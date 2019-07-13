@@ -1,0 +1,142 @@
+[
+    {
+        "component": "attribute",
+        "name": "Vitality",
+        "abbreviation": "VIT",
+        "description": "A measure of your physical fitness and how well your body can persevere through damage, pain, trauma, and exercise. PC health starts at a base of 100, plus or minus 10 times your Vitality modifier. A PC with -10 VIT will have a max health of 1.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Endurance",
+        "abbreviation": "END",
+        "description": "A measure of how well your character can exert his body for physically demanding actions. PC stamina starts at a base of 100, plus or minus 10 times your Endurance modifier. Stamina can be zero if your END is -10.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Spirit",
+        "abbreviation": "SPT",
+        "description": "A measure of your ability to draw upon magical reserves in an efficient manner. PC mana starts at a base of 100, plus or minus 10 times your Spirit modifier. Mana can be zero if your SPT is -10.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Recovery",
+        "abbreviation": "RCV",
+        "description": "A measure of your ability to heal moderate wounds. Health Regeneration starts at 0% for a PC with -10 RCV, and goes up 1% for each point.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Perseverance",
+        "abbreviation": "PER",
+        "description": "A measure of your ability to maintain physical activity over long periods of time. Stamina Regeneration starts at 0% for a PC with -10 PER, and goes up 1% for each point.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Sanity",
+        "abbreviation": "SAN",
+        "description": "A measure of your ability to maintain mental acuity even after rigorous brain function. Mana Regeneration starts at 0% for a PC with -10 SAN, and goes up 1% for each point.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Agility",
+        "abbreviation": "AGI",
+        "description": "A measure of your swiftness. PCs have a base movement speed of 30 feet if they have 0 AGI. Every two points of AGI provides 5 feet of movement speed. A PC with -10 AGI has a movement speed of 5.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Toughness",
+        "abbreviation": "TGH",
+        "description": "A measure of your body\u2019s resistance to damage. Armor Class (AC) is a flat reduction to physical damage taken, and is equal to 10 plus or minus your Toughness modifier. Usually a PC\u2019s AC comes from two sources: their TGH and their worn armor.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Reflex",
+        "abbreviation": "REF",
+        "description": "A measure of how quickly you can avoid an incoming threat without thought. Evasion is a percentage chance to avoid an attack targeted against you and is equal to 10% plus or minus or Reflex modifier in percentage points. Usually a PC\u2019s Evasion comes from two sources: their REF and their worm armor.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Resistance",
+        "abbreviation": "RES",
+        "description": "A measure of your body\u2019s natural resistance to magical damage. Magic Resist is a flat reduction to all types of magic damage taken, and is equal to 10% plus or minus your Resistance modifier. Usually a PC\u2019s Magic Resist comes from two sources: their RES and their worm armor.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Fortitude",
+        "abbreviation": "FRT",
+        "description": "A measure of your body\u2019s natural resistance to debilitating effects. Base condition resistance for a PC is 0% for a PC with -10 FRT, and you gain 1% resistance for each point of FRT, up to a max base condition resistance of 30% at 20 FRT",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Strength",
+        "abbreviation": "STR",
+        "description": "A measure of how hard you can work your muscles. Strength increases physical damage with melee weapons by a flat amount equal to the modifier.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Dexterity",
+        "abbreviation": "DEX",
+        "description": "A measure of how finely you can work your muscles. Dexterity increases physical damage with ranged and fine weapons by a flat amount equal to the modifier.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Attunement",
+        "abbreviation": "ATN",
+        "description": "A measure of how strong your link with your magical reserves is. Attunement increases magic damage by a flat amount equal to the modifier.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Precision",
+        "abbreviation": "PRE",
+        "description": "A measure of how easily you can execute actions that require specialized precision. Precision increases your critical chance by 1% for each point for a max critical chance of 30% at 20 PRE.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Appeal",
+        "abbreviation": "APL",
+        "description": "A measure of how strong your personality is and how easily you influence the actions of others. For every ten points of APL you have above -10, you gain one additional command during a Command Major Action, for a possible total of 4 commands per action at 20 APL.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Intelligence",
+        "abbreviation": "INT",
+        "description": "A measure of how good you are at storing information and using it when you need it; in other words, how book-smart you are. The number of languages you can learn and retain starts at 1 for a PC with -10 INT, and every 3 points of INT gets you another language slot.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Wisdom",
+        "abbreviation": "WIS",
+        "description": "A measure of how good you are at using what you\u2019ve learned through your experiences and applying your problem-solving abilities; in other words, how street-smart you are. Wisdom affects your Item Efficiency stat, which increases the effectiveness of items you use by a percentage. Each point of WIS gives you 5% more Item Efficiency, for a maximum Item Efficiency of 150% at 20 WIS",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Composure",
+        "abbreviation": "COM",
+        "description": "A measure of how well you hold up under the effect of multiple mental strains. Buff Limit is a stat that defines how many buffs you can have active on you with full benefit. Every two points of COM above -10 increases your Buff Limit by 1, for a maximum Buff Limit of 15 for a PC with 20 COM.",
+        "value": null
+    },
+    {
+        "component": "attribute",
+        "name": "Focus",
+        "abbreviation": "FCS",
+        "description": "A measure of your ability to multitask and divide your attention without a drop in the quality of your action execution. Concentration Limit is a stat that defines how many magical effects you can actively maintain at any given time with full benefit. Every two points of FCS above -10 increases your Concentration Limit by 1, for a maximum Concentration Limit of 15 for a PC with 20 FCS.",
+        "value": null
+    }
+]

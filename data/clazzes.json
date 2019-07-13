@@ -1,0 +1,1447 @@
+[
+    {
+        "type": "clazz",
+        "name": "Ice Duelist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Cryomancer",
+        "flavor_text": "Skating gracefully on the ice, she applies the finishing touches to the goblins, now tasteful frozen sculptures, and then continues deeper into their lair, followed by a cold tailwind.",
+        "description": "The Cryomancer is one of 8 offensive elemental mages. Harnessing the merciless aspect of ice, the Cryomancer is a flexible class that deals both single target and AOE damage, but especially excels at controlling the battlefield with crowd control spells. She can create spears of ice to impale enemies or freeze dozens of enemies solid. The Cryomancer provides a powerful defense with the power of ice and cold, and has plenty of offensive options to finish a fight.",
+        "num_requirements": 2,
+        "full_requirements": [
+            "        Ice Mastery A",
+            "        Destruction Magic A or Cloth Armor Mastery A"
+        ],
+        "branches": [
+            "Arctic",
+            "Chilling",
+            "Snow"
+        ],
+        "passive": {
+            "Frostbite": "For every round an enemy is affected by a condition applied by one of your spells, they gain a stack of Frostbite. When you inflict ice magic damage on a target, you may choose to consume all stacks of Frostbite on that target. Your ice magic damage is increased by 50% for every stack of Frostbite consumed in this manner for that instance of ice magic damage. Frostbite is not a condition, and does not require concentration"
+        },
+        "abilities": [
+            "Ice Spear",
+            "Glacial Crash",
+            "Shatter",
+            "Aurora Beam",
+            "Flash Freeze",
+            "Freezing Wind",
+            "Hypothermia",
+            "Heart of Ice",
+            "Ice Crafting",
+            "Extinguish",
+            "Ice Block",
+            "Frozen  Arena"
+        ]
+    },
+    {
+        "type": "clazz",
+        "name": "Luxomancer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Martial Artist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Symbiote",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Corrupter",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Conjurer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Controller",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Arcanist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Abjurer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Diviner",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Enchanter",
+        "flavor_text": "I watched on as he carefully inscribed his runes upon animal bones, knit together leather with magical seals, brushed the eerie skin tone paints upon a wooden, lifeless face, all while deftly avoiding the ritual circle he had encased his work inside of, and I lamented. For this doll, this macabre mockery of the young master\u2019s image, might soon move with enchanted grace and intelligence. But it would never love him as the boy did, only imitate.",
+        "description": "The Enchanter is an entry level mage that specializes in the magical school of Enchantment, using magical runes and inscriptions to apply effects to objects and equipment. Such mages are a mainstay of many armies, using their spells to augment the power of weapons and armor as well as reinforcing walls and defensive structures. They are also effective on a smaller scale, assisting party members by providing buff-like effects without taxing buff limit. This class provides a good number of entry level offensive, defensive, and utility effects for the aspiring party mage.",
+        "num_requirements": 2,
+        "full_requirements": [
+            "        Enchantment Magic A",
+            "        Cloth Armor A"
+        ],
+        "branches": [
+            "Personal",
+            "Structural",
+            "Minutiae"
+        ],
+        "passive": {
+            "Perpetual Runology": "You may have enchantment spells you cast that require concentration continue without your concentration at half effectiveness when your concentration breaks or when you choose not to concentrate on the spell when you cast it."
+        },
+        "abilities": [
+            "Modify Weapon",
+            "Reforge Armor",
+            "Alter Jewelry",
+            "Reconstruct Barrier",
+            "Rebuild Floor",
+            "Secure Building",
+            "Mint Coinage",
+            "Enhance Vehicle",
+            "Empower Ammo"
+        ]
+    },
+    {
+        "type": "clazz",
+        "name": "Illusionist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Healer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Summoner",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Transmuter",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Archaeomancer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Amplifier",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Evolutionist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Inventor",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Bioengineer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Necromancer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Pyromancer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Aquamancer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Aeromancer",
+        "flavor_text": "\u201cWhen I quit the Academy to become an adventurer, they told me I\u2019d be successful as long as I remembered to go where the wind blows. But then the wind kept blowing me straight towards trouble, so I figured I\u2019d take the wheel; now, the wind blows where I go.\u201d",
+        "description": "The Aeromancer is one of 8 offensive elemental mages. Harnessing the whimsical aspect of air, the Aeromancer values speed, creativity, and taking the initiative. Unlike other mages who plant themselves in the backlines, the Aeromancer uses its high mobility to literally fly across the battlefield, controlling wind to speed allies and slow enemies while inflicting damage through wind blasts and tornados. An adept Aeromancer never stays in one spot, abusing its speed and range to maximum effect to kite and whittle down even the staunchest foes.",
+        "num_requirements": 2,
+        "full_requirements": [
+            "        Air Magic A",
+            "        Destruction Magic A or Cloth Armor Mastery A"
+        ],
+        "branches": [
+            "Gale",
+            "Gust",
+            "Breeze"
+        ],
+        "passive": {
+            "Winds of War": "For every 5 feet you move using a Move Action or dash ability, gain a stack of Winds of War. When you inflict air magic damage on a target, you may choose to consume all stacks of Winds of War. Your air magic damage is increased by 5% for every stack of Winds of War consumed in this manner for that instance of air magic damage."
+        },
+        "abilities": [
+            "Wind Slash",
+            "Sky Uppercut",
+            "Vicious Cyclone",
+            "Vicious Hurricane",
+            "Aeroblast",
+            "Whisk Away",
+            "Buffeting Storm",
+            "Take Flight",
+            "Tailwind",
+            "Blowback",
+            "Rotation Barrier",
+            "Summon Wyvern"
+        ]
+    },
+    {
+        "type": "clazz",
+        "name": "Terramancer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Dynamancer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Noxomancer",
+        "flavor_text": "Why is it that children are always afraid of the dark? It\u2019s not something their parents teach them, after all. Is it a natural human fear of the unknown and the unseen? Or is there something about darkness itself that should be feared?",
+        "description": "The Noxomancer is one of 8 offensive elemental mages. Harnessing the sinister aspect of dark, the Noxomancer is an aggressive class that deals both single target and AOE damage, but especially excels at stacking conditions on enemies, especially curses. He can inflict a variety of debilitating effects from blindness to fear, all while piling on damage. A small suite of utility spells allows the Noxomancer to take advantage of a variety of situations. Overall, the Noxomancer\u2019s slow and steady damage output is a force to be reckoned with.",
+        "num_requirements": 2,
+        "full_requirements": [
+            "        Dark Magic A",
+            "        Destruction Magic A or Cloth Armor Mastery A"
+        ],
+        "branches": [
+            "Devastation",
+            "Affliction",
+            "Obfuscation"
+        ],
+        "passive": {
+            "Neverending Nightmare": "Whenever a non-curse condition that was inflicted by you ends on an enemy in sight, they gain a curse."
+        },
+        "abilities": [
+            "Shadow Bolt",
+            "Darkbomb",
+            "Corruption",
+            "Defile",
+            "Shriek",
+            "Spreading Madness",
+            "Siphon Soul",
+            "Treachery",
+            "Fiendish Circle"
+        ]
+    },
+    {
+        "type": "clazz",
+        "name": "Gladiator",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Warrior",
+        "flavor_text": "We were lost in the heat of battle, our once advantageous position shattered like glass. Acrid, fetid smoke, tinged with the flavors of blood and bile, filled our lungs and threatened to steal our lives even as we were cut down by the dozens. We were green recruits in a war far too brutal for the most hardened of veterans. And it was his cry, that glorious call to arms, which saved us.",
+        "description": "The Warrior is by nature a specialist. On the outside, he appears to be a run of the mill fighter that you might expect to see as a city guardsman or a caravanserai. However, the Warrior has made the simple act of waging war into a carefully measured process. The Warrior efficiently slays masses of foes while protecting his squad; he fells giant beasts while holding a defensive line; he is a centerpiece of calm when the rest of the team panics during an ambush. The warrior has simple and effective options for single and multi-target attacks, straightforward defensive techniques, and special warcries that provide buffs or apply conditions to large groups.",
+        "num_requirements": 2,
+        "full_requirements": [
+            "        Any melee weapon mastery skill at Rank A",
+            "        Any armor mastery skill at Rank A (but not Cloth Armor Mastery)"
+        ],
+        "branches": [
+            "Assault",
+            "Protect",
+            "Warcry"
+        ],
+        "passive": {
+            "Warleader": "You gain 25% increased physical damage for each buff active on you. On your turn, you may end any buff on you of your choice as a free action to empower an ally who can hear you, increasing their next attack\u2019s damage by 25%."
+        },
+        "abilities": [
+            "Spill Blood",
+            "Cut Down",
+            "Hack and Slash",
+            "Summary Execution",
+            "Shields Up",
+            "Reinforce Armor",
+            "Take Cover",
+            "Paragon of Victory",
+            "\u201cCharge!\u201d",
+            "\u201cFight me!\u201d",
+            "\u201cOvercome!\u201d",
+            "\u201cKill them all!\u201d"
+        ]
+    },
+    {
+        "type": "clazz",
+        "name": "Warlord",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Skald",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Assassin",
+        "flavor_text": "Leaping down from the rafters, he lands soundlessly behind the two guards and slips daggers between their ribs before they can react, then turns and sneaks into the King\u2019s quarters, his footsteps masked by the monarch\u2019s snores.",
+        "description": "The Assassin has always been a career of necessity. When a sword is too direct and a fireball too flashy, the dagger has always served as an inconspicuous tool to end someone\u2019s life. The Assassin excels at its use, as well as finding its way on top of its prey without being detected. With an excess of frontloaded damage, and the necessary abilities to prepare for a kill, the Assassin always tries to end a fight with the first blow. This class has access to abilities to increase its damage and critical strike chance, as well as various tools to track and sneak up on prey, and close in quickly.",
+        "num_requirements": 2,
+        "full_requirements": [
+            "        Sneak A",
+            "        Shortblades Mastery A"
+        ],
+        "branches": [
+            "Skulk",
+            "Preparation",
+            "Execution"
+        ],
+        "passive": {
+            "Assassinate": "If you attack an uninjured enemy with a shortblade, double all damage for that attack."
+        },
+        "abilities": [
+            "Vanish",
+            "Maneuver",
+            "Pursue",
+            "Stalk",
+            "Focus",
+            "Sharpen",
+            "Haste",
+            "Bloodlust",
+            "Backstab",
+            "Pounce",
+            "Skyfall",
+            "Massacre"
+        ]
+    },
+    {
+        "type": "clazz",
+        "name": "Sentinel",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Soldier",
+        "flavor_text": "They teach you a whole lot about keeping yourself together in Basic. How to swing your sword so you don\u2019t injure your wrist or shoulder. How to brace yourself for an impact against your shield. How to keep moving so a random archer doesn\u2019t end your career early. And most importantly, how to strike first, so they die before you do. They don\u2019t really talk about what to do after you\u2019ve killed a man, though. And you\u2019ve got to kill a lot of men before you learn the meaning of being a soldier.",
+        "description": "The Soldier is a fighter who wields sword and shield, but boasts an impressive level of mobility as well. Trained with more modern techniques of striking quickly and focusing on survival, this class provides a multitude of options for blocking or dodging incoming attacks, and fighting in a responsive, calculated style that wouldn\u2019t normally be expected of a fighter. The Soldier fights on the front lines like other fighters, but isn\u2019t restricted to heavy armor, and utilizes strategy over raw power to whittle down opponents.",
+        "num_requirements": 2,
+        "full_requirements": [
+            "        Longblades Mastery A",
+            "        Shield Armor Mastery A"
+        ],
+        "branches": [
+            "Skirmish",
+            "Safeguard",
+            "Sprint"
+        ],
+        "passive": {
+            "Defensive Footwork": "When you use your reaction to use a block ability and successfully avoid/reduce damage from an incoming attack, gain a special reaction until the beginning of your next turn which can only be used for a dash reaction ability. When you use your reaction to use a dash reaction ability and successfully avoid/reduce damage from an incoming attack, gain a special reaction until the beginning of your next turn which can only be used for a block reaction ability. Special reactions provided by Defensive Footwork have their mana and stamina costs halved. Defensive Footwork can activate at most once per round, and refreshes at the beginning of each of your turns."
+        },
+        "abilities": [
+            "Fleetfoot Blade",
+            "Steadfast Strikes",
+            "Biding Blade",
+            "Sever The Head",
+            "Intercept",
+            "Shield Bash",
+            "Protective Sweep",
+            "Long Live The King",
+            "Dodge Roll",
+            "Double Time",
+            "Tactical Withdrawal",
+            "Vigor of Battle"
+        ]
+    },
+    {
+        "type": "clazz",
+        "name": "Air Duelist",
+        "flavor_text": "\u201cI used to think I was the best. I could hit a goblin off its warg from 300 feet away. I used to split my first arrow with my second at the shooting range at school. But I had a rude awakening when I met her. She could shoot dragons out of the sky against the winds created by their beating wings. Her arrows whistled like mystical birdsong. I shot for sport; she created art.\u201d",
+        "description": "The Air Duelist is one of many spellblade variants that focuses on one element and one weapon. This class wields a bow as well as powerful air magic. By interlacing shots from her bow with precise wind strikes, the Air Duelist maximizes its action economy. Her individual spells are weaker than a dedicated air mage\u2019s, but her weapon provides increased flexibility and effectiveness at longer ranges, and his offensive output can surpass a regular duelist\u2019s with efficient usage of physical and magical arts. Her spells are primarily buffing and damaging in nature, with all the additional support and utility that air magic tends to provide, and there is a heavy emphasis on forced movement and mobility.",
+        "num_requirements": 2,
+        "full_requirements": [
+            "        Bow Mastery A",
+            "        Air Magic A"
+        ],
+        "branches": [
+            "Dueling",
+            "Casting",
+            "Buffing"
+        ],
+        "passive": {
+            "Whirlwind Quiver": "Once per turn, when you deal air magic damage to a target with a spell, gain one Whirlwind Arrow special ammunition. You may have up to 2 Whirlwind Arrows at a time, this special ammunition can not be recovered, and they expire at the end of combat. When you use a Whirlwind Arrow to make an attack with a bow, you may do so as a free action (you still pay any other costs)."
+        },
+        "abilities": [
+            "Gale Shot",
+            "Wind Strike",
+            "Mistral Bow"
+        ]
+    },
+    {
+        "type": "clazz",
+        "name": "Sniper",
+        "flavor_text": "At 30 seconds to midnight, I reconfirmed my target, still sipping wine on the veranda. At 26 seconds, I drew my longbow, custom crafted for this single shot. I planned to shatter it and toss the remains in the nearby river afterwards. At 18 seconds, I finished applying the oils to the ammo I\u2019d use. And at 7 seconds, I finally lined up the shot, and synced the rhythm of breath and heart to my countdown. 5\u20264\u20263\u20262\u2026",
+        "description": "The Sniper delivers death from afar. Unlike archers who use shortbows and crossbows for medium range engagements, firing dozens of arrows to slay their target, the Sniper relies on single, extremely powerful and accurate shots from extreme ranges. The firing rate of the average longbow tends to be lower, but the range and damage output easily make up for it. The Sniper expands upon the longbow\u2019s strengths by preparing carefully for each shot. He spots his target, tracks their movement, the way they dodge, the weak points in their armor. And finally, when he is ready to take the shot, he has already stacked all the cards in his favor.",
+        "num_requirements": 2,
+        "full_requirements": [
+            "        Bow Mastery A",
+            "        Light Armor Mastery A"
+        ],
+        "branches": [
+            "Shooting",
+            "Aiming",
+            "Improvising"
+        ],
+        "passive": {
+            "Spotter": "At any time, you may mark an enemy target you can see as Spotted. While you have a Spotted target, you gain 1 stack of Spotting whenever you take a Major action that does not involve dealing damage or moving. You can also use your Major action to track your target, gaining 2 stacks of Spotting. You have a maximum limit of 8 stacks of Spotting. You lose all stacks of Spotting when a Spotted target dies, or when you switch the mark to a new target. When you attack a Spotted target with a ranged attack from a longbow, you expend all stacks of Spotting, and deal 25% increased damage per stack expended this way."
+        },
+        "abilities": [
+            "Piercing Shot",
+            "Kill Shot",
+            "Shrapnel  Shot",
+            "Rapid Shot",
+            "Distance Shooter",
+            "Precision Shooter",
+            "Analytical Shooter",
+            "Professional Shooter",
+            "Swift Sprint",
+            "Swift Shot",
+            "Bola Shot",
+            "Evasive Maneuvers"
+        ]
+    },
+    {
+        "type": "clazz",
+        "name": "Arcane Archer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Marksman",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Rifleman",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Bard",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Dancer\u00ad",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Lightning Duelist",
+        "flavor_text": "One second, the two strangers were calmly watching each other from opposite sides of the raucous tavern; the next second, we heard a clap of thunder, and the smaller one had closed the gap in the blink of an eye. Everything was suddenly quiet, but for the slightest hum of energy and tension. We all held our breath even as the hair on the backs of our neck stood on end, and we prayed that the stranger\u2019s sword would stay in its scabbard.",
+        "description": "The Lightning Duelist is one of many spellblade variants that focuses on one element and one weapon. This class wields a rapier in one hand and volatile lightning magic in the other. By seamlessly weaving together rapier lunges and jabs with lightning magic spells, the Lightning Duelist has excellent action economy. His individual spells are weaker than a dedicated lightning mage\u2019s, but his weapon provides increased flexibility and effectiveness at shorter ranges, and his offensive output can surpass a regular duelist\u2019s with efficient usage of physical and magical arts. His spells are primary buffing and damaging in nature, with all of the random, violent flavor that lightning spells tend to have, and there is a heavy emphasis on mobility and flexibility of aggressive attack patterns.",
+        "num_requirements": 2,
+        "full_requirements": [
+            "        Lightning Mastery A",
+            "        Fine Weapons Mastery A"
+        ],
+        "branches": [
+            "Dueling",
+            "Casting",
+            "Buffing"
+        ],
+        "passive": {
+            "Battle Current": "Whenever you deal lightning magic damage to a target with a spell, you become empowered, and you may have the next attack you make with a rapier occur a second time at no cost. You may choose new targets for the second rapier attack. Battle Current does not stack with itself, but can occur multiple times per turn, and it does not count as a buff or require concentration."
+        },
+        "abilities": [
+            "Lightning Lunge",
+            "Blade Storm",
+            "Shocking Parry",
+            "Flash of Swords",
+            "Shock Tendrils",
+            "Ball Lightning",
+            "Thunder Blast",
+            "Arc Lightning",
+            "Taser Blade",
+            "Sword of Lightning",
+            "Plasma Saber",
+            "Lightning Coil Cuirass"
+        ]
+    },
+    {
+        "type": "clazz",
+        "name": "Lasher",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Fire Duelist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Dark Duelist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Water Duelist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Viking",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 2,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Chain Master",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Pinpoint Monk",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Tinkerer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Ki Monk",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Golem Master",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Transfusionist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Morphologist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Upgrade Alchemist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Reconstructionist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Modifier",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Lifedrinker",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Champion",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Captain",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Bladerunner",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Thief",
+        "flavor_text": "WANTED: The craven criminal who continues to harry our humble hamlet! The unnamed, unknown, unscrupulous usurper of the rightfully received revenues of our most righteous regime! This wanton mobster, whether man or woman or what have you, will with certainty maintain a masterful circumvention of our most muddled constabulary! The government guarantees a generous guerdon, gifted to the group who swiftly seizes this serpentine scofflaw!",
+        "description": "The Thief is a career of daring exploits and mischief. Stealing from the rich and poor, the strong and weak, the Thief preys upon the riches of others for their own personal gain. With excellent abilities to sneak past watchful eyes and a knack for knifeplay, the Thief augments its meager combat ability with excellent stealing and sneaking abilities. This class switches between focusing on stealing and focusing on sneaking and adapts to the situation at hand, fluidly sifting through a bag of both offensive and defensive tricks, and is effective at critical strikes when stealth fails and combat breaks out.",
+        "num_requirements": 3,
+        "full_requirements": [
+            "        Steal A",
+            "        Sneak A",
+            "        Shortblade Mastery A"
+        ],
+        "branches": [
+            "Predator",
+            "Pilfer",
+            "Prowl"
+        ],
+        "passive": {
+            "Hit and Run": "At the beginning of combat, enter either Hit Stance or Run Stance, and you may switch at the beginning of each of your turns. When you enter Hit Stance, drain 20 stamina from a target in melee range. During Hit Stance, your attacks have \u201cOn Hit: Drain 10 health.\u201d When you enter Run Stance, become Hidden and dash up to 15 ft in any direction. During Run Stance, your movement does not provoke opportunity attacks or trigger traps, and you gain +20 move speed."
+        },
+        "abilities": [
+            "Cloak and Dagger",
+            "Snatch and Grab",
+            "Infiltrate"
+        ]
+    },
+    {
+        "type": "clazz",
+        "name": "Assault Trooper",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Groveguard",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Bodyguard",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Warper",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Ranger",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Paladin",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Duelist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Barrager",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Blade Lord",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Pegasus Knight",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Bladesinger",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Shadowdancer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Ambusher",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Eldritch Knight",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Mistguard",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Daggerspell",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Dragonslayer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Reaper",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Firewheeler",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Harrier",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Horizon Stalker",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Mirror Mage",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Steam Mage",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Woodsman",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Herald",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Soulbinder",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Card Master",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Warlock",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Arcane Trickster",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Tempest",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Evangelist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Night Lord",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Ninja",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Voidwalker",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Gatekeeper",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Demon Hunter",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Raider",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Kickboxer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Ravager",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Cleric",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Brawler",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Hemoplague",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Corpselight",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Auramancer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Master Alchemist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 5,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Elementalist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 8,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Dancer",
+        "flavor_text": "\u201cDance, when you're broken open. Dance, if you've torn the bandage off. Dance in the middle of the fighting. Dance in your blood. Dance when you're perfectly free.\u201d",
+        "description": "The Dancer is one of many classes that evolves from the simple non-combat art of dancing. Combining their love for dance with the natural rhythm and furor of combat, the Dancer is able to move between enemies and allies while maintaining the fluid movements of their many forms. Dancing while moving costs additional stamina, but the Dancer can save on stamina costs by being an intelligent choreographer and moving through their many dances in a specific order. Most dances either provide allies with vigor and strength or confuse allies with bewitching and undulating movement.",
+        "num_requirements": 2,
+        "full_requirements": [
+            "        Dancing A",
+            "        Light Armor Mastery A"
+        ],
+        "branches": [
+            "Sway",
+            "Strut",
+            "Shimmy"
+        ],
+        "passive": {
+            "Dance The Night Away": "You may cast dance abilities alongside your regular Move Action if you expend twice as much stamina. If you do, your Move Action does not provoke opportunity attacks."
+        },
+        "abilities": [
+            "Belly Dance",
+            "Swing",
+            "Tango",
+            "Waltz",
+            "Foxtrot",
+            "Moonwalk"
+        ]
+    }
+]
