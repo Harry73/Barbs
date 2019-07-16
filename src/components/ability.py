@@ -44,7 +44,7 @@ class Ability(Component):
 
     def to_json(self):
         return {
-            'component': 'ability',
+            'type': 'ability',
             'name': self.name,
             'clazz': self.clazz.name,
             'branch': self.branch.name,

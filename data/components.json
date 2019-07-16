@@ -1,139 +1,139 @@
 [
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Vitality",
         "abbreviation": "VIT",
         "description": "A measure of your physical fitness and how well your body can persevere through damage, pain, trauma, and exercise. PC health starts at a base of 100, plus or minus 10 times your Vitality modifier. A PC with -10 VIT will have a max health of 1.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Endurance",
         "abbreviation": "END",
         "description": "A measure of how well your character can exert his body for physically demanding actions. PC stamina starts at a base of 100, plus or minus 10 times your Endurance modifier. Stamina can be zero if your END is -10.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Spirit",
         "abbreviation": "SPT",
         "description": "A measure of your ability to draw upon magical reserves in an efficient manner. PC mana starts at a base of 100, plus or minus 10 times your Spirit modifier. Mana can be zero if your SPT is -10.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Recovery",
         "abbreviation": "RCV",
         "description": "A measure of your ability to heal moderate wounds. Health Regeneration starts at 0% for a PC with -10 RCV, and goes up 1% for each point.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Perseverance",
         "abbreviation": "PER",
         "description": "A measure of your ability to maintain physical activity over long periods of time. Stamina Regeneration starts at 0% for a PC with -10 PER, and goes up 1% for each point.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Sanity",
         "abbreviation": "SAN",
         "description": "A measure of your ability to maintain mental acuity even after rigorous brain function. Mana Regeneration starts at 0% for a PC with -10 SAN, and goes up 1% for each point.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Agility",
         "abbreviation": "AGI",
         "description": "A measure of your swiftness. PCs have a base movement speed of 30 feet if they have 0 AGI. Every two points of AGI provides 5 feet of movement speed. A PC with -10 AGI has a movement speed of 5.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Toughness",
         "abbreviation": "TGH",
         "description": "A measure of your body\u2019s resistance to damage. Armor Class (AC) is a flat reduction to physical damage taken, and is equal to 10 plus or minus your Toughness modifier. Usually a PC\u2019s AC comes from two sources: their TGH and their worn armor.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Reflex",
         "abbreviation": "REF",
         "description": "A measure of how quickly you can avoid an incoming threat without thought. Evasion is a percentage chance to avoid an attack targeted against you and is equal to 10% plus or minus or Reflex modifier in percentage points. Usually a PC\u2019s Evasion comes from two sources: their REF and their worm armor.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Resistance",
         "abbreviation": "RES",
         "description": "A measure of your body\u2019s natural resistance to magical damage. Magic Resist is a flat reduction to all types of magic damage taken, and is equal to 10% plus or minus your Resistance modifier. Usually a PC\u2019s Magic Resist comes from two sources: their RES and their worm armor.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Fortitude",
         "abbreviation": "FRT",
         "description": "A measure of your body\u2019s natural resistance to debilitating effects. Base condition resistance for a PC is 0% for a PC with -10 FRT, and you gain 1% resistance for each point of FRT, up to a max base condition resistance of 30% at 20 FRT",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Strength",
         "abbreviation": "STR",
         "description": "A measure of how hard you can work your muscles. Strength increases physical damage with melee weapons by a flat amount equal to the modifier.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Dexterity",
         "abbreviation": "DEX",
         "description": "A measure of how finely you can work your muscles. Dexterity increases physical damage with ranged and fine weapons by a flat amount equal to the modifier.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Attunement",
         "abbreviation": "ATN",
         "description": "A measure of how strong your link with your magical reserves is. Attunement increases magic damage by a flat amount equal to the modifier.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Precision",
         "abbreviation": "PRE",
         "description": "A measure of how easily you can execute actions that require specialized precision. Precision increases your critical chance by 1% for each point for a max critical chance of 30% at 20 PRE.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Appeal",
         "abbreviation": "APL",
         "description": "A measure of how strong your personality is and how easily you influence the actions of others. For every ten points of APL you have above -10, you gain one additional command during a Command Major Action, for a possible total of 4 commands per action at 20 APL.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Intelligence",
         "abbreviation": "INT",
         "description": "A measure of how good you are at storing information and using it when you need it; in other words, how book-smart you are. The number of languages you can learn and retain starts at 1 for a PC with -10 INT, and every 3 points of INT gets you another language slot.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Wisdom",
         "abbreviation": "WIS",
         "description": "A measure of how good you are at using what you\u2019ve learned through your experiences and applying your problem-solving abilities; in other words, how street-smart you are. Wisdom affects your Item Efficiency stat, which increases the effectiveness of items you use by a percentage. Each point of WIS gives you 5% more Item Efficiency, for a maximum Item Efficiency of 150% at 20 WIS",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Composure",
         "abbreviation": "COM",
         "description": "A measure of how well you hold up under the effect of multiple mental strains. Buff Limit is a stat that defines how many buffs you can have active on you with full benefit. Every two points of COM above -10 increases your Buff Limit by 1, for a maximum Buff Limit of 15 for a PC with 20 COM.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Focus",
         "abbreviation": "FCS",
         "description": "A measure of your ability to multitask and divide your attention without a drop in the quality of your action execution. Concentration Limit is a stat that defines how many magical effects you can actively maintain at any given time with full benefit. Every two points of FCS above -10 increases your Concentration Limit by 1, for a maximum Concentration Limit of 15 for a PC with 20 FCS.",
@@ -2872,7 +2872,7 @@
         "abilities": []
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Ice Spear",
         "clazz": "Cryomancer",
         "branch": "Arctic",
@@ -2896,7 +2896,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Glacial Crash",
         "clazz": "Cryomancer",
         "branch": "Arctic",
@@ -2923,7 +2923,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Shatter",
         "clazz": "Cryomancer",
         "branch": "Arctic",
@@ -2949,7 +2949,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Aurora Beam",
         "clazz": "Cryomancer",
         "branch": "Arctic",
@@ -2976,7 +2976,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Flash Freeze",
         "clazz": "Cryomancer",
         "branch": "Chilling",
@@ -3000,7 +3000,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Freezing Wind",
         "clazz": "Cryomancer",
         "branch": "Chilling",
@@ -3025,7 +3025,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Hypothermia",
         "clazz": "Cryomancer",
         "branch": "Chilling",
@@ -3051,7 +3051,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Heart of Ice",
         "clazz": "Cryomancer",
         "branch": "Chilling",
@@ -3078,7 +3078,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Ice Crafting",
         "clazz": "Cryomancer",
         "branch": "Snow",
@@ -3100,7 +3100,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Extinguish",
         "clazz": "Cryomancer",
         "branch": "Snow",
@@ -3124,7 +3124,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Ice Block",
         "clazz": "Cryomancer",
         "branch": "Snow",
@@ -3148,7 +3148,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Frozen  Arena",
         "clazz": "Cryomancer",
         "branch": "Snow",
@@ -3171,7 +3171,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Modify Weapon",
         "clazz": "Enchanter",
         "branch": "Personal",
@@ -3193,7 +3193,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Reforge Armor",
         "clazz": "Enchanter",
         "branch": "Personal",
@@ -3215,7 +3215,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Alter Jewelry",
         "clazz": "Enchanter",
         "branch": "Personal",
@@ -3242,7 +3242,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Reconstruct Barrier",
         "clazz": "Enchanter",
         "branch": "Structural",
@@ -3268,7 +3268,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Rebuild Floor",
         "clazz": "Enchanter",
         "branch": "Structural",
@@ -3296,7 +3296,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Secure Building",
         "clazz": "Enchanter",
         "branch": "Structural",
@@ -3320,7 +3320,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Mint Coinage",
         "clazz": "Enchanter",
         "branch": "Minutiae",
@@ -3345,7 +3345,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Enhance Vehicle",
         "clazz": "Enchanter",
         "branch": "Minutiae",
@@ -3369,7 +3369,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Empower Ammo",
         "clazz": "Enchanter",
         "branch": "Minutiae",
@@ -3390,7 +3390,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Wind Slash",
         "clazz": "Aeromancer",
         "branch": "Gale",
@@ -3415,7 +3415,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Sky Uppercut",
         "clazz": "Aeromancer",
         "branch": "Gale",
@@ -3441,7 +3441,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Vicious Cyclone",
         "clazz": "Aeromancer",
         "branch": "Gale",
@@ -3468,7 +3468,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Vicious Hurricane",
         "clazz": "Aeromancer",
         "branch": "Gale",
@@ -3494,7 +3494,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Aeroblast",
         "clazz": "Aeromancer",
         "branch": "Gust",
@@ -3520,7 +3520,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Whisk Away",
         "clazz": "Aeromancer",
         "branch": "Gust",
@@ -3541,7 +3541,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Buffeting Storm",
         "clazz": "Aeromancer",
         "branch": "Gust",
@@ -3563,7 +3563,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Take Flight",
         "clazz": "Aeromancer",
         "branch": "Gust",
@@ -3585,7 +3585,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Tailwind",
         "clazz": "Aeromancer",
         "branch": "Breeze",
@@ -3607,7 +3607,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Blowback",
         "clazz": "Aeromancer",
         "branch": "Breeze",
@@ -3631,7 +3631,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Rotation Barrier",
         "clazz": "Aeromancer",
         "branch": "Breeze",
@@ -3653,7 +3653,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Summon Wyvern",
         "clazz": "Aeromancer",
         "branch": "Breeze",
@@ -3673,7 +3673,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Shadow Bolt",
         "clazz": "Noxomancer",
         "branch": "Devastation",
@@ -3698,7 +3698,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Darkbomb",
         "clazz": "Noxomancer",
         "branch": "Devastation",
@@ -3722,7 +3722,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Corruption",
         "clazz": "Noxomancer",
         "branch": "Devastation",
@@ -3746,7 +3746,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Defile",
         "clazz": "Noxomancer",
         "branch": "Affliction",
@@ -3773,7 +3773,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Shriek",
         "clazz": "Noxomancer",
         "branch": "Affliction",
@@ -3798,7 +3798,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Spreading Madness",
         "clazz": "Noxomancer",
         "branch": "Affliction",
@@ -3822,7 +3822,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Siphon Soul",
         "clazz": "Noxomancer",
         "branch": "Obfuscation",
@@ -3848,7 +3848,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Treachery",
         "clazz": "Noxomancer",
         "branch": "Obfuscation",
@@ -3873,7 +3873,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Fiendish Circle",
         "clazz": "Noxomancer",
         "branch": "Obfuscation",
@@ -3896,7 +3896,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Spill Blood",
         "clazz": "Warrior",
         "branch": "Assault",
@@ -3918,7 +3918,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Cut Down",
         "clazz": "Warrior",
         "branch": "Assault",
@@ -3947,7 +3947,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Hack and Slash",
         "clazz": "Warrior",
         "branch": "Assault",
@@ -3969,7 +3969,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Summary Execution",
         "clazz": "Warrior",
         "branch": "Assault",
@@ -3992,7 +3992,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Shields Up",
         "clazz": "Warrior",
         "branch": "Protect",
@@ -4012,7 +4012,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Reinforce Armor",
         "clazz": "Warrior",
         "branch": "Protect",
@@ -4034,7 +4034,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Take Cover",
         "clazz": "Warrior",
         "branch": "Protect",
@@ -4060,7 +4060,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Paragon of Victory",
         "clazz": "Warrior",
         "branch": "Protect",
@@ -4086,7 +4086,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "\u201cCharge!\u201d",
         "clazz": "Warrior",
         "branch": "Warcry",
@@ -4107,7 +4107,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "\u201cFight me!\u201d",
         "clazz": "Warrior",
         "branch": "Warcry",
@@ -4127,7 +4127,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "\u201cOvercome!\u201d",
         "clazz": "Warrior",
         "branch": "Warcry",
@@ -4148,7 +4148,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "\u201cKill them all!\u201d",
         "clazz": "Warrior",
         "branch": "Warcry",
@@ -4170,7 +4170,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Vanish",
         "clazz": "Assassin",
         "branch": "Skulk",
@@ -4191,7 +4191,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Maneuver",
         "clazz": "Assassin",
         "branch": "Skulk",
@@ -4209,7 +4209,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Pursue",
         "clazz": "Assassin",
         "branch": "Skulk",
@@ -4230,7 +4230,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Stalk",
         "clazz": "Assassin",
         "branch": "Skulk",
@@ -4250,7 +4250,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Focus",
         "clazz": "Assassin",
         "branch": "Preparation",
@@ -4270,7 +4270,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Sharpen",
         "clazz": "Assassin",
         "branch": "Preparation",
@@ -4289,7 +4289,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Haste",
         "clazz": "Assassin",
         "branch": "Preparation",
@@ -4309,7 +4309,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Bloodlust",
         "clazz": "Assassin",
         "branch": "Preparation",
@@ -4330,7 +4330,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Backstab",
         "clazz": "Assassin",
         "branch": "Execution",
@@ -4351,7 +4351,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Pounce",
         "clazz": "Assassin",
         "branch": "Execution",
@@ -4371,7 +4371,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Skyfall",
         "clazz": "Assassin",
         "branch": "Execution",
@@ -4393,7 +4393,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Massacre",
         "clazz": "Assassin",
         "branch": "Execution",
@@ -4416,7 +4416,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Fleetfoot Blade",
         "clazz": "Soldier",
         "branch": "Skirmish",
@@ -4439,7 +4439,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Steadfast Strikes",
         "clazz": "Soldier",
         "branch": "Skirmish",
@@ -4463,7 +4463,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Biding Blade",
         "clazz": "Soldier",
         "branch": "Skirmish",
@@ -4486,7 +4486,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Sever The Head",
         "clazz": "Soldier",
         "branch": "Skirmish",
@@ -4511,7 +4511,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Intercept",
         "clazz": "Soldier",
         "branch": "Safeguard",
@@ -4532,7 +4532,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Shield Bash",
         "clazz": "Soldier",
         "branch": "Safeguard",
@@ -4556,7 +4556,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Protective Sweep",
         "clazz": "Soldier",
         "branch": "Safeguard",
@@ -4575,7 +4575,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Long Live The King",
         "clazz": "Soldier",
         "branch": "Safeguard",
@@ -4596,7 +4596,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Dodge Roll",
         "clazz": "Soldier",
         "branch": "Sprint",
@@ -4614,7 +4614,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Double Time",
         "clazz": "Soldier",
         "branch": "Sprint",
@@ -4632,7 +4632,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Tactical Withdrawal",
         "clazz": "Soldier",
         "branch": "Sprint",
@@ -4651,7 +4651,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Vigor of Battle",
         "clazz": "Soldier",
         "branch": "Sprint",
@@ -4669,7 +4669,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Gale Shot",
         "clazz": "Air Duelist",
         "branch": "Dueling",
@@ -4691,7 +4691,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Zephyr Shot",
         "clazz": "Air Duelist",
         "branch": "Dueling",
@@ -4714,7 +4714,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Wind Strike",
         "clazz": "Air Duelist",
         "branch": "Casting",
@@ -4740,7 +4740,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Cutting Winds",
         "clazz": "Air Duelist",
         "branch": "Casting",
@@ -4765,7 +4765,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Mistral Bow",
         "clazz": "Air Duelist",
         "branch": "Buffing",
@@ -4788,7 +4788,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Arc of Air",
         "clazz": "Air Duelist",
         "branch": "Buffing",
@@ -4811,7 +4811,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Piercing Shot",
         "clazz": "Sniper",
         "branch": "Shooting",
@@ -4832,7 +4832,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Kill Shot",
         "clazz": "Sniper",
         "branch": "Shooting",
@@ -4854,7 +4854,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Shrapnel  Shot",
         "clazz": "Sniper",
         "branch": "Shooting",
@@ -4876,7 +4876,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Rapid Shot",
         "clazz": "Sniper",
         "branch": "Shooting",
@@ -4898,7 +4898,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Distance Shooter",
         "clazz": "Sniper",
         "branch": "Aiming",
@@ -4918,7 +4918,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Precision Shooter",
         "clazz": "Sniper",
         "branch": "Aiming",
@@ -4941,7 +4941,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Analytical Shooter",
         "clazz": "Sniper",
         "branch": "Aiming",
@@ -4963,7 +4963,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Professional Shooter",
         "clazz": "Sniper",
         "branch": "Aiming",
@@ -4980,7 +4980,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Swift Sprint",
         "clazz": "Sniper",
         "branch": "Improvising",
@@ -4999,7 +4999,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Swift Shot",
         "clazz": "Sniper",
         "branch": "Improvising",
@@ -5021,7 +5021,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Bola Shot",
         "clazz": "Sniper",
         "branch": "Improvising",
@@ -5045,7 +5045,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Evasive Maneuvers",
         "clazz": "Sniper",
         "branch": "Improvising",
@@ -5065,7 +5065,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Belly Dance",
         "clazz": "Dancer",
         "branch": "Sway",
@@ -5088,7 +5088,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Swing",
         "clazz": "Dancer",
         "branch": "Sway",
@@ -5109,7 +5109,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Tango",
         "clazz": "Dancer",
         "branch": "Strut",
@@ -5130,7 +5130,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Waltz",
         "clazz": "Dancer",
         "branch": "Strut",
@@ -5151,7 +5151,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Foxtrot",
         "clazz": "Dancer",
         "branch": "Shimmy",
@@ -5172,7 +5172,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Moonwalk",
         "clazz": "Dancer",
         "branch": "Shimmy",
@@ -5193,7 +5193,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Lightning Lunge",
         "clazz": "Lightning Duelist",
         "branch": "Dueling",
@@ -5215,7 +5215,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Blade Storm",
         "clazz": "Lightning Duelist",
         "branch": "Dueling",
@@ -5237,7 +5237,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Shocking Parry",
         "clazz": "Lightning Duelist",
         "branch": "Dueling",
@@ -5262,7 +5262,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Flash of Swords",
         "clazz": "Lightning Duelist",
         "branch": "Dueling",
@@ -5284,7 +5284,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Shock Tendrils",
         "clazz": "Lightning Duelist",
         "branch": "Casting",
@@ -5306,7 +5306,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Ball Lightning",
         "clazz": "Lightning Duelist",
         "branch": "Casting",
@@ -5330,7 +5330,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Thunder Blast",
         "clazz": "Lightning Duelist",
         "branch": "Casting",
@@ -5352,7 +5352,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Arc Lightning",
         "clazz": "Lightning Duelist",
         "branch": "Casting",
@@ -5376,7 +5376,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Taser Blade",
         "clazz": "Lightning Duelist",
         "branch": "Buffing",
@@ -5400,7 +5400,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Sword of Lightning",
         "clazz": "Lightning Duelist",
         "branch": "Buffing",
@@ -5422,7 +5422,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Plasma Saber",
         "clazz": "Lightning Duelist",
         "branch": "Buffing",
@@ -5445,7 +5445,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Lightning Coil Cuirass",
         "clazz": "Lightning Duelist",
         "branch": "Buffing",
@@ -5470,7 +5470,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Cloak and Dagger",
         "clazz": "Thief",
         "branch": "Predator",
@@ -5491,7 +5491,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Blade in the Dark",
         "clazz": "Thief",
         "branch": "Predator",
@@ -5515,7 +5515,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Snatch and Grab",
         "clazz": "Thief",
         "branch": "Pilfer",
@@ -5538,7 +5538,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Charm and Disarm",
         "clazz": "Thief",
         "branch": "Pilfer",
@@ -5560,7 +5560,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Infiltrate",
         "clazz": "Thief",
         "branch": "Prowl",
@@ -5580,7 +5580,7 @@
         ]
     },
     {
-        "component": "ability",
+        "type": "ability",
         "name": "Dodge the Law",
         "clazz": "Thief",
         "branch": "Prowl",

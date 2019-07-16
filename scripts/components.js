@@ -38,6 +38,7 @@ var STATS = [
 
 var hoshiko = {
     'name': 'Hoshiko/Luna/Ren Nightside',
+    'owner': 'gm',
     'gender': 'Female',
     'race': 'Shifter',
     'height': '5 ft 4 in',
@@ -97,2746 +98,166 @@ var hoshiko = {
     }
 };
 
+var owners = {
+    'gm': '-LjcnkLEcvyx-LjrwJlx',
+};
 
-var attributes = [
+var player_list = [
+    hoshiko,
+]
+
+var players = [];
+
+// individual collections are built at the end off of `components`, which has everything
+var attributes = [];
+var abilities = [];
+var races = [];
+var clazzes = [];
+var skills = [];
+var buffs = [];
+var conditions = [];
+var items = [];
+var components = [
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Vitality",
         "abbreviation": "VIT",
         "description": "A measure of your physical fitness and how well your body can persevere through damage, pain, trauma, and exercise. PC health starts at a base of 100, plus or minus 10 times your Vitality modifier. A PC with -10 VIT will have a max health of 1.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Endurance",
         "abbreviation": "END",
         "description": "A measure of how well your character can exert his body for physically demanding actions. PC stamina starts at a base of 100, plus or minus 10 times your Endurance modifier. Stamina can be zero if your END is -10.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Spirit",
         "abbreviation": "SPT",
         "description": "A measure of your ability to draw upon magical reserves in an efficient manner. PC mana starts at a base of 100, plus or minus 10 times your Spirit modifier. Mana can be zero if your SPT is -10.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Recovery",
         "abbreviation": "RCV",
         "description": "A measure of your ability to heal moderate wounds. Health Regeneration starts at 0% for a PC with -10 RCV, and goes up 1% for each point.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Perseverance",
         "abbreviation": "PER",
         "description": "A measure of your ability to maintain physical activity over long periods of time. Stamina Regeneration starts at 0% for a PC with -10 PER, and goes up 1% for each point.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Sanity",
         "abbreviation": "SAN",
         "description": "A measure of your ability to maintain mental acuity even after rigorous brain function. Mana Regeneration starts at 0% for a PC with -10 SAN, and goes up 1% for each point.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Agility",
         "abbreviation": "AGI",
         "description": "A measure of your swiftness. PCs have a base movement speed of 30 feet if they have 0 AGI. Every two points of AGI provides 5 feet of movement speed. A PC with -10 AGI has a movement speed of 5.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Toughness",
         "abbreviation": "TGH",
         "description": "A measure of your body\u2019s resistance to damage. Armor Class (AC) is a flat reduction to physical damage taken, and is equal to 10 plus or minus your Toughness modifier. Usually a PC\u2019s AC comes from two sources: their TGH and their worn armor.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Reflex",
         "abbreviation": "REF",
         "description": "A measure of how quickly you can avoid an incoming threat without thought. Evasion is a percentage chance to avoid an attack targeted against you and is equal to 10% plus or minus or Reflex modifier in percentage points. Usually a PC\u2019s Evasion comes from two sources: their REF and their worm armor.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Resistance",
         "abbreviation": "RES",
         "description": "A measure of your body\u2019s natural resistance to magical damage. Magic Resist is a flat reduction to all types of magic damage taken, and is equal to 10% plus or minus your Resistance modifier. Usually a PC\u2019s Magic Resist comes from two sources: their RES and their worm armor.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Fortitude",
         "abbreviation": "FRT",
         "description": "A measure of your body\u2019s natural resistance to debilitating effects. Base condition resistance for a PC is 0% for a PC with -10 FRT, and you gain 1% resistance for each point of FRT, up to a max base condition resistance of 30% at 20 FRT",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Strength",
         "abbreviation": "STR",
         "description": "A measure of how hard you can work your muscles. Strength increases physical damage with melee weapons by a flat amount equal to the modifier.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Dexterity",
         "abbreviation": "DEX",
         "description": "A measure of how finely you can work your muscles. Dexterity increases physical damage with ranged and fine weapons by a flat amount equal to the modifier.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Attunement",
         "abbreviation": "ATN",
         "description": "A measure of how strong your link with your magical reserves is. Attunement increases magic damage by a flat amount equal to the modifier.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Precision",
         "abbreviation": "PRE",
         "description": "A measure of how easily you can execute actions that require specialized precision. Precision increases your critical chance by 1% for each point for a max critical chance of 30% at 20 PRE.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Appeal",
         "abbreviation": "APL",
         "description": "A measure of how strong your personality is and how easily you influence the actions of others. For every ten points of APL you have above -10, you gain one additional command during a Command Major Action, for a possible total of 4 commands per action at 20 APL.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Intelligence",
         "abbreviation": "INT",
         "description": "A measure of how good you are at storing information and using it when you need it; in other words, how book-smart you are. The number of languages you can learn and retain starts at 1 for a PC with -10 INT, and every 3 points of INT gets you another language slot.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Wisdom",
         "abbreviation": "WIS",
         "description": "A measure of how good you are at using what you\u2019ve learned through your experiences and applying your problem-solving abilities; in other words, how street-smart you are. Wisdom affects your Item Efficiency stat, which increases the effectiveness of items you use by a percentage. Each point of WIS gives you 5% more Item Efficiency, for a maximum Item Efficiency of 150% at 20 WIS",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Composure",
         "abbreviation": "COM",
         "description": "A measure of how well you hold up under the effect of multiple mental strains. Buff Limit is a stat that defines how many buffs you can have active on you with full benefit. Every two points of COM above -10 increases your Buff Limit by 1, for a maximum Buff Limit of 15 for a PC with 20 COM.",
         "value": null
     },
     {
-        "component": "attribute",
+        "type": "attribute",
         "name": "Focus",
         "abbreviation": "FCS",
         "description": "A measure of your ability to multitask and divide your attention without a drop in the quality of your action execution. Concentration Limit is a stat that defines how many magical effects you can actively maintain at any given time with full benefit. Every two points of FCS above -10 increases your Concentration Limit by 1, for a maximum Concentration Limit of 15 for a PC with 20 FCS.",
         "value": null
-    }
-]
-
-var abilities = [
-    {
-        "component": "ability",
-        "name": "Ice Spear",
-        "clazz": "Cryomancer",
-        "branch": "Arctic",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 mana",
-        "rng": "30 ft",
-        "duration": "Instant",
-        "description": [
-            "You form a spear of ice and fire it at a nearby target. Deal 6d8 ice magic damage to a target in range. The ice spear passes through any enemies along its path, dealing half damage."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "ranged",
-            "ice",
-            "destruction",
-            "damage",
-            "single-target",
-            "multi-target"
-        ]
     },
-    {
-        "component": "ability",
-        "name": "Glacial Crash",
-        "clazz": "Cryomancer",
-        "branch": "Arctic",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "30 mana",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You cause spears of ice to erupt around you. Enemies within 5 ft of you take 6d8 ice magic damage and are Frozen. Enemies within 10 ft of you take 4d8 ice magic damage and are Slowed. Enemies within 15 ft of you take 2d8 damage."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "ice",
-            "destruction",
-            "damage",
-            "self-target",
-            "condition",
-            "control",
-            "Slow",
-            "Frozen",
-            "AOE"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Shatter",
-        "clazz": "Cryomancer",
-        "branch": "Arctic",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "50 mana",
-        "rng": "30 ft",
-        "duration": "Instant",
-        "description": [
-            "You shatter an enemy encased in ice. Deal 10d8 ice magic damage to a target within range who is Frozen. Their Frozen condition ends, and they are Slowed. Then, this spell\u2019s effect repeat for an adjacent Frozen target. A target cannot be damaged by this spell more than once per cast."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "ice",
-            "destruction",
-            "damage",
-            "single-target",
-            "conditional",
-            "Frozen",
-            "Slow",
-            "repeatable"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Aurora Beam",
-        "clazz": "Cryomancer",
-        "branch": "Arctic",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "X mana",
-        "rng": "60 ft",
-        "duration": "Instant",
-        "description": [
-            "You emit a powerful beam of ice. Deal Xd8 ice magic damage to all targets in a line, where X is the amount of mana expended on this spell divided by 5. You may choose to concentrate on this spell further, and if you do, you may use a major action to repeat this spell for no mana cost, at half its previous damage. If this spell consumes at least 5 stacks of Frostbite, refund half of the mana cost. If this attack consumes at least 10 stacks of Frostbite, refund the full mana cost."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "ice",
-            "destruction",
-            "damage",
-            "AOE",
-            "line",
-            "modal",
-            "continuous",
-            "concentration",
-            "gain mana"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Flash Freeze",
-        "clazz": "Cryomancer",
-        "branch": "Chilling",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "15 mana",
-        "rng": "30 ft",
-        "duration": "1 minute",
-        "description": [
-            "You freeze a target solid. Apply Frozen to a target in range, and apply Slow to any enemies adjacent to your target. Applies a stack of your passive on cast, even if resisted."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "ice",
-            "condition",
-            "control",
-            "Frozen",
-            "Slow",
-            "single target"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Freezing Wind",
-        "clazz": "Cryomancer",
-        "branch": "Chilling",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "35 mana",
-        "rng": "60 ft cone",
-        "duration": "Instant",
-        "description": [
-            "You conjure a cone of icy wind. Enemies in a 60 ft cone in front of you are Slowed. If an enemy is hit by this spell, and already is Slowed or has a stack of your passive on them, they are Frozen instead."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "ice",
-            "conjuration",
-            "control",
-            "Frozen",
-            "Slow",
-            "AOE",
-            "cone"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Hypothermia",
-        "clazz": "Cryomancer",
-        "branch": "Chilling",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "70 mana",
-        "rng": "30 ft",
-        "duration": "Instant",
-        "description": [
-            "You drop a target\u2019s body temperature, slowing their metabolism. A target within range becomes Slowed, loses its Major action, Minor action, and reaction, and loses all Evasion. This spell requires concentration."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "ice",
-            "condition",
-            "control",
-            "Slow",
-            "action loss",
-            "evasion loss",
-            "single-target",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Heart of Ice",
-        "clazz": "Cryomancer",
-        "branch": "Chilling",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "100 mana",
-        "rng": "Self",
-        "duration": "1 hour",
-        "description": [
-            "You drape yourself in an icy aura. For the duration of this spell, enemies who move into a space within 30 feet of you become Slowed. Adjacent enemies who attack you become Frozen. Attacks from enemies more than 30 ft away grant you 40% evasion for that attack. Allies who are adjacent to you have all types of damage they deal converted to ice magic damage, and inflict Frostbite on-hit (limited to once per turn). You may use your reaction to cast any ice spell while this buff is active."
-        ],
-        "tags": [
-            "Spell",
-            "ice",
-            "buff",
-            "condition",
-            "Slow",
-            "Frozen",
-            "self-target",
-            "on-hit",
-            "add evasion",
-            "ally buff",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Ice Crafting",
-        "clazz": "Cryomancer",
-        "branch": "Snow",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "5 mana",
-        "rng": "50 ft",
-        "duration": "10 minutes",
-        "description": [
-            "You create sheets of ice and snow. Cover the ground in a target space in your choice of either ice or snow. Ice spaces force creatures to make Balance checks or fall prone. Snow spaces count as difficult terrain. When you cast this spell, you can repeat it for as many spaces within range as desired, expending 5 more mana for every additional space. You can also create a pillar of ice or snow, with a height of up to 10 ft, in any space for an additional 5 mana."
-        ],
-        "tags": [
-            "Spell",
-            "smite-target",
-            "conjuration",
-            "ice",
-            "modal",
-            "repeatable"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Extinguish",
-        "clazz": "Cryomancer",
-        "branch": "Snow",
-        "tier": 2,
-        "action": "1 Reaction",
-        "cost": "20 mana",
-        "rng": "100 ft",
-        "duration": "Instant",
-        "description": [
-            "You take advantage of a mage casting a spell, freezing his mana. As a reaction to a target in range casting a spell, you may counter that spell. That target becomes Silenced until the end of their next turn."
-        ],
-        "tags": [
-            "Spell",
-            "counterspell",
-            "condition",
-            "defensive",
-            "Silence",
-            "control",
-            "ice",
-            "single-target"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Ice Block",
-        "clazz": "Cryomancer",
-        "branch": "Snow",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "40 mana",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You surround yourself in an icy armor, and manipulate a shield of ice. Increase your AC by 20, and increase your general MR by 30% until the beginning of your next turn. While you have this buff, you may use your reaction to completely block one attack on you or an ally within 30 ft, for no additional mana."
-        ],
-        "tags": [
-            "Spell",
-            "defensive",
-            "buff",
-            "AC increase",
-            "MR increase",
-            "block",
-            "self-target",
-            "single-target"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Frozen  Arena",
-        "clazz": "Cryomancer",
-        "branch": "Snow",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "60 mana",
-        "rng": "1000 ft",
-        "duration": "1 minute",
-        "description": [
-            "You create an arena surrounded in ice. Create a 200 ft cube zone centered on a point within range. Within this zone, all enemies have the following: they are revealed; they cannot leave the zone unless you allow them as a free reaction; if they have at least 1 stack of Frostbite, they have their Frostbite doubled at the beginning of each turn. Any entity that dies with at least 1 stack of Frostbite has its Frostbite stacks transferred to another entity of your choice within the zone."
-        ],
-        "tags": [
-            "Spell",
-            "ice",
-            "AOE",
-            "zone",
-            "cube",
-            "on-death",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Modify Weapon",
-        "clazz": "Enchanter",
-        "branch": "Personal",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 mana",
-        "rng": "Touch",
-        "duration": "1 minute",
-        "description": [
-            "You temper a weapon with runes of strengthening or weakening. Choose one:",
-            "Target weapon in range gains, \u201cOn Hit: Deal 4d10 physical damage.\u201d",
-            "Target weapon in range gains, \u201cWhile equipped, deal 50% decreased physical damage.\u201d"
-        ],
-        "tags": [
-            "Spell",
-            "enchantment",
-            "modal",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Reforge Armor",
-        "clazz": "Enchanter",
-        "branch": "Personal",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "20 mana",
-        "rng": "Touch",
-        "duration": "1 minute",
-        "description": [
-            "You temper armor with runes of strengthening or weakening. Choose one:",
-            "Target armor in range has its implicit AC, Evasion, MR, and CR increased by 50%.",
-            "Target armor in range loses all AC, Evasion, MR, and CR."
-        ],
-        "tags": [
-            "Spell",
-            "enchantment",
-            "modal",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Alter Jewelry",
-        "clazz": "Enchanter",
-        "branch": "Personal",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "30 mana",
-        "rng": "Touch",
-        "duration": "1 minute",
-        "description": [
-            "You affix runes to an accessory for a variety of effects. Choose one:",
-            "Target ring in range gains, \u201cOn Hit: Deal 2d20 magic damage of a chosen type.\u201d",
-            "Target ring in range gains, \u201cAt the beginning of your turn, lose 40 mana and stamina.\u201d",
-            "Target belt in range gains, \u201cYou have elemental resistance against 2 chosen types.\u201d",
-            "Target belt in range gains, \u201cYou have elemental weakness against 2 chosen types.\u201d",
-            "Target necklace in range gains, \u201cAt the beginning of your turn, heal 30 health.\u201d",
-            "Target necklace in range gains, \u201cAt the beginning of your turn, lose 30 health.\u201d",
-            "You may spend an additional 20 mana to choose a second effect for a type of accessory not previously chosen. You may then spend another additional 10 mana to choose a third effect for the last accessory type not previously chosen."
-        ],
-        "tags": [
-            "Spell",
-            "enchantment",
-            "modal",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Reconstruct Barrier",
-        "clazz": "Enchanter",
-        "branch": "Structural",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 mana",
-        "rng": "Touch",
-        "duration": "1 minute",
-        "description": [
-            "You rebuild a wall or door with runes of locking or breaking. Choose one:",
-            "Target wall in range becomes unbreakable, and all windows and doors in that wall become magically locked.",
-            "Target wall in range crumbles and weakens to become easily breakable, and all windows and doors in that wall become unlocked.",
-            "After choosing an effect, you may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
-        ],
-        "tags": [
-            "Spell",
-            "enchantment",
-            "utility",
-            "minor ritual",
-            "major ritual",
-            "modal",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Rebuild Floor",
-        "clazz": "Enchanter",
-        "branch": "Structural",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "20 mana",
-        "rng": "Touch",
-        "duration": "1 minute",
-        "description": [
-            "You reconstruct the floor or ceiling to various effect. Choose one:",
-            "The surface becomes difficult terrain.",
-            "The surface becomes fragile, crumbling underneath the weight of entities walking over it.",
-            "The surface becomes slick, granting entities doubled move speed.",
-            "The surface becomes unbreakable.",
-            "After choosing an effect, you may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
-        ],
-        "tags": [
-            "Spell",
-            "enchantment",
-            "utility",
-            "minor ritual",
-            "major ritual",
-            "modal",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Secure Building",
-        "clazz": "Enchanter",
-        "branch": "Structural",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "30 mana",
-        "rng": "Touch",
-        "duration": "1 minute",
-        "description": [
-            "You magically ward a building or some number of rooms in a building against enemy magic. Target building in range has any number of its rooms or the entire building gain the following effects: scrying and teleportation magic in or out of the warded area fails; you know if anyone casts a spell inside the warded area and what spell was cast; you know the positions and true magic signatures of all entities within the warded area. You may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
-        ],
-        "tags": [
-            "Spell",
-            "enchantment",
-            "utility",
-            "defense",
-            "minor ritual",
-            "major ritual",
-            "modal",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Mint Coinage",
-        "clazz": "Enchanter",
-        "branch": "Minutiae",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 mana",
-        "rng": "Touch",
-        "duration": "You stamp a variety of runes on the face of a coin. While touching a target coin, choose one:",
-        "description": [
-            "Inscribe a magical telepathic message of up to 100 words or 10 images that can be heard/seen by anyone who picks up the coin.",
-            "Inscribe a magical access point that allows you to telepathically communicate freely with anyone holding the coin.",
-            "Inscribe a magical tracker that allows you to always know the coin\u2019s position and if/when it changes owners.",
-            "Inscribe a magical storage space that grants the wielder of the coin +1 buff limit and +1 concentration limit.",
-            "Inscribe a restorative rune that grants the wielder of the coin 5% health, mana, and stamina regeneration.",
-            "Inscribe a rune of luck that grants the wielder of the coin +5 to all skill checks.",
-            "When you cast this spell, you may choose to expend an additional 5 mana to choose a second effect for the coin\u2019s opposite face. An entity can only benefit from one coin made by this ability at a time."
-        ],
-        "tags": [
-            "Spell",
-            "enchantment",
-            "modal"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Enhance Vehicle",
-        "clazz": "Enchanter",
-        "branch": "Minutiae",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "20 mana",
-        "rng": "Touch",
-        "duration": "24 hours",
-        "description": [
-            "You power up or power down a vehicle. Choose one:",
-            "Target vehicle in range has its move speed doubled and no longer requires a system to propel it forward (horses, engines) for the duration.",
-            "Target vehicle becomes immotile through its regular means (wheels lock, sails fail, etc) for the duration.",
-            "When you cast this spell, you may choose to expend an additional 10 mana to affect another target Vehicle with a new choice, and you may do this any number of times. Concentration is held once for all instances of this spell within one cast."
-        ],
-        "tags": [
-            "Spell",
-            "enchantment",
-            "utility",
-            "modal",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Empower Ammo",
-        "clazz": "Enchanter",
-        "branch": "Minutiae",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "30 mana",
-        "rng": "Touch",
-        "duration": "24 hours",
-        "description": [
-            "You bless any type of ammo with empowering runes. Target set of up to 10 pieces of ammunition becomes special ammo for the duration, gaining, \u201cAttacks with this ammo have 50% increased damage and inflict a random condition chosen from the following list: Slow, Immobilize, Cripple, Stun, Blind, Confuse, Sleep, Silence.\u201d"
-        ],
-        "tags": [
-            "Spell",
-            "enchantment",
-            "utility",
-            "modal",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Wind Slash",
-        "clazz": "Aeromancer",
-        "branch": "Gale",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 mana",
-        "rng": "100 ft",
-        "duration": "Instant",
-        "description": [
-            "You fire a fast moving blade of air. Deal 6d8 air magic damage to a target in range and up to 2 enemies adjacent to your target. This attack cannot miss, cannot be blocked, and bypasses barriers and walls."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "ranged",
-            "air",
-            "destruction",
-            "single-target",
-            "multi-target",
-            "ignore barriers/walls/blocks",
-            "no-miss"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Sky Uppercut",
-        "clazz": "Aeromancer",
-        "branch": "Gale",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "25 mana",
-        "rng": "100 ft",
-        "duration": "Instant",
-        "description": [
-            "You release an upwards draft of air. Deal 8d8 air magic damage to a target in range. The target is then Knocked Up and inflicted with 50% air vulnerability until this condition ends."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "ranged",
-            "air",
-            "destruction",
-            "single-target",
-            "control",
-            "condition",
-            "knock up",
-            "vulnerability"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Vicious Cyclone",
-        "clazz": "Aeromancer",
-        "branch": "Gale",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "40 mana",
-        "rng": "100 ft",
-        "duration": "1 minute",
-        "description": [
-            "You conjure a violent twister that buffets your foes with slashing winds. Create a 15 foot square Cyclone centered on a space in range. It reaches up 100 ft as well. When it initially appears it deals 6d8 air magic damage to all enemies in its AOE. If an enemy begins its turn in the AOE, they take 4d8 air magic damage, and if they are Knocked Up, they remain Airborne. When you cast this spell, you may increase the AOE size by 5 ft for every additional 20 mana you expend."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "air",
-            "destruction",
-            "conjuration",
-            "AOE",
-            "square",
-            "conditional",
-            "knock up",
-            "modal",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Vicious Hurricane",
-        "clazz": "Aeromancer",
-        "branch": "Gale",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "80 mana",
-        "rng": "100 ft",
-        "duration": "1 minute",
-        "description": [
-            "You conjure a violent hurricane that persistently damages and knocks up enemies. At the end of each of your turns, deal 10d8 air magic damage to all enemies in range and they are all Knocked Up. While you concentrate on this spell, your air spells ignore all MR and you can cast any air spell you know as a reaction."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "air",
-            "destruction",
-            "conjuration",
-            "AOE",
-            "square",
-            "knock up",
-            "ignore MR",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Aeroblast",
-        "clazz": "Aeromancer",
-        "branch": "Gust",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "15 mana",
-        "rng": "100 ft",
-        "duration": "Instant",
-        "description": [
-            "You release a powerful blast of air that sends people flying. Push a target in range 20 ft in a direction of your choice. When you cast this spell, you may choose to expend 4 stacks of Winds of War to additionally knock the target prone."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "ranged",
-            "air",
-            "control",
-            "utility",
-            "conjuration",
-            "knock prone",
-            "push",
-            "modal"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Whisk Away",
-        "clazz": "Aeromancer",
-        "branch": "Gust",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "20 mana",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You fire a gust of air behind you to quickly reposition yourself. Dash up to 50 ft in any direction including upwards and downwards"
-        ],
-        "tags": [
-            "Spell",
-            "air",
-            "utility",
-            "conjuration",
-            "dash"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Buffeting Storm",
-        "clazz": "Aeromancer",
-        "branch": "Gust",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "50 mana",
-        "rng": "Battlefield",
-        "duration": "1 minute",
-        "description": [
-            "You maintain powerful winds to impede foes and assist allies. While you concentrate on this spell, powerful winds decrease enemy movement speed by 20 and increase ally movement speed by 20. Additionally, while you concentrate on this spell, you may spend 5 mana to push any target 10 ft in any direction as a Minor Action."
-        ],
-        "tags": [
-            "Spell",
-            "air",
-            "control",
-            "conjuration",
-            "modal",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Take Flight",
-        "clazz": "Aeromancer",
-        "branch": "Gust",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "60 mana",
-        "rng": "Touch",
-        "duration": "1 minute",
-        "description": [
-            "You provide yourself or an ally the ability to fly without restrictions. Target willing entity in range gains a buff that converts all of their movement speed into flying speed, grants 20% evasion, and increases the range of their attacks by 50%."
-        ],
-        "tags": [
-            "Spell",
-            "air",
-            "buff",
-            "gain evasion",
-            "gain range",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Tailwind",
-        "clazz": "Aeromancer",
-        "branch": "Breeze",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "15 mana",
-        "rng": "Touch",
-        "duration": "1 minute",
-        "description": [
-            "You provide an aiding tailwind to increase an ally\u2019s speed. Target willing entity in range gains the following buff: Gain +20 movement speed; can end this buff as a reaction to dash 20 ft in any direction."
-        ],
-        "tags": [
-            "Spell",
-            "air",
-            "utility",
-            "conjuration",
-            "buff",
-            "modal"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Blowback",
-        "clazz": "Aeromancer",
-        "branch": "Breeze",
-        "tier": 2,
-        "action": "1 Reaction",
-        "cost": "20 mana",
-        "rng": "100 ft",
-        "duration": "Instant",
-        "description": [
-            "You counter a spell and muddle the caster\u2019s senses. As a reaction to a target in range casting a spell, you may counter that spell. Until the end of the target\u2019s next turn, their non-melee abilities have their range halved."
-        ],
-        "tags": [
-            "Spell",
-            "air",
-            "defensive",
-            "counterspell",
-            "conditional",
-            "single-target",
-            "condition",
-            "range decrease"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Rotation Barrier",
-        "clazz": "Aeromancer",
-        "branch": "Breeze",
-        "tier": 3,
-        "action": "1 Reaction",
-        "cost": "30 mana",
-        "rng": "10 ft",
-        "duration": "Instant",
-        "description": [
-            "You rotate the air surrounding you quickly, knocking down incoming projectiles. All non-melee, non-AOE attacks that target or affect a space within range are blocked."
-        ],
-        "tags": [
-            "Spell",
-            "air",
-            "defensive",
-            "conditional",
-            "AOE",
-            "block"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Summon Wyvern",
-        "clazz": "Aeromancer",
-        "branch": "Breeze",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "100 mana",
-        "rng": "50 ft",
-        "duration": "1 hour",
-        "description": [
-            "You summon a wyvern borne of the skies. Summon a Wyvern with 100 HP, 50 flying speed, 20 AC, 50% evasion, 50% general MR, and an innate 100% vulnerability to attacks from bows and crossbows. It obeys your Commands; otherwise, it uses its Move Action to fly towards enemies and its Major Action to do a melee claw attack for 5d10 physical damage or a 30 ft cone breath attack for 10d8 air magic damage (33% recharge rate)."
-        ],
-        "tags": [
-            "Spell",
-            "air",
-            "summoning",
-            "minion"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Shadow Bolt",
-        "clazz": "Noxomancer",
-        "branch": "Devastation",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 mana",
-        "rng": "40 ft",
-        "duration": "Instant",
-        "description": [
-            "You amass dark energy and toss it at an enemy. Deal 3d10 dark magic damage to a target in range, and inflict the target with a curse for every 15 dark magic damage dealt this way."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "ranged",
-            "dark",
-            "destruction",
-            "condition",
-            "Curse",
-            "conditional",
-            "single target"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Darkbomb",
-        "clazz": "Noxomancer",
-        "branch": "Devastation",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "30 mana",
-        "rng": "40 ft",
-        "duration": "Instant",
-        "description": [
-            "You release an orb of dark magic, primed to explode. Create a Darkbomb in an unoccupied space in range. You may have it detonate immediately to deal 3d10 dark magic damage and inflict a curse on every entity within 20 ft of the bomb. Alternatively, you may delay the explosion until the beginning of your next turn; if you do, it will deal 6d10 dark magic damage and inflict 2 curses on every entity within 20 ft of the bomb."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "dark",
-            "destruction",
-            "condition",
-            "Curse",
-            "AOE",
-            "modal"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Corruption",
-        "clazz": "Noxomancer",
-        "branch": "Devastation",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "40 mana",
-        "rng": "40 ft",
-        "duration": "1 minute",
-        "description": [
-            "You corrupt an enemy\u2019s body with dark energy. Deal 5d10 dark magic damage to a target and inflict them with a condition that causes them to gain a Curse and take 3d10 dark magic damage at the beginning of each turn and prevents Curses from expunging until the condition ends."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "single-target",
-            "dark",
-            "destruction",
-            "condition",
-            "Curse",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Defile",
-        "clazz": "Noxomancer",
-        "branch": "Affliction",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "15 mana",
-        "rng": "40 ft",
-        "duration": "1 minute",
-        "description": [
-            "You infuse an enemy with dark energy, weakening and cursing them. Select a target in range, and choose one of the following:",
-            "Inflict a 30% Weaken for 1 minute",
-            "Inflict a 20% Weaken for 1 minute, and inflict 1 curse",
-            "Inflict a 10% Weaken for 1 minute, and inflict 2 curses"
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "dark",
-            "condition",
-            "Weakened",
-            "Curse",
-            "modal",
-            "single target"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Shriek",
-        "clazz": "Noxomancer",
-        "branch": "Affliction",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "30 mana",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You release dark energy through your words, affecting the nervous system of nearby opponents. Enemies within 40 ft of you are Blinded and enemies within 20 ft of you are instead Feared."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "dark",
-            "condition",
-            "control",
-            "Blind",
-            "Fear",
-            "conditional",
-            "AOE"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Spreading Madness",
-        "clazz": "Noxomancer",
-        "branch": "Affliction",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "50 mana",
-        "rng": "40 ft",
-        "duration": "1 minute",
-        "description": [
-            "You corrupt the mind of an enemy with infectious dark magic. Inflict a condition on a target in range that causes 50% of their targeted attacks to be redirected at one of their allies in range if possible. When an enemy with this condition deals damage to another enemy, they inflict the same condition on hit. When you break concentration on this ability, all copies of this condition end as well."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "single-target",
-            "multi-target",
-            "dark",
-            "condition",
-            "control",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Siphon Soul",
-        "clazz": "Noxomancer",
-        "branch": "Obfuscation",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "15 mana",
-        "rng": "40 ft",
-        "duration": "Instant",
-        "description": [
-            "You tear away magical effects on allies and enemies. Choose one of the following:",
-            "Target entity in range loses a buff of your choice",
-            "Target entity in range is cleansed of a condition of your choice",
-            "You may choose to expend an additional 10 mana to use both options."
-        ],
-        "tags": [
-            "Spell",
-            "dark",
-            "modal",
-            "buff strip",
-            "cleanse",
-            "single-target",
-            "multi-target"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Treachery",
-        "clazz": "Noxomancer",
-        "branch": "Obfuscation",
-        "tier": 2,
-        "action": "1 Reaction",
-        "cost": "20 mana",
-        "rng": "100 ft",
-        "duration": "Instant",
-        "description": [
-            "You cause a mage to lose control of a spell during its casting. As a reaction to a target in range casting a spell, you may counter that spell. The target then expends 10 mana to deal 2d10 dark magic damage and inflict a curse on all of its allies within 10 ft of them."
-        ],
-        "tags": [
-            "Spell",
-            "dark",
-            "single-target",
-            "AOE",
-            "destruction",
-            "defensive",
-            "counterspell",
-            "condition",
-            "Curse"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Fiendish Circle",
-        "clazz": "Noxomancer",
-        "branch": "Obfuscation",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "40 mana",
-        "rng": "40 ft",
-        "duration": "Instant",
-        "description": [
-            "You call upon imps from a dark realm. Summon an Imp with 50 HP and 40 speed. Imps follow your Command Actions; otherwise, they use their Move Action to move towards enemies, their Major Action to make a melee attack that deals 4d10 dark magic damage, and their Minor Action to drink any potions they are carrying. When you cast this spell, you may choose to concentrate on this spell in order to spend an additional 20 mana to summon an extra Imp, and you may do this up to two more times to have a maximum of 4 Imps at one time."
-        ],
-        "tags": [
-            "Spell",
-            "summoning",
-            "dark",
-            "minion",
-            "conditional",
-            "modal",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Spill Blood",
-        "clazz": "Warrior",
-        "branch": "Assault",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You hack at an enemy, severing blood vessels. Deal 4d10 physical damage to a target in range. Inflict a d10 Bleed on the target. This Bleed\u2019s damage is amplified by your passive."
-        ],
-        "tags": [
-            "Attack",
-            "physical",
-            "single-target",
-            "melee",
-            "condition",
-            "Bleed"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Cut Down",
-        "clazz": "Warrior",
-        "branch": "Assault",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "20 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You deliver a wide slash to the enemy\u2019s frontlines, adjusting for their formation. Choose one of the following:",
-            "Deal 3d10 damage to all enemies in a 10 ft cone, knocking them prone.",
-            "Deal 3d10 damage to all enemies in a 25 ft horizontal line, knocking them back 10 ft",
-            "If you have at least 3 buffs active on you, choose both options."
-        ],
-        "tags": [
-            "Attack",
-            "physical",
-            "melee",
-            "AOE",
-            "cone",
-            "horizontal line",
-            "Knock Prone",
-            "Knock Back",
-            "modal",
-            "conditional"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Hack and Slash",
-        "clazz": "Warrior",
-        "branch": "Assault",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "40 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You turn vigor into violence, attacking quickly. Deal 3d10 physical damage to a target in range. Then, you may sacrifice a buff on you to repeat this skill at no cost."
-        ],
-        "tags": [
-            "Attack",
-            "physical",
-            "single-target",
-            "melee",
-            "repeatable",
-            "sacrifice"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Summary Execution",
-        "clazz": "Warrior",
-        "branch": "Assault",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "90 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You finish off weakened enemies. Deal 5d10 physical damage to all targets in range. This attack has lethality equal to each target\u2019s percentage of missing health (calculated after this ability\u2019s damage). You may sacrifice any number of buffs on you as you cast this ability to increase the base lethality of this attack by 10% per buff sacrificed this way."
-        ],
-        "tags": [
-            "Attack",
-            "physical",
-            "multi-target",
-            "melee",
-            "sacrifice",
-            "lethality",
-            "missing health"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Shields Up",
-        "clazz": "Warrior",
-        "branch": "Protect",
-        "tier": 1,
-        "action": "1 Reaction",
-        "cost": "15 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You toss up your shield or armguard to defend against an attack. Block an attack on you or an adjacent ally, reducing damage by 25%. Gain an additional 25% damage reduction for each buff you have."
-        ],
-        "tags": [
-            "Block",
-            "damage reduction",
-            "self-target",
-            "ally-target"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Reinforce Armor",
-        "clazz": "Warrior",
-        "branch": "Protect",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "25 stamina",
-        "rng": "Self",
-        "duration": "1 minute",
-        "description": [
-            "You strengthen your armor\u2019s natural defenses. Sacrifice any number of buffs active on you. Gain 25% increased AC, Evasion, or MR for each buff sacrificed this way for 1 minute. Recasting this ability while its buff is active will end your previous buff and start a new one."
-        ],
-        "tags": [
-            "Buff",
-            "concentration",
-            "sacrifice",
-            "increase AC",
-            "increase Evasion",
-            "increase MR"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Take Cover",
-        "clazz": "Warrior",
-        "branch": "Protect",
-        "tier": 3,
-        "action": "1 Reaction",
-        "cost": "35 stamina",
-        "rng": "30 ft",
-        "duration": "Instant",
-        "description": [
-            "You dive and roll to rescue a comrade from danger. As a reaction to an attack on an allied target in range, immediately dash to them before the attack lands. Then, choose one of the following:",
-            "Use your body as a shield. Your target gains 30 AC, and the attack will be redirected to both you and your target",
-            "Tackle your target to the ground. You and your target gain 30% evasion, and both of you are knocked prone",
-            "Drag them to safety. Dash an additional 20 ft in any direction, dragging your target with you, and your target loses their reaction if they still have one."
-        ],
-        "tags": [
-            "Dash",
-            "ally-target",
-            "modal",
-            "redirect",
-            "knock prone",
-            "increase AC",
-            "increase Evasion"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Paragon of Victory",
-        "clazz": "Warrior",
-        "branch": "Protect",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "100 stamina",
-        "rng": "Self",
-        "duration": "1 minute",
-        "description": [
-            "You become a powerful avatar of war. When you cast this ability, sacrifice any number of buffs on you. Gain the following effects, depending on the number of buffs sacrificed.",
-            "5 Buffs - Gain immunity to physical damage",
-            "10 Buffs - Gain all of the above in addition to immunity to conditions and crowd control.",
-            "15 Buffs - Gain all of the above in addition to 50 ft of added speed and 100% increased damage"
-        ],
-        "tags": [
-            "Buff",
-            "concentration",
-            "sacrifice",
-            "Immunity",
-            "add speed",
-            "increase damage",
-            "modal"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "\u201cCharge!\u201d",
-        "clazz": "Warrior",
-        "branch": "Warcry",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "20 stamina",
-        "rng": "---",
-        "duration": "Instant",
-        "description": [
-            "You bellow a righteous cry, calling all to drive forward into battle. You and all allies who can hear you gain 50% increased damage until the end of your next turn. When you cast this ability, all allies who can hear you may use their reaction to move up to their speed in any direction."
-        ],
-        "tags": [
-            "Buff",
-            "multi-target",
-            "self-target",
-            "ally-target",
-            "damage increase"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "\u201cFight me!\u201d",
-        "clazz": "Warrior",
-        "branch": "Warcry",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "30 stamina",
-        "rng": "---",
-        "duration": "1 minute",
-        "description": [
-            "You bellow a belligerent cry, igniting your enemies\u2019 fury. All enemies who can hear you are Taunted for 1 minute. An enemy Taunted by this ability previously is Immune to this ability\u2019s Taunt. When you cast this ability, all enemies who can hear you break concentration."
-        ],
-        "tags": [
-            "Condition",
-            "Taunt",
-            "multi-target",
-            "break concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "\u201cOvercome!\u201d",
-        "clazz": "Warrior",
-        "branch": "Warcry",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "40 stamina",
-        "rng": "---",
-        "duration": "Instant",
-        "description": [
-            "You bellow an inspiring cry, encouraging everyone to persist. You and all allies who can hear you are cleansed of Fear, Stun, Paralysis, Confusion, Sleep, and Charm. Allies in a 1000 ft range who are in a downed state become immediately stabilized. When you cast this ability, all allies who can hear you may use their reaction to cleanse an additional condition on them of their choice."
-        ],
-        "tags": [
-            "Cleanse",
-            "Stabilize",
-            "multi-target",
-            "self-target",
-            "ally-target"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "\u201cKill them all!\u201d",
-        "clazz": "Warrior",
-        "branch": "Warcry",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "70 stamina",
-        "rng": "---",
-        "duration": "Instant",
-        "description": [
-            "You bellow a powerful cry, cowing your enemies and announcing their coming deaths. All enemies who can hear you gain 50% physical damage vulnerability, lose natural elemental resistances, and become Feared. When you cast this ability, all enemies who can hear you are stripped of all buffs, and those buffs are distributed as you choose amongst you and all allies who can hear you."
-        ],
-        "tags": [
-            "Condition",
-            "multi-target",
-            "Fear",
-            "vulnerability",
-            "buff stripping",
-            "buff"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Vanish",
-        "clazz": "Assassin",
-        "branch": "Skulk",
-        "tier": 1,
-        "action": "1 Minor Action",
-        "cost": "10 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You move quickly to avoid detection. You immediately become Hidden, and you may dash up to 10 ft in any direction. You may cast this ability as a reaction for 30 stamina."
-        ],
-        "tags": [
-            "self-target",
-            "Hidden",
-            "buff",
-            "dash",
-            "modal"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Maneuver",
-        "clazz": "Assassin",
-        "branch": "Skulk",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "20 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You move quickly and can ascend sheer walls. Dash up to 40 ft. During your dash, you can also scale walls up to 40 ft."
-        ],
-        "tags": [
-            "Dash",
-            "modal"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Pursue",
-        "clazz": "Assassin",
-        "branch": "Skulk",
-        "tier": 3,
-        "action": "1 Reaction",
-        "cost": "25 stamina",
-        "rng": "100 ft",
-        "duration": "Instant",
-        "description": [
-            "You follow quickly after a fleeing enemy. As a reaction to a target in range moving, you may move an equal distance towards the target. You then mark the target, increasing your critical damage modifier by 50% on the marked target. This mark can stack multiple times."
-        ],
-        "tags": [
-            "Dash",
-            "conditional",
-            "reaction",
-            "condition",
-            "stackable"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Stalk",
-        "clazz": "Assassin",
-        "branch": "Skulk",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "50 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You move quickly from shadow to shadow. Become Hidden. Then, while hidden, you may use this ability to dash up to 60 ft. At the end of your dash, if you make a successful Sneak check, you may repeat this ability at no cost."
-        ],
-        "tags": [
-            "Dash",
-            "conditional",
-            "Sneak",
-            "continuous"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Focus",
-        "clazz": "Assassin",
-        "branch": "Preparation",
-        "tier": 1,
-        "action": "1 Minor Action",
-        "cost": "5 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You ready yourself for the kill. Your next attack gains an additional 30% critical strike chance. This buff is consumed even if you miss or all of your damage is blocked, and it does not stack with itself."
-        ],
-        "tags": [
-            "self-target",
-            "buff",
-            "stat improve",
-            "critical"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Sharpen",
-        "clazz": "Assassin",
-        "branch": "Preparation",
-        "tier": 2,
-        "action": "1 Minor Action",
-        "cost": "15 stamina",
-        "rng": "Self",
-        "duration": "1 minute",
-        "description": [
-            "You prepare your blades for the kill. For this ability\u2019s duration, all of your d4 damage dice become d6 damage dice instead."
-        ],
-        "tags": [
-            "self-target",
-            "buff",
-            "damage improve"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Haste",
-        "clazz": "Assassin",
-        "branch": "Preparation",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "50 stamina",
-        "rng": "Self",
-        "duration": "20 seconds",
-        "description": [
-            "You temporarily speed up your actions. During your next turn, you gain an additional Major action and Minor action. Also, until the end of your next turn, you may take any number of reactions."
-        ],
-        "tags": [
-            "self-target",
-            "buff",
-            "action gain",
-            "delayed effect"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Bloodlust",
-        "clazz": "Assassin",
-        "branch": "Preparation",
-        "tier": 4,
-        "action": "1 Minor Action",
-        "cost": "100 stamina",
-        "rng": "Self",
-        "duration": "1 minute",
-        "description": [
-            "You become a spectre of whirling death. For this ability\u2019s duration, dealing a killing blow on an enemy resets your Move, Major, and Minor actions."
-        ],
-        "tags": [
-            "self-target",
-            "buff",
-            "action reset",
-            "concentration",
-            "on-kill"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Backstab",
-        "clazz": "Assassin",
-        "branch": "Execution",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You attack from your enemy\u2019s blind spot. Deal 3d4 physical damage to a target in range. If you are Hidden, you roll max damage on all damage dice automatically."
-        ],
-        "tags": [
-            "Attack",
-            "physical",
-            "conditional",
-            "melee",
-            "Hidden"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Pounce",
-        "clazz": "Assassin",
-        "branch": "Execution",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "15 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You quickly close in on your target before dealing the killing blow. Dash up to 15 ft towards a target, then deal 4d4 physical damage to a target in range."
-        ],
-        "tags": [
-            "Attack",
-            "melee",
-            "physical",
-            "dash"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Skyfall",
-        "clazz": "Assassin",
-        "branch": "Execution",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "30 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You bring death from above. You may cast this ability while falling on a target from at least 10 ft above it. Deal 8d4 physical damage to the target, with a 100% increased critical damage modifier."
-        ],
-        "tags": [
-            "Attack",
-            "physical",
-            "conditional",
-            "melee",
-            "aerial",
-            "empowered"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Massacre",
-        "clazz": "Assassin",
-        "branch": "Execution",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "60 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You strike as a blur, killing many. Deal 16d4 physical damage, dividing your damage dice amongst any number of adjacent targets as you choose. For every damage die a target is hit by, that attack gains 5% Lethality. You roll for critical strike chance only once, for all dice."
-        ],
-        "tags": [
-            "Attack",
-            "physical",
-            "melee",
-            "single-target",
-            "multi-target",
-            "modal",
-            "Lethal"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Fleetfoot Blade",
-        "clazz": "Soldier",
-        "branch": "Skirmish",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You slash quickly at an enemy while staying mobile. Deal 4d10 physical damage to a target in range. If you cast a dash reaction ability, you may cast this ability as a free reaction at the beginning or end of your dash."
-        ],
-        "tags": [
-            "Attack",
-            "physical",
-            "single-target",
-            "melee",
-            "longblade",
-            "modal",
-            "conditional"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Steadfast Strikes",
-        "clazz": "Soldier",
-        "branch": "Skirmish",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "20 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You attack relentlessly in between evasive moves. Deal 2d10 physical damage to a target in range. You may choose to concentrate on this ability when you cast it. If you do, you may use your Major Action to repeat this ability at no stamina cost, dealing 2d10 + Xd10 physical damage to a target in range, where X is the number of times you have hit with this ability since beginning concentration. Concentration on this ability ends immediately when you take at least 1 point of damage or recieve a condition."
-        ],
-        "tags": [
-            "Attack",
-            "physical",
-            "single-target",
-            "melee",
-            "longblade",
-            "concentration",
-            "repeatable",
-            "conditional"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Biding Blade",
-        "clazz": "Soldier",
-        "branch": "Skirmish",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "40 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You build energy while blocking to attack when the opening presents itself. Deal 5d10 physical damage to a target in range. If you cast a block reaction ability, you may cast this ability as a free reaction after your block, dealing 5d10 + X physical damage to a target in range, where X is half the blocked damage amount."
-        ],
-        "tags": [
-            "Attack",
-            "physical",
-            "single-target",
-            "melee",
-            "longblade",
-            "modal",
-            "conditional"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Sever The Head",
-        "clazz": "Soldier",
-        "branch": "Skirmish",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "50 stamina",
-        "rng": "30 ft",
-        "duration": "Instant",
-        "description": [
-            "You dive the enemy\u2019s backline with the goal of slaying their commander. Dash to a space adjacent to a target in range, marking the target and dealing 6d10 physical damage to it. While the target is marked, it loses its reaction and takes 50% increased damage from your attacks. The mark lasts until the beginning of your next turn or until you take at least 1 point of damage or gain a condition. Alternatively, you may end the mark early to dash up to 30 ft in any direction as a free reaction at any time."
-        ],
-        "tags": [
-            "Attack",
-            "physical",
-            "single-target",
-            "melee",
-            "longblade",
-            "modal",
-            "mark",
-            "damage boost",
-            "dash"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Intercept",
-        "clazz": "Soldier",
-        "branch": "Safeguard",
-        "tier": 1,
-        "action": "1 Reaction",
-        "cost": "10 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You toss your shield up to block an attack. Completely block one single-target attack on you as a reaction. If the attacker is in melee range, you may dash to any empty space that is still in melee range."
-        ],
-        "tags": [
-            "Block",
-            "self-target",
-            "dash",
-            "conditional",
-            "shield"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Shield Bash",
-        "clazz": "Soldier",
-        "branch": "Safeguard",
-        "tier": 2,
-        "action": "1 Reaction",
-        "cost": "30 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You preemptively counterattack before your enemy\u2019s attack lands. When an enemy in range targets you with an attack, deal 4d6 physical damage to that enemy. If you roll at least 18 on your damage dice for this ability, it also Stuns your target until the beginning of their next turn."
-        ],
-        "tags": [
-            "Single-target",
-            "attack",
-            "physical",
-            "melee",
-            "shield",
-            "conditional",
-            "Stun",
-            "condition"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Protective Sweep",
-        "clazz": "Soldier",
-        "branch": "Safeguard",
-        "tier": 3,
-        "action": "1 Reaction",
-        "cost": "40 stamina",
-        "rng": "5 ft",
-        "duration": "Instant",
-        "description": [
-            "You spin your shield in a wide circle, protecting an entire area. Block all the effects of an incoming AOE attack for all spaces within range."
-        ],
-        "tags": [
-            "Block",
-            "AOE",
-            "shield"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Long Live The King",
-        "clazz": "Soldier",
-        "branch": "Safeguard",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "50 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You stand by an important ally, protecting them from harm. Until the beginning of your next turn, you may use any number of free reactions to redirect all attacks that would hit target adjacent ally to yourself, blocking 50% of the damage of those attacks. If the ally you targetted is not adjacent to you when they are attacked, you may dash to a space adjacent to them as a free reaction to such an attack, expending 5 stamina for every 5 ft traveled this way up to a limit of 50 ft."
-        ],
-        "tags": [
-            "Block",
-            "dash",
-            "modal",
-            "variable stamina cost",
-            "redirect"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Dodge Roll",
-        "clazz": "Soldier",
-        "branch": "Sprint",
-        "tier": 1,
-        "action": "1 Minor Action or Reaction",
-        "cost": "10 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You roll away or towards enemies. Dash up to 20 ft in any direction at any time. The max dash range extends to 30 ft if you use this ability as a reaction after using it as a minor action in the same round."
-        ],
-        "tags": [
-            "Dash",
-            "conditional"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Double Time",
-        "clazz": "Soldier",
-        "branch": "Sprint",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "20 stamina",
-        "rng": "Self",
-        "duration": "1 minute",
-        "description": [
-            "You speed up your pace in combat. Increase your move speed by +20 and convert all movement made during Move Actions to dashes."
-        ],
-        "tags": [
-            "Buff",
-            "move speed"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Tactical Withdrawal",
-        "clazz": "Soldier",
-        "branch": "Sprint",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "40 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You sprint out of a tactically unsound position. When you successfully resolve this ability, actions you take this turn do not trigger enemy reactions (although the initial cast of this ability can be reacted to). Dash up to 40 ft in any direction to a space that is not adjacent to an enemy."
-        ],
-        "tags": [
-            "Dash",
-            "conditional",
-            "action denial"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Vigor of Battle",
-        "clazz": "Soldier",
-        "branch": "Sprint",
-        "tier": 4,
-        "action": "1 Minor Action",
-        "cost": "50 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You build up speed as you deliver death. Until the beginning of your next turn, you gain 5 ft of additional move speed for every 5 damage you deal this round, and you gain 5% evasion for every 10 damage you deal this round. At the beginning of your next turn, any unused move speed you accumulated during the last round carries over to the new turn."
-        ],
-        "tags": [
-            "Gain move speed",
-            "gain evasion"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Gale Shot",
-        "clazz": "Air Duelist",
-        "branch": "Dueling",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 stamina",
-        "rng": "150 ft",
-        "duration": "Instant",
-        "description": [
-            "You fire at an enemy while making evasive maneuvers. Deal 4d8 physical damage to a target in range, then dash 10 ft in any direction"
-        ],
-        "tags": [
-            "Attack",
-            "ranged",
-            "physical",
-            "bow",
-            "dash",
-            "single-target"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Wind Strike",
-        "clazz": "Air Duelist",
-        "branch": "Casting",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 mana",
-        "rng": "150 ft",
-        "duration": "Instant",
-        "description": [
-            "You fire a powerful gust of air to blow enemies away. Deal 5d8 air magic damage to a target in range, pushing them 10 ft away from you."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "ranged",
-            "air",
-            "destruction",
-            "single-target",
-            "control",
-            "utility",
-            "conjuration",
-            "push."
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Mistral Bow",
-        "clazz": "Air Duelist",
-        "branch": "Buffing",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 mana",
-        "rng": "Self",
-        "duration": "1 minute",
-        "description": [
-            "You use air magic to provide your bow with extra stopping power. For the spell\u2019s duration, when you hit a target with a bow attack, push the target 5 ft away from you as an on-hit effect."
-        ],
-        "tags": [
-            "Spell",
-            "air",
-            "buff",
-            "self-target",
-            "on-hit",
-            "bow",
-            "push"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Piercing Shot",
-        "clazz": "Sniper",
-        "branch": "Shooting",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 stamina",
-        "rng": "200 ft",
-        "duration": "Instant",
-        "description": [
-            "You fire an empowered arrow, skewering multiple enemies. Deal 5d8 physical damage to all enemy targets in a 200 ft line. Targets beyond the first one hit take half damage, unless they are Spotted."
-        ],
-        "tags": [
-            "Attack",
-            "ranged",
-            "physical",
-            "multi-target",
-            ""
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Kill Shot",
-        "clazz": "Sniper",
-        "branch": "Shooting",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "30 stamina",
-        "rng": "200 ft",
-        "duration": "Instant",
-        "description": [
-            "You fire a single, massive arrow with deadly accuracy. Deal 7d8 physical damage to a target in range. You may choose to expend any number of Spotting stacks to add 10% Lethality to the attack per stack."
-        ],
-        "tags": [
-            "Attack",
-            "ranged",
-            "physical",
-            "single-target",
-            "modal",
-            "Lethal"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Shrapnel  Shot",
-        "clazz": "Sniper",
-        "branch": "Shooting",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "45 stamina",
-        "rng": "200 ft",
-        "duration": "Instant",
-        "description": [
-            "You fire an arrow rigged to detonate, shooting deadly shrapnel from the arrowhead after initial impact. Deal 6d8 to a target in range. If the target is Spotted, this ability deals half as much damage taken by the target to all enemies within 20 ft of the target. If the target was killed by the initial hit, this ability deals damage equal to the damage taken by the target to all enemies within 20 ft of the target instead."
-        ],
-        "tags": [
-            "Attack",
-            "ranged",
-            "physical",
-            "single-target",
-            "conditional",
-            "AOE"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Rapid Shot",
-        "clazz": "Sniper",
-        "branch": "Shooting",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "X stamina",
-        "rng": "200 ft",
-        "duration": "Instant",
-        "description": [
-            "You fire a heavy stream of arrows. Expend any amount of stamina in order to deal 2d8 physical damage to a target in range for every 10 stamina spent this way. If the target is Spotted, these hits gain the damage increase from consuming Spotting stacks without actually consuming them until the last hit."
-        ],
-        "tags": [
-            "Attack",
-            "ranged",
-            "physical",
-            "single-target",
-            "multi-hit",
-            "modal"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Distance Shooter",
-        "clazz": "Sniper",
-        "branch": "Aiming",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "15 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You fire specialized arrows which speed up as they fly. Your next ranged attack deals 2 additional damage for every 5 ft between you and your target."
-        ],
-        "tags": [
-            "Buff",
-            "self-target",
-            "conditional",
-            "ranged"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Precision Shooter",
-        "clazz": "Sniper",
-        "branch": "Aiming",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "30 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You fire specialized arrows which fly faster and punch through armor. Your next ranged attack ignores AC and MR, cannot miss, bypasses barriers and walls, cannot be blocked or redirected, and cannot be reacted to."
-        ],
-        "tags": [
-            "Buff",
-            "self-target",
-            "ignore AC",
-            "ignore MR",
-            "ignore barriers/walls/blocks",
-            "no-miss",
-            "no-react"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Analytical Shooter",
-        "clazz": "Sniper",
-        "branch": "Aiming",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "55 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You aim carefully, scanning for a target\u2019s weak points. Your next ranged attack gains 20% critical strike chance and 50% critical damage modifier. When you cast this ability, you may choose to concentrate on it. While concentrating on this ability, you may use a Major Action to gain an additional 10% critical strike chance and 25% critical damage modifier on your next ranged attack. This ability cannot grant more than 100% critical strike chance or more than 200% critical damage modifier. Concentration on this ability ends immediately upon making an attack."
-        ],
-        "tags": [
-            "Buff",
-            "self-target",
-            "stat improve",
-            "critical",
-            "concentration",
-            "repeatable"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Professional Shooter",
-        "clazz": "Sniper",
-        "branch": "Aiming",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "120 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You force your senses past their limit. If you have an enemy Spotted, when you cast this ability, you instantly gain max Spotting stacks. After casting this ability, you lose the benefits of the Spotter passive until your next long rest."
-        ],
-        "tags": [
-            "Self-target"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Swift Sprint",
-        "clazz": "Sniper",
-        "branch": "Improvising",
-        "tier": 1,
-        "action": "1 Major Action or Reaction",
-        "cost": "15 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You quickly spring to your feet and sprint from danger. Cleanse Slow, Immobilize, and Prone, then dash 10 ft in any direction. You may choose to expend a stack of Spotting to dash 25 ft instead."
-        ],
-        "tags": [
-            "Dash",
-            "modal",
-            "cleanse Slow",
-            "cleanse Immobilize",
-            "cleanse Prone"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Swift Shot",
-        "clazz": "Sniper",
-        "branch": "Improvising",
-        "tier": 2,
-        "action": "1 Minor Action or Reaction",
-        "cost": "25 stamina",
-        "rng": "200 ft",
-        "duration": "Instant",
-        "description": [
-            "You flick your aim elsewhere and take a snap potshot. Deal 3d8 physical damage to a target in range, Stunning them until the end of the turn."
-        ],
-        "tags": [
-            "Attack",
-            "ranged",
-            "physical",
-            "single-target",
-            "condition",
-            "Stun"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Bola Shot",
-        "clazz": "Sniper",
-        "branch": "Improvising",
-        "tier": 3,
-        "action": "1 Major Action or Reaction",
-        "cost": "35 stamina",
-        "rng": "200 ft",
-        "duration": "Instant",
-        "description": [
-            "You fire an arrow with a bola head. Deal 4d8 damage and inflict Slow on a target in range. You may choose to expend a stack of Spotting to inflict Immobilize instead."
-        ],
-        "tags": [
-            "Attack",
-            "ranged",
-            "physical",
-            "single-target",
-            "condition",
-            "Slow",
-            "modal",
-            "Immobilize"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Evasive Maneuvers",
-        "clazz": "Sniper",
-        "branch": "Improvising",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "70 stamina",
-        "rng": "Self",
-        "duration": "1 minute",
-        "description": [
-            "You concentrate all your energy on avoiding attacks. Expend any number of Spotting stacks to gain 10% evasion per stack expended this way. While this buff is active, you may use your Reaction to cast any Sniper ability."
-        ],
-        "tags": [
-            "Buff",
-            "concentration",
-            "add evasion",
-            ""
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Lightning Lunge",
-        "clazz": "Lightning Duelist",
-        "branch": "Dueling",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You make a lunging strike at an enemy with your rapier. Dash up to 10 ft, then deal 4d8 physical damage to a target in range."
-        ],
-        "tags": [
-            "Attack",
-            "melee",
-            "physical",
-            "rapier",
-            "dash",
-            "single-target"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Blade Storm",
-        "clazz": "Lightning Duelist",
-        "branch": "Dueling",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "25 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You stab rapidly and repeatedly at an enemy with your rapier. Deal d8 physical damage to a target in range. This attack repeats 2-6 times."
-        ],
-        "tags": [
-            "Attack",
-            "melee",
-            "physical",
-            "rapier",
-            "multi-hit",
-            "single-target."
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Shocking Parry",
-        "clazz": "Lightning Duelist",
-        "branch": "Dueling",
-        "tier": 3,
-        "action": "1 Reaction",
-        "cost": "30 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You parry an enemy\u2019s strike and counter. As a reaction to an enemy in range attacking you with a weapon, fully block the attack with your rapier and counterattack, dealing 4d8 physical damage to that enemy. When you hit an enemy with this ability, you have a 50% chance of recovering half the stamina cost."
-        ],
-        "tags": [
-            "Attack",
-            "melee",
-            "physical",
-            "rapier",
-            "single-target",
-            "restore stamina",
-            "reaction",
-            "counter",
-            "block"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Flash of Swords",
-        "clazz": "Lightning Duelist",
-        "branch": "Dueling",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "70 stamina",
-        "rng": "25 ft",
-        "duration": "Instant",
-        "description": [
-            "You move and strike in a blur of deadly speed. Deal 8d8 physical damage to all enemies adjacent to you. Then, dash up to 25 ft to an empty space in range, dealing 4d8 physical damage to all enemies in spaces you pass through. Finally, deal 8d8 physical damage to all enemies adjacent to your dash\u2019s final destination. An enemy cannot be hit more than once with this ability per cast (Battle Current\u2019s activation counts as a separate cast)."
-        ],
-        "tags": [
-            "Attack",
-            "melee",
-            "multi-target",
-            "physical",
-            "rapier",
-            "dash"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Shock Tendrils",
-        "clazz": "Lightning Duelist",
-        "branch": "Casting",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 mana",
-        "rng": "20 ft",
-        "duration": "Instant",
-        "description": [
-            "You release tendril of energy in front of you. Deal 3d8 lightning magic damage to all enemy targets in a 20 ft line. Then at the end of your turn, this spell deals 3d8 damage to all targets in a 20 ft line with random direction."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "lightning",
-            "AOE",
-            "line",
-            "random"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Ball Lightning",
-        "clazz": "Lightning Duelist",
-        "branch": "Casting",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "25 mana",
-        "rng": "20 ft",
-        "duration": "1 minute",
-        "description": [
-            "You summon a ball of energy that erratically flies around attacking enemies. Summon a Ball Lightning object in an empty space in range. When summoned, it deals 4d8 lightning magic damage to all adjacent enemies. At the beginning of each of your turns, it travels 20 ft in a random direction (stopping when it hits a space it can\u2019t enter), then discharges, dealing 2d8 lightning magic damage to all adjacent targets."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "lightning",
-            "AOE",
-            "summoning",
-            "destruction",
-            "random",
-            "concentration"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Thunder Blast",
-        "clazz": "Lightning Duelist",
-        "branch": "Casting",
-        "tier": 3,
-        "action": "1 Major Action",
-        "cost": "40 mana",
-        "rng": "100 ft",
-        "duration": "Instant",
-        "description": [
-            "You call down a mighty bolt of thunder. Deal 8d8 lightning magic damage to all entities in a 20 ft square. Until the beginning of your next turn, random lightning strikes occur every turn in the target square, dealing 4d8 lightning magic damage to entities struck."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "lightning",
-            "AOE",
-            "ground-target",
-            "random"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Arc Lightning",
-        "clazz": "Lightning Duelist",
-        "branch": "Casting",
-        "tier": 4,
-        "action": "1 Major Action",
-        "cost": "60 mana",
-        "rng": "40 ft",
-        "duration": "1 round",
-        "description": [
-            "You release a powerful bolt of lightning that bounces between targets. Deal 6d8 lightning magic damage to a target in range, marking them until the end of your next turn. Dealing physical damage to the marked target with a rapier causes a lightning bolt to fire from their bodies, dealing 6d8 lightning magic damage to them and cleansing their mark, as well as dealing 6d8 lightning magic damage to another random enemy within 40 ft and marking them until the end of your next turn."
-        ],
-        "tags": [
-            "Spell",
-            "attack",
-            "ranged",
-            "lightning",
-            "single-target",
-            "mark",
-            "random",
-            ""
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Taser Blade",
-        "clazz": "Lightning Duelist",
-        "branch": "Buffing",
-        "tier": 1,
-        "action": "1 Minor Action",
-        "cost": "10 mana",
-        "rng": "Self",
-        "duration": "1 minute",
-        "description": [
-            "You envelop your blade in an electric current. For the spell\u2019s duration, when you hit a target with a rapier attack, inflict a stack of Paralysis on the target."
-        ],
-        "tags": [
-            "Spell",
-            "lightning",
-            "buff",
-            "self-target",
-            "on-hit",
-            "condition",
-            "Paralysis",
-            "rapier"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Sword of Lightning",
-        "clazz": "Lightning Duelist",
-        "branch": "Buffing",
-        "tier": 2,
-        "action": "1 Minor Action",
-        "cost": "20 mana",
-        "rng": "Self",
-        "duration": "1 minute",
-        "description": [
-            "You envelop your blade in lightning magic energy. For the spell\u2019s duration, when you hit a target with a rapier attack, deal an additional 2d8 lightning magic damage on hit."
-        ],
-        "tags": [
-            "Spell",
-            "lightning",
-            "buff",
-            "self-target",
-            "on-hit",
-            "rapier"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Plasma Saber",
-        "clazz": "Lightning Duelist",
-        "branch": "Buffing",
-        "tier": 3,
-        "action": "1 Minor Action",
-        "cost": "30 mana",
-        "rng": "Self",
-        "duration": "1 minute",
-        "description": [
-            "Your blade becomes a thin sheet of lightning magic. All damage that you would deal with rapier attacks have their damage converted to lightning magic damage. While this buff is active, Battle Current empowered attacks recover 5, 10, or 15 stamina randomly."
-        ],
-        "tags": [
-            "Spell",
-            "lightning",
-            "buff",
-            "self-target",
-            "damage convert",
-            "rapier",
-            "gain stamina"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Lightning Coil Cuirass",
-        "clazz": "Lightning Duelist",
-        "branch": "Buffing",
-        "tier": 4,
-        "action": "1 Minor Action",
-        "cost": "80 mana",
-        "rng": "Self",
-        "duration": "1 minute",
-        "description": [
-            "You don magically conjured lightning armor. Whenever an adjacent enemy targets you with an attack, they are inflicted with a stack of Paralysis and take 2d8 lightning magic damage. Whenever you take damage, you may freely dash up to your speed in any direction. While this ability is active, you gain a stack of Lightning on every physical damage hit. You expend all stacks of Lightning when you cast a lightning spell attack, increasing lightning magic damage by 10% for each stack of Lightning expended this way, up to a limit of 20 stacks."
-        ],
-        "tags": [
-            "Spell",
-            "lightning",
-            "buff",
-            "self-target",
-            "condition",
-            "Paralysis",
-            "stacking buff",
-            "concentration",
-            "dash"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Cloak and Dagger",
-        "clazz": "Thief",
-        "branch": "Predator",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "20 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You stab at an enemy behind the veil of stealth or with the sudden violence of a mugging. Deal 5d4 physical damage to a target in range. If you are in Hit Stance, this attack has +100% critical damage modifier. If you are in Run Stance, this attack has +20% critical strike chance."
-        ],
-        "tags": [
-            "Attack",
-            "physical",
-            "conditional",
-            "stance"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Snatch and Grab",
-        "clazz": "Thief",
-        "branch": "Pilfer",
-        "tier": 1,
-        "action": "1 Minor Action",
-        "cost": "15 stamina",
-        "rng": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You reach into a distracted enemy\u2019s bag and grab the first thing you touch. Steal a random item or up to 100 gp from the inventory of a target in range. If you are in Hit Stance, steal twice from the target. If you fail to steal an item because the target\u2019s inventory is empty, you may make an auto attack against the target with an equipped dagger as a free action."
-        ],
-        "tags": [
-            "Conditional",
-            "random",
-            "modal",
-            "attack",
-            "physical",
-            "dagger",
-            "stance"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Infiltrate",
-        "clazz": "Thief",
-        "branch": "Prowl",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "20 stamina",
-        "rng": "Self",
-        "duration": "Instant",
-        "description": [
-            "You move quickly and quietly past doors and guards. Dash up to 40 ft in any direction. During this dash, you automatically unlock doors and windows and pass through magical barriers without harm. If you are in Run Stance, you may cast this ability as a Minor Action instead."
-        ],
-        "tags": [
-            "Dash",
-            "conditional",
-            "modal",
-            "stance"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Belly Dance",
-        "clazz": "Dancer",
-        "branch": "Sway",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 stamina",
-        "rng": "Touch",
-        "duration": "1 minute",
-        "description": [
-            "You charm attackers with your sensual touch and dull their strikes. Inflict a 10% Weaken to a target in range for the duration. This Weaken can stack up to 4 times. This ability costs 10 less stamina if your last Move Action included a Step 3 dance ability."
-        ],
-        "tags": [
-            "Attack",
-            "condition",
-            "Weaken",
-            "stacking",
-            "conditional",
-            "dance",
-            "Step 1"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Swing",
-        "clazz": "Dancer",
-        "branch": "Sway",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "15 stamina",
-        "rng": "Touch",
-        "duration": "Instant",
-        "description": [
-            "You force enemies to join you in dance. Push a target in range 20 ft in any direction. If the target hits other entities during its forced movement, it pushes them as well. This ability costs 15 less stamina if your last Move Action included a Step 1 dance ability."
-        ],
-        "tags": [
-            "Attack",
-            "push",
-            "conditional",
-            "dance",
-            "Step 2"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Tango",
-        "clazz": "Dancer",
-        "branch": "Strut",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 stamina",
-        "rng": "Touch",
-        "duration": "Instant",
-        "description": [
-            "You join up with a partner, giving them time to recover while you guide their step. Cleanse 1 condition on yourself or cleanse 1 condition on an ally in range and push them 5 ft in any direction. This ability costs 10 less stamina if your last Move Action included a Step 1 dance ability."
-        ],
-        "tags": [
-            "Cleanse",
-            "push",
-            "conditional",
-            "dance",
-            "Step 2"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Waltz",
-        "clazz": "Dancer",
-        "branch": "Strut",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "15 stamina",
-        "rng": "Touch",
-        "duration": "Instant",
-        "description": [
-            "You reinvigorate an ally with your beautiful dance moves. Heal 3d10 for a target in range and cleanse Poison, Bleed, and Burn. This ability costs 15 less stamina if your last Move Action included a Step 2 ability."
-        ],
-        "tags": [
-            "Cleanse",
-            "push",
-            "conditional",
-            "dance",
-            "Step 3"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Foxtrot",
-        "clazz": "Dancer",
-        "branch": "Shimmy",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "10 stamina",
-        "rng": "Self",
-        "duration": "1 minute",
-        "description": [
-            "You quickly step and weave across the dance hall. Gain 10% evasion and 10% general MR for the duration. This buff can stack up to 4 times. This ability costs 10 less stamina if your last Move Action included a Step 2 dance ability."
-        ],
-        "tags": [
-            "Buff",
-            "gain evasion",
-            "gain MR",
-            "dance",
-            "Step 3"
-        ]
-    },
-    {
-        "component": "ability",
-        "name": "Moonwalk",
-        "clazz": "Dancer",
-        "branch": "Shimmy",
-        "tier": 2,
-        "action": "1 Major Action",
-        "cost": "15 stamina",
-        "rng": "Self",
-        "duration": "1 minute",
-        "description": [
-            "You slide across the dance hall. Gain 10 movement speed. This buff can stack up to 4 times. This ability costs 15 less stamina if your last Move Action included a Step 3 dance ability."
-        ],
-        "tags": [
-            "Buff",
-            "gain move speed",
-            "conditional",
-            "dance",
-            "Step 1"
-        ]
-    }
-]
-
-var races = [
     {
         "type": "race",
         "name": "Aasimar",
@@ -3016,10 +437,145 @@ var races = [
             "Scavenge": "The human has 20% better gather rates",
             "Create": "The human has 20% better crafting rates"
         }
-    }
-]
-
-var skills = [
+    },
+    {
+        "type": "buff",
+        "name": "Hidden",
+        "duration": "Until broken",
+        "description": "Enemies cannot track you for the purposes of targeting you. If you attack an enemy while Hidden, you will lose the Hidden buff, but your target cannot use a Reaction in response to the attack."
+    },
+    {
+        "type": "buff",
+        "name": "Immunity",
+        "duration": "Permanent",
+        "description": "You have immunity to a certain type of damage or a certain condition. Some entities will have innate immunity, which is not a buff."
+    },
+    {
+        "type": "buff",
+        "name": "Increased Stats",
+        "duration": "Varies",
+        "description": "You have your stats increased temporarily due to the effects of skills, abilities, consumables, items, battlefield effects, etc."
+    },
+    {
+        "type": "condition",
+        "name": "Bleeding",
+        "duration": "Until broken",
+        "description": "At the beginning of each of your turns, you take a varying amount of physical damage. Skill checks can be used to cleanse this condition, as determined by the DM."
+    },
+    {
+        "type": "condition",
+        "name": "Blinded",
+        "duration": "1 minute",
+        "description": "Ranged attacks you make always miss. Melee attacks you make have a 50% chance of missing before factoring in your target\u2019s Evasion. You automatically fail skill check requiring sight, like Search."
+    },
+    {
+        "type": "condition",
+        "name": "Cursed",
+        "duration": "Varies",
+        "description": "When you have at least 3 curses, you instantly take Xd20 dark magic damage, where X is the number of curses you have"
+    },
+    {
+        "type": "condition",
+        "name": "Charmed",
+        "duration": "Varies",
+        "description": "You consider the entity that charmed you as a friend."
+    },
+    {
+        "type": "condition",
+        "name": "Confused",
+        "duration": "1 minute",
+        "description": "When you move or make an attack, you will move in a random direction instead of your intended direction."
+    },
+    {
+        "type": "condition",
+        "name": "Crippled",
+        "duration": "Until cleansed",
+        "description": "Your movement speed is halved and you cannot jump or climb."
+    },
+    {
+        "type": "condition",
+        "name": "Decreased Stats",
+        "duration": "Varies",
+        "description": "You have your stats decreased temporarily due to the effects of skills, abilities, consumables, items, battlefield effects, etc."
+    },
+    {
+        "type": "condition",
+        "name": "Fear",
+        "duration": "1 minute",
+        "description": "You cannot move towards the object of your fear."
+    },
+    {
+        "type": "condition",
+        "name": "Frozen",
+        "duration": "1 minute",
+        "description": "You cannot take any actions. You gain 10 AC. If you are attacked, Frozen has a 50% chance of being cleansed."
+    },
+    {
+        "type": "condition",
+        "name": "Helpless",
+        "duration": "Until broken",
+        "description": "You are susceptible to non-combat execution."
+    },
+    {
+        "type": "condition",
+        "name": "Immobilized",
+        "duration": "Varies",
+        "description": "You may not take the Move Action or dash."
+    },
+    {
+        "type": "condition",
+        "name": "Knocked Down (Prone)",
+        "duration": "Until broken",
+        "description": "You lie prone on the floor, and cannot take a Move Action unless you get up, which takes half your movement. Being prone may also confer other effects depending on other abilities or situations."
+    },
+    {
+        "type": "condition",
+        "name": "Knocked Up (Airborne)",
+        "duration": "Until the beginning of target\u2019s next turn",
+        "description": "You are helplessly flying in the air and cannot evade or use reactions. At the beginning of your next turn you fall to the ground prone unless you make an appropriate skill check to land on your feet."
+    },
+    {
+        "type": "condition",
+        "name": "Paralyzed",
+        "duration": "1 minute",
+        "description": "When you take a Move or Major Action, you have a 25% chance of failing the action. This condition can stack multiple times, and each additional stack increases the chance of failing your action by 25%, up to a limit of 3 stacks for a 75% failure chance."
+    },
+    {
+        "type": "condition",
+        "name": "Silenced",
+        "duration": "Varies",
+        "description": "You cannot speak or cast spells."
+    },
+    {
+        "type": "condition",
+        "name": "Sleeping",
+        "duration": "Until broken",
+        "description": "You are asleep, and cannot take any actions nor perceive anything. You are considered helpless. If you are attacked, Sleeping is cleansed. Other entities can use a Minor Action to shake you awake, and you can also be awakened by loud noises."
+    },
+    {
+        "type": "condition",
+        "name": "Slowed",
+        "duration": "1 minute",
+        "description": "Your movement speed is halved."
+    },
+    {
+        "type": "condition",
+        "name": "Stunned",
+        "duration": "1 round",
+        "description": "You cannot take any actions."
+    },
+    {
+        "type": "condition",
+        "name": "Taunted",
+        "duration": "1 minute",
+        "description": "When you make an attack on an enemy that did not Taunt you, roll a d6. If you roll 4 or lower, you must redirect your attack to the enemy that Taunted you if possible. You do not have to redirect your attack if attacking the enemy that Taunted you would be impossible (due to being out of range, or behind a barrier, or out of sight)."
+    },
+    {
+        "type": "condition",
+        "name": "Weakened",
+        "duration": "1 minute",
+        "description": "All your damage output is decreased by X%, after all other modifiers. This condition does not stack; subsequent Weakened effects simply change the original."
+    },
     {
         "type": "skill",
         "name": "Armor Mastery Cloth",
@@ -3051,7 +607,8 @@ var skills = [
         "value": null,
         "rank_notes": {
             "Untrained": "You cannot wear light armor",
-            "Rank F": "You can wear normal and magic light armor"
+            "Rank F": "You can wear normal and magic light armor",
+            "Rank A": "You can wear rare and unique light armor"
         }
     },
     {
@@ -3085,7 +642,8 @@ var skills = [
         "value": null,
         "rank_notes": {
             "Untrained": "You automatically fail Dancing checks",
-            "Rank F": "You can perform Dancing checks"
+            "Rank F": "You can perform Dancing checks",
+            "Rank A": "You can infuse magic into dances and perform improvised physical arts with dances"
         }
     },
     {
@@ -3404,7 +962,8 @@ var skills = [
         "value": null,
         "rank_notes": {
             "Untrained": "You cannot use air magic",
-            "Rank F": "You can cast air cantrips"
+            "Rank F": "You can cast air cantrips",
+            "Rank A": "You can cast air spells given to you by class abilities"
         }
     },
     {
@@ -3415,7 +974,8 @@ var skills = [
         "value": null,
         "rank_notes": {
             "Untrained": "You cannot use Dark magic",
-            "Rank F": "You can cast dark cantrips"
+            "Rank F": "You can cast dark cantrips",
+            "Rank A": "You can cast dark spells given to you by class abilities"
         }
     },
     {
@@ -3460,7 +1020,8 @@ var skills = [
         "value": null,
         "rank_notes": {
             "Untrained": "You cannot use lightning magic",
-            "Rank F": "You can cast lightning cantrips"
+            "Rank F": "You can cast lightning cantrips",
+            "Rank A": "You can cast lightning spells given to you by class abilities"
         }
     },
     {
@@ -3735,7 +1296,8 @@ var skills = [
         "value": null,
         "rank_notes": {
             "Untrained": "You automatically fail Destruction Magic checks",
-            "Rank F": "You can perform Destruction Magic checks"
+            "Rank F": "You can perform Destruction Magic checks",
+            "Rank A": "You can perform improvised magic arts with destruction spells"
         }
     },
     {
@@ -3746,7 +1308,8 @@ var skills = [
         "value": null,
         "rank_notes": {
             "Untrained": "You automatically fail Enchantment Magic checks",
-            "Rank F": "You can perform Enchantment Magic checks"
+            "Rank F": "You can perform Enchantment Magic checks",
+            "Rank A": "You can perform improvised magic arts with enchantment spells"
         }
     },
     {
@@ -3769,6 +1332,17 @@ var skills = [
         "rank_notes": {
             "Untrained": "You automatically fail Restoration Magic checks",
             "Rank F": "You can perform Restoration Magic checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic Summoning",
+        "description": "Summoning magic involves creating creatures to assist you. Skill checks usually involve knowledge about the summoning magic subtype, or possibly improvised summoning spell usage",
+        "attribute": "Focus",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You automatically fail Summoning Magic checks",
+            "Rank F": "You can perform Summoning Magic checks"
         }
     },
     {
@@ -3852,12 +1426,13 @@ var skills = [
     {
         "type": "skill",
         "name": "Stealth Steal",
-        "description": "Stealing is for taking things that don\u2019t belong to you. This skill is mostly used to steal thing in combat or pickpocket people out of combat. Higher levels increase your success rates and let you take more things",
+        "description": "Stealing is for taking things that don\u2019t belong to you. This skill is mostly used to steal things in combat or pickpocket people out of combat. Higher levels increase your success rates and let you take more things",
         "attribute": "Precision",
         "value": null,
         "rank_notes": {
             "Untrained": "You automatically fail Steal checks",
-            "Rank F": "You can perform Steal checks"
+            "Rank F": "You can perform Steal checks",
+            "Rank A": "You can steal during combat as a Major Action even while not hidden"
         }
     },
     {
@@ -3892,6 +1467,17 @@ var skills = [
             "Untrained": "You deal half damage with bows",
             "Rank F": "You deal regular damage with bows",
             "Rank A": "You can perform improvised physical arts with ranged weapons"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery Bullets",
+        "description": "Bullet Weapon mastery involves the effective use of ranged weapons that use ammunition that is not bolts or arrows. If you\u2019re looking to maximize the damage and flexibility of a sling, pistol, or rifle, you want to put points in Bullet Weapon Mastery",
+        "attribute": "Dexterity",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You deal half damage with bullets",
+            "Rank F": "You deal regular damage with bullets"
         }
     },
     {
@@ -3936,7 +1522,8 @@ var skills = [
         "value": null,
         "rank_notes": {
             "Untrained": "You deal half damage with long blades",
-            "Rank F": "You deal regular damage with long blades"
+            "Rank F": "You deal regular damage with long blades",
+            "Rank A": "You can perform improvised physical arts with longblades"
         }
     },
     {
@@ -3962,10 +1549,7 @@ var skills = [
             "Rank F": "You deal regular damage with short blades",
             "Rank A": "You can perform improvised physical arts with short blades"
         }
-    }
-]
-
-var clazzes = [
+    },
     {
         "type": "clazz",
         "name": "Ice Duelist",
@@ -4519,8 +2103,11 @@ var clazzes = [
         },
         "abilities": [
             "Gale Shot",
+            "Zephyr Shot",
             "Wind Strike",
-            "Mistral Bow"
+            "Cutting Winds",
+            "Mistral Bow",
+            "Arc of Air"
         ]
     },
     {
@@ -4602,14 +2189,30 @@ var clazzes = [
     },
     {
         "type": "clazz",
-        "name": "Dancer\u00ad",
-        "flavor_text": "",
-        "description": "",
+        "name": "Dancer",
+        "flavor_text": "\u201cDance, when you're broken open. Dance, if you've torn the bandage off. Dance in the middle of the fighting. Dance in your blood. Dance when you're perfectly free.\u201d",
+        "description": "The Dancer is one of many classes that evolves from the simple non-combat art of dancing. Combining their love for dance with the natural rhythm and furor of combat, the Dancer is able to move between enemies and allies while maintaining the fluid movements of their many forms. Dancing while moving costs additional stamina, but the Dancer can save on stamina costs by being an intelligent choreographer and moving through their many dances in a specific order. Most dances either provide allies with vigor and strength or confuse allies with bewitching and undulating movement.",
         "num_requirements": 2,
-        "full_requirements": [],
-        "branches": [],
-        "passive": {},
-        "abilities": []
+        "full_requirements": [
+            "        Dancing A",
+            "        Light Armor Mastery A"
+        ],
+        "branches": [
+            "Sway",
+            "Strut",
+            "Shimmy"
+        ],
+        "passive": {
+            "Dance The Night Away": "You may cast dance abilities alongside your regular Move Action if you expend twice as much stamina. If you do, your Move Action does not provoke opportunity attacks."
+        },
+        "abilities": [
+            "Belly Dance",
+            "Swing",
+            "Tango",
+            "Waltz",
+            "Foxtrot",
+            "Moonwalk"
+        ]
     },
     {
         "type": "clazz",
@@ -4874,8 +2477,11 @@ var clazzes = [
         },
         "abilities": [
             "Cloak and Dagger",
+            "Blade in the Dark",
             "Snatch and Grab",
-            "Infiltrate"
+            "Charm and Disarm",
+            "Infiltrate",
+            "Dodge the Law"
         ]
     },
     {
@@ -5385,32 +2991,2761 @@ var clazzes = [
         "abilities": []
     },
     {
-        "type": "clazz",
-        "name": "Dancer",
-        "flavor_text": "\u201cDance, when you're broken open. Dance, if you've torn the bandage off. Dance in the middle of the fighting. Dance in your blood. Dance when you're perfectly free.\u201d",
-        "description": "The Dancer is one of many classes that evolves from the simple non-combat art of dancing. Combining their love for dance with the natural rhythm and furor of combat, the Dancer is able to move between enemies and allies while maintaining the fluid movements of their many forms. Dancing while moving costs additional stamina, but the Dancer can save on stamina costs by being an intelligent choreographer and moving through their many dances in a specific order. Most dances either provide allies with vigor and strength or confuse allies with bewitching and undulating movement.",
-        "num_requirements": 2,
-        "full_requirements": [
-            "        Dancing A",
-            "        Light Armor Mastery A"
+        "type": "ability",
+        "name": "Ice Spear",
+        "clazz": "Cryomancer",
+        "branch": "Arctic",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 mana",
+        "rng": "30 ft",
+        "duration": "Instant",
+        "description": [
+            "You form a spear of ice and fire it at a nearby target. Deal 6d8 ice magic damage to a target in range. The ice spear passes through any enemies along its path, dealing half damage."
         ],
-        "branches": [
-            "Sway",
-            "Strut",
-            "Shimmy"
+        "tags": [
+            "Spell",
+            "attack",
+            "ranged",
+            "ice",
+            "destruction",
+            "damage",
+            "single-target",
+            "multi-target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Glacial Crash",
+        "clazz": "Cryomancer",
+        "branch": "Arctic",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "30 mana",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You cause spears of ice to erupt around you. Enemies within 5 ft of you take 6d8 ice magic damage and are Frozen. Enemies within 10 ft of you take 4d8 ice magic damage and are Slowed. Enemies within 15 ft of you take 2d8 damage."
         ],
-        "passive": {
-            "Dance The Night Away": "You may cast dance abilities alongside your regular Move Action if you expend twice as much stamina. If you do, your Move Action does not provoke opportunity attacks."
-        },
-        "abilities": [
-            "Belly Dance",
-            "Swing",
-            "Tango",
-            "Waltz",
-            "Foxtrot",
-            "Moonwalk"
+        "tags": [
+            "Spell",
+            "attack",
+            "ice",
+            "destruction",
+            "damage",
+            "self-target",
+            "condition",
+            "control",
+            "Slow",
+            "Frozen",
+            "AOE"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Shatter",
+        "clazz": "Cryomancer",
+        "branch": "Arctic",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "50 mana",
+        "rng": "30 ft",
+        "duration": "Instant",
+        "description": [
+            "You shatter an enemy encased in ice. Deal 10d8 ice magic damage to a target within range who is Frozen. Their Frozen condition ends, and they are Slowed. Then, this spell\u2019s effect repeat for an adjacent Frozen target. A target cannot be damaged by this spell more than once per cast."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "ice",
+            "destruction",
+            "damage",
+            "single-target",
+            "conditional",
+            "Frozen",
+            "Slow",
+            "repeatable"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Aurora Beam",
+        "clazz": "Cryomancer",
+        "branch": "Arctic",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "X mana",
+        "rng": "60 ft",
+        "duration": "Instant",
+        "description": [
+            "You emit a powerful beam of ice. Deal Xd8 ice magic damage to all targets in a line, where X is the amount of mana expended on this spell divided by 5. You may choose to concentrate on this spell further, and if you do, you may use a major action to repeat this spell for no mana cost, at half its previous damage. If this spell consumes at least 5 stacks of Frostbite, refund half of the mana cost. If this attack consumes at least 10 stacks of Frostbite, refund the full mana cost."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "ice",
+            "destruction",
+            "damage",
+            "AOE",
+            "line",
+            "modal",
+            "continuous",
+            "concentration",
+            "gain mana"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Flash Freeze",
+        "clazz": "Cryomancer",
+        "branch": "Chilling",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 mana",
+        "rng": "30 ft",
+        "duration": "1 minute",
+        "description": [
+            "You freeze a target solid. Apply Frozen to a target in range, and apply Slow to any enemies adjacent to your target. Applies a stack of your passive on cast, even if resisted."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "ice",
+            "condition",
+            "control",
+            "Frozen",
+            "Slow",
+            "single target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Freezing Wind",
+        "clazz": "Cryomancer",
+        "branch": "Chilling",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "35 mana",
+        "rng": "60 ft cone",
+        "duration": "Instant",
+        "description": [
+            "You conjure a cone of icy wind. Enemies in a 60 ft cone in front of you are Slowed. If an enemy is hit by this spell, and already is Slowed or has a stack of your passive on them, they are Frozen instead."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "ice",
+            "conjuration",
+            "control",
+            "Frozen",
+            "Slow",
+            "AOE",
+            "cone"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Hypothermia",
+        "clazz": "Cryomancer",
+        "branch": "Chilling",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "70 mana",
+        "rng": "30 ft",
+        "duration": "Instant",
+        "description": [
+            "You drop a target\u2019s body temperature, slowing their metabolism. A target within range becomes Slowed, loses its Major action, Minor action, and reaction, and loses all Evasion. This spell requires concentration."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "ice",
+            "condition",
+            "control",
+            "Slow",
+            "action loss",
+            "evasion loss",
+            "single-target",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Heart of Ice",
+        "clazz": "Cryomancer",
+        "branch": "Chilling",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "100 mana",
+        "rng": "Self",
+        "duration": "1 hour",
+        "description": [
+            "You drape yourself in an icy aura. For the duration of this spell, enemies who move into a space within 30 feet of you become Slowed. Adjacent enemies who attack you become Frozen. Attacks from enemies more than 30 ft away grant you 40% evasion for that attack. Allies who are adjacent to you have all types of damage they deal converted to ice magic damage, and inflict Frostbite on-hit (limited to once per turn). You may use your reaction to cast any ice spell while this buff is active."
+        ],
+        "tags": [
+            "Spell",
+            "ice",
+            "buff",
+            "condition",
+            "Slow",
+            "Frozen",
+            "self-target",
+            "on-hit",
+            "add evasion",
+            "ally buff",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Ice Crafting",
+        "clazz": "Cryomancer",
+        "branch": "Snow",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "5 mana",
+        "rng": "50 ft",
+        "duration": "10 minutes",
+        "description": [
+            "You create sheets of ice and snow. Cover the ground in a target space in your choice of either ice or snow. Ice spaces force creatures to make Balance checks or fall prone. Snow spaces count as difficult terrain. When you cast this spell, you can repeat it for as many spaces within range as desired, expending 5 more mana for every additional space. You can also create a pillar of ice or snow, with a height of up to 10 ft, in any space for an additional 5 mana."
+        ],
+        "tags": [
+            "Spell",
+            "smite-target",
+            "conjuration",
+            "ice",
+            "modal",
+            "repeatable"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Extinguish",
+        "clazz": "Cryomancer",
+        "branch": "Snow",
+        "tier": 2,
+        "action": "1 Reaction",
+        "cost": "20 mana",
+        "rng": "100 ft",
+        "duration": "Instant",
+        "description": [
+            "You take advantage of a mage casting a spell, freezing his mana. As a reaction to a target in range casting a spell, you may counter that spell. That target becomes Silenced until the end of their next turn."
+        ],
+        "tags": [
+            "Spell",
+            "counterspell",
+            "condition",
+            "defensive",
+            "Silence",
+            "control",
+            "ice",
+            "single-target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Ice Block",
+        "clazz": "Cryomancer",
+        "branch": "Snow",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 mana",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You surround yourself in an icy armor, and manipulate a shield of ice. Increase your AC by 20, and increase your general MR by 30% until the beginning of your next turn. While you have this buff, you may use your reaction to completely block one attack on you or an ally within 30 ft, for no additional mana."
+        ],
+        "tags": [
+            "Spell",
+            "defensive",
+            "buff",
+            "AC increase",
+            "MR increase",
+            "block",
+            "self-target",
+            "single-target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Frozen  Arena",
+        "clazz": "Cryomancer",
+        "branch": "Snow",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "60 mana",
+        "rng": "1000 ft",
+        "duration": "1 minute",
+        "description": [
+            "You create an arena surrounded in ice. Create a 200 ft cube zone centered on a point within range. Within this zone, all enemies have the following: they are revealed; they cannot leave the zone unless you allow them as a free reaction; if they have at least 1 stack of Frostbite, they have their Frostbite doubled at the beginning of each turn. Any entity that dies with at least 1 stack of Frostbite has its Frostbite stacks transferred to another entity of your choice within the zone."
+        ],
+        "tags": [
+            "Spell",
+            "ice",
+            "AOE",
+            "zone",
+            "cube",
+            "on-death",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Modify Weapon",
+        "clazz": "Enchanter",
+        "branch": "Personal",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 mana",
+        "rng": "Touch",
+        "duration": "1 minute",
+        "description": [
+            "You temper a weapon with runes of strengthening or weakening. Choose one:",
+            "Target weapon in range gains, \u201cOn Hit: Deal 4d10 physical damage.\u201d",
+            "Target weapon in range gains, \u201cWhile equipped, deal 50% decreased physical damage.\u201d"
+        ],
+        "tags": [
+            "Spell",
+            "enchantment",
+            "modal",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Reforge Armor",
+        "clazz": "Enchanter",
+        "branch": "Personal",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "20 mana",
+        "rng": "Touch",
+        "duration": "1 minute",
+        "description": [
+            "You temper armor with runes of strengthening or weakening. Choose one:",
+            "Target armor in range has its implicit AC, Evasion, MR, and CR increased by 50%.",
+            "Target armor in range loses all AC, Evasion, MR, and CR."
+        ],
+        "tags": [
+            "Spell",
+            "enchantment",
+            "modal",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Alter Jewelry",
+        "clazz": "Enchanter",
+        "branch": "Personal",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "30 mana",
+        "rng": "Touch",
+        "duration": "1 minute",
+        "description": [
+            "You affix runes to an accessory for a variety of effects. Choose one:",
+            "Target ring in range gains, \u201cOn Hit: Deal 2d20 magic damage of a chosen type.\u201d",
+            "Target ring in range gains, \u201cAt the beginning of your turn, lose 40 mana and stamina.\u201d",
+            "Target belt in range gains, \u201cYou have elemental resistance against 2 chosen types.\u201d",
+            "Target belt in range gains, \u201cYou have elemental weakness against 2 chosen types.\u201d",
+            "Target necklace in range gains, \u201cAt the beginning of your turn, heal 30 health.\u201d",
+            "Target necklace in range gains, \u201cAt the beginning of your turn, lose 30 health.\u201d",
+            "You may spend an additional 20 mana to choose a second effect for a type of accessory not previously chosen. You may then spend another additional 10 mana to choose a third effect for the last accessory type not previously chosen."
+        ],
+        "tags": [
+            "Spell",
+            "enchantment",
+            "modal",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Reconstruct Barrier",
+        "clazz": "Enchanter",
+        "branch": "Structural",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 mana",
+        "rng": "Touch",
+        "duration": "1 minute",
+        "description": [
+            "You rebuild a wall or door with runes of locking or breaking. Choose one:",
+            "Target wall in range becomes unbreakable, and all windows and doors in that wall become magically locked.",
+            "Target wall in range crumbles and weakens to become easily breakable, and all windows and doors in that wall become unlocked.",
+            "After choosing an effect, you may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
+        ],
+        "tags": [
+            "Spell",
+            "enchantment",
+            "utility",
+            "minor ritual",
+            "major ritual",
+            "modal",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Rebuild Floor",
+        "clazz": "Enchanter",
+        "branch": "Structural",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "20 mana",
+        "rng": "Touch",
+        "duration": "1 minute",
+        "description": [
+            "You reconstruct the floor or ceiling to various effect. Choose one:",
+            "The surface becomes difficult terrain.",
+            "The surface becomes fragile, crumbling underneath the weight of entities walking over it.",
+            "The surface becomes slick, granting entities doubled move speed.",
+            "The surface becomes unbreakable.",
+            "After choosing an effect, you may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
+        ],
+        "tags": [
+            "Spell",
+            "enchantment",
+            "utility",
+            "minor ritual",
+            "major ritual",
+            "modal",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Secure Building",
+        "clazz": "Enchanter",
+        "branch": "Structural",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "30 mana",
+        "rng": "Touch",
+        "duration": "1 minute",
+        "description": [
+            "You magically ward a building or some number of rooms in a building against enemy magic. Target building in range has any number of its rooms or the entire building gain the following effects: scrying and teleportation magic in or out of the warded area fails; you know if anyone casts a spell inside the warded area and what spell was cast; you know the positions and true magic signatures of all entities within the warded area. You may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
+        ],
+        "tags": [
+            "Spell",
+            "enchantment",
+            "utility",
+            "defense",
+            "minor ritual",
+            "major ritual",
+            "modal",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Mint Coinage",
+        "clazz": "Enchanter",
+        "branch": "Minutiae",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 mana",
+        "rng": "Touch",
+        "duration": "You stamp a variety of runes on the face of a coin. While touching a target coin, choose one:",
+        "description": [
+            "Inscribe a magical telepathic message of up to 100 words or 10 images that can be heard/seen by anyone who picks up the coin.",
+            "Inscribe a magical access point that allows you to telepathically communicate freely with anyone holding the coin.",
+            "Inscribe a magical tracker that allows you to always know the coin\u2019s position and if/when it changes owners.",
+            "Inscribe a magical storage space that grants the wielder of the coin +1 buff limit and +1 concentration limit.",
+            "Inscribe a restorative rune that grants the wielder of the coin 5% health, mana, and stamina regeneration.",
+            "Inscribe a rune of luck that grants the wielder of the coin +5 to all skill checks.",
+            "When you cast this spell, you may choose to expend an additional 5 mana to choose a second effect for the coin\u2019s opposite face. An entity can only benefit from one coin made by this ability at a time."
+        ],
+        "tags": [
+            "Spell",
+            "enchantment",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Enhance Vehicle",
+        "clazz": "Enchanter",
+        "branch": "Minutiae",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "20 mana",
+        "rng": "Touch",
+        "duration": "24 hours",
+        "description": [
+            "You power up or power down a vehicle. Choose one:",
+            "Target vehicle in range has its move speed doubled and no longer requires a system to propel it forward (horses, engines) for the duration.",
+            "Target vehicle becomes immotile through its regular means (wheels lock, sails fail, etc) for the duration.",
+            "When you cast this spell, you may choose to expend an additional 10 mana to affect another target Vehicle with a new choice, and you may do this any number of times. Concentration is held once for all instances of this spell within one cast."
+        ],
+        "tags": [
+            "Spell",
+            "enchantment",
+            "utility",
+            "modal",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Empower Ammo",
+        "clazz": "Enchanter",
+        "branch": "Minutiae",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "30 mana",
+        "rng": "Touch",
+        "duration": "24 hours",
+        "description": [
+            "You bless any type of ammo with empowering runes. Target set of up to 10 pieces of ammunition becomes special ammo for the duration, gaining, \u201cAttacks with this ammo have 50% increased damage and inflict a random condition chosen from the following list: Slow, Immobilize, Cripple, Stun, Blind, Confuse, Sleep, Silence.\u201d"
+        ],
+        "tags": [
+            "Spell",
+            "enchantment",
+            "utility",
+            "modal",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Wind Slash",
+        "clazz": "Aeromancer",
+        "branch": "Gale",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 mana",
+        "rng": "100 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire a fast moving blade of air. Deal 6d8 air magic damage to a target in range and up to 2 enemies adjacent to your target. This attack cannot miss, cannot be blocked, and bypasses barriers and walls."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "ranged",
+            "air",
+            "destruction",
+            "single-target",
+            "multi-target",
+            "ignore barriers/walls/blocks",
+            "no-miss"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Sky Uppercut",
+        "clazz": "Aeromancer",
+        "branch": "Gale",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 mana",
+        "rng": "100 ft",
+        "duration": "Instant",
+        "description": [
+            "You release an upwards draft of air. Deal 8d8 air magic damage to a target in range. The target is then Knocked Up and inflicted with 50% air vulnerability until this condition ends."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "ranged",
+            "air",
+            "destruction",
+            "single-target",
+            "control",
+            "condition",
+            "knock up",
+            "vulnerability"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Vicious Cyclone",
+        "clazz": "Aeromancer",
+        "branch": "Gale",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 mana",
+        "rng": "100 ft",
+        "duration": "1 minute",
+        "description": [
+            "You conjure a violent twister that buffets your foes with slashing winds. Create a 15 foot square Cyclone centered on a space in range. It reaches up 100 ft as well. When it initially appears it deals 6d8 air magic damage to all enemies in its AOE. If an enemy begins its turn in the AOE, they take 4d8 air magic damage, and if they are Knocked Up, they remain Airborne. When you cast this spell, you may increase the AOE size by 5 ft for every additional 20 mana you expend."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "air",
+            "destruction",
+            "conjuration",
+            "AOE",
+            "square",
+            "conditional",
+            "knock up",
+            "modal",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Vicious Hurricane",
+        "clazz": "Aeromancer",
+        "branch": "Gale",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "80 mana",
+        "rng": "100 ft",
+        "duration": "1 minute",
+        "description": [
+            "You conjure a violent hurricane that persistently damages and knocks up enemies. At the end of each of your turns, deal 10d8 air magic damage to all enemies in range and they are all Knocked Up. While you concentrate on this spell, your air spells ignore all MR and you can cast any air spell you know as a reaction."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "air",
+            "destruction",
+            "conjuration",
+            "AOE",
+            "square",
+            "knock up",
+            "ignore MR",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Aeroblast",
+        "clazz": "Aeromancer",
+        "branch": "Gust",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 mana",
+        "rng": "100 ft",
+        "duration": "Instant",
+        "description": [
+            "You release a powerful blast of air that sends people flying. Push a target in range 20 ft in a direction of your choice. When you cast this spell, you may choose to expend 4 stacks of Winds of War to additionally knock the target prone."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "ranged",
+            "air",
+            "control",
+            "utility",
+            "conjuration",
+            "knock prone",
+            "push",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Whisk Away",
+        "clazz": "Aeromancer",
+        "branch": "Gust",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "20 mana",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You fire a gust of air behind you to quickly reposition yourself. Dash up to 50 ft in any direction including upwards and downwards"
+        ],
+        "tags": [
+            "Spell",
+            "air",
+            "utility",
+            "conjuration",
+            "dash"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Buffeting Storm",
+        "clazz": "Aeromancer",
+        "branch": "Gust",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "50 mana",
+        "rng": "Battlefield",
+        "duration": "1 minute",
+        "description": [
+            "You maintain powerful winds to impede foes and assist allies. While you concentrate on this spell, powerful winds decrease enemy movement speed by 20 and increase ally movement speed by 20. Additionally, while you concentrate on this spell, you may spend 5 mana to push any target 10 ft in any direction as a Minor Action."
+        ],
+        "tags": [
+            "Spell",
+            "air",
+            "control",
+            "conjuration",
+            "modal",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Take Flight",
+        "clazz": "Aeromancer",
+        "branch": "Gust",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "60 mana",
+        "rng": "Touch",
+        "duration": "1 minute",
+        "description": [
+            "You provide yourself or an ally the ability to fly without restrictions. Target willing entity in range gains a buff that converts all of their movement speed into flying speed, grants 20% evasion, and increases the range of their attacks by 50%."
+        ],
+        "tags": [
+            "Spell",
+            "air",
+            "buff",
+            "gain evasion",
+            "gain range",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Tailwind",
+        "clazz": "Aeromancer",
+        "branch": "Breeze",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 mana",
+        "rng": "Touch",
+        "duration": "1 minute",
+        "description": [
+            "You provide an aiding tailwind to increase an ally\u2019s speed. Target willing entity in range gains the following buff: Gain +20 movement speed; can end this buff as a reaction to dash 20 ft in any direction."
+        ],
+        "tags": [
+            "Spell",
+            "air",
+            "utility",
+            "conjuration",
+            "buff",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Blowback",
+        "clazz": "Aeromancer",
+        "branch": "Breeze",
+        "tier": 2,
+        "action": "1 Reaction",
+        "cost": "20 mana",
+        "rng": "100 ft",
+        "duration": "Instant",
+        "description": [
+            "You counter a spell and muddle the caster\u2019s senses. As a reaction to a target in range casting a spell, you may counter that spell. Until the end of the target\u2019s next turn, their non-melee abilities have their range halved."
+        ],
+        "tags": [
+            "Spell",
+            "air",
+            "defensive",
+            "counterspell",
+            "conditional",
+            "single-target",
+            "condition",
+            "range decrease"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Rotation Barrier",
+        "clazz": "Aeromancer",
+        "branch": "Breeze",
+        "tier": 3,
+        "action": "1 Reaction",
+        "cost": "30 mana",
+        "rng": "10 ft",
+        "duration": "Instant",
+        "description": [
+            "You rotate the air surrounding you quickly, knocking down incoming projectiles. All non-melee, non-AOE attacks that target or affect a space within range are blocked."
+        ],
+        "tags": [
+            "Spell",
+            "air",
+            "defensive",
+            "conditional",
+            "AOE",
+            "block"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Summon Wyvern",
+        "clazz": "Aeromancer",
+        "branch": "Breeze",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "100 mana",
+        "rng": "50 ft",
+        "duration": "1 hour",
+        "description": [
+            "You summon a wyvern borne of the skies. Summon a Wyvern with 100 HP, 50 flying speed, 20 AC, 50% evasion, 50% general MR, and an innate 100% vulnerability to attacks from bows and crossbows. It obeys your Commands; otherwise, it uses its Move Action to fly towards enemies and its Major Action to do a melee claw attack for 5d10 physical damage or a 30 ft cone breath attack for 10d8 air magic damage (33% recharge rate)."
+        ],
+        "tags": [
+            "Spell",
+            "air",
+            "summoning",
+            "minion"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Shadow Bolt",
+        "clazz": "Noxomancer",
+        "branch": "Devastation",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 mana",
+        "rng": "40 ft",
+        "duration": "Instant",
+        "description": [
+            "You amass dark energy and toss it at an enemy. Deal 3d10 dark magic damage to a target in range, and inflict the target with a curse for every 15 dark magic damage dealt this way."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "ranged",
+            "dark",
+            "destruction",
+            "condition",
+            "Curse",
+            "conditional",
+            "single target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Darkbomb",
+        "clazz": "Noxomancer",
+        "branch": "Devastation",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "30 mana",
+        "rng": "40 ft",
+        "duration": "Instant",
+        "description": [
+            "You release an orb of dark magic, primed to explode. Create a Darkbomb in an unoccupied space in range. You may have it detonate immediately to deal 3d10 dark magic damage and inflict a curse on every entity within 20 ft of the bomb. Alternatively, you may delay the explosion until the beginning of your next turn; if you do, it will deal 6d10 dark magic damage and inflict 2 curses on every entity within 20 ft of the bomb."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "dark",
+            "destruction",
+            "condition",
+            "Curse",
+            "AOE",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Corruption",
+        "clazz": "Noxomancer",
+        "branch": "Devastation",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 mana",
+        "rng": "40 ft",
+        "duration": "1 minute",
+        "description": [
+            "You corrupt an enemy\u2019s body with dark energy. Deal 5d10 dark magic damage to a target and inflict them with a condition that causes them to gain a Curse and take 3d10 dark magic damage at the beginning of each turn and prevents Curses from expunging until the condition ends."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "single-target",
+            "dark",
+            "destruction",
+            "condition",
+            "Curse",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Defile",
+        "clazz": "Noxomancer",
+        "branch": "Affliction",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 mana",
+        "rng": "40 ft",
+        "duration": "1 minute",
+        "description": [
+            "You infuse an enemy with dark energy, weakening and cursing them. Select a target in range, and choose one of the following:",
+            "Inflict a 30% Weaken for 1 minute",
+            "Inflict a 20% Weaken for 1 minute, and inflict 1 curse",
+            "Inflict a 10% Weaken for 1 minute, and inflict 2 curses"
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "dark",
+            "condition",
+            "Weakened",
+            "Curse",
+            "modal",
+            "single target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Shriek",
+        "clazz": "Noxomancer",
+        "branch": "Affliction",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "30 mana",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You release dark energy through your words, affecting the nervous system of nearby opponents. Enemies within 40 ft of you are Blinded and enemies within 20 ft of you are instead Feared."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "dark",
+            "condition",
+            "control",
+            "Blind",
+            "Fear",
+            "conditional",
+            "AOE"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Spreading Madness",
+        "clazz": "Noxomancer",
+        "branch": "Affliction",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "50 mana",
+        "rng": "40 ft",
+        "duration": "1 minute",
+        "description": [
+            "You corrupt the mind of an enemy with infectious dark magic. Inflict a condition on a target in range that causes 50% of their targeted attacks to be redirected at one of their allies in range if possible. When an enemy with this condition deals damage to another enemy, they inflict the same condition on hit. When you break concentration on this ability, all copies of this condition end as well."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "single-target",
+            "multi-target",
+            "dark",
+            "condition",
+            "control",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Siphon Soul",
+        "clazz": "Noxomancer",
+        "branch": "Obfuscation",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 mana",
+        "rng": "40 ft",
+        "duration": "Instant",
+        "description": [
+            "You tear away magical effects on allies and enemies. Choose one of the following:",
+            "Target entity in range loses a buff of your choice",
+            "Target entity in range is cleansed of a condition of your choice",
+            "You may choose to expend an additional 10 mana to use both options."
+        ],
+        "tags": [
+            "Spell",
+            "dark",
+            "modal",
+            "buff strip",
+            "cleanse",
+            "single-target",
+            "multi-target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Treachery",
+        "clazz": "Noxomancer",
+        "branch": "Obfuscation",
+        "tier": 2,
+        "action": "1 Reaction",
+        "cost": "20 mana",
+        "rng": "100 ft",
+        "duration": "Instant",
+        "description": [
+            "You cause a mage to lose control of a spell during its casting. As a reaction to a target in range casting a spell, you may counter that spell. The target then expends 10 mana to deal 2d10 dark magic damage and inflict a curse on all of its allies within 10 ft of them."
+        ],
+        "tags": [
+            "Spell",
+            "dark",
+            "single-target",
+            "AOE",
+            "destruction",
+            "defensive",
+            "counterspell",
+            "condition",
+            "Curse"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Fiendish Circle",
+        "clazz": "Noxomancer",
+        "branch": "Obfuscation",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 mana",
+        "rng": "40 ft",
+        "duration": "Instant",
+        "description": [
+            "You call upon imps from a dark realm. Summon an Imp with 50 HP and 40 speed. Imps follow your Command Actions; otherwise, they use their Move Action to move towards enemies, their Major Action to make a melee attack that deals 4d10 dark magic damage, and their Minor Action to drink any potions they are carrying. When you cast this spell, you may choose to concentrate on this spell in order to spend an additional 20 mana to summon an extra Imp, and you may do this up to two more times to have a maximum of 4 Imps at one time."
+        ],
+        "tags": [
+            "Spell",
+            "summoning",
+            "dark",
+            "minion",
+            "conditional",
+            "modal",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Spill Blood",
+        "clazz": "Warrior",
+        "branch": "Assault",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You hack at an enemy, severing blood vessels. Deal 4d10 physical damage to a target in range. Inflict a d10 Bleed on the target. This Bleed\u2019s damage is amplified by your passive."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "condition",
+            "Bleed"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Cut Down",
+        "clazz": "Warrior",
+        "branch": "Assault",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You deliver a wide slash to the enemy\u2019s frontlines, adjusting for their formation. Choose one of the following:",
+            "Deal 3d10 damage to all enemies in a 10 ft cone, knocking them prone.",
+            "Deal 3d10 damage to all enemies in a 25 ft horizontal line, knocking them back 10 ft",
+            "If you have at least 3 buffs active on you, choose both options."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "melee",
+            "AOE",
+            "cone",
+            "horizontal line",
+            "Knock Prone",
+            "Knock Back",
+            "modal",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Hack and Slash",
+        "clazz": "Warrior",
+        "branch": "Assault",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You turn vigor into violence, attacking quickly. Deal 3d10 physical damage to a target in range. Then, you may sacrifice a buff on you to repeat this skill at no cost."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "repeatable",
+            "sacrifice"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Summary Execution",
+        "clazz": "Warrior",
+        "branch": "Assault",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "90 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You finish off weakened enemies. Deal 5d10 physical damage to all targets in range. This attack has lethality equal to each target\u2019s percentage of missing health (calculated after this ability\u2019s damage). You may sacrifice any number of buffs on you as you cast this ability to increase the base lethality of this attack by 10% per buff sacrificed this way."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "multi-target",
+            "melee",
+            "sacrifice",
+            "lethality",
+            "missing health"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Shields Up",
+        "clazz": "Warrior",
+        "branch": "Protect",
+        "tier": 1,
+        "action": "1 Reaction",
+        "cost": "15 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You toss up your shield or armguard to defend against an attack. Block an attack on you or an adjacent ally, reducing damage by 25%. Gain an additional 25% damage reduction for each buff you have."
+        ],
+        "tags": [
+            "Block",
+            "damage reduction",
+            "self-target",
+            "ally-target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Reinforce Armor",
+        "clazz": "Warrior",
+        "branch": "Protect",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 stamina",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You strengthen your armor\u2019s natural defenses. Sacrifice any number of buffs active on you. Gain 25% increased AC, Evasion, or MR for each buff sacrificed this way for 1 minute. Recasting this ability while its buff is active will end your previous buff and start a new one."
+        ],
+        "tags": [
+            "Buff",
+            "concentration",
+            "sacrifice",
+            "increase AC",
+            "increase Evasion",
+            "increase MR"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Take Cover",
+        "clazz": "Warrior",
+        "branch": "Protect",
+        "tier": 3,
+        "action": "1 Reaction",
+        "cost": "35 stamina",
+        "rng": "30 ft",
+        "duration": "Instant",
+        "description": [
+            "You dive and roll to rescue a comrade from danger. As a reaction to an attack on an allied target in range, immediately dash to them before the attack lands. Then, choose one of the following:",
+            "Use your body as a shield. Your target gains 30 AC, and the attack will be redirected to both you and your target",
+            "Tackle your target to the ground. You and your target gain 30% evasion, and both of you are knocked prone",
+            "Drag them to safety. Dash an additional 20 ft in any direction, dragging your target with you, and your target loses their reaction if they still have one."
+        ],
+        "tags": [
+            "Dash",
+            "ally-target",
+            "modal",
+            "redirect",
+            "knock prone",
+            "increase AC",
+            "increase Evasion"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Paragon of Victory",
+        "clazz": "Warrior",
+        "branch": "Protect",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "100 stamina",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You become a powerful avatar of war. When you cast this ability, sacrifice any number of buffs on you. Gain the following effects, depending on the number of buffs sacrificed.",
+            "5 Buffs - Gain immunity to physical damage",
+            "10 Buffs - Gain all of the above in addition to immunity to conditions and crowd control.",
+            "15 Buffs - Gain all of the above in addition to 50 ft of added speed and 100% increased damage"
+        ],
+        "tags": [
+            "Buff",
+            "concentration",
+            "sacrifice",
+            "Immunity",
+            "add speed",
+            "increase damage",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "\u201cCharge!\u201d",
+        "clazz": "Warrior",
+        "branch": "Warcry",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "rng": "---",
+        "duration": "Instant",
+        "description": [
+            "You bellow a righteous cry, calling all to drive forward into battle. You and all allies who can hear you gain 50% increased damage until the end of your next turn. When you cast this ability, all allies who can hear you may use their reaction to move up to their speed in any direction."
+        ],
+        "tags": [
+            "Buff",
+            "multi-target",
+            "self-target",
+            "ally-target",
+            "damage increase"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "\u201cFight me!\u201d",
+        "clazz": "Warrior",
+        "branch": "Warcry",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "30 stamina",
+        "rng": "---",
+        "duration": "1 minute",
+        "description": [
+            "You bellow a belligerent cry, igniting your enemies\u2019 fury. All enemies who can hear you are Taunted for 1 minute. An enemy Taunted by this ability previously is Immune to this ability\u2019s Taunt. When you cast this ability, all enemies who can hear you break concentration."
+        ],
+        "tags": [
+            "Condition",
+            "Taunt",
+            "multi-target",
+            "break concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "\u201cOvercome!\u201d",
+        "clazz": "Warrior",
+        "branch": "Warcry",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 stamina",
+        "rng": "---",
+        "duration": "Instant",
+        "description": [
+            "You bellow an inspiring cry, encouraging everyone to persist. You and all allies who can hear you are cleansed of Fear, Stun, Paralysis, Confusion, Sleep, and Charm. Allies in a 1000 ft range who are in a downed state become immediately stabilized. When you cast this ability, all allies who can hear you may use their reaction to cleanse an additional condition on them of their choice."
+        ],
+        "tags": [
+            "Cleanse",
+            "Stabilize",
+            "multi-target",
+            "self-target",
+            "ally-target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "\u201cKill them all!\u201d",
+        "clazz": "Warrior",
+        "branch": "Warcry",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "70 stamina",
+        "rng": "---",
+        "duration": "Instant",
+        "description": [
+            "You bellow a powerful cry, cowing your enemies and announcing their coming deaths. All enemies who can hear you gain 50% physical damage vulnerability, lose natural elemental resistances, and become Feared. When you cast this ability, all enemies who can hear you are stripped of all buffs, and those buffs are distributed as you choose amongst you and all allies who can hear you."
+        ],
+        "tags": [
+            "Condition",
+            "multi-target",
+            "Fear",
+            "vulnerability",
+            "buff stripping",
+            "buff"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Vanish",
+        "clazz": "Assassin",
+        "branch": "Skulk",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "10 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You move quickly to avoid detection. You immediately become Hidden, and you may dash up to 10 ft in any direction. You may cast this ability as a reaction for 30 stamina."
+        ],
+        "tags": [
+            "self-target",
+            "Hidden",
+            "buff",
+            "dash",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Maneuver",
+        "clazz": "Assassin",
+        "branch": "Skulk",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You move quickly and can ascend sheer walls. Dash up to 40 ft. During your dash, you can also scale walls up to 40 ft."
+        ],
+        "tags": [
+            "Dash",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Pursue",
+        "clazz": "Assassin",
+        "branch": "Skulk",
+        "tier": 3,
+        "action": "1 Reaction",
+        "cost": "25 stamina",
+        "rng": "100 ft",
+        "duration": "Instant",
+        "description": [
+            "You follow quickly after a fleeing enemy. As a reaction to a target in range moving, you may move an equal distance towards the target. You then mark the target, increasing your critical damage modifier by 50% on the marked target. This mark can stack multiple times."
+        ],
+        "tags": [
+            "Dash",
+            "conditional",
+            "reaction",
+            "condition",
+            "stackable"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Stalk",
+        "clazz": "Assassin",
+        "branch": "Skulk",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "50 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You move quickly from shadow to shadow. Become Hidden. Then, while hidden, you may use this ability to dash up to 60 ft. At the end of your dash, if you make a successful Sneak check, you may repeat this ability at no cost."
+        ],
+        "tags": [
+            "Dash",
+            "conditional",
+            "Sneak",
+            "continuous"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Focus",
+        "clazz": "Assassin",
+        "branch": "Preparation",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "5 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You ready yourself for the kill. Your next attack gains an additional 30% critical strike chance. This buff is consumed even if you miss or all of your damage is blocked, and it does not stack with itself."
+        ],
+        "tags": [
+            "self-target",
+            "buff",
+            "stat improve",
+            "critical"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Sharpen",
+        "clazz": "Assassin",
+        "branch": "Preparation",
+        "tier": 2,
+        "action": "1 Minor Action",
+        "cost": "15 stamina",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You prepare your blades for the kill. For this ability\u2019s duration, all of your d4 damage dice become d6 damage dice instead."
+        ],
+        "tags": [
+            "self-target",
+            "buff",
+            "damage improve"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Haste",
+        "clazz": "Assassin",
+        "branch": "Preparation",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "50 stamina",
+        "rng": "Self",
+        "duration": "20 seconds",
+        "description": [
+            "You temporarily speed up your actions. During your next turn, you gain an additional Major action and Minor action. Also, until the end of your next turn, you may take any number of reactions."
+        ],
+        "tags": [
+            "self-target",
+            "buff",
+            "action gain",
+            "delayed effect"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Bloodlust",
+        "clazz": "Assassin",
+        "branch": "Preparation",
+        "tier": 4,
+        "action": "1 Minor Action",
+        "cost": "100 stamina",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You become a spectre of whirling death. For this ability\u2019s duration, dealing a killing blow on an enemy resets your Move, Major, and Minor actions."
+        ],
+        "tags": [
+            "self-target",
+            "buff",
+            "action reset",
+            "concentration",
+            "on-kill"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Backstab",
+        "clazz": "Assassin",
+        "branch": "Execution",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You attack from your enemy\u2019s blind spot. Deal 3d4 physical damage to a target in range. If you are Hidden, you roll max damage on all damage dice automatically."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "conditional",
+            "melee",
+            "Hidden"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Pounce",
+        "clazz": "Assassin",
+        "branch": "Execution",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "15 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You quickly close in on your target before dealing the killing blow. Dash up to 15 ft towards a target, then deal 4d4 physical damage to a target in range."
+        ],
+        "tags": [
+            "Attack",
+            "melee",
+            "physical",
+            "dash"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Skyfall",
+        "clazz": "Assassin",
+        "branch": "Execution",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "30 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You bring death from above. You may cast this ability while falling on a target from at least 10 ft above it. Deal 8d4 physical damage to the target, with a 100% increased critical damage modifier."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "conditional",
+            "melee",
+            "aerial",
+            "empowered"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Massacre",
+        "clazz": "Assassin",
+        "branch": "Execution",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "60 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You strike as a blur, killing many. Deal 16d4 physical damage, dividing your damage dice amongst any number of adjacent targets as you choose. For every damage die a target is hit by, that attack gains 5% Lethality. You roll for critical strike chance only once, for all dice."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "melee",
+            "single-target",
+            "multi-target",
+            "modal",
+            "Lethal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Fleetfoot Blade",
+        "clazz": "Soldier",
+        "branch": "Skirmish",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You slash quickly at an enemy while staying mobile. Deal 4d10 physical damage to a target in range. If you cast a dash reaction ability, you may cast this ability as a free reaction at the beginning or end of your dash."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "longblade",
+            "modal",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Steadfast Strikes",
+        "clazz": "Soldier",
+        "branch": "Skirmish",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You attack relentlessly in between evasive moves. Deal 2d10 physical damage to a target in range. You may choose to concentrate on this ability when you cast it. If you do, you may use your Major Action to repeat this ability at no stamina cost, dealing 2d10 + Xd10 physical damage to a target in range, where X is the number of times you have hit with this ability since beginning concentration. Concentration on this ability ends immediately when you take at least 1 point of damage or recieve a condition."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "longblade",
+            "concentration",
+            "repeatable",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Biding Blade",
+        "clazz": "Soldier",
+        "branch": "Skirmish",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You build energy while blocking to attack when the opening presents itself. Deal 5d10 physical damage to a target in range. If you cast a block reaction ability, you may cast this ability as a free reaction after your block, dealing 5d10 + X physical damage to a target in range, where X is half the blocked damage amount."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "longblade",
+            "modal",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Sever The Head",
+        "clazz": "Soldier",
+        "branch": "Skirmish",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "50 stamina",
+        "rng": "30 ft",
+        "duration": "Instant",
+        "description": [
+            "You dive the enemy\u2019s backline with the goal of slaying their commander. Dash to a space adjacent to a target in range, marking the target and dealing 6d10 physical damage to it. While the target is marked, it loses its reaction and takes 50% increased damage from your attacks. The mark lasts until the beginning of your next turn or until you take at least 1 point of damage or gain a condition. Alternatively, you may end the mark early to dash up to 30 ft in any direction as a free reaction at any time."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "longblade",
+            "modal",
+            "mark",
+            "damage boost",
+            "dash"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Intercept",
+        "clazz": "Soldier",
+        "branch": "Safeguard",
+        "tier": 1,
+        "action": "1 Reaction",
+        "cost": "10 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You toss your shield up to block an attack. Completely block one single-target attack on you as a reaction. If the attacker is in melee range, you may dash to any empty space that is still in melee range."
+        ],
+        "tags": [
+            "Block",
+            "self-target",
+            "dash",
+            "conditional",
+            "shield"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Shield Bash",
+        "clazz": "Soldier",
+        "branch": "Safeguard",
+        "tier": 2,
+        "action": "1 Reaction",
+        "cost": "30 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You preemptively counterattack before your enemy\u2019s attack lands. When an enemy in range targets you with an attack, deal 4d6 physical damage to that enemy. If you roll at least 18 on your damage dice for this ability, it also Stuns your target until the beginning of their next turn."
+        ],
+        "tags": [
+            "Single-target",
+            "attack",
+            "physical",
+            "melee",
+            "shield",
+            "conditional",
+            "Stun",
+            "condition"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Protective Sweep",
+        "clazz": "Soldier",
+        "branch": "Safeguard",
+        "tier": 3,
+        "action": "1 Reaction",
+        "cost": "40 stamina",
+        "rng": "5 ft",
+        "duration": "Instant",
+        "description": [
+            "You spin your shield in a wide circle, protecting an entire area. Block all the effects of an incoming AOE attack for all spaces within range."
+        ],
+        "tags": [
+            "Block",
+            "AOE",
+            "shield"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Long Live The King",
+        "clazz": "Soldier",
+        "branch": "Safeguard",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "50 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You stand by an important ally, protecting them from harm. Until the beginning of your next turn, you may use any number of free reactions to redirect all attacks that would hit target adjacent ally to yourself, blocking 50% of the damage of those attacks. If the ally you targetted is not adjacent to you when they are attacked, you may dash to a space adjacent to them as a free reaction to such an attack, expending 5 stamina for every 5 ft traveled this way up to a limit of 50 ft."
+        ],
+        "tags": [
+            "Block",
+            "dash",
+            "modal",
+            "variable stamina cost",
+            "redirect"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Dodge Roll",
+        "clazz": "Soldier",
+        "branch": "Sprint",
+        "tier": 1,
+        "action": "1 Minor Action or Reaction",
+        "cost": "10 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You roll away or towards enemies. Dash up to 20 ft in any direction at any time. The max dash range extends to 30 ft if you use this ability as a reaction after using it as a minor action in the same round."
+        ],
+        "tags": [
+            "Dash",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Double Time",
+        "clazz": "Soldier",
+        "branch": "Sprint",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You speed up your pace in combat. Increase your move speed by +20 and convert all movement made during Move Actions to dashes."
+        ],
+        "tags": [
+            "Buff",
+            "move speed"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Tactical Withdrawal",
+        "clazz": "Soldier",
+        "branch": "Sprint",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You sprint out of a tactically unsound position. When you successfully resolve this ability, actions you take this turn do not trigger enemy reactions (although the initial cast of this ability can be reacted to). Dash up to 40 ft in any direction to a space that is not adjacent to an enemy."
+        ],
+        "tags": [
+            "Dash",
+            "conditional",
+            "action denial"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Vigor of Battle",
+        "clazz": "Soldier",
+        "branch": "Sprint",
+        "tier": 4,
+        "action": "1 Minor Action",
+        "cost": "50 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You build up speed as you deliver death. Until the beginning of your next turn, you gain 5 ft of additional move speed for every 5 damage you deal this round, and you gain 5% evasion for every 10 damage you deal this round. At the beginning of your next turn, any unused move speed you accumulated during the last round carries over to the new turn."
+        ],
+        "tags": [
+            "Gain move speed",
+            "gain evasion"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Gale Shot",
+        "clazz": "Air Duelist",
+        "branch": "Dueling",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 stamina",
+        "rng": "150 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire at an enemy while making evasive maneuvers. Deal 4d8 physical damage to a target in range, then dash 10 ft in any direction"
+        ],
+        "tags": [
+            "Attack",
+            "ranged",
+            "physical",
+            "bow",
+            "dash",
+            "single-target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Zephyr Shot",
+        "clazz": "Air Duelist",
+        "branch": "Dueling",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 stamina",
+        "rng": "150 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire a series of several arrows at the enemy. Deal d8 physical damage to a target in range. This attack repeats 5 times, and you may change targets with each hit."
+        ],
+        "tags": [
+            "Attack",
+            "ranged",
+            "physical",
+            "bow",
+            "single-target",
+            "multi-target",
+            "multi-hit"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Wind Strike",
+        "clazz": "Air Duelist",
+        "branch": "Casting",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 mana",
+        "rng": "150 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire a powerful gust of air to blow enemies away. Deal 5d8 air magic damage to a target in range, pushing them 10 ft away from you."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "ranged",
+            "air",
+            "destruction",
+            "single-target",
+            "control",
+            "utility",
+            "conjuration",
+            "push."
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Cutting Winds",
+        "clazz": "Air Duelist",
+        "branch": "Casting",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 mana",
+        "rng": "150 ft",
+        "duration": "Instant",
+        "description": [
+            "You conjure winds as sharp as blades to damage and knock down enemies. Deal 6d8 air magic damage to all entities in a 25 ft square centered on a space in range, knocking them all Prone."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "ranged",
+            "air",
+            "destruction",
+            "AOE",
+            "square",
+            "conjuration",
+            "Knock Prone"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Mistral Bow",
+        "clazz": "Air Duelist",
+        "branch": "Buffing",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "10 mana",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You use air magic to provide your bow with extra stopping power. For the spell\u2019s duration, when you hit a target with a bow attack, push the target 5 ft away from you as an on-hit effect."
+        ],
+        "tags": [
+            "Spell",
+            "air",
+            "buff",
+            "self-target",
+            "on-hit",
+            "bow",
+            "push"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Arc of Air",
+        "clazz": "Air Duelist",
+        "branch": "Buffing",
+        "tier": 2,
+        "action": "1 Minor Action",
+        "cost": "20 mana",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You envelop your bow in air magic energy. For the spell\u2019s duration, when you hit a target with a bow attack, deal an additional 2d8 air magic damage on hit."
+        ],
+        "tags": [
+            "Spell",
+            "air",
+            "buff",
+            "self-target",
+            "on-hit",
+            "bow",
+            ""
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Piercing Shot",
+        "clazz": "Sniper",
+        "branch": "Shooting",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 stamina",
+        "rng": "200 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire an empowered arrow, skewering multiple enemies. Deal 5d8 physical damage to all enemy targets in a 200 ft line. Targets beyond the first one hit take half damage, unless they are Spotted."
+        ],
+        "tags": [
+            "Attack",
+            "ranged",
+            "physical",
+            "multi-target",
+            ""
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Kill Shot",
+        "clazz": "Sniper",
+        "branch": "Shooting",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "30 stamina",
+        "rng": "200 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire a single, massive arrow with deadly accuracy. Deal 7d8 physical damage to a target in range. You may choose to expend any number of Spotting stacks to add 10% Lethality to the attack per stack."
+        ],
+        "tags": [
+            "Attack",
+            "ranged",
+            "physical",
+            "single-target",
+            "modal",
+            "Lethal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Shrapnel  Shot",
+        "clazz": "Sniper",
+        "branch": "Shooting",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "45 stamina",
+        "rng": "200 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire an arrow rigged to detonate, shooting deadly shrapnel from the arrowhead after initial impact. Deal 6d8 to a target in range. If the target is Spotted, this ability deals half as much damage taken by the target to all enemies within 20 ft of the target. If the target was killed by the initial hit, this ability deals damage equal to the damage taken by the target to all enemies within 20 ft of the target instead."
+        ],
+        "tags": [
+            "Attack",
+            "ranged",
+            "physical",
+            "single-target",
+            "conditional",
+            "AOE"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Rapid Shot",
+        "clazz": "Sniper",
+        "branch": "Shooting",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "X stamina",
+        "rng": "200 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire a heavy stream of arrows. Expend any amount of stamina in order to deal 2d8 physical damage to a target in range for every 10 stamina spent this way. If the target is Spotted, these hits gain the damage increase from consuming Spotting stacks without actually consuming them until the last hit."
+        ],
+        "tags": [
+            "Attack",
+            "ranged",
+            "physical",
+            "single-target",
+            "multi-hit",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Distance Shooter",
+        "clazz": "Sniper",
+        "branch": "Aiming",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You fire specialized arrows which speed up as they fly. Your next ranged attack deals 2 additional damage for every 5 ft between you and your target."
+        ],
+        "tags": [
+            "Buff",
+            "self-target",
+            "conditional",
+            "ranged"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Precision Shooter",
+        "clazz": "Sniper",
+        "branch": "Aiming",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "30 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You fire specialized arrows which fly faster and punch through armor. Your next ranged attack ignores AC and MR, cannot miss, bypasses barriers and walls, cannot be blocked or redirected, and cannot be reacted to."
+        ],
+        "tags": [
+            "Buff",
+            "self-target",
+            "ignore AC",
+            "ignore MR",
+            "ignore barriers/walls/blocks",
+            "no-miss",
+            "no-react"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Analytical Shooter",
+        "clazz": "Sniper",
+        "branch": "Aiming",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "55 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You aim carefully, scanning for a target\u2019s weak points. Your next ranged attack gains 20% critical strike chance and 50% critical damage modifier. When you cast this ability, you may choose to concentrate on it. While concentrating on this ability, you may use a Major Action to gain an additional 10% critical strike chance and 25% critical damage modifier on your next ranged attack. This ability cannot grant more than 100% critical strike chance or more than 200% critical damage modifier. Concentration on this ability ends immediately upon making an attack."
+        ],
+        "tags": [
+            "Buff",
+            "self-target",
+            "stat improve",
+            "critical",
+            "concentration",
+            "repeatable"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Professional Shooter",
+        "clazz": "Sniper",
+        "branch": "Aiming",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "120 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You force your senses past their limit. If you have an enemy Spotted, when you cast this ability, you instantly gain max Spotting stacks. After casting this ability, you lose the benefits of the Spotter passive until your next long rest."
+        ],
+        "tags": [
+            "Self-target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Swift Sprint",
+        "clazz": "Sniper",
+        "branch": "Improvising",
+        "tier": 1,
+        "action": "1 Major Action or Reaction",
+        "cost": "15 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You quickly spring to your feet and sprint from danger. Cleanse Slow, Immobilize, and Prone, then dash 10 ft in any direction. You may choose to expend a stack of Spotting to dash 25 ft instead."
+        ],
+        "tags": [
+            "Dash",
+            "modal",
+            "cleanse"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Swift Shot",
+        "clazz": "Sniper",
+        "branch": "Improvising",
+        "tier": 2,
+        "action": "1 Minor Action or Reaction",
+        "cost": "25 stamina",
+        "rng": "200 ft",
+        "duration": "Instant",
+        "description": [
+            "You flick your aim elsewhere and take a snap potshot. Deal 3d8 physical damage to a target in range, Stunning them until the end of the turn."
+        ],
+        "tags": [
+            "Attack",
+            "ranged",
+            "physical",
+            "single-target",
+            "condition",
+            "Stun"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Bola Shot",
+        "clazz": "Sniper",
+        "branch": "Improvising",
+        "tier": 3,
+        "action": "1 Major Action or Reaction",
+        "cost": "35 stamina",
+        "rng": "200 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire an arrow with a bola head. Deal 4d8 damage and inflict Slow on a target in range. You may choose to expend a stack of Spotting to inflict Immobilize instead."
+        ],
+        "tags": [
+            "Attack",
+            "ranged",
+            "physical",
+            "single-target",
+            "condition",
+            "Slow",
+            "modal",
+            "Immobilize"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Evasive Maneuvers",
+        "clazz": "Sniper",
+        "branch": "Improvising",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "70 stamina",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You concentrate all your energy on avoiding attacks. Expend any number of Spotting stacks to gain 10% evasion per stack expended this way. While this buff is active, you may use your Reaction to cast any Sniper ability."
+        ],
+        "tags": [
+            "Buff",
+            "concentration",
+            "add evasion",
+            ""
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Belly Dance",
+        "clazz": "Dancer",
+        "branch": "Sway",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 stamina",
+        "rng": "Touch",
+        "duration": "1 minute",
+        "description": [
+            "You charm attackers with your sensual touch and dull their strikes. Inflict a 10% Weaken to a target in range for the duration. This Weaken can stack up to 4 times. This ability costs 10 less stamina if your last Move Action included a Step 3 dance ability."
+        ],
+        "tags": [
+            "Attack",
+            "condition",
+            "Weaken",
+            "stacking",
+            "conditional",
+            "dance",
+            "Step 1"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Swing",
+        "clazz": "Dancer",
+        "branch": "Sway",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "15 stamina",
+        "rng": "Touch",
+        "duration": "Instant",
+        "description": [
+            "You force enemies to join you in dance. Push a target in range 20 ft in any direction. If the target hits other entities during its forced movement, it pushes them as well. This ability costs 15 less stamina if your last Move Action included a Step 1 dance ability."
+        ],
+        "tags": [
+            "Attack",
+            "push",
+            "conditional",
+            "dance",
+            "Step 2"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Tango",
+        "clazz": "Dancer",
+        "branch": "Strut",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 stamina",
+        "rng": "Touch",
+        "duration": "Instant",
+        "description": [
+            "You join up with a partner, giving them time to recover while you guide their step. Cleanse 1 condition on yourself or cleanse 1 condition on an ally in range and push them 5 ft in any direction. This ability costs 10 less stamina if your last Move Action included a Step 1 dance ability."
+        ],
+        "tags": [
+            "Cleanse",
+            "push",
+            "conditional",
+            "dance",
+            "Step 2"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Waltz",
+        "clazz": "Dancer",
+        "branch": "Strut",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "15 stamina",
+        "rng": "Touch",
+        "duration": "Instant",
+        "description": [
+            "You reinvigorate an ally with your beautiful dance moves. Heal 3d10 for a target in range and cleanse Poison, Bleed, and Burn. This ability costs 15 less stamina if your last Move Action included a Step 2 ability."
+        ],
+        "tags": [
+            "Cleanse",
+            "push",
+            "conditional",
+            "dance",
+            "Step 3"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Foxtrot",
+        "clazz": "Dancer",
+        "branch": "Shimmy",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 stamina",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You quickly step and weave across the dance hall. Gain 10% evasion and 10% general MR for the duration. This buff can stack up to 4 times. This ability costs 10 less stamina if your last Move Action included a Step 2 dance ability."
+        ],
+        "tags": [
+            "Buff",
+            "gain evasion",
+            "gain MR",
+            "dance",
+            "Step 3"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Moonwalk",
+        "clazz": "Dancer",
+        "branch": "Shimmy",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "15 stamina",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You slide across the dance hall. Gain 10 movement speed. This buff can stack up to 4 times. This ability costs 15 less stamina if your last Move Action included a Step 3 dance ability."
+        ],
+        "tags": [
+            "Buff",
+            "gain move speed",
+            "conditional",
+            "dance",
+            "Step 1"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Lightning Lunge",
+        "clazz": "Lightning Duelist",
+        "branch": "Dueling",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You make a lunging strike at an enemy with your rapier. Dash up to 10 ft, then deal 4d8 physical damage to a target in range."
+        ],
+        "tags": [
+            "Attack",
+            "melee",
+            "physical",
+            "rapier",
+            "dash",
+            "single-target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Blade Storm",
+        "clazz": "Lightning Duelist",
+        "branch": "Dueling",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You stab rapidly and repeatedly at an enemy with your rapier. Deal d8 physical damage to a target in range. This attack repeats 2-6 times."
+        ],
+        "tags": [
+            "Attack",
+            "melee",
+            "physical",
+            "rapier",
+            "multi-hit",
+            "single-target."
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Shocking Parry",
+        "clazz": "Lightning Duelist",
+        "branch": "Dueling",
+        "tier": 3,
+        "action": "1 Reaction",
+        "cost": "30 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You parry an enemy\u2019s strike and counter. As a reaction to an enemy in range attacking you with a weapon, fully block the attack with your rapier and counterattack, dealing 4d8 physical damage to that enemy. When you hit an enemy with this ability, you have a 50% chance of recovering half the stamina cost."
+        ],
+        "tags": [
+            "Attack",
+            "melee",
+            "physical",
+            "rapier",
+            "single-target",
+            "restore stamina",
+            "reaction",
+            "counter",
+            "block"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Flash of Swords",
+        "clazz": "Lightning Duelist",
+        "branch": "Dueling",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "70 stamina",
+        "rng": "25 ft",
+        "duration": "Instant",
+        "description": [
+            "You move and strike in a blur of deadly speed. Deal 8d8 physical damage to all enemies adjacent to you. Then, dash up to 25 ft to an empty space in range, dealing 4d8 physical damage to all enemies in spaces you pass through. Finally, deal 8d8 physical damage to all enemies adjacent to your dash\u2019s final destination. An enemy cannot be hit more than once with this ability per cast (Battle Current\u2019s activation counts as a separate cast)."
+        ],
+        "tags": [
+            "Attack",
+            "melee",
+            "multi-target",
+            "physical",
+            "rapier",
+            "dash"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Shock Tendrils",
+        "clazz": "Lightning Duelist",
+        "branch": "Casting",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 mana",
+        "rng": "20 ft",
+        "duration": "Instant",
+        "description": [
+            "You release tendril of energy in front of you. Deal 3d8 lightning magic damage to all enemy targets in a 20 ft line. Then at the end of your turn, this spell deals 3d8 damage to all targets in a 20 ft line with random direction."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "lightning",
+            "AOE",
+            "line",
+            "random"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Ball Lightning",
+        "clazz": "Lightning Duelist",
+        "branch": "Casting",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 mana",
+        "rng": "20 ft",
+        "duration": "1 minute",
+        "description": [
+            "You summon a ball of energy that erratically flies around attacking enemies. Summon a Ball Lightning object in an empty space in range. When summoned, it deals 4d8 lightning magic damage to all adjacent enemies. At the beginning of each of your turns, it travels 20 ft in a random direction (stopping when it hits a space it can\u2019t enter), then discharges, dealing 2d8 lightning magic damage to all adjacent targets."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "lightning",
+            "AOE",
+            "summoning",
+            "destruction",
+            "random",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Thunder Blast",
+        "clazz": "Lightning Duelist",
+        "branch": "Casting",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 mana",
+        "rng": "100 ft",
+        "duration": "Instant",
+        "description": [
+            "You call down a mighty bolt of thunder. Deal 8d8 lightning magic damage to all entities in a 20 ft square. Until the beginning of your next turn, random lightning strikes occur every turn in the target square, dealing 4d8 lightning magic damage to entities struck."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "lightning",
+            "AOE",
+            "ground-target",
+            "random"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Arc Lightning",
+        "clazz": "Lightning Duelist",
+        "branch": "Casting",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "60 mana",
+        "rng": "40 ft",
+        "duration": "1 round",
+        "description": [
+            "You release a powerful bolt of lightning that bounces between targets. Deal 6d8 lightning magic damage to a target in range, marking them until the end of your next turn. Dealing physical damage to the marked target with a rapier causes a lightning bolt to fire from their bodies, dealing 6d8 lightning magic damage to them and cleansing their mark, as well as dealing 6d8 lightning magic damage to another random enemy within 40 ft and marking them until the end of your next turn."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "ranged",
+            "lightning",
+            "single-target",
+            "mark",
+            "random",
+            ""
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Taser Blade",
+        "clazz": "Lightning Duelist",
+        "branch": "Buffing",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "10 mana",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You envelop your blade in an electric current. For the spell\u2019s duration, when you hit a target with a rapier attack, inflict a stack of Paralysis on the target."
+        ],
+        "tags": [
+            "Spell",
+            "lightning",
+            "buff",
+            "self-target",
+            "on-hit",
+            "condition",
+            "Paralysis",
+            "rapier"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Sword of Lightning",
+        "clazz": "Lightning Duelist",
+        "branch": "Buffing",
+        "tier": 2,
+        "action": "1 Minor Action",
+        "cost": "20 mana",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You envelop your blade in lightning magic energy. For the spell\u2019s duration, when you hit a target with a rapier attack, deal an additional 2d8 lightning magic damage on hit."
+        ],
+        "tags": [
+            "Spell",
+            "lightning",
+            "buff",
+            "self-target",
+            "on-hit",
+            "rapier"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Plasma Saber",
+        "clazz": "Lightning Duelist",
+        "branch": "Buffing",
+        "tier": 3,
+        "action": "1 Minor Action",
+        "cost": "30 mana",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "Your blade becomes a thin sheet of lightning magic. All damage that you would deal with rapier attacks have their damage converted to lightning magic damage. While this buff is active, Battle Current empowered attacks recover 5, 10, or 15 stamina randomly."
+        ],
+        "tags": [
+            "Spell",
+            "lightning",
+            "buff",
+            "self-target",
+            "damage convert",
+            "rapier",
+            "gain stamina"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Lightning Coil Cuirass",
+        "clazz": "Lightning Duelist",
+        "branch": "Buffing",
+        "tier": 4,
+        "action": "1 Minor Action",
+        "cost": "80 mana",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You don magically conjured lightning armor. Whenever an adjacent enemy targets you with an attack, they are inflicted with a stack of Paralysis and take 2d8 lightning magic damage. Whenever you take damage, you may freely dash up to your speed in any direction. While this ability is active, you gain a stack of Lightning on every physical damage hit. You expend all stacks of Lightning when you cast a lightning spell attack, increasing lightning magic damage by 10% for each stack of Lightning expended this way, up to a limit of 20 stacks."
+        ],
+        "tags": [
+            "Spell",
+            "lightning",
+            "buff",
+            "self-target",
+            "condition",
+            "Paralysis",
+            "stacking buff",
+            "concentration",
+            "dash"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Cloak and Dagger",
+        "clazz": "Thief",
+        "branch": "Predator",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You stab at an enemy behind the veil of stealth or with the sudden violence of a mugging. Deal 5d4 physical damage to a target in range. If you are in Hit Stance, this attack has +100% critical damage modifier. If you are in Run Stance, this attack has +20% critical strike chance."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "melee",
+            "conditional",
+            "stance"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Blade in the Dark",
+        "clazz": "Thief",
+        "branch": "Predator",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 stamina",
+        "rng": "30 ft",
+        "duration": "Instant",
+        "description": [
+            "You toss a knife from the shadows. Deal 4d4 physical damage to a target in range. If you entered Hit Stance this turn, you may dash to a space adjacent to your target after the attack, gaining 50% critical damage modifier until the end of your next turn. If you entered Run Stance this turn, this attack does not break your Hidden status, and you gain 10% critical strike chance until the end of your next turn."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "ranged",
+            "conditional",
+            "stance",
+            "Hidden",
+            "buff",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Snatch and Grab",
+        "clazz": "Thief",
+        "branch": "Pilfer",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "15 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You reach into a distracted enemy\u2019s bag and grab the first thing you touch. Steal a random item or up to 100 gp from the inventory of a target in range. If you are in Hit Stance, steal twice from the target. If you fail to steal an item because the target\u2019s inventory is empty, you may make an auto attack against the target with an equipped dagger as a free action."
+        ],
+        "tags": [
+            "Conditional",
+            "random",
+            "modal",
+            "attack",
+            "physical",
+            "dagger",
+            "stance"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Charm and Disarm",
+        "clazz": "Thief",
+        "branch": "Pilfer",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "40 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You distract an enemy and snatch the weapon right out of an enemy\u2019s hand, or loosen the clasps on their armor so it falls free. A target in range becomes Confused until the beginning of their next turn. Then steal a weapon or armor piece that is equipped to that target. If you are in Hit Stance and steal a weapon this way, you may make an autoattack with that weapon as a free action before stowing or discarding it. If you are in Hit Stance and steal a piece of armor this way, the target\u2019s Confusion lasts until the end of their next turn instead."
+        ],
+        "tags": [
+            "Conditional",
+            "stance",
+            "modal",
+            "attack",
+            "condition",
+            "Confuse"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Infiltrate",
+        "clazz": "Thief",
+        "branch": "Prowl",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You move quickly and quietly past doors and guards. Dash up to 40 ft in any direction. During this dash, you automatically unlock doors and windows and pass through magical barriers without harm. If you are in Run Stance, you may cast this ability as a Minor Action instead."
+        ],
+        "tags": [
+            "Dash",
+            "conditional",
+            "modal",
+            "stance"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Dodge the Law",
+        "clazz": "Thief",
+        "branch": "Prowl",
+        "tier": 2,
+        "action": "1 Reaction",
+        "cost": "30 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You evade an attempt at capture and escape the hands of your pursuers. Cleanse Cripple, Immobilize, Prone, and Slow. Break any grapple or bindings you are in and temporarily ignore any condition or spell that would prevent you from moving freely until the end of your next turn. Then dash up to 30 ft in any direction. If you are in Run Stance, you may instead dash up to 40 ft in any direction and become Hidden after your dash."
+        ],
+        "tags": [
+            "Cleanse",
+            "dash",
+            "conditional",
+            "stance",
+            "Hidden"
         ]
     }
-]
+];
 
-var components = abilities.concat(attributes).concat(races).concat(skills).concat(clazzes);
+// organize things in case they're useful
+for (var i = 0; i < components.length; i++) {
+    component = components[i];
+    if (!('type' in component)) {
+        log('component missing type ' + component.name);
+        continue;
+    }
+    
+    if (component.type === 'attribute') {
+        attributes.push(component);
+    } else if (component.type === 'ability') {
+        abilities.push(component);
+    } else if (component.type === 'race') {
+        races.push(component);
+    } else if (component.type === 'clazz') {
+        clazzes.push(component);
+    } else if (component.type === 'skill') {
+        skills.push(component);
+    } else if (component.type === 'buff') {
+        buffs.push(component);
+    } else if (component.type === 'condition') {
+        conditions.push(component);
+    } else if (component.type === 'item') {
+        items.push(component);    
+    } else {
+        log('unknown component type ' + component.name);
+    }
+}

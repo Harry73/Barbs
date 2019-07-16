@@ -22,7 +22,7 @@ class Attribute(Component):
 
     def to_json(self):
         return {
-            'component': 'attribute',
+            'type': 'attribute',
             'name': self.name,
             'abbreviation': self.abbreviation,
             'description': self.description,
