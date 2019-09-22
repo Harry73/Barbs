@@ -1,3 +1,65 @@
+var owners = {
+    'gm': [
+        'Adam',
+        '-LjcnkLEcvyx-LjrwJlx',
+    ],
+    'ian': [
+        'Hoshiko Nightside',
+        'Ren Nightside',
+        'Luna Nightside',
+        'Ian P.',
+        'Ian',
+        '-LjmvO3KlA-S3iHQlRW3',
+    ],
+    'ahasan': [
+        'Edwin Markov (Adric Vapeiros)',
+        'Ahasan R.',
+        'Ahasan',
+        '-Ljmverqp4J9xjCdHGq4',
+    ],
+    'sanjay': [
+        'Kirin Inagami',
+        'Sanjay N.',
+        'Sanjay',
+        '-Lk1li2MqriN_SAJ1ARF',
+    ],
+    'ravi': [
+        'Russ Finnegan',
+        'Ravi B.',
+        'Ravi',
+        '-Lk7Ovry6ltsLmK8qnUY',
+    ],
+    'jason': [
+        'Cordelia Tenebris',
+        'Jason',
+        'Jason V.',
+    ],
+    'steve': [
+        "Suro N'Gamma",
+        'Steve K.',
+        'Steve',
+    ],
+    'matt': [
+        'Orpheus Glacierum',
+        'Matthew H.',
+        'Matthew',
+        'Matt H.',
+        'Matt',
+    ],
+    'nevil': [
+        'Faust Brightwood',
+        'Nevil A.',
+        'Nevil,'
+    ],
+    'dan': [
+        'Janatris',
+        'Daniel B.',
+        'Daniel',
+        'Dan B.',
+        'Dan',
+    ],
+};
+
 class Stat {
 
     constructor(name, attr_tla, formula) {
@@ -6,7 +68,7 @@ class Stat {
         this.attr_tla = attr_tla;
         this.formula = formula;
     }
-        
+
     value(v) {
         return this.formula(v);
     }
@@ -38,7 +100,7 @@ var STATS = [
 
 var hoshiko = {
     'name': 'Hoshiko/Luna/Ren Nightside',
-    'owner': 'gm',
+    'owner': 'ian',
     'gender': 'Female',
     'race': 'Shifter',
     'height': '5 ft 4 in',
@@ -95,18 +157,25 @@ var hoshiko = {
             'Precision Shooter',
             'Swift Sprint',
         ],
-    }
+    },
+    'items': [
+        'Longbow of Stunning',
+        'Leather Cap of Serenity',
+        'Leather Vest',
+        'Viper\'s Gloves of Dodging',
+        'Leather Sandals of Slickness',
+        'Quickened Quiver',
+        'Ring of Archery',
+        'Energetic Ring of the Mind',
+        'Invigorated Belt of Greater Stamina',
+    ],
 };
 
-var owners = {
-    'gm': '-LjcnkLEcvyx-LjrwJlx',
-};
-
-var player_list = [
+var character_list = [
     hoshiko,
 ]
 
-var players = [];
+var characters = [];
 
 // individual collections are built at the end off of `components`, which has everything
 var attributes = [];
@@ -5728,7 +5797,7 @@ for (var i = 0; i < components.length; i++) {
         log('component missing type ' + component.name);
         continue;
     }
-    
+
     if (component.type === 'attribute') {
         attributes.push(component);
     } else if (component.type === 'ability') {
@@ -5744,7 +5813,7 @@ for (var i = 0; i < components.length; i++) {
     } else if (component.type === 'condition') {
         conditions.push(component);
     } else if (component.type === 'item') {
-        items.push(component);    
+        items.push(component);
     } else {
         log('unknown component type ' + component.name);
     }

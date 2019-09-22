@@ -1,0 +1,2635 @@
+<div class="sheet-overall-wrapper">
+	<!-- PC / NPC toggle -->
+	<input class="sheet-is-npc" type="checkbox" name="attr_is_npc" value="1"><span class="sheet-is-npc-tab"></span>
+	<div style="float: right">
+		<input type="checkbox" name="attr_default_ro" class="sheet-ro-checkbox" value="1" /><span class="sheet-ro-label">y</span>
+		<!-- Modal template Should be placed as the first element immediately after the input checkbox to open it -->
+		<div class="sheet-ro-modal sheet-save-modal">
+			<div>
+				<!-- Modal Title and close button row -->
+				<div class="sheet-row sheet-ro-header sheet-border-bottom sheet-padb">
+					<div class="sheet-col-3-4 sheet-ro-title">Default Roll Options</div>
+					<div class="sheet-col-1-4 sheet-ro-close-wrapper">
+						<input type="checkbox" name="attr_default_ro" class="sheet-ro-close-checkbox" value="1" />
+						<span class="sheet-ro-close-label"></span>
+					</div>
+				</div>
+				<!--Help text and copy of roll button-->
+				<div class="sheet-row sheet-padb">
+					<div class="sheet-col-2-3 sheet-small-note">The settings here apply to any rolls set to use the default roll options</div>
+				</div>
+				<hr/>
+				<!-- Define options here -->
+				<div class="sheet-row sheet-checkbox-row">
+					<div class="sheet-col-1-3 sheet-ro-optionlabel">Roll type</div>
+					<div class="sheet-col-2-3 sheet-padl sheet-ro-option">
+						<select name="attr_ro_default_rolltype">
+							<option value="{{showadvroll=1}} {{roll2=[[ 1d20">Roll 2d20</option>
+							<option value="{{noadvroll=1}}">Roll 1d20</option>
+							<option value="?{Roll type?|Normal,&#123&#123noadvroll=1&#125&#125|Advantage,&#123&#123rollhasadv=1&#125&#125 &#123&#123roll2=[[1d20|Disadvantage,&#123&#123rollhasdisadv=1&#125&#125 &#123&#123roll2=[[1d20}">Prompt for adv/disadv</option>
+							<option value="{{rollhasadv=1}} {{roll2=[[ 1d20">ALWAYS Advantage</option>
+							<option value="{{rollhasdisadv=1}} {{roll2=[[ 1d20">ALWAYS Disadvantage</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<!-- close inner modal div -->
+		</div>
+		<!-- close outer modal div -->
+	</div>
+
+
+	<div class="sheet-core-header sheet-padb">
+		<div class="sheet-row">
+			<div class="sheet-col-1-2 sheet-margin-top"><img src="http://i.imgur.com/Y8KHPKm.png" alt="Barbs"></div>
+			<div class="sheet-col-1-4 sheet-small-label sheet-center">
+				<input class="sheet-underlined sheet-center" type="text" name="attr_character_name">
+				<br/>Character Name
+			</div>
+			<div class="sheet-col-1-4 sheet-small-label sheet-center">
+				<input class="sheet-underlined sheet-center" type="text" name="attr_owner">
+				<br/>Owner
+			</div>
+		</div>
+	</div>
+
+
+	<div class="sheet-player">
+
+		<!-- Header Tabs -->
+		<input type="radio" name="attr_tab" class="sheet-tab sheet-tab1" value="1" title="Characteristics" checked="checked" />
+		<span class="sheet-tab sheet-tab1">Characteristics</span>
+		<input type="radio" name="attr_tab" class="sheet-tab sheet-tab2" value="2" />
+		<span class="sheet-tab sheet-tab2">Attributes</span>
+		<input type="radio" name="attr_tab" class="sheet-tab sheet-tab3" value="3" />
+		<span class="sheet-tab sheet-tab3">Stats</span>
+		<input type="radio" name="attr_tab" class="sheet-tab sheet-tab4" value="4" />
+		<span class="sheet-tab sheet-tab4">Skills</span>
+		<input type="radio" name="attr_tab" class="sheet-tab sheet-tab5" value="5" />
+		<span class="sheet-tab sheet-tab5">Class Abilities</span>
+		<input type="radio" name="attr_tab" class="sheet-tab sheet-tab6" value="6" />
+		<span class="sheet-tab sheet-tab6">Equipment</span>
+		<input type="radio" name="attr_tab" class="sheet-tab sheet-tab7" value="7" />
+		<span class="sheet-tab sheet-tab7">Inventory</span>
+		<span class="sheet-spacer"></span>
+
+
+		<!-- Characteristics Sheet -->
+		<div class="sheet-section-characteristics">
+			<h4 class="sheet-center">Appearance, Languages and Alignment <span class="sheet-pictos">U</span></h4>
+			<div class="sheet-row">
+				<div class="sheet-col-1-6 sheet-small-label sheet-center">
+					<input class="sheet-underlined sheet-center" type="text" name="attr_gender">
+					<br/>Gender
+				</div>
+				<div class="sheet-col-1-6 sheet-small-label sheet-center">
+					<input class="sheet-underlined sheet-center" type="number" name="attr_age">
+					<br/>Age
+				</div>
+				<div class="sheet-col-1-6 sheet-small-label sheet-center">
+					<input class="sheet-underlined sheet-center" type="text" name="attr_height">
+					<br/>Height
+				</div>
+				<div class="sheet-col-1-6 sheet-small-label sheet-center">
+					<input class="sheet-underlined sheet-center" type="text" name="attr_weight">
+					<br/>Weight
+				</div>
+				<div class="sheet-col-1-6 sheet-small-label sheet-center">
+					<input class="sheet-underlined sheet-center" type="text" name="attr_eyes">
+					<br/>Eye Color
+				</div>
+				<div class="sheet-col-1-6 sheet-small-label sheet-center">
+					<input class="sheet-underlined sheet-center" type="text" name="attr_hair">
+					<br/>Hair Color
+				</div>
+			</div>
+
+			<div class="sheet-row sheet-padb">
+				<div class="sheet-col-5-6 sheet-small-label sheet-center">
+					<input class="sheet-underlined sheet-center" type="text" name="attr_languages">
+					<br/>Known Languages</div>
+				<div class="sheet-col-1-6 sheet-small-label sheet-center">
+					<input class="sheet-underlined sheet-center" type="text" name="attr_alignment">
+					<br/>Alignment</div>
+			</div>
+
+			<div class="sheet-col-1-2 sheet-padr">
+				<h4 class="sheet-center">Core Stats</h4>
+				<div class="sheet-row sheet-sub-header">
+					<div class="sheet-col-3-8 sheet-center sheet-small-label">Stat</div>
+					<div class="sheet-col-1-8 sheet-center sheet-small-label">Score</div>
+				</div>
+
+				<!-- Core stat: Health -->
+				<div class="sheet-row">
+					<div class="sheet-col-3-8 sheet-core-stat-label">Health</div>
+					<div class="sheet-col-1-8">
+						<input type="number" name="attr_overview_health" value="100+10*@{VIT}" disabled="disabled"/>
+					</div>
+				</div>
+
+				<!-- Core stat: Stamina -->
+				<div class="sheet-row">
+					<div class="sheet-col-3-8 sheet-core-stat-label">Stamina</div>
+					<div class="sheet-col-1-8">
+						<input type="number" name="attr_overview_stamina" value="100+10*@{END}" disabled="disabled" />
+					</div>
+				</div>
+
+				<!-- Core stat: Mana -->
+				<div class="sheet-row">
+					<div class="sheet-col-3-8 sheet-core-stat-label">Mana</div>
+					<div class="sheet-col-1-8">
+						<input type="number" name="attr_overview_mana" value="100+10*@{SPT}" disabled="disabled" />
+					</div>
+				</div>
+
+				<!-- Core stat: Agility -->
+				<div class="sheet-row">
+					<div class="sheet-col-3-8 sheet-core-stat-label">Speed</div>
+					<div class="sheet-col-1-8">
+						<input type="number" name="attr_overview_speed" value="30+5*floor(@{AGI}/2)" disabled="disabled" />
+					</div>
+				</div>
+			</div>
+
+
+			<div class="sheet-col-1-2 sheet-padr">
+				<div class="sheet-row">
+					<div class="sheet-col-1-2">
+						<h4 class="sheet-center">Initiative <span class="sheet-pictos">t</span></h4>
+						<div class="sheet-row sheet-padr">
+							<div class="sheet-col-1-3 sheet-center">
+								<button type="roll" class="sheet-initiative sheet-large-button" name="roll_Initiative" value="&{template:5eDefault} {{title=Initiative}} {{subheader=@{character_name}}} {{rollname=Initiative}} {{roll=[[ 1d100 + @{AGI} &{tracker} ]]}}">Initiative</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<h4 class="sheet-center">Level and Combat Experience<span class="sheet-pictos-three">d</span></h4>
+				<div class="sheet-row">
+					<!-- TODO add skill and class points -->
+					<div class="sheet-col-1-4 sheet-small-label sheet-center" title="This is automatically calculated from your individual class levels listed in the class section">
+						<input class="sheet-underlined" type="number" name="attr_level" value="200+@{VIT}+@{END}+@{SPT}+@{RCV}+@{PER}+@{SAN}+@{AGI}+@{TGH}+@{REF}+@{RES}+@{FRT}+@{STR}+@{DEX}+@{ATN}+@{PRE}+@{APL}+@{INT}+@{WIS}+@{COM}+@{FCS}" disabled="disabled">
+						<br/>Overall Level</div>
+					<div class="sheet-col-1-4 sheet-small-label sheet-center">
+						<input class="sheet-underlined" type="number" name="attr_xp" min="0" max="100" step="1">
+						<br/>Current Combat XP</div>
+					<div class="sheet-col-1-4 sheet-small-label sheet-center">
+						<input class="sheet-underlined" type="number" name="attr_xp_next_level" value="100" disabled="disabled">
+						<br/>XP for next level</div>
+				</div>
+
+				<h4 class="sheet-center">Death Saving Throw</h4>
+				<div class="sheet-row">
+					<div class="sheet-col-1-2">
+						<div class="sheet-row sheet-padr">
+							<div class="sheet-col-1-3 sheet-center">
+								<button type="roll" class="sheet-initiative sheet-large-button" name="roll_Initiative" value="&{template:5eDefault}  {{title=Death Save}} {{subheader=@{character_name}}} {{rollname=Death save}} {{roll=[[ 1d100 ]]}}">Death Saving Throw</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- Attributes Sheet -->
+		<div class="sheet-section-attributes">
+
+			<h4 class="sheet-center">Attributes</h4>
+			<div class="sheet-row">
+				<!-- left column -->
+				<div class="sheet-col-1-2 sheet-padr">
+					<div class="sheet-row sheet-sub-header">
+						<div class="sheet-col-1-6 sheet-center sheet-small-label">&nbsp;</div>
+						<div class="sheet-col-5-6 sheet-small-label">Attribute</div>
+					</div>
+
+					<!-- TODO fix the rolls -->
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Vitality}} {{VIT=[[1d100+@{VIT}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Vitality (VIT)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_VIT" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Endurance}} {{END=[[1d100+@{END}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Endurance (END)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_END" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Spirit}} {{SPT=[[1d100+@{SPT}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Spirit (SPT)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_SPT" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Recovery}} {{RCV=[[1d100+@{RCV}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Recovery (RCV)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_RCV" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Perseverance}} {{PER=[[1d100+@{PER}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Perseverance (PER)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_PER" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Sanity}} {{SAN=[[1d100+@{SAN}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Sanity (SAN)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_SAN" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Agility}} {{AGI=[[1d100+@{AGI}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Agility (AGI)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_AGI" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Toughness}} {{TGH=[[1d100+@{TGH}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Toughness (TGH)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_TGH" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Reflex}} {{REF=[[1d100+@{REF}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Reflex (REF)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_REF" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Resistance}} {{RES=[[1d100+@{RES}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Resistance (RES)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_RES" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+				</div>
+
+				<!-- right column -->
+				<div class="sheet-col-1-2">
+					<div class="sheet-row sheet-sub-header">
+						<div class="sheet-col-1-6 sheet-center sheet-small-label">&nbsp;</div>
+						<div class="sheet-col-5-6 sheet-small-label">Attribute</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Fortitude}} {{FRT=[[1d100+@{FRT}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Fortitude (FRT)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_FRT" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Strength}} {{STR=[[1d100+@{STR}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Strength (STR)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_STR" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Dexerity}} {{DEX=[[1d100+@{DEX}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Dexerity (DEX)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_DEX" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Attunement}} {{ATN=[[1d100+@{ATN}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Attunement (ATN)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_ATN" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Precision}} {{PRE=[[1d100+@{PRE}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Precision (PRE)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_PRE" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Appeal}} {{APL=[[1d100+@{APL}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Appeal (APL)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_APL" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Intelligence}} {{INT=[[1d100+@{INT}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Intelligence (INT)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_INT" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Wisdom}} {{WIS=[[1d100+@{WIS}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Wisdom (WIS)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_WIS" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Composure}} {{COM=[[1d100+@{COM}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Composure (COM)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_COM" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Focus}} {{FCS=[[1d100+@{FCS}]]}}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Focus (FCS)</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_FCS" min="-10" max="20" step="1" value="-10" />
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- Stats Sheet -->
+		<div class="sheet-section-stats">
+
+			<h4 class="sheet-center">Stats</h4>
+			<div class="sheet-row">
+				<!-- left column -->
+				<div class="sheet-col-1-2 sheet-padr">
+					<div class="sheet-row sheet-sub-header">
+						<div class="sheet-col-1-6 sheet-center sheet-small-label">&nbsp;</div>
+						<div class="sheet-col-5-6 sheet-small-label">Stat</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_health" value="!barbs_skill Health"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Health</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_health" value="100+10*@{VIT}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_stamina" value="!barbs_skill Stamina"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Stamina</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_stamina" value="100+10*@{END}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_mana" value="!barbs_skill Mana @{attr_mana}"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Mana</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_mana" value="100+10*@{SPT}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_health_regeneration" value="!barbs_skill Health_Regeneration"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Health Regeneration</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_health_regeneration" value="10+@{RCV}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_stamina_regeneration" value="!barbs_skill Stamina_Regeneration"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Stamina Regeneration</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_stamina_regeneration" value="10+@{PER}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_mana_regeneration" value="!barbs_skill Mana_Regeneration"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Mana Regeneration</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_mana_regeneration" value="10+@{SAN}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_movement_speed" value="!barbs_skill Movement_Speed"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Movement Speed</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_movement_speed" value="30+5*floor(@{AGI}/2)" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_ac" value="!barbs_skill AC"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">AC</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_ac" value="10+@{TGH}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_evasion" value="!barbs_skill Evasion"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Evasion</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_evasion" value="10+@{REF}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_magic_resist" value="!barbs_skill Magic_Resist"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Magic Resist</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_magic_resist" value="10+@{RES}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+				</div>
+
+				<!-- right column -->
+				<div class="sheet-col-1-2">
+					<div class="sheet-row sheet-sub-header">
+						<div class="sheet-col-1-6 sheet-center sheet-small-label">&nbsp;</div>
+						<div class="sheet-col-5-6 sheet-small-label">Stat</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_condition_resist" value="!barbs_skill Condition_Resist"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Condition Resist</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_condition_resist" value="10+@{FRT}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_melee_damage" value="!barbs_skill Melee_Damage"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Melee Damage</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_melee_damage" value="@{STR}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_ranged_fine_damage" value="!barbs_skill Ranged_Fine_Damage"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Ranged/Fine Damage</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_ranged_fine_damage" value="@{DEX}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_magic_damage" value="!barbs_skill Magic_Damage"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Magic Damage</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_magic_damage" value="@{ATN}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_critical_hit_chance" value="!barbs_skill Critical_Hit_Chance"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Critical Hit Chance</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_critical_hit_chance" value="10+@{PRE}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_commands" value="!barbs_skill Commands"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Commands</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_commands" value="floor((@{APL}+10)/10)+1" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_languages" value="!barbs_skill Languages"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Languages</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_num_languages" value="floor((@{INT}+10)/3)+1" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_item_efficiency" value="!barbs_skill Item_Efficiency"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Item Efficiency</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_item_efficiency" value="(@{WIS}+10)*5" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_buff_limit" value="!barbs_skill >Buff_Limit"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Buff Limit</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_buff_limit" value="floor((@{COM}+10)/2)" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_concentration_limit" value="!barbs_skill Concentration_Limit"></button>
+						</div>
+						<div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+						<div class="sheet-col-1-3 sheet-skill-name">Concentration Limit</div>
+						<div class="sheet-col-1-6">
+							<input type="number" name="attr_concentration_limit" value="floor((@{FCS}+10)/2)" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- Skills Sheet -->
+		<div class="sheet-section-skills">
+
+			<h4 class="sheet-center">Skills</h4>
+			<div class="sheet-row">
+				<div class="sheet-row sheet-sub-header">
+					<div class="sheet-col-1-12 sheet-center sheet-small-label">&nbsp;</div>
+					<div class="sheet-col-13-24 sheet-center sheet-small-label">Skill</div>
+					<div class="sheet-col-1-8 sheet-center sheet-small-label">Points</div>
+					<div class="sheet-col-1-8 sheet-center sheet-small-label">Rank</div>
+					<div class="sheet-col-1-8 sheet-center sheet-small-label">Bonus</div>
+				</div>
+
+				<!-- TODO fix rank and bonus updating -->
+				<!-- https://github.com/Roll20/roll20-character-sheets/blob/master/Call_of_Cthulhu_7th_Ed/extended_autocalc.js -->
+				<div class="sheet-row sheet-skill-row">
+					<div class="sheet-col-1-12">
+						<button class="sheet-skill-roll" type="roll" name="roll_condition_resist" value="!barbs_skill @{attr_skill_name_1} @{attr_skill_points_1}"></button>
+					</div>
+					<div class="sheet-col-13-24">
+						<input type="text" name="attr_skill_name_1"/>
+					</div>
+					<div class="sheet-col-1-8">
+						<input type="number" name="attr_skill_points_1" value="0" min="0" max="15"/>
+					</div>
+					<div class="sheet-col-1-8">
+						<input type="number" class="sheet-center" name="attr_skill_rank_1" value="" disabled="disabled"/>
+					</div>
+					<div class="sheet-col-1-8">
+						<input type="number" class="sheet-center" name="attr_skill_bonus_1" value="" disabled="disabled"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- Class abilities sheet -->
+		<div class="sheet-section-classes-abilities">
+
+			<h4 class="sheet-center">Class Abilities</h4>
+			<div class="sheet-row">
+				<div class="sheet-row sheet-sub-header">
+					<div class="sheet-col-1-12 sheet-center sheet-small-label">&nbsp;</div>
+					<div class="sheet-col-19-24 sheet-center sheet-small-label">Ability</div>
+					<div class="sheet-col-1-8 sheet-center sheet-small-label">Points</div>
+				</div>
+
+				<!-- TODO fix points updating (ask API for the tier and fill in the field on changes -->
+				<!-- https://github.com/Roll20/roll20-character-sheets/blob/master/Call_of_Cthulhu_7th_Ed/extended_autocalc.js -->
+				<!-- allow you to create new fields -->
+				<div class="sheet-row sheet-skill-row">
+					<div class="sheet-col-1-12">
+						<button class="sheet-skill-roll" type="roll" name="roll_condition_resist" value="!ability @{ability_name_1}"></button>
+					</div>
+					<div class="sheet-col-19-24">
+						<input type="text" name="attr_ability_name_1"/>
+					</div>
+					<div class="sheet-col-1-8">
+						<input type="number" class="sheet-center" name="attr_ability_points_1" value="" min="1" max="4" disabled="disabled"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- Equipment sheet -->
+		<div class="sheet-section-equipment">
+			<h4 class="sheet-center">Eqiupment</h4>
+			<div class="sheet-row">
+				<div class="sheet-row sheet-sub-header">
+					<div class="sheet-col-1-3 sheet-center sheet-small-label">Slot</div>
+					<div class="sheet-col-2-3 sheet-center sheet-small-label">Item</div>
+				</div>
+
+				<div class="sheet-row sheet-skill-row">
+					<div class="sheet-col-1-3">
+						<input type="text"class="sheet-center" value="Main Hand" disabled="disabled"/>
+					</div>
+					<div class="sheet-col-2-3">
+						<input type="text" name="attr_main_hand" value=""/>
+					</div>
+				</div>
+
+				<div class="sheet-row sheet-skill-row">
+					<div class="sheet-col-1-3">
+						<input type="text" class="sheet-center" value="Offhand" disabled="disabled"/>
+					</div>
+					<div class="sheet-col-2-3">
+						<input type="text" name="attr_offhand" value=""/>
+					</div>
+				</div>
+
+				<div class="sheet-row sheet-skill-row">
+					<div class="sheet-col-1-3">
+						<input type="text" class="sheet-center" value="Head" disabled="disabled"/>
+					</div>
+					<div class="sheet-col-2-3">
+						<input type="text" name="attr_head" value=""/>
+					</div>
+				</div>
+
+				<div class="sheet-row sheet-skill-row">
+					<div class="sheet-col-1-3">
+						<input type="text" class="sheet-center" value="Body" disabled="disabled"/>
+					</div>
+					<div class="sheet-col-2-3">
+						<input type="text" name="attr_body" value=""/>
+					</div>
+				</div>
+
+				<div class="sheet-row sheet-skill-row">
+					<div class="sheet-col-1-3">
+						<input type="text" class="sheet-center" value="Hands" disabled="disabled"/>
+					</div>
+					<div class="sheet-col-2-3">
+						<input type="text" name="attr_hands" value=""/>
+					</div>
+				</div>
+
+				<div class="sheet-row sheet-skill-row">
+					<div class="sheet-col-1-3">
+						<input type="text" class="sheet-center" value="Feet" disabled="disabled"/>
+					</div>
+					<div class="sheet-col-2-3">
+						<input type="text" name="attr_feet" value=""/>
+					</div>
+				</div>
+
+				<div class="sheet-row sheet-skill-row">
+					<div class="sheet-col-1-3">
+						<input type="text" class="sheet-center" value="Neck" disabled="disabled"/>
+					</div>
+					<div class="sheet-col-2-3">
+						<input type="text" name="attr_neck" value=""/>
+					</div>
+				</div>
+
+				<div class="sheet-row sheet-skill-row">
+					<div class="sheet-col-1-3">
+						<input type="text" class="sheet-center" value="Left Ring" disabled="disabled"/>
+					</div>
+					<div class="sheet-col-2-3">
+						<input type="text" name="attr_left_ring" value=""/>
+					</div>
+				</div>
+
+				<div class="sheet-row sheet-skill-row">
+					<div class="sheet-col-1-3">
+						<input type="text" class="sheet-center" value="Right Ring" disabled="disabled"/>
+					</div>
+					<div class="sheet-col-2-3">
+						<input type="text" name="attr_right_ring" value=""/>
+					</div>
+				</div>
+
+				<div class="sheet-row sheet-skill-row">
+					<div class="sheet-col-1-3">
+						<input type="text" class="sheet-center" value="Belt" disabled="disabled"/>
+					</div>
+					<div class="sheet-col-2-3">
+						<input type="text" name="attr_belt" value=""/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- Inventory sheet -->
+		<div class="sheet-section-inventory">
+
+			<!-- Inventory coins -->
+			<h4 class="sheet-center">Coin Carried <span class="sheet-pictos">h</span></h4>
+			<p class="sheet-small-note">Total = value of all coins converted to GP</p>
+			<div class="sheet-row sheet-sub-header">
+				<div class="sheet-col-1-6 sheet-center sheet-small-label">CP</div>
+				<div class="sheet-col-1-6 sheet-center sheet-small-label">SP</div>
+				<div class="sheet-col-1-6 sheet-center sheet-small-label">EP</div>
+				<div class="sheet-col-1-6 sheet-center sheet-small-label">GP</div>
+				<div class="sheet-col-1-6 sheet-center sheet-small-label">PP</div>
+				<div class="sheet-col-1-6 sheet-center sheet-small-label">Total</div>
+			</div>
+			<div class="sheet-row">
+				<div class="sheet-col-1-6" title="Copper Pieces">
+					<input type="number" name="attr_cp" value="0" min="0" step="1">
+				</div>
+				<div class="sheet-col-1-6" title="Silver Pieces">
+					<input type="number" name="attr_sp" value="0" min="0" step="1">
+				</div>
+				<div class="sheet-col-1-6" title="Electrum Pieces">
+					<input type="number" name="attr_ep" value="0" min="0" step="1">
+				</div>
+				<div class="sheet-col-1-6" title="Gold Pieces">
+					<input type="number" name="attr_gp" value="0" min="0" step="1">
+				</div>
+				<div class="sheet-col-1-6" title="Platinum Pieces">
+					<input type="number" name="attr_pp" value="0" min="0" step="1">
+				</div>
+				<div class="sheet-col-1-6" title="Total (in Gold Pieces)">
+					<input type="number" name="attr_money_total_gp" value="(@{cp} / 100) + (@{sp} / 10) + (@{ep} / 2) + @{gp} + (@{pp} * 10) " disabled="disabled">
+				</div>
+			</div>
+
+
+			<input type="radio" name="attr_inventorytab" class="sheet-inventorytab sheet-inventorytab1" value="1" title="Page 1" checked="checked" />
+			<span class="sheet-inventorytab sheet-inventorytab1">Page 1</span>
+			<input type="radio" name="attr_inventorytab" class="sheet-inventorytab sheet-inventorytab2" value="2" title="Page 2" />
+			<span class="sheet-inventorytab sheet-inventorytab2">Page 2</span>
+			<input type="radio" name="attr_inventorytab" class="sheet-inventorytab sheet-inventorytab3" value="3" title="Page 3" />
+			<span class="sheet-inventorytab sheet-inventorytab3">Page 3</span>
+			<input type="radio" name="attr_inventorytab" class="sheet-inventorytab sheet-inventorytab4" value="4" title="Page 4" />
+			<span class="sheet-inventorytab sheet-inventorytab4">Page 4</span>
+			<input type="radio" name="attr_inventorytab" class="sheet-inventorytab sheet-inventorytab99" value="99" title="Show All" />
+			<span class="sheet-inventorytab sheet-inventorytab99">Show All</span>
+			<span class="sheet-spacer"></span>
+			<!-- BEGIN AUTO GENERATED CONTENT -->
+			<!-- BEGIN new inventory page -->
+			<div class="sheet-inventory-page1">
+				<div class="sheet-row sheet-sub-header">
+					<div class="sheet-col-1-15 sheet-center sheet-small-label">Row #</div>
+					<div class="sheet-col-1-15 sheet-center sheet-small-label">Carried?</div>
+					<div class="sheet-col-1-15 sheet-center sheet-small-label">Qty</div>
+					<div class="sheet-col-4-15 sheet-center sheet-small-label">Name</div>
+					<div class="sheet-col-2-15 sheet-center sheet-small-label">Weight</div>
+					<div class="sheet-col-6-15 sheet-center sheet-small-label">Description</div>
+				</div>
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row1">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">1</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried1" value="@{inventoryweight1}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty1" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname1">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight1" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription1">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row2">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">2</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried2" value="@{inventoryweight2}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty2" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname2">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight2" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription2">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row3">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">3</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried3" value="@{inventoryweight3}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty3" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname3">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight3" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription3">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row4">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">4</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried4" value="@{inventoryweight4}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty4" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname4">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight4" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription4">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row5">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">5</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried5" value="@{inventoryweight5}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty5" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname5">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight5" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription5">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row6">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">6</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried6" value="@{inventoryweight6}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty6" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname6">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight6" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription6">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row7">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">7</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried7" value="@{inventoryweight7}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty7" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname7">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight7" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription7">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row8">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">8</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried8" value="@{inventoryweight8}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty8" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname8">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight8" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription8">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row9">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">9</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried9" value="@{inventoryweight9}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty9" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname9">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight9" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription9">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row10">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">10</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried10" value="@{inventoryweight10}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty10" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname10">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight10" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription10">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+			</div>
+			<!-- END inventory page -->
+			<!-- BEGIN new inventory page -->
+			<div class="sheet-inventory-page2">
+				<div class="sheet-row sheet-sub-header">
+					<div class="sheet-col-1-15 sheet-center sheet-small-label">Row #</div>
+					<div class="sheet-col-1-15 sheet-center sheet-small-label">Carried?</div>
+					<div class="sheet-col-1-15 sheet-center sheet-small-label">Qty</div>
+					<div class="sheet-col-4-15 sheet-center sheet-small-label">Name</div>
+					<div class="sheet-col-2-15 sheet-center sheet-small-label">Weight</div>
+					<div class="sheet-col-6-15 sheet-center sheet-small-label">Description</div>
+				</div>
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row11">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">11</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried11" value="@{inventoryweight11}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty11" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname11">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight11" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription11">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row12">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">12</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried12" value="@{inventoryweight12}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty12" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname12">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight12" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription12">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row13">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">13</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried13" value="@{inventoryweight13}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty13" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname13">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight13" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription13">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row14">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">14</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried14" value="@{inventoryweight14}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty14" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname14">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight14" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription14">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row15">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">15</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried15" value="@{inventoryweight15}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty15" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname15">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight15" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription15">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row16">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">16</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried16" value="@{inventoryweight16}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty16" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname16">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight16" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription16">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row17">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">17</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried17" value="@{inventoryweight17}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty17" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname17">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight17" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription17">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row18">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">18</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried18" value="@{inventoryweight18}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty18" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname18">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight18" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription18">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row19">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">19</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried19" value="@{inventoryweight19}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty19" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname19">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight19" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription19">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row20">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">20</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried20" value="@{inventoryweight20}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty20" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname20">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight20" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription20">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+			</div>
+			<!-- END inventory page -->
+			<!-- BEGIN new inventory page -->
+			<div class="sheet-inventory-page3">
+				<div class="sheet-row sheet-sub-header">
+					<div class="sheet-col-1-15 sheet-center sheet-small-label">Row #</div>
+					<div class="sheet-col-1-15 sheet-center sheet-small-label">Carried?</div>
+					<div class="sheet-col-1-15 sheet-center sheet-small-label">Qty</div>
+					<div class="sheet-col-4-15 sheet-center sheet-small-label">Name</div>
+					<div class="sheet-col-2-15 sheet-center sheet-small-label">Weight</div>
+					<div class="sheet-col-6-15 sheet-center sheet-small-label">Description</div>
+				</div>
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row21">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">21</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried21" value="@{inventoryweight21}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty21" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname21">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight21" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription21">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row22">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">22</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried22" value="@{inventoryweight22}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty22" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname22">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight22" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription22">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row23">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">23</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried23" value="@{inventoryweight23}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty23" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname23">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight23" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription23">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row24">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">24</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried24" value="@{inventoryweight24}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty24" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname24">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight24" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription24">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row25">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">25</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried25" value="@{inventoryweight25}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty25" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname25">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight25" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription25">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row26">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">26</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried26" value="@{inventoryweight26}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty26" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname26">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight26" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription26">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row27">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">27</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried27" value="@{inventoryweight27}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty27" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname27">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight27" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription27">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row28">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">28</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried28" value="@{inventoryweight28}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty28" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname28">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight28" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription28">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row29">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">29</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried29" value="@{inventoryweight29}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty29" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname29">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight29" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription29">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row30">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">30</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried30" value="@{inventoryweight30}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty30" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname30">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight30" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription30">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+			</div>
+			<!-- END inventory page -->
+			<!-- BEGIN new inventory page -->
+			<div class="sheet-inventory-page4">
+				<div class="sheet-row sheet-sub-header">
+					<div class="sheet-col-1-15 sheet-center sheet-small-label">Row #</div>
+					<div class="sheet-col-1-15 sheet-center sheet-small-label">Carried?</div>
+					<div class="sheet-col-1-15 sheet-center sheet-small-label">Qty</div>
+					<div class="sheet-col-4-15 sheet-center sheet-small-label">Name</div>
+					<div class="sheet-col-2-15 sheet-center sheet-small-label">Weight</div>
+					<div class="sheet-col-6-15 sheet-center sheet-small-label">Description</div>
+				</div>
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row31">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">31</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried31" value="@{inventoryweight31}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty31" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname31">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight31" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription31">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row32">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">32</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried32" value="@{inventoryweight32}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty32" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname32">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight32" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription32">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row33">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">33</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried33" value="@{inventoryweight33}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty33" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname33">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight33" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription33">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row34">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">34</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried34" value="@{inventoryweight34}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty34" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname34">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight34" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription34">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row35">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">35</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried35" value="@{inventoryweight35}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty35" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname35">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight35" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription35">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row36">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">36</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried36" value="@{inventoryweight36}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty36" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname36">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight36" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription36">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row37">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">37</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried37" value="@{inventoryweight37}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty37" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname37">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight37" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription37">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row38">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">38</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried38" value="@{inventoryweight38}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty38" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname38">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight38" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription38">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row39">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">39</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried39" value="@{inventoryweight39}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty39" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname39">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight39" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription39">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+				<!-- BEGIN inventory row -->
+				<div class="sheet-inventory-row40">
+					<div class="sheet-row sheet-grey-row">
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-inventory-row-number">40</div>
+						<div class="sheet-col-1-15 sheet-vert-middle sheet-checkbox-row">
+							<input type="checkbox" name="attr_inventorycarried40" value="@{inventoryweight40}" checked="checked" />
+						</div>
+						<div class="sheet-col-1-15">
+							<input type="number" name="attr_inventoryqty40" value="1" min="0" step="1">
+						</div>
+						<div class="sheet-col-4-15">
+							<input type="text" name="attr_inventoryname40">
+						</div>
+						<div class="sheet-col-2-15">
+							<input type="number" name="attr_inventoryweight40" value="0" step="0.01">
+						</div>
+						<div class="sheet-col-6-15">
+							<input type="text" name="attr_inventorydescription40">
+						</div>
+					</div>
+				</div>
+				<!-- END inventory row -->
+			</div>
+			<!-- END inventory page -->
+			<input type="hidden" name="attr_inventory_weight_calc" value="(@{inventorycarried1} + (((@{inventoryqty1} - 1) * @{inventorycarried1}) * @{weight_unit_setting}) + @{inventorycarried2} + (((@{inventoryqty2} - 1) * @{inventorycarried2}) * @{weight_unit_setting}) + @{inventorycarried3} + (((@{inventoryqty3} - 1) * @{inventorycarried3}) * @{weight_unit_setting}) + @{inventorycarried4} + (((@{inventoryqty4} - 1) * @{inventorycarried4}) * @{weight_unit_setting}) + @{inventorycarried5} + (((@{inventoryqty5} - 1) * @{inventorycarried5}) * @{weight_unit_setting}) + @{inventorycarried6} + (((@{inventoryqty6} - 1) * @{inventorycarried6}) * @{weight_unit_setting}) + @{inventorycarried7} + (((@{inventoryqty7} - 1) * @{inventorycarried7}) * @{weight_unit_setting}) + @{inventorycarried8} + (((@{inventoryqty8} - 1) * @{inventorycarried8}) * @{weight_unit_setting}) + @{inventorycarried9} + (((@{inventoryqty9} - 1) * @{inventorycarried9}) * @{weight_unit_setting}) + @{inventorycarried10} + (((@{inventoryqty10} - 1) * @{inventorycarried10}) * @{weight_unit_setting}) + @{inventorycarried11} + (((@{inventoryqty11} - 1) * @{inventorycarried11}) * @{weight_unit_setting}) + @{inventorycarried12} + (((@{inventoryqty12} - 1) * @{inventorycarried12}) * @{weight_unit_setting}) + @{inventorycarried13} + (((@{inventoryqty13} - 1) * @{inventorycarried13}) * @{weight_unit_setting}) + @{inventorycarried14} + (((@{inventoryqty14} - 1) * @{inventorycarried14}) * @{weight_unit_setting}) + @{inventorycarried15} + (((@{inventoryqty15} - 1) * @{inventorycarried15}) * @{weight_unit_setting}) + @{inventorycarried16} + (((@{inventoryqty16} - 1) * @{inventorycarried16}) * @{weight_unit_setting}) + @{inventorycarried17} + (((@{inventoryqty17} - 1) * @{inventorycarried17}) * @{weight_unit_setting}) + @{inventorycarried18} + (((@{inventoryqty18} - 1) * @{inventorycarried18}) * @{weight_unit_setting}) + @{inventorycarried19} + (((@{inventoryqty19} - 1) * @{inventorycarried19}) * @{weight_unit_setting}) + @{inventorycarried20} + (((@{inventoryqty20} - 1) * @{inventorycarried20}) * @{weight_unit_setting}) + @{inventorycarried21} + (((@{inventoryqty21} - 1) * @{inventorycarried21}) * @{weight_unit_setting}) + @{inventorycarried22} + (((@{inventoryqty22} - 1) * @{inventorycarried22}) * @{weight_unit_setting}) + @{inventorycarried23} + (((@{inventoryqty23} - 1) * @{inventorycarried23}) * @{weight_unit_setting}) + @{inventorycarried24} + (((@{inventoryqty24} - 1) * @{inventorycarried24}) * @{weight_unit_setting}) + @{inventorycarried25} + (((@{inventoryqty25} - 1) * @{inventorycarried25}) * @{weight_unit_setting}) + @{inventorycarried26} + (((@{inventoryqty26} - 1) * @{inventorycarried26}) * @{weight_unit_setting}) + @{inventorycarried27} + (((@{inventoryqty27} - 1) * @{inventorycarried27}) * @{weight_unit_setting}) + @{inventorycarried28} + (((@{inventoryqty28} - 1) * @{inventorycarried28}) * @{weight_unit_setting}) + @{inventorycarried29} + (((@{inventoryqty29} - 1) * @{inventorycarried29}) * @{weight_unit_setting}) + @{inventorycarried30} + (((@{inventoryqty30} - 1) * @{inventorycarried30}) * @{weight_unit_setting}) + @{inventorycarried31} + (((@{inventoryqty31} - 1) * @{inventorycarried31}) * @{weight_unit_setting}) + @{inventorycarried32} + (((@{inventoryqty32} - 1) * @{inventorycarried32}) * @{weight_unit_setting}) + @{inventorycarried33} + (((@{inventoryqty33} - 1) * @{inventorycarried33}) * @{weight_unit_setting}) + @{inventorycarried34} + (((@{inventoryqty34} - 1) * @{inventorycarried34}) * @{weight_unit_setting}) + @{inventorycarried35} + (((@{inventoryqty35} - 1) * @{inventorycarried35}) * @{weight_unit_setting}) + @{inventorycarried36} + (((@{inventoryqty36} - 1) * @{inventorycarried36}) * @{weight_unit_setting}) + @{inventorycarried37} + (((@{inventoryqty37} - 1) * @{inventorycarried37}) * @{weight_unit_setting}) + @{inventorycarried38} + (((@{inventoryqty38} - 1) * @{inventorycarried38}) * @{weight_unit_setting}) + @{inventorycarried39} + (((@{inventoryqty39} - 1) * @{inventorycarried39}) * @{weight_unit_setting}) + @{inventorycarried40} + (((@{inventoryqty40} - 1) * @{inventorycarried40}) * @{weight_unit_setting}))" />
+			<!-- END AUTO GENERATED CONTENT -->
+			<hr/>
+			<h4 class="sheet-center">Treasure/Loot/Inventory Notes <span class="sheet-pictos">W</span></h4>
+			<textarea name="attr_notes"></textarea>
+			<hr/>
+		</div>
+
+	</div>
+
+  <script type="text/worker">
+
+    on("change:drop_category", function(eventinfo) {
+        if(eventinfo.newValue === "Monsters") {
+            handle_drop_monster(eventinfo.newValue);
+        }
+    });
+
+    var handle_drop_monster = function(category, eventinfo) {
+        var callbacks = [];
+        var update = {};
+        var id = generateRowID();
+
+        drop_attrs = ["drop_name","drop_weight","drop_properties",
+                      "drop_modifiers","drop_content","drop_itemtype",
+                      "drop_damage","drop_damagetype","drop_damage2",
+                      "drop_damagetype2","drop_range","drop_ac",
+                      "drop_speed", "drop_str", "drop_dex", "drop_con",
+                      "drop_int", "drop_wis", "drop_cha",
+                      "drop_vulnerabilities", "drop_resistances",
+                      "drop_immunities", "drop_condition_immunities",
+                      "drop_languages", "drop_challenge_rating", "drop_size",
+                      "drop_type", "drop_alignment", "drop_hp",
+                      "drop_saving_throws", "drop_senses",
+                      "drop_passive_perception", "drop_skills",
+                      "drop_token_size", "character_id"]
+        getAttrs(drop_attrs, function(v) {
+            if(category === "Monsters") {
+                update["is_npc"] = "1";
+                if(v["drop_name"] && v["drop_name"] != "") {update["character_name"] = v["drop_name"]};
+                // core stats
+                update["npc_strength"]     = v["drop_str"] ? v["drop_str"] : "";
+                update["npc_dexterity"]    = v["drop_dex"] ? v["drop_dex"] : "";
+                update["npc_constitution"] = v["drop_con"] ? v["drop_con"] : "";
+                update["npc_intelligence"] = v["drop_int"] ? v["drop_int"] : "";
+                update["npc_wisdom"]       = v["drop_wis"] ? v["drop_wis"] : "";
+                update["npc_charisma"]     = v["drop_cha"] ? v["drop_cha"] : "";
+                update["npc_strength_save_mod"] = 0;
+                update["npc_dexterity_save_mod"] = 0;
+                update["npc_constitution_save_mod"] = 0;
+                update["npc_intelligence_save_mod"] = 0;
+                update["npc_wisdom_save_mod"] = 0;
+                update["npc_charisma_save_mod"] = 0;
+                if(v["drop_saving_throws"] && v["drop_saving_throws"] != "") {
+                    var savearray = v["drop_saving_throws"].split(", ");
+                    _.each(savearray, function(save) {
+                        kv = save.indexOf("-") > -1 ? save.split(" ") : save.split(" +");
+                        update["npc_" + kv[0].toLowerCase() + "_save_mod"] = parseInt(kv[1], 10);
+                    });
+                };
+                //right side of core stats, top to bottom
+                update["npc_size"]      = v["drop_size"] ? v["drop_size"] : "";
+                update["npc_type"]      = v["drop_type"] ? v["drop_type"] : "";
+                update["npc_alignment"] = v["drop_alignment"] ? v["drop_alignment"] : "";
+                 //AC handling
+                if(v["drop_ac"]) {
+                    if(v["drop_ac"].indexOf("(") > -1) {
+                        update["npc_ac"] = v["drop_ac"].split(" (")[0];
+                        update["npc_AC_note"] = v["drop_ac"].split(" (")[1].slice(0, -1);
+                    }
+                    else {
+                        update["npc_ac"] = v["drop_ac"];
+                        update["npc_AC_note"] = "";
+                    };
+                }
+                else {
+                    update["npc_ac"] = 10;
+                    update["npc_AC_note"] = "";
+                };
+                 //HP handling
+                if(v["drop_hp"]) {
+                    if(v["drop_hp"].indexOf("(") > -1) {
+                        update["npc_HP"] = v["drop_hp"].split(" (")[0];
+                        update["npc_HP_max"] = v["drop_hp"].split(" (")[0];
+                        //update["npc_HP_max"] = v["drop_hp"].split(" (")[1].slice(0, -1);
+                    }
+                    else {
+                        update["npc_HP"] = v["drop_hp"]
+                        update["npc_HP_max"] = v["drop_hp"]
+                        //update["npc_hpformula"] = ""
+                    };
+                }
+                else {
+                    update["npc_HP"] = 1
+                    update["npc_HP_max"] = 1
+                };
+                 //Speed handling
+                if(v["drop_speed"]) {
+                    speed = /\d+/i
+                    fly   = /fly \d+/i
+                    climb = /climb \d+/i
+                    swim  = /swim \d+/i
+                    speed_match = speed.exec(v["drop_speed"])
+                    fly_match   = fly.exec(v["drop_speed"])
+                    climb_match = climb.exec(v["drop_speed"])
+                    swim_match  = swim.exec(v["drop_speed"])
+                    if(speed_match) {
+                        speed_number = speed_match[0].split(" ")
+                        speed_number = parseInt(speed_number[0], 10)
+                        update["npc_speed"] = speed_number
+                    }
+                    if(fly_match) {
+                        speed_number = fly_match[0].split(" ")
+                        speed_number = parseInt(speed_number[1], 10)
+                        update["npc_speed_fly"] = speed_number
+                    }
+                    if(climb_match) {
+                        speed_number = climb_match[0].split(" ")
+                        speed_number = parseInt(speed_number[1], 10)
+                        update["npc_speed_climb"] = speed_number
+                    }
+                    if(swim_match) {
+                        speed_number = swim_match[0].split(" ")
+                        speed_number = parseInt(speed_number[1], 10)
+                        update["npc_speed_swim"] = speed_number
+                    }
+                }
+                //Challenge --> Languages
+                 //Challenge/XP handling
+                if(v["drop_challenge_rating"] && v["drop_challenge_rating"] != "") {
+                  update["npc_challenge"] = v["drop_challenge_rating"];
+                  var xp = 0;
+                  var pb = 0;
+                  switch(v["drop_challenge_rating"]) {
+                  case "0":
+                      xp = "10";
+                      pb = 2;
+                      break;
+                  case "1/8":
+                      xp = "25";
+                      pb = 2;
+                      break;
+                  case "1/4":
+                      xp = "50";
+                      pb = 2;
+                      break;
+                  case "1/2":
+                      xp = "100";
+                      pb = 2;
+                      break;
+                  case "1":
+                      xp = "200";
+                      pb = 2;
+                      break;
+                  case "2":
+                      xp = "450";
+                      pb = 2;
+                      break;
+                  case "3":
+                      xp = "700";
+                      pb = 2;
+                      break;
+                  case "4":
+                      xp = "1100";
+                      pb = 2;
+                      break;
+                  case "5":
+                      xp = "1800";
+                      pb = 3;
+                      break;
+                  case "6":
+                      xp = "2300";
+                      pb = 3;
+                      break;
+                  case "7":
+                      xp = "2900";
+                      pb = 3;
+                      break;
+                  case "8":
+                      xp = "3900";
+                      pb = 3;
+                      break;
+                  case "9":
+                      xp = "5000";
+                      pb = 4;
+                      break;
+                  case "10":
+                      xp = "5900";
+                      pb = 4;
+                      break;
+                  case "11":
+                      xp = "7200";
+                      pb = 4;
+                      break;
+                  case "12":
+                      xp = "8400";
+                      pb = 4;
+                      break;
+                  case "13":
+                      xp = "10000";
+                      pb = 5;
+                      break;
+                  case "14":
+                      xp = "11500";
+                      pb = 5;
+                      break;
+                  case "15":
+                      xp = "13000";
+                      pb = 5;
+                      break;
+                  case "16":
+                      xp = "15000";
+                      pb = 5;
+                      break;
+                  case "17":
+                      xp = "18000";
+                      pb = 6;
+                      break;
+                  case "18":
+                      xp = "20000";
+                      pb = 6;
+                      break;
+                  case "19":
+                      xp = "22000";
+                      pb = 6;
+                      break;
+                  case "20":
+                      xp = "25000";
+                      pb = 6;
+                      break;
+                  case "21":
+                      xp = "33000";
+                      pb = 7;
+                      break;
+                  case "22":
+                      xp = "41000";
+                      pb = 7;
+                      break;
+                  case "23":
+                      xp = "50000";
+                      pb = 7;
+                      break;
+                  case "24":
+                      xp = "62000";
+                      pb = 7;
+                      break;
+                  case "25":
+                      xp = "75000";
+                      pb = 8;
+                      break;
+                  case "26":
+                      xp = "90000";
+                      pb = 8;
+                      break;
+                  case "27":
+                      xp = "105000";
+                      pb = 8;
+                      break;
+                  case "28":
+                      xp = "120000";
+                      pb = 8;
+                      break;
+                  case "29":
+                      xp = "";
+                      pb = 9;
+                      break;
+                  case "30":
+                      xp = "155000";
+                      pb = 9;
+                      break;
+                  }
+                  update["npc_xp"] = xp;
+                }
+                update["npc_senses"] = v["drop_senses"] ? v["drop_senses"] : "";
+                update["npc_languages"] = v["drop_languages"] ? v["drop_languages"] : "";
+                //Traits/Background
+                update["npc_damage_resistance"] = v["drop_resistances"] ? v["drop_resistances"] : "";
+                update["npc_damage_vulnerability"] = v["drop_vulnerabilities"] ? v["drop_vulnerabilities"] : "";
+                update["npc_damage_immunity"] = v["drop_immunities"] ? v["drop_immunities"] : "";
+                update["npc_condition_immunity"] = v["drop_condition_immunities"] ? v["drop_condition_immunities"] : "";
+                update["npc_traits"] = v["drop_content"] ? v["drop_content"] : "";
+                //Skills
+                update["npc_acrobatics_bonus"] = 0;
+                update["npc_animal_handling_bonus"] = 0;
+                update["npc_arcana_bonus"] = 0;
+                update["npc_athletics_bonus"] = 0;
+                update["npc_deception_bonus"] = 0;
+                update["npc_history_bonus"] = 0;
+                update["npc_insight_bonus"] = 0;
+                update["npc_intimidation_bonus"] = 0;
+                update["npc_investigation_bonus"] = 0;
+                update["npc_medicine_bonus"] = 0;
+                update["npc_nature_bonus"] = 0;
+                update["npc_perception_bonus"] = 0;
+                update["npc_performance_bonus"] = 0;
+                update["npc_persuasion_bonus"] = 0;
+                update["npc_religion_bonus"] = 0;
+                update["npc_sleight_of_hand_bonus"] = 0;
+                update["npc_stealth_bonus"] = 0;
+                update["npc_survival_bonus"] = 0;
+                if(v["drop_skills"] && v["drop_skills"] != "") {
+                    skillarray = v["drop_skills"].split(", ");
+                    _.each(skillarray, function(skill) {
+                        kv = skill.indexOf("-") > -1 ? skill.split(" ") : skill.split(" +");
+                        update["npc_" + kv[0].toLowerCase().replace(/ /g, '_') + "_bonus"] = parseInt(kv[1], 10);
+                    });
+                }
+            };
+
+            callbacks.push( function() {cleanup_drop_fields();} );
+            setAttrs(update, {silent: true}, function() {callbacks.forEach(function(callback) {callback(); })} );
+        });
+
+
+    };
+
+    var cleanup_drop_fields = function() {
+        var update = {};
+        update["drop_name"] = "";
+        update["drop_weight"] = "";
+        update["drop_properties"] = "";
+        update["drop_modifiers"] = "";
+        update["drop_content"] = "";
+        update["drop_itemtype"] = "";
+        update["drop_damage"] = "";
+        update["drop_damagetype"] = "";
+        update["drop_range"] = "";
+        update["drop_ac"] = "";
+        update["drop_category"] = "";
+        update["drop_speed"] = "";
+        update["drop_str"] = "";
+        update["drop_dex"] = "";
+        update["drop_con"] = "";
+        update["drop_int"] = "";
+        update["drop_wis"] = "";
+        update["drop_cha"] = "";
+        update["drop_vulnerabilities"] = "";
+        update["drop_resistances"] = "";
+        update["drop_immunities"] = "";
+        update["drop_condition_immunities"] = "";
+        update["drop_languages"] = "";
+        update["drop_challenge_rating"] = "";
+        update["drop_size"] = "";
+        update["drop_type"] = "";
+        update["drop_alignment"] = "";
+        update["drop_hp"] = "";
+        update["drop_saving_throws"] = "";
+        update["drop_senses"] = "";
+        update["drop_passive_perception"] = "";
+        update["drop_skills"] = "";
+        update["drop_token_size"] = "";
+        setAttrs(update, {silent: true});
+    };
+
+  </script>
+</div>
+
+<rolltemplate class="sheet-rolltemplate-5eDefault">
+	<div class="sheet-rt-card">
+		<div class="sheet-rt-header{{#weapon}} sheet-weapon{{/weapon}}{{#spell}}  sheet-spell{{/spell}}{{#ability}} sheet-ability{{/ability}}{{#save}} sheet-save{{/save}}{{#deathsave}} sheet-deathsave{{/deathsave}}">
+			<div class="sheet-rt-title">{{title}}</div>
+			{{#subheader}}
+			<div class="sheet-rt-subheader">{{subheader}}{{#subheaderright}} &bullet; {{subheaderright}}{{/subheaderright}}</div>
+			{{/subheader}} {{#subheader2}}
+			<div class="sheet-rt-subheader">{{subheader2}}{{#subheaderright2}} &bullet; {{subheaderright2}}{{/subheaderright2}}</div>
+			{{/subheader2}}
+		</div>
+		{{#emote}}
+		<p class="sheet-rt-emote">{{character_name}} {{emote}}</p>
+		{{/emote}}
+		<div class="sheet-main-content">
+			<!--Weapon based attacks-->
+			{{#attack}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Attack</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{attack}}{{#attackadv}} | {{attackadv}}{{/attackadv}} vs AC</div>
+			</div>
+			{{/attack}} {{#damage}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Damage</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{damage}}</div>
+			</div>
+			{{/damage}} {{#rollWasCrit() attack}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{critdamage}}</div>
+			</div>
+			{{/rollWasCrit() attack}} {{#rollWasCrit() attackadv}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit (adv roll)</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{critdamage}} (if attack was made with advantage)</div>
+			</div>
+			{{/rollWasCrit() attackadv}}
+			<!--Spellcasting-->
+			{{#spellshowinfoblock}}
+			<div class="sheet-row sheet-padb">
+				<div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-right-dotted"><span class="sheet-rt-key">Class</span>
+					<br/><span class="sheet-rt-value">{{spellgainedfrom}}</span></div>
+				<div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-left-dotted"><span class="sheet-rt-key">Comp.</span>
+					<br/><span class="sheet-rt-value">{{spellcomponents}}</span></div>
+				<div class="sheet-col-1 sheet-border-top-dotted"></div>
+				<div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-right-dotted"><span class="sheet-rt-key">Cast Time</span>
+					<br/><span class="sheet-rt-value">{{spellcasttime}}</span></div>
+				<div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-left-dotted"><span class="sheet-rt-key">Duration</span>
+					<br/><span class="sheet-rt-value">{{spellduration}}</span></div>
+				<div class="sheet-col-1 sheet-border-top-dotted"></div>
+				<div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-right-dotted"><span class="sheet-rt-key">Target/AoE</span>
+					<br/><span class="sheet-rt-value">{{spelltarget}}</span></div>
+				<div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-left-dotted"><span class="sheet-rt-key">Range</span>
+					<br/><span class="sheet-rt-value">{{spellrange}}</span></div>
+			</div>
+			{{/spellshowinfoblock}} {{#spellshowattack}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Attack</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{spellattack}}{{#spellshowattackadv}} | {{spellattackadv}}{{/spellshowattackadv}} vs AC</div>
+			</div>
+			{{/spellshowattack}} {{#spellshowsavethrow}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Save</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">DC {{spellsavedc}} {{spellsavestat}}</div>
+			</div>
+			{{/spellshowsavethrow}} {{#spellshowhealing}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Healing</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{spellhealing}} HP healed</div>
+			</div>
+			{{/spellshowhealing}} {{#spellshowdamage}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Damage</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{spelldamage}}</div>
+			</div>
+			{{/spellshowdamage}} {{#spellcancrit}} {{#spellshowattack}} {{#rollWasCrit() spellattack}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{spellcritdamage}}</div>
+			</div>
+			{{/rollWasCrit() spellattack}} {{#rollWasCrit() spellattackadv}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit (adv roll)</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{spellcritdamage}} (if attack was made with advantage)</div>
+			</div>
+			{{/rollWasCrit() spellattackadv}} {{/spellshowattack}} {{/spellcancrit}} {{#spellshoweffects}}
+			<div class="sheet-row">
+				<div class="sheet-col-1 sheet-padl sheet-padr sheet-rt-key">Effect</div>
+				<div class="sheet-col-1 sheet-padl sheet-padr sheet-rt-value">{{spelleffect}}</div>
+			</div>
+			{{/spellshoweffects}} {{#spellshowsavethrow}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Save success</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{spellsavesuccess}}</div>
+			</div>
+			{{/spellshowsavethrow}} {{#spellshowdesc}}
+			<div class="sheet-row">
+				<div class="sheet-col-1 sheet-padl sheet-padr sheet-rt-key">Spell Description</div>
+				<div class="sheet-col-1 sheet-padl sheet-padr sheet-rt-value">{{spelldescription}}</div>
+			</div>
+			{{/spellshowdesc}} {{#spellshowhigherlvl}}
+			<div class="sheet-row">
+				<div class="sheet-col-1 sheet-padl sheet-padr sheet-rt-key">At Higher Levels</div>
+				<div class="sheet-col-1 sheet-padl sheet-padr sheet-rt-value">{{spellhigherlevel}}</div>
+			</div>
+			{{/spellshowhigherlvl}}
+			<!--NPC-->
+			{{#npccorestats}}
+			<div class="sheet-row">
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-key">Stat</div>
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-key">Score</div>
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-key">Mod</div>
+			</div>
+			<div class="sheet-row">
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">STR</div>
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_strength}}</div>
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_strength_mod}}</div>
+			</div>
+			<div class="sheet-row">
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">DEX</div>
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_dexterity}}</div>
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_dexterity_mod}}</div>
+			</div>
+			<div class="sheet-row">
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">CON</div>
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_constitution}}</div>
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_constitution_mod}}</div>
+			</div>
+			<div class="sheet-row">
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">INT</div>
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_intelligence}}</div>
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_intelligence_mod}}</div>
+			</div>
+			<div class="sheet-row">
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">WIS</div>
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_wisdom}}</div>
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_wisdom_mod}}</div>
+			</div>
+			<div class="sheet-row">
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">CHA</div>
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_charisma}}</div>
+				<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_charisma_mod}}</div>
+			</div>
+			{{/npccorestats}} {{#npctraits}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Dmg Resistance</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{npc_damage_resistance}}</div>
+			</div>
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Dmg Vuln.</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{npc_damage_vulnerability}}</div>
+			</div>
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Dmg Immunity</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{npc_damage_immunity}}</div>
+			</div>
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Condition Immunity</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{npc_condition_immunity}}</div>
+			</div>
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Other Traits</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{npc_traits}}</div>
+			</div>
+			{{/npctraits}} {{#npcaction}} {{#npc_showmultiattack}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Multi Attack</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{npc_multiattack}}</div>
+			</div>
+			{{/npc_showmultiattack}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Desc.</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{npc_action_description}}</div>
+			</div>
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Effect</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{npc_action_effect}}</div>
+			</div>
+			{{/npcaction}}
+			<!--Generic section-->
+			{{#freetext}}
+			<div class="sheet-row">
+				<div class="sheet-col-1 sheet-padl sheet-padr sheet-rt-key-wide">{{freetextname}}</div>
+				<div class="sheet-col-1 sheet-padl sheet-padr sheet-rt-value">{{freetext}}</div>
+			</div>
+			{{/freetext}} {{#roll}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">{{rollname}}</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{roll}}{{#rolladv}} | {{rolladv}}{{/rolladv}}</div>
+			</div>
+			{{/roll}}
+			<!-- START roll option templates -->
+			<!--Simple roll (such as save/skill check or weapon attack)-->
+			{{#simple}} {{#rollhasadv}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Roll type</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">With advantage</div>
+			</div>
+			{{/rollhasadv}} {{#rollhasdisadv}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Roll type</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">With disadvantage</div>
+			</div>
+			{{/rollhasdisadv}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">{{rollname}}</div>
+				{{#noadvroll}}
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{roll1}}</div>
+				{{/noadvroll}} {{#showadvroll}}
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{roll1}} | {{roll2}}</div>
+				{{/showadvroll}} {{#rollhasadv}} {{#rollTotal() roll1 roll2}}
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{roll1}} | <span class="sheet-ignored-roll">{{roll2}}</span></div>{{/rollTotal() roll1 roll2}} {{#rollGreater() roll1 roll2}}
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{roll1}} | <span class="sheet-ignored-roll">{{roll2}}</span></div>{{/rollGreater() roll1 roll2}} {{#rollGreater() roll2 roll1}}
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value"><span class="sheet-ignored-roll">{{roll1}}</span> | {{roll2}}</div>{{/rollGreater() roll2 roll1}} {{/rollhasadv}} {{#rollhasdisadv}} {{#rollTotal() roll1 roll2}}
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{roll1}} | <span class="sheet-ignored-roll">{{roll2}}</span></div>{{/rollTotal() roll1 roll2}} {{#rollLess() roll1 roll2}}
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{roll1}} | <span class="sheet-ignored-roll">{{roll2}}</span></div>{{/rollLess() roll1 roll2}} {{#rollLess() roll2 roll1}}
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value"><span class="sheet-ignored-roll">{{roll1}}</span> | {{roll2}}</div>{{/rollLess() roll2 roll1}} {{/rollhasdisadv}}
+			</div>
+			{{#weapondamage}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Damage</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{weapondamage}}</div>
+			</div>
+			{{/weapondamage}} {{#weapon}} {{#noadvroll}} {{#rollWasCrit() roll1}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{weaponcritdamage}}</div>
+			</div>
+			{{/rollWasCrit() roll1}} {{/noadvroll}} {{#showadvroll}} {{#rollWasCrit() roll1}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{weaponcritdamage}}</div>
+			</div>
+			{{/rollWasCrit() roll1}} {{#rollWasCrit() roll2}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit (adv roll)</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{weaponcritdamage}}</div>
+			</div>
+			{{/rollWasCrit() roll2}} {{/showadvroll}} {{#rollhasadv}} {{#rollGreater() roll1 roll2}} {{#rollWasCrit() roll1}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{weaponcritdamage}}</div>
+			</div>
+			{{/rollWasCrit() roll1}} {{/rollGreater() roll1 roll2}} {{#rollGreater() roll2 roll1}} {{#rollWasCrit() roll2}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{weaponcritdamage}}</div>
+			</div>
+			{{/rollWasCrit() roll2}} {{/rollGreater() roll2 roll1}} {{#rollTotal() roll1 roll2}} {{#rollWasCrit() roll1}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{weaponcritdamage}}</div>
+			</div>
+			{{/rollWasCrit() roll1}} {{/rollTotal() roll1 roll2}} {{/rollhasadv}} {{#rollhasdisadv}} {{#rollLess() roll1 roll2}} {{#rollWasCrit() roll1}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{weaponcritdamage}}</div>
+			</div>
+			{{/rollWasCrit() roll1}} {{/rollLess() roll1 roll2}} {{#rollLess() roll2 roll1}} {{#rollWasCrit() roll2}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{weaponcritdamage}}</div>
+			</div>
+			{{/rollWasCrit() roll2}} {{/rollLess() roll2 roll1}} {{#rollTotal() roll1 roll2}} {{#rollWasCrit() roll1}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{weaponcritdamage}}</div>
+			</div>
+			{{/rollWasCrit() roll1}} {{/rollTotal() roll1 roll2}} {{/rollhasdisadv}} {{/weapon}} {{#math}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Math</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value sheet-no-roll-highlight">{{math}}</div>
+			</div>
+			{{/math}} {{/simple}}
+			<!-- END roll option templates -->
+			<!-- Class action additions -->
+			{{#showclassactions}} {{#allprops() showclassactions character_name save title subheader subheaderright subheader2 subheaderright2 rollname roll rolladv emote deathsave weapon attack attackadv damage critdamage spell spellshowinfoblock spellshowdesc spelldescription spellshowhigherlvl spellhigherlevel spellshowattack spellattack spellshowattackadv spellattackadv spellshowsavethrow spellsavedc spellsavestat spellsavesuccess spellshowhealing spellhealing spellshowdamage spelldamage spellcancrit spellcritdamage spellshoweffects spelleffect spellcasttime spellduration spelltarget spellrange spellgainedfrom spellcomponents ability roll1 roll2 simple showadvroll noadvroll rollhasadv rollhasdisadv math weapondamage weaponcritdamage debug}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">{{key}}</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{value}}</div>
+			</div>
+			{{/allprops() showclassactions character_name save title subheader subheaderright subheader2 subheaderright2 rollname roll rolladv emote deathsave weapon attack attackadv damage critdamage spell spellshowinfoblock spellshowdesc spelldescription spellshowhigherlvl spellhigherlevel spellshowattack spellattack spellshowattackadv spellattackadv spellshowsavethrow spellsavedc spellsavestat spellsavesuccess spellshowhealing spellhealing spellshowdamage spelldamage spellcancrit spellcritdamage spellshoweffects spelleffect spellcasttime spellduration spelltarget spellrange spellgainedfrom spellcomponents ability roll1 roll2 simple showadvroll noadvroll rollhasadv rollhasdisadv math weapondamage weaponcritdamage debug}} {{/showclassactions}}
+			<!--Multi attack-->
+			{{#multiattack}}
+			<!--Attack 1-->
+			{{#mattack1}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Attack1</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mattack1}}{{#mattack1adv}} | {{mattack1adv}}{{/mattack1adv}} vs AC</div>
+			</div>
+			{{/mattack1}} {{#mdamage1}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Damage1</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mdamage1}}</div>
+			</div>
+			{{/mdamage1}} {{#rollWasCrit() mattack1}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit1</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mcritdamage1}}</div>
+			</div>
+			{{/rollWasCrit() mattack1}} {{#rollWasCrit() mattack1adv}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit1 (adv roll)</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mcritdamage1}} (if attack was made with advantage)</div>
+			</div>
+			{{/rollWasCrit() mattack1adv}}
+			<!--Attack 2-->
+			{{#mattack2}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Attack2</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mattack2}}{{#mattack2adv}} | {{mattack2adv}}{{/mattack2adv}} vs AC</div>
+			</div>
+			{{/mattack2}} {{#mdamage2}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Damage2</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mdamage2}}</div>
+			</div>
+			{{/mdamage2}} {{#rollWasCrit() mattack2}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit2</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mcritdamage2}}</div>
+			</div>
+			{{/rollWasCrit() mattack2}} {{#rollWasCrit() mattack2adv}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit2 (adv roll)</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mcritdamage2}} (if attack was made with advantage)</div>
+			</div>
+			{{/rollWasCrit() mattack2adv}}
+			<!--Attack 3-->
+			{{#mattack3}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Attack3</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mattack3}}{{#mattack3adv}} | {{mattack3adv}}{{/mattack3adv}} vs AC</div>
+			</div>
+			{{/mattack3}} {{#mdamage3}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Damage3</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mdamage3}}</div>
+			</div>
+			{{/mdamage3}} {{#rollWasCrit() mattack3}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit3</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mcritdamage3}}</div>
+			</div>
+			{{/rollWasCrit() mattack3}} {{#rollWasCrit() mattack3adv}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit3 (adv roll)</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mcritdamage3}} (if attack was made with advantage)</div>
+			</div>
+			{{/rollWasCrit() mattack3adv}}
+			<!--Attack 4-->
+			{{#mattack4}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Attack4</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mattack4}}{{#mattack4adv}} | {{mattack4adv}}{{/mattack4adv}} vs AC</div>
+			</div>
+			{{/mattack4}} {{#mdamage4}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Damage4</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mdamage4}}</div>
+			</div>
+			{{/mdamage4}} {{#rollWasCrit() mattack4}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit4</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mcritdamage4}}</div>
+			</div>
+			{{/rollWasCrit() mattack4}} {{#rollWasCrit() mattack4adv}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit4 (adv roll)</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mcritdamage4}} (if attack was made with advantage)</div>
+			</div>
+			{{/rollWasCrit() mattack4adv}}
+			<!--Attack 5-->
+			{{#mattack5}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Attack5</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mattack5}}{{#mattack5adv}} | {{mattack5adv}}{{/mattack5adv}} vs AC</div>
+			</div>
+			{{/mattack5}} {{#mdamage5}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Damage5</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mdamage5}}</div>
+			</div>
+			{{/mdamage5}} {{#rollWasCrit() mattack5}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit5</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mcritdamage5}}</div>
+			</div>
+			{{/rollWasCrit() mattack5}} {{#rollWasCrit() mattack5adv}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Crit5 (adv roll)</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{mcritdamage5}} (if attack was made with advantage)</div>
+			</div>
+			{{/rollWasCrit() mattack5adv}} {{/multiattack}}
+			<!--Outputall-->
+			{{#outputall}} {{#allprops() outputall title subheader subheaderright subheader2 subheaderright2 emote weapon spell ability save deathsave}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">{{key}}</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{value}}</div>
+			</div>
+			{{/allprops() outputall title subheader subheaderright subheader2 subheaderright2 emote weapon spell ability save deathsave}} {{/outputall}}
+			<!--DEBUG-->
+			{{#debug}} {{#allprops()}}
+			<div class="sheet-row">
+				<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">{{key}} (DEBUG)</div>
+				<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{value}}</div>
+			</div>
+			{{/allprops()}} {{/debug}}
+		</div>
+	</div>
+</rolltemplate>
