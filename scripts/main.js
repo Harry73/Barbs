@@ -1,5 +1,6 @@
 // Owner to player garbage
 
+/*
 function get_owner_name(who, id) {
     var found_owner = null;
     Object.keys(owners).forEach(function(owner_name) {
@@ -66,92 +67,228 @@ function get_clazz(name) {
 function get_ability(name) {
     return null;
 }
+*/
 
-
-// Player
-
-class Character {
-    constructor(character_json) {
-        this.name = character_json.name;
-        this.owner = character_json.owner;
-        this.gender = character_json.gender;
-        this.race = this.get_race(character_json.race);
-        this.height = character_json.height;
-        this.weight = character_json.weight;
-        this.eye_color = character_json.eye_color;
-        this.alignment = character_json.alignment;
-        this.languages = character_json.languages;
-
-        this.attributes = this.get_attributes(character_json.attributes);
-        this.stats = this.get_stats(this.attributes);
-        this.skills = this.get_skills(character_json.skills);
-        this.abilities = [];
-        this.clazzes = this.get_clazzes(character_json.clazzes);
-        this.items = [];
+String.prototype.format = function() {
+    a = this;
+    for (k in arguments) {
+        a = a.replace('%s', arguments[k])
     }
+    return a
+}
 
-    get_attributes(attributes_json) {
-        var attributes = [];
-        Object.keys(attributes_json).forEach(function(attribute_name) {
-            attributes.push(get_attribute(attribute_name, attributes_json[attribute_name]));
+
+function get_character_names(who, id) {
+    var found_characters = [];
+    Object.keys(characters_by_owner).forEach(function(character_name) {
+        var owner_names = characters_by_owner[character_name];
+        for (var i = 0; i < owner_names.length; i++) {
+            if (owner_names[i] === who || owner_names[i] === id) {
+                found_characters.push(character_name);
+            }
+        }
+    });
+
+    return found_characters;
+}
+
+function get_character(who, id) {
+    const character_names = get_character_names(who, id);
+
+    let characters = [];
+    for (let i = 0; i < character_names.length; i++) {
+        const objects = findObjs({
+            _type: 'character',
+            name: character_names[i]
         });
 
-        return attributes;
+        characters = characters.concat(objects);
     }
 
-    get_stats(attributes) {
-        var stats = [];
-        for (var i = 0; i < attributes; i++) {
-            stats.push(get_stat(attribute));
-        }
-
-        return stats;
-    }
-
-    get_race(race_name) {
+    if (characters.length === 0) {
+        sendChat(who, 'Error, did not find a character for ' + who);
+        return null;
+    } else if (characters.length > 1) {
+        sendChat(who, 'Error, found multiple characters for ' + who);
         return null;
     }
 
-    get_skills(skills_json) {
-        var skills = [];
-        Object.keys(skills_json).forEach(function(skill_name) {
-            skills.push(get_skill(skill_name, skills_json[skill_name]));
-        });
+    return characters[0];
+}
 
-        return skills;
-    }
+function get_item_names(character) {
+    const item_slots = [
+        'main_hand',
+        'offhand',
+        'head',
+        'body',
+        'hands',
+        'feet',
+        'neck',
+        'left_ring',
+        'right_ring',
+        'belt',
+    ];
 
-    get_abilities(abilities_list) {
-        for (var i = 0; i < abilities_list.length; i++) {
-            this.abilities.push(get_ability(abilities_list[i]));
+    const item_names = [];
+
+    _.each(item_slots, function(slot) {
+        const item_name = getAttrByName(character.id, slot);
+        if (item_name !== '') {
+            item_names.push(item_name);
         }
+    });
+
+    return item_names;
+}
+
+function get_character_items(character) {
+    const item_names = get_item_names(character);
+
+    // find the actual item for each given name
+    const character_items = [];
+
+    _.each(item_names, function(item_name) {
+        for (let i = 0; i < ITEMS.length; i++) {
+            if (ITEMS[i].name === item_name) {
+                character_items.push(ITEMS[i]);
+                return;
+            }
+        }
+
+        log('Error, could not find item with name ' + item_name);
+    });
+
+    return character_items;
+}
+
+function generate_stat_roll_modifier(character, stat_to_roll) {
+    const character_items = get_character_items(character);
+    const stat = get_stat(stat_to_roll);
+    const attribute = parseInt(getAttrByName(character.id, stat.attr_tla), 10);
+
+    let mod = '' + stat.value(attribute);
+    _.each(character_items, function(item) {
+        for (let i = 0; i < item.effects.length; i++) {
+            if (item.effects[i].type === 'stat') {
+                mod = mod + item.effects[i].apply(stat_to_roll);
+            }
+        }
+    });
+
+    return mod;
+}
+
+function roll_stat(msg) {
+    const character = get_character(msg.who, msg.playerid);
+    if (character === null) {
+        return;
     }
 
-    get_clazzes(clazzes_json) {
-        var clazzes = [];
-        var self = this;
-        Object.keys(clazzes_json).forEach(function(clazz_name) {
-            clazzes.push(get_clazz(clazz_name));
-            self.get_abilities(clazzes_json[clazz_name]);
-        });
+    const stat_to_roll = msg.content.split(' ')[1].replace(/_/g, ' ').toLowerCase();
+    const modifier = generate_stat_roll_modifier(character, stat_to_roll);
 
-        return clazzes;
+    const total_format = '&{template:default} {{name=%s}} {{%s=[[%s]]}}';
+    const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
+    const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s)+1]]]]}}';
+
+    switch (stat_to_roll) {
+        case 'health':
+            sendChat(msg.who, total_format.format('Total Health', 'Health', modifier));
+            break;
+        case 'stamina':
+            sendChat(msg.who, total_format.format('Total Stamina', 'Stamina', modifier));
+            break;
+
+        case 'mana':
+            sendChat(msg.who, total_format.format('Total Mana', 'Mana', modifier));
+            break;
+
+        case 'health regeneration':
+            const total_health = generate_stat_roll_modifier(character, 'health');
+            sendChat(msg.who, regen_format.format('Health Regeneration', 'Regen', total_health, modifier));
+            break;
+
+        case 'stamina regeneration':
+            const total_stamina = generate_stat_roll_modifier(character, 'stamina');
+            sendChat(msg.who, regen_format.format('Stamina Regeneration', 'Regen', total_stamina, modifier));
+            break;
+
+        case 'mana regeneration':
+            const total_mana = generate_stat_roll_modifier(character, 'mana');
+            sendChat(msg.who, regen_format.format('Mana Regeneration', 'Regen', total_mana, modifier));
+            break;
+
+        case 'movement speed':
+            sendChat(msg.who, total_format.format('Total Movement Speed', 'Speed', modifier));
+            break;
+
+        case 'ac':
+            sendChat(msg.who, total_format.format('Total AC', 'AC', modifier));
+            break;
+
+        case 'evasion':
+            sendChat(msg.who, percent_format.format('Evasion', 'Evasion', modifier));
+            break;
+
+        case 'magic resist':
+            sendChat(msg.who, total_format.format('Total Magic Resist', 'Magic Resist', modifier));
+            break;
+
+        case 'condition resist':
+            sendChat(msg.who, percent_format.format('Condition Resist', 'CR', modifier));
+            break;
+
+        case 'melee damage':
+            sendChat(msg.who, total_format.format('Bonus Melee Damage', 'Damage', modifier));
+            break;
+
+        case 'ranged fine damage':
+            sendChat(msg.who, total_format.format('Bonus Ranged/Fine Damage', 'Damage', modifier));
+            break;
+
+        case 'magic damage':
+            sendChat(msg.who, total_format.format('Bonus Magic Damage', 'Damage', modifier));
+            break;
+
+        case 'critical hit chance':
+            sendChat(msg.who, percent_format.format('Critical Hit Chance', 'Crit', modifier));
+            break;
+
+        case 'commands':
+            sendChat(msg.who, total_format.format('Total Commands', 'Commands', modifier));
+            break;
+
+        case 'languages':
+            sendChat(msg.who, total_format.format('Total Languages', 'Languages', modifier));
+            break;
+
+        case 'item efficiency':
+            sendChat(msg.who, total_format.format('Total Item Efficiency', 'Modifier', modifier));
+            break;
+
+        case 'buff limit':
+            sendChat(msg.who, total_format.format('Total Buff Limit', 'Buff Limit', modifier));
+            break;
+
+        case 'concentration limit':
+            sendChat(msg.who, total_format.format('Total Concentration Limit', 'Concentration Limit', modifier));
+            break;
+
+        default:
+            sendChat(msg.who, 'Error, unknown stat ' + stat_to_roll);
     }
+}
 
-};
+function roll_skill(msg) {
 
-function setup_characters() {
-    for (var i = 0; i < character_list.length; i++) {
-        var character = new Character(character_list[i]);
-        characters.push(character);
-    }
 }
 
 
 on('ready', function() {
     log('main.js begin');
 
-    setup_characters();
+    // setup_characters();
 
     log('main.js complete');
 });
@@ -159,13 +296,19 @@ on('ready', function() {
 
 // message handler
 on("chat:message", function(msg) {
-  // handle "!use" api call
-    if(msg.type != "api") {
+    if(msg.type !== "api") {
         return;
     }
 
-    log('who=' + msg.who + ', id=' + msg.playerid + ', message=' + msg.content);
+    log('API call: who=' + msg.who + ', id=' + msg.playerid + ', message="' + msg.content + '"');
 
+    if (msg.content.indexOf('!barbs_stat') !== -1) {
+        roll_stat(msg);
+    } else if (msg.content.indexOf('!barbs_skill') !== -1) {
+        roll_skill(msg);
+    }
+
+    /*
     var character = get_character(msg.who, msg.playerid);
     if (character === null) {
         log('no character');
@@ -189,5 +332,6 @@ on("chat:message", function(msg) {
 
         sendChat(msg.who, '[[1d100 + @{Ren Nightside|' + skill_str + '} * 5 + @{Ren Nightside|' + scaling_stat + '}]]');
     }
+    */
 });
 

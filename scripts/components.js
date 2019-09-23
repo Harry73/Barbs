@@ -1,57 +1,64 @@
-var owners = {
-    'gm': [
-        'Adam',
-        '-LjcnkLEcvyx-LjrwJlx',
-    ],
-    'ian': [
-        'Hoshiko Nightside',
-        'Ren Nightside',
-        'Luna Nightside',
-        'Ian P.',
+
+var characters_by_owner = {
+    'Hoshiko Nightside': [
         'Ian',
+        'Ian P.',
+        'Hoshiko Nightside',
         '-LjmvO3KlA-S3iHQlRW3',
     ],
-    'ahasan': [
+    'Ren Nightside': [
+        'Ian',
+        'Ian P.',
+        'Ren Nightside',
+        '-LjmvO3KlA-S3iHQlRW3',
+    ],
+    'Luna Nightside': [
+        'Ian',
+        'Ian P.',
+        'Luna Nightside',
+        '-LjmvO3KlA-S3iHQlRW3',
+    ],
+    'Edwin Markov (Adric Vapeiros)': [
         'Edwin Markov (Adric Vapeiros)',
         'Ahasan R.',
         'Ahasan',
         '-Ljmverqp4J9xjCdHGq4',
     ],
-    'sanjay': [
+    'Kirin Inagami': [
         'Kirin Inagami',
         'Sanjay N.',
         'Sanjay',
         '-Lk1li2MqriN_SAJ1ARF',
     ],
-    'ravi': [
+    'Russ Finnegan': [
         'Russ Finnegan',
         'Ravi B.',
         'Ravi',
         '-Lk7Ovry6ltsLmK8qnUY',
     ],
-    'jason': [
+    'Cordelia Tenebris': [
         'Cordelia Tenebris',
         'Jason',
         'Jason V.',
     ],
-    'steve': [
+    "Suro N'Gamma": [
         "Suro N'Gamma",
         'Steve K.',
         'Steve',
     ],
-    'matt': [
+    'Orpheus Glacierum': [
         'Orpheus Glacierum',
         'Matthew H.',
         'Matthew',
         'Matt H.',
         'Matt',
     ],
-    'nevil': [
+    'Faust Brightwood': [
         'Faust Brightwood',
         'Nevil A.',
         'Nevil,'
     ],
-    'dan': [
+    'Janatris': [
         'Janatris',
         'Daniel B.',
         'Daniel',
@@ -59,6 +66,10 @@ var owners = {
         'Dan',
     ],
 };
+
+
+// ########################################################
+// Stats
 
 class Stat {
 
@@ -72,32 +83,43 @@ class Stat {
     value(v) {
         return this.formula(v);
     }
-};
+}
 
-var STATS = [
-    new Stat('Health', 'VIT', function(v) { return 100 + 10 * v }),
-    new Stat('Stamina', 'END', function(v) { return 100 + 10 * v }),
-    new Stat('Mana', 'SPT', function(v) { return 100 + 10 * v }),
-    new Stat('Health Regeneration', 'RCV', function(v) { return 10 + v }),
-    new Stat('Stamina Regeneration', 'PER', function(v) { return 10 + v }),
-    new Stat('Mana Regeneration', 'SAN', function(v) { return 10 + v }),
-    new Stat('Movement Speed', 'AGI', function(v) { return 30 + 5 * Math.floor(v / 2) }),
-    new Stat('AC', 'TGH', function(v) { return 10 + v }),
-    new Stat('Evasion', 'REF', function(v) { return 10 + v }),
-    new Stat('Magic Resist', 'RES', function(v) { return 10 + v }),
-    new Stat('Condition Resist', 'FRT', function(v) { return 10 + v }),
-    new Stat('Melee Damage', 'STR', function(v) { return v }),
-    new Stat('Ranged/Fine Damage', 'DEX', function(v) { return v }),
-    new Stat('Magic Damage', 'ATN', function(v) { return v }),
-    new Stat('Critical Hit Chance', 'PRE', function(v) { return 10 + v }),
-    new Stat('Commands', 'APL', function(v) { return Math.floor((v + 10) / 10) + 1 }),
-    new Stat('Languages', 'INT', function(v) { return Math.floor((v + 10) / 3) + 1 }),
-    new Stat('Item Efficiency', 'WIS', function(v) { return (v + 10) * 5 }),
-    new Stat('Buff Limit', 'COM', function(v) { return Math.floor((v + 10) / 2) }),
-    new Stat('Concentration Limit', 'FCS', function(v) { return Math.floor((v + 10) / 2) }),
+const STATS = [
+    new Stat('health', 'VIT', function(v) { return 100 + 10 * v }),
+    new Stat('stamina', 'END', function(v) { return 100 + 10 * v }),
+    new Stat('mana', 'SPT', function(v) { return 100 + 10 * v }),
+    new Stat('health regeneration', 'RCV', function(v) { return 10 + v }),
+    new Stat('stamina regeneration', 'PER', function(v) { return 10 + v }),
+    new Stat('mana regeneration', 'SAN', function(v) { return 10 + v }),
+    new Stat('movement speed', 'AGI', function(v) { return 30 + 5 * Math.floor(v / 2) }),
+    new Stat('ac', 'TGH', function(v) { return 10 + v }),
+    new Stat('evasion', 'REF', function(v) { return 10 + v }),
+    new Stat('magic resist', 'RES', function(v) { return 10 + v }),
+    new Stat('condition resist', 'FRT', function(v) { return 10 + v }),
+    new Stat('melee damage', 'STR', function(v) { return v }),
+    new Stat('ranged fine damage', 'DEX', function(v) { return v }),
+    new Stat('magic damage', 'ATN', function(v) { return v }),
+    new Stat('critical hit chance', 'PRE', function(v) { return 10 + v }),
+    new Stat('commands', 'APL', function(v) { return Math.floor((v + 10) / 10) + 1 }),
+    new Stat('languages', 'INT', function(v) { return Math.floor((v + 10) / 3) + 1 }),
+    new Stat('item efficiency', 'WIS', function(v) { return (v + 10) * 5 }),
+    new Stat('buff limit', 'COM', function(v) { return Math.floor((v + 10) / 2) }),
+    new Stat('concentration limit', 'FCS', function(v) { return Math.floor((v + 10) / 2) }),
 ];
 
 
+function get_stat(name) {
+   for (let i = 0; i < STATS.length; i++) {
+       if (STATS[i].name === name) {
+           return STATS[i];
+       }
+   }
+
+   return null;
+}
+
+/*
 var hoshiko = {
     'name': 'Hoshiko/Luna/Ren Nightside',
     'owner': 'ian',
@@ -176,17 +198,20 @@ var character_list = [
 ]
 
 var characters = [];
+*/
+
+// ########################################################
+// Main components, excluding items
 
 // individual collections are built at the end off of `components`, which has everything
-var attributes = [];
-var abilities = [];
-var races = [];
-var clazzes = [];
-var skills = [];
-var buffs = [];
-var conditions = [];
-var items = [];
-var components = [
+let attributes = [];
+let abilities = [];
+let races = [];
+let clazzes = [];
+let skills = [];
+let buffs = [];
+let conditions = [];
+let components = [
     {
         "type": "attribute",
         "name": "Vitality",
@@ -5791,8 +5816,8 @@ var components = [
 ];
 
 // organize things in case they're useful
-for (var i = 0; i < components.length; i++) {
-    component = components[i];
+for (let i = 0; i < components.length; i++) {
+    let component = components[i];
     if (!('type' in component)) {
         log('component missing type ' + component.name);
         continue;
@@ -5812,9 +5837,353 @@ for (var i = 0; i < components.length; i++) {
         buffs.push(component);
     } else if (component.type === 'condition') {
         conditions.push(component);
-    } else if (component.type === 'item') {
-        items.push(component);
     } else {
         log('unknown component type ' + component.name);
     }
 }
+
+// ########################################################
+// Character
+
+class Character {
+    constructor(character_json) {
+        this.name = character_json.name;
+        this.owner = character_json.owner;
+        this.gender = character_json.gender;
+        this.race = this.get_race(character_json.race);
+        this.height = character_json.height;
+        this.weight = character_json.weight;
+        this.eye_color = character_json.eye_color;
+        this.alignment = character_json.alignment;
+        this.languages = character_json.languages;
+
+        this.attributes = this.get_attributes(character_json.attributes);
+        this.stats = this.get_stats(this.attributes);
+        this.skills = this.get_skills(character_json.skills);
+        this.abilities = [];
+        this.clazzes = this.get_clazzes(character_json.clazzes);
+        this.items = [];
+    }
+
+    get_attributes(attributes_json) {
+        let attributes = [];
+        Object.keys(attributes_json).forEach(function(attribute_name) {
+            attributes.push(get_attribute(attribute_name, attributes_json[attribute_name]));
+        });
+
+        return attributes;
+    }
+
+    get_stats(attributes) {
+        let stats = [];
+        for (var i = 0; i < attributes; i++) {
+            stats.push(get_stat(attribute));
+        }
+
+        return stats;
+    }
+
+    get_race(race_name) {
+        return null;
+    }
+
+    get_skills(skills_json) {
+        let skills = [];
+        Object.keys(skills_json).forEach(function(skill_name) {
+            skills.push(get_skill(skill_name, skills_json[skill_name]));
+        });
+
+        return skills;
+    }
+
+    get_abilities(abilities_list) {
+        for (let i = 0; i < abilities_list.length; i++) {
+            this.abilities.push(get_ability(abilities_list[i]));
+        }
+    }
+
+    get_clazzes(clazzes_json) {
+        let clazzes = [];
+        let self = this;
+        Object.keys(clazzes_json).forEach(function(clazz_name) {
+            clazzes.push(get_clazz(clazz_name));
+            self.get_abilities(clazzes_json[clazz_name]);
+        });
+
+        return clazzes;
+    }
+
+    has_skill_req(skill, rank) {
+        return true;
+    }
+
+    is_using(weapon_type) {
+        return true;
+    }
+}
+
+
+// ########################################################
+// Roll
+
+class Roll {
+    constructor(character) {
+        this.character = character;
+        this.damages = {}
+        this.multipliers = {}
+    }
+
+    is_crit() {
+        return true;
+    }
+
+    add_damage(value, type) {
+        if (type in this.damages) {
+            this.damages[type] = this.damages[type] + '+' + value;
+        } else {
+            this.damages[type] = value;
+        }
+    }
+
+    // TODO need the origin?
+    add_multiplier(value, type) {
+        if (type in this.multipliers) {
+            this.multipliers[type] = this.multipliers[type] + '*' + value;
+        } else {
+            this.multipliers[type] = value;
+        }
+
+    }
+}
+
+
+// ########################################################
+// Items
+
+class Item {
+    constructor(name, type, rarity, slot, equip_conditions, unique, range, price, cantrips, notes, effects) {
+        this.name = name;
+        this.type = type;
+        this.rarity = rarity;
+        this.slot = slot;
+        this.equip_conditions = equip_conditions;
+        this.unique = unique;
+        this.range = range;
+        this.price = price;
+        this.cantrips = cantrips;
+        this.notes = notes;
+        this.effects = effects;
+    }
+}
+
+class Effect {
+    constructor(type, effect) {
+        this.type = type;
+        this.apply = effect;
+    }
+}
+
+function light_armor_condition(character) {
+    return character.has_skill_req('Weapons: Bows', 'F');
+}
+
+function stat_effect(stat, mod) {
+    return new Effect('stat', function(stat_to_test) {
+        return stat_to_test === stat ? mod : '';
+    });
+}
+
+
+const ITEMS = [
+    new Item(
+        'Longbow of Stunning',
+        'longbow',
+        'Magic',
+        '2Hand',
+        [
+            function(player) {
+                return player.has_skill_req('Weapons: Bows', 'F');
+            },
+        ],
+        false,
+        200,
+        0,
+        [],
+        '',
+        [
+            new Effect('roll', function(roll) {
+                if (roll.is_crit()) {
+                    return "Stun";
+                }
+            }),
+        ]
+    ),
+
+    new Item(
+        'Longbow of Flames',
+        'longbow',
+        'Magic',
+        '2Hand',
+        [
+            light_armor_condition,
+        ],
+        false,
+        250,
+        0,
+        [],
+        '',
+        [
+            new Effect('roll', function(roll) {
+                roll.add_damage('3d10', 'fire');
+            }),
+        ]
+    ),
+
+    new Item(
+        'Leather Cap of Serenity',
+        'armor',
+        'Magic',
+        'head',
+        [
+            light_armor_condition,
+        ],
+        false,
+        0,
+        0,
+        [],
+        '',
+        [
+            stat_effect('evasion', '+5'),
+            stat_effect('health regeneration', '+10'),
+        ]
+    ),
+
+    new Item(
+        "Hunter's Longcoat of Resistance",
+        'armor',
+        'Magic',
+        'body',
+        [
+            light_armor_condition,
+        ],
+        false,
+        0,
+        0,
+        [],
+        '',
+        [
+            stat_effect('evasion', '+20'),
+            stat_effect('magic resist', '+10'),
+        ]
+    ),
+
+    new Item(
+        "Viper's Gloves of Dodging",
+        'armor',
+        'Magic',
+        'hands',
+        [
+            light_armor_condition,
+        ],
+        false,
+        0,
+        0,
+        [],
+        '',
+        [
+            stat_effect('evasion', '+15'),
+            stat_effect('condition resist', '+10'),
+        ]
+    ),
+
+    new Item(
+        'Leather Sandals of Slickness',
+        'armor',
+        'Magic',
+        'feet',
+        [
+            light_armor_condition,
+        ],
+        false,
+        0,
+        0,
+        [],
+        '',
+        [
+            stat_effect('evasion', '+15'),
+            stat_effect('stamina regeneration', '+10'),
+            stat_effect('ac', '-10'),
+        ]
+    ),
+
+    new Item(
+        'Cleansing Brooch of Mana Storage',
+        'accessory',
+        'Magic',
+        'neck',
+        [],
+        false,
+        0,
+        0,
+        [
+            'Expend 30 mana as Major action to cleanse 1 condition on yourself. 30 excess mana releases when you use the cantrip.'
+        ],
+        '',
+        []
+    ),
+
+    new Item(
+        'Ring of Archery',
+        'accessory',
+        'magic',
+        'ring',
+        [],
+        false,
+        0,
+        0,
+        [],
+        '',
+        [
+            new Effect('roll', function(roll) {
+                if (roll.character.is_using('longbow') || roll.character.is_using('crossbow')) {
+                    roll.add_multiplier('1.5', 'all');
+                }
+            })
+        ]
+    ),
+
+    new Item(
+        'Energetic Ring of the Mind',
+        'accessory',
+        'magic',
+        'ring',
+        [],
+        false,
+        0,
+        0,
+        [],
+        '',
+        [
+            stat_effect('stamina', '+30'),
+            stat_effect('mana', '+40'),
+        ]
+    ),
+
+    new Item(
+        'Invigorated Belt of Greater Stamina',
+        'accessory',
+        'magic',
+        'belt',
+        [],
+        false,
+        0,
+        0,
+        [],
+        '',
+        [
+            stat_effect('stamina', '+60'),
+            stat_effect('stamina regeneration', '+15'),
+        ]
+    )
+];
+
