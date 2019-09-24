@@ -1,88 +1,36 @@
-// Owner to player garbage
 
-/*
-function get_owner_name(who, id) {
-    var found_owner = null;
-    Object.keys(owners).forEach(function(owner_name) {
-        var owner_ids = owners[owner_name];
-        for (var i = 0; i < owner_ids.length; i++) {
-            if (owner_ids[i] == who || owner_ids[i] == id) {
-                found_owner = owner_name;
-            }
-        }
-    });
-
-    return found_owner;
-}
-
-function get_character(who, id) {
-    var owner_name = get_owner_name(who, id);
-    if (owner_name == null) {
-        log('owner is null');
-        return null;
-    }
-
-    for (var i = 0; i < character_list.length; i++) {
-        var character = character_list[i];
-        if (character.owner === owner_name) {
-            return character;
-        }
-    }
-
-    return null;
-}
-
-// Fetch component from the giant lists
-
-function get_attribute(name, value) {
-    for (var i = 0; i < attributes.length; i++) {
-        if (attributes[i].name == name) {
-            var attr = attributes[i];
-            attr.value = value;
-            return attr;
-        }
-    }
-
-    return null;
-}
-
-function get_stat(attribute) {
-    for (var i = 0; i < STATS.length; i++) {
-        if (STATS[i].attr_tla == attribute.abbreviation) {
-            return STATS[i];
-        }
-    }
-
-    return null;
-}
-
-function get_skill(name, value) {
-    return null;
-}
-
-function get_clazz(name) {
-    return null;
-}
-
-function get_ability(name) {
-    return null;
-}
-*/
-
+// Basic python-like string formatting
 String.prototype.format = function() {
-    a = this;
-    for (k in arguments) {
-        a = a.replace('%s', arguments[k])
+    let a = this;
+    for (let i = 0; i < arguments.length; i++) {
+        a = a.replace('%s', arguments[i]);
     }
     return a
-}
+};
+
+const item_slots = [
+    'main_hand',
+    'offhand',
+    'head',
+    'body',
+    'hands',
+    'feet',
+    'neck',
+    'left_ring',
+    'right_ring',
+    'belt',
+];
+
+const total_format = '&{template:default} {{name=%s}} {{%s=[[%s]]}}';
+const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
+const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s)+1]]]]}}';
 
 
 function get_character_names(who, id) {
-    var found_characters = [];
+    const found_characters = [];
     Object.keys(characters_by_owner).forEach(function(character_name) {
-        var owner_names = characters_by_owner[character_name];
-        for (var i = 0; i < owner_names.length; i++) {
+        const owner_names = characters_by_owner[character_name];
+        for (let i = 0; i < owner_names.length; i++) {
             if (owner_names[i] === who || owner_names[i] === id) {
                 found_characters.push(character_name);
             }
@@ -117,19 +65,6 @@ function get_character(who, id) {
 }
 
 function get_item_names(character) {
-    const item_slots = [
-        'main_hand',
-        'offhand',
-        'head',
-        'body',
-        'hands',
-        'feet',
-        'neck',
-        'left_ring',
-        'right_ring',
-        'belt',
-    ];
-
     const item_names = [];
 
     _.each(item_slots, function(slot) {
@@ -167,7 +102,7 @@ function generate_stat_roll_modifier(character, stat_to_roll) {
     const stat = get_stat(stat_to_roll);
     const attribute = parseInt(getAttrByName(character.id, stat.attr_tla), 10);
 
-    let mod = '' + stat.value(attribute);
+    let mod = stat.value(attribute).toString(10);
     _.each(character_items, function(item) {
         for (let i = 0; i < item.effects.length; i++) {
             if (item.effects[i].type === 'stat') {
@@ -187,10 +122,6 @@ function roll_stat(msg) {
 
     const stat_to_roll = msg.content.split(' ')[1].replace(/_/g, ' ').toLowerCase();
     const modifier = generate_stat_roll_modifier(character, stat_to_roll);
-
-    const total_format = '&{template:default} {{name=%s}} {{%s=[[%s]]}}';
-    const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
-    const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s)+1]]]]}}';
 
     switch (stat_to_roll) {
         case 'health':
@@ -280,6 +211,8 @@ function roll_stat(msg) {
     }
 }
 
+
+// TODO: skill rolling API
 function roll_skill(msg) {
 
 }
@@ -307,31 +240,4 @@ on("chat:message", function(msg) {
     } else if (msg.content.indexOf('!barbs_skill') !== -1) {
         roll_skill(msg);
     }
-
-    /*
-    var character = get_character(msg.who, msg.playerid);
-    if (character === null) {
-        log('no character');
-        return;
-    }
-
-    if (msg.content.indexOf('!use ') !== -1) {
-        var pieces = msg.content.split(' ');
-        var ability_str = pieces[1];
-        log('use ability ' + ability_str);
-
-        // respond as the player
-        sendChat(msg.who, 'character ' + character.name + ' use ability ' + ability_str);
-    } else if (msg.content.indexOf('!roll skill ') !== -1) {
-        var pieces = msg.content.split(' ');
-        var skill_str = pieces[2].replace('name', 'value');
-
-        log('use skill ' + skill_str);
-        //get scale stat
-        var scaling_stat = 'REF';
-
-        sendChat(msg.who, '[[1d100 + @{Ren Nightside|' + skill_str + '} * 5 + @{Ren Nightside|' + scaling_stat + '}]]');
-    }
-    */
 });
-

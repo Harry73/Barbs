@@ -169,8 +169,8 @@
 					<h4 class="sheet-center">Level and Combat Experience<span class="sheet-pictos-three">d</span></h4>
 					<div class="sheet-row">
 						<div class="sheet-col-1-4 sheet-small-label sheet-center" title="This is automatically calculated from your individual class levels listed in the class section">
-							<!-- TODO add skill and class points -->
-							<input class="sheet-underlined" type="number" name="attr_level" value="200+@{VIT}+@{END}+@{SPT}+@{RCV}+@{PER}+@{SAN}+@{AGI}+@{TGH}+@{REF}+@{RES}+@{FRT}+@{STR}+@{DEX}+@{ATN}+@{PRE}+@{APL}+@{INT}+@{WIS}+@{COM}+@{FCS}" disabled="disabled">
+							<input class="sheet-underlined" type="number" name="attr_level" value="@{hidden_level}" disabled="disabled">
+							<input type="hidden" name="attr_hidden_level" value="200+@{VIT}+@{END}+@{SPT}+@{RCV}+@{PER}+@{SAN}+@{AGI}+@{TGH}+@{REF}+@{RES}+@{FRT}+@{STR}+@{DEX}+@{ATN}+@{PRE}+@{APL}+@{INT}+@{WIS}+@{COM}+@{FCS}"/>
 							<br/>Overall Level
 						</div>
 						<div class="sheet-col-1-4 sheet-small-label sheet-center">
@@ -738,28 +738,33 @@
 					<div class="sheet-col-13-24 sheet-center sheet-small-label">Skill</div>
 					<div class="sheet-col-1-8 sheet-center sheet-small-label">Points</div>
 					<div class="sheet-col-1-8 sheet-center sheet-small-label">Rank</div>
-					<div class="sheet-col-1-8 sheet-center sheet-small-label">Bonus</div>
+					<div class="sheet-col-1-8 sheet-center sheet-small-label">Base Bonus</div>
 				</div>
 
 				<!-- TODO fix rank and bonus updating -->
-				<!-- https://github.com/Roll20/roll20-character-sheets/blob/master/Call_of_Cthulhu_7th_Ed/extended_autocalc.js -->
-				<div class="sheet-row sheet-skill-row">
-					<div class="sheet-col-1-12">
-						<button class="sheet-skill-roll" type="roll" name="roll_condition_resist" value="!barbs_skill @{attr_skill_name_1} @{attr_skill_points_1}"></button>
+				<!-- https://wiki.roll20.net/Sheet_Worker_Scripts -->
+				<fieldset class="repeating_skills">
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_skill" value="!barbs_skill @{skill_name} @{skill_points}"></button>
+						</div>
+						<div class="sheet-col-13-24">
+							<input type="text" name="attr_skill_name"/>
+						</div>
+						<div class="sheet-col-1-8">
+							<input type="number" name="attr_skill_points" value="0" min="0" max="15"/>
+						</div>
+						<div class="sheet-col-1-8">
+							<input type="text" class="sheet-center" name="attr_skill_rank" value="@{hidden_rank}" disabled="disabled"/>
+						</div>
+						<div class="sheet-col-1-8">
+							<input type="number" class="sheet-center" name="attr_skill_bonus" value="@{hidden_bonus}" disabled="disabled"/>
+						</div>
+
+						<input type="hidden" name="attr_hidden_rank" value=""/>
+						<input type="hidden" name="attr_hidden_bonus" value=""/>
 					</div>
-					<div class="sheet-col-13-24">
-						<input type="text" name="attr_skill_name_1"/>
-					</div>
-					<div class="sheet-col-1-8">
-						<input type="number" name="attr_skill_points_1" value="0" min="0" max="15"/>
-					</div>
-					<div class="sheet-col-1-8">
-						<input type="number" class="sheet-center" name="attr_skill_rank_1" value="" disabled="disabled"/>
-					</div>
-					<div class="sheet-col-1-8">
-						<input type="number" class="sheet-center" name="attr_skill_bonus_1" value="" disabled="disabled"/>
-					</div>
-				</div>
+				</fieldset>
 			</div>
 		</div>
 
@@ -772,23 +777,23 @@
 				<div class="sheet-row sheet-sub-header">
 					<div class="sheet-col-1-12 sheet-center sheet-small-label">&nbsp;</div>
 					<div class="sheet-col-19-24 sheet-center sheet-small-label">Ability</div>
-					<div class="sheet-col-1-8 sheet-center sheet-small-label">Points</div>
+					<div class="sheet-col-1-8 sheet-center sheet-small-label">Tier</div>
 				</div>
 
 				<!-- TODO fix points updating (ask API for the tier and fill in the field on changes -->
-				<!-- https://github.com/Roll20/roll20-character-sheets/blob/master/Call_of_Cthulhu_7th_Ed/extended_autocalc.js -->
-				<!-- allow you to create new fields -->
-				<div class="sheet-row sheet-skill-row">
-					<div class="sheet-col-1-12">
-						<button class="sheet-skill-roll" type="roll" name="roll_condition_resist" value="!ability @{ability_name_1}"></button>
+				<fieldset class="repeating_abilities">
+					<div class="sheet-row sheet-skill-row">
+						<div class="sheet-col-1-12">
+							<button class="sheet-skill-roll" type="roll" name="roll_class_ability" value="!barbs_ability @{ability_name}"></button>
+						</div>
+						<div class="sheet-col-19-24">
+							<input type="text" name="attr_ability_name"/>
+						</div>
+						<div class="sheet-col-1-8">
+							<input type="number" class="sheet-center" name="attr_ability_points" value="" min="1" max="4" disabled="disabled"/>
+						</div>
 					</div>
-					<div class="sheet-col-19-24">
-						<input type="text" name="attr_ability_name_1"/>
-					</div>
-					<div class="sheet-col-1-8">
-						<input type="number" class="sheet-center" name="attr_ability_points_1" value="" min="1" max="4" disabled="disabled"/>
-					</div>
-				</div>
+				</fieldset>
 			</div>
 		</div>
 
@@ -1884,351 +1889,458 @@
 
 	</div>
 
-  <script type="text/worker">
+	<!-- Skills rank and bonus updater -->
+	<script type="text/worker">
 
-    on("change:drop_category", function(eventinfo) {
-        if(eventinfo.newValue === "Monsters") {
-            handle_drop_monster(eventinfo.newValue);
-        }
-    });
+		const skill_to_attribute_map = {"Armor Mastery Cloth": "RES", "Armor Mastery Heavy": "TGH", "Armor Mastery Light": "REF", "Armor Mastery Shields": "TGH", "Artistry Acting": "APL", "Artistry Dancing": "APL", "Artistry Illustration": "APL", "Artistry Literature": "APL", "Artistry Music": "APL", "Artistry Sculpture": "APL", "Athletics Balance": "DEX", "Athletics Climbing": "AGI", "Athletics Force": "STR", "Athletics Movement": "AGI", "Athletics Pain Tolerance": "COM", "Beast Mastery Riding": "AGI", "Beast Mastery Taming": "WIS", "Combat Blocking": "TGH", "Combat Dodging": "REF", "Combat Grappling": "AGI", "Crafting Armorsmithing": "TGH", "Crafting Artificing": "RES", "Crafting Cooking": "APL", "Crafting Enchanting": "RES", "Crafting Fine Weapons": "REF", "Crafting Forgery": "PRE", "Crafting Leatherworking": "REF", "Crafting Jewelry": "FRT", "Crafting Heavy Weapons": "TGH", "Crafting Poisons": "FRT", "Crafting Potions": "FRT", "Crafting Ranged Weapons": "REF", "Crafting Shortblades": "PRE", "Crafting Tailoring": "RES", "Element Mastery Air": "AGI", "Element Mastery Dark": "FRT", "Element Mastery Earth": "RES", "Element Mastery Fire": "ATN", "Element Mastery Ice": "FRT", "Element Mastery Lightning": "ATN", "Gathering Forestry": "TGH", "Gathering Harvest": "AGI", "Gathering Herbology": "RES", "Gathering Hunting": "REF", "Gathering Mining": "TGH", "Gathering Skinning": "REF", "Item Use Appraisal": "WIS", "Item Use First Aid": "FRT", "Item Use Literacy": "INT", "Item Use Ropes": "WIS", "Interaction Deception": "APL", "Interaction Intent": "WIS", "Interaction Intimidation": "COM", "Interaction Leadership": "COM", "Interaction Persuasion": "APL", "Interaction Seduction": "APL", "Knowledge Arcana": "INT", "Knowledge Culture": "INT", "Knowledge History": "INT", "Knowledge Nature": "INT", "Magic Buffs": "FCS", "Magic Conjuration": "FCS", "Magic Control": "ATN", "Magic Defensive": "RES", "Magic Destruction": "ATN", "Magic Enchantment": "FCS", "Magic Mana Channeling": "COM", "Magic Restoration": "ATN", "Magic Summoning": "FCS", "Magic Transmutation": "FCS", "Magic Utility": "ATN", "Observation Listen": "WIS", "Observation Search": "WIS", "Stealth Disguise": "PRE", "Stealth Lockpicking": "PRE", "Stealth Sneak": "PRE", "Stealth Steal": "PRE", "Transportation Land Vehicles": "AGI", "Weapon Mastery Axes": "STR", "Weapon Mastery Bows": "DEX", "Weapon Mastery Bullets": "DEX", "Weapon Mastery Crossbows": "DEX", "Weapon Mastery Fine": "DEX", "Weapon Mastery Heavy Thrown Weapons": "STR", "Weapon Mastery Longblades": "STR", "Weapon Mastery Shields": "STR", "Weapon Mastery Shortblades": "PRE"};
 
-    var handle_drop_monster = function(category, eventinfo) {
-        var callbacks = [];
-        var update = {};
-        var id = generateRowID();
+		String.prototype.format = function() {
+			let a = this;
+			for (let i = 0; i < arguments.length; i++) {
+				a = a.replace('%s', arguments[i]);
+			}
+			return a
+		};
 
-        drop_attrs = ["drop_name","drop_weight","drop_properties",
-                      "drop_modifiers","drop_content","drop_itemtype",
-                      "drop_damage","drop_damagetype","drop_damage2",
-                      "drop_damagetype2","drop_range","drop_ac",
-                      "drop_speed", "drop_str", "drop_dex", "drop_con",
-                      "drop_int", "drop_wis", "drop_cha",
-                      "drop_vulnerabilities", "drop_resistances",
-                      "drop_immunities", "drop_condition_immunities",
-                      "drop_languages", "drop_challenge_rating", "drop_size",
-                      "drop_type", "drop_alignment", "drop_hp",
-                      "drop_saving_throws", "drop_senses",
-                      "drop_passive_perception", "drop_skills",
-                      "drop_token_size", "character_id"]
-        getAttrs(drop_attrs, function(v) {
-            if(category === "Monsters") {
-                update["is_npc"] = "1";
-                if(v["drop_name"] && v["drop_name"] != "") {update["character_name"] = v["drop_name"]};
-                // core stats
-                update["npc_strength"]     = v["drop_str"] ? v["drop_str"] : "";
-                update["npc_dexterity"]    = v["drop_dex"] ? v["drop_dex"] : "";
-                update["npc_constitution"] = v["drop_con"] ? v["drop_con"] : "";
-                update["npc_intelligence"] = v["drop_int"] ? v["drop_int"] : "";
-                update["npc_wisdom"]       = v["drop_wis"] ? v["drop_wis"] : "";
-                update["npc_charisma"]     = v["drop_cha"] ? v["drop_cha"] : "";
-                update["npc_strength_save_mod"] = 0;
-                update["npc_dexterity_save_mod"] = 0;
-                update["npc_constitution_save_mod"] = 0;
-                update["npc_intelligence_save_mod"] = 0;
-                update["npc_wisdom_save_mod"] = 0;
-                update["npc_charisma_save_mod"] = 0;
-                if(v["drop_saving_throws"] && v["drop_saving_throws"] != "") {
-                    var savearray = v["drop_saving_throws"].split(", ");
-                    _.each(savearray, function(save) {
-                        kv = save.indexOf("-") > -1 ? save.split(" ") : save.split(" +");
-                        update["npc_" + kv[0].toLowerCase() + "_save_mod"] = parseInt(kv[1], 10);
-                    });
-                };
-                //right side of core stats, top to bottom
-                update["npc_size"]      = v["drop_size"] ? v["drop_size"] : "";
-                update["npc_type"]      = v["drop_type"] ? v["drop_type"] : "";
-                update["npc_alignment"] = v["drop_alignment"] ? v["drop_alignment"] : "";
-                 //AC handling
-                if(v["drop_ac"]) {
-                    if(v["drop_ac"].indexOf("(") > -1) {
-                        update["npc_ac"] = v["drop_ac"].split(" (")[0];
-                        update["npc_AC_note"] = v["drop_ac"].split(" (")[1].slice(0, -1);
-                    }
-                    else {
-                        update["npc_ac"] = v["drop_ac"];
-                        update["npc_AC_note"] = "";
-                    };
-                }
-                else {
-                    update["npc_ac"] = 10;
-                    update["npc_AC_note"] = "";
-                };
-                 //HP handling
-                if(v["drop_hp"]) {
-                    if(v["drop_hp"].indexOf("(") > -1) {
-                        update["npc_HP"] = v["drop_hp"].split(" (")[0];
-                        update["npc_HP_max"] = v["drop_hp"].split(" (")[0];
-                        //update["npc_HP_max"] = v["drop_hp"].split(" (")[1].slice(0, -1);
-                    }
-                    else {
-                        update["npc_HP"] = v["drop_hp"]
-                        update["npc_HP_max"] = v["drop_hp"]
-                        //update["npc_hpformula"] = ""
-                    };
-                }
-                else {
-                    update["npc_HP"] = 1
-                    update["npc_HP_max"] = 1
-                };
-                 //Speed handling
-                if(v["drop_speed"]) {
-                    speed = /\d+/i
-                    fly   = /fly \d+/i
-                    climb = /climb \d+/i
-                    swim  = /swim \d+/i
-                    speed_match = speed.exec(v["drop_speed"])
-                    fly_match   = fly.exec(v["drop_speed"])
-                    climb_match = climb.exec(v["drop_speed"])
-                    swim_match  = swim.exec(v["drop_speed"])
-                    if(speed_match) {
-                        speed_number = speed_match[0].split(" ")
-                        speed_number = parseInt(speed_number[0], 10)
-                        update["npc_speed"] = speed_number
-                    }
-                    if(fly_match) {
-                        speed_number = fly_match[0].split(" ")
-                        speed_number = parseInt(speed_number[1], 10)
-                        update["npc_speed_fly"] = speed_number
-                    }
-                    if(climb_match) {
-                        speed_number = climb_match[0].split(" ")
-                        speed_number = parseInt(speed_number[1], 10)
-                        update["npc_speed_climb"] = speed_number
-                    }
-                    if(swim_match) {
-                        speed_number = swim_match[0].split(" ")
-                        speed_number = parseInt(speed_number[1], 10)
-                        update["npc_speed_swim"] = speed_number
-                    }
-                }
-                //Challenge --> Languages
-                 //Challenge/XP handling
-                if(v["drop_challenge_rating"] && v["drop_challenge_rating"] != "") {
-                  update["npc_challenge"] = v["drop_challenge_rating"];
-                  var xp = 0;
-                  var pb = 0;
-                  switch(v["drop_challenge_rating"]) {
-                  case "0":
-                      xp = "10";
-                      pb = 2;
-                      break;
-                  case "1/8":
-                      xp = "25";
-                      pb = 2;
-                      break;
-                  case "1/4":
-                      xp = "50";
-                      pb = 2;
-                      break;
-                  case "1/2":
-                      xp = "100";
-                      pb = 2;
-                      break;
-                  case "1":
-                      xp = "200";
-                      pb = 2;
-                      break;
-                  case "2":
-                      xp = "450";
-                      pb = 2;
-                      break;
-                  case "3":
-                      xp = "700";
-                      pb = 2;
-                      break;
-                  case "4":
-                      xp = "1100";
-                      pb = 2;
-                      break;
-                  case "5":
-                      xp = "1800";
-                      pb = 3;
-                      break;
-                  case "6":
-                      xp = "2300";
-                      pb = 3;
-                      break;
-                  case "7":
-                      xp = "2900";
-                      pb = 3;
-                      break;
-                  case "8":
-                      xp = "3900";
-                      pb = 3;
-                      break;
-                  case "9":
-                      xp = "5000";
-                      pb = 4;
-                      break;
-                  case "10":
-                      xp = "5900";
-                      pb = 4;
-                      break;
-                  case "11":
-                      xp = "7200";
-                      pb = 4;
-                      break;
-                  case "12":
-                      xp = "8400";
-                      pb = 4;
-                      break;
-                  case "13":
-                      xp = "10000";
-                      pb = 5;
-                      break;
-                  case "14":
-                      xp = "11500";
-                      pb = 5;
-                      break;
-                  case "15":
-                      xp = "13000";
-                      pb = 5;
-                      break;
-                  case "16":
-                      xp = "15000";
-                      pb = 5;
-                      break;
-                  case "17":
-                      xp = "18000";
-                      pb = 6;
-                      break;
-                  case "18":
-                      xp = "20000";
-                      pb = 6;
-                      break;
-                  case "19":
-                      xp = "22000";
-                      pb = 6;
-                      break;
-                  case "20":
-                      xp = "25000";
-                      pb = 6;
-                      break;
-                  case "21":
-                      xp = "33000";
-                      pb = 7;
-                      break;
-                  case "22":
-                      xp = "41000";
-                      pb = 7;
-                      break;
-                  case "23":
-                      xp = "50000";
-                      pb = 7;
-                      break;
-                  case "24":
-                      xp = "62000";
-                      pb = 7;
-                      break;
-                  case "25":
-                      xp = "75000";
-                      pb = 8;
-                      break;
-                  case "26":
-                      xp = "90000";
-                      pb = 8;
-                      break;
-                  case "27":
-                      xp = "105000";
-                      pb = 8;
-                      break;
-                  case "28":
-                      xp = "120000";
-                      pb = 8;
-                      break;
-                  case "29":
-                      xp = "";
-                      pb = 9;
-                      break;
-                  case "30":
-                      xp = "155000";
-                      pb = 9;
-                      break;
-                  }
-                  update["npc_xp"] = xp;
-                }
-                update["npc_senses"] = v["drop_senses"] ? v["drop_senses"] : "";
-                update["npc_languages"] = v["drop_languages"] ? v["drop_languages"] : "";
-                //Traits/Background
-                update["npc_damage_resistance"] = v["drop_resistances"] ? v["drop_resistances"] : "";
-                update["npc_damage_vulnerability"] = v["drop_vulnerabilities"] ? v["drop_vulnerabilities"] : "";
-                update["npc_damage_immunity"] = v["drop_immunities"] ? v["drop_immunities"] : "";
-                update["npc_condition_immunity"] = v["drop_condition_immunities"] ? v["drop_condition_immunities"] : "";
-                update["npc_traits"] = v["drop_content"] ? v["drop_content"] : "";
-                //Skills
-                update["npc_acrobatics_bonus"] = 0;
-                update["npc_animal_handling_bonus"] = 0;
-                update["npc_arcana_bonus"] = 0;
-                update["npc_athletics_bonus"] = 0;
-                update["npc_deception_bonus"] = 0;
-                update["npc_history_bonus"] = 0;
-                update["npc_insight_bonus"] = 0;
-                update["npc_intimidation_bonus"] = 0;
-                update["npc_investigation_bonus"] = 0;
-                update["npc_medicine_bonus"] = 0;
-                update["npc_nature_bonus"] = 0;
-                update["npc_perception_bonus"] = 0;
-                update["npc_performance_bonus"] = 0;
-                update["npc_persuasion_bonus"] = 0;
-                update["npc_religion_bonus"] = 0;
-                update["npc_sleight_of_hand_bonus"] = 0;
-                update["npc_stealth_bonus"] = 0;
-                update["npc_survival_bonus"] = 0;
-                if(v["drop_skills"] && v["drop_skills"] != "") {
-                    skillarray = v["drop_skills"].split(", ");
-                    _.each(skillarray, function(skill) {
-                        kv = skill.indexOf("-") > -1 ? skill.split(" ") : skill.split(" +");
-                        update["npc_" + kv[0].toLowerCase().replace(/ /g, '_') + "_bonus"] = parseInt(kv[1], 10);
-                    });
-                }
-            };
+		on("change:repeating_skills:skill_points", function(event) {
+			let value = parseInt(event.newValue, 10);
+			const bonus = 5 * value;
 
-            callbacks.push( function() {cleanup_drop_fields();} );
-            setAttrs(update, {silent: true}, function() {callbacks.forEach(function(callback) {callback(); })} );
-        });
+			let rank = 'error';
+			switch (value) {
+				case 0:
+					rank = 'Untrained';
+					break;
+				case 1:
+					rank = 'F'
+					break;
+				case 2:
+					rank = 'E'
+					break;
+				case 3:
+					rank = 'D'
+					break;
+				case 4:
+					rank = 'C'
+					break;
+				case 5:
+					rank = 'B'
+					break;
+				case 6:
+					rank = 'A'
+					break;
+				default:
+					rank = -1 * value + 16;
+					rank = rank.toString(10);
+					break;
+			}
+
+			getAttrs(['repeating_skills_skill_name'], function(values) {
+				const skill_name = values.repeating_skills_skill_name.replace(/:/g, '');
+
+				if (!(skill_name in skill_to_attribute_map)) {
+					console.log('error, unknown skill ' + skill_name);
+					return;
+				}
+
+				const attr = skill_to_attribute_map[skill_name];
+				const bonus_string = '%s+@{%s}'.format(bonus.toString(10), attr);
+
+				setAttrs({
+					'repeating_skills_hidden_rank': rank,
+					'repeating_skills_hidden_bonus': bonus_string
+				});
+			});
+
+		});
+
+	</script>
+
+	<!-- Level updater -->
+	<!-- TODO: Add class points into this -->
+	<script type="text/worker">
+
+		const base_equation = '200+@{VIT}+@{END}+@{SPT}+@{RCV}+@{PER}+@{SAN}+@{AGI}+@{TGH}+@{REF}+@{RES}+@{FRT}+@{STR}+@{DEX}+@{ATN}+@{PRE}+@{APL}+@{INT}+@{WIS}+@{COM}+@{FCS}';
+
+		String.prototype.format = function() {
+			let a = this;
+			for (let i = 0; i < arguments.length; i++) {
+				a = a.replace('%s', arguments[i]);
+			}
+			return a
+		};
+
+		on("change:repeating_skills:skill_points", function(event) {
+			getSectionIDs("repeating_skills", function(ids) {
+				const skill_point_attrs = [];
+				for(let i = 0; i < ids.length; i++) {
+					console.log('got id ' + ids[i]);
+					const skill_point_attr = 'repeating_skills_%s_skill_points'.format(ids[i]);
+					skill_point_attrs.push(skill_point_attr);
+		  		}
+
+		  		getAttrs(skill_point_attrs, function(values) {
+					var skill_points = 0;
+					for(let i = 0; i < skill_point_attrs.length; i++) {
+						skill_points += parseInt(values[skill_point_attrs[i]]);
+					}
+
+					const level_equation = '%s+%s'.format(base_equation, skill_points.toString(10));
+
+					setAttrs({
+						hidden_level: level_equation
+					});
+		  		});
+			});
+		});
+
+	</script>
+
+  	<script type="text/worker">
+
+		on("change:drop_category", function(eventinfo) {
+			if(eventinfo.newValue === "Monsters") {
+				handle_drop_monster(eventinfo.newValue);
+			}
+		});
+
+		var handle_drop_monster = function(category, eventinfo) {
+			var callbacks = [];
+			var update = {};
+			var id = generateRowID();
+
+			drop_attrs = ["drop_name","drop_weight","drop_properties",
+						  "drop_modifiers","drop_content","drop_itemtype",
+						  "drop_damage","drop_damagetype","drop_damage2",
+						  "drop_damagetype2","drop_range","drop_ac",
+						  "drop_speed", "drop_str", "drop_dex", "drop_con",
+						  "drop_int", "drop_wis", "drop_cha",
+						  "drop_vulnerabilities", "drop_resistances",
+						  "drop_immunities", "drop_condition_immunities",
+						  "drop_languages", "drop_challenge_rating", "drop_size",
+						  "drop_type", "drop_alignment", "drop_hp",
+						  "drop_saving_throws", "drop_senses",
+						  "drop_passive_perception", "drop_skills",
+						  "drop_token_size", "character_id"]
+			getAttrs(drop_attrs, function(v) {
+				if(category === "Monsters") {
+					update["is_npc"] = "1";
+					if(v["drop_name"] && v["drop_name"] != "") {update["character_name"] = v["drop_name"]};
+					// core stats
+					update["npc_strength"]     = v["drop_str"] ? v["drop_str"] : "";
+					update["npc_dexterity"]    = v["drop_dex"] ? v["drop_dex"] : "";
+					update["npc_constitution"] = v["drop_con"] ? v["drop_con"] : "";
+					update["npc_intelligence"] = v["drop_int"] ? v["drop_int"] : "";
+					update["npc_wisdom"]       = v["drop_wis"] ? v["drop_wis"] : "";
+					update["npc_charisma"]     = v["drop_cha"] ? v["drop_cha"] : "";
+					update["npc_strength_save_mod"] = 0;
+					update["npc_dexterity_save_mod"] = 0;
+					update["npc_constitution_save_mod"] = 0;
+					update["npc_intelligence_save_mod"] = 0;
+					update["npc_wisdom_save_mod"] = 0;
+					update["npc_charisma_save_mod"] = 0;
+					if(v["drop_saving_throws"] && v["drop_saving_throws"] != "") {
+						var savearray = v["drop_saving_throws"].split(", ");
+						_.each(savearray, function(save) {
+							kv = save.indexOf("-") > -1 ? save.split(" ") : save.split(" +");
+							update["npc_" + kv[0].toLowerCase() + "_save_mod"] = parseInt(kv[1], 10);
+						});
+					};
+					//right side of core stats, top to bottom
+					update["npc_size"]      = v["drop_size"] ? v["drop_size"] : "";
+					update["npc_type"]      = v["drop_type"] ? v["drop_type"] : "";
+					update["npc_alignment"] = v["drop_alignment"] ? v["drop_alignment"] : "";
+					 //AC handling
+					if(v["drop_ac"]) {
+						if(v["drop_ac"].indexOf("(") > -1) {
+							update["npc_ac"] = v["drop_ac"].split(" (")[0];
+							update["npc_AC_note"] = v["drop_ac"].split(" (")[1].slice(0, -1);
+						}
+						else {
+							update["npc_ac"] = v["drop_ac"];
+							update["npc_AC_note"] = "";
+						};
+					}
+					else {
+						update["npc_ac"] = 10;
+						update["npc_AC_note"] = "";
+					};
+					 //HP handling
+					if(v["drop_hp"]) {
+						if(v["drop_hp"].indexOf("(") > -1) {
+							update["npc_HP"] = v["drop_hp"].split(" (")[0];
+							update["npc_HP_max"] = v["drop_hp"].split(" (")[0];
+							//update["npc_HP_max"] = v["drop_hp"].split(" (")[1].slice(0, -1);
+						}
+						else {
+							update["npc_HP"] = v["drop_hp"]
+							update["npc_HP_max"] = v["drop_hp"]
+							//update["npc_hpformula"] = ""
+						};
+					}
+					else {
+						update["npc_HP"] = 1
+						update["npc_HP_max"] = 1
+					};
+					 //Speed handling
+					if(v["drop_speed"]) {
+						speed = /\d+/i
+						fly   = /fly \d+/i
+						climb = /climb \d+/i
+						swim  = /swim \d+/i
+						speed_match = speed.exec(v["drop_speed"])
+						fly_match   = fly.exec(v["drop_speed"])
+						climb_match = climb.exec(v["drop_speed"])
+						swim_match  = swim.exec(v["drop_speed"])
+						if(speed_match) {
+							speed_number = speed_match[0].split(" ")
+							speed_number = parseInt(speed_number[0], 10)
+							update["npc_speed"] = speed_number
+						}
+						if(fly_match) {
+							speed_number = fly_match[0].split(" ")
+							speed_number = parseInt(speed_number[1], 10)
+							update["npc_speed_fly"] = speed_number
+						}
+						if(climb_match) {
+							speed_number = climb_match[0].split(" ")
+							speed_number = parseInt(speed_number[1], 10)
+							update["npc_speed_climb"] = speed_number
+						}
+						if(swim_match) {
+							speed_number = swim_match[0].split(" ")
+							speed_number = parseInt(speed_number[1], 10)
+							update["npc_speed_swim"] = speed_number
+						}
+					}
+					//Challenge --> Languages
+					 //Challenge/XP handling
+					if(v["drop_challenge_rating"] && v["drop_challenge_rating"] != "") {
+					  update["npc_challenge"] = v["drop_challenge_rating"];
+					  var xp = 0;
+					  var pb = 0;
+					  switch(v["drop_challenge_rating"]) {
+					  case "0":
+						  xp = "10";
+						  pb = 2;
+						  break;
+					  case "1/8":
+						  xp = "25";
+						  pb = 2;
+						  break;
+					  case "1/4":
+						  xp = "50";
+						  pb = 2;
+						  break;
+					  case "1/2":
+						  xp = "100";
+						  pb = 2;
+						  break;
+					  case "1":
+						  xp = "200";
+						  pb = 2;
+						  break;
+					  case "2":
+						  xp = "450";
+						  pb = 2;
+						  break;
+					  case "3":
+						  xp = "700";
+						  pb = 2;
+						  break;
+					  case "4":
+						  xp = "1100";
+						  pb = 2;
+						  break;
+					  case "5":
+						  xp = "1800";
+						  pb = 3;
+						  break;
+					  case "6":
+						  xp = "2300";
+						  pb = 3;
+						  break;
+					  case "7":
+						  xp = "2900";
+						  pb = 3;
+						  break;
+					  case "8":
+						  xp = "3900";
+						  pb = 3;
+						  break;
+					  case "9":
+						  xp = "5000";
+						  pb = 4;
+						  break;
+					  case "10":
+						  xp = "5900";
+						  pb = 4;
+						  break;
+					  case "11":
+						  xp = "7200";
+						  pb = 4;
+						  break;
+					  case "12":
+						  xp = "8400";
+						  pb = 4;
+						  break;
+					  case "13":
+						  xp = "10000";
+						  pb = 5;
+						  break;
+					  case "14":
+						  xp = "11500";
+						  pb = 5;
+						  break;
+					  case "15":
+						  xp = "13000";
+						  pb = 5;
+						  break;
+					  case "16":
+						  xp = "15000";
+						  pb = 5;
+						  break;
+					  case "17":
+						  xp = "18000";
+						  pb = 6;
+						  break;
+					  case "18":
+						  xp = "20000";
+						  pb = 6;
+						  break;
+					  case "19":
+						  xp = "22000";
+						  pb = 6;
+						  break;
+					  case "20":
+						  xp = "25000";
+						  pb = 6;
+						  break;
+					  case "21":
+						  xp = "33000";
+						  pb = 7;
+						  break;
+					  case "22":
+						  xp = "41000";
+						  pb = 7;
+						  break;
+					  case "23":
+						  xp = "50000";
+						  pb = 7;
+						  break;
+					  case "24":
+						  xp = "62000";
+						  pb = 7;
+						  break;
+					  case "25":
+						  xp = "75000";
+						  pb = 8;
+						  break;
+					  case "26":
+						  xp = "90000";
+						  pb = 8;
+						  break;
+					  case "27":
+						  xp = "105000";
+						  pb = 8;
+						  break;
+					  case "28":
+						  xp = "120000";
+						  pb = 8;
+						  break;
+					  case "29":
+						  xp = "";
+						  pb = 9;
+						  break;
+					  case "30":
+						  xp = "155000";
+						  pb = 9;
+						  break;
+					  }
+					  update["npc_xp"] = xp;
+					}
+					update["npc_senses"] = v["drop_senses"] ? v["drop_senses"] : "";
+					update["npc_languages"] = v["drop_languages"] ? v["drop_languages"] : "";
+					//Traits/Background
+					update["npc_damage_resistance"] = v["drop_resistances"] ? v["drop_resistances"] : "";
+					update["npc_damage_vulnerability"] = v["drop_vulnerabilities"] ? v["drop_vulnerabilities"] : "";
+					update["npc_damage_immunity"] = v["drop_immunities"] ? v["drop_immunities"] : "";
+					update["npc_condition_immunity"] = v["drop_condition_immunities"] ? v["drop_condition_immunities"] : "";
+					update["npc_traits"] = v["drop_content"] ? v["drop_content"] : "";
+					//Skills
+					update["npc_acrobatics_bonus"] = 0;
+					update["npc_animal_handling_bonus"] = 0;
+					update["npc_arcana_bonus"] = 0;
+					update["npc_athletics_bonus"] = 0;
+					update["npc_deception_bonus"] = 0;
+					update["npc_history_bonus"] = 0;
+					update["npc_insight_bonus"] = 0;
+					update["npc_intimidation_bonus"] = 0;
+					update["npc_investigation_bonus"] = 0;
+					update["npc_medicine_bonus"] = 0;
+					update["npc_nature_bonus"] = 0;
+					update["npc_perception_bonus"] = 0;
+					update["npc_performance_bonus"] = 0;
+					update["npc_persuasion_bonus"] = 0;
+					update["npc_religion_bonus"] = 0;
+					update["npc_sleight_of_hand_bonus"] = 0;
+					update["npc_stealth_bonus"] = 0;
+					update["npc_survival_bonus"] = 0;
+					if(v["drop_skills"] && v["drop_skills"] != "") {
+						skillarray = v["drop_skills"].split(", ");
+						_.each(skillarray, function(skill) {
+							kv = skill.indexOf("-") > -1 ? skill.split(" ") : skill.split(" +");
+							update["npc_" + kv[0].toLowerCase().replace(/ /g, '_') + "_bonus"] = parseInt(kv[1], 10);
+						});
+					}
+				};
+
+				callbacks.push( function() {cleanup_drop_fields();} );
+				setAttrs(update, {silent: true}, function() {callbacks.forEach(function(callback) {callback(); })} );
+			});
 
 
-    };
+		};
 
-    var cleanup_drop_fields = function() {
-        var update = {};
-        update["drop_name"] = "";
-        update["drop_weight"] = "";
-        update["drop_properties"] = "";
-        update["drop_modifiers"] = "";
-        update["drop_content"] = "";
-        update["drop_itemtype"] = "";
-        update["drop_damage"] = "";
-        update["drop_damagetype"] = "";
-        update["drop_range"] = "";
-        update["drop_ac"] = "";
-        update["drop_category"] = "";
-        update["drop_speed"] = "";
-        update["drop_str"] = "";
-        update["drop_dex"] = "";
-        update["drop_con"] = "";
-        update["drop_int"] = "";
-        update["drop_wis"] = "";
-        update["drop_cha"] = "";
-        update["drop_vulnerabilities"] = "";
-        update["drop_resistances"] = "";
-        update["drop_immunities"] = "";
-        update["drop_condition_immunities"] = "";
-        update["drop_languages"] = "";
-        update["drop_challenge_rating"] = "";
-        update["drop_size"] = "";
-        update["drop_type"] = "";
-        update["drop_alignment"] = "";
-        update["drop_hp"] = "";
-        update["drop_saving_throws"] = "";
-        update["drop_senses"] = "";
-        update["drop_passive_perception"] = "";
-        update["drop_skills"] = "";
-        update["drop_token_size"] = "";
-        setAttrs(update, {silent: true});
-    };
+		var cleanup_drop_fields = function() {
+			var update = {};
+			update["drop_name"] = "";
+			update["drop_weight"] = "";
+			update["drop_properties"] = "";
+			update["drop_modifiers"] = "";
+			update["drop_content"] = "";
+			update["drop_itemtype"] = "";
+			update["drop_damage"] = "";
+			update["drop_damagetype"] = "";
+			update["drop_range"] = "";
+			update["drop_ac"] = "";
+			update["drop_category"] = "";
+			update["drop_speed"] = "";
+			update["drop_str"] = "";
+			update["drop_dex"] = "";
+			update["drop_con"] = "";
+			update["drop_int"] = "";
+			update["drop_wis"] = "";
+			update["drop_cha"] = "";
+			update["drop_vulnerabilities"] = "";
+			update["drop_resistances"] = "";
+			update["drop_immunities"] = "";
+			update["drop_condition_immunities"] = "";
+			update["drop_languages"] = "";
+			update["drop_challenge_rating"] = "";
+			update["drop_size"] = "";
+			update["drop_type"] = "";
+			update["drop_alignment"] = "";
+			update["drop_hp"] = "";
+			update["drop_saving_throws"] = "";
+			update["drop_senses"] = "";
+			update["drop_passive_perception"] = "";
+			update["drop_skills"] = "";
+			update["drop_token_size"] = "";
+			setAttrs(update, {silent: true});
+		};
 
-  </script>
+	</script>
 </div>
 
 <rolltemplate class="sheet-rolltemplate-5eDefault">

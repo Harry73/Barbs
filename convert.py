@@ -40,6 +40,17 @@ def main():
     with open(os.path.join(DATA_PATH, 'components.json'), 'w') as f:
         json.dump(components, f, indent=4)
 
+    # Create a map of skills to their attribute acronyms
+    skill_to_attr = {}
+    for skill in skills:
+        if not skill.attribute or not skill.attribute.abbreviation:
+            print('error, skill missing data, %s' % skill)
+            return
+
+        skill_to_attr[skill.name] = skill.attribute.abbreviation
+
+    with open(os.path.join(DATA_PATH, 'skills_to_attributes.json'), 'w') as f:
+        json.dump(skill_to_attr, f)
 
 
 # One method to compose them all, one method to hash them
