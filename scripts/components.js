@@ -56,7 +56,9 @@ var characters_by_owner = {
     'Faust Brightwood': [
         'Faust Brightwood',
         'Nevil A.',
-        'Nevil,'
+        'Nevil,',
+        'Drenion',
+        'Drenion A.',
     ],
     'Janatris': [
         'Janatris',
@@ -5841,6 +5843,9 @@ for (let i = 0; i < components.length; i++) {
         log('unknown component type ' + component.name);
     }
 }
+
+
+const skill_to_attribute_map = {"Armor Mastery Cloth": "RES", "Armor Mastery Heavy": "TGH", "Armor Mastery Light": "REF", "Armor Mastery Shields": "TGH", "Artistry Acting": "APL", "Artistry Dancing": "APL", "Artistry Illustration": "APL", "Artistry Literature": "APL", "Artistry Music": "APL", "Artistry Sculpture": "APL", "Athletics Balance": "DEX", "Athletics Climbing": "AGI", "Athletics Force": "STR", "Athletics Movement": "AGI", "Athletics Pain Tolerance": "COM", "Beast Mastery Riding": "AGI", "Beast Mastery Taming": "WIS", "Combat Blocking": "TGH", "Combat Dodging": "REF", "Combat Grappling": "AGI", "Crafting Armorsmithing": "TGH", "Crafting Artificing": "RES", "Crafting Cooking": "APL", "Crafting Enchanting": "RES", "Crafting Fine Weapons": "REF", "Crafting Forgery": "PRE", "Crafting Leatherworking": "REF", "Crafting Jewelry": "FRT", "Crafting Heavy Weapons": "TGH", "Crafting Poisons": "FRT", "Crafting Potions": "FRT", "Crafting Ranged Weapons": "REF", "Crafting Shortblades": "PRE", "Crafting Tailoring": "RES", "Element Mastery Air": "AGI", "Element Mastery Dark": "FRT", "Element Mastery Earth": "RES", "Element Mastery Fire": "ATN", "Element Mastery Ice": "FRT", "Element Mastery Lightning": "ATN", "Gathering Forestry": "TGH", "Gathering Harvest": "AGI", "Gathering Herbology": "RES", "Gathering Hunting": "REF", "Gathering Mining": "TGH", "Gathering Skinning": "REF", "Item Use Appraisal": "WIS", "Item Use First Aid": "FRT", "Item Use Literacy": "INT", "Item Use Ropes": "WIS", "Interaction Deception": "APL", "Interaction Intent": "WIS", "Interaction Intimidation": "COM", "Interaction Leadership": "COM", "Interaction Persuasion": "APL", "Interaction Seduction": "APL", "Knowledge Arcana": "INT", "Knowledge Culture": "INT", "Knowledge History": "INT", "Knowledge Nature": "INT", "Magic Buffs": "FCS", "Magic Conjuration": "FCS", "Magic Control": "ATN", "Magic Defensive": "RES", "Magic Destruction": "ATN", "Magic Enchantment": "FCS", "Magic Mana Channeling": "COM", "Magic Restoration": "ATN", "Magic Summoning": "FCS", "Magic Transmutation": "FCS", "Magic Utility": "ATN", "Observation Listen": "WIS", "Observation Search": "WIS", "Stealth Disguise": "PRE", "Stealth Lockpicking": "PRE", "Stealth Sneak": "PRE", "Stealth Steal": "PRE", "Transportation Land Vehicles": "AGI", "Weapon Mastery Axes": "STR", "Weapon Mastery Bows": "DEX", "Weapon Mastery Bullets": "DEX", "Weapon Mastery Crossbows": "DEX", "Weapon Mastery Fine": "DEX", "Weapon Mastery Heavy Thrown Weapons": "STR", "Weapon Mastery Longblades": "STR", "Weapon Mastery Shields": "STR", "Weapon Mastery Shortblades": "PRE"};
 
 // ########################################################
 // Character

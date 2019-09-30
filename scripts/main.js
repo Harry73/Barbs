@@ -40,6 +40,7 @@ function get_character_names(who, id) {
     return found_characters;
 }
 
+
 function get_character(who, id) {
     const character_names = get_character_names(who, id);
 
@@ -57,12 +58,13 @@ function get_character(who, id) {
         sendChat(who, 'Error, did not find a character for ' + who);
         return null;
     } else if (characters.length > 1) {
-        sendChat(who, 'Error, found multiple characters for ' + who);
-        return null;
+        // warn, but pray we've got the right ones regardless
+        log('warning, found ' + characters.length + ' matching characters for ' + who);
     }
 
     return characters[0];
 }
+
 
 function get_item_names(character) {
     const item_names = [];
@@ -76,6 +78,7 @@ function get_item_names(character) {
 
     return item_names;
 }
+
 
 function get_character_items(character) {
     const item_names = get_item_names(character);
@@ -97,16 +100,15 @@ function get_character_items(character) {
     return character_items;
 }
 
-function generate_stat_roll_modifier(character, stat_to_roll) {
-    const character_items = get_character_items(character);
-    const stat = get_stat(stat_to_roll);
-    const attribute = parseInt(getAttrByName(character.id, stat.attr_tla), 10);
 
-    let mod = stat.value(attribute).toString(10);
+function apply_items(character, thing_to_roll, effect_type) {
+    const character_items = get_character_items(character);
+
+    let mod = '';
     _.each(character_items, function(item) {
         for (let i = 0; i < item.effects.length; i++) {
-            if (item.effects[i].type === 'stat') {
-                mod = mod + item.effects[i].apply(stat_to_roll);
+            if (item.effects[i].type === effect_type) {
+                mod = mod + item.effects[i].apply(thing_to_roll);
             }
         }
     });
@@ -114,14 +116,27 @@ function generate_stat_roll_modifier(character, stat_to_roll) {
     return mod;
 }
 
+
+function generate_stat_roll_modifier_from_items(character, stat_to_roll, effect_type) {
+    const stat = get_stat(stat_to_roll);
+    const attribute = parseInt(getAttrByName(character.id, stat.attr_tla), 10);
+    let mod = stat.value(attribute).toString(10);
+
+    mod = mod + apply_items(character, stat_to_roll, effect_type);
+
+    return mod;
+}
+
+
 function roll_stat(msg) {
     const character = get_character(msg.who, msg.playerid);
     if (character === null) {
+        log('error, unknown character for ' + msg.who);
         return;
     }
 
     const stat_to_roll = msg.content.split(' ')[1].replace(/_/g, ' ').toLowerCase();
-    const modifier = generate_stat_roll_modifier(character, stat_to_roll);
+    const modifier = generate_stat_roll_modifier_from_items(character, stat_to_roll, 'stat');
 
     switch (stat_to_roll) {
         case 'health':
@@ -136,17 +151,17 @@ function roll_stat(msg) {
             break;
 
         case 'health regeneration':
-            const total_health = generate_stat_roll_modifier(character, 'health');
+            const total_health = generate_stat_roll_modifier_from_items(character, 'health', 'stat');
             sendChat(msg.who, regen_format.format('Health Regeneration', 'Regen', total_health, modifier));
             break;
 
         case 'stamina regeneration':
-            const total_stamina = generate_stat_roll_modifier(character, 'stamina');
+            const total_stamina = generate_stat_roll_modifier_from_items(character, 'stamina', 'stat');
             sendChat(msg.who, regen_format.format('Stamina Regeneration', 'Regen', total_stamina, modifier));
             break;
 
         case 'mana regeneration':
-            const total_mana = generate_stat_roll_modifier(character, 'mana');
+            const total_mana = generate_stat_roll_modifier_from_items(character, 'mana', 'stat');
             sendChat(msg.who, regen_format.format('Mana Regeneration', 'Regen', total_mana, modifier));
             break;
 
@@ -212,9 +227,32 @@ function roll_stat(msg) {
 }
 
 
-// TODO: skill rolling API
 function roll_skill(msg) {
+    const character = get_character(msg.who, msg.playerid);
+    if (character === null) {
+        log('error, unknown character for ' + msg.who);
+        return;
+    }
 
+    const pieces = msg.content.split(' ');
+
+    const bonus = 5 * parseInt(pieces[pieces.length - 1]);
+    const skill_to_roll = pieces.slice(1, pieces.length - 1).join(' ').replace(/:/g, '');
+
+    if (!(skill_to_roll in skill_to_attribute_map)) {
+        log('error, skill "' + skill_to_roll + '" not in skill-to-attribute map');
+        return;
+    }
+
+    const attribute = parseInt(getAttrByName(character.id, skill_to_attribute_map[skill_to_roll]), 10);
+
+    const modifier = apply_items(character, skill_to_roll, 'skill');
+    let roll_string = 'd100+%s+%s'.format(bonus, attribute);
+    if (modifier !== '') {
+        roll_string += '+' + modifier;
+    }
+
+    sendChat(msg.who, total_format.format(skill_to_roll, 'Roll', roll_string));
 }
 
 
