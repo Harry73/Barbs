@@ -121,88 +121,8 @@ function get_stat(name) {
    return null;
 }
 
-/*
-var hoshiko = {
-    'name': 'Hoshiko/Luna/Ren Nightside',
-    'owner': 'ian',
-    'gender': 'Female',
-    'race': 'Shifter',
-    'height': '5 ft 4 in',
-    'weight':  '108',
-    'eye_color': 'Amber/Hazel/Red',
-    'alignment': 'Neutral Good',
-    'languages': [
-        'Common',
-        'Celestial',
-        'Anima',
-    ],
-    'attributes': {
-        'Vitality': 5,
-        'Endurance': 0,
-        'Spirit': -5,
-        'Recovery': -5,
-        'Perseverance': -8,
-        'Sanity': -10,
-        'Agility': 0,
-        'Toughness': -10,
-        'Reflex': -10,
-        'Resistance': 0,
-        'Fortitude': -10,
-        'Strength': -10,
-        'Dexterity': 5,
-        'Attunement': -10,
-        'Precision': 0,
-        'Appeal': -5,
-        'Intelligence': -4,
-        'Wisdom': 0,
-        'Composure': -8,
-        'Focus': -10,
-    },
-    'skills': {
-        'Armor: Light': 6,
-        'Artistry: Literature': 1,
-        'Athletics: Balance': 1,
-        'Athletics: Climbing': 1,
-        'Crafting: Ranged Weapons': 2,
-        'Combat: Dodging': 1,
-        'Element Mastery: Air': 6,
-        'Gathering: Skinning': 1,
-        'Interaction: Deception': 1,
-        'Interaction: Intent': 1,
-        'Observation: Listening': 2,
-        'Weapons: Bows': 8,
-        'Weapons: Crossbows': 1,
-    },
-    'clazzes': {
-        'Sniper': [
-            'Piercing Shot',
-            'Shrapnel Shot',
-            'Distance Shooter',
-            'Precision Shooter',
-            'Swift Sprint',
-        ],
-    },
-    'items': [
-        'Longbow of Stunning',
-        'Leather Cap of Serenity',
-        'Leather Vest',
-        'Viper\'s Gloves of Dodging',
-        'Leather Sandals of Slickness',
-        'Quickened Quiver',
-        'Ring of Archery',
-        'Energetic Ring of the Mind',
-        'Invigorated Belt of Greater Stamina',
-    ],
-};
 
-var character_list = [
-    hoshiko,
-]
-
-var characters = [];
-*/
-
-// ########################################################
+// ####################################################################################################################
 // Main components, excluding items
 
 // individual collections are built at the end off of `components`, which has everything
@@ -5845,97 +5765,45 @@ for (let i = 0; i < components.length; i++) {
 }
 
 
-const skill_to_attribute_map = {"Armor Mastery Cloth": "RES", "Armor Mastery Heavy": "TGH", "Armor Mastery Light": "REF", "Armor Mastery Shields": "TGH", "Artistry Acting": "APL", "Artistry Dancing": "APL", "Artistry Illustration": "APL", "Artistry Literature": "APL", "Artistry Music": "APL", "Artistry Sculpture": "APL", "Athletics Balance": "DEX", "Athletics Climbing": "AGI", "Athletics Force": "STR", "Athletics Movement": "AGI", "Athletics Pain Tolerance": "COM", "Beast Mastery Riding": "AGI", "Beast Mastery Taming": "WIS", "Combat Blocking": "TGH", "Combat Dodging": "REF", "Combat Grappling": "AGI", "Crafting Armorsmithing": "TGH", "Crafting Artificing": "RES", "Crafting Cooking": "APL", "Crafting Enchanting": "RES", "Crafting Fine Weapons": "REF", "Crafting Forgery": "PRE", "Crafting Leatherworking": "REF", "Crafting Jewelry": "FRT", "Crafting Heavy Weapons": "TGH", "Crafting Poisons": "FRT", "Crafting Potions": "FRT", "Crafting Ranged Weapons": "REF", "Crafting Shortblades": "PRE", "Crafting Tailoring": "RES", "Element Mastery Air": "AGI", "Element Mastery Dark": "FRT", "Element Mastery Earth": "RES", "Element Mastery Fire": "ATN", "Element Mastery Ice": "FRT", "Element Mastery Lightning": "ATN", "Gathering Forestry": "TGH", "Gathering Harvest": "AGI", "Gathering Herbology": "RES", "Gathering Hunting": "REF", "Gathering Mining": "TGH", "Gathering Skinning": "REF", "Item Use Appraisal": "WIS", "Item Use First Aid": "FRT", "Item Use Literacy": "INT", "Item Use Ropes": "WIS", "Interaction Deception": "APL", "Interaction Intent": "WIS", "Interaction Intimidation": "COM", "Interaction Leadership": "COM", "Interaction Persuasion": "APL", "Interaction Seduction": "APL", "Knowledge Arcana": "INT", "Knowledge Culture": "INT", "Knowledge History": "INT", "Knowledge Nature": "INT", "Magic Buffs": "FCS", "Magic Conjuration": "FCS", "Magic Control": "ATN", "Magic Defensive": "RES", "Magic Destruction": "ATN", "Magic Enchantment": "FCS", "Magic Mana Channeling": "COM", "Magic Restoration": "ATN", "Magic Summoning": "FCS", "Magic Transmutation": "FCS", "Magic Utility": "ATN", "Observation Listen": "WIS", "Observation Search": "WIS", "Stealth Disguise": "PRE", "Stealth Lockpicking": "PRE", "Stealth Sneak": "PRE", "Stealth Steal": "PRE", "Transportation Land Vehicles": "AGI", "Weapon Mastery Axes": "STR", "Weapon Mastery Bows": "DEX", "Weapon Mastery Bullets": "DEX", "Weapon Mastery Crossbows": "DEX", "Weapon Mastery Fine": "DEX", "Weapon Mastery Heavy Thrown Weapons": "STR", "Weapon Mastery Longblades": "STR", "Weapon Mastery Shields": "STR", "Weapon Mastery Shortblades": "PRE"};
-
-// ########################################################
-// Character
-
-class Character {
-    constructor(character_json) {
-        this.name = character_json.name;
-        this.owner = character_json.owner;
-        this.gender = character_json.gender;
-        this.race = this.get_race(character_json.race);
-        this.height = character_json.height;
-        this.weight = character_json.weight;
-        this.eye_color = character_json.eye_color;
-        this.alignment = character_json.alignment;
-        this.languages = character_json.languages;
-
-        this.attributes = this.get_attributes(character_json.attributes);
-        this.stats = this.get_stats(this.attributes);
-        this.skills = this.get_skills(character_json.skills);
-        this.abilities = [];
-        this.clazzes = this.get_clazzes(character_json.clazzes);
-        this.items = [];
-    }
-
-    get_attributes(attributes_json) {
-        let attributes = [];
-        Object.keys(attributes_json).forEach(function(attribute_name) {
-            attributes.push(get_attribute(attribute_name, attributes_json[attribute_name]));
-        });
-
-        return attributes;
-    }
-
-    get_stats(attributes) {
-        let stats = [];
-        for (var i = 0; i < attributes; i++) {
-            stats.push(get_stat(attribute));
-        }
-
-        return stats;
-    }
-
-    get_race(race_name) {
-        return null;
-    }
-
-    get_skills(skills_json) {
-        let skills = [];
-        Object.keys(skills_json).forEach(function(skill_name) {
-            skills.push(get_skill(skill_name, skills_json[skill_name]));
-        });
-
-        return skills;
-    }
-
-    get_abilities(abilities_list) {
-        for (let i = 0; i < abilities_list.length; i++) {
-            this.abilities.push(get_ability(abilities_list[i]));
-        }
-    }
-
-    get_clazzes(clazzes_json) {
-        let clazzes = [];
-        let self = this;
-        Object.keys(clazzes_json).forEach(function(clazz_name) {
-            clazzes.push(get_clazz(clazz_name));
-            self.get_abilities(clazzes_json[clazz_name]);
-        });
-
-        return clazzes;
-    }
-
-    has_skill_req(skill, rank) {
-        return true;
-    }
-
-    is_using(weapon_type) {
-        return true;
-    }
-}
+const skill_to_attribute_map = {
+    "Armor Mastery Cloth": "RES", "Armor Mastery Heavy": "TGH", "Armor Mastery Light": "REF",
+    "Armor Mastery Shields": "TGH", "Artistry Acting": "APL", "Artistry Dancing": "APL", "Artistry Illustration": "APL",
+    "Artistry Literature": "APL", "Artistry Music": "APL", "Artistry Sculpture": "APL", "Athletics Balance": "DEX",
+    "Athletics Climbing": "AGI", "Athletics Force": "STR", "Athletics Movement": "AGI",
+    "Athletics Pain Tolerance": "COM", "Beast Mastery Riding": "AGI", "Beast Mastery Taming": "WIS",
+    "Combat Blocking": "TGH", "Combat Dodging": "REF", "Combat Grappling": "AGI",
+    "Crafting Armorsmithing": "TGH", "Crafting Artificing": "RES", "Crafting Cooking": "APL",
+    "Crafting Enchanting": "RES", "Crafting Fine Weapons": "REF", "Crafting Forgery": "PRE",
+    "Crafting Leatherworking": "REF", "Crafting Jewelry": "FRT", "Crafting Heavy Weapons": "TGH",
+    "Crafting Poisons": "FRT", "Crafting Potions": "FRT", "Crafting Ranged Weapons": "REF",
+    "Crafting Shortblades": "PRE", "Crafting Tailoring": "RES", "Element Mastery Air": "AGI",
+    "Element Mastery Dark": "FRT", "Element Mastery Earth": "RES", "Element Mastery Fire": "ATN",
+    "Element Mastery Ice": "FRT", "Element Mastery Lightning": "ATN", "Gathering Forestry": "TGH",
+    "Gathering Harvest": "AGI", "Gathering Herbology": "RES", "Gathering Hunting": "REF", "Gathering Mining": "TGH",
+    "Gathering Skinning": "REF", "Item Use Appraisal": "WIS", "Item Use First Aid": "FRT", "Item Use Literacy": "INT",
+    "Item Use Ropes": "WIS", "Interaction Deception": "APL", "Interaction Intent": "WIS",
+    "Interaction Intimidation": "COM", "Interaction Leadership": "COM", "Interaction Persuasion": "APL",
+    "Interaction Seduction": "APL", "Knowledge Arcana": "INT", "Knowledge Culture": "INT", "Knowledge History": "INT",
+    "Knowledge Nature": "INT", "Magic Buffs": "FCS", "Magic Conjuration": "FCS", "Magic Control": "ATN",
+    "Magic Defensive": "RES", "Magic Destruction": "ATN", "Magic Enchantment": "FCS", "Magic Mana Channeling": "COM",
+    "Magic Restoration": "ATN", "Magic Summoning": "FCS", "Magic Transmutation": "FCS", "Magic Utility": "ATN",
+    "Observation Listen": "WIS", "Observation Search": "WIS", "Stealth Disguise": "PRE", "Stealth Lockpicking": "PRE",
+    "Stealth Sneak": "PRE", "Stealth Steal": "PRE", "Transportation Land Vehicles": "AGI", "Weapon Mastery Axes": "STR",
+    "Weapon Mastery Bows": "DEX", "Weapon Mastery Bullets": "DEX", "Weapon Mastery Crossbows": "DEX",
+    "Weapon Mastery Fine": "DEX", "Weapon Mastery Heavy Thrown Weapons": "STR", "Weapon Mastery Longblades": "STR",
+    "Weapon Mastery Shields": "STR", "Weapon Mastery Shortblades": "PRE",
+};
 
 
-// ########################################################
+// ####################################################################################################################
 // Roll
 
 class Roll {
     constructor(character) {
         this.character = character;
-        this.damages = {}
-        this.multipliers = {}
+        this.damages = {};
+        this.multipliers = {};
+        this.effects = [];
     }
 
     is_crit() {
@@ -5957,13 +5825,50 @@ class Roll {
         } else {
             this.multipliers[type] = value;
         }
+    }
 
+    add_effect(effect) {
+        this.effects.append(effect);
+    }
+
+    roll() {
+        const rolls = {};
+
+        let self = this;
+        Object.keys(this.damages).forEach(function(type) {
+            let dmg_str = '(%s)'.format(self.damages[type]);
+
+            if (type in self.multipliers) {
+                dmg_str = '%s*%s'.format(dmg_str, self.multipliers[type]);
+            }
+
+            if ('all' in self.multipliers) {
+                dmg_str =  '%s*%s'.format(dmg_str, self.multipliers['all']);
+            }
+
+            rolls[type] = 'round(%s)'.format(dmg_str);
+        });
+
+        return rolls;
     }
 }
 
 
 // ########################################################
 // Items
+
+const ITEM_SLOTS = [
+    'main_hand',
+    'offhand',
+    'head',
+    'body',
+    'hands',
+    'feet',
+    'neck',
+    'left_ring',
+    'right_ring',
+    'belt',
+];
 
 class Item {
     constructor(name, type, rarity, slot, equip_conditions, unique, range, price, cantrips, notes, effects) {
@@ -5994,7 +5899,7 @@ function light_armor_condition(character) {
 
 function stat_effect(stat, mod) {
     return new Effect('stat', function(stat_to_test) {
-        return stat_to_test === stat ? mod : '';
+        return stat_to_test === stat ? mod : 0
     });
 }
 
@@ -6006,8 +5911,8 @@ const ITEMS = [
         'Magic',
         '2Hand',
         [
-            function(player) {
-                return player.has_skill_req('Weapons: Bows', 'F');
+            function(character) {
+                return character.has_skill_req('Weapons: Bows', 'F');
             },
         ],
         false,
@@ -6058,8 +5963,8 @@ const ITEMS = [
         [],
         '',
         [
-            stat_effect('evasion', '+5'),
-            stat_effect('health regeneration', '+10'),
+            stat_effect('evasion', 5),
+            stat_effect('health regeneration', 10),
         ]
     ),
 
@@ -6077,8 +5982,8 @@ const ITEMS = [
         [],
         '',
         [
-            stat_effect('evasion', '+20'),
-            stat_effect('magic resist', '+10'),
+            stat_effect('evasion', 20),
+            stat_effect('magic resist', 10),
         ]
     ),
 
@@ -6096,8 +6001,8 @@ const ITEMS = [
         [],
         '',
         [
-            stat_effect('evasion', '+15'),
-            stat_effect('condition resist', '+10'),
+            stat_effect('evasion', 15),
+            stat_effect('condition resist', 10),
         ]
     ),
 
@@ -6115,9 +6020,9 @@ const ITEMS = [
         [],
         '',
         [
-            stat_effect('evasion', '+15'),
-            stat_effect('stamina regeneration', '+10'),
-            stat_effect('ac', '-10'),
+            stat_effect('evasion', 15),
+            stat_effect('stamina regeneration', 10),
+            stat_effect('ac', -10),
         ]
     ),
 
@@ -6169,8 +6074,8 @@ const ITEMS = [
         [],
         '',
         [
-            stat_effect('stamina', '+30'),
-            stat_effect('mana', '+40'),
+            stat_effect('stamina', 30),
+            stat_effect('mana', 40),
         ]
     ),
 
@@ -6186,9 +6091,123 @@ const ITEMS = [
         [],
         '',
         [
-            stat_effect('stamina', '+60'),
-            stat_effect('stamina regeneration', '+15'),
+            stat_effect('stamina', 60),
+            stat_effect('stamina regeneration', 15),
         ]
     )
 ];
 
+
+// ####################################################################################################################
+// Character
+
+class Character {
+    constructor(game_object, who) {
+        this.id = game_object.id;  // roll20 id for the character
+        this.who = who;            // who an API call originated from, used to respond under their name
+
+        this.name = getAttrByName(this.id, 'character_name');
+        this.owner = getAttrByName(this.id, 'owner');
+        this.gender = getAttrByName(this.id, 'gender');
+        this.age = getAttrByName(this.id, 'age');
+        this.height = getAttrByName(this.id, 'height');
+        this.weight = getAttrByName(this.id, 'weight');
+        this.eye_color = getAttrByName(this.id, 'eyes');
+        this.hair_color = getAttrByName(this.id, 'hair');
+        this.alignment = getAttrByName(this.id, 'alignment');
+        this.race = getAttrByName(this.id, 'race');
+        this.languages = this.csv_to_array(getAttrByName(this.id, 'languages'));
+        this.items = this.get_items();
+
+        // Fetched lazily, aka when requested
+        this.attributes = {};
+        this.stats = {};
+    }
+
+    csv_to_array(list) {
+        const items = [];
+        list.split(',').forEach(i => items.push(i.trim()));
+        return items;
+    }
+
+    get_item_names() {
+        const item_names = [];
+
+        for (let i = 0; i < ITEM_SLOTS.length; i++) {
+            const slot = ITEM_SLOTS[i];
+            const item_name = getAttrByName(this.id, slot);
+            if (item_name !== '') {
+                item_names.push(item_name);
+            }
+        }
+
+        return item_names;
+    }
+
+    get_items() {
+        const item_names = this.get_item_names();
+
+        // find the actual item for each given name
+        const character_items = [];
+
+        _.each(item_names, function(item_name) {
+            for (let i = 0; i < ITEMS.length; i++) {
+                if (ITEMS[i].name === item_name) {
+                    character_items.push(ITEMS[i]);
+                    return;
+                }
+            }
+
+            log('Error, could not find item with name ' + item_name);
+        });
+
+        return character_items;
+    }
+
+    get_attribute(attr_tla) {
+        if (attr_tla in this.attributes) {
+            return this.attributes[attr_tla];
+        }
+
+        const attr_value = parseInt(getAttrByName(this.id, attr_tla), 10);
+        this.stats[attr_tla] = attr_value;
+        return attr_value;
+    }
+
+    get_stat(stat_name) {
+        if (stat_name in this.stats) {
+            return this.stats[stat_name];
+        }
+
+        const stat = get_stat(stat_name);
+        const attr_value = this.get_attribute(stat.attr_tla);
+        let stat_value = stat.value(attr_value);
+
+        _.each(this.items, function(item) {
+            for (let i = 0; i < item.effects.length; i++) {
+                if (item.effects[i].type === 'stat') {
+                    stat_value += item.effects[i].apply(stat.name);
+                }
+            }
+        });
+
+        this.stats[stat] = stat_value;
+        return stat_value;
+    }
+
+    has_skill_req(skill, rank) {
+        return true;
+    }
+
+    is_using(weapon_type) {
+        log('checking for type %s'.format(weapon_type));
+        for (let i = 0; i < this.items.length; i++) {
+            const item = this.items[i];
+            if ((item.slot === 'main_hand' || item.slot === '2Hand') && item.type === weapon_type) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}

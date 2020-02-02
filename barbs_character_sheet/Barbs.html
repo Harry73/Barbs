@@ -105,12 +105,18 @@
             </div>
 
             <div class="sheet-row sheet-padb">
-                <div class="sheet-col-5-6 sheet-small-label sheet-center">
+                <div class="sheet-col-1-6 sheet-small-label sheet-center">
+                    <input class="sheet-underlined sheet-center" type="text" name="attr_race">
+                    <br/>Race
+                </div>
+                <div class="sheet-col-2-3 sheet-small-label sheet-center">
                     <input class="sheet-underlined sheet-center" type="text" name="attr_languages">
-                    <br/>Known Languages</div>
+                    <br/>Known Languages
+                </div>
                 <div class="sheet-col-1-6 sheet-small-label sheet-center">
                     <input class="sheet-underlined sheet-center" type="text" name="attr_alignment">
-                    <br/>Alignment</div>
+                    <br/>Alignment
+                </div>
             </div>
 
 
@@ -741,8 +747,6 @@
                     <div class="sheet-col-1-8 sheet-center sheet-small-label">Base Bonus</div>
                 </div>
 
-                <!-- TODO fix rank and bonus updating -->
-                <!-- https://wiki.roll20.net/Sheet_Worker_Scripts -->
                 <fieldset class="repeating_skills">
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -1889,6 +1893,8 @@
 
     </div>
 
+    <!-- https://wiki.roll20.net/Sheet_Worker_Scripts -->
+
     <!-- Skills rank and bonus updater -->
     <script type="text/worker">
 
@@ -1996,351 +2002,6 @@
 
 	</script>
 
-    <script type="text/worker">
-
-		on("change:drop_category", function(eventinfo) {
-			if(eventinfo.newValue === "Monsters") {
-				handle_drop_monster(eventinfo.newValue);
-			}
-		});
-
-		var handle_drop_monster = function(category, eventinfo) {
-			var callbacks = [];
-			var update = {};
-			var id = generateRowID();
-
-			drop_attrs = ["drop_name","drop_weight","drop_properties",
-						  "drop_modifiers","drop_content","drop_itemtype",
-						  "drop_damage","drop_damagetype","drop_damage2",
-						  "drop_damagetype2","drop_range","drop_ac",
-						  "drop_speed", "drop_str", "drop_dex", "drop_con",
-						  "drop_int", "drop_wis", "drop_cha",
-						  "drop_vulnerabilities", "drop_resistances",
-						  "drop_immunities", "drop_condition_immunities",
-						  "drop_languages", "drop_challenge_rating", "drop_size",
-						  "drop_type", "drop_alignment", "drop_hp",
-						  "drop_saving_throws", "drop_senses",
-						  "drop_passive_perception", "drop_skills",
-						  "drop_token_size", "character_id"]
-			getAttrs(drop_attrs, function(v) {
-				if(category === "Monsters") {
-					update["is_npc"] = "1";
-					if(v["drop_name"] && v["drop_name"] != "") {update["character_name"] = v["drop_name"]};
-					// core stats
-					update["npc_strength"]     = v["drop_str"] ? v["drop_str"] : "";
-					update["npc_dexterity"]    = v["drop_dex"] ? v["drop_dex"] : "";
-					update["npc_constitution"] = v["drop_con"] ? v["drop_con"] : "";
-					update["npc_intelligence"] = v["drop_int"] ? v["drop_int"] : "";
-					update["npc_wisdom"]       = v["drop_wis"] ? v["drop_wis"] : "";
-					update["npc_charisma"]     = v["drop_cha"] ? v["drop_cha"] : "";
-					update["npc_strength_save_mod"] = 0;
-					update["npc_dexterity_save_mod"] = 0;
-					update["npc_constitution_save_mod"] = 0;
-					update["npc_intelligence_save_mod"] = 0;
-					update["npc_wisdom_save_mod"] = 0;
-					update["npc_charisma_save_mod"] = 0;
-					if(v["drop_saving_throws"] && v["drop_saving_throws"] != "") {
-						var savearray = v["drop_saving_throws"].split(", ");
-						_.each(savearray, function(save) {
-							kv = save.indexOf("-") > -1 ? save.split(" ") : save.split(" +");
-							update["npc_" + kv[0].toLowerCase() + "_save_mod"] = parseInt(kv[1], 10);
-						});
-					};
-					//right side of core stats, top to bottom
-					update["npc_size"]      = v["drop_size"] ? v["drop_size"] : "";
-					update["npc_type"]      = v["drop_type"] ? v["drop_type"] : "";
-					update["npc_alignment"] = v["drop_alignment"] ? v["drop_alignment"] : "";
-					 //AC handling
-					if(v["drop_ac"]) {
-						if(v["drop_ac"].indexOf("(") > -1) {
-							update["npc_ac"] = v["drop_ac"].split(" (")[0];
-							update["npc_AC_note"] = v["drop_ac"].split(" (")[1].slice(0, -1);
-						}
-						else {
-							update["npc_ac"] = v["drop_ac"];
-							update["npc_AC_note"] = "";
-						};
-					}
-					else {
-						update["npc_ac"] = 10;
-						update["npc_AC_note"] = "";
-					};
-					 //HP handling
-					if(v["drop_hp"]) {
-						if(v["drop_hp"].indexOf("(") > -1) {
-							update["npc_HP"] = v["drop_hp"].split(" (")[0];
-							update["npc_HP_max"] = v["drop_hp"].split(" (")[0];
-							//update["npc_HP_max"] = v["drop_hp"].split(" (")[1].slice(0, -1);
-						}
-						else {
-							update["npc_HP"] = v["drop_hp"]
-							update["npc_HP_max"] = v["drop_hp"]
-							//update["npc_hpformula"] = ""
-						};
-					}
-					else {
-						update["npc_HP"] = 1
-						update["npc_HP_max"] = 1
-					};
-					 //Speed handling
-					if(v["drop_speed"]) {
-						speed = /\d+/i
-						fly   = /fly \d+/i
-						climb = /climb \d+/i
-						swim  = /swim \d+/i
-						speed_match = speed.exec(v["drop_speed"])
-						fly_match   = fly.exec(v["drop_speed"])
-						climb_match = climb.exec(v["drop_speed"])
-						swim_match  = swim.exec(v["drop_speed"])
-						if(speed_match) {
-							speed_number = speed_match[0].split(" ")
-							speed_number = parseInt(speed_number[0], 10)
-							update["npc_speed"] = speed_number
-						}
-						if(fly_match) {
-							speed_number = fly_match[0].split(" ")
-							speed_number = parseInt(speed_number[1], 10)
-							update["npc_speed_fly"] = speed_number
-						}
-						if(climb_match) {
-							speed_number = climb_match[0].split(" ")
-							speed_number = parseInt(speed_number[1], 10)
-							update["npc_speed_climb"] = speed_number
-						}
-						if(swim_match) {
-							speed_number = swim_match[0].split(" ")
-							speed_number = parseInt(speed_number[1], 10)
-							update["npc_speed_swim"] = speed_number
-						}
-					}
-					//Challenge --> Languages
-					 //Challenge/XP handling
-					if(v["drop_challenge_rating"] && v["drop_challenge_rating"] != "") {
-					  update["npc_challenge"] = v["drop_challenge_rating"];
-					  var xp = 0;
-					  var pb = 0;
-					  switch(v["drop_challenge_rating"]) {
-					  case "0":
-						  xp = "10";
-						  pb = 2;
-						  break;
-					  case "1/8":
-						  xp = "25";
-						  pb = 2;
-						  break;
-					  case "1/4":
-						  xp = "50";
-						  pb = 2;
-						  break;
-					  case "1/2":
-						  xp = "100";
-						  pb = 2;
-						  break;
-					  case "1":
-						  xp = "200";
-						  pb = 2;
-						  break;
-					  case "2":
-						  xp = "450";
-						  pb = 2;
-						  break;
-					  case "3":
-						  xp = "700";
-						  pb = 2;
-						  break;
-					  case "4":
-						  xp = "1100";
-						  pb = 2;
-						  break;
-					  case "5":
-						  xp = "1800";
-						  pb = 3;
-						  break;
-					  case "6":
-						  xp = "2300";
-						  pb = 3;
-						  break;
-					  case "7":
-						  xp = "2900";
-						  pb = 3;
-						  break;
-					  case "8":
-						  xp = "3900";
-						  pb = 3;
-						  break;
-					  case "9":
-						  xp = "5000";
-						  pb = 4;
-						  break;
-					  case "10":
-						  xp = "5900";
-						  pb = 4;
-						  break;
-					  case "11":
-						  xp = "7200";
-						  pb = 4;
-						  break;
-					  case "12":
-						  xp = "8400";
-						  pb = 4;
-						  break;
-					  case "13":
-						  xp = "10000";
-						  pb = 5;
-						  break;
-					  case "14":
-						  xp = "11500";
-						  pb = 5;
-						  break;
-					  case "15":
-						  xp = "13000";
-						  pb = 5;
-						  break;
-					  case "16":
-						  xp = "15000";
-						  pb = 5;
-						  break;
-					  case "17":
-						  xp = "18000";
-						  pb = 6;
-						  break;
-					  case "18":
-						  xp = "20000";
-						  pb = 6;
-						  break;
-					  case "19":
-						  xp = "22000";
-						  pb = 6;
-						  break;
-					  case "20":
-						  xp = "25000";
-						  pb = 6;
-						  break;
-					  case "21":
-						  xp = "33000";
-						  pb = 7;
-						  break;
-					  case "22":
-						  xp = "41000";
-						  pb = 7;
-						  break;
-					  case "23":
-						  xp = "50000";
-						  pb = 7;
-						  break;
-					  case "24":
-						  xp = "62000";
-						  pb = 7;
-						  break;
-					  case "25":
-						  xp = "75000";
-						  pb = 8;
-						  break;
-					  case "26":
-						  xp = "90000";
-						  pb = 8;
-						  break;
-					  case "27":
-						  xp = "105000";
-						  pb = 8;
-						  break;
-					  case "28":
-						  xp = "120000";
-						  pb = 8;
-						  break;
-					  case "29":
-						  xp = "";
-						  pb = 9;
-						  break;
-					  case "30":
-						  xp = "155000";
-						  pb = 9;
-						  break;
-					  }
-					  update["npc_xp"] = xp;
-					}
-					update["npc_senses"] = v["drop_senses"] ? v["drop_senses"] : "";
-					update["npc_languages"] = v["drop_languages"] ? v["drop_languages"] : "";
-					//Traits/Background
-					update["npc_damage_resistance"] = v["drop_resistances"] ? v["drop_resistances"] : "";
-					update["npc_damage_vulnerability"] = v["drop_vulnerabilities"] ? v["drop_vulnerabilities"] : "";
-					update["npc_damage_immunity"] = v["drop_immunities"] ? v["drop_immunities"] : "";
-					update["npc_condition_immunity"] = v["drop_condition_immunities"] ? v["drop_condition_immunities"] : "";
-					update["npc_traits"] = v["drop_content"] ? v["drop_content"] : "";
-					//Skills
-					update["npc_acrobatics_bonus"] = 0;
-					update["npc_animal_handling_bonus"] = 0;
-					update["npc_arcana_bonus"] = 0;
-					update["npc_athletics_bonus"] = 0;
-					update["npc_deception_bonus"] = 0;
-					update["npc_history_bonus"] = 0;
-					update["npc_insight_bonus"] = 0;
-					update["npc_intimidation_bonus"] = 0;
-					update["npc_investigation_bonus"] = 0;
-					update["npc_medicine_bonus"] = 0;
-					update["npc_nature_bonus"] = 0;
-					update["npc_perception_bonus"] = 0;
-					update["npc_performance_bonus"] = 0;
-					update["npc_persuasion_bonus"] = 0;
-					update["npc_religion_bonus"] = 0;
-					update["npc_sleight_of_hand_bonus"] = 0;
-					update["npc_stealth_bonus"] = 0;
-					update["npc_survival_bonus"] = 0;
-					if(v["drop_skills"] && v["drop_skills"] != "") {
-						skillarray = v["drop_skills"].split(", ");
-						_.each(skillarray, function(skill) {
-							kv = skill.indexOf("-") > -1 ? skill.split(" ") : skill.split(" +");
-							update["npc_" + kv[0].toLowerCase().replace(/ /g, '_') + "_bonus"] = parseInt(kv[1], 10);
-						});
-					}
-				};
-
-				callbacks.push( function() {cleanup_drop_fields();} );
-				setAttrs(update, {silent: true}, function() {callbacks.forEach(function(callback) {callback(); })} );
-			});
-
-
-		};
-
-		var cleanup_drop_fields = function() {
-			var update = {};
-			update["drop_name"] = "";
-			update["drop_weight"] = "";
-			update["drop_properties"] = "";
-			update["drop_modifiers"] = "";
-			update["drop_content"] = "";
-			update["drop_itemtype"] = "";
-			update["drop_damage"] = "";
-			update["drop_damagetype"] = "";
-			update["drop_range"] = "";
-			update["drop_ac"] = "";
-			update["drop_category"] = "";
-			update["drop_speed"] = "";
-			update["drop_str"] = "";
-			update["drop_dex"] = "";
-			update["drop_con"] = "";
-			update["drop_int"] = "";
-			update["drop_wis"] = "";
-			update["drop_cha"] = "";
-			update["drop_vulnerabilities"] = "";
-			update["drop_resistances"] = "";
-			update["drop_immunities"] = "";
-			update["drop_condition_immunities"] = "";
-			update["drop_languages"] = "";
-			update["drop_challenge_rating"] = "";
-			update["drop_size"] = "";
-			update["drop_type"] = "";
-			update["drop_alignment"] = "";
-			update["drop_hp"] = "";
-			update["drop_saving_throws"] = "";
-			update["drop_senses"] = "";
-			update["drop_passive_perception"] = "";
-			update["drop_skills"] = "";
-			update["drop_token_size"] = "";
-			setAttrs(update, {silent: true});
-		};
-
-	</script>
 </div>
 
 <rolltemplate class="sheet-rolltemplate-5eDefault">

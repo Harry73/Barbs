@@ -8,26 +8,13 @@ String.prototype.format = function() {
     return a
 };
 
-const item_slots = [
-    'main_hand',
-    'offhand',
-    'head',
-    'body',
-    'hands',
-    'feet',
-    'neck',
-    'left_ring',
-    'right_ring',
-    'belt',
-];
-
 const total_format = '&{template:default} {{name=%s}} {{%s=[[%s]]}}';
 const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
 const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s)+1]]]]}}';
 
 
-function chat(msg, string) {
-    sendChat(msg.who, string);
+function chat(character, string) {
+    sendChat(character.who, string);
 }
 
 
@@ -67,53 +54,18 @@ function get_character(msg) {
         log('warning, found ' + characters.length + ' matching characters for ' + msg.who);
     }
 
-    return characters[0];
+    return new Character(characters[0], msg.who);
 }
 
-
-function get_item_names(character) {
-    const item_names = [];
-
-    _.each(item_slots, function(slot) {
-        const item_name = getAttrByName(character.id, slot);
-        if (item_name !== '') {
-            item_names.push(item_name);
-        }
-    });
-
-    return item_names;
-}
-
-
-function get_character_items(character) {
-    const item_names = get_item_names(character);
-
-    // find the actual item for each given name
-    const character_items = [];
-
-    _.each(item_names, function(item_name) {
-        for (let i = 0; i < ITEMS.length; i++) {
-            if (ITEMS[i].name === item_name) {
-                character_items.push(ITEMS[i]);
-                return;
-            }
-        }
-
-        log('Error, could not find item with name ' + item_name);
-    });
-
-    return character_items;
-}
 
 
 function apply_items(character, thing_to_roll, effect_type) {
-    const character_items = get_character_items(character);
-
     let mod = '';
-    _.each(character_items, function(item) {
+    _.each(character.items, function(item) {
         for (let i = 0; i < item.effects.length; i++) {
             if (item.effects[i].type === effect_type) {
-                mod = mod + item.effects[i].apply(thing_to_roll);
+                const item_mod = item.effects[i].apply(thing_to_roll).toString(10);
+                mod = mod + '+%s'.format(item_mod);
             }
         }
     });
@@ -145,89 +97,89 @@ function roll_stat(msg) {
 
     switch (stat_to_roll) {
         case 'health':
-            chat(msg, total_format.format('Total Health', 'Health', modifier));
+            chat(character, total_format.format('Total Health', 'Health', modifier));
             break;
         case 'stamina':
-            chat(msg, total_format.format('Total Stamina', 'Stamina', modifier));
+            chat(character, total_format.format('Total Stamina', 'Stamina', modifier));
             break;
 
         case 'mana':
-            chat(msg, total_format.format('Total Mana', 'Mana', modifier));
+            chat(character, total_format.format('Total Mana', 'Mana', modifier));
             break;
 
         case 'health regeneration':
             const total_health = generate_stat_roll_modifier_from_items(character, 'health', 'stat');
-            chat(msg, regen_format.format('Health Regeneration', 'Regen', total_health, modifier));
+            chat(character, regen_format.format('Health Regeneration', 'Regen', total_health, modifier));
             break;
 
         case 'stamina regeneration':
             const total_stamina = generate_stat_roll_modifier_from_items(character, 'stamina', 'stat');
-            chat(msg, regen_format.format('Stamina Regeneration', 'Regen', total_stamina, modifier));
+            chat(character, regen_format.format('Stamina Regeneration', 'Regen', total_stamina, modifier));
             break;
 
         case 'mana regeneration':
             const total_mana = generate_stat_roll_modifier_from_items(character, 'mana', 'stat');
-            chat(msg, regen_format.format('Mana Regeneration', 'Regen', total_mana, modifier));
+            chat(character, regen_format.format('Mana Regeneration', 'Regen', total_mana, modifier));
             break;
 
         case 'movement speed':
-            chat(msg, total_format.format('Total Movement Speed', 'Speed', modifier));
+            chat(character, total_format.format('Total Movement Speed', 'Speed', modifier));
             break;
 
         case 'ac':
-            chat(msg, total_format.format('Total AC', 'AC', modifier));
+            chat(character, total_format.format('Total AC', 'AC', modifier));
             break;
 
         case 'evasion':
-            chat(msg, percent_format.format('Evasion', 'Evasion', modifier));
+            chat(character, percent_format.format('Evasion', 'Evasion', modifier));
             break;
 
         case 'magic resist':
-            chat(msg, total_format.format('Total Magic Resist', 'Magic Resist', modifier));
+            chat(character, total_format.format('Total Magic Resist', 'Magic Resist', modifier));
             break;
 
         case 'condition resist':
-            chat(msg, percent_format.format('Condition Resist', 'CR', modifier));
+            chat(character, percent_format.format('Condition Resist', 'CR', modifier));
             break;
 
         case 'melee damage':
-            chat(msg, total_format.format('Bonus Melee Damage', 'Damage', modifier));
+            chat(character, total_format.format('Bonus Melee Damage', 'Damage', modifier));
             break;
 
         case 'ranged fine damage':
-            chat(msg, total_format.format('Bonus Ranged/Fine Damage', 'Damage', modifier));
+            chat(character, total_format.format('Bonus Ranged/Fine Damage', 'Damage', modifier));
             break;
 
         case 'magic damage':
-            chat(msg, total_format.format('Bonus Magic Damage', 'Damage', modifier));
+            chat(character, total_format.format('Bonus Magic Damage', 'Damage', modifier));
             break;
 
         case 'critical hit chance':
-            chat(msg, percent_format.format('Critical Hit Chance', 'Crit', modifier));
+            chat(character, percent_format.format('Critical Hit Chance', 'Crit', modifier));
             break;
 
         case 'commands':
-            chat(msg, total_format.format('Total Commands', 'Commands', modifier));
+            chat(character, total_format.format('Total Commands', 'Commands', modifier));
             break;
 
         case 'languages':
-            chat(msg, total_format.format('Total Languages', 'Languages', modifier));
+            chat(character, total_format.format('Total Languages', 'Languages', modifier));
             break;
 
         case 'item efficiency':
-            chat(msg, total_format.format('Total Item Efficiency', 'Modifier', modifier));
+            chat(character, total_format.format('Total Item Efficiency', 'Modifier', modifier));
             break;
 
         case 'buff limit':
-            chat(msg, total_format.format('Total Buff Limit', 'Buff Limit', modifier));
+            chat(character, total_format.format('Total Buff Limit', 'Buff Limit', modifier));
             break;
 
         case 'concentration limit':
-            chat(msg, total_format.format('Total Concentration Limit', 'Concentration Limit', modifier));
+            chat(character, total_format.format('Total Concentration Limit', 'Concentration Limit', modifier));
             break;
 
         default:
-            chat(msg, 'Error, unknown stat ' + stat_to_roll);
+            chat(character, 'Error, unknown stat ' + stat_to_roll);
     }
 }
 
@@ -261,6 +213,87 @@ function roll_skill(msg) {
 }
 
 
+// ####################################################################################################################
+// Class abilities
+
+function sniper_spotter(character, parameters) {
+    chat(character, 'not implemented');
+}
+
+function sniper_piercing_shot(character, parameters) {
+    const roll = new Roll(character);
+    roll.add_damage('5d8', 'physical');
+    roll.add_damage(character.get_stat('ranged fine damage'), 'physical');
+
+    _.each(character.items, function(item) {
+        for (let i = 0; i < item.effects.length; i++) {
+            if (item.effects[i].type === 'roll') {
+                item.effects[i].apply(roll);
+            }
+        }
+    });
+
+    const rolls = roll.roll();
+    let msg = '';
+    Object.keys(rolls).forEach(function(type) {
+        msg = msg + '[[%s]] %s, '.format(rolls[type], type);
+    });
+
+    // TODO I don't think I can figure some things out before actually sending the message, so there'd just be extra
+    // text, like "Stun on crit". Or I do two rolls for everything. One with damage and crit, another for
+    // additional stuff, like multiplied damage and extra effects. There's supposedly a callback feature I can use
+    // to get the result and then do things with it.
+    chat(character, msg);
+}
+
+function sniper_kill_shot(character, parameters) {
+    chat(character, 'not implemented');
+}
+
+
+
+
+
+
+
+
+
+const barbs_abilities_processors = {
+    'sniper_spotter': sniper_spotter,
+    'sniper_piercing_shot': sniper_piercing_shot,
+    'sniper_kill_shot': sniper_kill_shot,
+    // TODO add more
+};
+
+
+function process_ability(msg) {
+    const character = get_character(msg);
+    if (character === null) {
+        log('error, unknown character for ' + msg.who);
+        return;
+    }
+
+    const pieces = msg.content.split(' ');
+    const ability = pieces[1];
+    const parameters = pieces.slice(2);
+
+    if (!(ability in barbs_abilities_processors)) {
+        chat(msg, 'unknown ability %s'.format(ability));
+        return;
+    }
+
+    const processor = barbs_abilities_processors[ability];
+    processor(character, parameters);
+}
+
+
+
+
+
+
+// ####################################################################################################################
+// Basic setup and message handling
+
 on('ready', function() {
     log('main.js begin');
 
@@ -282,5 +315,7 @@ on("chat:message", function(msg) {
         roll_stat(msg);
     } else if (msg.content.indexOf('!barbs_skill') !== -1) {
         roll_skill(msg);
+    } else if (msg.content.indexOf('!barbs_ability') !== -1) {
+        process_ability(msg)
     }
 });
