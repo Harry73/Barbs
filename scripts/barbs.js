@@ -13,8 +13,8 @@ const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)
 const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s)+1]]]]}}';
 
 
-function chat(character, string) {
-    sendChat(character.who, string);
+function chat(character, string, handler) {
+    sendChat(character.who, string, handler);
 }
 
 
@@ -92,7 +92,11 @@ function roll_stat(msg) {
         return;
     }
 
-    const stat_to_roll = msg.content.split(' ')[1].replace(/_/g, ' ').toLowerCase();
+    const stat_to_roll = msg.content.split(' ')[2].replace(/_/g, ' ').toLowerCase();
+    roll_stat_inner(character, stat_to_roll)
+}
+
+function roll_stat_inner(character, stat_to_roll, handler) {
     const modifier = generate_stat_roll_modifier_from_items(character, stat_to_roll, 'stat');
 
     switch (stat_to_roll) {
@@ -155,7 +159,7 @@ function roll_stat(msg) {
             break;
 
         case 'critical hit chance':
-            chat(character, percent_format.format('Critical Hit Chance', 'Crit', modifier));
+            chat(character, percent_format.format('Critical Hit Chance', 'Crit', modifier), handler);
             break;
 
         case 'commands':
@@ -183,6 +187,64 @@ function roll_stat(msg) {
     }
 }
 
+/*
+// Example msg result from a crit roll
+const msg = {
+    "who":"Ren Nightside",
+    "type":"general",
+    "content":" {{name=Critical Hit Chance}} {{Crit=$[[1]]}}","playerid":"API","avatar":false,
+    "inlinerolls":[
+        {
+            "expression":"100-(10+0+0+0+0+0+0+0+0+0+0+0)+1",
+            "results":{
+                "type":"V",
+                "rolls":[{"type":"M","expr":"100-(10+0+0+0+0+0+0+0+0+0+0+0)+1"}],
+                "resultType":"M",
+                "total":91
+            },
+            "signature":false,
+            "rollid":null
+        },
+        {
+            "expression":"1d100cs>91",
+            "results":{
+                "type":"V",
+                "rolls":[
+                    {
+                        "type":"R","dice":1,"sides":100,
+                        "mods":{
+                            "customCrit":[{"comp":">=","point":91}]
+                        },
+                        "results":[{"v":100}]
+                    }
+                ],
+                "resultType":"sum",
+                "total":100
+            },
+            "signature":"3e6cfaf705fb91181557676b07dc48b9cbec0c251e310cf2c621dd3edc1e26d2f2aebed79e7108b08bfda4d98465e6e65d367d67829e8b295cb42d81a34df077",
+            "rollid":"-M0t49TVaJccGoUk9Jx3"
+        }
+    ],
+    "rolltemplate":"default"
+};
+*/
+
+// Roll for whether or not this will be a crit, and set the result in the roll. The passed handler should take a string
+// that can be appended to show the result of the crit roll.
+//
+function roll_crit(roll, handler) {
+    roll_stat_inner(roll.character, 'critical hit chance', function(results) {
+        const rolls = results[0].inlinerolls;
+
+        const rolled_value_for_crit = rolls[1].results.total;
+        const crit_compare_value = rolls[0].results.total;
+        roll.crit = (rolled_value_for_crit >= crit_compare_value);
+
+        // TODO this doesn't like being a proper roll, like [[%scs>%s]] for some reason
+        const crit_string = '%s >= %s crit'.format(rolled_value_for_crit, crit_compare_value);
+        handler(crit_string);
+    });
+}
 
 function roll_skill(msg) {
     const character = get_character(msg);
@@ -194,7 +256,7 @@ function roll_skill(msg) {
     const pieces = msg.content.split(' ');
 
     const bonus = 5 * parseInt(pieces[pieces.length - 1]);
-    const skill_to_roll = pieces.slice(1, pieces.length - 1).join(' ').replace(/:/g, '');
+    const skill_to_roll = pieces.slice(2, pieces.length - 1).join(' ').replace(/:/g, '');
 
     if (!(skill_to_roll in skill_to_attribute_map)) {
         log('error, skill "' + skill_to_roll + '" not in skill-to-attribute map');
@@ -222,28 +284,35 @@ function sniper_spotter(character, parameters) {
 
 function sniper_piercing_shot(character, parameters) {
     const roll = new Roll(character);
-    roll.add_damage('5d8', 'physical');
-    roll.add_damage(character.get_stat('ranged fine damage'), 'physical');
 
-    _.each(character.items, function(item) {
-        for (let i = 0; i < item.effects.length; i++) {
-            if (item.effects[i].type === 'roll') {
-                item.effects[i].apply(roll);
+    roll_crit(roll, function(crit_string) {
+        roll.add_damage('5d8', 'physical');
+        roll.add_damage(character.get_stat('ranged fine damage'), 'physical');
+
+        _.each(character.items, function(item) {
+            for (let i = 0; i < item.effects.length; i++) {
+                if (item.effects[i].type === 'roll') {
+                    item.effects[i].apply(roll);
+                }
             }
+        });
+
+        const rolls = roll.roll();
+        let msg = '';
+        Object.keys(rolls).forEach(function(type) {
+            msg = msg + '[[%s]] %s, '.format(rolls[type], type);
+        });
+
+        msg = msg + crit_string;
+
+        if (roll.effects.length > 0) {
+            msg = msg + '\nEffects: %s'.format(roll.effects.join(', '));
         }
-    });
 
-    const rolls = roll.roll();
-    let msg = '';
-    Object.keys(rolls).forEach(function(type) {
-        msg = msg + '[[%s]] %s, '.format(rolls[type], type);
-    });
+        log('Roll: ' + msg);
 
-    // TODO I don't think I can figure some things out before actually sending the message, so there'd just be extra
-    // text, like "Stun on crit". Or I do two rolls for everything. One with damage and crit, another for
-    // additional stuff, like multiplied damage and extra effects. There's supposedly a callback feature I can use
-    // to get the result and then do things with it.
-    chat(character, msg);
+        chat(character, msg);
+    });
 }
 
 function sniper_kill_shot(character, parameters) {
@@ -274,8 +343,8 @@ function process_ability(msg) {
     }
 
     const pieces = msg.content.split(' ');
-    const ability = pieces[1];
-    const parameters = pieces.slice(2);
+    const ability = pieces[2];
+    const parameters = pieces.slice(3);
 
     if (!(ability in barbs_abilities_processors)) {
         chat(msg, 'unknown ability %s'.format(ability));
@@ -295,27 +364,45 @@ function process_ability(msg) {
 // Basic setup and message handling
 
 on('ready', function() {
-    log('main.js begin');
+    log('barbs.js begin');
 
     // setup_characters();
 
-    log('main.js complete');
+    log('barbs.js complete');
 });
 
 
-// message handler
+barbs_subcommand_handlers = {
+    'stat': roll_stat,
+    'skill': roll_skill,
+    'ability': process_ability,
+};
+
+
+// main message handler
 on("chat:message", function(msg) {
     if(msg.type !== "api") {
         return;
     }
 
+    const pieces = msg.content.split(' ');
+    if (pieces.length < 2) {
+        return;
+    }
+
+    const main_command = pieces[0];
+    if ('!barbs' !== main_command) {
+        return;
+    }
+
     log('API call: who=' + msg.who + ', id=' + msg.playerid + ', message="' + msg.content + '"');
 
-    if (msg.content.indexOf('!barbs_stat') !== -1) {
-        roll_stat(msg);
-    } else if (msg.content.indexOf('!barbs_skill') !== -1) {
-        roll_skill(msg);
-    } else if (msg.content.indexOf('!barbs_ability') !== -1) {
-        process_ability(msg)
+    const sub_command = pieces[1];
+    if (!(sub_command in barbs_subcommand_handlers)) {
+        chat(msg, 'unknown barbs subcommand %s'.format(sub_command));
+        return;
     }
+
+    const processor = barbs_subcommand_handlers[sub_command];
+    processor(msg);
 });

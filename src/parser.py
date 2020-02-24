@@ -9,13 +9,13 @@ from src.components.skill import Skill
 # Cut off period at the end, if there is one
 def trim(string):
     result = string.strip()
-    
+
     if result[-1] == '.':
         result = result[:-1]
-    
+
     if result[-1] == '­':
         result = result[:-1]
-    
+
     return result
 
 
@@ -301,6 +301,11 @@ def parse_clazzes(lines, skills):
 
         else:  # Process full classes
             clazz_name = line
+
+            # TODO: remove this when bladerunner is properly filled out
+            if clazz_name == 'Bladerunner':
+                break
+
             clazz = get_clazz(clazz_name) or Clazz(clazz_name)
             clazz.add_clazz_requirement(skill_req)
 
@@ -325,16 +330,26 @@ def parse_clazzes(lines, skills):
             branch_names = [branch1_name, branch2_name, branch3_name]
             branch_descriptions = [branch1_description, branch2_description, branch3_description]
 
-            passive_line = lines[i + 6]
-            split_char = get_split_char(passive_line)
-            passive_name = passive_line.split(split_char, 1)[0].split(':', 1)[1].strip()
-            passive_description = passive_line.split(split_char, 1)[1].strip()
+            # Get the passive, which may be multiple lines
+            i += 5
+            passive_line_start = i + 1
+            while True:
+                if lines[i].startswith(branch1_name):
+                    break
+                i += 1
+
+            passive_lines = lines[passive_line_start:i]
+            split_char = get_split_char(passive_lines[0])
+            passive_name = passive_lines[0].split(split_char, 1)[0].split(':', 1)[1].strip()
+            passive_description = passive_lines[0].split(split_char, 1)[1].strip()
+            if len(passive_lines) > 1:
+                passive_description += '\n' + '\n'.join(passive_lines[1:])
 
             clazz.add_passive(flavor_text, description, len(requirements), requirements, branch_names,
                               branch_descriptions, passive_name, passive_description)
 
             # Handle class skills
-            i += 6
+            i -= 1  # because i'm too lazy to do this nicer. i is at the first branch name
             known_tiers = None
             for throw_away in range(3):
                 i += 1
@@ -376,7 +391,8 @@ def parse_clazzes(lines, skills):
                             raise Exception('No tags found while process class "%s"' % clazz_name)
 
                         name, action, cost, rng, duration, description, tags = parse_clazz_skill(lines[start:end+1])
-                        clazz.add_ability(current_branch, tier + 1, name, action, cost, rng, duration, description, tags)
+                        clazz.add_ability(current_branch, tier + 1, name, action, cost, rng, duration, description,
+                                          tags)
                         i = end
 
             if clazz not in clazzes:  # Safety check, though it shouldn't be necessary anymore

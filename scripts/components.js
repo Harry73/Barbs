@@ -473,6 +473,12 @@ let components = [
         "description": "You have your stats increased temporarily due to the effects of skills, abilities, consumables, items, battlefield effects, etc."
     },
     {
+        "type": "buff",
+        "name": "Invisible",
+        "duration": "1 minute",
+        "description": "You are Hidden and cannot be seen at all. Hidden is not lost until this buff ends."
+    },
+    {
         "type": "condition",
         "name": "Bleeding",
         "duration": "Until broken",
@@ -482,7 +488,7 @@ let components = [
         "type": "condition",
         "name": "Blinded",
         "duration": "1 minute",
-        "description": "Ranged attacks you make always miss. Melee attacks you make have a 50% chance of missing before factoring in your target\u2019s Evasion. You automatically fail skill check requiring sight, like Search."
+        "description": "Ranged attacks you make always miss. Melee attacks you make have a 50% chance of missing before factoring in your target\u2019s Evasion. You automatically fail skill check requiring sight, like Search. You have no line of sight for targeting with spells."
     },
     {
         "type": "condition",
@@ -506,7 +512,7 @@ let components = [
         "type": "condition",
         "name": "Crippled",
         "duration": "Until cleansed",
-        "description": "Your movement speed is halved and you cannot jump or climb."
+        "description": "Your movement speed is halved and you cannot jump, climb, or take flight through physical means."
     },
     {
         "type": "condition",
@@ -558,6 +564,12 @@ let components = [
     },
     {
         "type": "condition",
+        "name": "Petrified",
+        "duration": "1 minute",
+        "description": "You cannot take any actions. You become attuned to earth. At the beginning of your turn you can make an appropriate skill check to break out of your stone casing."
+    },
+    {
+        "type": "condition",
         "name": "Silenced",
         "duration": "Varies",
         "description": "You cannot speak or cast spells."
@@ -591,6 +603,50 @@ let components = [
         "name": "Weakened",
         "duration": "1 minute",
         "description": "All your damage output is decreased by X%, after all other modifiers. This condition does not stack; subsequent Weakened effects simply change the original."
+    },
+    {
+        "type": "skill",
+        "name": "Alchemy Augmentation",
+        "description": "This school of alchemy focuses on the alteration of material objects. Instead of fundamentally changing what the object is, you can change the natural properties of the object, while maintaining some of its original properties",
+        "attribute": "Intelligence",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You cannot perform Augmentation Alchemy",
+            "Rank F": "You can perform Augmentation Alchemy from basic blueprints"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Alchemy Constructs",
+        "description": "This school of alchemy focuses on the creation of constructs, like robots and golems, that are technically non-living bodies powered by magic. Constructs lack any intelligence whatsoever, but aren\u2019t limited physically the same way organics are",
+        "attribute": "Intelligence",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You cannot perform Construct Alchemy",
+            "Rank F": "You can perform Construct Alchemy from basic blueprints"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Alchemy Organics",
+        "description": "This school of alchemy focuses on the creation of organic life, like homunculi and chimera. These creatures are intelligent and don\u2019t require magical input to operate, but have more realistic physical limitations",
+        "attribute": "Intelligence",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You cannot perform Organics Alchemy",
+            "Rank F": "You can perform Organics Alchemy from basic blueprints"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Alchemy Transformation",
+        "description": "This school of alchemy focuses on the transformation of material objects. Instead of simply altering the properties of an object, you change things into completely different objects entirely",
+        "attribute": "Intelligence",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You cannot perform Transmutation Alchemy",
+            "Rank F": "You can perform Transmutation Alchemy from basic blueprints"
+        }
     },
     {
         "type": "skill",
@@ -730,6 +786,17 @@ let components = [
     },
     {
         "type": "skill",
+        "name": "Athletics Flexibility",
+        "description": "Flexibility involves being able to bend or stretch in uncommon ways. You might use this to fit into small spaces, contort your body, or perform dodges that would be impossible for others",
+        "attribute": "Dexterity",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You automatically fail Flexibility checks",
+            "Rank F": "You can perform Flexibility checks"
+        }
+    },
+    {
+        "type": "skill",
         "name": "Athletics Force",
         "description": "Force involves the effective use of your muscles to push, pull, lift, drag, or do any sort of athletic ability requiring raw muscles strength",
         "attribute": "Strength",
@@ -759,6 +826,17 @@ let components = [
         "rank_notes": {
             "Untrained": "You automatically fail Pain Tolerance checks",
             "Rank F": "You can perform Pain Tolerance checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Beast Mastery Battle Pet",
+        "description": "Battle Pet checks allow you to use a pet in combat. Skill checks are needed for specialized commands",
+        "attribute": "Wisdom",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You cannot use your pet in combat",
+            "Rank F": "You can command your pet in combat"
         }
     },
     {
@@ -814,6 +892,17 @@ let components = [
         "rank_notes": {
             "Untrained": "You automatically fail Grappling checks",
             "Rank F": "You can perform Grappling checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Combat Trapping",
+        "description": "Trapping skill checks are used whenever you must set up or tinker with traps under pressure, which occurs most notably during combat. If interacting with a trap would be easy, then it does not require a skill check",
+        "attribute": "Fortitude",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You cannot performing Trapping checks in combat",
+            "Rank F": "You can perform Trapping checks in combat as a Major Action"
         }
     },
     {
@@ -951,7 +1040,7 @@ let components = [
     {
         "type": "skill",
         "name": "Crafting Shortblades",
-        "description": "Shortblade Weapon crafting involves the creation of shortblades, which scale off Precision for their damage. You can make things like daggers and specialized throwing knives, as well as more exotic designs. Crafting thieves\u2019 tools also falls under this skill",
+        "description": "Shortblade Weapon crafting involves the creation of shortblades, which do not scale with STR or DEX. You can make things like daggers and specialized throwing knives, as well as more exotic designs. Crafting thieves\u2019 tools also falls under this skill",
         "attribute": "Precision",
         "value": null,
         "rank_notes": {
@@ -1030,6 +1119,18 @@ let components = [
     },
     {
         "type": "skill",
+        "name": "Element Mastery Light",
+        "description": "Light Mastery involves the effective use of the element light in magic spells. Putting points in Light Mastery will allow you to cast light spells as well as invoke light cantrips from equipment",
+        "attribute": "Focus",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You cannot use light magic",
+            "Rank F": "You can cast light cantrips",
+            "Rank A": "You can cast light spells given to you by class abilities"
+        }
+    },
+    {
+        "type": "skill",
         "name": "Element Mastery Lightning",
         "description": "Lightning Mastery involves the effective use of the element lightning in magic spells. Putting points in Lightning Mastery will allow you to cast lightning spells as well as invoke lightning cantrips from equipment",
         "attribute": "Attunement",
@@ -1038,6 +1139,17 @@ let components = [
             "Untrained": "You cannot use lightning magic",
             "Rank F": "You can cast lightning cantrips",
             "Rank A": "You can cast lightning spells given to you by class abilities"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Element Mastery Water",
+        "description": "Water Mastery involves the effective use of the element water in magic spells. Putting points in Water Mastery will allow you to cast water spells as well as invoke water cantrips from equipment",
+        "attribute": "Focus",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You cannot use water magic",
+            "Rank F": "You can cast water cantrips"
         }
     },
     {
@@ -1119,6 +1231,17 @@ let components = [
     },
     {
         "type": "skill",
+        "name": "Item Use Construction",
+        "description": "Construction checks can be used to build any large objects that do not require a delicate hand to assemble. This could be anything from wooden fortifications to a trebuchet",
+        "attribute": "Strength",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You automatically fail Construction checks",
+            "Rank F": "You can perform Construction checks"
+        }
+    },
+    {
+        "type": "skill",
         "name": "Item Use First Aid",
         "description": "First Aid involves the application of salves and bandages, suturing lacerations, fixing bones, and other emergency medical operations",
         "attribute": "Fortitude",
@@ -1148,6 +1271,28 @@ let components = [
         "rank_notes": {
             "Untrained": "You automatically fail Rope checks",
             "Rank F": "You can perform Rope checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Item Use Tinkering",
+        "description": "Tinkering checks will be used largely as a catch-all for any difficult action requiring the delicate operating of various small objects. This could include anything from building a wooden doll to carefully reconstructing an ancient clock",
+        "attribute": "Wisdom",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You automatically fail Tinkering checks",
+            "Rank F": "You can perform Tinkering checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Item Use Traps",
+        "description": "Traps are mechanisms designed to trigger to an event (like opening a door) and cause something to happen (like releasing poison). They can be simple and made of random objects, or complex and require building in a workshop. Making and disabling traps requires calm handiwork",
+        "attribute": "Composure",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You automatically fail Traps checks",
+            "Rank F": "You can perform Traps checks"
         }
     },
     {
@@ -1224,7 +1369,8 @@ let components = [
         "value": null,
         "rank_notes": {
             "Untrained": "You automatically fail Arcana checks",
-            "Rank F": "You can perform Arcana checks"
+            "Rank F": "You can perform Arcana checks",
+            "Rank A": "You can make an Arcana check during combat as a free action or free reaction once per round"
         }
     },
     {
@@ -1262,13 +1408,36 @@ let components = [
     },
     {
         "type": "skill",
+        "name": "Knowledge Religion",
+        "description": "Religion skill checks exercise your knowledge of the various religions of the world. You might use this skill to see what you know about a god, a cult, a certain religious practice, or a religious symbol",
+        "attribute": "Intelligence",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You automatically fail Religion checks",
+            "Rank F": "You can perform Religion checks"
+        }
+    },
+    {
+        "type": "skill",
         "name": "Magic Buffs",
         "description": "Buff magic applies positive effects, known as buffs, to creatures. Skill checks usually involve knowledge about the buff magic subtype, or possibly improvised buff spell usage",
         "attribute": "Focus",
         "value": null,
         "rank_notes": {
             "Untrained": "You automatically fail Buff Magic checks",
-            "Rank F": "You can perform Buff Magic checks"
+            "Rank F": "You can perform Buff Magic checks",
+            "Rank A": "You can perform improvised magic arts with buff spells"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic Conditions",
+        "description": "Condition magic applies negative effects, known as conditions, to creatures. Skill checks usually involve knowledge about the condition magic subtype, or possibly improvised condition spell usage",
+        "attribute": "Attunement",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You automatically fail Condition Magic checks",
+            "Rank F": "You can perform Condition Magic checks"
         }
     },
     {
@@ -1318,6 +1487,17 @@ let components = [
     },
     {
         "type": "skill",
+        "name": "Magic Divination",
+        "description": "Divination magic involves spells that protect. Skill checks usually involve knowledge about the divination magic subtype, or possibly improvised divination spell usage",
+        "attribute": "Attunement",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You automatically fail Divination Magic checks",
+            "Rank F": "You can perform Divination Magic checks"
+        }
+    },
+    {
+        "type": "skill",
         "name": "Magic Enchantment",
         "description": "Enchantment magic involves applying various effects to objects. Skill checks usually involve knowledge about the enchantment magic subtype, or possibly improvised enchantment spell usage",
         "attribute": "Focus",
@@ -1326,6 +1506,17 @@ let components = [
             "Untrained": "You automatically fail Enchantment Magic checks",
             "Rank F": "You can perform Enchantment Magic checks",
             "Rank A": "You can perform improvised magic arts with enchantment spells"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic Illusions",
+        "description": "Illusion magic involves creating sensory stimuli with magic to deceive. Skill checks usually involve knowledge about the illusion magic subtype, or possibly improvised illusion spell usage",
+        "attribute": "Focus",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You automatically fail Illusion Magic checks",
+            "Rank F": "You can perform Illusion Magic checks"
         }
     },
     {
@@ -1375,7 +1566,7 @@ let components = [
     {
         "type": "skill",
         "name": "Magic Utility",
-        "description": "Utility magic involves creating creatures to assist you. Skill checks usually involve knowledge about the utility magic subtype, or possibly improvised utility spell usage",
+        "description": "Utility magic involves spells that provide small benefits of varying types. Skill checks usually involve knowledge about the utility magic subtype, or possibly improvised utility spell usage",
         "attribute": "Attunement",
         "value": null,
         "rank_notes": {
@@ -1407,6 +1598,50 @@ let components = [
     },
     {
         "type": "skill",
+        "name": "Observation Tracking",
+        "description": "Tracking checks are for following trails of clues. Higher ranks of Tracking allow you to follow trails of footsteps or other clues that others might normally miss",
+        "attribute": "Wisdom",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You automatically fail Tracking checks",
+            "Rank F": "You can perform Tracking checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Psionics Defensive",
+        "description": "Defensive Psionics are not strictly speaking the use of psionic powers, but it is more of using your body and mind to resist psionic attacks. While some psionic arts are classified as defensive, this skill check is more often used by non-psionic users to resist attacks",
+        "attribute": "Composure",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You automatically fail Defensive Psionics checks",
+            "Rank F": "You can perform Defensive Psionic checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Psionics Offensive",
+        "description": "Offensive Psionics allow you to use your mind as a weapon in a way that is patently different from using magic. It requires raw brain power rather than mana, and thus is a physical exertion of your will",
+        "attribute": "Composure",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You cannot use psionics offensively",
+            "Rank F": "You can use psionics offensively"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Psionics Utility",
+        "description": "Utility Psionics includes any psionic ability that isn\u2019t an attack on another creature or defending against an attack from a creature. This usually involves using psionic abilities on objects",
+        "attribute": "Composure",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You automatically fail Utility Psionics checks",
+            "Rank F": "You can perform Utility Psionic checks"
+        }
+    },
+    {
+        "type": "skill",
         "name": "Stealth Disguise",
         "description": "Disguise checks allow you to hide your identity through elaborate disguises or cleverly placed mundane clothing. You would also use this check if you wanted to put a disguise on another person or object",
         "attribute": "Precision",
@@ -1425,6 +1660,17 @@ let components = [
         "rank_notes": {
             "Untrained": "You automatically fail Lockpicking checks",
             "Rank F": "You can perform Lockpicking checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Stealth Sleight of Hand",
+        "description": "Sleight of Hand is for being deceptive with your hand motions. You can use this skill for cheating at card games, hiding a dagger up your sleeve, or swapping out a goblet of wine with poison, all without being detected",
+        "attribute": "Precision",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You automatically fail Sleight of Hand checks",
+            "Rank F": "You can perform Sleight of Hand checks"
         }
     },
     {
@@ -1453,6 +1699,17 @@ let components = [
     },
     {
         "type": "skill",
+        "name": "Transportation Air Vehicles",
+        "description": "Air Vehicle Mastery allows you to effectively drive airships, hot air balloons, and any other vehicle that moves through the air. Checks might be required for difficult maneuvers, and you need to be calm and composed while thousands of feet above solid land",
+        "attribute": "Composure",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You cannot drive air vehicles",
+            "Rank F": "You can drive small air vehicles"
+        }
+    },
+    {
+        "type": "skill",
         "name": "Transportation Land Vehicles",
         "description": "Land Vehicle Mastery allows you to effectively drive carts, wagons, carriages, chariots, sleds, and any other vehicle that moves over land. Checks might be required for difficult maneuvers, and you need to be able to move and react quickly",
         "attribute": "Agility",
@@ -1460,6 +1717,17 @@ let components = [
         "rank_notes": {
             "Untrained": "You cannot drive land vehicles",
             "Rank F": "You can drive small land vehicles"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Transportation Sea Vehicles",
+        "description": "Sea Vehicle Mastery allows you to effectively drive canoes, boats, ships, and any other vehicle that moves in water. Checks might be required for difficult maneuvers, and you need to be able to focus on all the various parts and little movements that come with driving most waterborne vehicles",
+        "attribute": "Focus",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You cannot drive sea vehicles",
+            "Rank F": "You can drive small sea vehicles"
         }
     },
     {
@@ -1475,6 +1743,17 @@ let components = [
     },
     {
         "type": "skill",
+        "name": "Weapon Mastery Blunt",
+        "description": "Blunt Weapons Mastery involves the effective use of bludgeoning weapons. If you\u2019re looking to maximize the damage and flexibility of a club, hammer, maul, mace, flail, or quarterstaff, you want to put points in Blunt Weapons Mastery",
+        "attribute": "Strength",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You deal half damage with bludgeoning weapons",
+            "Rank F": "You deal regular damage with bludgeoning weapons"
+        }
+    },
+    {
+        "type": "skill",
         "name": "Weapon Mastery Bows",
         "description": "Bow Weapon Mastery involves the effective use of bows. If you\u2019re looking to maximize the damage and flexibility of a shortbow, longbow, or composite bow, you want to put points in Ranged Weapon Mastery",
         "attribute": "Dexterity",
@@ -1482,7 +1761,8 @@ let components = [
         "rank_notes": {
             "Untrained": "You deal half damage with bows",
             "Rank F": "You deal regular damage with bows",
-            "Rank A": "You can perform improvised physical arts with ranged weapons"
+            "Rank A": "You can perform improvised physical arts with ranged weapons",
+            "Rank 5": "Your autoattacks with bows pierce once, hitting another target behind your initial target within range"
         }
     },
     {
@@ -1493,7 +1773,8 @@ let components = [
         "value": null,
         "rank_notes": {
             "Untrained": "You deal half damage with bullets",
-            "Rank F": "You deal regular damage with bullets"
+            "Rank F": "You deal regular damage with bullets",
+            "Rank A": "You can perform improvised physical arts with bullets"
         }
     },
     {
@@ -1521,13 +1802,36 @@ let components = [
     },
     {
         "type": "skill",
+        "name": "Weapon Mastery Improvised Weapons",
+        "description": "Improvised Weapon Mastery involves the effective use of any random items as weapons. If you\u2019re looking to maximize the damage and flexibility of a chair, a broken bottle, or really any other object that isn\u2019t strictly speaking a weapon, you want to put points in Improvised Weapon Mastery",
+        "attribute": "Wisdom",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You cannot use improvised weapons",
+            "Rank F": "You can use improvised weapons"
+        }
+    },
+    {
+        "type": "skill",
         "name": "Weapon Mastery Heavy Thrown Weapons",
         "description": "Heavy Throwing Mastery involves the effective use of javelins, nets, throwing axes, and even boulders as weapons. Heavy throwing weapons involve the use of your raw strength instead of any fancy technique, and are a good ranged option for warriors",
         "attribute": "Strength",
         "value": null,
         "rank_notes": {
             "Untrained": "You deal half damage with heavy thrown weapons",
-            "Rank F": "You deal regular damage with heavy thrown weapons"
+            "Rank F": "You deal regular damage with heavy thrown weapons",
+            "Rank A": "You can perform improvised physical arts with heavy thrown weapons"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery Light Thrown Weapons",
+        "description": "Light Throwing Mastery involves the effective use of throwing knives, needles, shuriken, and even small rocks as weapons. Light throwing weapons involve the use of practiced technique instead of raw strength, and provide many classes additional options at range",
+        "attribute": "Dexterity",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You deal half damage with light thrown weapons",
+            "Rank F": "You deal regular damage with light thrown weapons"
         }
     },
     {
@@ -1544,6 +1848,17 @@ let components = [
     },
     {
         "type": "skill",
+        "name": "Weapon Mastery Polearms",
+        "description": "Polearm Mastery involves the effective use of polearms. If you\u2019re looking to maximize the damage and flexibility of a spear, glaive, pike, or javelin, you want to put points in Polearm Mastery",
+        "attribute": "Strength",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You deal half damage with polearms",
+            "Rank F": "You deal regular damage with polearms"
+        }
+    },
+    {
+        "type": "skill",
         "name": "Weapon Mastery Shields",
         "description": "Shield Weapon Mastery involves the effective use as shields as weapons. If you want to add some offensive options to your sword and board fighting style, or even dual wield shields, you want to put points in Shield Mastery",
         "attribute": "Strength",
@@ -1551,7 +1866,8 @@ let components = [
         "rank_notes": {
             "Untrained": "You deal half damage with shields",
             "Rank F": "You deal regular damage with shields",
-            "Rank A": "You can perform improvised physical arts with shields"
+            "Rank A": "You can perform improvised physical arts with shields",
+            "Rank 5": "You can wield shields in your main hand"
         }
     },
     {
@@ -1564,6 +1880,17 @@ let components = [
             "Untrained": "You deal half damage with short blades",
             "Rank F": "You deal regular damage with short blades",
             "Rank A": "You can perform improvised physical arts with short blades"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery Unarmed",
+        "description": "Unarmed Combat Mastery involves the effective use of your own body as a weapon. If you\u2019re looking to maximize the damage and flexibility of punches, kicks, and open palm strikes, you want to put points in Unarmed Combat Mastery",
+        "attribute": "Dexterity",
+        "value": null,
+        "rank_notes": {
+            "Untrained": "You deal half damage with unarmed techniques",
+            "Rank F": "You deal regular damage with unarmed techniques"
         }
     },
     {
@@ -1635,13 +1962,32 @@ let components = [
     {
         "type": "clazz",
         "name": "Symbiote",
-        "flavor_text": "",
-        "description": "",
+        "flavor_text": "\u201cHe\u2019s far too humble for his own good. Always in the background, trying his best to avoid the spotlight. Doesn\u2019t speak a word, except when he\u2019s casting one of his spells. But without those spells, this team would be nothing. Hell, we probably would have died on our first mission. Kid won\u2019t admit it, but he\u2019s the backbone of the squad. Everyone might look to me for leadership, but not before I look to him for assurance.\u201d",
+        "description": "The Symbiote is a standard part of many mage cadres, as an intermediate level mage with a mastery of buff magic. Buff spells allow this class to assist their allies without having to attack their enemies and put themselves in harms way. As long as allies have enough composure to handle the strain of multiple buff spells, this class can turn the party into ruthless killing machines or steadfast and unbreakable defenders. As the entry level class for buff magic, this class contains a wide variety of buffing effects and the ability to maintain those effects for an extended period of time.",
         "num_requirements": 2,
-        "full_requirements": [],
-        "branches": [],
-        "passive": {},
-        "abilities": []
+        "full_requirements": [
+            "        Buff Magic Rank A",
+            "        Cloth Armor Rank A"
+        ],
+        "branches": [
+            "Fiery Soul",
+            "Stone Body",
+            "Fluid Mind"
+        ],
+        "passive": {
+            "Eternal Bond": "When an ally you can see has a buff\u2019s duration expire on them for a buff spell that you originally casted, you may recast the spell if they are in range as a free reaction. Mana costs are halved for spells cast this way."
+        },
+        "abilities": [
+            "Strengthen Soul",
+            "Empower Soul",
+            "Bolster Soul",
+            "Strengthen Body",
+            "Empower Body",
+            "Bolster Body",
+            "Strengthen Mind",
+            "Power Spike",
+            "Bolster Speed"
+        ]
     },
     {
         "type": "clazz",
@@ -1679,13 +2025,26 @@ let components = [
     {
         "type": "clazz",
         "name": "Arcanist",
-        "flavor_text": "",
-        "description": "",
+        "flavor_text": "\u201cMagic can regenerate lost limbs and necrotic organs. It can send messages across time and space, teleport us to unfathomably bizarre worlds, help us build entire cities in just a few days, and give us glimpses into both the future and the past. And yet here we are, killing each other with it. What a farce.\u201d",
+        "description": "The Arcanist is the entry level destruction mage. For those mages who do not wish to pigeonhole themselves in one element, this class provides damaging spells which can utilize all 8, although it sacrifices some of the special strengths of those classes. The class\u2019s passive also grants the user some extra flexibility as far as targeting their spells is concerned, which works well with the class\u2019s overall emphasis on both single-target and multi-target/AOE damage. A third branch provides some extra utility, rounding the class out as an excellent first class for a new mage character. Functionally the class is designed to be simple and straightforward, acting as a segway to more complicated mage classes.",
         "num_requirements": 2,
-        "full_requirements": [],
-        "branches": [],
-        "passive": {},
-        "abilities": []
+        "full_requirements": [
+            "        Destruction Magic Rank A",
+            "        Cloth Armor Rank A"
+        ],
+        "branches": [
+            "Zapping",
+            "Blasting",
+            "Arcane"
+        ],
+        "passive": {
+            "Focus Fire": "When you cast a damaging spell attack that targets a single enemy, you may have the spell become a 15 ft square AOE instead, decreasing the spell\u2019s effectiveness by 25%. Alternatively, when you cast a damaging spell attack that is AOE, you may have the spell become single-target instead, increasing the spell\u2019s effectiveness by 25%."
+        },
+        "abilities": [
+            "Magic Dart",
+            "Magic Bomb",
+            "Magic Primer"
+        ]
     },
     {
         "type": "clazz",
@@ -1942,7 +2301,7 @@ let components = [
             "Obfuscation"
         ],
         "passive": {
-            "Neverending Nightmare": "Whenever a non-curse condition that was inflicted by you ends on an enemy in sight, they gain a curse."
+            "Neverending Nightmare": "Whenever a non-curse condition that was inflicted by you ends (in any manner, including cleanse) on an enemy in sight, they gain a curse."
         },
         "abilities": [
             "Shadow Bolt",
@@ -2003,13 +2362,32 @@ let components = [
     {
         "type": "clazz",
         "name": "Warlord",
-        "flavor_text": "",
-        "description": "",
+        "flavor_text": "I could feel the scream trapped in my throat and could not tear my eyes away from the grisly spectacle before me. Blood dripped from the corpses pinned to the walls, and the sound of each drop threatened madness. The guilty and innocent lay here; eviscerated, torn to shreds, filled with holes. In a brief moment of poignant horror, I wondered how I would explain to the children. And I questioned what kind of man would lust for such senseless violence.",
+        "description": "The Warlord is a fighter that understands the value of flexibility. Adept at fighting at close range with a variety of melee abilities and controlling longer ranges with a ranged weapon of their choice, the Warlord dominates the battlefield by abusing range advantages against less prepared foes. Diving in close against archers and mages, kiting other fighters, harrying enemies as they approach, this class can reliably put down a constant stream of damage and never wastes turns getting into position due to good mobility. The Warlord is rewarded, however, for switching between ranged and melee attacks frequently, forcing enemies to keep up with constantly changing tactics.",
         "num_requirements": 2,
-        "full_requirements": [],
-        "branches": [],
-        "passive": {},
-        "abilities": []
+        "full_requirements": [
+            "        Any Melee Weapon A (but not Unarmed Mastery)",
+            "        Any Ranged Weapon A"
+        ],
+        "branches": [
+            "Close Range",
+            "Long Range",
+            "Weapon Swap"
+        ],
+        "passive": {
+            "Calculated Aggression": "When you successfully deal physical damage with a melee weapon to a target, your next ranged attack becomes empowered for 50% increased physical damage. When you successfully deal physical damage with a ranged weapon to a target, your next melee attack becomes empowered for 50% increased physical damage. Calculated Aggression can trigger at most once per turn and the empowered effect does not stack."
+        },
+        "abilities": [
+            "Pivot and Slash",
+            "Knock Aside",
+            "Crippling Blow",
+            "Advancing Fire",
+            "Hookshot",
+            "Stopping Shot",
+            "Weapon Swap: Roll",
+            "Weapon Swap: Quaff",
+            "Weapon Swap: Attack"
+        ]
     },
     {
         "type": "clazz",
@@ -2058,13 +2436,26 @@ let components = [
     {
         "type": "clazz",
         "name": "Sentinel",
-        "flavor_text": "",
-        "description": "",
+        "flavor_text": "\u201cThere is a place where civilization gives way to twisting undergrowth and unknown shores. Where good and evil just barely begin to blur together. A place where brave heroics fail and terror dominates the heart. This is the place where he stands guard. Waiting for the end.\u201d",
+        "description": "The Sentinel is a fighter class that has mastered the use of shields as weapons. Dual wielding bladed shields with specialized chain systems attached to their wristguards, the Sentinel has redefined the art of shield combat with innovative new techniques. Being able to double down on the defensive aspects of shields, the Sentinel also brings vicious new attacking opportunities and a wealth of utility and mobility. This class bides its time playing defensively in order to release energy in a burst of explosive movements and attacks in later rounds. The chains on his shields allow for easy shield tossing and dragging himself and opponents where he pleases, and opens up his effective range and target selection. While dual wielding is technically optional with this class, choosing to hold two shields maximizes the abilities this class provides. In order to help these specialized shields mesh with other classes, the Sentinel treats all shields that have implicit damage as axes, longblades, blunt weapons, and heavy throwing weapons as well. The default range for a Sentinel\u2019s shield chain is 30 ft, and can be picked up from range using the chains as a free action.",
         "num_requirements": 2,
-        "full_requirements": [],
-        "branches": [],
-        "passive": {},
-        "abilities": []
+        "full_requirements": [
+            "        Armor: Shields A",
+            "        Weapons: Shields 5"
+        ],
+        "branches": [
+            "Dauntless",
+            "Stalwart",
+            "Tenacious"
+        ],
+        "passive": {
+            "Perfect Shield": "While you are not in Shield stance, when you block an attack, gain a Shield stack. At the end of your turn, you may expend all Shield stacks to gain that many special reactions and enter Shield stance until the beginning of your next turn. You may use special reactions gained this way as normal reactions or to cast any Sentinel ability. Sentinel abilities you cast this way have their stamina cost halved."
+        },
+        "abilities": [
+            "Crossguard Guillotine",
+            "Parallel Shields",
+            "Chain Rush"
+        ]
     },
     {
         "type": "clazz",
@@ -2120,10 +2511,13 @@ let components = [
         "abilities": [
             "Gale Shot",
             "Zephyr Shot",
+            "Storm Shot",
             "Wind Strike",
             "Cutting Winds",
+            "Harassing Whirlwind",
             "Mistral Bow",
-            "Arc of Air"
+            "Arc of Air",
+            "Bow of Hurricanes"
         ]
     },
     {
@@ -2184,13 +2578,26 @@ let components = [
     {
         "type": "clazz",
         "name": "Rifleman",
-        "flavor_text": "",
-        "description": "",
+        "flavor_text": "\u201cDANGER! MISHANDLING OF FIREARM CAN RESULT IN SERIOUS INJURY OR DEATH. You are now the proud owner of an Achak Industries firearm, which comes with certain responsibilities which the Sultanate of Kraithan requires our company to inform you of. Do not point a firearm at anyone or anything you do not intend to fire at. Always assume a firearm is loaded. Achak Industries is not liable for any harm that comes to any law-abiding citizens as a result of improper or reckless use of our equipment. Do not even think of suing us; our lawyers are better than yours and also have guns. Thank you for your patronage.\u201d",
+        "description": "The Rifleman is the entry level bullet weapon class. The use of firearms is difficult for multiple reasons, which the Rifleman helps remedy: firearms require a special action called a Reload Action, which takes two Major Actions, to reload their ammunition, and firearms have an inherent misfire rate that forces a player to roll everytime they attack to see if their gun doesn\u2019t just fall apart. To make up for these weaknesses, the average firearm has improved damage capabilities thanks to the secondary fire, an alternative to regular autoattacks. The Rifleman has abilities to minimize misfire, improve damage and speed, and abuse secondary fire and ammunition types to great effect, and acts as an excellent first step to any character who wishes to use firearms for the long term. Damage is high and range is medium compared to other ranged options, and firearms combine many of the unique strengths of both crossbows and bows, often piercing and pushing enemies back.",
         "num_requirements": 2,
-        "full_requirements": [],
-        "branches": [],
-        "passive": {},
-        "abilities": []
+        "full_requirements": [
+            "        Bullet Weapons Rank A",
+            "        Light Armor Rank A"
+        ],
+        "branches": [
+            "Operation",
+            "Assembly",
+            "Maintenance"
+        ],
+        "passive": {
+            "Silver Bullet": "At the beginning of your turn, select a bullet currently chambered in a firearm in your inventory. It becomes a silver bullet, this class\u2019s unique special ammunition (if the bullet chosen is already special ammunition, it retains its other properties). When you create a silver bullet, you may choose an additional effect for the ammunition from the list below:\nAn attack with this ammunition ignores AC\nAn attack with this ammunition ignores MR\nAn attack with this ammunition cannot miss\nAn attack with this ammunition gains an extra damage die"
+        },
+        "abilities": [
+            "Bodyshot",
+            "Iron Sights",
+            "Quick Reload"
+        ]
     },
     {
         "type": "clazz",
@@ -2224,16 +2631,19 @@ let components = [
         "abilities": [
             "Belly Dance",
             "Swing",
+            "Jive",
             "Tango",
             "Waltz",
+            "Boogie",
             "Foxtrot",
-            "Moonwalk"
+            "Moonwalk",
+            "Ballet"
         ]
     },
     {
         "type": "clazz",
         "name": "Lightning Duelist",
-        "flavor_text": "One second, the two strangers were calmly watching each other from opposite sides of the raucous tavern; the next second, we heard a clap of thunder, and the smaller one had closed the gap in the blink of an eye. Everything was suddenly quiet, but for the slightest hum of energy and tension. We all held our breath even as the hair on the backs of our neck stood on end, and we prayed that the stranger\u2019s sword would stay in its scabbard.",
+        "flavor_text": "One second, the two strangers were calmly watching each other from opposite sides of the raucous tavern; the next second, we heard a clap of thunder, and the smaller one had closed the gap in the blink of an eye. Everything was suddenly quiet, but for the slightest hum of energy and tension. We all held our breath even as the hair on the backs of our necks stood on end, and we prayed that the stranger\u2019s sword would stay in its scabbard.",
         "description": "The Lightning Duelist is one of many spellblade variants that focuses on one element and one weapon. This class wields a rapier in one hand and volatile lightning magic in the other. By seamlessly weaving together rapier lunges and jabs with lightning magic spells, the Lightning Duelist has excellent action economy. His individual spells are weaker than a dedicated lightning mage\u2019s, but his weapon provides increased flexibility and effectiveness at shorter ranges, and his offensive output can surpass a regular duelist\u2019s with efficient usage of physical and magical arts. His spells are primary buffing and damaging in nature, with all of the random, violent flavor that lightning spells tend to have, and there is a heavy emphasis on mobility and flexibility of aggressive attack patterns.",
         "num_requirements": 2,
         "full_requirements": [
@@ -2442,13 +2852,34 @@ let components = [
     {
         "type": "clazz",
         "name": "Champion",
-        "flavor_text": "",
-        "description": "",
-        "num_requirements": 3,
-        "full_requirements": [],
-        "branches": [],
-        "passive": {},
-        "abilities": []
+        "flavor_text": "\u201cThis one\u2019s the Spear of the Frozen Throne! Papa got it after looting the lair of a lich up north! And this one\u2019s the Blade of Sunlight! It shoots beams when in the hands of a hero! And here\u2019s the Bow of True Death! I\u2019m not allowed to touch it because Papa says it\u2019s cursed. Pretty cool, huh? C\u2019mon, Papa\u2019s got even cooler stuff in the attic!\u201d",
+        "description": "The Champion is a fighter that has devoted his life to the mastery of as many weapons as possible. Just like how a mage might study for years to master a wide variety of spells, the Champion trains for years to master a wide variety of both melee and ranged weapons. The Champion has high strength to swing around greatsword and halberds but also has high dexterity to deftly handle whips and rapiers. The class swaps weapons easily, adapting to the situation, and is especially good at showing off the specific strengths and flairs of each type of weapon. The Champion may only require 3 weapon types to unlock, but is further rewarded for mastering more weapons over the course of their adventuring career.",
+        "num_requirements": 1,
+        "full_requirements": [
+            "        Any 3 Weapon Masteries Rank A"
+        ],
+        "branches": [
+            "Type A Weapons",
+            "Type B Weapons",
+            "Type C Weapons"
+        ],
+        "passive": {
+            "Master of Arms": "Once per turn, you may freely swap weapons in both hands. After you do, you may make a free autoattack with an extra damage die on the weapon and with the following additional effects, based on weapon type:\nAxe - Cleave reaches an additional space from your target\nBlunt - The weapon\u2019s implicit condition cannot be resisted\nLongblade - The weapon keeps its additional damage die for the rest of the round\nPolearm - Reach is extended to 15 ft for the rest of the round\nShield - Blocking allows you to repeat this autoattack for the rest of the round as long as a shield remains equipped\nHeavy Throwing Weapon - This attack creates a shockwave around the target, dealing its damage to enemies adjacent to your target as well\nBow - This attack pushes the target 20 ft away from you\nBullets - This attack causes a muzzle blast to deal damage to enemies adjacent to you as well\nCrossbow - This attack penetrates enemies to travel its full length\nFine - This attack ignores AC and MR\nUnarmed - This attack repeats twice more\nLight Throwing Weapons - This attack cannot miss\nShortblade - This attack has +20% critical strike chance\nImprovised - This attack has 2 more extra damage dice"
+        },
+        "abilities": [
+            "Slice and Dice",
+            "Skull Bash",
+            "Piercing Blow",
+            "Arsenal of Power",
+            "Precision Strike",
+            "Fan The Hammer",
+            "Painful Blow",
+            "Arsenal of Finesse",
+            "Disarming Blow",
+            "Throat Slitter",
+            "Parry and Draw",
+            "Weapon Juggling"
+        ]
     },
     {
         "type": "clazz",
@@ -2494,10 +2925,16 @@ let components = [
         "abilities": [
             "Cloak and Dagger",
             "Blade in the Dark",
+            "Frenetic Assault",
+            "Unavoidable Casualties",
             "Snatch and Grab",
             "Charm and Disarm",
+            "Purloin Powers",
+            "Grand Thievery",
             "Infiltrate",
-            "Dodge the Law"
+            "Dodge the Law",
+            "Smokescreen",
+            "Phantom Thief"
         ]
     },
     {
@@ -2821,6 +3258,72 @@ let components = [
     },
     {
         "type": "clazz",
+        "name": "Magic Gunner",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Battle Architect",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Bomber",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Visionary",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Dragon Caller",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Demonologist",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 3,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
         "name": "Tempest",
         "flavor_text": "",
         "description": "",
@@ -2833,13 +3336,31 @@ let components = [
     {
         "type": "clazz",
         "name": "Evangelist",
-        "flavor_text": "",
-        "description": "",
+        "flavor_text": "\u201cTo think that there would be somebody foolish enough to willingly choose darkness. You should realize that darkness is not such a simple thing. The shadow opposite light. The night opposite day. Right and wrong. Good and evil. Order and chaos. Reason and irrationality. Look at it. Savor it. Remember it well. This is the source of your power. Your initial impulses. Your first dive. Your original self. If you can\u2019t handle it, it\u2019s the end for you. Prepare yourself.\u201d",
+        "description": "Evangelist brings together the most powerful parts of ice and dark magic, casting high powered AOE spells with ease and causing widespread destruction. It also applies the typical conditions that ice and dark are capable of, but goes a step further with some unique curse abilities, including some that work with ice spells. However, the most integral part of the class is the passive, allowing the Evangelist to turn any damaging spell into a powerful and dangerous steroid. Evangelist is designed to be the final step for an ice or dark mage, and thus has a lot of extra power and complexity in its spells, but the passive also grants some extra synergy with other mages, allowing you to recontextualize your spell list into a list of possible augmentations.",
         "num_requirements": 4,
-        "full_requirements": [],
-        "branches": [],
-        "passive": {},
-        "abilities": []
+        "full_requirements": [
+            "        Ice Mastery Rank A",
+            "        Dark Mastery Rank A",
+            "        Enchantment Magic Rank A",
+            "        Destruction Magic Rank A"
+        ],
+        "branches": [
+            "Gelidus Ouranos",
+            "Nivis Obscurans",
+            "Magia Ensis"
+        ],
+        "passive": {
+            "Magia Erebea": "When you cast a damaging spell attack, instead of releasing the spell, you may absorb its energy to enchant your soul. You may only do so with one spell at a time; activating this passive with a new spell when you already have it active will end the previous effect to allow you to absorb the new spell and gain its effects. While enchanted this way, you lose 10 maximum health per turn. Maximum health lost this way is restored after a long rest and is not considered a condition. You may release Magia Erebea as a free reaction; otherwise, it continues until your maximum health reaches one. Magia Erebea is neither spell nor buff. While under the effects of Magia Erebea, you gain the following effects, based on the absorbed spell:\nYour spell attacks gain on hit damage die equal to the damage die of the absorbed spell (if the spell has multiple modes resulting in multiple possible damage die configurations, take the mode with the lowest potential maximum damage)\nYour spell attacks inflict any conditions that the absorbed spell would inflict as an on hit effect\nYour spell attacks have their range extended by an amount equal to the range of the absorbed spell\nYou may have your spell attacks have their damage type changed to any element that the absorbed spell has\nYou become elementally aspected to the elements of the absorbed spell"
+        },
+        "abilities": [
+            "Krystalline Basileia",
+            "Iaculatio Orcus",
+            "Frigerans Barathrum",
+            "Anthos Pagetou Khilion Eton",
+            "Actus Noctis Erebeae",
+            "Supplementum Pro Armationem"
+        ]
     },
     {
         "type": "clazz",
@@ -2888,13 +3409,31 @@ let components = [
     {
         "type": "clazz",
         "name": "Demon Hunter",
-        "flavor_text": "",
-        "description": "",
+        "flavor_text": "\u201cThere will never be peace between humanity and Hell. We create these demons; they\u2019re born of our own twisted hearts and blackened souls. Folks ask me what\u2019s the worst I\u2019ve seen while on the job; I don\u2019t have the heart to tell them that those memories have nothing to do with demons. It makes an old, melodramatic coot like me want to turn my guns on the ones I\u2019ve sworn to protect, sometimes. But as long as there\u2019s still one good person left on this earth...Well, I can tolerate any number of demons for just one angel.\u201d",
+        "description": "The Demon Hunter has a thankless job. A master of light and lightning magic, and armed with demon slaying weapons, he dives into the fray against the foulest creatures in the multiverse. Sometimes persisting for weeks amongst their kind, doling out holy death in an almost reckless manner; in reality, the Demon Hunter specializes in the simple act of survival against beings who have lived for centuries and mastered every dark art in the book. This class understands well the balance between maintaining a careful defensive manner and exploiting brilliant yet narrow offensive opportunities. The class\u2019s passive provides ample defensive options to allow the user to spend their action economy on attacking instead, which in turn grants them further use of their passive. With powerful light and lightning spells similar to the Cleric\u2019s, but with a focus on defense, and deadly ranged attacks, the Demon Hunter represents a pinnacle of efficiency, a maelstrom of human willpower, and a nightmare to every demon that crosses his path.",
         "num_requirements": 4,
-        "full_requirements": [],
-        "branches": [],
-        "passive": {},
-        "abilities": []
+        "full_requirements": [
+            "        Light Mastery Rank A",
+            "        Lightning Mastery Rank A",
+            "        Bow, Crossbow, or Bullet Weapons Rank A",
+            "        Light Armor Rank A"
+        ],
+        "branches": [
+            "Slayer",
+            "Exorcism",
+            "Humanity"
+        ],
+        "passive": {
+            "Evil\u2019s Bane": "At the beginning of each turn, gain a stack of Hunter. You also gain a Hunter stack when you successfully deal 100 damage in a single round, but only once per round (this effect refreshes at the beginning of your turn). Lose all stacks of Hunter after combat ends. You may expend a Hunter stack as a free reaction at any time to perform one of the following:\nGain an additional reaction this round\nCleanse a condition of your choice on yourself\nHeal for 5d10 health\nIgnore all effects from enemy fields until the beginning of your next turn"
+        },
+        "abilities": [
+            "Demonbane Blast",
+            "Consecrated Carnage",
+            "Banishing Bolt",
+            "Lifesteal Elegy",
+            "Hunter\u2019s Guile",
+            "Essence Scatter"
+        ]
     },
     {
         "type": "clazz",
@@ -2976,6 +3515,17 @@ let components = [
     {
         "type": "clazz",
         "name": "Auramancer",
+        "flavor_text": "",
+        "description": "",
+        "num_requirements": 4,
+        "full_requirements": [],
+        "branches": [],
+        "passive": {},
+        "abilities": []
+    },
+    {
+        "type": "clazz",
+        "name": "Synergist",
         "flavor_text": "",
         "description": "",
         "num_requirements": 4,
@@ -3303,6 +3853,252 @@ let components = [
             "cube",
             "on-death",
             "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Strengthen Soul",
+        "clazz": "Symbiote",
+        "branch": "Fiery Soul",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 mana",
+        "rng": "50 ft",
+        "duration": "1 minute",
+        "description": [
+            "You strengthen an ally\u2019s conviction and confidence. Target ally in range gains a buff that increases their damage by 50% for the duration. When an ally gains this buff, they may use their reaction to make an autoattack."
+        ],
+        "tags": [
+            "Spell",
+            "buff",
+            "increase damage"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Empower Soul",
+        "clazz": "Symbiote",
+        "branch": "Fiery Soul",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "20 mana",
+        "rng": "50 ft",
+        "duration": "1 minute",
+        "description": [
+            "You empower an ally\u2019s willpower and forcefulness. Target ally in range gains a buff that causes their attacks to ignore 20% MR and evasion for the duration. You may expend any amount of additional mana when you cast this spell to add to the percentage MR and evasion ignored by twice the amount of additional mana spent."
+        ],
+        "tags": [
+            "Spell",
+            "buff",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Bolster Soul",
+        "clazz": "Symbiote",
+        "branch": "Fiery Soul",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "30 mana",
+        "rng": "50 ft",
+        "duration": "1 minute",
+        "description": [
+            "You bolster an ally\u2019s focus and precision. Target ally in range gains a buff that grants +20% critical strike chance and +100% critical damage modifier for the duration. As a free reaction to attacking an enemy, an ally with this buff may end the buff early to make the triggering attack a critical hit that cannot be reacted to."
+        ],
+        "tags": [
+            "Spell",
+            "buff",
+            "modal",
+            "increase critical strike chance",
+            "increase critical damage modifier"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Strengthen Body",
+        "clazz": "Symbiote",
+        "branch": "Stone Body",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 mana",
+        "rng": "50 ft",
+        "duration": "1 minute",
+        "description": [
+            "You strengthen an ally\u2019s attention and constitution. Target ally in range gains a buff that increases their AC and Evasion by 40% for the duration. You may cast this spell as a reaction for an additional 10 mana."
+        ],
+        "tags": [
+            "Spell",
+            "buff",
+            "increase AC",
+            "increase Evasion",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Empower Body",
+        "clazz": "Symbiote",
+        "branch": "Stone Body",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "20 mana",
+        "rng": "50 ft",
+        "duration": "1 minute",
+        "description": [
+            "You suffuse an ally\u2019s body with protective magic. Target ally in range gains a buff that grants +20% general MR and +20% MR for an element of your choice for the duration. You may cast this spell as a reaction for an additional 10 mana."
+        ],
+        "tags": [
+            "Spell",
+            "buff",
+            "defensive",
+            "increase MR",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Bolster Body",
+        "clazz": "Symbiote",
+        "branch": "Stone Body",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "30 mana",
+        "rng": "50 ft",
+        "duration": "1 minute",
+        "description": [
+            "You bolster an ally\u2019s natural defenses against conditions. Target ally in range gains a buff that grants +20% general CR and +20% CR for a condition of your choice for the duration. You may cast this spell as a reaction for an additional 10 mana."
+        ],
+        "tags": [
+            "Spell",
+            "buff",
+            "defensive",
+            "increase CR",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Strengthen Mind",
+        "clazz": "Symbiote",
+        "branch": "Fluid Mind",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 mana",
+        "rng": "50 ft",
+        "duration": "1 hour",
+        "description": [
+            "You strengthen an ally\u2019s instincts and proficiency. Target ally in range gains a buff that grants +30 to all skill checks for the duration. The target may consume 10 minutes of this buff\u2019s duration to reroll a skill check and take the new result while this buff is active."
+        ],
+        "tags": [
+            "Spell",
+            "buff",
+            "skill boost"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Power Spike",
+        "clazz": "Symbiote",
+        "branch": "Fluid Mind",
+        "tier": 2,
+        "action": "1 Minor Action",
+        "cost": "15 mana",
+        "rng": "50 ft",
+        "duration": "Instant",
+        "description": [
+            "You empower a buff effect at the cost of its duration. Target buff effect in range that you originally granted has its effectiveness increased by 50% and its current duration cut in half (always rounded down to the nearest 10 second, 10 minute, or 6 hour interval as applicable for minute, hour, and day long buffs)."
+        ],
+        "tags": [
+            "Spell",
+            "utility"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Bolster Speed",
+        "clazz": "Symbiote",
+        "branch": "Fluid Mind",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "30 mana",
+        "rng": "50 ft",
+        "duration": "1 minute",
+        "description": [
+            "You bolster an ally\u2019s quickness and endurance. Target ally in range gains a buff that grants +30 move speed for the duration. The target may consume 10 seconds of this buff\u2019s duration to dash 30 ft in any direction as a minor action or reaction."
+        ],
+        "tags": [
+            "Spell",
+            "buff",
+            "increase speed"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Magic Dart",
+        "clazz": "Arcanist",
+        "branch": "Zapping",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 mana",
+        "rng": "70 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire bolts of pure magic at one or more enemies. Create 3 magic darts of any elements and divide them as you choose amongst 1, 2, or 3 enemies. Each dart deals d12 magic damage of its chosen element."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "destruction",
+            "single-target",
+            "multi-target",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Magic Bomb",
+        "clazz": "Arcanist",
+        "branch": "Blasting",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "20 mana",
+        "rng": "70 ft",
+        "duration": "Instant",
+        "description": [
+            "You create a small explosive ball of mana. Deal 3d12 magic damage of a chosen element type in one of the following AOE shapes of your choice:",
+            "A 25 ft cube",
+            "A 45 ft cross"
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "destruction",
+            "AOE",
+            "square",
+            "cross",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Magic Primer",
+        "clazz": "Arcanist",
+        "branch": "Arcane",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "15 mana",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You charge mana to augment your next spell with raw power. Your next spell attack\u2019s damage increases by 30% and will be affected by your critical strike chance and critical damage modifier."
+        ],
+        "tags": [
+            "Spell",
+            "empower",
+            "destruction",
+            "self-target",
+            "damage increase"
         ]
     },
     {
@@ -4306,6 +5102,192 @@ let components = [
     },
     {
         "type": "ability",
+        "name": "Pivot and Slash",
+        "clazz": "Warlord",
+        "branch": "Close Range",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You focus on your footwork while you attack, looking for an opening. Deal 4d10 physical damage to a target in range. You may dash up to 5 ft in any direction before or after this attack."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "modal",
+            "dash"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Knock Aside",
+        "clazz": "Warlord",
+        "branch": "Close Range",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You slam your weapon into your opponent to push them. Deal 4d10 physical damage to a target in range, pushing them 10 ft in any direction except towards you."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "forced movement"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Crippling Blow",
+        "clazz": "Warlord",
+        "branch": "Close Range",
+        "tier": 3,
+        "action": "1 Reaction",
+        "cost": "25 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You aim for an enemy\u2019s legs as they attempt to escape. As a reaction to an enemy attempt to move out of your reach, deal 4d10 physical damage to them, reduce their move speed to 0 for the turn, and inflict Crippled."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "Crippled"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Advancing Fire",
+        "clazz": "Warlord",
+        "branch": "Long Range",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 stamina",
+        "rng": "Weapon",
+        "duration": "Instant",
+        "description": [
+            "You fire at an enemy as you approach. Deal 4d10 physical damage to a target in range. You may dash up to 15 ft towards the target if your attack does not miss."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "ranged",
+            "conditional",
+            "modal",
+            "dash"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Hookshot",
+        "clazz": "Warlord",
+        "branch": "Long Range",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "rng": "Weapon",
+        "duration": "Instant",
+        "description": [
+            "You fire at an enemy with a projectile and chain. Deal 4d10 physical damage to a target in range, then pull them 20 ft towards you."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "ranged",
+            "forced movement"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Stopping Shot",
+        "clazz": "Warlord",
+        "branch": "Long Range",
+        "tier": 3,
+        "action": "1 Reaction",
+        "cost": "25 stamina",
+        "rng": "Weapon",
+        "duration": "Instant",
+        "description": [
+            "You shoot an enemy with a heavy projectile designed to stop their progression. As a reaction to an enemy moving into range or moving towards you, deal 4d10 physical damage to that enemy, reduce their move speed to 0 for the turn, and inflict Crippled."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "ranged",
+            "forced movement"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Weapon Swap: Roll",
+        "clazz": "Warlord",
+        "branch": "Weapon Swap",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "10 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You roll while swapping weapons. Dash up to 20 ft in any direction, then you may swap weapons in both hands."
+        ],
+        "tags": [
+            "Modal",
+            "dash"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Weapon Swap: Quaff",
+        "clazz": "Warlord",
+        "branch": "Weapon Swap",
+        "tier": 2,
+        "action": "1 Minor Action",
+        "cost": "15 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You quickly down a potion while swapping weapons. Quaff a potion from your inventory, then you may swap weapons in both hands."
+        ],
+        "tags": [
+            "Modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Weapon Swap: Attack",
+        "clazz": "Warlord",
+        "branch": "Weapon Swap",
+        "tier": 3,
+        "action": "1 Minor Action",
+        "cost": "20 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You swap weapons and make a quick attack. Swap weapons in both hands, then you may make an autoattack with each weapon currently equipped if applicable."
+        ],
+        "tags": [
+            "Modal",
+            "attack",
+            "physical",
+            "melee",
+            "ranged",
+            "single-target"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Vanish",
         "clazz": "Assassin",
         "branch": "Skulk",
@@ -4400,8 +5382,7 @@ let components = [
         "tags": [
             "self-target",
             "buff",
-            "stat improve",
-            "critical"
+            "improve critical strike chance"
         ]
     },
     {
@@ -4420,7 +5401,7 @@ let components = [
         "tags": [
             "self-target",
             "buff",
-            "damage improve"
+            "improve damage dice"
         ]
     },
     {
@@ -4548,6 +5529,73 @@ let components = [
             "multi-target",
             "modal",
             "Lethal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Crossguard Guillotine",
+        "clazz": "Sentinel",
+        "branch": "Dauntless",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You swing your bladed shields in an X shaped pattern. Deal 4d10 physical damage to a target in range. This attack can block all incoming attacks that it reacts to, and if this attack combos with a dash, the block will also block any attacks along the path of your dash as well as at the final destination. If you are dual wielding shields, you may expend any number of Shield stacks; this attack deals an additional Xd10 physical damage, where X is the number of Shield stacks spent, and also hits enemies diagonally to your target."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "multi-target",
+            "conditional",
+            "block",
+            "shield",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Parallel Shields",
+        "clazz": "Sentinel",
+        "branch": "Stalwart",
+        "tier": 1,
+        "action": "1 Reaction",
+        "cost": "20 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You manipulate two shields to maximize coverage or layer your defenses. For each shield currently equipped, block an attack on yourself or on an ally in an adjacent space. If this ability combos with a dash, you can split up the two blocks to occur at two different points along the dash.",
+            "Alternatively, you may expend a Shield stack to layer the shields atop each other, blocking a single attack on yourself. This block is effective even against attacks that normally cannot be blocked, and an attack blocked this way cannot penetrate AC."
+        ],
+        "tags": [
+            "Block",
+            "self-target",
+            "ally-target",
+            "conditional",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Chain Rush",
+        "clazz": "Sentinel",
+        "branch": "Tenacious",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "15 stamina",
+        "rng": "30 ft",
+        "duration": "Instant",
+        "description": [
+            "You toss your shield and pull yourself to a new location with the chains. Toss your shield to a target space in range; if the space is occupied, push the entity in that space 5 ft away from you. If you are dual wielding shields, drop your other shield in your current space, then dash along your chain to the target space and pick up the shield there. As long as you do not use the shield at your original location for another action, you may dash along the chain back to that shield as a free reaction, picking the shield back up."
+        ],
+        "tags": [
+            "Dash",
+            "conditional",
+            "modal",
+            "shield"
         ]
     },
     {
@@ -4850,6 +5898,33 @@ let components = [
     },
     {
         "type": "ability",
+        "name": "Storm Shot",
+        "clazz": "Air Duelist",
+        "branch": "Dueling",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "30 stamina",
+        "rng": "150 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire a rain of arrows from the skies. Deal 6d8 physical damage to all enemies in a 25 ft square centered on a space in range, Crippling them for 1 minute. Flying enemies take 100% increased damage from this ability, cannot evade this attack, and are additionally Knocked Prone."
+        ],
+        "tags": [
+            "Attack",
+            "ranged",
+            "physical",
+            "bow",
+            "AOE",
+            "square",
+            "condition",
+            "Cripple",
+            "conditional",
+            "no-miss",
+            "Knock Prone"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Wind Strike",
         "clazz": "Air Duelist",
         "branch": "Casting",
@@ -4901,6 +5976,31 @@ let components = [
     },
     {
         "type": "ability",
+        "name": "Harassing Whirlwind",
+        "clazz": "Air Duelist",
+        "branch": "Casting",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 mana",
+        "rng": "150 ft",
+        "duration": "1 minute",
+        "description": [
+            "You create a whirlwind around a target that constantly damages and pushes them. Deal 4d8 air magic damage to a target in range. While concentrating on this spell, for the spell\u2019s duration, the target takes 4d8 air magic damage and is pushed 20 ft in a direction of your choice at the beginning of each turn."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "ranged",
+            "air",
+            "destruction",
+            "control",
+            "conjuration",
+            "forced movement",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Mistral Bow",
         "clazz": "Air Duelist",
         "branch": "Buffing",
@@ -4943,6 +6043,31 @@ let components = [
             "on-hit",
             "bow",
             ""
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Bow of Hurricanes",
+        "clazz": "Air Duelist",
+        "branch": "Buffing",
+        "tier": 3,
+        "action": "1 Minor Action",
+        "cost": "30 mana",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "Your bow becomes a thick arc of air magic. For the spell\u2019s duration, all damage that you would deal with bow attacks have their damage converted to air magic damage. While this buff is active, your bow attacks using special ammunition have 50% increased range."
+        ],
+        "tags": [
+            "Spell",
+            "air",
+            "buff",
+            "self-target",
+            "on-hit",
+            "bow",
+            "damage convert",
+            "increase range",
+            "conditional"
         ]
     },
     {
@@ -5049,7 +6174,8 @@ let components = [
             "Buff",
             "self-target",
             "conditional",
-            "ranged"
+            "ranged",
+            "bow"
         ]
     },
     {
@@ -5072,7 +6198,8 @@ let components = [
             "ignore MR",
             "ignore barriers/walls/blocks",
             "no-miss",
-            "no-react"
+            "no-react",
+            "bow"
         ]
     },
     {
@@ -5094,7 +6221,8 @@ let components = [
             "stat improve",
             "critical",
             "concentration",
-            "repeatable"
+            "repeatable",
+            "bow"
         ]
     },
     {
@@ -5111,7 +6239,8 @@ let components = [
             "You force your senses past their limit. If you have an enemy Spotted, when you cast this ability, you instantly gain max Spotting stacks. After casting this ability, you lose the benefits of the Spotter passive until your next long rest."
         ],
         "tags": [
-            "Self-target"
+            "Self-target",
+            "bow"
         ]
     },
     {
@@ -5201,6 +6330,68 @@ let components = [
     },
     {
         "type": "ability",
+        "name": "Bodyshot",
+        "clazz": "Rifleman",
+        "branch": "Operation",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 stamina",
+        "rng": "50 ft",
+        "duration": "Instant",
+        "description": [
+            "You aim for center of mass. Fire your currently equipped firearm at an enemy in range, dealing an additional 3d12 physical damage. Your target then chooses to either fall prone or be pushed back 10 ft. If this attack is made with a silver bullet, your target must choose both.",
+            "Secondary Fire: Fire your currently equipped firearm at an enemy in range, dealing an additional 2d12 physical damage. The target is inflicted with 10% physical vulnerability, which can stack up to 5 times. If this attack is made with a silver bullet, your target gains 2 stacks of this vulnerability."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "ranged",
+            "firearm",
+            "vulnerability",
+            "knock prone",
+            "forced movement",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Iron Sights",
+        "clazz": "Rifleman",
+        "branch": "Assembly",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You aim down your iron sights for increased accuracy. Your next firearm attack has +10% critical strike chance; it also has +100% critical damage modifier if it is made with a silver bullet."
+        ],
+        "tags": [
+            "Buff",
+            "conditional",
+            "increase critical"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Quick Reload",
+        "clazz": "Rifleman",
+        "branch": "Maintenance",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "10 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You\u2019ve learned how to quickly load a new clip of ammo. Reload each firearm you have currently equipped. When you do, each firearm you have currently equipped gains a silver bullet in a chamber of your choice."
+        ],
+        "tags": [
+            "Reload"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Belly Dance",
         "clazz": "Dancer",
         "branch": "Sway",
@@ -5245,6 +6436,28 @@ let components = [
     },
     {
         "type": "ability",
+        "name": "Jive",
+        "clazz": "Dancer",
+        "branch": "Sway",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "rng": "Touch",
+        "duration": "Instant",
+        "description": [
+            "You confound enemies with swirling limb and step. Inflict Confusion on an enemy in range. While an enemy is Confused in this manner, you may choose a specific direction when they move or attack, and the chosen direction becomes 3 times as likely to be selected when they roll. This ability costs 20 less stamina if your last Move Action included a Step 2 dance ability."
+        ],
+        "tags": [
+            "Attack",
+            "condition",
+            "Confuse",
+            "modal",
+            "dance",
+            "Step 3"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Tango",
         "clazz": "Dancer",
         "branch": "Strut",
@@ -5279,10 +6492,30 @@ let components = [
         ],
         "tags": [
             "Cleanse",
-            "push",
+            "heal",
             "conditional",
             "dance",
             "Step 3"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Boogie",
+        "clazz": "Dancer",
+        "branch": "Strut",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "rng": "Touch",
+        "duration": "Instant",
+        "description": [
+            "You dance with an ally, energizing them. Dash up to your move speed, moving an ally in range with you (if you cast this ability as a Move Action, your movement becomes a dash instead). That ally gains an additional Major Action during their next turn. This ability costs 20 less stamina if your last Move Action included a Step 3 ability."
+        ],
+        "tags": [
+            "Dash",
+            "conditional",
+            "dance",
+            "Step 1"
         ]
     },
     {
@@ -5325,6 +6558,27 @@ let components = [
             "conditional",
             "dance",
             "Step 1"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Ballet",
+        "clazz": "Dancer",
+        "branch": "Shimmy",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "Your mystical dance seems graceful on the outside, yet requires incredible athletics. Gain +10% general CR and +10% CR of a type of your choice. This buff can stack up to 2 times. This ability costs 20 less stamina if your last Move Action included a Step 1 dance ability."
+        ],
+        "tags": [
+            "Buff",
+            "gain CR",
+            "conditional",
+            "dance",
+            "Step 2"
         ]
     },
     {
@@ -5606,6 +6860,353 @@ let components = [
     },
     {
         "type": "ability",
+        "name": "Slice and Dice",
+        "clazz": "Champion",
+        "branch": "Type A Weapons",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 stamina",
+        "rng": "Weapon",
+        "duration": "Instant",
+        "description": [
+            "You hack at an enemy with your weapon. Deal 5d10 physical damage to a target in range. You may reroll any damage dice rolled with this attack, taking the second result. If this attack is made with an axe or sword, take the higher result instead."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "ranged",
+            "axe",
+            "blunt",
+            "longblade",
+            "polearm",
+            "shield",
+            "heavy throwing weapon",
+            "modal",
+            "conditional",
+            "reroll"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Skull Bash",
+        "clazz": "Champion",
+        "branch": "Type A Weapons",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 stamina",
+        "rng": "Weapon",
+        "duration": "Instant",
+        "description": [
+            "You bash an enemy\u2019s head in with your weapon. Deal 6d10 physical damage to a target in range and Stun them until the end of their next turn. If this attack is made with a blunt weapon or shield, it also hits enemies adjacent to your target."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "ranged",
+            "axe",
+            "blunt",
+            "longblade",
+            "polearm",
+            "shield",
+            "heavy throwing weapon",
+            "condition",
+            "Stun",
+            "conditional",
+            "multi-target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Piercing Blow",
+        "clazz": "Champion",
+        "branch": "Type A Weapons",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "35 stamina",
+        "rng": "Weapon",
+        "duration": "Instant",
+        "description": [
+            "You skewer your enemy. Deal 7d10 physical damage to a target in range. This attack pierces your target to hit an enemy behind them that is within 15 ft of the initial target for half damage. If this attack is made with a polearm or heavy throwing weapon, the second hit deals full damage instead."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "multi-target",
+            "melee",
+            "ranged",
+            "axe",
+            "blunt",
+            "longblade",
+            "polearm",
+            "shield",
+            "heavy throwing weapon",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Arsenal of Power",
+        "clazz": "Champion",
+        "branch": "Type A Weapons",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "80 stamina",
+        "rng": "Weapon",
+        "duration": "Instant",
+        "description": [
+            "You use every heavy weapon available to you to pound an enemy into submission. Swap weapons in both hands, then choose one of the following:",
+            "With an axe equipped, deal 8d10 physical damage to a target in range, inflicting half your damage dealt as Bleed for 1 minute",
+            "With a blunt weapon equipped, deal 8d10 physical damage to a target in range, inflicting a condition that decreases the target\u2019s move speed by half your damage dealt for 1 minute",
+            "With a longblade equipped, deal 8d10 physical damage to a target in range, inflicting physical vulnerability equal to half your damage dealt for 1 minute (append a \u201c%\u201d to the value)",
+            "With a polearm equipped, deal 8d10 physical damage to a target in range, inflicting AC loss equal to half your damage dealt for 1 minute",
+            "With a shield equipped, deal 8d10 physical damage to a target in range, gaining AC equal to half you damage dealt for 1 minute",
+            "With a heavy throwing weapon equipped, deal 8d10 physical damage to a target in range, and this attack does not consume special ammunition (unless it is special ammunition granted by a class ability)",
+            "Then, you may concentrate on this ability. If you do, you may repeat it as a free action at no cost once per turn, choosing a new selection from the list above. Concentration ends when you exhaust the list."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "ranged",
+            "axe",
+            "blunt",
+            "longblade",
+            "polearm",
+            "shield",
+            "heavy throwing weapon",
+            "conditional",
+            "modal",
+            "concentration",
+            "condition",
+            "Bleed",
+            "Vulnerability"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Precision Strike",
+        "clazz": "Champion",
+        "branch": "Type B Weapons",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 stamina",
+        "rng": "Weapon",
+        "duration": "Instant",
+        "description": [
+            "You carefully strike for a precise point to pass through an enemy\u2019s armor. Deal 5d8 physical damage to a target in range. This attack cannot miss, cannot be blocked, ignores AC, and ignores magical defenses. If this attack is made with a fine weapon or unarmed combat, you may dash up to 20 ft before or after the attack."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "ranged",
+            "bow",
+            "crossbow",
+            "bullet",
+            "fine weapon",
+            "unarmed",
+            "light throwing weapon",
+            "conditional",
+            "modal",
+            "dash"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Fan The Hammer",
+        "clazz": "Champion",
+        "branch": "Type B Weapons",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 stamina",
+        "rng": "Weapon",
+        "duration": "Instant",
+        "description": [
+            "You fire multiple attacks quickly at a single target. Deal 2d8 physical damage to a target in range, then repeat this for 3 more hits against the same target. This attack cannot be reacted to. If this attack is made with a crossbow or bullet weapon, this ability gains, \u201cOn Hit: Push target 10 ft.\u201d"
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "ranged",
+            "bow",
+            "crossbow",
+            "bullet",
+            "fine weapon",
+            "unarmed",
+            "light throwing weapon",
+            "multi-hit",
+            "conditional",
+            "forced movement"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Painful Blow",
+        "clazz": "Champion",
+        "branch": "Type B Weapons",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "35 stamina",
+        "rng": "Weapon",
+        "duration": "Instant",
+        "description": [
+            "You attack an enemy\u2019s weak points, dealing immense pain. Deal 6d8 physical damage to a target in range and inflict them with a 2d8 Bleed. If this attack is made with a bow or light throwing weapon, inflict the target with 50% physical vulnerability as well."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "ranged",
+            "bow",
+            "crossbow",
+            "bullet",
+            "fine weapon",
+            "unarmed",
+            "light throwing weapon",
+            "conditional",
+            "Bleed",
+            "Vulnerability",
+            "condition"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Arsenal of Finesse",
+        "clazz": "Champion",
+        "branch": "Type B Weapons",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "80 stamina",
+        "rng": "Weapon",
+        "duration": "Instant",
+        "description": [
+            "You attack quickly with all of your fast weapons. Swap weapons in both hands, then choose one of the following:",
+            "With a bow equipped, deal 7d10 physical damage to a target in range, inflicting evasion loss equal to half the damage dealt (append a \u201c%\u201d to the value)",
+            "With a crossbow equipped, deal 7d10 physical damage to a target in range, pushing the target back a distance equal to half your damage dealt in feet",
+            "With a bullet weapon equipped, deal 7d10 physical damage to a target in range; this attack has a chance of stunning equal to half your damage dealt as a percentage",
+            "With a fine weapon equipped, deal 7d10 physical damage to a target in range, then dash up to half your damage dealt in any direction",
+            "With unarmed combat, deal 7d10 physical damage to a target in range; this attack has a chance to combo equal to 10% of your damage dealt as a percentage",
+            "With a light throwing weapon equipped, deal 7d10 physical damage to a target in range, and this attack does not consume special ammunition (unless it is special ammunition granted by a class ability)",
+            "Then, you may concentrate on this ability. If you do, you may repeat it as a free action at no cost once per turn, choosing a new selection from the list above. Concentration ends when you exhaust the list."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "ranged",
+            "bow",
+            "crossbow",
+            "bullet",
+            "fine weapon",
+            "unarmed",
+            "light throwing weapon",
+            "conditional",
+            "modal",
+            "combo",
+            "dash",
+            "condition",
+            "Stun",
+            "forced movement",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Disarming Blow",
+        "clazz": "Champion",
+        "branch": "Type C Weapons",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 stamina",
+        "rng": "Weapon",
+        "duration": "Instant",
+        "description": [
+            "You slam your weapon home while also disarming your opponent. Deal 5d6 physical damage to a target in range. That target is disarmed and you may choose to kick the dropped item 30 ft in any direction. If this attack is made with an improvised weapon, you may pick up whatever the target dropped instead and make an autoattack with it if it is a weapon."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "shortblade",
+            "improvised weapon",
+            "conditional",
+            "modal",
+            "disarm"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Throat Slitter",
+        "clazz": "Champion",
+        "branch": "Type C Weapons",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 stamina",
+        "rng": "Weapon",
+        "duration": "Instant",
+        "description": [
+            "You aim for an enemy\u2019s weak points. Deal 6d6 physical damage to a target in range. This attack has your choice of either 15% critical strike chance or 150% critical damage modifier. If this attack is made with a shortblade, you may choose both."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "melee",
+            "shortblade",
+            "improvised weapon",
+            "conditional",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Parry and Draw",
+        "clazz": "Champion",
+        "branch": "Type C Weapons",
+        "tier": 3,
+        "action": "1 Reaction",
+        "cost": "30 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You ward off attacks as you switch weapons. As a reaction to an attack, block the attack fully with your currently equipped weapon or shield. Then, you may swap weapons in both hands."
+        ],
+        "tags": [
+            "Block",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Weapon Juggling",
+        "clazz": "Champion",
+        "branch": "Type C Weapons",
+        "tier": 4,
+        "action": "1 Minor Action",
+        "cost": "50 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You\u2019ve mastered the art of swapping weapons seamlessly while attacking with them. Concentrate on this ability; while you do, the weapon swap action is a free action, and Master of Arms can trigger up to twice per turn instead of once per turn. If you would swap to a weapon which would trigger a \u201cdraw weapon\u201d trigger, ignore the trigger while concentrating on this ability."
+        ],
+        "tags": [
+            "Concentration"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Cloak and Dagger",
         "clazz": "Thief",
         "branch": "Predator",
@@ -5622,7 +7223,8 @@ let components = [
             "physical",
             "melee",
             "conditional",
-            "stance"
+            "stance",
+            "single-target"
         ]
     },
     {
@@ -5646,7 +7248,55 @@ let components = [
             "stance",
             "Hidden",
             "buff",
-            "modal"
+            "modal",
+            "single-target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Frenetic Assault",
+        "clazz": "Thief",
+        "branch": "Predator",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You quickly stab with your dagger multiple times. Deal d4 physical damage to a target in range, repeated 3 times. If you are in Hit Stance, these hits have, \u201cOn Hit: Target loses your choice of 5 AC, 10% evasion, or 10% MR.\u201d If you are in Run Stance, you may dash up to 10 ft before each hit, and you may choose new targets for each hit."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "melee",
+            "conditional",
+            "stance",
+            "dash",
+            "single-target",
+            "multi-target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Unavoidable Casualties",
+        "clazz": "Thief",
+        "branch": "Predator",
+        "tier": 4,
+        "action": "1 Reaction",
+        "cost": "80 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You cut down the unsuspecting person who just happens to be in your way. As a reaction to stealing from an enemy, moving out of melee range of an enemy, or being attacked by an enemy in range, deal 20d4 physical damage to that enemy. If you are in Hit Stance, this attack gains 5% Lethality for every damage die that rolls its maximum. If you are in Run Stance, gain 5 stamina for every damage die that rolls its maximum. You may not attack an enemy who was hit by this ability during your next turn."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "melee",
+            "conditional",
+            "stance",
+            "Lethality",
+            "recover stamina"
         ]
     },
     {
@@ -5696,6 +7346,50 @@ let components = [
     },
     {
         "type": "ability",
+        "name": "Purloin Powers",
+        "clazz": "Thief",
+        "branch": "Pilfer",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "50 stamina",
+        "rng": "30 ft",
+        "duration": "Instant",
+        "description": [
+            "Your deft stealing skills allow you to steal an enemy\u2019s magic effects. Choose one:",
+            "Strip all buffs from all enemy targets in range, then gain those buffs yourself, or distribute them as you choose amongst allies within 30 ft.",
+            "If you are in Hit Stance, cast this ability as a reaction to a spell that is cast within range. Counter that spell, then you may copy and cast it yourself, choosing new targets and paying stamina instead of mana."
+        ],
+        "tags": [
+            "Buff strip",
+            "buff",
+            "modal",
+            "conditional",
+            "stance",
+            "counterspell"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Grand Thievery",
+        "clazz": "Thief",
+        "branch": "Pilfer",
+        "tier": 4,
+        "action": "1 Minor Action",
+        "cost": "60 stamina",
+        "rng": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You dash forward with the intent of stealing everything you can get your hands on. Dash up to 30 ft in any direction. Then, steal a random item or up to 100 gp from the inventory of a target in range. If you are in Hit Stance, steal twice instead. Then make a Steal check with a DC of 10 + X where X is 10 times the number of times you have stolen with this ability. If your Steal check succeeds, repeat this ability as a free action with no cost."
+        ],
+        "tags": [
+            "Conditional",
+            "random",
+            "stance",
+            "repeatable"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Infiltrate",
         "clazz": "Thief",
         "branch": "Prowl",
@@ -5733,6 +7427,387 @@ let components = [
             "conditional",
             "stance",
             "Hidden"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Smokescreen",
+        "clazz": "Thief",
+        "branch": "Prowl",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "60 stamina",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You drop a smoke bomb and disappear. Drop a 35 ft square of thick smoke that enemies cannot see through. You and your allies remain Hidden while in this smoke, and can see through it. This smoke suppresses the field effects of your enemies that overlap with it, and enemies inside the smoke have -50% evasion and -50% MR. This smoke can be blown away by a strong wind. If you are in Run Stance, you may cast this ability as a reaction; if you do, the smoke blocks AOE attacks and effects within its spaces until the beginning of your next turn."
+        ],
+        "tags": [
+            "Hidden",
+            "conditional",
+            "stance",
+            "modal",
+            "block"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Phantom Thief",
+        "clazz": "Thief",
+        "branch": "Prowl",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "100 stamina",
+        "rng": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You embody the legend of the master thief that you are, a spirit of freedom. Gain a buff that grants +100% Evasion, +100% crowd control CR, 1 additional Minor Action per turn, and 1 additional reaction per round, for the duration. If you enter Run stance while this buff is active, gain an additional Major Action."
+        ],
+        "tags": [
+            "Buff",
+            "conditional",
+            "stance",
+            "gain actions",
+            "gain evasion",
+            "gain CR"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Krystalline Basileia",
+        "clazz": "Evangelist",
+        "branch": "Gelidus Ouranos",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "40 mana",
+        "rng": "200 ft",
+        "duration": "Instant",
+        "description": [
+            "You cause an explosion of ice shards and dark energy. Deal 6d8 ice magic damage and 6d8 dark magic damage to all enemies in a 65 ft square centered on a space in range, then choose two additional effects from the following list:",
+            "Inflict Frozen for 1 minute",
+            "Inflict Slowed for 1 minute",
+            "Inflict Blinded for 1 minute",
+            "Inflict 2 curses",
+            "Instead of choosing two effects from the above list, you may instead have this spell deal an additional 4d8 magic damage of either ice or dark.",
+            "If you absorb this spell with Magia Erebea, you may have it be cast when you release Magia Erebea as long as it was absorbed for at least 2 turns. If you do release the spell in this way, you may select 3 conditions from the above list, or have the spell deal an additional 6d8 magic damage of either ice or dark."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "destruction",
+            "AOE",
+            "square",
+            "condition",
+            "Frozen",
+            "Slowed",
+            "Blinded",
+            "curse",
+            "modal",
+            "conditional",
+            "dark",
+            "ice"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Iaculatio Orcus",
+        "clazz": "Evangelist",
+        "branch": "Gelidus Ouranos",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "60 mana",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You cause spears of ice and darkness to fire from your hands in a wide arc. Deal 16d8 magic damage to all enemies in a 60 ft cone in front of you; the type of magic damage dealt and additional effects are dependant on each enemy\u2019s distance from you as follows:",
+            "Within 10 ft: 4d8 ice magic damage and 12d8 dark magic damage, and the attack has 30% Lethality",
+            "11 to 20 ft: 6d8 ice magic damage and 10d8 dark magic damage, and inflict a 30% Weaken",
+            "21 to 40 ft: 8d8 ice magic damage and 8d8 dark magic damage",
+            "41 to 50 ft: 10d8 ice magic damage and 6d8 dark magic damage, and inflict Slowed",
+            "51 to 60 ft: 12d8 ice magic damage and 4d8 dark magic damage, and inflict Frozen",
+            "If you absorb this spell with Magia Erebea, you may have it be cast when you release Magia Erebea as long as it was absorbed for at least 2 turns. If you do release the spell in this way, the cone\u2019s range extends to 120 ft, and the above list\u2019s effect ranges change to within 20 ft, 21 to 40, 41 to 80, 81 to 100, and 101 to 120 respectively."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "destruction",
+            "dark",
+            "ice",
+            "AOE",
+            "cone",
+            "conditional",
+            "condition",
+            "Lethality",
+            "Weaken",
+            "Slow",
+            "Frozen",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Frigerans Barathrum",
+        "clazz": "Evangelist",
+        "branch": "Nivis Obscurans",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "50 mana",
+        "rng": "200 ft",
+        "duration": "Endless",
+        "description": [
+            "You overload the souls of your enemies with corrupting and chilling energy. All enemies in a 65 ft square centered on a space in range gain 2 of the following conditions of your choice:",
+            "Each turn, their move speed and dash/teleport distance decreases by 10.",
+            "Using a dash ability, teleport ability, or Move Action causes their move speed and dash/teleport distance to decrease by 10 after their movement ends.",
+            "Each turn, they gain a curse.",
+            "Making an attack causes them to gain a curse after their attack concludes.",
+            "If you cast this spell with Magia Erebea active, you may select all 4 options from the above list."
+        ],
+        "tags": [
+            "Spell",
+            "dark",
+            "ice",
+            "condition",
+            "control",
+            "Curse",
+            "AOE",
+            "square",
+            "modal",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Anthos Pagetou Khilion Eton",
+        "clazz": "Evangelist",
+        "branch": "Nivis Obscurans",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "70 mana",
+        "rng": "200 ft",
+        "duration": "30 seconds",
+        "description": [
+            "You pull enemies together to set up for later spell attacks. Create a Flower on a space in range; it is immune to damage and conditions and resists all forced movement, but can be dispelled, and it lasts for 30 seconds. You may only have one Flower active at one time. If a damaging AOE spell you cast also hits the Flower, the damage for that spell is doubled and the Flower is dispelled. Enemies within 1000 ft of it roll a d6 at the beginning of their turns, causing the following effects:",
+            "On a 1 or 2, the enemy gains a curse and is inflicted with Slowed and Confused",
+            "On a 3 or 4, the enemy gains 2 curses, and may not move away from the Flower in any way",
+            "On a 5 or 6, the enemy gains 3 curses, and must use its Move Action to move toward the Flower up to its move speed, even if already next to the Flower. The enemy loses any excess move speed that turn",
+            "If you cast this spell with Magia Erebea active, enemies within 1000 ft of the Flower will roll the d6 twice, taking the higher result each time."
+        ],
+        "tags": [
+            "Spell",
+            "dark",
+            "ice",
+            "condition",
+            "control",
+            "Curse",
+            "AOE",
+            "field",
+            "totem",
+            "conditional",
+            "Confused"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Actus Noctis Erebeae",
+        "clazz": "Evangelist",
+        "branch": "Magia Ensis",
+        "tier": 1,
+        "action": "Free Reaction",
+        "cost": "X mana",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You exploit your enhanced body\u2019s new affinity for magic to store spells for quicker casting. You may only cast this ability while under the effects of Magia Erebea. When you cast a spell, you may pay an additional X mana, where X is the spell\u2019s mana cost. If you do, you absorb the spell being cast instead of releasing it. While a spell is absorbed in this manner, you may cast it as a Minor Action or reaction at half its mana cost. You may have multiple spells absorbed simultaneously in this manner. When Magia Erebea is released, all absorbed spells are dispelled."
+        ],
+        "tags": [
+            "Conditional",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Supplementum Pro Armationem",
+        "clazz": "Evangelist",
+        "branch": "Magia Ensis",
+        "tier": 2,
+        "action": "Free Action",
+        "cost": "None",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You reconfigure the mana which flows wildly through you. You may only cast this ability while under the effects of Magia Erebea. Magia Erebea gains the following effects until you release it:",
+            "Maximum health loss per turn increases to 20",
+            "Your unarmed and weapon attacks gain the absorbed spell\u2019s damage dice and conditions as on-hit damage and conditions, in a similar manner as your spells do",
+            "Your move speed doubles and your Move Actions are teleports",
+            "Your single-target attacks ignore AC, MR, and Evasion"
+        ],
+        "tags": [
+            "Conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Demonbane Blast",
+        "clazz": "Demon Hunter",
+        "branch": "Slayer",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "30 stamina",
+        "rng": "60 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire projectiles primed with a blessing to exploit a demon\u2019s magical circuit and otherworldly energy. Deal 10d8 physical damage to a target in range; that target then loses 10% of their mana and stamina and loses health equal to the amount of mana and stamina they lost (or would lose if they do not have the stamina or mana to lose). If this attack is made against an entity of demonic origin, it deals double damage and the target loses twice as much health after their mana and stamina loss. You may cast this ability as a free action if you expend 2 Hunter stacks; if you do, this attack ignores AC, cannot be blocked, and bypasses magical barriers."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "single-target",
+            "bow",
+            "crossbow",
+            "firearm",
+            "no block",
+            "conditional",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Consecrated Carnage",
+        "clazz": "Demon Hunter",
+        "branch": "Slayer",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "40 stamina",
+        "rng": "30 ft",
+        "duration": "Instant",
+        "description": [
+            "You dive into danger and fire wildly in a circle, forcing hordes of demons back and to their knees. Dash up to 40 ft in any direction, then deal 8d8 physical damage to all targets in range, pushing them back until they are outside the range, then inflicting Crippled and a 30% Weaken. This attack has 20% increased damage for every enemy within range. Each enemy of demonic origin adds 40% increased damage instead, and is inflicted with a 50% Weaken instead. You may cast this ability as a free action if you expend 2 Hunter stacks; if you do, this attack ignores AC, cannot be blocked, and bypasses magical barriers."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "multi-target",
+            "condition",
+            "Cripple",
+            "Weaken",
+            "conditional",
+            "modal",
+            "no-block",
+            "bow",
+            "crossbow",
+            "firearm"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Banishing Bolt",
+        "clazz": "Demon Hunter",
+        "branch": "Exorcism",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "40 mana",
+        "rng": "60 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire a bolt of magical energy that tears away a demon\u2019s hold on the physical realm. Deal 6d8 lightning magic damage and 5d10 light magic damage to all enemies in a 35 ft square, centered on a space in range; this attack deals double damage and has 30% Lethality against entities of demonic origin. Allies, including yourself, that are caught in the blast will gain the lightning damage rolled as on-hit damage for their next attack and heal for the light damage rolled. This attack leaves behind a field of banishment; within this field, attacks against entities of demonic origin have 30% Lethality and all enemies have -20% MR and CR. The field lasts for 1 minute, but you may expend it as a free action, cleansing 1 condition on every ally, including yourself, that was within the field. You may cast this ability as a free action if you expend 2 Hunter stacks; if you do, this attack ignores MR, cannot be blocked, and bypasses magical barriers."
+        ],
+        "tags": [
+            "Spell",
+            "light",
+            "lightning",
+            "attack",
+            "heal",
+            "on-hit",
+            "cleanse",
+            "decrease MR",
+            "decrease CR",
+            "field",
+            "Lethality",
+            "destruction",
+            "restoration",
+            "conditional",
+            "modal",
+            "no block",
+            "empower"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Lifesteal Elegy",
+        "clazz": "Demon Hunter",
+        "branch": "Exorcism",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "50 mana",
+        "rng": "30 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire waves of magical energy to sap strength from demons. Choose one:",
+            "Deal 10d8 lightning magic damage to all enemies in range. Your next attack is empowered to deal additional light magic damage equal to half the damage dealt by this spell. If this attack hits at least 5 enemies, it also inflicts 2 stacks of Paralysis.",
+            "Deal 9d10 light magic damage to all enemies in range. Heal for half the damage dealt. If this attack hits at least 5 enemies, it also cleanses 3 conditions.",
+            "Entities of demonic origin take double damage from this spell and count as 3 enemies each. You may cast this ability as a free action if you expend 2 Hunter stacks; if you do, this attack ignores MR, cannot be blocked, and bypasses magical barriers."
+        ],
+        "tags": [
+            "Spell",
+            "light",
+            "lightning",
+            "attack",
+            "AOE",
+            "square",
+            "heal",
+            "condition",
+            "Paralysis",
+            "destruction",
+            "restoration",
+            "cleanse",
+            "conditional",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Hunter\u2019s Guile",
+        "clazz": "Demon Hunter",
+        "branch": "Humanity",
+        "tier": 1,
+        "action": "1 Reaction",
+        "cost": "30 stamina",
+        "rng": "Self",
+        "duration": "Instant",
+        "description": [
+            "You work tirelessly to defend others. As a reaction to an attack on you or an ally, dash up to 30 ft in any direction, blocking all incoming damage and effects in the spaces you travel through (including your original position and your destination) until the end of the turn. If this ability is used to block an attack from an entity of demonic origin, it redirects attacks with doubled damage back at the attacker instead of blocking. After casting this ability, your next attack gains 20% increased damage, which can stack up to 5 times. When you cast this ability, you may expend 1 Hunter stack; if you do, extend the range of the dash to 50 ft."
+        ],
+        "tags": [
+            "Dash",
+            "block",
+            "AOE",
+            "conditional",
+            "modal",
+            "redirect",
+            "empower"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Essence Scatter",
+        "clazz": "Demon Hunter",
+        "branch": "Humanity",
+        "tier": 2,
+        "action": "1 Reaction",
+        "cost": "40 mana",
+        "rng": "100 ft",
+        "duration": "Instant",
+        "description": [
+            "You counter a demonic spell. As a reaction to a target in range casting a spell, you may counter that spell and mark that target until the end of your next turn. A target marked this way takes 50% increased damage from your damaging spells and has -20% CR against your condition-inflicting spells. If this spell is used to counter a spell that would summon a demon, your reaction refreshes. If this spell is used to counter a spell cast by an entity of demonic origin, you are refunded half this spell\u2019s mana cost."
+        ],
+        "tags": [
+            "Spell",
+            "light",
+            "lightning",
+            "counterspell",
+            "defensive",
+            "mark",
+            "conditional"
         ]
     }
 ];
@@ -5804,10 +7879,7 @@ class Roll {
         this.damages = {};
         this.multipliers = {};
         this.effects = [];
-    }
-
-    is_crit() {
-        return true;
+        this.crit = false;
     }
 
     add_damage(value, type) {
@@ -5819,31 +7891,66 @@ class Roll {
     }
 
     // TODO need the origin?
-    add_multiplier(value, type) {
-        if (type in this.multipliers) {
-            this.multipliers[type] = this.multipliers[type] + '*' + value;
+    add_multiplier(value, type, source) {
+        if (!(type in this.multipliers)) {
+            this.multipliers[type] = {};
+        }
+
+        if (!(source in this.multipliers[type])) {
+            this.multipliers[type][source] = '%s'.format(value);
         } else {
-            this.multipliers[type] = value;
+            this.multipliers[type][source] = '%s+%s'.format(this.multipliers[type][source], value);
         }
     }
 
     add_effect(effect) {
-        this.effects.append(effect);
+        this.effects.push(effect);
+    }
+
+    get_multiplier_string(type) {
+        const self = this;
+        let multiplier_string = '1';
+
+        let per_source_multipliers = {};
+        if (type in self.multipliers) {
+            Object.keys(self.multipliers[type]).forEach(function (source) {
+                if (!(source in per_source_multipliers)) {
+                    per_source_multipliers[source] = [];
+                }
+
+                per_source_multipliers[source].push(self.multipliers[type][source]);
+            });
+        }
+        if ('all' in self.multipliers) {
+            Object.keys(self.multipliers['all']).forEach(function (source) {
+                if (!(source in per_source_multipliers)) {
+                    per_source_multipliers[source] = [];
+                }
+
+                per_source_multipliers[source].push(self.multipliers['all'][source]);
+            });
+        }
+
+        Object.keys(per_source_multipliers).forEach(function (source) {
+            const source_multipliers = '1+' + per_source_multipliers[source].join('+');
+            multiplier_string = multiplier_string + '*(%s)'.format(source_multipliers);
+        });
+
+        return multiplier_string;
     }
 
     roll() {
+        const self = this;
         const rolls = {};
 
-        let self = this;
-        Object.keys(this.damages).forEach(function(type) {
+        Object.keys(self.damages).forEach(function(type) {
             let dmg_str = '(%s)'.format(self.damages[type]);
 
-            if (type in self.multipliers) {
-                dmg_str = '%s*%s'.format(dmg_str, self.multipliers[type]);
-            }
+            dmg_str = '%s*(%s)'.format(dmg_str, self.get_multiplier_string(type));
 
-            if ('all' in self.multipliers) {
-                dmg_str =  '%s*%s'.format(dmg_str, self.multipliers['all']);
+            if (self.crit) {
+                // TODO use the proper crit damage modifier
+                dmg_str = '(%s)*2'.format(dmg_str);
             }
 
             rolls[type] = 'round(%s)'.format(dmg_str);
@@ -5893,13 +8000,35 @@ class Effect {
     }
 }
 
-function light_armor_condition(character) {
-    return character.has_skill_req('Weapons: Bows', 'F');
+function skill_condition(skill, rank) {
+    return function(character) {
+        return character.has_skill_req(skill, rank);
+    };
 }
 
 function stat_effect(stat, mod) {
     return new Effect('stat', function(stat_to_test) {
         return stat_to_test === stat ? mod : 0
+    });
+}
+
+function roll_damage(dmg, type) {
+    return new Effect('roll', function(roll) {
+        roll.add_damage(dmg, type);
+    });
+}
+
+function roll_multiplier(value, type) {
+    return new Effect('roll', function(roll) {
+        roll.add_multiplier(value, type, 'self');
+    })
+}
+
+function crit_effect(effect) {
+    return new Effect('roll', function(roll) {
+        if (roll.crit) {
+            roll.add_effect(effect);
+        }
     });
 }
 
@@ -5911,9 +8040,7 @@ const ITEMS = [
         'Magic',
         '2Hand',
         [
-            function(character) {
-                return character.has_skill_req('Weapons: Bows', 'F');
-            },
+            skill_condition('Weapons: Bows', 'F'),
         ],
         false,
         200,
@@ -5921,11 +8048,7 @@ const ITEMS = [
         [],
         '',
         [
-            new Effect('roll', function(roll) {
-                if (roll.is_crit()) {
-                    return "Stun";
-                }
-            }),
+            crit_effect('Stun'),
         ]
     ),
 
@@ -5935,7 +8058,7 @@ const ITEMS = [
         'Magic',
         '2Hand',
         [
-            light_armor_condition,
+            skill_condition('Weapons: Bows', 'F'),
         ],
         false,
         250,
@@ -5943,9 +8066,7 @@ const ITEMS = [
         [],
         '',
         [
-            new Effect('roll', function(roll) {
-                roll.add_damage('3d10', 'fire');
-            }),
+            roll_damage('3d10', 'fire'),
         ]
     ),
 
@@ -5955,7 +8076,7 @@ const ITEMS = [
         'Magic',
         'head',
         [
-            light_armor_condition,
+            skill_condition('Armor: Light', 'F'),
         ],
         false,
         0,
@@ -5974,7 +8095,7 @@ const ITEMS = [
         'Magic',
         'body',
         [
-            light_armor_condition,
+            skill_condition('Armor: Light', 'F'),
         ],
         false,
         0,
@@ -5993,7 +8114,7 @@ const ITEMS = [
         'Magic',
         'hands',
         [
-            light_armor_condition,
+            skill_condition('Armor: Light', 'F'),
         ],
         false,
         0,
@@ -6012,7 +8133,7 @@ const ITEMS = [
         'Magic',
         'feet',
         [
-            light_armor_condition,
+            skill_condition('Armor: Light', 'F'),
         ],
         false,
         0,
@@ -6056,7 +8177,7 @@ const ITEMS = [
         [
             new Effect('roll', function(roll) {
                 if (roll.character.is_using('longbow') || roll.character.is_using('crossbow')) {
-                    roll.add_multiplier('1.5', 'all');
+                    roll.add_multiplier(0.5, 'physical', 'self');
                 }
             })
         ]
@@ -6084,7 +8205,9 @@ const ITEMS = [
         'accessory',
         'magic',
         'belt',
-        [],
+        [
+            skill_condition('Armor: Light', 'F'),
+        ],
         false,
         0,
         0,
@@ -6094,7 +8217,163 @@ const ITEMS = [
             stat_effect('stamina', 60),
             stat_effect('stamina regeneration', 15),
         ]
-    )
+    ),
+
+    new Item(
+        'Resistant Hat of Dodging',
+        'armor',
+        'magic',
+        'head',
+        [
+            skill_condition('Armor: Light', 'F'),
+        ],
+        false,
+        0,
+        0,
+        [],
+        '',
+        [
+            stat_effect('evasion', 20),
+            stat_effect('magic resist', 10),
+            stat_effect('ac', -10),
+        ]
+    ),
+
+    new Item(
+        "Viper's Vest of Dodging",
+        'armor',
+        'magic',
+        'body',
+        [
+            skill_condition('Armor: Light', 'F'),
+        ],
+        false,
+        0,
+        0,
+        [],
+        '',
+        [
+            stat_effect('evasion', 20),
+            stat_effect('condition resist', 10),
+            stat_effect('ac', -10),
+        ]
+    ),
+
+    new Item(
+        "Viper's Gloves of Evasion",
+        'armor',
+        'magic',
+        'hand',
+        [
+            skill_condition('Armor: Light', 'F'),
+        ],
+        false,
+        0,
+        0,
+        [],
+        '',
+        [
+            stat_effect('evasion', 20),
+            stat_effect('condition resist', 10),
+            stat_effect('ac', -10),
+        ]
+    ),
+
+    new Item(
+        "Mage’s Amulet of Cleansing",
+        'accessory',
+        'magic',
+        'neck',
+        [],
+        false,
+        0,
+        0,
+        ['Expend 30 mana as a Major Action to clease 1 condition on yourself'],
+        '',
+        [
+            stat_effect('mana', 40),
+        ]
+    ),
+
+    new Item(
+        'Ring of Slaying',
+        'accessory',
+        'magic',
+        'ring',
+        [],
+        false,
+        0,
+        0,
+        [],
+        '',
+        [
+            roll_multiplier(0.3, 'physical')
+        ]
+    ),
+
+    new Item(
+        "Beast’s Health of the Worker",
+        'accessory',
+        'magic',
+        'belt',
+        [
+            skill_condition('Armor: Light', 'F'),
+        ],
+        false,
+        0,
+        0,
+        [],
+        '',
+        [
+            stat_effect('health', 40),
+            stat_effect('stamina', 40),
+        ]
+    ),
+
+    new Item(
+        "Angel’s Longbow of Accuracy",
+        'longbow',
+        'magic',
+        'main_hand',
+        [
+            skill_condition('Weapons: Bows', 'F'),
+        ],
+        false,
+        0,
+        0,
+        [],
+        '',
+        [
+            new Effect('roll', function(roll) {
+                roll.add_damage('4d10', 'light');
+            }),
+            new Effect('roll', function(roll) {
+                roll.add_effect('20% accuracy');
+            }),
+        ]
+    ),
+
+    new Item(
+        "Slaying Featherfall Sneakers of Speedy Evasion",
+        'armor',
+        'rare',
+        'feet',
+        [
+            skill_condition('Armor: Light', 'F'),
+        ],
+        false,
+        0,
+        0,
+        [],
+        'You take no fall damage',
+        [
+            stat_effect('evasion', 20),
+            stat_effect('movement speed', 20),
+            stat_effect('ac', -10),
+            stat_effect('health', 40),
+            roll_multiplier(0.3, 'physical'),
+        ]
+    ),
 ];
 
 
@@ -6200,7 +8479,6 @@ class Character {
     }
 
     is_using(weapon_type) {
-        log('checking for type %s'.format(weapon_type));
         for (let i = 0; i < this.items.length; i++) {
             const item = this.items[i];
             if ((item.slot === 'main_hand' || item.slot === '2Hand') && item.type === weapon_type) {
