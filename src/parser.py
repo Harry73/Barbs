@@ -238,7 +238,7 @@ def parse_clazzes(lines, skills):
         return None
 
     def parse_clazz_skill(clazz_skill_lines):
-        nm = clazz_skill_lines[0]
+        nm = clazz_skill_lines[0].replace(u'\u201C', '"').replace(u'\u201D', '"').replace(u'\u2019', "'")
         ac = clazz_skill_lines[1]
         cst = clazz_skill_lines[2].split(':', 1)[1].strip()
         rg = clazz_skill_lines[3].split(':', 1)[1].strip()

@@ -331,9 +331,11 @@ function sniper_kill_shot(character, parameters) {
 
 
 const barbs_abilities_processors = {
-    'sniper_spotter': sniper_spotter,
-    'sniper_piercing_shot': sniper_piercing_shot,
-    'sniper_kill_shot': sniper_kill_shot,
+    'Sniper': {
+        'Spotter': sniper_spotter,
+        'Piercing Shot': sniper_piercing_shot,
+        'Kill Shot': sniper_kill_shot,
+    },
     // TODO add more
 };
 
@@ -346,15 +348,32 @@ function process_ability(msg) {
     }
 
     const pieces = msg.content.split(' ');
-    const ability = pieces[2];
-    const parameters = pieces.slice(3);
+    const options = pieces.slice(2).join(' ');
+    const option_pieces = options.split(',');
+    const clazz = option_pieces[0];
+    const ability = option_pieces[1];
+    const parameters = option_pieces.slice(2);
 
-    if (!(ability in barbs_abilities_processors)) {
+    // Verify that we know how to handle this class + ability combo
+    if (!(clazz in barbs_abilities_processors)) {
+        chat(msg, 'unknown class %s'.format(clazz));
+        return;
+    }
+    if (!(ability in barbs_abilities_processors[clazz])) {
         chat(msg, 'unknown ability %s'.format(ability));
         return;
     }
 
-    const processor = barbs_abilities_processors[ability];
+    // Double check that the class and ability names are correct based on the master components list
+    if (!(clazz in clazzes)) {
+        chat(msg, 'mismatched class %s, this is Ian\'s mistake'.format(clazz));
+        return;
+    }
+    if (!(clazzes[clazz].abilities.includes(ability))) {
+        chat(msg, 'mismatched ability %s, this is Ian\'s mistake'.format(ability));
+    }
+
+    const processor = barbs_abilities_processors[clazz][ability];
     processor(character, parameters);
 }
 

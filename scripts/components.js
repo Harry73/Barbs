@@ -135,7 +135,7 @@ function get_stat(name) {
 let attributes = [];
 let abilities = [];
 let races = [];
-let clazzes = [];
+let clazzes = {};
 let skills = [];
 let buffs = [];
 let conditions = [];
@@ -7833,7 +7833,7 @@ for (let i = 0; i < components.length; i++) {
     } else if (component.type === 'race') {
         races.push(component);
     } else if (component.type === 'clazz') {
-        clazzes.push(component);
+        clazzes[component.name] = component;
     } else if (component.type === 'skill') {
         skills.push(component);
     } else if (component.type === 'buff') {

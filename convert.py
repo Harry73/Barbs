@@ -52,6 +52,16 @@ def main():
     with open(os.path.join(DATA_PATH, 'skills_to_attributes.json'), 'w') as f:
         json.dump(skill_to_attr, f)
 
+    # Create a map of abilities in classes
+    clazz_ability_map = {}
+    for clazz in clazzes:
+        clazz_ability_map[clazz.name] = []
+        for ability in clazz.abilities:
+            clazz_ability_map[clazz.name].append(ability.name)
+
+    with open(os.path.join(DATA_PATH, 'clazz_abilities.json'), 'w') as f:
+        json.dump(clazz_ability_map, f)
+
 
 # One method to compose them all, one method to hash them
 if '__main__' == __name__:
