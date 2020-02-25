@@ -1,5 +1,5 @@
 
-var characters_by_owner = {
+const characters_by_owner = {
     'Hoshiko Nightside': [
         'Ian',
         'Ian P.',
@@ -29,6 +29,12 @@ var characters_by_owner = {
         'Sanjay N.',
         'Sanjay',
         '-Lk1li2MqriN_SAJ1ARF',
+    ],
+    'Russ': [
+        'Russ',
+        'Ravi B.',
+        'Ravi',
+        '-Lk7Ovry6ltsLmK8qnUY',
     ],
     'Russ Finnegan': [
         'Russ Finnegan',

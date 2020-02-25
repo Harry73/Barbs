@@ -11,6 +11,8 @@ String.prototype.format = function() {
 const total_format = '&{template:default} {{name=%s}} {{%s=[[%s]]}}';
 const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
 const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s)+1]]]]}}';
+// TODO: The escaped double quotes at the end aren't working right. This does have to be one line.
+const crit_roll_format = '<div class="sheet-rolltemplate-default"><table><caption>Critical Hit Chance</caption><tbody><tr><td>Crit</td><td><span class="inlinerollresult showtip tipsy-n-right fullcrit" original-title="<img src=&#34;images/quantumrollwhite.png&#34; class=&#34;inlineqroll&#34;> Rolling 1d100cs>%s = (<span class=&#34;basicdiceroll critsuccess &#34;>%s</span>)">%s</span></td></tr></tbody></table></div>';
 
 
 function chat(character, string, handler) {
@@ -240,9 +242,10 @@ function roll_crit(roll, handler) {
         const crit_compare_value = rolls[0].results.total;
         roll.crit = (rolled_value_for_crit >= crit_compare_value);
 
-        // TODO this doesn't like being a proper roll, like [[%scs>%s]] for some reason
-        const crit_string = '%s >= %s crit'.format(rolled_value_for_crit, crit_compare_value);
-        handler(crit_string);
+        // Show the crit roll
+        chat(roll.character, crit_roll_format.format(crit_compare_value, rolled_value_for_crit, rolled_value_for_crit));
+
+        handler();
     });
 }
 
@@ -285,7 +288,7 @@ function sniper_spotter(character, parameters) {
 function sniper_piercing_shot(character, parameters) {
     const roll = new Roll(character);
 
-    roll_crit(roll, function(crit_string) {
+    roll_crit(roll, function() {
         roll.add_damage('5d8', 'physical');
         roll.add_damage(character.get_stat('ranged fine damage'), 'physical');
 
@@ -298,12 +301,12 @@ function sniper_piercing_shot(character, parameters) {
         });
 
         const rolls = roll.roll();
-        let msg = '';
+        let msg_strings = [];
         Object.keys(rolls).forEach(function(type) {
-            msg = msg + '[[%s]] %s, '.format(rolls[type], type);
+            msg_strings.push('[[%s]] %s'.format(rolls[type], type));
         });
 
-        msg = msg + crit_string;
+        let msg = msg_strings.join(', ');
 
         if (roll.effects.length > 0) {
             msg = msg + '\nEffects: %s'.format(roll.effects.join(', '));
