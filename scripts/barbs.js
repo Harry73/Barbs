@@ -14,9 +14,9 @@ const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s
 // TODO: The escaped double quotes at the end aren't working right. This does have to be one line.
 const crit_roll_format = '<div class="sheet-rolltemplate-default"><table><caption>Critical Hit Chance</caption><tbody><tr><td>Crit</td><td><span class="inlinerollresult showtip tipsy-n-right fullcrit" original-title="<img src=&#34;images/quantumrollwhite.png&#34; class=&#34;inlineqroll&#34;> Rolling 1d100cs>%s = (<span class=&#34;basicdiceroll critsuccess &#34;>%s</span>)">%s</span></td></tr></tbody></table></div>';
 
-const roll_format = '&{template:Barbs} {{name=%s}} %s {{crit_value=%s}} {{crit_cutoff=%s}}';
-const dmg_format = '{{%s=[[%s]]}}';
-
+const barbs_roll = '&{template:Barbs} {{name=%s}} %s %s';
+const barbs_damage_section = '{{%s=[[%s]]}}';
+const barbs_crit_section = '{{crit_value=[[%s]]}} {{crit_cutoff=[[%s]]}}';
 
 function chat(character, string, handler) {
     sendChat(character.who, string, handler);
@@ -234,21 +234,6 @@ const msg = {
 };
 */
 
-// Roll for whether or not this will be a crit, and set the result in the roll. The passed handler should take a string
-// that can be appended to show the result of the crit roll.
-//
-function roll_crit(roll, handler) {
-    roll_stat_inner(roll.character, 'critical hit chance', function(results) {
-        const rolls = results[0].inlinerolls;
-        const crit_compare_value = rolls[0].results.total;
-        const rolled_value_for_crit = rolls[1].results.total;
-        roll.crit = (rolled_value_for_crit >= crit_compare_value);
-
-        const crit_value = '[[%s]]'.format(rolled_value_for_crit);
-        const crit_cutoff = '[[%s]]'.format(crit_compare_value);
-        handler(crit_value, crit_cutoff);
-    });
-}
 
 function roll_skill(msg) {
     const character = get_character(msg);
@@ -280,42 +265,78 @@ function roll_skill(msg) {
 
 
 // ####################################################################################################################
+// Class abilities helpers
+
+// Roll for whether or not this will be a crit, and set the result in the roll. The passed handler should take a string
+// that can be appended to show the result of the crit roll.
+function roll_crit(roll, handler) {
+    roll_stat_inner(roll.character, 'critical hit chance', function(results) {
+        const rolls = results[0].inlinerolls;
+        const crit_compare_value = rolls[0].results.total;
+        const rolled_value_for_crit = rolls[1].results.total;
+        roll.crit = (rolled_value_for_crit >= crit_compare_value);
+
+        const crit_section = barbs_crit_section.format(rolled_value_for_crit, crit_compare_value);
+        handler(crit_section);
+    });
+}
+
+
+// Iterate through the character's items and add any damage bonuses or multipliers to the roll
+function add_items_to_roll(character, roll) {
+    _.each(character.items, function(item) {
+        for (let i = 0; i < item.effects.length; i++) {
+            if (item.effects[i].type === 'roll') {
+                item.effects[i].apply(roll);
+            }
+        }
+    });
+}
+
+// Iterate through effects of abilities (buffs, empowers, etc) that may last multiple turns and add applicable ones
+// to the roll.
+function add_persistent_effects_to_roll(character, roll) {
+
+}
+
+// 1. Do the roll, which actually builds up the strings for the roll on a per-type basis.
+// 2. Fill out a roll template to construct the message.
+// 3. Add in any extra effects that don't fit nicely into a damage type to the message.
+// 4. Record and send the message.
+function do_roll(character, ability, roll, crit_section) {
+    const rolls_per_type = roll.roll();
+
+    let damage_section = '';
+    Object.keys(rolls_per_type).forEach(function(type) {
+        damage_section = damage_section + barbs_damage_section.format(type, rolls_per_type[type]);
+    });
+
+    let msg = barbs_roll.format(ability, damage_section, crit_section);
+
+    if (roll.effects.length > 0) {
+        msg = msg + '\nEffects: %s'.format(roll.effects.join(', '));
+    }
+
+    log('Roll: ' + msg);
+    chat(character, msg);
+}
+
+// ####################################################################################################################
 // Class abilities
 
-function sniper_spotter(character, parameters) {
+function sniper_spotter(character, ability, parameters) {
     chat(character, 'not implemented');
 }
 
-function sniper_piercing_shot(character, parameters) {
+function sniper_piercing_shot(character, ability, parameters) {
     const roll = new Roll(character);
 
-    roll_crit(roll, function(crit_value, crit_cutoff) {
+    roll_crit(roll, function(crit_section) {
         roll.add_damage('5d8', 'physical');
         roll.add_damage(character.get_stat('ranged fine damage'), 'physical');
-
-        _.each(character.items, function(item) {
-            for (let i = 0; i < item.effects.length; i++) {
-                if (item.effects[i].type === 'roll') {
-                    item.effects[i].apply(roll);
-                }
-            }
-        });
-
-        const rolls = roll.roll();
-        let dmg_components = '';
-        Object.keys(rolls).forEach(function(type) {
-            dmg_components = dmg_components + dmg_format.format(type, rolls[type]);
-        });
-
-        let msg = roll_format.format('Piercing Shot', dmg_components, crit_value, crit_cutoff);
-
-        if (roll.effects.length > 0) {
-            msg = msg + '\nEffects: %s'.format(roll.effects.join(', '));
-        }
-
-        log('Roll: ' + msg);
-
-        chat(character, msg);
+        add_items_to_roll(character, roll);
+        add_persistent_effects_to_roll(character, roll);
+        do_roll(character, ability, roll, crit_section);
     });
 }
 
@@ -375,7 +396,7 @@ function process_ability(msg) {
     }
 
     const processor = barbs_abilities_processors[clazz][ability];
-    processor(character, parameters);
+    processor(character, ability, parameters);
 }
 
 

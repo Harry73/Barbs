@@ -7984,13 +7984,14 @@ const ITEM_SLOTS = [
 ];
 
 class Item {
-    constructor(name, type, rarity, slot, equip_conditions, unique, range, price, cantrips, notes, effects) {
+    constructor(name, type, rarity, slot, equip_conditions, unique, base_damage, range, price, cantrips, notes, effects) {
         this.name = name;
         this.type = type;
         this.rarity = rarity;
         this.slot = slot;
         this.equip_conditions = equip_conditions;
         this.unique = unique;
+        this.base_damage = base_damage;
         this.range = range;
         this.price = price;
         this.cantrips = cantrips;
@@ -8004,44 +8005,48 @@ class Effect {
         this.type = type;
         this.apply = effect;
     }
+
+    static stat_effect(stat, mod) {
+        return new Effect('stat', function(stat_to_test) {
+            return stat_to_test === stat ? mod : 0
+        });
+    }
+
+    static no_op_roll_effect() {
+        return new Effect('roll', function(roll) {});
+    }
+
+    static roll_damage(dmg, type) {
+        return new Effect('roll', function(roll) {
+            roll.add_damage(dmg, type);
+        });
+    }
+
+    static roll_multiplier(value, type) {
+        return new Effect('roll', function(roll) {
+            roll.add_multiplier(value, type, 'self');
+        })
+    }
+
+    static roll_effect(effect) {
+        return new Effect('roll', function(roll) {
+            roll.add_effect(effect);
+        });
+    }
+
+    static crit_effect(effect) {
+        return new Effect('roll', function(roll) {
+            if (roll.crit) {
+                roll.add_effect(effect);
+            }
+        });
+    }
 }
 
 function skill_condition(skill, rank) {
     return function(character) {
         return character.has_skill_req(skill, rank);
     };
-}
-
-function stat_effect(stat, mod) {
-    return new Effect('stat', function(stat_to_test) {
-        return stat_to_test === stat ? mod : 0
-    });
-}
-
-function roll_damage(dmg, type) {
-    return new Effect('roll', function(roll) {
-        roll.add_damage(dmg, type);
-    });
-}
-
-function roll_multiplier(value, type) {
-    return new Effect('roll', function(roll) {
-        roll.add_multiplier(value, type, 'self');
-    })
-}
-
-function roll_effect(effect) {
-    return new Effect('roll', function(roll) {
-        roll.add_effect(effect);
-    });
-}
-
-function crit_effect(effect) {
-    return new Effect('roll', function(roll) {
-        if (roll.crit) {
-            roll.add_effect(effect);
-        }
-    });
 }
 
 
@@ -8055,12 +8060,13 @@ const ITEMS = [
             skill_condition('Weapons: Bows', 'F'),
         ],
         false,
+        Effect.roll_damage('d8', 'physical'),
         200,
         0,
         [],
         '',
         [
-            crit_effect('Stun'),
+            Effect.crit_effect('Stun'),
         ]
     ),
 
@@ -8073,12 +8079,13 @@ const ITEMS = [
             skill_condition('Weapons: Bows', 'F'),
         ],
         false,
+        Effect.roll_damage('d6', 'physical'),
         250,
         0,
         [],
         '',
         [
-            roll_damage('3d10', 'fire'),
+            Effect.roll_damage('3d10', 'fire'),
         ]
     ),
 
@@ -8091,13 +8098,14 @@ const ITEMS = [
             skill_condition('Armor: Light', 'F'),
         ],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         [],
         '',
         [
-            stat_effect('evasion', 5),
-            stat_effect('health regeneration', 10),
+            Effect.stat_effect('evasion', 5),
+            Effect.stat_effect('health regeneration', 10),
         ]
     ),
 
@@ -8110,13 +8118,14 @@ const ITEMS = [
             skill_condition('Armor: Light', 'F'),
         ],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         [],
         '',
         [
-            stat_effect('evasion', 20),
-            stat_effect('magic resist', 10),
+            Effect.stat_effect('evasion', 20),
+            Effect.stat_effect('magic resist', 10),
         ]
     ),
 
@@ -8129,13 +8138,14 @@ const ITEMS = [
             skill_condition('Armor: Light', 'F'),
         ],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         [],
         '',
         [
-            stat_effect('evasion', 15),
-            stat_effect('condition resist', 10),
+            Effect.stat_effect('evasion', 15),
+            Effect.stat_effect('condition resist', 10),
         ]
     ),
 
@@ -8148,14 +8158,15 @@ const ITEMS = [
             skill_condition('Armor: Light', 'F'),
         ],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         [],
         '',
         [
-            stat_effect('evasion', 15),
-            stat_effect('stamina regeneration', 10),
-            stat_effect('ac', -10),
+            Effect.stat_effect('evasion', 15),
+            Effect.stat_effect('stamina regeneration', 10),
+            Effect.stat_effect('ac', -10),
         ]
     ),
 
@@ -8166,6 +8177,7 @@ const ITEMS = [
         'neck',
         [],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         [
@@ -8182,6 +8194,7 @@ const ITEMS = [
         'ring',
         [],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         [],
@@ -8202,13 +8215,14 @@ const ITEMS = [
         'ring',
         [],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         [],
         '',
         [
-            stat_effect('stamina', 30),
-            stat_effect('mana', 40),
+            Effect.stat_effect('stamina', 30),
+            Effect.stat_effect('mana', 40),
         ]
     ),
 
@@ -8221,13 +8235,14 @@ const ITEMS = [
             skill_condition('Armor: Light', 'F'),
         ],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         [],
         '',
         [
-            stat_effect('stamina', 60),
-            stat_effect('stamina regeneration', 15),
+            Effect.stat_effect('stamina', 60),
+            Effect.stat_effect('stamina regeneration', 15),
         ]
     ),
 
@@ -8240,14 +8255,15 @@ const ITEMS = [
             skill_condition('Armor: Light', 'F'),
         ],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         [],
         '',
         [
-            stat_effect('evasion', 20),
-            stat_effect('magic resist', 10),
-            stat_effect('ac', -10),
+            Effect.stat_effect('evasion', 20),
+            Effect.stat_effect('magic resist', 10),
+            Effect.stat_effect('ac', -10),
         ]
     ),
 
@@ -8260,14 +8276,15 @@ const ITEMS = [
             skill_condition('Armor: Light', 'F'),
         ],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         [],
         '',
         [
-            stat_effect('evasion', 20),
-            stat_effect('condition resist', 10),
-            stat_effect('ac', -10),
+            Effect.stat_effect('evasion', 20),
+            Effect.stat_effect('condition resist', 10),
+            Effect.stat_effect('ac', -10),
         ]
     ),
 
@@ -8280,14 +8297,15 @@ const ITEMS = [
             skill_condition('Armor: Light', 'F'),
         ],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         [],
         '',
         [
-            stat_effect('evasion', 20),
-            stat_effect('condition resist', 10),
-            stat_effect('ac', -10),
+            Effect.stat_effect('evasion', 20),
+            Effect.stat_effect('condition resist', 10),
+            Effect.stat_effect('ac', -10),
         ]
     ),
 
@@ -8298,12 +8316,13 @@ const ITEMS = [
         'neck',
         [],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         ['Expend 30 mana as a Major Action to clease 1 condition on yourself'],
         '',
         [
-            stat_effect('mana', 40),
+            Effect.stat_effect('mana', 40),
         ]
     ),
 
@@ -8314,12 +8333,13 @@ const ITEMS = [
         'ring',
         [],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         [],
         '',
         [
-            roll_multiplier(0.3, 'physical')
+            Effect.roll_multiplier(0.3, 'physical')
         ]
     ),
 
@@ -8332,13 +8352,14 @@ const ITEMS = [
             skill_condition('Armor: Light', 'F'),
         ],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         [],
         '',
         [
-            stat_effect('health', 40),
-            stat_effect('stamina', 40),
+            Effect.stat_effect('health', 40),
+            Effect.stat_effect('stamina', 40),
         ]
     ),
 
@@ -8351,13 +8372,14 @@ const ITEMS = [
             skill_condition('Weapons: Bows', 'F'),
         ],
         false,
+        Effect.roll_damage('d10', 'physical'),
         0,
         0,
         [],
         '',
         [
-            roll_damage('4d10', 'light'),
-            roll_effect('20% accuracy'),
+            Effect.roll_damage('4d10', 'light'),
+            Effect.roll_effect('20% accuracy'),
         ]
     ),
 
@@ -8370,16 +8392,17 @@ const ITEMS = [
             skill_condition('Armor: Light', 'F'),
         ],
         false,
+        Effect.no_op_roll_effect(),
         0,
         0,
         [],
         'You take no fall damage',
         [
-            stat_effect('evasion', 20),
-            stat_effect('movement speed', 20),
-            stat_effect('ac', -10),
-            stat_effect('health', 40),
-            roll_multiplier(0.3, 'physical'),
+            Effect.stat_effect('evasion', 20),
+            Effect.stat_effect('movement speed', 20),
+            Effect.stat_effect('ac', -10),
+            Effect.stat_effect('health', 40),
+            Effect.roll_multiplier(0.3, 'physical'),
         ]
     ),
 ];
