@@ -14,6 +14,9 @@ const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s
 // TODO: The escaped double quotes at the end aren't working right. This does have to be one line.
 const crit_roll_format = '<div class="sheet-rolltemplate-default"><table><caption>Critical Hit Chance</caption><tbody><tr><td>Crit</td><td><span class="inlinerollresult showtip tipsy-n-right fullcrit" original-title="<img src=&#34;images/quantumrollwhite.png&#34; class=&#34;inlineqroll&#34;> Rolling 1d100cs>%s = (<span class=&#34;basicdiceroll critsuccess &#34;>%s</span>)">%s</span></td></tr></tbody></table></div>';
 
+const roll_format = '&{template:Barbs} {{name=%s}} %s {{crit_value=%s}} {{crit_cutoff=%s}}';
+const dmg_format = '{{%s=[[%s]]}}';
+
 
 function chat(character, string, handler) {
     sendChat(character.who, string, handler);
@@ -237,15 +240,13 @@ const msg = {
 function roll_crit(roll, handler) {
     roll_stat_inner(roll.character, 'critical hit chance', function(results) {
         const rolls = results[0].inlinerolls;
-
-        const rolled_value_for_crit = rolls[1].results.total;
         const crit_compare_value = rolls[0].results.total;
+        const rolled_value_for_crit = rolls[1].results.total;
         roll.crit = (rolled_value_for_crit >= crit_compare_value);
 
-        // Show the crit roll
-        chat(roll.character, crit_roll_format.format(crit_compare_value, rolled_value_for_crit, rolled_value_for_crit));
-
-        handler();
+        const crit_value = '[[%s]]'.format(rolled_value_for_crit);
+        const crit_cutoff = '[[%s]]'.format(crit_compare_value);
+        handler(crit_value, crit_cutoff);
     });
 }
 
@@ -288,7 +289,7 @@ function sniper_spotter(character, parameters) {
 function sniper_piercing_shot(character, parameters) {
     const roll = new Roll(character);
 
-    roll_crit(roll, function() {
+    roll_crit(roll, function(crit_value, crit_cutoff) {
         roll.add_damage('5d8', 'physical');
         roll.add_damage(character.get_stat('ranged fine damage'), 'physical');
 
@@ -301,12 +302,12 @@ function sniper_piercing_shot(character, parameters) {
         });
 
         const rolls = roll.roll();
-        let msg_strings = [];
+        let dmg_components = '';
         Object.keys(rolls).forEach(function(type) {
-            msg_strings.push('[[%s]] %s'.format(rolls[type], type));
+            dmg_components = dmg_components + dmg_format.format(type, rolls[type]);
         });
 
-        let msg = msg_strings.join(', ');
+        let msg = roll_format.format('Piercing Shot', dmg_components, crit_value, crit_cutoff);
 
         if (roll.effects.length > 0) {
             msg = msg + '\nEffects: %s'.format(roll.effects.join(', '));

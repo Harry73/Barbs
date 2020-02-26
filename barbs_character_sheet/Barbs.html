@@ -2518,3 +2518,115 @@
         </div>
     </div>
 </rolltemplate>
+
+
+<!--
+Desired example
+
+&{template:Barbs}
+{{name=Piercing Shot}}
+{{physical=[[<something>]]}}
+{{light=[[<something>]]}}
+{{fire=[[<something>]]}}
+{{crit_value=[[value]]}}
+{{crit_chance=[[value]]}}
+
+&{template:Barbs} {{name=Piercing Shot}} {{physical=[[d100]]}} {{fire=[[d100]]}} {{water=[[d100]]}} {{earth=[[d100]]}} {{air=[[d100]]}} {{ice=[[d100]]}} {{lightning=[[d100]]}} {{light=[[d100]]}} {{dark=[[d100]]}} {{crit_value=[[40]]}} {{crit_cutoff=[[50]]}}
+
+-->
+
+<rolltemplate class="sheet-rolltemplate-Barbs">
+    <table>
+        <caption>{{name}}</caption>
+
+        <!-- Colors for each damage type
+          Physical - orange
+          Fire - red
+          Water - blue
+          Earth - purple
+          Air - green
+          Ice - silver
+          Lightning - gold
+          Light - white
+          Dark - black
+        -->
+
+        {{#physical}}
+        <tr style="background:#FFB27F;">
+            <td class="template_label">Physical:</td>
+            <td class="template_value">{{physical}}</td>
+        </tr>
+        {{/physical}}
+
+        {{#fire}}
+        <tr style="background:#FF8484;">
+            <td class="template_label">Fire:</td>
+            <td class="template_value">{{fire}}</td>
+        </tr>
+        {{/fire}}
+
+        {{#water}}
+        <tr style="background:#BFFFFF;">
+            <td class="template_label">Water:</td>
+            <td class="template_value">{{water}}</td>
+        </tr>
+        {{/water}}
+
+        {{#earth}}
+        <tr style="background:#E7B5FF;">
+            <td class="template_label">Earth:</td>
+            <td class="template_value">{{earth}}</td>
+        </tr>
+        {{/earth}}
+
+        {{#air}}
+        <tr style="background:#6C876C;">
+            <td class="template_label">Air:</td>
+            <td class="template_value">{{air}}</td>
+        </tr>
+        {{/air}}
+
+        {{#ice}}
+        <tr style="background:#C0C0C0;">
+            <td class="template_label">Ice:</td>
+            <td class="template_value">{{ice}}</td>
+        </tr>
+        {{/ice}}
+
+        {{#lightning}}
+        <tr style="background:#FFE793;">
+            <td class="template_label">Lightning:</td>
+            <td class="template_value">{{lightning}}</td>
+        </tr>
+        {{/lightning}}
+
+        {{#light}}
+        <tr style="background:#FFFFFF;">
+            <td class="template_label">Light:</td>
+            <td class="template_value">{{light}}</td>
+        </tr>
+        {{/light}}
+
+        {{#dark}}
+        <tr style="background:#000000; color:#FFFFFF;">
+            <td class="template_label">Dark:</td>
+            <td class="template_value">{{dark}}</td>
+        </tr>
+        {{/dark}}
+
+        {{#rollLess() crit_value crit_cutoff}}
+        <tr style="background:#702082; color:#FFFFFF">
+            <td class="template_label">Crit Roll:</td>
+            <td class="template_value">{{crit_value}}</td>
+        </tr>
+        {{/rollLess() crit_value crit_cutoff}}
+
+        {{#^rollLess() crit_value crit_cutoff}}
+        <tr style="background:#702082; color:#FFFFFF; border: 3px solid #3FB315;">
+            <td class="template_label">Crit Roll:</td>
+            <td class="template_value">{{crit_value}}</td>
+        </tr>
+        {{/^rollLess() crit_value crit_cutoff}}
+
+    </table>
+</rolltemplate>

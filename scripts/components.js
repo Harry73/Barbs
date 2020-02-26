@@ -8030,6 +8030,12 @@ function roll_multiplier(value, type) {
     })
 }
 
+function roll_effect(effect) {
+    return new Effect('roll', function(roll) {
+        roll.add_effect(effect);
+    });
+}
+
 function crit_effect(effect) {
     return new Effect('roll', function(roll) {
         if (roll.crit) {
@@ -8350,12 +8356,8 @@ const ITEMS = [
         [],
         '',
         [
-            new Effect('roll', function(roll) {
-                roll.add_damage('4d10', 'light');
-            }),
-            new Effect('roll', function(roll) {
-                roll.add_effect('20% accuracy');
-            }),
+            roll_damage('4d10', 'light'),
+            roll_effect('20% accuracy'),
         ]
     ),
 

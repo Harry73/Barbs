@@ -206,6 +206,48 @@
 }
 
 
+
+
+/* Barbs roll template styling */
+
+/* PD/BD rolltemplate */
+.sheet-rolltemplate-Barbs table {
+    width: 100%;
+    border: 1px solid black;
+    color: black;
+    background: #FFFFFF;
+}
+.sheet-rolltemplate-Barbs caption {
+    text-align: center;
+    background: #702082;
+    color: white;
+    font-weight: bold;
+    padding: 2px;
+    border: 1px solid black;
+    line-height: 1.6em;
+}
+.sheet-rolltemplate-Barbs td {
+    padding: 2px;
+    border-bottom: 1px solid black;
+}
+.sheet-rolltemplate-Barbs td.sheet-template_label {
+    font-weight: bold;
+}
+.sheet-rolltemplate-Barbs td.sheet-template_value {
+    text-align: center;
+    color: #000000;
+}
+.sheet-rolltemplate-Barbs .inlinerollresult  {
+    display: inline-block;
+    min-width: 1.5em;
+    text-align: center;
+    border: 2px solid black;
+    color: #000000;
+    background: #BEBEBE;
+}
+
+
+
 /*** ROLL TEMPLATE STYLING ENDS HERE **/
 
 
