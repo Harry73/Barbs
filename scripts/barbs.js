@@ -340,10 +340,21 @@ function sniper_piercing_shot(character, ability, parameters) {
     });
 }
 
-function sniper_kill_shot(character, parameters) {
+function sniper_kill_shot(character, ability, parameters) {
     chat(character, 'not implemented');
 }
 
+function soldier_fleetfoot_blade(character, ability, parameters) {
+    const roll = new Roll(character);
+
+    roll_crit(roll, function(crit_section) {
+        roll.add_damage('4d10', 'physical');
+        roll.add_damage(character.get_stat('melee damage'), 'physical');
+        add_items_to_roll(character, roll);
+        add_persistent_effects_to_roll(character, roll);
+        do_roll(character, ability, roll, crit_section);
+    });
+}
 
 
 
@@ -357,6 +368,9 @@ const barbs_abilities_processors = {
         'Spotter': sniper_spotter,
         'Piercing Shot': sniper_piercing_shot,
         'Kill Shot': sniper_kill_shot,
+    },
+    'Soldier': {
+        'Fleetfoot Blade': soldier_fleetfoot_blade,
     },
     // TODO add more
 };

@@ -1,4 +1,3 @@
-
 const characters_by_owner = {
     'Hoshiko Nightside': [
         'Ian',
@@ -63,8 +62,9 @@ const characters_by_owner = {
         'Faust Brightwood',
         'Nevil A.',
         'Nevil,',
-        'Drenion',
-        'Drenion A.',
+        'Drenieon',
+        'Drenieon A.',
+        '-Ljmv81n7XaR6f9smrur'
     ],
     'Janatris': [
         'Janatris',
@@ -118,13 +118,13 @@ const STATS = [
 
 
 function get_stat(name) {
-   for (let i = 0; i < STATS.length; i++) {
-       if (STATS[i].name === name) {
-           return STATS[i];
-       }
-   }
+    for (let i = 0; i < STATS.length; i++) {
+        if (STATS[i].name === name) {
+            return STATS[i];
+        }
+    }
 
-   return null;
+    return null;
 }
 
 
@@ -8344,7 +8344,7 @@ const ITEMS = [
     ),
 
     new Item(
-        "Beast’s Health of the Worker",
+        "Beast’s Belt of the Worker",
         'accessory',
         'magic',
         'belt',
@@ -8403,6 +8403,44 @@ const ITEMS = [
             Effect.stat_effect('ac', -10),
             Effect.stat_effect('health', 40),
             Effect.roll_multiplier(0.3, 'physical'),
+        ]
+    ),
+    new Item(
+        "Earthen Bladeshield of Hacking",
+        'shield',
+        'magic',
+        'main_hand',
+        [
+            skill_condition('Weapons: Shields', 'F'),
+        ],
+        false,
+        Effect.roll_damage('d8', 'physical'),
+        0,
+        0,
+        [],
+        '',
+        [
+            Effect.roll_damage('2d8', 'physical'),
+            Effect.roll_damage('2d10', 'earth'),
+        ]
+    ),
+    new Item(
+        "Paralyzing Shield of Accuracy",
+        'shield',
+        'magic',
+        'off_hand',
+        [
+            skill_condition('Weapons: Shields', 'F'),
+        ],
+        false,
+        Effect.roll_damage('d10', 'physical'),
+        0,
+        0,
+        [],
+        '',
+        [
+            Effect.roll_effect('20% Accuracy'),
+            Effect.roll_effect('30% paralyze'),
         ]
     ),
 ];
