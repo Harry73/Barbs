@@ -1,3 +1,8 @@
+/*
+ * This is stole from the Roll20 GitHub, credit goes there. I used it as a model and reference for the Barbs
+ * character sheet. Original can be found at: https://github.com/Roll20/roll20-character-sheets/tree/master/DnD_5e
+ */
+
 .sheet-rolltemplate-5eDefault .sheet-rt-card {
 	width: 95%;
 	background-color: #FFFFFF;
