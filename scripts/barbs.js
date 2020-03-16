@@ -551,6 +551,12 @@ var Barbs = Barbs || (function() {
             },
         };
 
+        // TODO: cope with multiple targets being hit by one instance of distance shooter
+        // Isn't there a world where you could output the base roll and multipliers first, and then have it output the
+        // damage just from distance and the multipliers for that bonus damage for each target? So the base roll would
+        // be the same for each enemy and then we'd just add on manually the multiplied damage from the distance for
+        // each enemy
+
         persistent_effects.push(persistent);
         chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
     }
