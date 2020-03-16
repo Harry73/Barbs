@@ -3,11 +3,10 @@ from src.components.component import Component
 
 class Skill(Component):
 
-    def __init__(self, name, description, attribute, value=None):
+    def __init__(self, name, description, attribute):
         super(Skill, self).__init__(name, 'Skill')
         self.description = description
         self.attribute = attribute  # an Attribute object
-        self.value = value
         self.rank_notes = {}
 
     # Expects notes in an array of pairs
@@ -26,6 +25,5 @@ class Skill(Component):
             'name': self.name,
             'description': self.description,
             'attribute': self.attribute.name,
-            'value': self.value,
             'rank_notes': self.rank_notes,
         }

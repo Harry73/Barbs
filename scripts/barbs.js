@@ -1,3 +1,28 @@
+// TODO: Wrap everything in a function to isolate everything in a pseudo-namespace. E.g.:
+//
+// var Barbs = Barbs || (function() {
+//     ...
+//
+//     return {
+//         checkInstall,
+//         ObserveTokenChange: observeTokenChange,
+//         registerEventHandlers,
+//         getConditions,
+//         getConditionByName,
+//         handleConditions,
+//         sendConditionToChat,
+//         getIcon,
+//         version
+//     };
+// })();
+//
+// on('ready', () => {
+//     'use strict';
+//
+//     Barbs.checkInstall();
+//     Barbs.registerEventHandlers();
+// });
+
 
 // Basic python-like string formatting
 String.prototype.format = function() {
@@ -14,9 +39,15 @@ const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s
 // TODO: The escaped double quotes at the end aren't working right. This does have to be one line.
 const crit_roll_format = '<div class="sheet-rolltemplate-default"><table><caption>Critical Hit Chance</caption><tbody><tr><td>Crit</td><td><span class="inlinerollresult showtip tipsy-n-right fullcrit" original-title="<img src=&#34;images/quantumrollwhite.png&#34; class=&#34;inlineqroll&#34;> Rolling 1d100cs>%s = (<span class=&#34;basicdiceroll critsuccess &#34;>%s</span>)">%s</span></td></tr></tbody></table></div>';
 
-const barbs_roll = '&{template:Barbs} {{name=%s}} %s %s';
+const barbs_roll = '&{template:Barbs} {{name=%s}} %s %s %s';
 const barbs_damage_section = '{{%s=[[%s]]}}';
 const barbs_crit_section = '{{crit_value=[[%s]]}} {{crit_cutoff=[[%s]]}}';
+const barbs_effects_section = '{{effects=%s}}';
+
+const barbs_full_info_block = '&{template:5eDefault} {{spell=1}} {{spellshowinfoblock=1}} {{spellshowdesc=1}} {{character_name=@{Kairi Halicarnuss|character_name}}} {{title=%s}} {{subheader=%s}} {{subheaderright=%s}} {{spellcasttime=%s}} {{spellduration=%s}} {{spelltarget=%s}} {{spellrange=%s}} {{spellgainedfrom=%s}} {{spelldescription=Create or destroy 20 gallons of water. You can extinguish flames with this in 30 ft cube if you want. }} @{Kairi Halicarnuss|classactionspellinfo}'
+const barbs_ability_block = '&{template:5eDefault} {{spell=1}} {{title=%s}} {{subheader=%s}} 0 {{spellshowdesc=1}} {{spelldescription=%s }} 0 0 0 0 0 0 0';
+
+let barbs_persistents = [];
 
 function chat(character, string, handler) {
     sendChat(character.who, string, handler);
@@ -63,7 +94,6 @@ function get_character(msg) {
 }
 
 
-
 function apply_items(character, thing_to_roll, effect_type) {
     let mod = '';
     _.each(character.items, function(item) {
@@ -100,6 +130,7 @@ function roll_stat(msg) {
     const stat_to_roll = msg.content.split(' ')[2].replace(/_/g, ' ').toLowerCase();
     roll_stat_inner(character, stat_to_roll)
 }
+
 
 function roll_stat_inner(character, stat_to_roll, handler) {
     const modifier = generate_stat_roll_modifier_from_items(character, stat_to_roll, 'stat');
@@ -192,6 +223,7 @@ function roll_stat_inner(character, stat_to_roll, handler) {
     }
 }
 
+
 /*
 // Example msg result from a crit roll
 const msg = {
@@ -233,8 +265,6 @@ const msg = {
     "rolltemplate":"default"
 };
 */
-
-
 function roll_skill(msg) {
     const character = get_character(msg);
     if (character === null) {
@@ -267,6 +297,30 @@ function roll_skill(msg) {
 // ####################################################################################################################
 // Class abilities helpers
 
+
+function get_ability_info(ability) {
+    for (let i = 0; i < abilities.length; i++) {
+        if (abilities[i].name === ability) {
+            return abilities[i];
+        }
+    }
+
+    log('ERROR: ability ' + ability + ' not found');
+    return null;
+}
+
+
+function get_parameter(parameter, parameters) {
+    for (let i = 0; i < parameters.length; i++) {
+        if (parameters[i].includes(parameter)) {
+            return parameters[i].split(' ')[1];
+        }
+    }
+
+    return null;
+}
+
+
 // Roll for whether or not this will be a crit, and set the result in the roll. The passed handler should take a string
 // that can be appended to show the result of the crit roll.
 function roll_crit(roll, handler) {
@@ -293,11 +347,24 @@ function add_items_to_roll(character, roll) {
     });
 }
 
+
 // Iterate through effects of abilities (buffs, empowers, etc) that may last multiple turns and add applicable ones
 // to the roll.
-function add_persistent_effects_to_roll(character, roll) {
+function add_persistent_effects_to_roll(character, roll, parameters) {
+    for (let i =0; i < barbs_persistents.length; i++) {
+        if (character.name === barbs_persistents[i].character) {
+            if (!barbs_persistents[i].handler(character, roll, parameters)) {
+                return false;
+            }
 
+            // TODO: check some "done" condition, to see if the effect should be removed from the list of
+            // persistent effects
+        }
+    }
+
+    return true;
 }
+
 
 // 1. Do the roll, which actually builds up the strings for the roll on a per-type basis.
 // 2. Fill out a roll template to construct the message.
@@ -311,22 +378,91 @@ function do_roll(character, ability, roll, crit_section) {
         damage_section = damage_section + barbs_damage_section.format(type, rolls_per_type[type]);
     });
 
-    let msg = barbs_roll.format(ability, damage_section, crit_section);
-
+    let effects = '';
     if (roll.effects.length > 0) {
-        msg = msg + '\nEffects: %s'.format(roll.effects.join(', '));
+        effects = barbs_effects_section.format(roll.effects.join(''));
     }
+
+    const msg = barbs_roll.format(ability, damage_section, crit_section, effects);
 
     log('Roll: ' + msg);
     chat(character, msg);
 }
 
+
+// ####################################################################################################################
+// Class passives (usually) that may apply to anything
+
+
+function sniper_spotter(roll, parameter) {
+    const stacks = parseInt(parameter.split(' ')[1], 10);
+    roll.add_multiplier(stacks * 0.25, 'all', 'self');
+    return true;
+}
+
+
+const barbs_arbitrary_parameters = {
+    'spotting': sniper_spotter,
+};
+
+
+function handle_arbitrary_parameters(roll, parameters) {
+    Object.keys(barbs_arbitrary_parameters).forEach(function(keyword) {
+        for (let i = 0; i < parameters.length; i++) {
+            if (parameters[i].includes(keyword)) {
+                if (!barbs_arbitrary_parameters[keyword](roll, parameters[i])) {
+                    return false;
+                }
+            }
+        }
+    });
+
+    return true;
+}
+
+
 // ####################################################################################################################
 // Class abilities
 
-function sniper_spotter(character, ability, parameters) {
-    chat(character, 'not implemented');
+
+function air_duelist_mistral_bow(character, ability, parameters) {
+    const ability_info = get_ability_info(ability);
+
+    const persistent = {
+        'character': character.name,
+        'duration': ability_info.duration,
+        'handler': function(character, roll) {
+            roll.add_effect('Bow attacks push target 5ft away');
+        },
+    };
+
+    barbs_persistents.push(persistent);
+    chat(character, barbs_ability_block.format(ability, ability_info.clazz, ability_info.description.join('\n')));
 }
+
+
+function air_duelist_arc_of_air(character, ability, parameters) {
+    const ability_info = get_ability_info(ability);
+
+    const persistent = {
+        'character': character.name,
+        'duration': ability_info.duration,
+        'handler': function(character, roll) {
+            roll.add_damage('2d8', 'air');
+            return true;
+        },
+    };
+
+    barbs_persistents.push(persistent);
+    chat(character, barbs_ability_block.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+}
+
+
+function enchanter_mint_coinage(character, ability, parameters) {
+    const ability_info = get_ability_info(ability);
+    chat(character, barbs_ability_block.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+}
+
 
 function sniper_piercing_shot(character, ability, parameters) {
     const roll = new Roll(character);
@@ -335,14 +471,87 @@ function sniper_piercing_shot(character, ability, parameters) {
         roll.add_damage('5d8', 'physical');
         roll.add_damage(character.get_stat('ranged fine damage'), 'physical');
         add_items_to_roll(character, roll);
-        add_persistent_effects_to_roll(character, roll);
+        if (!add_persistent_effects_to_roll(character, roll, parameters)) {
+            return;
+        }
+        if (!handle_arbitrary_parameters(roll, parameters)) {
+            return;
+        }
         do_roll(character, ability, roll, crit_section);
     });
 }
 
+
 function sniper_kill_shot(character, ability, parameters) {
-    chat(character, 'not implemented');
+    const roll = new Roll(character);
+
+    roll_crit(roll, function(crit_section) {
+        roll.add_damage('7d8', 'physical');
+        roll.add_damage(character.get_stat('ranged fine damage'), 'physical');
+
+        const stacks_spent_for_lethality = get_parameter('stacks', parameters);
+        if (stacks_spent_for_lethality !== null) {
+            roll.add_effect('%s% Lethality'.format(10 * parseInt(stacks_spent_for_lethality, 10)));
+        }
+
+        add_items_to_roll(character, roll);
+        if (!add_persistent_effects_to_roll(character, roll, parameters)) {
+            return;
+        }
+        if (!handle_arbitrary_parameters(roll, parameters)) {
+            return;
+        }
+        do_roll(character, ability, roll, crit_section);
+    });
 }
+
+
+function sniper_distance_shooter(character, ability, parameters) {
+    const ability_info = get_ability_info(ability);
+
+    const persistent = {
+        'character': character.name,
+        'duration': 1,
+        'handler': function(character, roll, parameters) {
+            const distance = get_parameter('distance', parameters);
+            if (distance === null) {
+                chat(character, '"distance" parameter is missing');
+                return false;
+            }
+
+            // 2 damage per 5 ft between character and target
+            roll.add_damage(2 * parseInt(distance, 10) / 5, 'physical');
+            return true;
+        },
+    };
+
+    barbs_persistents.push(persistent);
+    chat(character, barbs_ability_block.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+}
+
+
+function sniper_precision_shooter(character, ability, parameters) {
+    const ability_info = get_ability_info(ability);
+
+    const persistent = {
+        'character': character.name,
+        'duration': 1,
+        'handler': function(character, roll, parameters) {
+            roll.add_effect('Ignores AC');
+            roll.add_effect('Ignores MR');
+            roll.add_effect('Cannot miss');
+            roll.add_effect('Cannot be blocked');
+            roll.add_effect('Cannot be reacted to');
+            roll.add_effect('Cannot be blocked or redirected');
+            roll.add_effect('Bypasses barriers and walls');
+            return true;
+        },
+    };
+
+    barbs_persistents.push(persistent);
+    chat(character, barbs_ability_block.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+}
+
 
 function soldier_fleetfoot_blade(character, ability, parameters) {
     const roll = new Roll(character);
@@ -351,23 +560,30 @@ function soldier_fleetfoot_blade(character, ability, parameters) {
         roll.add_damage('4d10', 'physical');
         roll.add_damage(character.get_stat('melee damage'), 'physical');
         add_items_to_roll(character, roll);
-        add_persistent_effects_to_roll(character, roll);
+        if (!add_persistent_effects_to_roll(character, roll, parameters)) {
+            return;
+        }
+        if (!handle_arbitrary_parameters(roll, parameters)) {
+            return;
+        }
         do_roll(character, ability, roll, crit_section);
     });
 }
 
 
-
-
-
-
-
-
 const barbs_abilities_processors = {
+    'Air Duelist': {
+        'Mistral Bow': air_duelist_mistral_bow,
+        'Arc of Air': air_duelist_arc_of_air,
+    },
+    'Enchanter': {
+        'Mint Coinage': enchanter_mint_coinage,
+    },
     'Sniper': {
-        'Spotter': sniper_spotter,
         'Piercing Shot': sniper_piercing_shot,
         'Kill Shot': sniper_kill_shot,
+        'Distance Shooter': sniper_distance_shooter,
+        'Precision Shooter': sniper_precision_shooter,
     },
     'Soldier': {
         'Fleetfoot Blade': soldier_fleetfoot_blade,
@@ -388,7 +604,7 @@ function process_ability(msg) {
     const option_pieces = options.split(',');
     const clazz = option_pieces[0];
     const ability = option_pieces[1];
-    const parameters = option_pieces.slice(2);
+    const parameters = option_pieces[2].split(';');
 
     // Verify that we know how to handle this class + ability combo
     if (!(clazz in barbs_abilities_processors)) {
@@ -438,8 +654,8 @@ barbs_subcommand_handlers = {
 
 
 // main message handler
-on("chat:message", function(msg) {
-    if(msg.type !== "api") {
+on('chat:message', function(msg) {
+    if(msg.type !== 'api') {
         return;
     }
 

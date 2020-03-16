@@ -9,11 +9,10 @@ Attribute: {name} ({abbreviation})
 
 class Attribute(Component):
 
-    def __init__(self, name, abbreviation, description, value=None):
+    def __init__(self, name, abbreviation, description):
         super(Attribute, self).__init__(name, 'Attribute')
         self.abbreviation = abbreviation
         self.description = description
-        self.value = value
 
     def info(self):
         return '%s[name="%s", abbreviation="%s", description="%s"]' % (
@@ -26,5 +25,4 @@ class Attribute(Component):
             'name': self.name,
             'abbreviation': self.abbreviation,
             'description': self.description,
-            'value': self.value,
         }

@@ -7,7 +7,7 @@ from src.components.skill import Skill
 
 
 # Cut off period at the end, if there is one
-def trim(string):
+def _trim(string):
     result = string.strip()
 
     if result[-1] == '.':
@@ -20,7 +20,7 @@ def trim(string):
 
 
 # There's a weird mix of two types of dashes to deal with
-def get_split_char(string):
+def _get_split_char(string):
     indexes = {}
     chars = ['-', '–']
     for char in chars:
@@ -98,7 +98,7 @@ def parse_buffs(lines):
     lines = lines[2:]
 
     for line in lines:
-        split_char = get_split_char(line)
+        split_char = _get_split_char(line)
         buff_pieces = line.split(split_char)
 
         name = buff_pieces[0].strip()
@@ -120,7 +120,7 @@ def parse_conditions(lines):
     lines = lines[2:]
 
     for line in lines:
-        split_char = get_split_char(line)
+        split_char = _get_split_char(line)
         condition_pieces = line.split(split_char)
 
         name = condition_pieces[0].strip()
@@ -179,14 +179,14 @@ def parse_skills(lines, attributes):
             start += 1
 
         # Split each line into fields
-        skill_field = trim(skill_line.split(':')[0])
-        skill_name = trim(skill_line.split(':')[1])
-        description = trim(description_line.split(':')[0])
-        attribute = get_attribute(trim(attribute_line.split(' ')[-1]))
-        rank_notes = [('Untrained', trim(untrained_line.split('–')[1]))]
+        skill_field = _trim(skill_line.split(':')[0])
+        skill_name = _trim(skill_line.split(':')[1])
+        description = _trim(description_line.split(':')[0])
+        attribute = get_attribute(_trim(attribute_line.split(' ')[-1]))
+        rank_notes = [('Untrained', _trim(untrained_line.split('–')[1]))]
         for rank_line in rank_lines:
-            split_char = get_split_char(rank_line)
-            rank_note = (trim(rank_line.split(split_char)[0]), trim(rank_line.split(split_char)[1]))
+            split_char = _get_split_char(rank_line)
+            rank_note = (_trim(rank_line.split(split_char)[0]), _trim(rank_line.split(split_char)[1]))
             rank_notes.append(rank_note)
 
         skill = Skill('%s %s' % (skill_field, skill_name), description, attribute)
@@ -238,7 +238,7 @@ def parse_clazzes(lines, skills):
         return None
 
     def parse_clazz_skill(clazz_skill_lines):
-        nm = clazz_skill_lines[0].replace(u'\u201C', '"').replace(u'\u201D', '"').replace(u'\u2019', "'")
+        nm = clazz_skill_lines[0]
         ac = clazz_skill_lines[1]
         cst = clazz_skill_lines[2].split(':', 1)[1].strip()
         rg = clazz_skill_lines[3].split(':', 1)[1].strip()
@@ -287,8 +287,8 @@ def parse_clazzes(lines, skills):
                 preview_line = lines[i]
                 preview_line = preview_line[2:]  # Cut off bullet
 
-                split_char = get_split_char(preview_line)
-                clazz_name = trim(preview_line.split(split_char, 1)[0].strip())
+                split_char = _get_split_char(preview_line)
+                clazz_name = _trim(preview_line.split(split_char, 1)[0].strip())
                 clazz_preview = preview_line.split(split_char, 1)[1].strip()
 
                 clazz = get_clazz(clazz_name)
@@ -316,7 +316,8 @@ def parse_clazzes(lines, skills):
                 if i == len(lines) or not lines[i].startswith('·'):
                     break  # No longer handling requirements, go back to class handling
 
-                requirements.append(lines[i][2:])  # TODO: attempt to parse these better so we can link the skill
+                # TODO: attempt to parse these better so we can link the skill
+                requirements.append(lines[i][2:].strip())
 
             flavor_text = lines[i + 1]
             description = lines[i + 2]
@@ -339,7 +340,7 @@ def parse_clazzes(lines, skills):
                 i += 1
 
             passive_lines = lines[passive_line_start:i]
-            split_char = get_split_char(passive_lines[0])
+            split_char = _get_split_char(passive_lines[0])
             passive_name = passive_lines[0].split(split_char, 1)[0].split(':', 1)[1].strip()
             passive_description = passive_lines[0].split(split_char, 1)[1].strip()
             if len(passive_lines) > 1:
@@ -405,8 +406,10 @@ def parse_clazzes(lines, skills):
 
 # Read text and parse into objects
 def parse_data(lines):
+    # Strip whitespace, ignore blank lines, ignore page breaks
     lines = [line.strip() for line in lines]
     lines = [line for line in lines if line != '']
+    lines = [line for line in lines if line != '________________']
 
     attributes_index = None
     races_index = None

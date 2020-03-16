@@ -2531,7 +2531,7 @@ Desired example
 {{crit_value=[[value]]}}
 {{crit_chance=[[value]]}}
 
-&{template:Barbs} {{name=Piercing Shot}} {{physical=[[d100]]}} {{fire=[[d100]]}} {{water=[[d100]]}} {{earth=[[d100]]}} {{air=[[d100]]}} {{ice=[[d100]]}} {{lightning=[[d100]]}} {{light=[[d100]]}} {{dark=[[d100]]}} {{crit_value=[[40]]}} {{crit_cutoff=[[50]]}}
+&{template:Barbs} {{name=Piercing Shot}} {{physical=[[d100]]}} {{fire=[[d100]]}} {{water=[[d100]]}} {{earth=[[d100]]}} {{air=[[d100]]}} {{ice=[[d100]]}} {{lightning=[[d100]]}} {{light=[[d100]]}} {{dark=[[d100]]}} {{crit_value=[[40]]}} {{crit_cutoff=[[50]]}} {{effects="something cool"}}
 
 -->
 
@@ -2627,6 +2627,17 @@ Desired example
             <td class="template_value">{{crit_value}}</td>
         </tr>
         {{/^rollLess() crit_value crit_cutoff}}
+
+        {{#effects}}
+        <tr style="background:#FFFFFF; color:#000000;">
+            <td colspan="2">
+                <b>Effects:</b><br/>
+                <ul>
+                    {{effects}}
+                </ul>
+            </td>
+        </tr>
+        {{/effects}}
 
     </table>
 </rolltemplate>

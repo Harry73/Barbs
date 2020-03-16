@@ -10,6 +10,17 @@ DATA_PATH = os.path.join(CURRENT_PATH, 'data')
 DATA_TXT = os.path.join(DATA_PATH, 'data.txt')
 
 
+def fix_quotes(obj):
+    if isinstance(obj, str):
+        return obj.replace(u'\u201C', '"').replace(u'\u201D', '"').replace(u'\u2019', "'")
+    elif isinstance(obj, list):
+        return [fix_quotes(o) for o in obj]
+    elif isinstance(obj, dict):
+        return {fix_quotes(k): fix_quotes(v) for k, v in obj.items()}
+    else:
+        return obj
+
+
 # One method to call them all, and in the syntax run them
 def main():
 
@@ -35,7 +46,7 @@ def main():
     components = []
     for name, l in lists.items():
         for item in l:
-            components.append(item.to_json())
+            components.append(fix_quotes(item.to_json()))
 
     with open(os.path.join(DATA_PATH, 'components.json'), 'w') as f:
         json.dump(components, f, indent=4)
