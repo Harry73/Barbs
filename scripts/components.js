@@ -3,31 +3,43 @@ var BarbsComponents = BarbsComponents || (function() {
 
     const characters_by_owner = {
         'Hoshiko Nightside': [
+            'Hoshiko Nightside',
+            'Hoshiko',
+            'Ren',
+            'Luna',
             'Ian',
             'Ian P.',
-            'Hoshiko Nightside',
             '-LjmvO3KlA-S3iHQlRW3',
         ],
         'Ren Nightside': [
+            'Ren Nightside',
+            'Hoshiko',
+            'Ren',
+            'Luna',
             'Ian',
             'Ian P.',
-            'Ren Nightside',
             '-LjmvO3KlA-S3iHQlRW3',
         ],
         'Luna Nightside': [
+            'Luna Nightside',
+            'Hoshiko',
+            'Ren',
+            'Luna',
             'Ian',
             'Ian P.',
-            'Luna Nightside',
             '-LjmvO3KlA-S3iHQlRW3',
         ],
         'Edwin Markov (Adric Vapeiros)': [
             'Edwin Markov (Adric Vapeiros)',
+            'Edwin',
+            'Adric',
             'Ahasan R.',
             'Ahasan',
             '-Ljmverqp4J9xjCdHGq4',
         ],
         'Kirin Inagami': [
             'Kirin Inagami',
+            'Kirin',
             'Sanjay N.',
             'Sanjay',
             '-Lk1li2MqriN_SAJ1ARF',
@@ -40,22 +52,26 @@ var BarbsComponents = BarbsComponents || (function() {
         ],
         'Russ Finnegan': [
             'Russ Finnegan',
+            'Russ',
             'Ravi B.',
             'Ravi',
             '-Lk7Ovry6ltsLmK8qnUY',
         ],
         'Cordelia Tenebris': [
             'Cordelia Tenebris',
+            'Cordelia',
             'Jason',
             'Jason V.',
         ],
         "Suro N'Gamma": [
             "Suro N'Gamma",
+            'Suro',
             'Steve K.',
             'Steve',
         ],
         'Orpheus Glacierum': [
             'Orpheus Glacierum',
+            'Orpheus',
             'Matthew H.',
             'Matthew',
             'Matt H.',
@@ -63,6 +79,7 @@ var BarbsComponents = BarbsComponents || (function() {
         ],
         'Faust Brightwood': [
             'Faust Brightwood',
+            'Faust',
             'Nevil A.',
             'Nevil,',
             'Drenieon',
@@ -7876,8 +7893,9 @@ var BarbsComponents = BarbsComponents || (function() {
     // Roll
 
     class Roll {
-        constructor(character) {
+        constructor(character, type) {
             this.character = character;
+            this.type = type;
             this.damages = {};
             this.multipliers = {};
             this.effects = [];
@@ -7906,6 +7924,18 @@ var BarbsComponents = BarbsComponents || (function() {
 
         add_effect(effect) {
             this.effects.push('<li>%s</li>'.format(effect));
+        }
+
+        dump_multipliers() {
+            const keys = Object.keys(this.multipliers);
+            for (let i = 0; i < keys.length; i++) {
+                const type = keys[i];
+                const keys_2 = Object.keys(this.multipliers[type]);
+                for (let j = 0; j < keys_2.length; j++) {
+                    const source = keys_2[j];
+                    log('Multiplier[type=' + type + ', source=' + source + ', string=' + this.multipliers[type][source] + ']');
+                }
+            }
         }
 
         get_multiplier_string(type) {
@@ -8013,9 +8043,11 @@ var BarbsComponents = BarbsComponents || (function() {
             return new Effect('roll', function(roll) {});
         }
 
-        static roll_damage(dmg, type) {
+        static roll_damage(dmg, type, applicable_roll_type) {
             return new Effect('roll', function(roll) {
-                roll.add_damage(dmg, type);
+                if (applicable_roll_type === 'all' || roll.type === applicable_roll_type) {
+                    roll.add_damage(dmg, type);
+                }
             });
         }
 
@@ -8025,16 +8057,20 @@ var BarbsComponents = BarbsComponents || (function() {
             })
         }
 
-        static roll_effect(effect) {
+        static roll_effect(effect, applicable_roll_type) {
             return new Effect('roll', function(roll) {
-                roll.add_effect(effect);
+                if (applicable_roll_type === 'all' || roll.type === applicable_roll_type) {
+                    roll.add_effect(effect);
+                }
             });
         }
 
-        static crit_effect(effect) {
+        static crit_effect(effect, applicable_roll_type) {
             return new Effect('roll', function(roll) {
-                if (roll.crit) {
-                    roll.add_effect(effect);
+                if (applicable_roll_type === 'all' || roll.type === applicable_roll_type) {
+                    if (roll.crit) {
+                        roll.add_effect(effect);
+                    }
                 }
             });
         }
@@ -8058,13 +8094,13 @@ var BarbsComponents = BarbsComponents || (function() {
                 skill_condition('Weapons: Bows', 'F'),
             ],
             false,
-            Effect.roll_damage('d8', 'physical'),
+            Effect.roll_damage('d8', 'physical', 'physical'),
             200,
             0,
             [],
             '',
             [
-                Effect.crit_effect('Stun'),
+                Effect.crit_effect('Stun', 'physical'),
             ]
         ),
 
@@ -8077,13 +8113,13 @@ var BarbsComponents = BarbsComponents || (function() {
                 skill_condition('Weapons: Bows', 'F'),
             ],
             false,
-            Effect.roll_damage('d6', 'physical'),
+            Effect.roll_damage('d6', 'physical', 'physical'),
             250,
             0,
             [],
             '',
             [
-                Effect.roll_damage('3d10', 'fire'),
+                Effect.roll_damage('3d10', 'fire', 'physical'),
             ]
         ),
 
@@ -8370,14 +8406,14 @@ var BarbsComponents = BarbsComponents || (function() {
                 skill_condition('Weapons: Bows', 'F'),
             ],
             false,
-            Effect.roll_damage('d10', 'physical'),
+            Effect.roll_damage('d10', 'physical', 'physical'),
             0,
             0,
             [],
             '',
             [
-                Effect.roll_damage('4d10', 'light'),
-                Effect.roll_effect('20% accuracy'),
+                Effect.roll_damage('4d10', 'light', 'physical'),
+                Effect.roll_effect('20% accuracy', 'physical'),
             ]
         ),
 
@@ -8402,6 +8438,7 @@ var BarbsComponents = BarbsComponents || (function() {
                 Effect.roll_multiplier(0.3, 'physical'),
             ]
         ),
+
         new Item(
             "Earthen Bladeshield of Hacking",
             'shield',
@@ -8411,16 +8448,17 @@ var BarbsComponents = BarbsComponents || (function() {
                 skill_condition('Weapons: Shields', 'F'),
             ],
             false,
-            Effect.roll_damage('d8', 'physical'),
+            Effect.roll_damage('d8', 'physical', 'physical'),
             0,
             0,
             [],
             '',
             [
-                Effect.roll_damage('2d8', 'physical'),
-                Effect.roll_damage('2d10', 'earth'),
+                Effect.roll_damage('2d8', 'physical', 'physical'),
+                Effect.roll_damage('2d10', 'earth', 'physical'),
             ]
         ),
+
         new Item(
             "Paralyzing Shield of Accuracy",
             'shield',
@@ -8430,14 +8468,14 @@ var BarbsComponents = BarbsComponents || (function() {
                 skill_condition('Weapons: Shields', 'F'),
             ],
             false,
-            Effect.roll_damage('d10', 'physical'),
+            Effect.roll_damage('d10', 'physical', 'physical'),
             0,
             0,
             [],
             '',
             [
-                Effect.roll_effect('20% Accuracy'),
-                Effect.roll_effect('30% paralyze'),
+                Effect.roll_effect('20% Accuracy', 'physical'),
+                Effect.roll_effect('30% paralyze', 'physical'),
             ]
         ),
     ];

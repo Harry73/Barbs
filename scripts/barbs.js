@@ -332,9 +332,6 @@ var Barbs = Barbs || (function() {
                 if (!persistent_effects[i].handler(character, roll, parameters)) {
                     return false;
                 }
-
-                // TODO: check some "done" condition, to see if the effect should be removed from the list of
-                // persistent effects
             }
         }
 
@@ -348,6 +345,15 @@ var Barbs = Barbs || (function() {
     // 4. Record and send the message.
     function do_roll(character, ability, roll, crit_section) {
         const rolls_per_type = roll.roll();
+
+        // Some effects last exactly one attack. At this point, we've successfully applied everything and done the roll,
+        // so the attack will complete. the single-use persistent effects from the master list.
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].remove_after_single_application) {
+                persistent_effects.splice(i, 1);
+                i--;
+            }
+        }
 
         let damage_section = '';
         Object.keys(rolls_per_type).forEach(function (type) {
@@ -370,28 +376,49 @@ var Barbs = Barbs || (function() {
     // Class passives (usually) that may apply to anything
 
 
+    function arbitrary_multiplier(roll, parameter) {
+        const pieces = parameter.split(' ');
+        const multiplier = pieces[1];
+        const type = pieces[2];
+        const source = pieces[3];
+        roll.add_multiplier(multiplier, type, source);
+        return true;
+    }
+
+
+    function arbitrary_damage(roll, parameter) {
+        const pieces = parameter.split(' ');
+        const damage = pieces[1];
+        const type = pieces[2];
+        roll.add_damage(damage, type);
+        return true;
+    }
+
+
     function sniper_spotter(roll, parameter) {
-        const stacks = parseInt(parameter.split(' ')[1], 10);
+        const stacks = parseInt(parameter.split(' ')[1]);
         roll.add_multiplier(stacks * 0.25, 'all', 'self');
         return true;
     }
 
 
     const arbitrary_parameters = {
+        'misc_multiplier': arbitrary_multiplier,
+        'misc_damage': arbitrary_damage,
         'spotting': sniper_spotter,
     };
 
 
     function handle_arbitrary_parameters(roll, parameters) {
-        Object.keys(arbitrary_parameters).forEach(function (keyword) {
-            for (let i = 0; i < parameters.length; i++) {
+        for (let i = 0; i < parameters.length; i++) {
+            Object.keys(arbitrary_parameters).forEach(function (keyword) {
                 if (parameters[i].includes(keyword)) {
                     if (!arbitrary_parameters[keyword](roll, parameters[i])) {
                         return false;
                     }
                 }
-            }
-        });
+            });
+        }
 
         return true;
     }
@@ -407,6 +434,7 @@ var Barbs = Barbs || (function() {
         const persistent = {
             'character': character.name,
             'duration': ability_info.duration,
+            'remove_after_single_application': false,
             'handler': function (character, roll) {
                 roll.add_effect('Bow attacks push target 5ft away');
             },
@@ -434,6 +462,26 @@ var Barbs = Barbs || (function() {
     }
 
 
+    function air_duelist_cutting_winds(character, ability, parameters) {
+        const roll = new BarbsComponents.Roll(character, 'magic');
+
+        roll_crit(roll, function (crit_section) {
+            roll.add_damage('6d8', 'air');
+            roll.add_damage(character.get_stat('magic damage'), 'air');
+            roll.add_effect('Knocks prone');
+
+            add_items_to_roll(character, roll);
+            if (!add_persistent_effects_to_roll(character, roll, parameters)) {
+                return;
+            }
+            if (!handle_arbitrary_parameters(roll, parameters)) {
+                return;
+            }
+            do_roll(character, ability, roll, crit_section);
+        });
+    }
+
+
     function enchanter_mint_coinage(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
@@ -441,7 +489,7 @@ var Barbs = Barbs || (function() {
 
 
     function sniper_piercing_shot(character, ability, parameters) {
-        const roll = new BarbsComponents.Roll(character);
+        const roll = new BarbsComponents.Roll(character, 'physical');
 
         roll_crit(roll, function (crit_section) {
             roll.add_damage('5d8', 'physical');
@@ -459,7 +507,7 @@ var Barbs = Barbs || (function() {
 
 
     function sniper_kill_shot(character, ability, parameters) {
-        const roll = new BarbsComponents.Roll(character);
+        const roll = new BarbsComponents.Roll(character, 'physical');
 
         roll_crit(roll, function (crit_section) {
             roll.add_damage('7d8', 'physical');
@@ -488,7 +536,8 @@ var Barbs = Barbs || (function() {
         const persistent = {
             'character': character.name,
             'duration': 1,
-            'handler': function (character, /*BarbsComponent.Roll*/ roll, parameters) {
+            'remove_after_single_application': true,
+            'handler': function (character, roll, parameters) {
                 const distance = get_parameter('distance', parameters);
                 if (distance === null) {
                     chat(character, '"distance" parameter is missing');
@@ -497,6 +546,7 @@ var Barbs = Barbs || (function() {
 
                 // 2 damage per 5 ft between character and target
                 roll.add_damage(2 * parseInt(distance, 10) / 5, 'physical');
+
                 return true;
             },
         };
@@ -512,6 +562,7 @@ var Barbs = Barbs || (function() {
         const persistent = {
             'character': character.name,
             'duration': 1,
+            'remove_after_single_application': true,
             'handler': function (character, roll, parameters) {
                 roll.add_effect('Ignores AC');
                 roll.add_effect('Ignores MR');
@@ -529,8 +580,40 @@ var Barbs = Barbs || (function() {
     }
 
 
+    function warrior_charge(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+
+        if (parameters.length < 1) {
+            chat(character, 'Need a parameter for the list of affected players');
+        }
+        const character_names = parameters[0].split(',');
+
+        for (let i = 0; i < character_names.length; i++) {
+            const fake_msg = {'who': character_names[i], 'id': ''};
+            const target_character = get_character(fake_msg);
+            if (target_character === null) {
+                return;
+            }
+
+            const persistent = {
+                'character': target_character.name,
+                'duration': 1,
+                'remove_after_single_application': false,
+                'handler': function (character, roll, parameters) {
+                    roll.add_multiplier(0.5, 'all', character.name);
+                    return true;
+                },
+            };
+
+            persistent_effects.push(persistent);
+        }
+
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
     function soldier_fleetfoot_blade(character, ability, parameters) {
-        const roll = new BarbsComponents.Roll(character);
+        const roll = new BarbsComponents.Roll(character, 'physical');
 
         roll_crit(roll, function (crit_section) {
             roll.add_damage('4d10', 'physical');
@@ -551,6 +634,7 @@ var Barbs = Barbs || (function() {
         'Air Duelist': {
             'Mistral Bow': air_duelist_mistral_bow,
             'Arc of Air': air_duelist_arc_of_air,
+            'Cutting Winds': air_duelist_cutting_winds,
         },
         'Enchanter': {
             'Mint Coinage': enchanter_mint_coinage,
@@ -564,6 +648,9 @@ var Barbs = Barbs || (function() {
         'Soldier': {
             'Fleetfoot Blade': soldier_fleetfoot_blade,
         },
+        'Warrior': {
+            '"Charge!"': warrior_charge,
+        }
         // TODO add more
     };
 
@@ -577,10 +664,10 @@ var Barbs = Barbs || (function() {
 
         const pieces = msg.content.split(' ');
         const options = pieces.slice(2).join(' ');
-        const option_pieces = options.split(',');
+        const option_pieces = options.split(';');
         const clazz = option_pieces[0];
         const ability = option_pieces[1];
-        const parameters = option_pieces[2].split(';');
+        const parameters = option_pieces.slice(2);
 
         // Verify that we know how to handle this class + ability combo
         if (!(clazz in abilities_processors)) {
