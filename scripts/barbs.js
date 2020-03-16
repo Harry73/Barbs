@@ -289,7 +289,7 @@ var Barbs = Barbs || (function() {
     function get_parameter(parameter, parameters) {
         for (let i = 0; i < parameters.length; i++) {
             if (parameters[i].includes(parameter)) {
-                return parameters[i].split(' ')[1];
+                return parameters[i].split(' ').slice(1).join(' ');
             }
         }
 
@@ -449,6 +449,7 @@ var Barbs = Barbs || (function() {
         const ability_info = get_ability_info(ability);
 
         const persistent = {
+            'name': ability,
             'character': character.name,
             'duration': ability_info.duration,
             'handler': function (character, roll) {
@@ -534,6 +535,7 @@ var Barbs = Barbs || (function() {
         const ability_info = get_ability_info(ability);
 
         const persistent = {
+            'name': ability,
             'character': character.name,
             'duration': 1,
             'remove_after_single_application': true,
@@ -566,6 +568,7 @@ var Barbs = Barbs || (function() {
         const ability_info = get_ability_info(ability);
 
         const persistent = {
+            'name': ability,
             'character': character.name,
             'duration': 1,
             'remove_after_single_application': true,
@@ -602,6 +605,7 @@ var Barbs = Barbs || (function() {
             }
 
             const persistent = {
+                'name': ability,
                 'character': target_character.name,
                 'duration': 1,
                 'remove_after_single_application': false,
@@ -699,6 +703,30 @@ var Barbs = Barbs || (function() {
     }
 
 
+    function remove_persistent_effect(msg) {
+        const pieces = msg.content.split(' ');
+        const options = pieces.slice(2).join(' ');
+        const option_pieces = options.split(';');
+        const character_name = option_pieces[0];
+        const effect_name = option_pieces[1];
+
+        const fake_msg = {'who': character_name, 'id': ''};
+        const character = get_character(fake_msg);
+        if (character === null) {
+            return;
+        }
+
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].name === effect_name && persistent_effects[i].character === character.name) {
+                persistent_effects.splice(i, 1);
+                i--;
+
+                chat(get_character(msg), 'Removed effect ' + effect_name + ' from ' + character.name);
+            }
+        }
+    }
+
+
     // ################################################################################################################
     // Basic setup and message handling
 
@@ -707,6 +735,7 @@ var Barbs = Barbs || (function() {
         'stat': roll_stat,
         'skill': roll_skill,
         'ability': process_ability,
+        'remove_effect': remove_persistent_effect,
     };
 
 
