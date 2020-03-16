@@ -339,6 +339,21 @@ var Barbs = Barbs || (function() {
     }
 
 
+    function add_extras(character, roll, parameters) {
+        add_items_to_roll(character, roll);
+        if (!add_persistent_effects_to_roll(character, roll, parameters)) {
+            log('Problem adding persistent effects to roll');
+            return false;
+        }
+        if (!handle_arbitrary_parameters(roll, parameters)) {
+            log('Problem handling arbitrary parameters');
+            return false;
+        }
+
+        return true;
+    }
+
+
     // 1. Do the roll, which actually builds up the strings for the roll on a per-type basis.
     // 2. Fill out a roll template to construct the message.
     // 3. Add in any extra effects that don't fit nicely into a damage type to the message.
@@ -471,11 +486,7 @@ var Barbs = Barbs || (function() {
             roll.add_damage(character.get_stat('magic damage'), 'air');
             roll.add_effect('Knocks prone');
 
-            add_items_to_roll(character, roll);
-            if (!add_persistent_effects_to_roll(character, roll, parameters)) {
-                return;
-            }
-            if (!handle_arbitrary_parameters(roll, parameters)) {
+            if (!add_extras(character, roll, parameters)) {
                 return;
             }
             do_roll(character, ability, roll, crit_section);
@@ -495,11 +506,7 @@ var Barbs = Barbs || (function() {
         roll_crit(roll, function (crit_section) {
             roll.add_damage('5d8', 'physical');
             roll.add_damage(character.get_stat('ranged fine damage'), 'physical');
-            add_items_to_roll(character, roll);
-            if (!add_persistent_effects_to_roll(character, roll, parameters)) {
-                return;
-            }
-            if (!handle_arbitrary_parameters(roll, parameters)) {
+            if (!add_extras(character, roll, parameters)) {
                 return;
             }
             do_roll(character, ability, roll, crit_section);
@@ -519,11 +526,21 @@ var Barbs = Barbs || (function() {
                 roll.add_effect('%s% Lethality'.format(10 * parseInt(stacks_spent_for_lethality, 10)));
             }
 
-            add_items_to_roll(character, roll);
-            if (!add_persistent_effects_to_roll(character, roll, parameters)) {
+            if (!add_extras(character, roll, parameters)) {
                 return;
             }
-            if (!handle_arbitrary_parameters(roll, parameters)) {
+            do_roll(character, ability, roll, crit_section);
+        });
+    }
+
+
+    function sniper_shrapnel_shot(character, ability, parameters) {
+        const roll = new BarbsComponents.Roll(character, 'physical');
+
+        roll_crit(roll, function (crit_section) {
+            roll.add_damage('6d8', 'physical');
+            roll.add_damage(character.get_stat('ranged fine damage'), 'physical');
+            if (!add_extras(character, roll, parameters)) {
                 return;
             }
             do_roll(character, ability, roll, crit_section);
@@ -628,11 +645,7 @@ var Barbs = Barbs || (function() {
         roll_crit(roll, function (crit_section) {
             roll.add_damage('4d10', 'physical');
             roll.add_damage(character.get_stat('melee damage'), 'physical');
-            add_items_to_roll(character, roll);
-            if (!add_persistent_effects_to_roll(character, roll, parameters)) {
-                return;
-            }
-            if (!handle_arbitrary_parameters(roll, parameters)) {
+            if (!add_extras(character, roll, parameters)) {
                 return;
             }
             do_roll(character, ability, roll, crit_section);
@@ -652,6 +665,7 @@ var Barbs = Barbs || (function() {
         'Sniper': {
             'Piercing Shot': sniper_piercing_shot,
             'Kill Shot': sniper_kill_shot,
+            'Shrapnel Shot': sniper_shrapnel_shot,
             'Distance Shooter': sniper_distance_shooter,
             'Precision Shooter': sniper_precision_shooter,
         },

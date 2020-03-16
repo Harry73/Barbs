@@ -2436,7 +2436,7 @@ var BarbsComponents = BarbsComponents || (function() {
             "abilities": [
                 "Piercing Shot",
                 "Kill Shot",
-                "Shrapnel  Shot",
+                "Shrapnel Shot",
                 "Rapid Shot",
                 "Distance Shooter",
                 "Precision Shooter",
@@ -6133,7 +6133,7 @@ var BarbsComponents = BarbsComponents || (function() {
         },
         {
             "type": "ability",
-            "name": "Shrapnel  Shot",
+            "name": "Shrapnel Shot",
             "clazz": "Sniper",
             "branch": "Shooting",
             "tier": 3,
