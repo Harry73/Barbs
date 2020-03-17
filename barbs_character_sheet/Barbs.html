@@ -791,20 +791,26 @@
                             <button class="sheet-skill-roll" type="roll" name="roll_class_ability" value="!barbs ability @{class_name};@{ability_name};@{ability_options}"></button>
                         </div>
                         <div class="sheet-col-7-24">
-                            <input type="text" placeholder="class name" name="attr_class_name"/>
+                            <input style="font-weight: bolder;" type="text" placeholder="class name" name="attr_class_name"/>
                         </div>
-                        <div class="sheet-col-1-2">
-                            <input type="text" placeholder="ability name" name="attr_ability_name"/>
+                        <div class="sheet-col-1-2 sheet-bold">
+                            <input style="font-weight: bolder;" type="text" placeholder="ability name" name="attr_ability_name"/>
                         </div>
                         <div class="sheet-col-1-8">
-                            <input type="number" class="sheet-center" name="attr_ability_tier" value="" min="1" max="4"/>
+                            <input style="font-weight: bolder;" type="number" class="sheet-center" name="attr_ability_tier" value="" min="1" max="4"/>
                         </div>
                     </div>
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">&nbsp;</div>
                         <div class="sheet-col-11-12">
-                            <input type="text" placeholder="&nbsp;&nbsp;ability parameters and options" name="attr_ability_options"/>
+                            <input type="text" placeholder="&nbsp;&nbsp;&nbsp;&nbsp;ability parameters and options" name="attr_ability_options"/>
                         </div>
+                    </div>
+
+                    <!-- add some separation between abilities -->
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-2">&nbsp;</div>
+                        <div class="sheet-col-1-2">&nbsp;</div>
                     </div>
                 </fieldset>
             </div>
@@ -1904,109 +1910,138 @@
     <!-- Skills rank and bonus updater -->
     <script type="text/worker">
 
-		const skill_to_attribute_map = {"Alchemy Augmentation": "INT", "Alchemy Constructs": "INT", "Alchemy Organics": "INT", "Alchemy Transformation": "INT", "Armor Mastery Cloth": "RES", "Armor Mastery Heavy": "TGH", "Armor Mastery Light": "REF", "Armor Mastery Shields": "TGH", "Artistry Acting": "APL", "Artistry Dancing": "APL", "Artistry Illustration": "APL", "Artistry Literature": "APL", "Artistry Music": "APL", "Artistry Sculpture": "APL", "Athletics Balance": "DEX", "Athletics Climbing": "AGI", "Athletics Flexibility": "DEX", "Athletics Force": "STR", "Athletics Movement": "AGI", "Athletics Pain Tolerance": "COM", "Beast Mastery Battle Pet": "WIS", "Beast Mastery Riding": "AGI", "Beast Mastery Taming": "WIS", "Combat Blocking": "TGH", "Combat Dodging": "REF", "Combat Grappling": "AGI", "Combat Trapping": "FRT", "Crafting Armorsmithing": "TGH", "Crafting Artificing": "RES", "Crafting Cooking": "APL", "Crafting Enchanting": "RES", "Crafting Fine Weapons": "REF", "Crafting Forgery": "PRE", "Crafting Leatherworking": "REF", "Crafting Jewelry": "FRT", "Crafting Heavy Weapons": "TGH", "Crafting Poisons": "FRT", "Crafting Potions": "FRT", "Crafting Ranged Weapons": "REF", "Crafting Shortblades": "PRE", "Crafting Tailoring": "RES", "Element Mastery Air": "AGI", "Element Mastery Dark": "FRT", "Element Mastery Earth": "RES", "Element Mastery Fire": "ATN", "Element Mastery Ice": "FRT", "Element Mastery Light": "FCS", "Element Mastery Lightning": "ATN", "Element Mastery Water": "FCS", "Gathering Forestry": "TGH", "Gathering Harvest": "AGI", "Gathering Herbology": "RES", "Gathering Hunting": "REF", "Gathering Mining": "TGH", "Gathering Skinning": "REF", "Item Use Appraisal": "WIS", "Item Use Construction": "STR", "Item Use First Aid": "FRT", "Item Use Literacy": "INT", "Item Use Ropes": "WIS", "Item Use Tinkering": "WIS", "Item Use Traps": "COM", "Interaction Deception": "APL", "Interaction Intent": "WIS", "Interaction Intimidation": "COM", "Interaction Leadership": "COM", "Interaction Persuasion": "APL", "Interaction Seduction": "APL", "Knowledge Arcana": "INT", "Knowledge Culture": "INT", "Knowledge History": "INT", "Knowledge Nature": "INT", "Knowledge Religion": "INT", "Magic Buffs": "FCS", "Magic Conditions": "ATN", "Magic Conjuration": "FCS", "Magic Control": "ATN", "Magic Defensive": "RES", "Magic Destruction": "ATN", "Magic Divination": "ATN", "Magic Enchantment": "FCS", "Magic Illusions": "FCS", "Magic Mana Channeling": "COM", "Magic Restoration": "ATN", "Magic Summoning": "FCS", "Magic Transmutation": "FCS", "Magic Utility": "ATN", "Observation Listen": "WIS", "Observation Search": "WIS", "Observation Tracking": "WIS", "Psionics Defensive": "COM", "Psionics Offensive": "COM", "Psionics Utility": "COM", "Stealth Disguise": "PRE", "Stealth Lockpicking": "PRE", "Stealth Sleight of Hand": "PRE", "Stealth Sneak": "PRE", "Stealth Steal": "PRE", "Transportation Air Vehicles": "COM", "Transportation Land Vehicles": "AGI", "Transportation Sea Vehicles": "FCS", "Weapon Mastery Axes": "STR", "Weapon Mastery Blunt": "STR", "Weapon Mastery Bows": "DEX", "Weapon Mastery Bullets": "DEX", "Weapon Mastery Crossbows": "DEX", "Weapon Mastery Fine": "DEX", "Weapon Mastery Improvised Weapons": "WIS", "Weapon Mastery Heavy Thrown Weapons": "STR", "Weapon Mastery Light Thrown Weapons": "DEX", "Weapon Mastery Longblades": "STR", "Weapon Mastery Polearms": "STR", "Weapon Mastery Shields": "STR", "Weapon Mastery Shortblades": "PRE", "Weapon Mastery Unarmed": "DEX"};
+        const skill_to_attribute_map = {"Alchemy Augmentation": "INT", "Alchemy Constructs": "INT", "Alchemy Organics": "INT", "Alchemy Transformation": "INT", "Armor Mastery Cloth": "RES", "Armor Mastery Heavy": "TGH", "Armor Mastery Light": "REF", "Armor Mastery Shields": "TGH", "Artistry Acting": "APL", "Artistry Dancing": "APL", "Artistry Illustration": "APL", "Artistry Literature": "APL", "Artistry Music": "APL", "Artistry Sculpture": "APL", "Athletics Balance": "DEX", "Athletics Climbing": "AGI", "Athletics Flexibility": "DEX", "Athletics Force": "STR", "Athletics Movement": "AGI", "Athletics Pain Tolerance": "COM", "Beast Mastery Battle Pet": "WIS", "Beast Mastery Riding": "AGI", "Beast Mastery Taming": "WIS", "Combat Blocking": "TGH", "Combat Dodging": "REF", "Combat Grappling": "AGI", "Combat Trapping": "FRT", "Crafting Armorsmithing": "TGH", "Crafting Artificing": "RES", "Crafting Cooking": "APL", "Crafting Enchanting": "RES", "Crafting Fine Weapons": "REF", "Crafting Forgery": "PRE", "Crafting Leatherworking": "REF", "Crafting Jewelry": "FRT", "Crafting Heavy Weapons": "TGH", "Crafting Poisons": "FRT", "Crafting Potions": "FRT", "Crafting Ranged Weapons": "REF", "Crafting Shortblades": "PRE", "Crafting Tailoring": "RES", "Element Mastery Air": "AGI", "Element Mastery Dark": "FRT", "Element Mastery Earth": "RES", "Element Mastery Fire": "ATN", "Element Mastery Ice": "FRT", "Element Mastery Light": "FCS", "Element Mastery Lightning": "ATN", "Element Mastery Water": "FCS", "Gathering Forestry": "TGH", "Gathering Harvest": "AGI", "Gathering Herbology": "RES", "Gathering Hunting": "REF", "Gathering Mining": "TGH", "Gathering Skinning": "REF", "Item Use Appraisal": "WIS", "Item Use Construction": "STR", "Item Use First Aid": "FRT", "Item Use Literacy": "INT", "Item Use Ropes": "WIS", "Item Use Tinkering": "WIS", "Item Use Traps": "COM", "Interaction Deception": "APL", "Interaction Intent": "WIS", "Interaction Intimidation": "COM", "Interaction Leadership": "COM", "Interaction Persuasion": "APL", "Interaction Seduction": "APL", "Knowledge Arcana": "INT", "Knowledge Culture": "INT", "Knowledge History": "INT", "Knowledge Nature": "INT", "Knowledge Religion": "INT", "Magic Buffs": "FCS", "Magic Conditions": "ATN", "Magic Conjuration": "FCS", "Magic Control": "ATN", "Magic Defensive": "RES", "Magic Destruction": "ATN", "Magic Divination": "ATN", "Magic Enchantment": "FCS", "Magic Illusions": "FCS", "Magic Mana Channeling": "COM", "Magic Restoration": "ATN", "Magic Summoning": "FCS", "Magic Transmutation": "FCS", "Magic Utility": "ATN", "Observation Listen": "WIS", "Observation Search": "WIS", "Observation Tracking": "WIS", "Psionics Defensive": "COM", "Psionics Offensive": "COM", "Psionics Utility": "COM", "Stealth Disguise": "PRE", "Stealth Lockpicking": "PRE", "Stealth Sleight of Hand": "PRE", "Stealth Sneak": "PRE", "Stealth Steal": "PRE", "Transportation Air Vehicles": "COM", "Transportation Land Vehicles": "AGI", "Transportation Sea Vehicles": "FCS", "Weapon Mastery Axes": "STR", "Weapon Mastery Blunt": "STR", "Weapon Mastery Bows": "DEX", "Weapon Mastery Bullets": "DEX", "Weapon Mastery Crossbows": "DEX", "Weapon Mastery Fine": "DEX", "Weapon Mastery Improvised Weapons": "WIS", "Weapon Mastery Heavy Thrown Weapons": "STR", "Weapon Mastery Light Thrown Weapons": "DEX", "Weapon Mastery Longblades": "STR", "Weapon Mastery Polearms": "STR", "Weapon Mastery Shields": "STR", "Weapon Mastery Shortblades": "PRE", "Weapon Mastery Unarmed": "DEX"};
 
-		String.prototype.format = function() {
-			let a = this;
-			for (let i = 0; i < arguments.length; i++) {
-				a = a.replace('%s', arguments[i]);
-			}
-			return a
-		};
+        String.prototype.format = function() {
+            let a = this;
+            for (let i = 0; i < arguments.length; i++) {
+                a = a.replace('%s', arguments[i]);
+            }
+            return a
+        };
 
-		on("change:repeating_skills:skill_points", function(event) {
-			let value = parseInt(event.newValue, 10);
-			const bonus = 5 * value;
+        on("change:repeating_skills:skill_points", function(event) {
+            let value = parseInt(event.newValue, 10);
+            const bonus = 5 * value;
 
-			let rank = 'error';
-			switch (value) {
-				case 0:
-					rank = 'Untrained';
-					break;
-				case 1:
-					rank = 'F';
-					break;
-				case 2:
-					rank = 'E';
-					break;
-				case 3:
-					rank = 'D';
-					break;
-				case 4:
-					rank = 'C';
-					break;
-				case 5:
-					rank = 'B';
-					break;
-				case 6:
-					rank = 'A';
-					break;
-				default:
-					rank = -1 * value + 16;
-					rank = rank.toString(10);
-					break;
-			}
+            let rank = 'error';
+            switch (value) {
+                case 0:
+                    rank = 'Untrained';
+                    break;
+                case 1:
+                    rank = 'F';
+                    break;
+                case 2:
+                    rank = 'E';
+                    break;
+                case 3:
+                    rank = 'D';
+                    break;
+                case 4:
+                    rank = 'C';
+                    break;
+                case 5:
+                    rank = 'B';
+                    break;
+                case 6:
+                    rank = 'A';
+                    break;
+                default:
+                    rank = -1 * value + 16;
+                    rank = rank.toString(10);
+                    break;
+            }
 
-			getAttrs(['repeating_skills_skill_name'], function(values) {
-				const skill_name = values.repeating_skills_skill_name.replace(/:/g, '');
+            getAttrs(['repeating_skills_skill_name'], function(values) {
+                const skill_name = values.repeating_skills_skill_name.replace(/:/g, '');
 
-				if (!(skill_name in skill_to_attribute_map)) {
-					console.log('error, unknown skill ' + skill_name);
-					return;
-				}
+                if (!(skill_name in skill_to_attribute_map)) {
+                    console.log('error, unknown skill ' + skill_name);
+                    return;
+                }
 
-				const attr = skill_to_attribute_map[skill_name];
-				const bonus_string = '%s+@{%s}'.format(bonus.toString(10), attr);
+                const attr = skill_to_attribute_map[skill_name];
+                const bonus_string = '%s+@{%s}'.format(bonus.toString(10), attr);
 
-				setAttrs({
-					'repeating_skills_hidden_rank': rank,
-					'repeating_skills_hidden_bonus': bonus_string
-				});
-			});
+                setAttrs({
+                    'repeating_skills_hidden_rank': rank,
+                    'repeating_skills_hidden_bonus': bonus_string
+                });
+            });
 
-		});
+        });
 
-	</script>
+    </script>
 
     <!-- Level updater -->
     <!-- TODO: Add class points into this -->
     <script type="text/worker">
 
-		const base_equation = '200+@{VIT}+@{END}+@{SPT}+@{RCV}+@{PER}+@{SAN}+@{AGI}+@{TGH}+@{REF}+@{RES}+@{FRT}+@{STR}+@{DEX}+@{ATN}+@{PRE}+@{APL}+@{INT}+@{WIS}+@{COM}+@{FCS}';
+        const base_equation = '200+@{VIT}+@{END}+@{SPT}+@{RCV}+@{PER}+@{SAN}+@{AGI}+@{TGH}+@{REF}+@{RES}+@{FRT}+@{STR}+@{DEX}+@{ATN}+@{PRE}+@{APL}+@{INT}+@{WIS}+@{COM}+@{FCS}';
 
-		String.prototype.format = function() {
-			let a = this;
-			for (let i = 0; i < arguments.length; i++) {
-				a = a.replace('%s', arguments[i]);
-			}
-			return a
-		};
+        String.prototype.format = function() {
+            let a = this;
+            for (let i = 0; i < arguments.length; i++) {
+                a = a.replace('%s', arguments[i]);
+            }
+            return a
+        };
 
-		on("change:repeating_skills:skill_points", function(event) {
-			getSectionIDs("repeating_skills", function(ids) {
-				const skill_point_attrs = [];
-				for(let i = 0; i < ids.length; i++) {
-					console.log('got id ' + ids[i]);
-					const skill_point_attr = 'repeating_skills_%s_skill_points'.format(ids[i]);
-					skill_point_attrs.push(skill_point_attr);
-		  		}
 
-		  		getAttrs(skill_point_attrs, function(values) {
-					var skill_points = 0;
-					for(let i = 0; i < skill_point_attrs.length; i++) {
-						skill_points += parseInt(values[skill_point_attrs[i]]);
-					}
+        function append_ability_points(partial_level_equation) {
+            getSectionIDs("repeating_abilities", function(ids) {
+                const ability_point_attrs = [];
+                for (let i = 0; i < ids.length; i++) {
+                    const ability_point_attr = 'repeating_abilities_%s_ability_tier'.format(ids[i]);
+                    ability_point_attrs.push(ability_point_attr);
+                }
 
-					const level_equation = '%s+%s'.format(base_equation, skill_points.toString(10));
+                getAttrs(ability_point_attrs, function(values) {
+                    var ability_points = 0;
+                    for (let i = 0; i < ability_point_attrs.length; i++) {
+                        ability_points += parseInt(values[ability_point_attrs[i]]);
+                    }
 
-					setAttrs({
-						hidden_level: level_equation
-					});
-		  		});
-			});
-		});
+                    const level_equation = '%s+%s'.format(partial_level_equation, ability_points.toString(10));
+                    setAttrs({
+                        hidden_level: level_equation,
+                    });
+                });
+            });
+        }
 
-	</script>
+
+        function append_skill_points() {
+            getSectionIDs("repeating_skills", function(ids) {
+                const skill_point_attrs = [];
+                for (let i = 0; i < ids.length; i++) {
+                    const skill_point_attr = 'repeating_skills_%s_skill_points'.format(ids[i]);
+                    skill_point_attrs.push(skill_point_attr);
+                }
+
+                getAttrs(skill_point_attrs, function(values) {
+                    var skill_points = 0;
+                    for (let i = 0; i < skill_point_attrs.length; i++) {
+                        skill_points += parseInt(values[skill_point_attrs[i]]);
+                    }
+
+                    const partial_level_equation = '%s+%s'.format(base_equation, skill_points.toString(10));
+                    append_ability_points(partial_level_equation);
+                });
+            });
+        }
+
+
+        function handle_event(event) {
+            append_skill_points();
+        }
+
+
+        on("change:repeating_skills:skill_points", handle_event);
+        on("change:repeating_abilities:ability_tier", handle_event);
+
+    </script>
 
 </div>
 

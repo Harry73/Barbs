@@ -271,6 +271,76 @@ var Barbs = Barbs || (function() {
 
 
     // ################################################################################################################
+    // Managing persistent effects
+
+    // Effects may be applied before or after a roll. Within the "before" and "after" categories, effects can
+    // additionally have some desired ordering. This class wraps both by giving each effect some "ordering" in which
+    // it should be applied.
+    //
+    class Ordering {
+        constructor(type, val) {
+            this.type = type;
+            this.val = val;
+        }
+
+        static BEFORE(val = 0) {
+            return new Ordering('before', val);
+        }
+
+        static AFTER(val = 0) {
+            return new Ordering('after', val);
+        }
+    }
+
+
+    function add_persistent_effect(ability, character, duration, order, single_application, handler) {
+        const effect = {
+            'name': ability,
+            'character': character.name,
+            'duration': duration,
+            'ordering': order,
+            'single_application': single_application,
+            'handler': handler,
+        };
+
+        // Keep persistent effects in a priority queue, so that we process lower priority effects first and higher
+        // priority effects last
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].ordering.val > effect.ordering.val) {
+                persistent_effects.splice(i, 0, effect);
+                return;
+            }
+        }
+
+        persistent_effects.push(effect);
+    }
+
+
+    function remove_persistent_effect(msg) {
+        const pieces = msg.content.split(' ');
+        const options = pieces.slice(2).join(' ');
+        const option_pieces = options.split(';');
+        const character_name = option_pieces[0];
+        const effect_name = option_pieces[1];
+
+        const fake_msg = {'who': character_name, 'id': ''};
+        const character = get_character(fake_msg);
+        if (character === null) {
+            return;
+        }
+
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].name === effect_name && persistent_effects[i].character === character.name) {
+                persistent_effects.splice(i, 1);
+                i--;
+
+                chat(get_character(msg), 'Removed effect ' + effect_name + ' from ' + character.name);
+            }
+        }
+    }
+
+
+    // ################################################################################################################
     // Class abilities helpers
 
 
@@ -297,6 +367,48 @@ var Barbs = Barbs || (function() {
     }
 
 
+    // Iterate through the character's items and add any damage bonuses or multipliers to the roll
+    function add_items_to_roll(character, roll) {
+        _.each(character.items, function (item) {
+            for (let i = 0; i < item.effects.length; i++) {
+                if (item.effects[i].type === 'roll') {
+                    item.effects[i].apply(roll);
+                }
+            }
+        });
+    }
+
+
+    // Iterate through effects of abilities (buffs, empowers, etc) that may last multiple turns and add applicable ones
+    // to the roll.
+    function handle_persistent_effects(character, roll, parameters, ordering) {
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].character === character.name && persistent_effects[i].ordering.type === ordering.type) {
+                if (!persistent_effects[i].handler(character, roll, parameters)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+
+    function add_extras(character, roll, parameters) {
+        add_items_to_roll(character, roll);
+        if (!handle_persistent_effects(character, roll, parameters, Ordering.BEFORE())) {
+            log('Problem adding persistent effects to roll');
+            return false;
+        }
+        if (!handle_arbitrary_parameters(roll, parameters)) {
+            log('Problem handling arbitrary parameters');
+            return false;
+        }
+
+        return true;
+    }
+
+
     // Roll for whether or not this will be a crit, and set the result in the roll. The passed handler should take a
     // string that can be appended to show the result of the crit roll.
     function roll_crit(roll, handler) {
@@ -312,64 +424,35 @@ var Barbs = Barbs || (function() {
     }
 
 
-    // Iterate through the character's items and add any damage bonuses or multipliers to the roll
-    function add_items_to_roll(character, roll) {
-        _.each(character.items, function (item) {
-            for (let i = 0; i < item.effects.length; i++) {
-                if (item.effects[i].type === 'roll') {
-                    item.effects[i].apply(roll);
-                }
-            }
-        });
-    }
-
-
-    // Iterate through effects of abilities (buffs, empowers, etc) that may last multiple turns and add applicable ones
-    // to the roll.
-    function add_persistent_effects_to_roll(character, roll, parameters) {
-        for (let i = 0; i < persistent_effects.length; i++) {
-            if (character.name === persistent_effects[i].character) {
-                if (!persistent_effects[i].handler(character, roll, parameters)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-
-    function add_extras(character, roll, parameters) {
-        add_items_to_roll(character, roll);
-        if (!add_persistent_effects_to_roll(character, roll, parameters)) {
-            log('Problem adding persistent effects to roll');
-            return false;
-        }
-        if (!handle_arbitrary_parameters(roll, parameters)) {
-            log('Problem handling arbitrary parameters');
-            return false;
-        }
-
-        return true;
-    }
-
-
     // 1. Do the roll, which actually builds up the strings for the roll on a per-type basis.
     // 2. Fill out a roll template to construct the message.
     // 3. Add in any extra effects that don't fit nicely into a damage type to the message.
     // 4. Record and send the message.
-    function do_roll(character, ability, roll, crit_section) {
+    function do_roll(character, ability, roll, parameters, crit_section) {
+        if (!add_extras(character, roll, parameters)) {
+            return;
+        }
+
         const rolls_per_type = roll.roll();
+        format_and_send_roll(character, ability, roll, rolls_per_type, crit_section);
+
+        if (!handle_persistent_effects(character, roll, parameters, Ordering.AFTER())) {
+            log('Problem adding persistent effects after roll');
+            return false;
+        }
 
         // Some effects last exactly one attack. At this point, we've successfully applied everything and done the roll,
-        // so the attack will complete. the single-use persistent effects from the master list.
+        // so the attack will complete. Thus we can remove the single-use persistent effects from the master list.
         for (let i = 0; i < persistent_effects.length; i++) {
-            if (persistent_effects[i].remove_after_single_application) {
+            if (persistent_effects[i].single_application && persistent_effects[i].character === character.name) {
                 persistent_effects.splice(i, 1);
                 i--;
             }
         }
+    }
 
+
+    function format_and_send_roll(character, ability, roll, rolls_per_type, crit_section) {
         let damage_section = '';
         Object.keys(rolls_per_type).forEach(function (type) {
             damage_section = damage_section + damage_section_format.format(type, rolls_per_type[type]);
@@ -443,19 +526,21 @@ var Barbs = Barbs || (function() {
     // Class abilities
 
 
+    // There are some abilities that don't make any real changes to combat. Simply print the description for
+    // these abilities.
+    function print_ability_description(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
     function air_duelist_mistral_bow(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
-        const persistent = {
-            'character': character.name,
-            'duration': ability_info.duration,
-            'remove_after_single_application': false,
-            'handler': function (character, roll) {
-                roll.add_effect('Bow attacks push target 5ft away');
-            },
-        };
+        add_persistent_effect(ability, character, ability_info.duration,  Ordering.BEFORE(1), true,  function (character, roll, parameters) {
+            roll.add_effect('Bow attacks push target 5ft away');
+        });
 
-        persistent_effects.push(persistent);
         chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
     }
 
@@ -463,17 +548,11 @@ var Barbs = Barbs || (function() {
     function air_duelist_arc_of_air(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
-        const persistent = {
-            'name': ability,
-            'character': character.name,
-            'duration': ability_info.duration,
-            'handler': function (character, roll) {
-                roll.add_damage('2d8', 'air');
-                return true;
-            },
-        };
+        add_persistent_effect(ability, character, ability_info.duration,  Ordering.BEFORE(1), false,  function (character, roll, parameters) {
+            roll.add_damage('2d8', 'air');
+            return true;
+        });
 
-        persistent_effects.push(persistent);
         chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
     }
 
@@ -485,18 +564,8 @@ var Barbs = Barbs || (function() {
             roll.add_damage('6d8', 'air');
             roll.add_damage(character.get_stat('magic damage'), 'air');
             roll.add_effect('Knocks prone');
-
-            if (!add_extras(character, roll, parameters)) {
-                return;
-            }
-            do_roll(character, ability, roll, crit_section);
+            do_roll(character, ability, roll, parameters, crit_section);
         });
-    }
-
-
-    function enchanter_mint_coinage(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
     }
 
 
@@ -506,10 +575,7 @@ var Barbs = Barbs || (function() {
         roll_crit(roll, function (crit_section) {
             roll.add_damage('5d8', 'physical');
             roll.add_damage(character.get_stat('ranged fine damage'), 'physical');
-            if (!add_extras(character, roll, parameters)) {
-                return;
-            }
-            do_roll(character, ability, roll, crit_section);
+            do_roll(character, ability, roll, parameters, crit_section);
         });
     }
 
@@ -526,10 +592,7 @@ var Barbs = Barbs || (function() {
                 roll.add_effect('%s% Lethality'.format(10 * parseInt(stacks_spent_for_lethality, 10)));
             }
 
-            if (!add_extras(character, roll, parameters)) {
-                return;
-            }
-            do_roll(character, ability, roll, crit_section);
+            do_roll(character, ability, roll, parameters, crit_section);
         });
     }
 
@@ -540,10 +603,7 @@ var Barbs = Barbs || (function() {
         roll_crit(roll, function (crit_section) {
             roll.add_damage('6d8', 'physical');
             roll.add_damage(character.get_stat('ranged fine damage'), 'physical');
-            if (!add_extras(character, roll, parameters)) {
-                return;
-            }
-            do_roll(character, ability, roll, crit_section);
+            do_roll(character, ability, roll, parameters, crit_section);
         });
     }
 
@@ -551,32 +611,33 @@ var Barbs = Barbs || (function() {
     function sniper_distance_shooter(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
-        const persistent = {
-            'name': ability,
-            'character': character.name,
-            'duration': 1,
-            'remove_after_single_application': true,
-            'handler': function (character, roll, parameters) {
-                const distance = get_parameter('distance', parameters);
-                if (distance === null) {
-                    chat(character, '"distance" parameter is missing');
-                    return false;
-                }
+        add_persistent_effect(ability, character, 1,  Ordering.AFTER(99), true, function (character, roll, parameters) {
+            const parameter = get_parameter('distance', parameters);
+            if (parameter === null) {
+                chat(character, '"distance" parameter is missing');
+                return false;
+            }
 
-                // 2 damage per 5 ft between character and target
-                roll.add_damage(2 * parseInt(distance, 10) / 5, 'physical');
+            const distances = parameter.split(' ');
+            if (distances.length < 1) {
+                chat(character, 'Missing values for "distance" parameter');
+                return false;
+            }
 
-                return true;
-            },
-        };
+            // Because this effect has the "AFTER" ordering, the distance shooter rolls will be sent after the base roll.
+            // Distance shooter damage will always be calculated after the base roll so that it can cope with multiple
+            // distances. Multipliers from the original roll are copied into a new roll per given distance.
+            for (let i = 0; i < distances.length; i++) {
+                const distance_roll = new BarbsComponents.Roll(character, 'physical');
+                distance_roll.add_damage(2 * parseInt(distances[i]) / 5, 'physical');
+                distance_roll.copy_multipliers(roll);
+                const rolls_per_type = distance_roll.roll();
+                format_and_send_roll(character, '%s (%s ft)'.format(ability, distances[i]), distance_roll, rolls_per_type, '');
+            }
 
-        // TODO: cope with multiple targets being hit by one instance of distance shooter
-        // Isn't there a world where you could output the base roll and multipliers first, and then have it output the
-        // damage just from distance and the multipliers for that bonus damage for each target? So the base roll would
-        // be the same for each enemy and then we'd just add on manually the multiplied damage from the distance for
-        // each enemy
+            return true;
+        });
 
-        persistent_effects.push(persistent);
         chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
     }
 
@@ -584,25 +645,35 @@ var Barbs = Barbs || (function() {
     function sniper_precision_shooter(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
-        const persistent = {
-            'name': ability,
-            'character': character.name,
-            'duration': 1,
-            'remove_after_single_application': true,
-            'handler': function (character, roll, parameters) {
-                roll.add_effect('Ignores AC');
-                roll.add_effect('Ignores MR');
-                roll.add_effect('Cannot miss');
-                roll.add_effect('Cannot be blocked');
-                roll.add_effect('Cannot be reacted to');
-                roll.add_effect('Cannot be blocked or redirected');
-                roll.add_effect('Bypasses barriers and walls');
-                return true;
-            },
-        };
+        add_persistent_effect(ability, character, 1, Ordering.BEFORE(1),true,  function (character, roll, parameters) {
+            roll.add_effect('Ignores AC');
+            roll.add_effect('Ignores MR');
+            roll.add_effect('Cannot miss');
+            roll.add_effect('Cannot be blocked');
+            roll.add_effect('Cannot be reacted to');
+            roll.add_effect('Cannot be blocked or redirected');
+            roll.add_effect('Bypasses barriers and walls');
+            return true;
+        });
 
-        persistent_effects.push(persistent);
         chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
+    function sniper_analytical_shooter(character, ability, parameters) {
+        chat(character, 'not yet implemented');
+    }
+
+
+    function sniper_swift_shot(character, ability, parameters) {
+        const roll = new BarbsComponents.Roll(character, 'physical');
+
+        roll_crit(roll, function (crit_section) {
+            roll.add_damage('3d8', 'physical');
+            roll.add_damage(character.get_stat('ranged fine damage'), 'physical');
+            roll.add_effect('Stun until end of turn');
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -621,18 +692,10 @@ var Barbs = Barbs || (function() {
                 return;
             }
 
-            const persistent = {
-                'name': ability,
-                'character': target_character.name,
-                'duration': 1,
-                'remove_after_single_application': false,
-                'handler': function (character, roll, parameters) {
-                    roll.add_multiplier(0.5, 'all', character.name);
-                    return true;
-                },
-            };
-
-            persistent_effects.push(persistent);
+            add_persistent_effect(ability, character, 1, Ordering.BEFORE(1), false, function (character, roll, parameters) {
+                roll.add_multiplier(0.5, 'all', character.name);
+                return true;
+            });
         }
 
         chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
@@ -645,10 +708,7 @@ var Barbs = Barbs || (function() {
         roll_crit(roll, function (crit_section) {
             roll.add_damage('4d10', 'physical');
             roll.add_damage(character.get_stat('melee damage'), 'physical');
-            if (!add_extras(character, roll, parameters)) {
-                return;
-            }
-            do_roll(character, ability, roll, crit_section);
+            do_roll(character, ability, roll, parameters, crit_section);
         });
     }
 
@@ -660,7 +720,7 @@ var Barbs = Barbs || (function() {
             'Cutting Winds': air_duelist_cutting_winds,
         },
         'Enchanter': {
-            'Mint Coinage': enchanter_mint_coinage,
+            'Mint Coinage': print_ability_description,
         },
         'Sniper': {
             'Piercing Shot': sniper_piercing_shot,
@@ -668,6 +728,9 @@ var Barbs = Barbs || (function() {
             'Shrapnel Shot': sniper_shrapnel_shot,
             'Distance Shooter': sniper_distance_shooter,
             'Precision Shooter': sniper_precision_shooter,
+            'Analytical Shooter': sniper_analytical_shooter,
+            'Swift Sprint': print_ability_description,
+            'Swift Shot': sniper_swift_shot,
         },
         'Soldier': {
             'Fleetfoot Blade': soldier_fleetfoot_blade,
@@ -714,30 +777,6 @@ var Barbs = Barbs || (function() {
 
         const processor = abilities_processors[clazz][ability];
         processor(character, ability, parameters);
-    }
-
-
-    function remove_persistent_effect(msg) {
-        const pieces = msg.content.split(' ');
-        const options = pieces.slice(2).join(' ');
-        const option_pieces = options.split(';');
-        const character_name = option_pieces[0];
-        const effect_name = option_pieces[1];
-
-        const fake_msg = {'who': character_name, 'id': ''};
-        const character = get_character(fake_msg);
-        if (character === null) {
-            return;
-        }
-
-        for (let i = 0; i < persistent_effects.length; i++) {
-            if (persistent_effects[i].name === effect_name && persistent_effects[i].character === character.name) {
-                persistent_effects.splice(i, 1);
-                i--;
-
-                chat(get_character(msg), 'Removed effect ' + effect_name + ' from ' + character.name);
-            }
-        }
     }
 
 

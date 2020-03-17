@@ -7938,6 +7938,21 @@ var BarbsComponents = BarbsComponents || (function() {
             }
         }
 
+        copy_multipliers(other_roll) {
+            const types = Object.keys(other_roll.multipliers);
+            for (let i = 0; i < types.length; i++) {
+                const type = types[i];
+                const sources = Object.keys(other_roll.multipliers[type]);
+                for (let j = 0; j < sources.length; j++) {
+                    const source = sources[j];
+                    const value = other_roll.multipliers[type][source];
+                    this.add_multiplier(value, type, source);
+                }
+            }
+
+            this.crit = other_roll.crit;
+        }
+
         get_multiplier_string(type) {
             const self = this;
             let multiplier_string = '1';
