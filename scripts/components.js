@@ -7892,14 +7892,44 @@ var BarbsComponents = BarbsComponents || (function() {
     // ####################################################################################################################
     // Roll
 
+    const Damage = {
+        'PHYSICAL': 'physical',
+        'FIRE': 'fire',
+        'WATER': 'water',
+        'EARTH': 'earth',
+        'AIR': 'air',
+        'ICE': 'ice',
+        'LIGHTNING': 'lightning',
+        'LIGHT': 'light',
+        'DARK': 'dark',
+    };
+
+    const RollType = {
+        'PHYSICAL': 'roll_type_physical',
+        'MAGIC': 'roll_type_magic',
+        'ALL': 'roll_type_all',
+    };
+
+    const RollTime = {
+        // Indicates that the effect should be applied when calculating a character stat
+        'STAT': 'roll_time_stat',
+        // Indicates that the effect should be applied after we know whether or not a roll was a crit
+        'ROLL': 'roll_time_roll',
+        // Indicates that the effect should be applied before we roll for crit
+        'CRIT': 'roll_time_crit',
+    };
+
     class Roll {
-        constructor(character, type) {
+        constructor(character, roll_type) {
             this.character = character;
-            this.type = type;
+            this.roll_type = roll_type;
             this.damages = {};
             this.multipliers = {};
             this.effects = [];
+
             this.crit = false;
+            this.crit_chance = 0;
+            this.crit_damage_mod = 2;
         }
 
         add_damage(value, type) {
@@ -7951,6 +7981,7 @@ var BarbsComponents = BarbsComponents || (function() {
             }
 
             this.crit = other_roll.crit;
+            this.crit_damage_mod = other_roll.crit_damage_mod;
         }
 
         get_multiplier_string(type) {
@@ -7995,14 +8026,44 @@ var BarbsComponents = BarbsComponents || (function() {
                 dmg_str = '%s*(%s)'.format(dmg_str, self.get_multiplier_string(type));
 
                 if (self.crit) {
-                    // TODO use the proper crit damage modifier
-                    dmg_str = '(%s)*2'.format(dmg_str);
+                    dmg_str = '(%s)*%s'.format(dmg_str, self.crit_damage_mod);
                 }
 
                 rolls[type] = 'round(%s)'.format(dmg_str);
             });
 
             return rolls;
+        }
+
+        // "amount" should be passed in as a regular number, e.g. pass "10" for a 10% increase
+        add_crit_chance(amount) {
+            this.crit_chance += amount;
+        }
+
+        // "amount" should be passed in as a regular number, e.g. pass "10" for a 10% increase
+        add_crit_damage_mod(amount) {
+            this.crit_damage_mod += amount / 100;
+        }
+
+        get_crit_chance() {
+            const self = this;
+
+            // self.crit_chance may be upped by abilities. Add that amount into base crit chance from attributes.
+            let final_crit_chance = self.crit_chance;
+            const stat = get_stat('critical hit chance');
+            const attribute = parseInt(getAttrByName(self.character.id, stat.attr_tla));
+            final_crit_chance += stat.value(attribute);
+
+            // Then add in crit chance boosts from items
+            _.each(self.character.items, function (item) {
+                for (let i = 0; i < item.effects.length; i++) {
+                     if (item.effects[i].roll_time === RollTime.STAT) {
+                        final_crit_chance += item.effects[i].apply('critical hit chance');
+                    }
+                }
+            });
+
+            return final_crit_chance;
         }
     }
 
@@ -8043,46 +8104,49 @@ var BarbsComponents = BarbsComponents || (function() {
 
 
     class Effect {
-        constructor(type, effect) {
-            this.type = type;
+        constructor(roll_time, roll_type, effect) {
+            this.roll_time = roll_time;
+            this.roll_type = roll_type;
             this.apply = effect;
         }
 
         static stat_effect(stat, mod) {
-            return new Effect('stat', function(stat_to_test) {
+            return new Effect(RollTime.STAT, RollType.ALL, function(stat_to_test) {
                 return stat_to_test === stat ? mod : 0
             });
         }
 
         static no_op_roll_effect() {
-            return new Effect('roll', function(roll) {});
+            return new Effect(RollTime.ROLL, RollType.ALL, function(roll) {});
         }
 
-        static roll_damage(dmg, type, applicable_roll_type) {
-            return new Effect('roll', function(roll) {
-                if (applicable_roll_type === 'all' || roll.type === applicable_roll_type) {
-                    roll.add_damage(dmg, type);
+        static roll_damage(dmg, dmg_type, roll_type) {
+            return new Effect(RollTime.ROLL, roll_type, function(roll) {
+                if (roll_type === RollType.ALL || roll_type === roll.roll_type) {
+                    roll.add_damage(dmg, dmg_type);
                 }
             });
         }
 
-        static roll_multiplier(value, type) {
-            return new Effect('roll', function(roll) {
-                roll.add_multiplier(value, type, 'self');
+        static roll_multiplier(value, dmg_type, applicable_roll_type) {
+            return new Effect(RollTime.ROLL, applicable_roll_type, function(roll) {
+                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                    roll.add_multiplier(value, dmg_type, 'self');
+                }
             })
         }
 
         static roll_effect(effect, applicable_roll_type) {
-            return new Effect('roll', function(roll) {
-                if (applicable_roll_type === 'all' || roll.type === applicable_roll_type) {
+            return new Effect(RollTime.ROLL, applicable_roll_type, function(roll) {
+                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
                     roll.add_effect(effect);
                 }
             });
         }
 
         static crit_effect(effect, applicable_roll_type) {
-            return new Effect('roll', function(roll) {
-                if (applicable_roll_type === 'all' || roll.type === applicable_roll_type) {
+            return new Effect(RollTime.ROLL, applicable_roll_type, function(roll) {
+                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
                     if (roll.crit) {
                         roll.add_effect(effect);
                     }
@@ -8109,13 +8173,13 @@ var BarbsComponents = BarbsComponents || (function() {
                 skill_condition('Weapons: Bows', 'F'),
             ],
             false,
-            Effect.roll_damage('d8', 'physical', 'physical'),
+            Effect.roll_damage('d8', Damage.PHYSICAL, RollType.PHYSICAL),
             200,
             0,
             [],
             '',
             [
-                Effect.crit_effect('Stun', 'physical'),
+                Effect.crit_effect('Stun', RollType.PHYSICAL),
             ]
         ),
 
@@ -8128,13 +8192,13 @@ var BarbsComponents = BarbsComponents || (function() {
                 skill_condition('Weapons: Bows', 'F'),
             ],
             false,
-            Effect.roll_damage('d6', 'physical', 'physical'),
+            Effect.roll_damage('d6', Damage.PHYSICAL, RollType.PHYSICAL),
             250,
             0,
             [],
             '',
             [
-                Effect.roll_damage('3d10', 'fire', 'physical'),
+                Effect.roll_damage('3d10', Damage.FIRE, RollType.PHYSICAL),
             ]
         ),
 
@@ -8249,9 +8313,9 @@ var BarbsComponents = BarbsComponents || (function() {
             [],
             '',
             [
-                new Effect('roll', function(roll) {
+                new Effect(RollTime.ROLL, RollType.PHYSICAL, function(roll) {
                     if (roll.character.is_using('longbow') || roll.character.is_using('crossbow')) {
-                        roll.add_multiplier(0.5, 'physical', 'self');
+                        roll.add_multiplier(0.5, Damage.PHYSICAL, 'self');
                     }
                 })
             ]
@@ -8388,7 +8452,7 @@ var BarbsComponents = BarbsComponents || (function() {
             [],
             '',
             [
-                Effect.roll_multiplier(0.3, 'physical')
+                Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.ALL)
             ]
         ),
 
@@ -8421,14 +8485,14 @@ var BarbsComponents = BarbsComponents || (function() {
                 skill_condition('Weapons: Bows', 'F'),
             ],
             false,
-            Effect.roll_damage('d10', 'physical', 'physical'),
+            Effect.roll_damage('d10', Damage.PHYSICAL, RollType.PHYSICAL),
             0,
             0,
             [],
             '',
             [
-                Effect.roll_damage('4d10', 'light', 'physical'),
-                Effect.roll_effect('20% accuracy', 'physical'),
+                Effect.roll_damage('4d10', Damage.LIGHT, RollType.PHYSICAL),
+                Effect.roll_effect('20% accuracy', RollType.PHYSICAL),
             ]
         ),
 
@@ -8450,7 +8514,7 @@ var BarbsComponents = BarbsComponents || (function() {
                 Effect.stat_effect('evasion', 20),
                 Effect.stat_effect('movement speed', 20),
                 Effect.stat_effect('ac', -10),
-                Effect.roll_multiplier(0.3, 'physical'),
+                Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.ALL),
             ]
         ),
 
@@ -8463,14 +8527,14 @@ var BarbsComponents = BarbsComponents || (function() {
                 skill_condition('Weapons: Shields', 'F'),
             ],
             false,
-            Effect.roll_damage('d8', 'physical', 'physical'),
+            Effect.roll_damage('d8', Damage.PHYSICAL, RollType.PHYSICAL),
             0,
             0,
             [],
             '',
             [
-                Effect.roll_damage('2d8', 'physical', 'physical'),
-                Effect.roll_damage('2d10', 'earth', 'physical'),
+                Effect.roll_damage('2d8', Damage.PHYSICAL, RollType.PHYSICAL),
+                Effect.roll_damage('2d10', Damage.EARTH, RollType.PHYSICAL),
             ]
         ),
 
@@ -8483,14 +8547,32 @@ var BarbsComponents = BarbsComponents || (function() {
                 skill_condition('Weapons: Shields', 'F'),
             ],
             false,
-            Effect.roll_damage('d10', 'physical', 'physical'),
+            Effect.roll_damage('d10', Damage.PHYSICAL, RollType.PHYSICAL),
             0,
             0,
             [],
             '',
             [
-                Effect.roll_effect('20% Accuracy', 'physical'),
-                Effect.roll_effect('30% paralyze', 'physical'),
+                Effect.roll_effect('20% Accuracy', RollType.PHYSICAL),
+                Effect.roll_effect('30% paralyze', RollType.PHYSICAL),
+            ]
+        ),
+
+        new Item(
+            'Shocking Band of Critical Strikes',
+            'accessory',
+            'magic',
+            'ring',
+            [],
+            false,
+            Effect.no_op_roll_effect(),
+            0,
+            0,
+            [],
+            '',
+            [
+                Effect.roll_damage('2d8', Damage.LIGHTNING, RollType.ALL),
+                Effect.stat_effect('critical hit chance', 5),
             ]
         ),
     ];
@@ -8584,7 +8666,7 @@ var BarbsComponents = BarbsComponents || (function() {
 
             _.each(this.items, function(item) {
                 for (let i = 0; i < item.effects.length; i++) {
-                    if (item.effects[i].type === 'stat') {
+                    if (item.effects[i].type === RollTime.STAT) {
                         stat_value += item.effects[i].apply(stat.name);
                     }
                 }
@@ -8619,6 +8701,9 @@ var BarbsComponents = BarbsComponents || (function() {
         abilities,
         skill_to_attribute_map,
         Character,
+        Damage,
+        RollType,
+        RollTime,
         Roll,
     };
 
