@@ -8601,9 +8601,9 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Impeding Quickblade of Normalizing',
-            'weapon',
-            'magic',
             'shortblade',
+            'magic',
+            'Main Hand',
             [],
             false,
             Effect.roll_damage('d4', Damage.PHYSICAL, RollType.PHYSICAL),
@@ -8616,9 +8616,9 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Sharpened Penetrating Moonblade of Waves',
-            'weapon',
-            'magic',
             'shortblade',
+            'magic',
+            'Main Hand',
             [],
             false,
             Effect.roll_damage('2d4', Damage.PHYSICAL, RollType.PHYSICAL),
@@ -8633,9 +8633,9 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Seeking Dagger of Paralysis',
-            'weapon',
-            'magic',
             'shortblade',
+            'magic',
+            'Main Hand',
             [],
             false,
             Effect.roll_damage('d4', Damage.PHYSICAL, RollType.PHYSICAL),
@@ -8761,6 +8761,17 @@ var BarbsComponents = BarbsComponents || (function() {
             }
 
             return false;
+        }
+
+        get_main_weapon() {
+            for (let i = 0; i < this.items.length; i++) {
+                const item = this.items[i];
+                if (item.slot === 'main_hand' || item.slot === '2Hand') {
+                    return item;
+                }
+            }
+
+            return null;
         }
     }
 

@@ -377,6 +377,35 @@ var Barbs = Barbs || (function() {
         return null;
     }
 
+    // TODO: What attacks scale off of is hardcoded on the weapon type. Really, the item info should probably include
+    //  the scaling stat, since modifiers may change it.
+    function add_scale_damage(character, roll) {
+        if (roll.type !== RollType.PHYSICAL) {
+            chat('Unexpected roll type %s while adding weapon scaling damage'.format(roll.type));
+        }
+
+        let main_hand_item = character.get_main_weapon();
+        if (main_hand_item === null) {
+            // pass
+        } else if (main_hand_item.type === 'shortblade') {
+            // doesn't scale off of anything
+        } else if (main_hand_item.type === 'axe') {
+            roll.add_damage(character.get_stat('melee damage'), Damage.PHYSICAL);
+        } else if (main_hand_item.type === 'axe') {
+            roll.add_damage(character.get_stat('melee damage'), Damage.PHYSICAL);
+        } else if (main_hand_item.type === 'longblade') {
+            roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
+        } else if (main_hand_item.type === 'shield') {
+            roll.add_damage(character.get_stat('melee damage'), Damage.PHYSICAL);
+        } else if (main_hand_item.type === 'polearm') {
+            roll.add_damage(character.get_stat('melee damage'), Damage.PHYSICAL);
+        } else if (main_hand_item.type === 'javelin') {
+            roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
+        } else {
+            chat('Unexpected weapon type %s. We probably should not be calling this method for this ability'.format(main_hand_item.type));
+        }
+    }
+
 
     // Iterate through the character's items and add any damage bonuses or multipliers to the roll
     function add_items_to_roll(character, roll, roll_time) {
@@ -643,10 +672,6 @@ var Barbs = Barbs || (function() {
     }
 
 
-    // TODO: what attacks scale off of depends on the weapon type. Currently the scaling parameter is hardcoded into
-    //  abilities. Daggers have no scaling by default, bows are ranged, longblades are fine, others are melee.
-
-
     function assassin_backstab(character, ability, parameters) {
         const parameter = get_parameter('hidden', parameters);
         if (parameter === null) {
@@ -660,6 +685,7 @@ var Barbs = Barbs || (function() {
         } else {
             roll.add_damage('3d4', Damage.PHYSICAL);
         }
+        add_scale_damage(character, roll);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -693,15 +719,13 @@ var Barbs = Barbs || (function() {
                 return;
             }
 
-            // Because this effect has the "AFTER" ordering, the distance shooter rolls will be sent after the
-            // base roll. Distance shooter damage will always be calculated after the base roll so that it can cope
-            // with multiple distances. Multipliers from the original roll are copied into a new roll per given
-            // distance.
             for (let i = 0; i < dice_divisions.length; i++) {
                 const roll = new Roll(character, RollType.PHYSICAL);
                 roll.add_damage('%sd4'.format(dice_divisions[i]), Damage.PHYSICAL);
-                roll.copy_multipliers(dummy_roll);
+                add_scale_damage(character, roll);
                 roll.add_effect('%s% Lethality'.format(5 * dice_divisions[i]));
+
+                roll.copy_multipliers(dummy_roll);
                 const rolls_per_type = roll.roll();
                 format_and_send_roll(character, '%s (%sd4)'.format(ability, dice_divisions[i]), roll,
                                      rolls_per_type, crit_section);
@@ -878,7 +902,7 @@ var Barbs = Barbs || (function() {
     function soldier_fleetfoot_blade(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('4d10', Damage.PHYSICAL);
-        roll.add_damage(character.get_stat('melee damage'), Damage.PHYSICAL);
+        add_scale_damage(character, roll);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
