@@ -115,26 +115,30 @@ var BarbsComponents = BarbsComponents || (function() {
 
 
     const STATS = [
-        new Stat('health', 'VIT', function(v) { return 100 + 10 * v }),
-        new Stat('stamina', 'END', function(v) { return 100 + 10 * v }),
-        new Stat('mana', 'SPT', function(v) { return 100 + 10 * v }),
-        new Stat('health regeneration', 'RCV', function(v) { return 10 + v }),
-        new Stat('stamina regeneration', 'PER', function(v) { return 10 + v }),
-        new Stat('mana regeneration', 'SAN', function(v) { return 10 + v }),
-        new Stat('movement speed', 'AGI', function(v) { return 30 + 5 * Math.floor(v / 2) }),
-        new Stat('ac', 'TGH', function(v) { return 10 + v }),
-        new Stat('evasion', 'REF', function(v) { return 10 + v }),
-        new Stat('magic resist', 'RES', function(v) { return 10 + v }),
-        new Stat('condition resist', 'FRT', function(v) { return 10 + v }),
-        new Stat('melee damage', 'STR', function(v) { return v }),
-        new Stat('ranged fine damage', 'DEX', function(v) { return v }),
-        new Stat('magic damage', 'ATN', function(v) { return v }),
-        new Stat('critical hit chance', 'PRE', function(v) { return 10 + v }),
-        new Stat('commands', 'APL', function(v) { return Math.floor((v + 10) / 10) + 1 }),
-        new Stat('languages', 'INT', function(v) { return Math.floor((v + 10) / 3) + 1 }),
-        new Stat('item efficiency', 'WIS', function(v) { return (v + 10) * 5 }),
-        new Stat('buff limit', 'COM', function(v) { return Math.floor((v + 10) / 2) }),
-        new Stat('concentration limit', 'FCS', function(v) { return Math.floor((v + 10) / 2) }),
+        new Stat('health', 'VIT', function(v) { return 100 + 10 * v; }),
+        new Stat('stamina', 'END', function(v) { return 100 + 10 * v; }),
+        new Stat('mana', 'SPT', function(v) { return 100 + 10 * v; }),
+        new Stat('health regeneration', 'RCV', function(v) { return 10 + v; }),
+        new Stat('stamina regeneration', 'PER', function(v) { return 10 + v; }),
+        new Stat('mana regeneration', 'SAN', function(v) { return 10 + v; }),
+        new Stat('movement speed', 'AGI', function(v) { return 30 + 5 * Math.floor(v / 2); }),
+        new Stat('ac', 'TGH', function(v) { return 10 + v; }),
+        new Stat('evasion', 'REF', function(v) { return 10 + v; }),
+        new Stat('magic resist', 'RES', function(v) { return 10 + v; }),
+        new Stat('condition resist', 'FRT', function(v) { return 10 + v; }),
+        new Stat('melee damage', 'STR', function(v) { return v; }),
+        new Stat('ranged fine damage', 'DEX', function(v) { return v; }),
+        new Stat('magic damage', 'ATN', function(v) { return v; }),
+        new Stat('critical hit chance', 'PRE', function(v) { return 10 + v; }),
+        new Stat('commands', 'APL', function(v) { return Math.floor((v + 10) / 10) + 1; }),
+        new Stat('languages', 'INT', function(v) { return Math.floor((v + 10) / 3) + 1; }),
+        new Stat('item efficiency', 'WIS', function(v) { return (v + 10) * 5; }),
+        new Stat('buff limit', 'COM', function(v) { return Math.floor((v + 10) / 2); }),
+        new Stat('concentration limit', 'FCS', function(v) { return Math.floor((v + 10) / 2); }),
+
+        // Hidden stats
+        new Stat('critical hit damage', '', function(v) { return v; }),
+        new Stat('lethality', '', function(v) { return v; }),
     ];
 
 
@@ -8063,7 +8067,8 @@ var BarbsComponents = BarbsComponents || (function() {
                 }
             });
 
-            return final_crit_chance;
+            // Crit chance can't go over 100%, which we'll interpret as 101 because of the crit chance math.
+            return Math.min(101, final_crit_chance);
         }
     }
 
@@ -8120,9 +8125,9 @@ var BarbsComponents = BarbsComponents || (function() {
             return new Effect(RollTime.ROLL, RollType.ALL, function(roll) {});
         }
 
-        static roll_damage(dmg, dmg_type, roll_type) {
-            return new Effect(RollTime.ROLL, roll_type, function(roll) {
-                if (roll_type === RollType.ALL || roll_type === roll.roll_type) {
+        static roll_damage(dmg, dmg_type, applicable_roll_type) {
+            return new Effect(RollTime.ROLL, applicable_roll_type, function(roll) {
+                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
                     roll.add_damage(dmg, dmg_type);
                 }
             });
@@ -8150,6 +8155,24 @@ var BarbsComponents = BarbsComponents || (function() {
                     if (roll.crit) {
                         roll.add_effect(effect);
                     }
+                }
+            });
+        }
+
+        static crit_damage(dmg, dmg_type, applicable_roll_type) {
+            return new Effect(RollTime.ROLL, applicable_roll_type, function(roll) {
+                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                    if (roll.crit) {
+                        roll.add_damage(dmg, dmg_type);
+                    }
+                }
+            });
+        }
+
+        static crit_damage_mod(amount) {
+            return new Effect(RollTime.CRIT, RollType.PHYSICAL, function(roll) {
+                if (roll.roll_type === RollType.PHYSICAL) {
+                    roll.add_crit_damage_mod(amount);
                 }
             });
         }
@@ -8575,6 +8598,55 @@ var BarbsComponents = BarbsComponents || (function() {
                 Effect.stat_effect('critical hit chance', 5),
             ]
         ),
+
+        new Item(
+            'Impeding Quickblade of Normalizing',
+            'weapon',
+            'magic',
+            'shortblade',
+            [],
+            false,
+            Effect.roll_damage('d4', Damage.PHYSICAL, RollType.PHYSICAL),
+            0, 0, [], '',
+            [
+                Effect.stat_effect('critical hit chance', 20),
+                Effect.crit_effect('Target loses 10% evasion for 1 minute (stacks) & strip 1 buff from the target'),
+            ]
+        ),
+
+        new Item(
+            'Sharpened Penetrating Moonblade of Waves',
+            'weapon',
+            'magic',
+            'shortblade',
+            [],
+            false,
+            Effect.roll_damage('2d4', Damage.PHYSICAL, RollType.PHYSICAL),
+            0, 0, [], '',
+            [
+                Effect.stat_effect('critical hit chance', 10),
+                Effect.crit_damage_mod(100),
+                Effect.crit_effect('Ignore blocks and shielding'),
+                Effect.crit_damage('3d6', Damage.WATER, RollType.PHYSICAL),
+            ]
+        ),
+
+        new Item(
+            'Seeking Dagger of Paralysis',
+            'weapon',
+            'magic',
+            'shortblade',
+            [],
+            false,
+            Effect.roll_damage('d4', Damage.PHYSICAL, RollType.PHYSICAL),
+            0, 0, [], '',
+            [
+                Effect.roll_effect('When thrown, this dagger cannot miss'),
+                Effect.roll_effect('Inflict Paralysis'),
+            ]
+        )
+
+
     ];
 
 

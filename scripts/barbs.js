@@ -546,10 +546,22 @@ var Barbs = Barbs || (function() {
     }
 
 
+    function warper_opportunistic_predator(roll, roll_time, parameter) {
+        if (roll_time !== RollTime.CRIT) {
+            return true;
+        }
+
+        // If the parameter is present, we always add the bonus crit chance
+        roll.add_crit_chance(50);
+        return true;
+    }
+
+
     const arbitrary_parameters = {
         'misc_multiplier': arbitrary_multiplier,
         'misc_damage': arbitrary_damage,
         'spotting': sniper_spotter,
+        'warper_cc': warper_opportunistic_predator,
     };
 
 
@@ -614,6 +626,88 @@ var Barbs = Barbs || (function() {
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function assassin_focus(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+
+        add_persistent_effect(ability, character, ability_info.duration,  Ordering.BEFORE(), RollTime.CRIT, true,
+            function (character, roll, parameters) {
+                roll.add_crit_chance(30);
+                return true;
+            });
+
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
+    // TODO: what attacks scale off of depends on the weapon type. Currently the scaling parameter is hardcoded into
+    //  abilities. Daggers have no scaling by default, bows are ranged, longblades are fine, others are melee.
+
+
+    function assassin_backstab(character, ability, parameters) {
+        const parameter = get_parameter('hidden', parameters);
+        if (parameter === null) {
+            chat(character, '"hidden <true/false>" parameter is required');
+            return;
+        }
+
+        const roll = new Roll(character, RollType.PHYSICAL);
+        if (parameter === 'true') {
+            roll.add_damage('4+4+4', Damage.PHYSICAL);
+        } else {
+            roll.add_damage('3d4', Damage.PHYSICAL);
+        }
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function assassin_massacre(character, ability, parameters) {
+        const parameter = get_parameter('division', parameters);
+        if (parameter === null) {
+            chat(character, '"division" parameter is missing');
+            return;
+        }
+
+        const dice_divisions = parameter.split(' ');
+
+        // Check that the total adds up to 16
+        let total_dice = 0;
+        _.each(dice_divisions, function(dice_division) {
+            total_dice += parseInt(dice_division);
+        });
+
+        if (total_dice !== 16) {
+            chat(character, 'Total dice do not add up to 16');
+            return;
+        }
+
+        const dummy_roll = new Roll(character, RollType.PHYSICAL);
+        roll_crit(dummy_roll, parameters, function (crit_section) {
+            if (!add_extras(character, dummy_roll, RollTime.ROLL, parameters)) {
+                return;
+            }
+
+            // Because this effect has the "AFTER" ordering, the distance shooter rolls will be sent after the
+            // base roll. Distance shooter damage will always be calculated after the base roll so that it can cope
+            // with multiple distances. Multipliers from the original roll are copied into a new roll per given
+            // distance.
+            for (let i = 0; i < dice_divisions.length; i++) {
+                const roll = new Roll(character, RollType.PHYSICAL);
+                roll.add_damage('%sd4'.format(dice_divisions[i]), Damage.PHYSICAL);
+                roll.copy_multipliers(dummy_roll);
+                roll.add_effect('%s% Lethality'.format(5 * dice_divisions[i]));
+                const rolls_per_type = roll.roll();
+                format_and_send_roll(character, '%s (%sd4)'.format(ability, dice_divisions[i]), roll,
+                                     rolls_per_type, crit_section);
+            }
+
+            finalize_roll(character, dummy_roll, parameters);
         });
     }
 
@@ -717,7 +811,7 @@ var Barbs = Barbs || (function() {
 
         const parameter = get_parameter('concentration', parameters);
         if (parameter === null) {
-            chat(character, '"concentration  <true/false>" paramter is required');
+            chat(character, '"concentration  <true/false>" parameter is required');
             return;
         }
 
@@ -756,11 +850,13 @@ var Barbs = Barbs || (function() {
     function warrior_charge(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
-        if (parameters.length < 1) {
-            chat(character, 'Need a parameter for the list of affected players');
+        const parameter = get_parameter('targets', parameters);
+        if (parameter === null) {
+            chat(character, '"targets" parameter, the list of affected players, is missing');
+            return;
         }
-        const character_names = parameters[0].split(',');
 
+        const character_names = parameter.split(',');
         for (let i = 0; i < character_names.length; i++) {
             const fake_msg = {'who': character_names[i], 'id': ''};
             const target_character = get_character(fake_msg);
@@ -795,6 +891,13 @@ var Barbs = Barbs || (function() {
             'Mistral Bow': air_duelist_mistral_bow,
             'Arc of Air': air_duelist_arc_of_air,
             'Cutting Winds': air_duelist_cutting_winds,
+        },
+        'Assassin': {
+            'Vanish': print_ability_description,
+            'Focus': assassin_focus,
+            'Backstab': assassin_backstab,
+            'Haste': print_ability_description,
+            'Massacre': assassin_massacre,
         },
         'Enchanter': {
             'Mint Coinage': print_ability_description,
