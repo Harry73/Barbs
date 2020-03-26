@@ -959,6 +959,9 @@ var Barbs = Barbs || (function() {
         const clazz = option_pieces[0];
         const ability = option_pieces[1];
         const parameters = option_pieces.slice(2);
+        parameters.forEach(function(parameter, index, self) {
+            self[index] = parameter.trim();
+        });
 
         // Verify that we know how to handle this class + ability combo
         if (!(clazz in abilities_processors)) {
