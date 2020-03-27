@@ -2,9 +2,25 @@ var BarbsComponents = BarbsComponents || (function () {
     'use_strict';
 
     function assert(condition, message) {
-        if (!condition) {
-            throw message || "Assertion failed";
+        if (condition === null || condition === undefined) {
+            throw 'assert() missing condition';
         }
+        if (message === null || message === undefined) {
+            throw 'assert() missing message';
+        }
+
+        if (!condition) {
+            throw 'AssertionError: ' + message;
+        }
+    }
+
+    function assert_not_null(parameter, message) {
+        if (message === null || message === undefined) {
+            throw 'assert_not_null() missing message';
+        }
+
+        assert(parameter !== null, message);
+        assert(parameter !== undefined, message);
     }
 
 
@@ -8211,9 +8227,9 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         static roll_damage(dmg, dmg_type, applicable_roll_type) {
-            assert(dmg !== null);
-            assert(dmg_type !== null);
-            assert(applicable_roll_type !== null);
+            assert_not_null(dmg, 'roll_damage(), dmg');
+            assert_not_null(dmg_type, 'roll_damage(), dmg_type');
+            assert_not_null(applicable_roll_type, 'roll_damage(), applicable_roll_type');
 
             return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
@@ -8223,9 +8239,9 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         static roll_multiplier(value, dmg_type, applicable_roll_type) {
-            assert(value !== null);
-            assert(dmg_type !== null);
-            assert(applicable_roll_type !== null);
+            assert_not_null(value, 'roll_multiplier() value');
+            assert_not_null(dmg_type, 'roll_multiplier() dmg_type');
+            assert_not_null(applicable_roll_type, 'roll_multiplier() applicable_roll_type');
 
             return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
@@ -8235,8 +8251,8 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         static roll_effect(effect, applicable_roll_type) {
-            assert(effect !== null);
-            assert(applicable_roll_type !== null);
+            assert_not_null(effect, 'roll_effect() effect');
+            assert_not_null(applicable_roll_type, 'roll_effect() applicable_roll_type');
 
             return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
@@ -8246,8 +8262,8 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         static crit_effect(effect, applicable_roll_type) {
-            assert(effect !== null);
-            assert(applicable_roll_type !== null);
+            assert_not_null(effect, 'crit_effect() effect');
+            assert_not_null(applicable_roll_type, 'crit_effect() applicable_roll_type');
 
             return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
@@ -8259,9 +8275,9 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         static crit_damage(dmg, dmg_type, applicable_roll_type) {
-            assert(dmg !== null);
-            assert(dmg_type !== null);
-            assert(applicable_roll_type !== null);
+            assert_not_null(dmg, 'crit_damage() dmg');
+            assert_not_null(dmg_type, 'crit_damage() dmg_type');
+            assert_not_null(applicable_roll_type, 'crit_damage() applicable_roll_type');
 
             return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
@@ -8273,7 +8289,7 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         static crit_damage_mod(amount) {
-            assert(amount !== null);
+            assert_not_null(amount, 'crit_damage_mod() amount');
 
             return new Effect(RollTime.CRIT, RollType.PHYSICAL, function (roll) {
                 if (roll.roll_type === RollType.PHYSICAL) {
@@ -8283,9 +8299,9 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         static hidden_stat(value, stat_type, applicable_roll_type) {
-            assert(value !== null);
-            assert(stat_type !== null);
-            assert(applicable_roll_type !== null);
+            assert_not_null(value, 'hidden_stat() value');
+            assert_not_null(stat_type, 'hidden_stat() stat_type');
+            assert_not_null(applicable_roll_type, 'hidden_stat() applicable_roll_type');
 
             return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
@@ -8295,9 +8311,9 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         static crit_hidden_stat(value, stat_type, applicable_roll_type) {
-            assert(value !== null);
-            assert(stat_type !== null);
-            assert(applicable_roll_type !== null);
+            assert_not_null(value, 'crit_hidden_stat() value');
+            assert_not_null(stat_type, 'crit_hidden_stat() stat_type');
+            assert_not_null(applicable_roll_type, 'crit_hidden_stat() applicable_roll_type');
 
             return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
@@ -8698,7 +8714,7 @@ var BarbsComponents = BarbsComponents || (function () {
             [
                 Effect.stat_effect('critical hit chance', 10),
                 Effect.crit_damage_mod(100),
-                Effect.crit_effect('Ignore blocks and shielding'),
+                Effect.crit_effect('Ignore blocks and shielding', RollType.PHYSICAL),
                 Effect.crit_damage('3d6', Damage.WATER, RollType.PHYSICAL),
             ]
         ),

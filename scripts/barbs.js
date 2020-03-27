@@ -10,6 +10,29 @@ var Barbs = Barbs || (function () {
         return a;
     };
 
+    function assert(condition, message) {
+        if (condition === null || condition === undefined) {
+            throw 'assert() missing condition';
+        }
+        if (message === null || message === undefined) {
+            throw 'assert() missing message';
+        }
+
+        if (!condition) {
+            throw 'AssertionError: ' + message;
+        }
+    }
+
+    function assert_not_null(parameter, message) {
+        if (message === null || message === undefined) {
+            throw 'assert_not_null() missing message';
+        }
+
+        assert(parameter !== null, message);
+        assert(parameter !== undefined, message);
+    }
+
+
     const HiddenStat = BarbsComponents.HiddenStat;
     const Damage = BarbsComponents.Damage;
     const RollType = BarbsComponents.RollType;
@@ -32,8 +55,11 @@ var Barbs = Barbs || (function () {
     let persistent_effects = [];
 
 
-    function chat(character, string, handler) {
-        sendChat(character.who, string, handler);
+    function chat(character, message, handler) {
+        assert_not_null(character, 'chat() character');
+        assert_not_null(message, 'chat() message');
+
+        sendChat(character.who, message, handler);
     }
 
 
@@ -74,6 +100,12 @@ var Barbs = Barbs || (function () {
         }
 
         return new BarbsComponents.Character(characters[0], msg.who);
+    }
+
+
+    function get_character_by_name(name) {
+        const fake_msg = {'who': name, 'id': ''};
+        return get_character(fake_msg);
     }
 
 
@@ -207,47 +239,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-    /*
-    // Example msg result from a crit roll
-    const msg = {
-        "who":"Ren Nightside",
-        "type":"general",
-        "content":" {{name=Critical Hit Chance}} {{Crit=$[[1]]}}","playerid":"API","avatar":false,
-        "inlinerolls":[
-            {
-                "expression":"100-(10+0+0+0+0+0+0+0+0+0+0+0)+1",
-                "results":{
-                    "type":"V",
-                    "rolls":[{"type":"M","expr":"100-(10+0+0+0+0+0+0+0+0+0+0+0)+1"}],
-                    "resultType":"M",
-                    "total":91
-                },
-                "signature":false,
-                "rollid":null
-            },
-            {
-                "expression":"1d100cs>91",
-                "results":{
-                    "type":"V",
-                    "rolls":[
-                        {
-                            "type":"R","dice":1,"sides":100,
-                            "mods":{
-                                "customCrit":[{"comp":">=","point":91}]
-                            },
-                            "results":[{"v":100}]
-                        }
-                    ],
-                    "resultType":"sum",
-                    "total":100
-                },
-                "signature":"3e6cfaf705fb91181557676b07dc48b9cbec0c251e310cf2c621dd3edc1e26d2f2aebed79e7108b08bfda4d98465e6e65d367d67829e8b295cb42d81a34df077",
-                "rollid":"-M0t49TVaJccGoUk9Jx3"
-            }
-        ],
-        "rolltemplate":"default"
-    };
-    */
     function roll_skill(msg) {
         const character = get_character(msg);
         if (character === null) {
@@ -279,6 +270,7 @@ var Barbs = Barbs || (function () {
 
     // ################################################################################################################
     // Managing persistent effects
+
 
     // Effects may be applied before or after a roll. Within the "before" and "after" categories, effects can
     // additionally have some desired ordering. This class wraps both by giving each effect some "ordering" in which
@@ -331,8 +323,7 @@ var Barbs = Barbs || (function () {
         const character_name = option_pieces[0];
         const effect_name = option_pieces[1];
 
-        const fake_msg = {'who': character_name, 'id': ''};
-        const character = get_character(fake_msg);
+        const character = get_character_by_name(character_name);
         if (character === null) {
             return;
         }
@@ -345,6 +336,24 @@ var Barbs = Barbs || (function () {
                 chat(get_character(msg), 'Removed effect ' + effect_name + ' from ' + character.name);
             }
         }
+    }
+
+
+    // Iterate through effects of abilities (buffs, empowers, etc) that may last multiple turns and add applicable ones
+    // to the roll.
+    function add_persistent_effects_to_roll(character, roll, roll_time, parameters, ordering) {
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].character === character.name
+                && persistent_effects[i].ordering.type === ordering.type
+                && persistent_effects[i].time === roll_time) {
+
+                if (!persistent_effects[i].handler(character, roll, parameters)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
 
@@ -379,10 +388,8 @@ var Barbs = Barbs || (function () {
 
 
     function get_parameter(parameter, parameters) {
-        if (parameter === null || parameter === undefined || parameters === null || parameters === undefined) {
-            chat('get_parameter() argument is null, blame Ian');
-            return null;
-        }
+        assert_not_null(parameter, 'get_parameter() parameter');
+        assert_not_null(parameters, 'get_parameter() parameters');
 
         for (let i = 0; i < parameters.length; i++) {
             if (parameters[i].includes(parameter)) {
@@ -397,8 +404,11 @@ var Barbs = Barbs || (function () {
     // For classes abilities specifically. We assume that the ability uses the character's equipped item with type
     // MAIN_HAND or TWO_HAND.
     function add_scale_damage(character, roll) {
-        if (roll.type !== RollType.PHYSICAL) {
-            chat('Unexpected roll type %s while adding weapon scaling damage'.format(roll.type));
+        assert_not_null(character, 'add_scale_damage() character');
+        assert_not_null(roll, 'add_scale_damage() roll');
+
+        if (roll.roll_type !== RollType.PHYSICAL) {
+            chat(character, 'Unexpected roll type %s while adding weapon scaling damage'.format(roll.roll_type));
         }
 
         let main_hand_item = character.get_main_weapon();
@@ -410,6 +420,10 @@ var Barbs = Barbs || (function () {
 
     // Iterate through the character's items and add any damage bonuses or multipliers to the roll
     function add_items_to_roll(character, roll, roll_time) {
+        assert_not_null(character, 'add_items_to_roll() character');
+        assert_not_null(roll, 'add_items_to_roll() roll');
+        assert_not_null(roll_time, 'add_items_to_roll() roll_time');
+
         _.each(character.items, function (item) {
             for (let i = 0; i < item.effects.length; i++) {
                 if (item.effects[i].roll_time === roll_time) {
@@ -420,27 +434,14 @@ var Barbs = Barbs || (function () {
     }
 
 
-    // Iterate through effects of abilities (buffs, empowers, etc) that may last multiple turns and add applicable ones
-    // to the roll.
-    function handle_persistent_effects(character, roll, roll_time, parameters, ordering) {
-        for (let i = 0; i < persistent_effects.length; i++) {
-            if (persistent_effects[i].character === character.name
-                    && persistent_effects[i].ordering.type === ordering.type
-                    && persistent_effects[i].time === roll_time) {
-
-                if (!persistent_effects[i].handler(character, roll, parameters)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-
     function add_extras(character, roll, roll_time, parameters) {
+        assert_not_null(character, 'add_extras() character');
+        assert_not_null(roll, 'add_extras() roll');
+        assert_not_null(roll_time, 'add_extras() roll_time');
+        assert_not_null(parameters, 'add_extras() parameters');
+
         add_items_to_roll(character, roll, roll_time);
-        if (!handle_persistent_effects(character, roll, roll_time, parameters, Ordering.BEFORE())) {
+        if (!add_persistent_effects_to_roll(character, roll, roll_time, parameters, Ordering.BEFORE())) {
             log('Problem adding persistent effects to roll at time ' + roll_time);
             return false;
         }
@@ -453,9 +454,54 @@ var Barbs = Barbs || (function () {
     }
 
 
-    // Roll for whether or not this will be a crit, and set the result in the roll. The passed handler should take a
-    // string that can be appended to show the result of the crit roll.
+    /*
+     * Roll for whether or not this will be a crit, and set the result in the roll. The passed handler should take a
+     * string that can be appended to show the result of the crit roll. Example crit roll result:
+
+        const msg = {
+            "who":"Ren Nightside",
+            "type":"general",
+            "content":" {{name=Critical Hit Chance}} {{Crit=$[[1]]}}","playerid":"API","avatar":false,
+            "inlinerolls":[
+                {
+                    "expression":"100-(10+0+0+0+0+0+0+0+0+0+0+0)+1",
+                    "results":{
+                        "type":"V",
+                        "rolls":[{"type":"M","expr":"100-(10+0+0+0+0+0+0+0+0+0+0+0)+1"}],
+                        "resultType":"M",
+                        "total":91
+                    },
+                    "signature":false,
+                    "rollid":null
+                },
+                {
+                    "expression":"1d100cs>91",
+                    "results":{
+                        "type":"V",
+                        "rolls":[
+                            {
+                                "type":"R","dice":1,"sides":100,
+                                "mods":{
+                                    "customCrit":[{"comp":">=","point":91}]
+                                },
+                                "results":[{"v":100}]
+                            }
+                        ],
+                        "resultType":"sum",
+                        "total":100
+                    },
+                    "signature":"3e6cfaf705fb91181557676b07dc48b9cbec0c251e310cf2c621dd3edc1e26d2f2aebed79e7108b08bfda4d98465e6e65d367d67829e8b295cb42d81a34df077",
+                    "rollid":"-M0t49TVaJccGoUk9Jx3"
+                }
+            ],
+            "rolltemplate":"default"
+        };
+    */
     function roll_crit(roll, parameters, handler) {
+        assert_not_null(roll, 'roll_crit() roll');
+        assert_not_null(parameters, 'roll_crit() parameters');
+        assert_not_null(handler, 'roll_crit() handler');
+
         const character = roll.character;
 
         // Some effects only apply when we know that the result is a crit. Those should have RollTime.CRIT, and
@@ -483,18 +529,32 @@ var Barbs = Barbs || (function () {
     // 2. Fill out a roll template to construct the message.
     // 3. Add in any extra effects that don't fit nicely into a damage type to the message.
     // 4. Record and send the message.
-    function do_roll(character, ability, roll, parameters, crit_section) {
+    function do_roll(character, ability, roll, parameters, crit_section, do_finalize = true) {
+        assert_not_null(character, 'do_roll() character');
+        assert_not_null(ability, 'do_roll() ability');
+        assert_not_null(roll, 'do_roll() roll');
+        assert_not_null(parameters, 'do_roll() parameters');
+        assert_not_null(crit_section, 'do_roll() crit_section');
+
         if (!add_extras(character, roll, RollTime.ROLL, parameters)) {
             return;
         }
 
         const rolls_per_type = roll.roll();
         format_and_send_roll(character, ability, roll, rolls_per_type, crit_section);
-        finalize_roll(character, roll, parameters);
+        if (do_finalize) {
+            finalize_roll(character, roll, parameters);
+        }
     }
 
 
     function format_and_send_roll(character, ability, roll, rolls_per_type, crit_section) {
+        assert_not_null(character, 'format_and_send_roll() character');
+        assert_not_null(ability, 'format_and_send_roll() ability');
+        assert_not_null(roll, 'format_and_send_roll() roll');
+        assert_not_null(rolls_per_type, 'format_and_send_roll() rolls_per_type');
+        assert_not_null(crit_section, 'format_and_send_roll() crit_section');
+
         let damage_section = '';
         Object.keys(rolls_per_type).forEach(function (type) {
             damage_section = damage_section + damage_section_format.format(type, rolls_per_type[type]);
@@ -515,12 +575,16 @@ var Barbs = Barbs || (function () {
 
 
     function finalize_roll(character, roll, parameters) {
+        assert_not_null(character, 'finalize_roll() character');
+        assert_not_null(roll, 'finalize_roll() roll');
+        assert_not_null(parameters, 'finalize_roll() parameters');
+
         // There are some effects that want to occur after a roll entirely completes. This is the purpose of Ordering.
         // The hope was that AFTER effects would be sent to chat after the main roll, but it seems that the order in
         // which we call chat() isn't respected when actually showing messages in chat, so the ordering doesn't really
         // work.
         // TODO: Consider removing ordering and letting AFTER effects run when we call add_extras() in do_roll()?
-        if (!handle_persistent_effects(character, roll, RollTime.ROLL, parameters, Ordering.AFTER())) {
+        if (!add_persistent_effects_to_roll(character, roll, RollTime.ROLL, parameters, Ordering.AFTER())) {
             log('Problem adding persistent effects after roll');
             return false;
         }
@@ -655,7 +719,7 @@ var Barbs = Barbs || (function () {
         }
 
         if (item === null) {
-            chat('Error, could not find item with name ' + item_name);
+            chat(character, 'Error, could not find item with name ' + item_name);
             return;
         }
 
@@ -738,7 +802,7 @@ var Barbs = Barbs || (function () {
     function assassin_backstab(character, ability, parameters) {
         const parameter = get_parameter('hidden', parameters);
         if (parameter === null) {
-            chat(character, '"hidden <true/false>" parameter is required');
+            chat(character, '"hidden {true/false}" parameter is required');
             return;
         }
 
@@ -858,16 +922,16 @@ var Barbs = Barbs || (function () {
         const roll_1 = new Roll(character, RollType.MAGIC);
         roll_1.add_damage('8d8', Damage.ICE);
         roll_1.add_effect('Frozen');
-        do_roll(character, '%s (5 ft)'.format(ability), roll_1, parameters, '');
+        do_roll(character, '%s (5 ft)'.format(ability), roll_1, parameters, '', /*do_finalize=*/false);
 
         const roll_2 = new Roll(character, RollType.MAGIC);
         roll_2.add_damage('6d8', Damage.ICE);
         roll_1.add_effect('Slowed');
-        do_roll(character, '%s (5 ft)'.format(ability), roll_2, parameters, '');
+        do_roll(character, '%s (5 ft)'.format(ability), roll_2, parameters, '', /*do_finalize=*/false);
 
         const roll_3 = new Roll(character, RollType.MAGIC);
         roll_3.add_damage('4d8', Damage.ICE);
-        do_roll(character, '%s (5 ft)'.format(ability), roll_3, parameters, '');
+        do_roll(character, '%s (5 ft)'.format(ability), roll_3, parameters, '', /*do_finalize=*/true);
     }
 
 
@@ -885,15 +949,14 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const fake_msg = {'who': target_name, 'id': ''};
-        const target_character = get_character(fake_msg);
+        const target_character = get_character_by_name(target_name);
         if (target_character === null) {
             return;
         }
 
         const choice = get_parameter('choice', parameters);
         if (choice === null) {
-            chat(character, '"choice <first/second>" parameter is missing');
+            chat(character, '"choice {first/second}" parameter is missing');
             return;
         }
 
@@ -912,7 +975,7 @@ var Barbs = Barbs || (function () {
                 });
 
         } else {
-            chat('Unknown value for "choice" parameter "%s"'.format(choice));
+            chat(character, 'Unknown value for "choice" parameter "%s"'.format(choice));
         }
     }
 
@@ -1054,7 +1117,7 @@ var Barbs = Barbs || (function () {
 
         const parameter = get_parameter('concentration', parameters);
         if (parameter === null) {
-            chat(character, '"concentration  <true/false>" parameter is required');
+            chat(character, '"concentration {true/false}" parameter is required');
             return;
         }
 
@@ -1099,8 +1162,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const fake_msg = {'who': target_name, 'id': ''};
-        const target_character = get_character(fake_msg);
+        const target_character = get_character_by_name(target_name);
         if (target_character === null) {
             return;
         }
@@ -1131,14 +1193,13 @@ var Barbs = Barbs || (function () {
     function warrior_warleader(character, ability, parameters) {
         const clazz = get_passive_clazz(ability);
 
-        const parameter = get_parameter('target', parameters);
-        if (parameter === null) {
+        const target_name = get_parameter('target', parameters);
+        if (target_name === null) {
             chat(character, '"target" parameter, the affected player, is missing');
             return;
         }
 
-        const fake_msg = {'who': parameter, 'id': ''};
-        const target_character = get_character(fake_msg);
+        const target_character = get_character_by_name(target_name);
         if (target_character === null) {
             return;
         }
@@ -1157,7 +1218,7 @@ var Barbs = Barbs || (function () {
     function warrior_cut_down(character, ability, parameters) {
         const choice = get_parameter('choice', parameters);
         if (choice === null) {
-            chat(character, '"choice <first/second/both>" parameter is missing');
+            chat(character, '"choice {first/second/both}" parameter is missing');
             return;
         }
 
@@ -1333,16 +1394,43 @@ var Barbs = Barbs || (function () {
 
         // Double check that the class and ability names are correct based on the master components list
         if (!(clazz in BarbsComponents.clazzes)) {
-            chat(msg, 'mismatched class %s, this is Ian\'s mistake'.format(clazz));
-            return;
+            log('mismatched class %s'.format(clazz));
         }
         if (!(BarbsComponents.clazzes[clazz].abilities.includes(ability))
                 && Object.keys(BarbsComponents.clazzes[clazz].passive)[0] !== ability) {
-            chat(msg, 'mismatched ability %s, this is Ian\'s mistake'.format(ability));
+            log('mismatched ability %s'.format(ability));
         }
 
         const processor = abilities_processors[clazz][ability];
         processor(character, ability, parameters);
+    }
+
+
+    // ################################################################################################################
+    // Turn order tracking
+
+
+    function do_turn_order_change() {
+
+    }
+
+
+    function handle_turn_order_change(current, previous) {
+        if (current.get('turnorder') === previous.turnorder) {
+            return;
+        }
+
+        const turn_order = (current.get('turnorder') === '') ? [] : JSON.parse(current.get('turnorder'));
+        const previous_turn_order = (previous.turnorder === '') ? [] : JSON.parse(previous.turnorder);
+
+        if (turn_order.length && previous_turn_order.length && turn_order[0].id !== previous_turn_order[0].id) {
+            do_turn_order_change();
+        }
+    }
+
+
+    function handle_initiative_page_change(current, previous) {
+
     }
 
 
@@ -1393,6 +1481,8 @@ var Barbs = Barbs || (function () {
 
     const register_event_handlers = function () {
         on('chat:message', handle_input);
+        on('change:campaign:turnorder', handle_turn_order_change);
+        on('change:campaign:initiativepage', handle_initiative_page_change);
     };
 
 
