@@ -364,6 +364,20 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function get_passive_clazz(passive) {
+        const clazz_names = Object.keys(BarbsComponents.clazzes);
+        for (let i = 0; i < clazz_names.length; i++) {
+            const clazz = BarbsComponents.clazzes[clazz_names[i]];
+            if ('passive' in clazz && passive === Object.keys(clazz.passive)[0]) {
+                return clazz;
+            }
+        }
+
+        log('ERROR: Class with passive ' + passive + ' not found');
+        return null;
+    }
+
+
     function get_parameter(parameter, parameters) {
         if (parameter === null || parameter === undefined || parameters === null || parameters === undefined) {
             chat('get_parameter() argument is null, blame Ian');
@@ -1115,7 +1129,7 @@ var Barbs = Barbs || (function () {
 
 
     function warrior_warleader(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
+        const clazz = get_passive_clazz(ability);
 
         const parameter = get_parameter('target', parameters);
         if (parameter === null) {
@@ -1136,7 +1150,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, 'Warleader', clazz.passive['Warleader']));
     }
 
 
@@ -1322,7 +1336,8 @@ var Barbs = Barbs || (function () {
             chat(msg, 'mismatched class %s, this is Ian\'s mistake'.format(clazz));
             return;
         }
-        if (!(BarbsComponents.clazzes[clazz].abilities.includes(ability))) {
+        if (!(BarbsComponents.clazzes[clazz].abilities.includes(ability))
+                && Object.keys(BarbsComponents.clazzes[clazz].passive)[0] !== ability) {
             chat(msg, 'mismatched ability %s, this is Ian\'s mistake'.format(ability));
         }
 
