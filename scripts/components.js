@@ -1,5 +1,12 @@
-var BarbsComponents = BarbsComponents || (function() {
+var BarbsComponents = BarbsComponents || (function () {
     'use_strict';
+
+    function assert(condition, message) {
+        if (!condition) {
+            throw message || "Assertion failed";
+        }
+    }
+
 
     const characters_by_owner = {
         'Hoshiko Nightside': [
@@ -115,31 +122,50 @@ var BarbsComponents = BarbsComponents || (function() {
 
 
     const STATS = [
-        new Stat('health', 'VIT', function(v) { return 100 + 10 * v; }),
-        new Stat('stamina', 'END', function(v) { return 100 + 10 * v; }),
-        new Stat('mana', 'SPT', function(v) { return 100 + 10 * v; }),
-        new Stat('health regeneration', 'RCV', function(v) { return 10 + v; }),
-        new Stat('stamina regeneration', 'PER', function(v) { return 10 + v; }),
-        new Stat('mana regeneration', 'SAN', function(v) { return 10 + v; }),
-        new Stat('movement speed', 'AGI', function(v) { return 30 + 5 * Math.floor(v / 2); }),
-        new Stat('ac', 'TGH', function(v) { return 10 + v; }),
-        new Stat('evasion', 'REF', function(v) { return 10 + v; }),
-        new Stat('magic resist', 'RES', function(v) { return 10 + v; }),
-        new Stat('condition resist', 'FRT', function(v) { return 10 + v; }),
-        new Stat('melee damage', 'STR', function(v) { return v; }),
-        new Stat('ranged fine damage', 'DEX', function(v) { return v; }),
-        new Stat('magic damage', 'ATN', function(v) { return v; }),
-        new Stat('critical hit chance', 'PRE', function(v) { return 10 + v; }),
-        new Stat('commands', 'APL', function(v) { return Math.floor((v + 10) / 10) + 1; }),
-        new Stat('languages', 'INT', function(v) { return Math.floor((v + 10) / 3) + 1; }),
-        new Stat('item efficiency', 'WIS', function(v) { return (v + 10) * 5; }),
-        new Stat('buff limit', 'COM', function(v) { return Math.floor((v + 10) / 2); }),
-        new Stat('concentration limit', 'FCS', function(v) { return Math.floor((v + 10) / 2); }),
-
-        // Hidden stats
-        new Stat('critical hit damage', '', function(v) { return v; }),
-        new Stat('lethality', '', function(v) { return v; }),
+        new Stat('health', 'VIT', function (v) { return 100 + 10 * v; }),
+        new Stat('stamina', 'END', function (v) { return 100 + 10 * v; }),
+        new Stat('mana', 'SPT', function (v) { return 100 + 10 * v; }),
+        new Stat('health regeneration', 'RCV', function (v) { return 10 + v; }),
+        new Stat('stamina regeneration', 'PER', function (v) { return 10 + v; }),
+        new Stat('mana regeneration', 'SAN', function (v) { return 10 + v; }),
+        new Stat('movement speed', 'AGI', function (v) { return 30 + 5 * Math.floor(v / 2); }),
+        new Stat('ac', 'TGH', function (v) { return 10 + v; }),
+        new Stat('evasion', 'REF', function (v) { return 10 + v; }),
+        new Stat('magic resist', 'RES', function (v) { return 10 + v; }),
+        new Stat('condition resist', 'FRT', function (v) { return 10 + v; }),
+        new Stat('melee damage', 'STR', function (v) { return v; }),
+        new Stat('ranged fine damage', 'DEX', function (v) { return v; }),
+        new Stat('magic damage', 'ATN', function (v) { return v; }),
+        new Stat('critical hit chance', 'PRE', function (v) { return 10 + v; }),
+        new Stat('commands', 'APL', function (v) { return Math.floor((v + 10) / 10) + 1; }),
+        new Stat('languages', 'INT', function (v) { return Math.floor((v + 10) / 3) + 1; }),
+        new Stat('item efficiency', 'WIS', function (v) { return (v + 10) * 5; }),
+        new Stat('buff limit', 'COM', function (v) { return Math.floor((v + 10) / 2); }),
+        new Stat('concentration limit', 'FCS', function (v) { return Math.floor((v + 10) / 2); }),
     ];
+
+
+    const HiddenStat = {
+        ACCURACY: '%s% accuracy',
+        BUFF_STRIP: 'Strip %s buff(s) from the target',
+        LETHALITY: '%s% lethality',
+        PARALYZE: '%s% chance to paralyze',
+        UNBLOCKABLE_CHANCE: '%s% chance to be unblockable',
+
+        REDUCE_EVASION: 'Target loses %s% evasion for 1 minute',
+        REDUCE_CR: 'Target loses %s% CR',
+        REDUCE_AC: 'Target loses %s AC',
+
+        GENERAL_MAGIC_PENETRATION: '%s% magic penetration',
+        FIRE_MAGIC_PENETRATION: '%s% fire magic penetration',
+        WATER_MAGIC_PENETRATION: '%s% water magic penetration',
+        EARTH_MAGIC_PENETRATION: '%s% earth magic penetration',
+        AIR_MAGIC_PENETRATION: '%s% air magic penetration',
+        ICE_MAGIC_PENETRATION: '%s% ice magic penetration',
+        LIGHTNING_MAGIC_PENETRATION: 's% lightning magic penetration',
+        LIGHT_MAGIC_PENETRATION: '%s% light magic penetration',
+        DARK_MAGIC_PENETRATION: '%s% dark magic penetration',
+    };
 
 
     function get_stat(name) {
@@ -7897,30 +7923,34 @@ var BarbsComponents = BarbsComponents || (function() {
     // Roll
 
     const Damage = {
-        'PHYSICAL': 'physical',
-        'FIRE': 'fire',
-        'WATER': 'water',
-        'EARTH': 'earth',
-        'AIR': 'air',
-        'ICE': 'ice',
-        'LIGHTNING': 'lightning',
-        'LIGHT': 'light',
-        'DARK': 'dark',
+        PHYSICAL: 'physical',
+        FIRE: 'fire',
+        WATER: 'water',
+        EARTH: 'earth',
+        AIR: 'air',
+        ICE: 'ice',
+        LIGHTNING: 'lightning',
+        LIGHT: 'light',
+        DARK: 'dark',
+        HEALING: 'healing',
+        ALL_MAGIC: 'all_magic',
+        ALL: 'all',
     };
 
     const RollType = {
-        'PHYSICAL': 'roll_type_physical',
-        'MAGIC': 'roll_type_magic',
-        'ALL': 'roll_type_all',
+        PHYSICAL: 'roll_type_physical',
+        MAGIC: 'roll_type_magic',
+        HEALING: 'roll_type_healing',
+        ALL: 'roll_type_all',
     };
 
     const RollTime = {
         // Indicates that the effect should be applied when calculating a character stat
-        'STAT': 'roll_time_stat',
+        STAT: 'roll_time_stat',
         // Indicates that the effect should be applied after we know whether or not a roll was a crit
-        'ROLL': 'roll_time_roll',
+        ROLL: 'roll_time_roll',
         // Indicates that the effect should be applied before we roll for crit
-        'CRIT': 'roll_time_crit',
+        CRIT: 'roll_time_crit',
     };
 
     class Roll {
@@ -7930,6 +7960,7 @@ var BarbsComponents = BarbsComponents || (function() {
             this.damages = {};
             this.multipliers = {};
             this.effects = [];
+            this.hidden_stats = {};
 
             this.crit = false;
             this.crit_chance = 0;
@@ -7958,6 +7989,14 @@ var BarbsComponents = BarbsComponents || (function() {
 
         add_effect(effect) {
             this.effects.push('<li>%s</li>'.format(effect));
+        }
+
+        add_hidden_stat(value, type) {
+            if (!(type in this.hidden_stats)) {
+                this.hidden_stats[type] = value;
+            } else {
+                this.hidden_stats[type] += value;
+            }
         }
 
         dump_multipliers() {
@@ -8002,13 +8041,26 @@ var BarbsComponents = BarbsComponents || (function() {
                     per_source_multipliers[source].push(self.multipliers[type][source]);
                 });
             }
-            if ('all' in self.multipliers) {
-                Object.keys(self.multipliers['all']).forEach(function (source) {
+
+            if (type !== Damage.PHYSICAL) {
+                if (Damage.ALL_MAGIC in self.multipliers) {
+                    Object.keys(self.multipliers[Damage.ALL_MAGIC]).forEach(function (source) {
+                        if (!(source in per_source_multipliers)) {
+                            per_source_multipliers[source] = [];
+                        }
+
+                        per_source_multipliers[source].push(self.multipliers[Damage.ALL_MAGIC][source]);
+                    });
+                }
+            }
+
+            if (Damage.ALL in self.multipliers) {
+                Object.keys(self.multipliers[Damage.ALL]).forEach(function (source) {
                     if (!(source in per_source_multipliers)) {
                         per_source_multipliers[source] = [];
                     }
 
-                    per_source_multipliers[source].push(self.multipliers['all'][source]);
+                    per_source_multipliers[source].push(self.multipliers[Damage.ALL][source]);
                 });
             }
 
@@ -8024,7 +8076,7 @@ var BarbsComponents = BarbsComponents || (function() {
             const self = this;
             const rolls = {};
 
-            Object.keys(self.damages).forEach(function(type) {
+            Object.keys(self.damages).forEach(function (type) {
                 let dmg_str = '(%s)'.format(self.damages[type]);
 
                 dmg_str = '%s*(%s)'.format(dmg_str, self.get_multiplier_string(type));
@@ -8083,11 +8135,12 @@ var BarbsComponents = BarbsComponents || (function() {
         JAVELIN: 'javelin',
         LONGBLADE: 'longblade',
         LONGBOW: 'longbow',
+        ORB: 'orb',
         POLEARM: 'polearm',
         SHIELD: 'shield',
         SHORTBLADE: 'shortblade',
+        WAND: 'wand',
     };
-
 
     const ItemSlot = {
         MAIN_HAND: 'main_hand',
@@ -8102,26 +8155,25 @@ var BarbsComponents = BarbsComponents || (function() {
         BELT: 'belt',
     };
 
-
     const ItemRarity = {
         MAGIC: 'magic',
         RARE: 'rare',
     };
 
     const ItemScaler = {
-        MELEE: function(character, roll) {
+        MELEE: function (character, roll) {
             roll.add_damage(character.get_stat('melee damage'), Damage.PHYSICAL);
         },
-        RANGED_FINE: function(character, roll) {
+        RANGED_FINE: function (character, roll) {
             roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
         },
         // This one has to be called with a parameter to create the function
-        OTHER: function(stat) {
-            return function(character, roll) {
+        OTHER: function (stat) {
+            return function (character, roll) {
                 roll.add_damage(character.get_stat(stat), Damage.PHYSICAL);
             }
         },
-        NONE: function() {},
+        NONE: function () {},
     };
 
     class Item {
@@ -8149,17 +8201,21 @@ var BarbsComponents = BarbsComponents || (function() {
         }
 
         static stat_effect(stat, mod) {
-            return new Effect(RollTime.STAT, RollType.ALL, function(stat_to_test) {
+            return new Effect(RollTime.STAT, RollType.ALL, function (stat_to_test) {
                 return stat_to_test === stat ? mod : 0
             });
         }
 
         static no_op_roll_effect() {
-            return new Effect(RollTime.ROLL, RollType.ALL, function(roll) {});
+            return new Effect(RollTime.ROLL, RollType.ALL, function () {});
         }
 
         static roll_damage(dmg, dmg_type, applicable_roll_type) {
-            return new Effect(RollTime.ROLL, applicable_roll_type, function(roll) {
+            assert(dmg !== null);
+            assert(dmg_type !== null);
+            assert(applicable_roll_type !== null);
+
+            return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
                     roll.add_damage(dmg, dmg_type);
                 }
@@ -8167,15 +8223,22 @@ var BarbsComponents = BarbsComponents || (function() {
         }
 
         static roll_multiplier(value, dmg_type, applicable_roll_type) {
-            return new Effect(RollTime.ROLL, applicable_roll_type, function(roll) {
+            assert(value !== null);
+            assert(dmg_type !== null);
+            assert(applicable_roll_type !== null);
+
+            return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
                     roll.add_multiplier(value, dmg_type, 'self');
                 }
-            })
+            });
         }
 
         static roll_effect(effect, applicable_roll_type) {
-            return new Effect(RollTime.ROLL, applicable_roll_type, function(roll) {
+            assert(effect !== null);
+            assert(applicable_roll_type !== null);
+
+            return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
                     roll.add_effect(effect);
                 }
@@ -8183,7 +8246,10 @@ var BarbsComponents = BarbsComponents || (function() {
         }
 
         static crit_effect(effect, applicable_roll_type) {
-            return new Effect(RollTime.ROLL, applicable_roll_type, function(roll) {
+            assert(effect !== null);
+            assert(applicable_roll_type !== null);
+
+            return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
                     if (roll.crit) {
                         roll.add_effect(effect);
@@ -8193,7 +8259,11 @@ var BarbsComponents = BarbsComponents || (function() {
         }
 
         static crit_damage(dmg, dmg_type, applicable_roll_type) {
-            return new Effect(RollTime.ROLL, applicable_roll_type, function(roll) {
+            assert(dmg !== null);
+            assert(dmg_type !== null);
+            assert(applicable_roll_type !== null);
+
+            return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
                     if (roll.crit) {
                         roll.add_damage(dmg, dmg_type);
@@ -8203,9 +8273,37 @@ var BarbsComponents = BarbsComponents || (function() {
         }
 
         static crit_damage_mod(amount) {
-            return new Effect(RollTime.CRIT, RollType.PHYSICAL, function(roll) {
+            assert(amount !== null);
+
+            return new Effect(RollTime.CRIT, RollType.PHYSICAL, function (roll) {
                 if (roll.roll_type === RollType.PHYSICAL) {
                     roll.add_crit_damage_mod(amount);
+                }
+            });
+        }
+
+        static hidden_stat(value, stat_type, applicable_roll_type) {
+            assert(value !== null);
+            assert(stat_type !== null);
+            assert(applicable_roll_type !== null);
+
+            return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
+                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                    roll.add_hidden_stat(value, stat_type);
+                }
+            });
+        }
+
+        static crit_hidden_stat(value, stat_type, applicable_roll_type) {
+            assert(value !== null);
+            assert(stat_type !== null);
+            assert(applicable_roll_type !== null);
+
+            return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
+                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                    if (roll.crit) {
+                        roll.add_hidden_stat(value, stat_type);
+                    }
                 }
             });
         }
@@ -8213,7 +8311,7 @@ var BarbsComponents = BarbsComponents || (function() {
 
 
     function skill_condition(skill, rank) {
-        return function(character) {
+        return function (character) {
             return character.has_skill_req(skill, rank);
         };
     }
@@ -8345,7 +8443,7 @@ var BarbsComponents = BarbsComponents || (function() {
             ItemScaler.NONE,
             0, [], '',
             [
-                new Effect(RollTime.ROLL, RollType.PHYSICAL, function(roll) {
+                new Effect(RollTime.ROLL, RollType.PHYSICAL, function (roll) {
                     if (roll.character.is_using('longbow') || roll.character.is_using('crossbow')) {
                         roll.add_multiplier(0.5, Damage.PHYSICAL, 'self');
                     }
@@ -8499,7 +8597,7 @@ var BarbsComponents = BarbsComponents || (function() {
             0, [], '',
             [
                 Effect.roll_damage('4d10', Damage.LIGHT, RollType.PHYSICAL),
-                Effect.roll_effect('20% accuracy', RollType.PHYSICAL),
+                Effect.hidden_stat(20, HiddenStat.ACCURACY, RollType.PHYSICAL),
             ]
         ),
 
@@ -8552,8 +8650,8 @@ var BarbsComponents = BarbsComponents || (function() {
             ItemScaler.MELEE,
             0, [], '',
             [
-                Effect.roll_effect('20% Accuracy', RollType.PHYSICAL),
-                Effect.roll_effect('30% paralyze', RollType.PHYSICAL),
+                Effect.hidden_stat(20, HiddenStat.ACCURACY, RollType.PHYSICAL),
+                Effect.roll_effect(30, HiddenStat.PARALYZE, RollType.PHYSICAL),
             ]
         ),
 
@@ -8583,7 +8681,8 @@ var BarbsComponents = BarbsComponents || (function() {
             0, [], '',
             [
                 Effect.stat_effect('critical hit chance', 20),
-                Effect.crit_effect('Target loses 10% evasion for 1 minute (stacks) & strip 1 buff from the target'),
+                Effect.crit_hidden_stat(1, HiddenStat.BUFF_STRIP, RollType.PHYSICAL),
+                Effect.crit_hidden_stat(10, HiddenStat.REDUCE_EVASION, RollType.PHYSICAL),
             ]
         ),
 
@@ -8614,8 +8713,164 @@ var BarbsComponents = BarbsComponents || (function() {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.roll_effect('When thrown, this dagger cannot miss'),
-                Effect.roll_effect('Inflict Paralysis'),
+                Effect.roll_effect('When thrown, this dagger cannot miss', RollType.ALL),
+                Effect.roll_effect('Inflict Paralysis', RollType.ALL),
+            ]
+        ),
+
+        new Item(
+            "Battlemage's Wand of Glacial Rage",
+            ItemType.WAND,
+            ItemRarity.RARE,
+            ItemSlot.MAIN_HAND,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.roll_multiplier(0.1, Damage.ALL_MAGIC, RollType.MAGIC),
+                Effect.hidden_stat(50, HiddenStat.ICE_MAGIC_PENETRATION, RollType.MAGIC),
+                Effect.roll_multiplier(0.25, Damage.ICE, RollType.MAGIC),
+            ]
+        ),
+
+        new Item(
+            "Phasing Blizzard's Glimmering Orb of Debilitating Sorcery",
+            ItemType.ORB,
+            ItemRarity.RARE,
+            ItemSlot.OFFHAND,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.hidden_stat(20, HiddenStat.GENERAL_MAGIC_PENETRATION, RollType.MAGIC),
+                Effect.hidden_stat(5, HiddenStat.REDUCE_CR, RollType.MAGIC),
+                Effect.roll_multiplier(0.3, Damage.ICE, RollType.MAGIC),
+                Effect.roll_multiplier(0.2, Damage.ICE, RollType.MAGIC),
+            ]
+        ),
+
+        new Item(
+            "Mage’s Resilient Hood of Accurate Concentration",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.HEAD,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect('magic resist', 20),
+                Effect.stat_effect('ac', -20),
+                Effect.stat_effect('mana', 40),
+                Effect.hidden_stat(20, HiddenStat.ACCURACY, RollType.ALL),
+                Effect.stat_effect('concentration limit', 30),
+            ]
+        ),
+
+        new Item(
+            "Mage’s Meditating Resilient Vest of the Healing Beast",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.BODY,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect('magic resist', 20),
+                Effect.stat_effect('ac', -20),
+                Effect.stat_effect('mana', 60),
+                Effect.stat_effect('mana regeneration', 20),
+                Effect.stat_effect('health', 60),
+                // TODO: Your healing spells are 30% more effective
+            ]
+        ),
+
+        new Item(
+            "Unblockable Accurate Resilient Gloves of Phasing Chills",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.HANDS,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect('magic resist', 20),
+                Effect.stat_effect('ac', -20),
+                Effect.hidden_stat(20, HiddenStat.UNBLOCKABLE_CHANCE, RollType.ALL),
+                Effect.hidden_stat(20, HiddenStat.ACCURACY, RollType.ALL),
+                Effect.hidden_stat(10, HiddenStat.GENERAL_MAGIC_PENETRATION, RollType.ALL),
+                Effect.hidden_stat(25, HiddenStat.ICE_MAGIC_PENETRATION, RollType.ALL),
+            ]
+        ),
+
+        new Item(
+            "Mage’s Meditating Resilient Shoes of Speed",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.FEET,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect('magic resist', 20),
+                Effect.stat_effect('ac', -20),
+                Effect.stat_effect('mana', 40),
+                Effect.stat_effect('mana regeneration', 15),
+                Effect.stat_effect('movement speed', 20),
+            ]
+        ),
+
+        new Item(
+            "Mage’s Concentrating Skillful Amulet of Healing",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.NECK,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect('mana', 40),
+                Effect.stat_effect('concentration limit', 20),
+                // TODO: Your healing spells are 30% more effective
+            ]
+        ),
+
+        new Item(
+            "Unblockable Phasing Skillful Ring of Sorcerous Blizzards",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.RING,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.roll_multiplier(0.2, Damage.ALL_MAGIC, RollType.MAGIC),
+                Effect.roll_multiplier(0.3, Damage.ICE, RollType.MAGIC),
+                Effect.hidden_stat(15, HiddenStat.GENERAL_MAGIC_PENETRATION, RollType.ALL),
+                Effect.hidden_stat(10, HiddenStat.UNBLOCKABLE_CHANCE, RollType.ALL),
+            ]
+        ),
+
+        new Item(
+            "Mage’s Skillful Belt of the Bestial Antidote",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.RING,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect('mana', 40),
+                Effect.stat_effect('health', 50),
+                // TODO poison specifically: Effect.stat_effect('condition resist', 50),
             ]
         ),
 
@@ -8672,7 +8927,7 @@ var BarbsComponents = BarbsComponents || (function() {
         get_item_names() {
             const item_names = [];
 
-            for (let i = 0; i < character_sheet_item_slots; i++) {
+            for (let i = 0; i < character_sheet_item_slots.length; i++) {
                 const slot = character_sheet_item_slots[i];
                 const item_name = getAttrByName(this.id, slot);
                 if (item_name !== '') {
@@ -8689,7 +8944,7 @@ var BarbsComponents = BarbsComponents || (function() {
             // find the actual item for each given name
             const character_items = [];
 
-            _.each(item_names, function(item_name) {
+            _.each(item_names, function (item_name) {
                 for (let i = 0; i < ITEMS.length; i++) {
                     if (ITEMS[i].name === item_name) {
                         character_items.push(ITEMS[i]);
@@ -8722,7 +8977,7 @@ var BarbsComponents = BarbsComponents || (function() {
             const attr_value = this.get_attribute(stat.attr_tla);
             let stat_value = stat.value(attr_value);
 
-            _.each(this.items, function(item) {
+            _.each(this.items, function (item) {
                 for (let i = 0; i < item.effects.length; i++) {
                     if (item.effects[i].type === RollTime.STAT) {
                         stat_value += item.effects[i].apply(stat.name);
@@ -8769,6 +9024,7 @@ var BarbsComponents = BarbsComponents || (function() {
         clazzes,
         abilities,
         skill_to_attribute_map,
+        HiddenStat,
         Character,
         Damage,
         RollType,

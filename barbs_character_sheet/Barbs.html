@@ -2673,6 +2673,7 @@ Desired example
         </tr>
         {{/dark}}
 
+        {{#modified_crit}}
         {{#rollLess() crit_value crit_cutoff}}
         <tr style="background:#702082; color:#FFFFFF">
             <td class="template_label">Crit Roll:</td>
@@ -2686,6 +2687,7 @@ Desired example
             <td class="template_value">{{modified_crit}}</td>
         </tr>
         {{/^rollLess() crit_value crit_cutoff}}
+        {{/modified_crit}}
 
         {{#effects}}
         <tr style="background:#FFFFFF; color:#000000;">

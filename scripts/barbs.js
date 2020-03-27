@@ -1,4 +1,4 @@
-var Barbs = Barbs || (function() {
+var Barbs = Barbs || (function () {
     'use strict';
 
     // Basic python-like string formatting
@@ -10,6 +10,7 @@ var Barbs = Barbs || (function() {
         return a;
     };
 
+    const HiddenStat = BarbsComponents.HiddenStat;
     const Damage = BarbsComponents.Damage;
     const RollType = BarbsComponents.RollType;
     const RollTime = BarbsComponents.RollTime;
@@ -485,12 +486,14 @@ var Barbs = Barbs || (function() {
             damage_section = damage_section + damage_section_format.format(type, rolls_per_type[type]);
         });
 
-        let effects = '';
-        if (roll.effects.length > 0) {
-            effects = effects_section_format.format(roll.effects.join(''));
-        }
+        let effects = Array.from(roll.effects);
+        Object.keys(roll.hidden_stats).forEach(function (hidden_stat_format) {
+            const formatted_hidden_stat = hidden_stat_format.format(roll.hidden_stats[hidden_stat_format]);
+            effects.push('<li>%s</li>'.format(formatted_hidden_stat));
+        });
 
-        const msg = roll_format.format(ability, damage_section, crit_section, effects);
+        const effects_section = effects_section_format.format(effects.join(''));
+        const msg = roll_format.format(ability, damage_section, crit_section, effects_section);
 
         log('Roll: ' + msg);
         chat(character, msg);
@@ -550,13 +553,24 @@ var Barbs = Barbs || (function() {
     }
 
 
+    function cryomancer_frostbite(roll, roll_time, parameter) {
+        if (roll_time !== RollTime.ROLL) {
+            return true;
+        }
+
+        const stacks = parseInt(parameter.split(' ')[1]);
+        roll.add_multiplier(stacks * 0.5, Damage.ICE, 'self');
+        return true;
+    }
+
+
     function sniper_spotter(roll, roll_time, parameter) {
         if (roll_time !== RollTime.ROLL) {
             return true;
         }
 
         const stacks = parseInt(parameter.split(' ')[1]);
-        roll.add_multiplier(stacks * 0.25, 'all', 'self');
+        roll.add_multiplier(stacks * 0.25, Damage.ALL, 'self');
         return true;
     }
 
@@ -576,6 +590,7 @@ var Barbs = Barbs || (function() {
         'misc_multiplier': arbitrary_multiplier,
         'misc_damage': arbitrary_damage,
         'spotting': sniper_spotter,
+        'frostbite': cryomancer_frostbite,
         'warper_cc': warper_opportunistic_predator,
     };
 
@@ -612,7 +627,7 @@ var Barbs = Barbs || (function() {
         const option_pieces = options.split(';');
         const item_name = option_pieces[0];
         const parameters = option_pieces.slice(1);
-        parameters.forEach(function(parameter, index, self) {
+        parameters.forEach(function (parameter, index, self) {
             self[index] = parameter.trim();
         });
 
@@ -738,7 +753,7 @@ var Barbs = Barbs || (function() {
 
         // Check that the total adds up to 16
         let total_dice = 0;
-        _.each(dice_divisions, function(dice_division) {
+        _.each(dice_divisions, function (dice_division) {
             total_dice += parseInt(dice_division);
         });
 
@@ -757,7 +772,7 @@ var Barbs = Barbs || (function() {
                 const roll = new Roll(character, RollType.PHYSICAL);
                 roll.add_damage('%sd4'.format(dice_divisions[i]), Damage.PHYSICAL);
                 add_scale_damage(character, roll);
-                roll.add_effect('%s% Lethality'.format(5 * dice_divisions[i]));
+                roll.add_hidden_stat(5 * dice_divisions[i], HiddenStat.LETHALITY);
 
                 roll.copy_multipliers(dummy_roll);
                 const rolls_per_type = roll.roll();
@@ -770,10 +785,166 @@ var Barbs = Barbs || (function() {
     }
 
 
+    function champion_slice_and_dice(character, ability, parameters) {
+        // TODO
+        chat(character, 'not yet implemented');
+    }
+
+
+    function champion_skull_bash(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('6d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+        roll.add_effect('Stun target until end of their next turn');
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function champion_piercing_blow(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('7d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function champion_disarming_blow(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d6', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function cryomancer_aurora_beam(character, ability, parameters) {
+        const mana = get_parameter('mana', parameters);
+        if (mana === null) {
+            chat(character, '"mana" parameter, the amount of mana you are spending, is missing');
+            return;
+        }
+
+        const dice = parseInt(mana) / 5;
+
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('%sd8'.format(dice), Damage.ICE);
+        do_roll(character, ability, roll, parameters, '');
+    }
+
+
+    function cryomancer_glacial_crash(character, ability, parameters) {
+        const roll_1 = new Roll(character, RollType.MAGIC);
+        roll_1.add_damage('8d8', Damage.ICE);
+        roll_1.add_effect('Frozen');
+        do_roll(character, '%s (5 ft)'.format(ability), roll_1, parameters, '');
+
+        const roll_2 = new Roll(character, RollType.MAGIC);
+        roll_2.add_damage('6d8', Damage.ICE);
+        roll_1.add_effect('Slowed');
+        do_roll(character, '%s (5 ft)'.format(ability), roll_2, parameters, '');
+
+        const roll_3 = new Roll(character, RollType.MAGIC);
+        roll_3.add_damage('4d8', Damage.ICE);
+        do_roll(character, '%s (5 ft)'.format(ability), roll_3, parameters, '');
+    }
+
+
+    function cryomancer_ice_spear(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('6d8', Damage.ICE);
+        do_roll(character, ability, roll, parameters, '');
+    }
+
+
+    function enchanter_modify_weapon(character, ability, parameters) {
+        const target_name = get_parameter('target', parameters);
+        if (target_name === null) {
+            chat(character, '"target" parameter is missing');
+            return;
+        }
+
+        const fake_msg = {'who': target_name, 'id': ''};
+        const target_character = get_character(fake_msg);
+        if (target_character === null) {
+            return;
+        }
+
+        const choice = get_parameter('choice', parameters);
+        if (choice === null) {
+            chat(character, '"choice <first/second>" parameter is missing');
+            return;
+        }
+
+        if (choice === 'first') {
+            add_persistent_effect(ability, target_character, ability_info.duration,  Ordering.BEFORE(), RollTime.CRIT, true,
+                function (character, roll, parameters) {
+                    roll.add_damage('4d10', Damage.PHYSICAL);
+                    return true;
+                });
+
+        } else if (choice === 'second') {
+            add_persistent_effect(ability, target_character, ability_info.duration,  Ordering.BEFORE(), RollTime.CRIT, true,
+                function (character, roll, parameters) {
+                    roll.add_multiplier(-0.5, Damage.PHYSICAL, 'self');
+                    return true;
+                });
+
+        } else {
+            chat('Unknown value for "choice" parameter "%s"'.format(choice));
+        }
+    }
+
+
+    function noxomancer_darkbomb(character, ability, parameters) {
+        const target_name = get_parameter('delay', parameters);
+        if (target_name === null) {
+            chat(character, '"delay {true/false}" parameter is missing');
+            return;
+        }
+
+        const roll = new Roll(character, RollType.MAGIC);
+
+        if (choice === 'false') {
+            roll.add_damage('3d10', Damage.DARK);
+            roll.add_effect('1 curse')
+        } else if (choice === 'true') {
+            roll.add_damage('6d10', Damage.DARK);
+            roll.add_effect('2 curses')
+        }
+
+        do_roll(character, ability, roll, parameters, '');
+    }
+
+
+    function sentinel_crossguard_guillotine(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('4d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+
+        const stacks = get_parameter(parameters, 'stacks');
+        if (stacks !== null) {
+            roll.add_damage('%sd10'.format(stacks), Damage.PHYSICAL);
+            roll.add_effect('Hits enemies diagonally to your target');
+        }
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
     function sniper_piercing_shot(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('5d8', Damage.PHYSICAL);
-        roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
+        add_scale_damage(character, roll);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -788,7 +959,7 @@ var Barbs = Barbs || (function() {
 
         const stacks_spent_for_lethality = get_parameter('stacks', parameters);
         if (stacks_spent_for_lethality !== null) {
-            roll.add_effect('%s% Lethality'.format(10 * parseInt(stacks_spent_for_lethality, 10)));
+            roll.add_hidden_stat(10 * parseInt(stacks_spent_for_lethality), HiddenStat.LETHALITY);
         }
 
         roll_crit(roll, parameters, function (crit_section) {
@@ -905,6 +1076,99 @@ var Barbs = Barbs || (function() {
     }
 
 
+    function symbiote_strengthen_soul(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+
+        const target_name = get_parameter('target', parameters);
+        if (target_name === null) {
+            chat(character, '"target" parameter is missing');
+            return;
+        }
+
+        const fake_msg = {'who': target_name, 'id': ''};
+        const target_character = get_character(fake_msg);
+        if (target_character === null) {
+            return;
+        }
+
+        const source = character.name;
+        add_persistent_effect(ability, target_character, 1, Ordering.BEFORE(), RollTime.ROLL, false,
+            function (char, roll, parameters) {
+                roll.add_multiplier(0.5, Damage.ALL, source);
+                return true;
+            });
+
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
+    function warlord_hookshot(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+        roll.add_effect('Pull target 20 ft towards you');
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function warrior_warleader(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+
+        const parameter = get_parameter('target', parameters);
+        if (parameter === null) {
+            chat(character, '"target" parameter, the affected player, is missing');
+            return;
+        }
+
+        const fake_msg = {'who': parameter, 'id': ''};
+        const target_character = get_character(fake_msg);
+        if (target_character === null) {
+            return;
+        }
+
+        const source = character.name;
+        add_persistent_effect(ability, target_character, 1, Ordering.BEFORE(), RollTime.ROLL, true,
+            function (char, roll, parameters) {
+                roll.add_multiplier(0.25, Damage.ALL, source);
+                return true;
+            });
+
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
+    function warrior_cut_down(character, ability, parameters) {
+        const choice = get_parameter('choice', parameters);
+        if (choice === null) {
+            chat(character, '"choice <first/second/both>" parameter is missing');
+            return;
+        }
+
+        if (choice === 'first' || choice === 'both') {
+            const roll = new Roll(character, RollType.PHYSICAL);
+            roll.add_damage('3d10', Damage.PHYSICAL);
+            add_scale_damage(character, roll);
+
+            roll_crit(roll, parameters, function (crit_section) {
+                do_roll(character, ability, roll, parameters, crit_section);
+            });
+        }
+
+        if (choice === 'second' || choice === 'both') {
+            const roll = new Roll(character, RollType.PHYSICAL);
+            roll.add_damage('3d10', Damage.PHYSICAL);
+            add_scale_damage(character, roll);
+
+            roll_crit(roll, parameters, function (crit_section) {
+                do_roll(character, ability, roll, parameters, crit_section);
+            });
+        }
+    }
+
+
     function warrior_charge(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
@@ -914,17 +1178,18 @@ var Barbs = Barbs || (function() {
             return;
         }
 
-        const character_names = parameter.split(',');
-        for (let i = 0; i < character_names.length; i++) {
-            const fake_msg = {'who': character_names[i], 'id': ''};
+        const target_names = parameter.split(',');
+        for (let i = 0; i < target_names.length; i++) {
+            const fake_msg = {'who': target_names[i], 'id': ''};
             const target_character = get_character(fake_msg);
             if (target_character === null) {
                 return;
             }
 
-            add_persistent_effect(ability, character, 1, Ordering.BEFORE(), RollTime.ROLL, false,
-                function (character, roll, parameters) {
-                    roll.add_multiplier(0.5, 'all', character.name);
+            const source = character.name;
+            add_persistent_effect(ability, target_character, 1, Ordering.BEFORE(), RollTime.ROLL, false,
+                function (char, roll, parameters) {
+                    roll.add_multiplier(0.5, Damage.ALL, source);
                     return true;
                 });
         }
@@ -957,8 +1222,36 @@ var Barbs = Barbs || (function() {
             'Haste': print_ability_description,
             'Massacre': assassin_massacre,
         },
+        'Champion': {
+            'Slice and Dice': champion_slice_and_dice,
+            'Skull Bash': champion_skull_bash,
+            'Piercing Blow': champion_piercing_blow,
+            'Disarming Blow': champion_disarming_blow,
+        },
+        'Cryomancer': {
+            'Aurora Beam': cryomancer_aurora_beam,
+            'Extinguish': print_ability_description,
+            'Flash Freeze': print_ability_description,
+            'Freezing Wind': print_ability_description,
+            'Frozen Arena': print_ability_description,
+            'Glacial Crash': cryomancer_glacial_crash,
+            'Heart of Ice': print_ability_description,
+            'Hypothermia': print_ability_description,
+            'Ice Crafting': print_ability_description,
+            'Ice Spear': cryomancer_ice_spear,
+        },
         'Enchanter': {
             'Mint Coinage': print_ability_description,
+            'Modify Weapon': enchanter_modify_weapon,
+            'Reconstruct Barrier': print_ability_description,
+        },
+        'Noxomancer': {
+            'Defile': print_ability_description,  // TODO this maybe could do more
+            'Siphon Soul': print_ability_description,  // TODO this maybe could do more
+            'Darkbomb': noxomancer_darkbomb,
+        },
+        'Sentinel': {
+            'Crossguard Guillotine': sentinel_crossguard_guillotine,
         },
         'Sniper': {
             'Piercing Shot': sniper_piercing_shot,
@@ -972,9 +1265,27 @@ var Barbs = Barbs || (function() {
         },
         'Soldier': {
             'Fleetfoot Blade': soldier_fleetfoot_blade,
+            'Intercept': print_ability_description,
+            'Dodge Roll': print_ability_description,
+            'Double Time': print_ability_description,  // TODO this could do more
+        },
+        'Symbiote': {
+            'Strengthen Soul': symbiote_strengthen_soul,
+            'Empower Soul': print_ability_description,  // TODO this could do more
+            'Strengthen Body': print_ability_description,  // TODO this could do more
+            'Strengthen Mind': print_ability_description,  // TODO this could do more
+        },
+        'Warlord': {
+            'Hookshot': warlord_hookshot,
+            'Weapon Swap': print_ability_description,
         },
         'Warrior': {
+            'Warleader': warrior_warleader,
+            'Cut Down': warrior_cut_down,
+            'Shields Up': print_ability_description,  // TODO this could do more
+            'Reinforce Armor': print_ability_description,  // TODO this could do more
             '"Charge!"': warrior_charge,
+            '"Fight Me!"': print_ability_description,  // TODO this could do more
         }
     };
 
@@ -992,7 +1303,7 @@ var Barbs = Barbs || (function() {
         const clazz = option_pieces[0];
         const ability = option_pieces[1];
         const parameters = option_pieces.slice(2);
-        parameters.forEach(function(parameter, index, self) {
+        parameters.forEach(function (parameter, index, self) {
             self[index] = parameter.trim();
         });
 
@@ -1034,34 +1345,38 @@ var Barbs = Barbs || (function() {
 
 
     function handle_input(msg) {
-        if (msg.type !== 'api') {
-            return;
+        // Regular API call
+        if (msg.content.startsWith('!')) {
+            const pieces = msg.content.split(' ');
+            if (pieces.length < 2) {
+                return;
+            }
+
+            const main_command = pieces[0];
+            if ('!barbs' !== main_command) {
+                return;
+            }
+
+            log('API call: who=' + msg.who + ', message="' + msg.content + '"');
+
+            const sub_command = pieces[1];
+            if (!(sub_command in subcommand_handlers)) {
+                chat(msg, 'unknown barbs subcommand %s'.format(sub_command));
+                return;
+            }
+
+            const processor = subcommand_handlers[sub_command];
+            processor(msg);
         }
 
-        const pieces = msg.content.split(' ');
-        if (pieces.length < 2) {
-            return;
-        }
-
-        const main_command = pieces[0];
-        if ('!barbs' !== main_command) {
-            return;
-        }
-
-        log('API call: who=' + msg.who + ', id=' + msg.playerid + ', message="' + msg.content + '"');
-
-        const sub_command = pieces[1];
-        if (!(sub_command in subcommand_handlers)) {
-            chat(msg, 'unknown barbs subcommand %s'.format(sub_command));
-            return;
-        }
-
-        const processor = subcommand_handlers[sub_command];
-        processor(msg);
+        // TODO: There are some abilities, like something in Demon Hunter, where we'd like to get back the result of a
+        //  roll after it's been sent and after tha API call is done. We can react to any message, not just API-type
+        //  messages, so we can do this. Add a list of abilities that have "secondary activations" in the API, and look
+        //  for them here.
     }
 
 
-    const register_event_handlers = function() {
+    const register_event_handlers = function () {
         on('chat:message', handle_input);
     };
 
