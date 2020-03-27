@@ -942,6 +942,12 @@ span.sheet-spacer,
     text-align: center;
 }
 
+.sheet-bold,
+.sheet-rolltemplate-5eDefault .sheet-bold {
+    font-weight: bold;
+}
+
+
 textarea {
     width: calc(100% - 10px);
     height: 150px;

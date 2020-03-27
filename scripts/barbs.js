@@ -14,6 +14,7 @@ var Barbs = Barbs || (function() {
     const RollType = BarbsComponents.RollType;
     const RollTime = BarbsComponents.RollTime;
     const Roll = BarbsComponents.Roll;
+    const ITEMS = BarbsComponents.ITEMS;
 
     const total_format = '&{template:default} {{name=%s}} {{%s=[[%s]]}}';
     const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
@@ -377,32 +378,17 @@ var Barbs = Barbs || (function() {
         return null;
     }
 
-    // TODO: What attacks scale off of is hardcoded on the weapon type. Really, the item info should probably include
-    //  the scaling stat, since modifiers may change it.
+
+    // For classes abilities specifically. We assume that the ability uses the character's equipped item with type
+    // MAIN_HAND or TWO_HAND.
     function add_scale_damage(character, roll) {
         if (roll.type !== RollType.PHYSICAL) {
             chat('Unexpected roll type %s while adding weapon scaling damage'.format(roll.type));
         }
 
         let main_hand_item = character.get_main_weapon();
-        if (main_hand_item === null) {
-            // pass
-        } else if (main_hand_item.type === 'shortblade') {
-            // doesn't scale off of anything
-        } else if (main_hand_item.type === 'axe') {
-            roll.add_damage(character.get_stat('melee damage'), Damage.PHYSICAL);
-        } else if (main_hand_item.type === 'axe') {
-            roll.add_damage(character.get_stat('melee damage'), Damage.PHYSICAL);
-        } else if (main_hand_item.type === 'longblade') {
-            roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
-        } else if (main_hand_item.type === 'shield') {
-            roll.add_damage(character.get_stat('melee damage'), Damage.PHYSICAL);
-        } else if (main_hand_item.type === 'polearm') {
-            roll.add_damage(character.get_stat('melee damage'), Damage.PHYSICAL);
-        } else if (main_hand_item.type === 'javelin') {
-            roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
-        } else {
-            chat('Unexpected weapon type %s. We probably should not be calling this method for this ability'.format(main_hand_item.type));
+        if (main_hand_item !== null) {
+            main_hand_item.damage_scaling(character, roll);
         }
     }
 
@@ -606,6 +592,54 @@ var Barbs = Barbs || (function() {
         }
 
         return true;
+    }
+
+
+
+    // ################################################################################################################
+    // Auto-attacks with an item
+
+
+    function roll_item(msg) {
+        const character = get_character(msg);
+        if (character === null) {
+            log('error, unknown character for ' + msg.who);
+            return;
+        }
+
+        const pieces = msg.content.split(' ');
+        const options = pieces.slice(2).join(' ');
+        const option_pieces = options.split(';');
+        const item_name = option_pieces[0];
+        const parameters = option_pieces.slice(1);
+        parameters.forEach(function(parameter, index, self) {
+            self[index] = parameter.trim();
+        });
+
+        // Find the item object for the name
+        let item = null;
+        for (let i = 0; i < ITEMS.length; i++) {
+            if (item_name === ITEMS[i].name) {
+                item = ITEMS[i];
+                break;
+            }
+        }
+
+        if (item === null) {
+            chat('Error, could not find item with name ' + item_name);
+            return;
+        }
+
+        // There are no magic auto-attacks, so the type here is always physical.
+        const roll = new Roll(character, RollType.PHYSICAL);
+        item.base_damage.apply(roll);
+
+        // We know the item being used explicitly, so don't use add_scale_damage(), which guesses
+        item.damage_scaling(character, roll);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, item_name, roll, parameters, crit_section);
+        });
     }
 
 
@@ -942,7 +976,6 @@ var Barbs = Barbs || (function() {
         'Warrior': {
             '"Charge!"': warrior_charge,
         }
-        // TODO add more
     };
 
 
@@ -992,6 +1025,7 @@ var Barbs = Barbs || (function() {
 
     // main message handler
     const subcommand_handlers = {
+        'item': roll_item,
         'stat': roll_stat,
         'skill': roll_skill,
         'ability': process_ability,

@@ -8076,31 +8076,64 @@ var BarbsComponents = BarbsComponents || (function() {
     // ########################################################
     // Items
 
-    const ITEM_SLOTS = [
-        'main_hand',
-        'offhand',
-        'head',
-        'body',
-        'hands',
-        'feet',
-        'neck',
-        'left_ring',
-        'right_ring',
-        'belt',
-    ];
+    const ItemType = {
+        ACCESSORY: 'accessory',
+        AXE: 'axe',
+        ARMOR: 'armor',
+        JAVELIN: 'javelin',
+        LONGBLADE: 'longblade',
+        LONGBOW: 'longbow',
+        POLEARM: 'polearm',
+        SHIELD: 'shield',
+        SHORTBLADE: 'shortblade',
+    };
 
+
+    const ItemSlot = {
+        MAIN_HAND: 'main_hand',
+        OFFHAND: 'offhand',
+        TWO_HAND: '2hand',
+        HEAD: 'head',
+        BODY: 'body',
+        HANDS: 'hands',
+        FEET: 'feet',
+        NECK: 'neck',
+        RING: 'ring',
+        BELT: 'belt',
+    };
+
+
+    const ItemRarity = {
+        MAGIC: 'magic',
+        RARE: 'rare',
+    };
+
+    const ItemScaler = {
+        MELEE: function(character, roll) {
+            roll.add_damage(character.get_stat('melee damage'), Damage.PHYSICAL);
+        },
+        RANGED_FINE: function(character, roll) {
+            roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
+        },
+        // This one has to be called with a parameter to create the function
+        OTHER: function(stat) {
+            return function(character, roll) {
+                roll.add_damage(character.get_stat(stat), Damage.PHYSICAL);
+            }
+        },
+        NONE: function() {},
+    };
 
     class Item {
-        constructor(name, type, rarity, slot, equip_conditions, unique, base_damage, range, price, cantrips, notes, effects) {
+        constructor(name, type, rarity, slot, equip_conditions, base_damage, damage_scaling, range, cantrips, notes, effects) {
             this.name = name;
             this.type = type;
             this.rarity = rarity;
             this.slot = slot;
             this.equip_conditions = equip_conditions;
-            this.unique = unique;
             this.base_damage = base_damage;
+            this.damage_scaling = damage_scaling;
             this.range = range;
-            this.price = price;
             this.cantrips = cantrips;
             this.notes = notes;
             this.effects = effects;
@@ -8189,18 +8222,15 @@ var BarbsComponents = BarbsComponents || (function() {
     const ITEMS = [
         new Item(
             'Longbow of Stunning',
-            'longbow',
-            'Magic',
-            '2Hand',
+            ItemType.LONGBOW,
+            ItemRarity.MAGIC,
+            ItemSlot.TWO_HAND,
             [
                 skill_condition('Weapons: Bows', 'F'),
             ],
-            false,
             Effect.roll_damage('d8', Damage.PHYSICAL, RollType.PHYSICAL),
-            200,
-            0,
-            [],
-            '',
+            ItemScaler.RANGED_FINE,
+            0, [], '',
             [
                 Effect.crit_effect('Stun', RollType.PHYSICAL),
             ]
@@ -8208,18 +8238,15 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Longbow of Flames',
-            'longbow',
-            'Magic',
-            '2Hand',
+            ItemType.LONGBOW,
+            ItemRarity.MAGIC,
+            ItemSlot.TWO_HAND,
             [
                 skill_condition('Weapons: Bows', 'F'),
             ],
-            false,
             Effect.roll_damage('d6', Damage.PHYSICAL, RollType.PHYSICAL),
-            250,
-            0,
-            [],
-            '',
+            ItemScaler.RANGED_FINE,
+            0, [], '',
             [
                 Effect.roll_damage('3d10', Damage.FIRE, RollType.PHYSICAL),
             ]
@@ -8227,18 +8254,15 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Leather Cap of Serenity',
-            'armor',
-            'Magic',
-            'head',
+            ItemType.ARMOR,
+            ItemRarity.MAGIC,
+            ItemSlot.HEAD,
             [
                 skill_condition('Armor: Light', 'F'),
             ],
-            false,
             Effect.no_op_roll_effect(),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.stat_effect('evasion', 5),
                 Effect.stat_effect('health regeneration', 10),
@@ -8247,18 +8271,15 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             "Hunter's Longcoat of Resistance",
-            'armor',
-            'Magic',
-            'body',
+            ItemType.ARMOR,
+            ItemRarity.MAGIC,
+            ItemSlot.BODY,
             [
                 skill_condition('Armor: Light', 'F'),
             ],
-            false,
             Effect.no_op_roll_effect(),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.stat_effect('evasion', 20),
                 Effect.stat_effect('magic resist', 10),
@@ -8267,18 +8288,15 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             "Viper's Gloves of Dodging",
-            'armor',
-            'Magic',
-            'hands',
+            ItemType.ARMOR,
+            ItemRarity.MAGIC,
+            ItemSlot.FEET,
             [
                 skill_condition('Armor: Light', 'F'),
             ],
-            false,
             Effect.no_op_roll_effect(),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.stat_effect('evasion', 15),
                 Effect.stat_effect('condition resist', 10),
@@ -8287,18 +8305,15 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Leather Sandals of Slickness',
-            'armor',
-            'Magic',
-            'feet',
+            ItemType.ARMOR,
+            ItemRarity.MAGIC,
+            ItemSlot.FEET,
             [
                 skill_condition('Armor: Light', 'F'),
             ],
-            false,
             Effect.no_op_roll_effect(),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.stat_effect('evasion', 15),
                 Effect.stat_effect('stamina regeneration', 10),
@@ -8308,33 +8323,27 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Cleansing Brooch of Mana Storage',
-            'accessory',
-            'Magic',
-            'neck',
+            ItemType.ACCESSORY,
+            ItemRarity.MAGIC,
+            ItemSlot.NECK,
             [],
-            false,
             Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
             0,
-            0,
-            [
-                'Expend 30 mana as Major action to cleanse 1 condition on yourself. 30 excess mana releases when you use the cantrip.'
-            ],
+            ['Expend 30 mana as Major action to cleanse 1 condition on yourself. 30 excess mana releases when you use the cantrip.'],
             '',
             []
         ),
 
         new Item(
             'Ring of Archery',
-            'accessory',
-            'magic',
-            'ring',
+            ItemType.ACCESSORY,
+            ItemRarity.MAGIC,
+            ItemSlot.RING,
             [],
-            false,
             Effect.no_op_roll_effect(),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 new Effect(RollTime.ROLL, RollType.PHYSICAL, function(roll) {
                     if (roll.character.is_using('longbow') || roll.character.is_using('crossbow')) {
@@ -8346,16 +8355,13 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Energetic Ring of the Mind',
-            'accessory',
-            'magic',
-            'ring',
+            ItemType.ACCESSORY,
+            ItemRarity.MAGIC,
+            ItemSlot.RING,
             [],
-            false,
             Effect.no_op_roll_effect(),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.stat_effect('stamina', 30),
                 Effect.stat_effect('mana', 40),
@@ -8364,18 +8370,15 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Invigorated Belt of Greater Stamina',
-            'accessory',
-            'magic',
-            'belt',
+            ItemType.ACCESSORY,
+            ItemRarity.MAGIC,
+            ItemSlot.BELT,
             [
                 skill_condition('Armor: Light', 'F'),
             ],
-            false,
             Effect.no_op_roll_effect(),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.stat_effect('stamina', 60),
                 Effect.stat_effect('stamina regeneration', 15),
@@ -8384,18 +8387,15 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Resistant Hat of Dodging',
-            'armor',
-            'magic',
-            'head',
+            ItemType.ARMOR,
+            ItemRarity.MAGIC,
+            ItemSlot.HEAD,
             [
                 skill_condition('Armor: Light', 'F'),
             ],
-            false,
             Effect.no_op_roll_effect(),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.stat_effect('evasion', 20),
                 Effect.stat_effect('magic resist', 10),
@@ -8405,18 +8405,15 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             "Viper's Vest of Dodging",
-            'armor',
-            'magic',
-            'body',
+            ItemType.ARMOR,
+            ItemRarity.MAGIC,
+            ItemSlot.BODY,
             [
                 skill_condition('Armor: Light', 'F'),
             ],
-            false,
             Effect.no_op_roll_effect(),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.stat_effect('evasion', 20),
                 Effect.stat_effect('condition resist', 10),
@@ -8426,18 +8423,15 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             "Viper's Gloves of Evasion",
-            'armor',
-            'magic',
-            'hand',
+            ItemType.ARMOR,
+            ItemRarity.MAGIC,
+            ItemSlot.HANDS,
             [
                 skill_condition('Armor: Light', 'F'),
             ],
-            false,
             Effect.no_op_roll_effect(),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.stat_effect('evasion', 20),
                 Effect.stat_effect('condition resist', 10),
@@ -8447,13 +8441,12 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             "Mage’s Amulet of Cleansing",
-            'accessory',
-            'magic',
-            'neck',
+            ItemType.ACCESSORY,
+            ItemRarity.MAGIC,
+            ItemSlot.NECK,
             [],
-            false,
             Effect.no_op_roll_effect(),
-            0,
+            ItemScaler.NONE,
             0,
             ['Expend 30 mana as a Major Action to clease 1 condition on yourself'],
             '',
@@ -8464,16 +8457,13 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Ring of Slaying',
-            'accessory',
-            'magic',
-            'ring',
+            ItemType.ACCESSORY,
+            ItemRarity.MAGIC,
+            ItemSlot.RING,
             [],
-            false,
             Effect.no_op_roll_effect(),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.ALL)
             ]
@@ -8481,18 +8471,15 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             "Beast’s Belt of the Worker",
-            'accessory',
-            'magic',
-            'belt',
+            ItemType.ACCESSORY,
+            ItemRarity.MAGIC,
+            ItemSlot.BELT,
             [
                 skill_condition('Armor: Light', 'F'),
             ],
-            false,
             Effect.no_op_roll_effect(),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.stat_effect('health', 40),
                 Effect.stat_effect('stamina', 40),
@@ -8501,18 +8488,15 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             "Angel’s Longbow of Accuracy",
-            'longbow',
-            'magic',
-            'main_hand',
+            ItemType.LONGBOW,
+            ItemRarity.MAGIC,
+            ItemSlot.MAIN_HAND,
             [
                 skill_condition('Weapons: Bows', 'F'),
             ],
-            false,
             Effect.roll_damage('d10', Damage.PHYSICAL, RollType.PHYSICAL),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.RANGED_FINE,
+            0, [], '',
             [
                 Effect.roll_damage('4d10', Damage.LIGHT, RollType.PHYSICAL),
                 Effect.roll_effect('20% accuracy', RollType.PHYSICAL),
@@ -8521,17 +8505,15 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             "Slaying Featherfall Sneakers of Speedy Evasion",
-            'armor',
-            'rare',
-            'feet',
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.FEET,
             [
                 skill_condition('Armor: Light', 'F'),
             ],
-            false,
             Effect.no_op_roll_effect(),
-            0,
-            0,
-            [],
+            ItemScaler.NONE,
+            0, [],
             'You take no fall damage',
             [
                 Effect.stat_effect('evasion', 20),
@@ -8543,18 +8525,15 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             "Earthen Bladeshield of Hacking",
-            'shield',
-            'magic',
-            'main_hand',
+            ItemType.SHIELD,
+            ItemRarity.MAGIC,
+            ItemSlot.MAIN_HAND,
             [
                 skill_condition('Weapons: Shields', 'F'),
             ],
-            false,
             Effect.roll_damage('d8', Damage.PHYSICAL, RollType.PHYSICAL),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.MELEE,
+            0, [], '',
             [
                 Effect.roll_damage('2d8', Damage.PHYSICAL, RollType.PHYSICAL),
                 Effect.roll_damage('2d10', Damage.EARTH, RollType.PHYSICAL),
@@ -8563,18 +8542,15 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             "Paralyzing Shield of Accuracy",
-            'shield',
-            'magic',
-            'off_hand',
+            ItemType.SHIELD,
+            ItemRarity.MAGIC,
+            ItemSlot.OFFHAND,
             [
                 skill_condition('Weapons: Shields', 'F'),
             ],
-            false,
             Effect.roll_damage('d10', Damage.PHYSICAL, RollType.PHYSICAL),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.MELEE,
+            0, [], '',
             [
                 Effect.roll_effect('20% Accuracy', RollType.PHYSICAL),
                 Effect.roll_effect('30% paralyze', RollType.PHYSICAL),
@@ -8583,16 +8559,13 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Shocking Band of Critical Strikes',
-            'accessory',
-            'magic',
-            'ring',
+            ItemType.ACCESSORY,
+            ItemRarity.MAGIC,
+            ItemSlot.RING,
             [],
-            false,
             Effect.no_op_roll_effect(),
-            0,
-            0,
-            [],
-            '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.roll_damage('2d8', Damage.LIGHTNING, RollType.ALL),
                 Effect.stat_effect('critical hit chance', 5),
@@ -8601,13 +8574,13 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Impeding Quickblade of Normalizing',
-            'shortblade',
-            'magic',
-            'Main Hand',
+            ItemType.SHORTBLADE,
+            ItemRarity.MAGIC,
+            ItemSlot.MAIN_HAND,
             [],
-            false,
             Effect.roll_damage('d4', Damage.PHYSICAL, RollType.PHYSICAL),
-            0, 0, [], '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.stat_effect('critical hit chance', 20),
                 Effect.crit_effect('Target loses 10% evasion for 1 minute (stacks) & strip 1 buff from the target'),
@@ -8616,13 +8589,13 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Sharpened Penetrating Moonblade of Waves',
-            'shortblade',
-            'magic',
-            'Main Hand',
+            ItemType.SHORTBLADE,
+            ItemRarity.MAGIC,
+            ItemSlot.MAIN_HAND,
             [],
-            false,
             Effect.roll_damage('2d4', Damage.PHYSICAL, RollType.PHYSICAL),
-            0, 0, [], '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.stat_effect('critical hit chance', 10),
                 Effect.crit_damage_mod(100),
@@ -8633,25 +8606,38 @@ var BarbsComponents = BarbsComponents || (function() {
 
         new Item(
             'Seeking Dagger of Paralysis',
-            'shortblade',
-            'magic',
-            'Main Hand',
+            ItemType.SHORTBLADE,
+            ItemRarity.MAGIC,
+            ItemSlot.MAIN_HAND,
             [],
-            false,
             Effect.roll_damage('d4', Damage.PHYSICAL, RollType.PHYSICAL),
-            0, 0, [], '',
+            ItemScaler.NONE,
+            0, [], '',
             [
                 Effect.roll_effect('When thrown, this dagger cannot miss'),
                 Effect.roll_effect('Inflict Paralysis'),
             ]
-        )
-
+        ),
 
     ];
 
 
     // ####################################################################################################################
     // Character
+
+
+    const character_sheet_item_slots = [
+        ItemSlot.MAIN_HAND,
+        ItemSlot.OFFHAND,
+        ItemSlot.HEAD,
+        ItemSlot.BODY,
+        ItemSlot.HANDS,
+        ItemSlot.FEET,
+        ItemSlot.NECK,
+        'left_ring',
+        'right_ring',
+        ItemSlot.BELT,
+    ];
 
 
     class Character {
@@ -8686,8 +8672,8 @@ var BarbsComponents = BarbsComponents || (function() {
         get_item_names() {
             const item_names = [];
 
-            for (let i = 0; i < ITEM_SLOTS.length; i++) {
-                const slot = ITEM_SLOTS[i];
+            for (let i = 0; i < character_sheet_item_slots; i++) {
+                const slot = character_sheet_item_slots[i];
                 const item_name = getAttrByName(this.id, slot);
                 if (item_name !== '') {
                     item_names.push(item_name);
@@ -8755,7 +8741,7 @@ var BarbsComponents = BarbsComponents || (function() {
         is_using(weapon_type) {
             for (let i = 0; i < this.items.length; i++) {
                 const item = this.items[i];
-                if ((item.slot === 'main_hand' || item.slot === '2Hand') && item.type === weapon_type) {
+                if ((item.slot === ItemSlot.MAIN_HAND || item.slot === ItemSlot.TWO_HAND) && item.type === weapon_type) {
                     return true;
                 }
             }
@@ -8766,7 +8752,7 @@ var BarbsComponents = BarbsComponents || (function() {
         get_main_weapon() {
             for (let i = 0; i < this.items.length; i++) {
                 const item = this.items[i];
-                if (item.slot === 'main_hand' || item.slot === '2Hand') {
+                if (item.slot === ItemSlot.MAIN_HAND || item.slot === ItemSlot.TWO_HAND) {
                     return item;
                 }
             }
@@ -8788,6 +8774,7 @@ var BarbsComponents = BarbsComponents || (function() {
         RollType,
         RollTime,
         Roll,
+        ITEMS,
     };
 
 })();

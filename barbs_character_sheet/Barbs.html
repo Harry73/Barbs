@@ -740,19 +740,16 @@
             <h4 class="sheet-center">Skills</h4>
             <div class="sheet-row">
                 <div class="sheet-row sheet-sub-header">
-                    <div class="sheet-col-1-12 sheet-center sheet-small-label">&nbsp;</div>
-                    <div class="sheet-col-13-24 sheet-center sheet-small-label">Skill</div>
+                    <div class="sheet-col-7-12 sheet-center sheet-small-label">Skill</div>
                     <div class="sheet-col-1-8 sheet-center sheet-small-label">Points</div>
                     <div class="sheet-col-1-8 sheet-center sheet-small-label">Rank</div>
                     <div class="sheet-col-1-8 sheet-center sheet-small-label">Base Bonus</div>
+                    <div class="sheet-col-1-24 sheet-center sheet-small-label">Roll</div>
                 </div>
 
                 <fieldset class="repeating_skills">
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_skill" value="!barbs skill @{skill_name} @{skill_points}"></button>
-                        </div>
-                        <div class="sheet-col-13-24">
+                        <div class="sheet-col-7-12">
                             <input type="text" name="attr_skill_name"/>
                         </div>
                         <div class="sheet-col-1-8">
@@ -763,6 +760,9 @@
                         </div>
                         <div class="sheet-col-1-8">
                             <input type="number" class="sheet-center" name="attr_skill_bonus" value="@{hidden_bonus}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24">
+                            <button class="sheet-skill-roll" type="roll" name="roll_skill" value="!barbs skill @{skill_name} @{skill_points}"></button>
                         </div>
 
                         <input type="hidden" name="attr_hidden_rank" value=""/>
@@ -779,18 +779,15 @@
             <h4 class="sheet-center">Class Abilities</h4>
             <div class="sheet-row">
                 <div class="sheet-row sheet-sub-header">
-                    <div class="sheet-col-1-12 sheet-center sheet-small-label">&nbsp;</div>
-                    <div class="sheet-col-7-24 sheet-center sheet-small-label">Class</div>
+                    <div class="sheet-col-1-3 sheet-center sheet-small-label">Class</div>
                     <div class="sheet-col-1-2 sheet-center sheet-small-label">Ability</div>
                     <div class="sheet-col-1-8 sheet-center sheet-small-label">Tier</div>
+                    <div class="sheet-col-1-24 sheet-center sheet-small-label">Use</div>
                 </div>
 
                 <fieldset class="repeating_abilities">
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_class_ability" value="!barbs ability @{class_name};@{ability_name};@{ability_options}"></button>
-                        </div>
-                        <div class="sheet-col-7-24">
+                        <div class="sheet-col-1-3">
                             <input style="font-weight: bolder;" type="text" placeholder="class name" name="attr_class_name"/>
                         </div>
                         <div class="sheet-col-1-2 sheet-bold">
@@ -799,12 +796,15 @@
                         <div class="sheet-col-1-8">
                             <input style="font-weight: bolder;" type="number" class="sheet-center" name="attr_ability_tier" value="" min="1" max="4"/>
                         </div>
+                        <div class="sheet-col-1-24">
+                            <button class="sheet-skill-roll" type="roll" name="roll_class_ability" value="!barbs ability @{class_name};@{ability_name};@{ability_options}"></button>
+                        </div>
                     </div>
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">&nbsp;</div>
-                        <div class="sheet-col-11-12">
+                        <div class="sheet-col-23-24">
                             <input type="text" placeholder="&nbsp;&nbsp;&nbsp;&nbsp;ability parameters and options" name="attr_ability_options"/>
                         </div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
                     </div>
 
                     <!-- add some separation between abilities -->
@@ -819,101 +819,134 @@
 
         <!-- Equipment sheet -->
         <div class="sheet-section-equipment">
-            <h4 class="sheet-center">Eqiupment</h4>
+            <h4 class="sheet-center">Equipment</h4>
             <div class="sheet-row">
                 <div class="sheet-row sheet-sub-header">
-                    <div class="sheet-col-1-3 sheet-center sheet-small-label">Slot</div>
-                    <div class="sheet-col-2-3 sheet-center sheet-small-label">Item</div>
+                    <div class="sheet-col-1-6 sheet-center sheet-small-label">Slot</div>
+                    <div class="sheet-col-19-24 sheet-center sheet-small-label">Item Name</div>
+                    <div class="sheet-col-1-24 sheet-center sheet-small-label">Use</div>
                 </div>
 
                 <div class="sheet-row sheet-skill-row">
-                    <div class="sheet-col-1-3">
-                        <input type="text"class="sheet-center" value="Main Hand" disabled="disabled"/>
+                    <div class="sheet-col-1-6">
+                        <input type="text" class="sheet-center sheet-bold" value="Main Hand" disabled="disabled"/>
                     </div>
-                    <div class="sheet-col-2-3">
+                    <div class="sheet-col-19-24">
                         <input type="text" name="attr_main_hand" value=""/>
                     </div>
+                    <div class="sheet-col-1-24">
+                        <button class="sheet-skill-roll" type="roll" name="roll_item" value="!barbs item @{attr_main_hand};@{attr_main_hand_options}"></button>
+                    </div>
                 </div>
 
                 <div class="sheet-row sheet-skill-row">
-                    <div class="sheet-col-1-3">
-                        <input type="text" class="sheet-center" value="Offhand" disabled="disabled"/>
+                    <div class="sheet-col-1-6">&nbsp;</div>
+                    <div class="sheet-col-19-24">
+                        <input type="text" placeholder="&nbsp;&nbsp;&nbsp;&nbsp;item parameters and options" name="attr_main_hand_options"/>
                     </div>
-                    <div class="sheet-col-2-3">
+                    <div class="sheet-col-1-24">&nbsp;</div>
+                </div>
+
+
+                <div class="sheet-row sheet-skill-row">
+                    <div class="sheet-col-1-6">
+                        <input type="text" class="sheet-center sheet-bold" value="Offhand" disabled="disabled"/>
+                    </div>
+                    <div class="sheet-col-19-24">
                         <input type="text" name="attr_offhand" value=""/>
                     </div>
+                    <div class="sheet-col-1-24">
+                        <button class="sheet-skill-roll" type="roll" name="roll_item" value="!barbs item @{attr_offhand};@{attr_offhand_options}"></button>
+                    </div>
                 </div>
 
                 <div class="sheet-row sheet-skill-row">
-                    <div class="sheet-col-1-3">
-                        <input type="text" class="sheet-center" value="Head" disabled="disabled"/>
+                    <div class="sheet-col-1-6">&nbsp;</div>
+                    <div class="sheet-col-19-24">
+                        <input type="text" placeholder="&nbsp;&nbsp;&nbsp;&nbsp;item parameters and options" name="attr_offhand_options"/>
                     </div>
-                    <div class="sheet-col-2-3">
+                    <div class="sheet-col-1-24">&nbsp;</div>
+                </div>
+
+
+                <div class="sheet-row sheet-skill-row">
+                    <div class="sheet-col-1-6">
+                        <input type="text" class="sheet-center sheet-bold" value="Head" disabled="disabled"/>
+                    </div>
+                    <div class="sheet-col-19-24">
                         <input type="text" name="attr_head" value=""/>
                     </div>
+                    <div class="sheet-col-1-24">&nbsp;</div>
                 </div>
 
                 <div class="sheet-row sheet-skill-row">
-                    <div class="sheet-col-1-3">
-                        <input type="text" class="sheet-center" value="Body" disabled="disabled"/>
+                    <div class="sheet-col-1-6">
+                        <input type="text" class="sheet-center sheet-bold" value="Body" disabled="disabled"/>
                     </div>
-                    <div class="sheet-col-2-3">
+                    <div class="sheet-col-19-24">
                         <input type="text" name="attr_body" value=""/>
                     </div>
+                    <div class="sheet-col-1-24">&nbsp;</div>
                 </div>
 
                 <div class="sheet-row sheet-skill-row">
-                    <div class="sheet-col-1-3">
-                        <input type="text" class="sheet-center" value="Hands" disabled="disabled"/>
+                    <div class="sheet-col-1-6">
+                        <input type="text" class="sheet-center sheet-bold" value="Hands" disabled="disabled"/>
                     </div>
-                    <div class="sheet-col-2-3">
+                    <div class="sheet-col-19-24">
                         <input type="text" name="attr_hands" value=""/>
                     </div>
+                    <div class="sheet-col-1-24">&nbsp;</div>
                 </div>
 
                 <div class="sheet-row sheet-skill-row">
-                    <div class="sheet-col-1-3">
-                        <input type="text" class="sheet-center" value="Feet" disabled="disabled"/>
+                    <div class="sheet-col-1-6">
+                        <input type="text" class="sheet-center sheet-bold" value="Feet" disabled="disabled"/>
                     </div>
-                    <div class="sheet-col-2-3">
+                    <div class="sheet-col-19-24">
                         <input type="text" name="attr_feet" value=""/>
                     </div>
+                    <div class="sheet-col-1-24">&nbsp;</div>
                 </div>
 
                 <div class="sheet-row sheet-skill-row">
-                    <div class="sheet-col-1-3">
-                        <input type="text" class="sheet-center" value="Neck" disabled="disabled"/>
+                    <div class="sheet-col-1-6">
+                        <input type="text" class="sheet-center sheet-bold" value="Neck" disabled="disabled"/>
                     </div>
-                    <div class="sheet-col-2-3">
+                    <div class="sheet-col-19-24">
                         <input type="text" name="attr_neck" value=""/>
                     </div>
+                    <div class="sheet-col-1-24">&nbsp;</div>
                 </div>
 
                 <div class="sheet-row sheet-skill-row">
-                    <div class="sheet-col-1-3">
-                        <input type="text" class="sheet-center" value="Left Ring" disabled="disabled"/>
+                    <div class="sheet-col-1-6">
+                        <input type="text" class="sheet-center sheet-bold" value="Left Ring" disabled="disabled"/>
                     </div>
-                    <div class="sheet-col-2-3">
+                    <div class="sheet-col-19-24">
                         <input type="text" name="attr_left_ring" value=""/>
                     </div>
+                    <div class="sheet-col-1-24">&nbsp;</div>
                 </div>
 
                 <div class="sheet-row sheet-skill-row">
-                    <div class="sheet-col-1-3">
-                        <input type="text" class="sheet-center" value="Right Ring" disabled="disabled"/>
+                    <div class="sheet-col-1-6">
+                        <input type="text" class="sheet-center sheet-bold" value="Right Ring" disabled="disabled"/>
                     </div>
-                    <div class="sheet-col-2-3">
+                    <div class="sheet-col-19-24">
                         <input type="text" name="attr_right_ring" value=""/>
                     </div>
+                    <div class="sheet-col-1-24">&nbsp;</div>
                 </div>
 
                 <div class="sheet-row sheet-skill-row">
-                    <div class="sheet-col-1-3">
-                        <input type="text" class="sheet-center" value="Belt" disabled="disabled"/>
+                    <div class="sheet-col-1-6">
+                        <input type="text" class="sheet-center sheet-bold" value="Belt" disabled="disabled"/>
                     </div>
-                    <div class="sheet-col-2-3">
+                    <div class="sheet-col-19-24">
                         <input type="text" name="attr_belt" value=""/>
                     </div>
+                    <div class="sheet-col-1-24">&nbsp;</div>
                 </div>
             </div>
         </div>
@@ -2556,15 +2589,9 @@
 Desired example
 
 &{template:Barbs}
-{{name=Piercing Shot}}
-{{physical=[[<something>]]}}
-{{light=[[<something>]]}}
-{{fire=[[<something>]]}}
-{{crit_value=[[value]]}}
-{{crit_chance=[[value]]}}
-
-&{template:Barbs} {{name=Piercing Shot}} {{physical=[[d100]]}} {{fire=[[d100]]}} {{water=[[d100]]}} {{earth=[[d100]]}} {{air=[[d100]]}} {{ice=[[d100]]}} {{lightning=[[d100]]}} {{light=[[d100]]}} {{dark=[[d100]]}} {{crit_value=[[40]]}} {{crit_cutoff=[[50]]}} {{effects="something cool"}}
-
+{{name=Piercing Shot}} {{physical=[[d100]]}} {{fire=[[d100]]}} {{water=[[d100]]}} {{earth=[[d100]]}} {{air=[[d100]]}} {{ice=[[d100]]}} {{lightning=[[d100]]}} {{light=[[d100]]}} {{dark=[[d100]]}}
+{{crit_value=[[40]]}} {{crit_cutoff=[[50]]}}
+{{effects="something cool"}}
 -->
 
 <rolltemplate class="sheet-rolltemplate-Barbs">
