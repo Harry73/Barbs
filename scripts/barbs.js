@@ -33,6 +33,9 @@ var Barbs = Barbs || (function () {
     }
 
 
+    const STATE_NAME = 'Barbs';
+    const LAST_TURN_ID = 'last_turn_id';
+
     const HiddenStat = BarbsComponents.HiddenStat;
     const Damage = BarbsComponents.Damage;
     const RollType = BarbsComponents.RollType;
@@ -292,10 +295,20 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function add_persistent_effect(ability, character, duration, order, roll_time, single_application, handler) {
+    function add_persistent_effect(caster, ability, target_character, duration, order, roll_time, single_application, handler) {
+        assert_not_null(caster, 'add_persistent_effect() caster');
+        assert_not_null(ability, 'add_persistent_effect() ability');
+        assert_not_null(target_character, 'add_persistent_effect() target_character');
+        assert_not_null(duration, 'add_persistent_effect() duration');
+        assert_not_null(order, 'add_persistent_effect() order');
+        assert_not_null(roll_time, 'add_persistent_effect() roll_time');
+        assert_not_null(single_application, 'add_persistent_effect() single_application');
+        assert_not_null(handler, 'add_persistent_effect() handler');
+
         const effect = {
+            'caster': caster.name,
             'name': ability,
-            'character': character.name,
+            'target': target_character.name,
             'duration': duration,
             'ordering': order,
             'time': roll_time,
@@ -307,11 +320,13 @@ var Barbs = Barbs || (function () {
         // priority effects last
         for (let i = 0; i < persistent_effects.length; i++) {
             if (persistent_effects[i].ordering.val > effect.ordering.val) {
+                log('Added persistent effect %s'.format(JSON.stringify(effect)));
                 persistent_effects.splice(i, 0, effect);
                 return;
             }
         }
 
+        log('Added persistent effect %s'.format(JSON.stringify(effect)));
         persistent_effects.push(effect);
     }
 
@@ -329,7 +344,7 @@ var Barbs = Barbs || (function () {
         }
 
         for (let i = 0; i < persistent_effects.length; i++) {
-            if (persistent_effects[i].name === effect_name && persistent_effects[i].character === character.name) {
+            if (persistent_effects[i].name === effect_name && persistent_effects[i].target === character.name) {
                 persistent_effects.splice(i, 1);
                 i--;
 
@@ -343,7 +358,7 @@ var Barbs = Barbs || (function () {
     // to the roll.
     function add_persistent_effects_to_roll(character, roll, roll_time, parameters, ordering) {
         for (let i = 0; i < persistent_effects.length; i++) {
-            if (persistent_effects[i].character === character.name
+            if (persistent_effects[i].target === character.name
                 && persistent_effects[i].ordering.type === ordering.type
                 && persistent_effects[i].time === roll_time) {
 
@@ -592,7 +607,7 @@ var Barbs = Barbs || (function () {
         // Some effects last exactly one attack. At this point, we've successfully applied everything and done the roll,
         // so the attack is done. Thus we can remove the single-use persistent effects from the master list.
         for (let i = 0; i < persistent_effects.length; i++) {
-            if (persistent_effects[i].single_application && persistent_effects[i].character === character.name) {
+            if (persistent_effects[i].single_application && persistent_effects[i].target === character.name) {
                 persistent_effects.splice(i, 1);
                 i--;
             }
@@ -751,7 +766,7 @@ var Barbs = Barbs || (function () {
     function air_duelist_mistral_bow(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
-        add_persistent_effect(ability, character, ability_info.duration,  Ordering.BEFORE(), RollTime.ROLL, true,
+        add_persistent_effect(character, ability, character, 6,  Ordering.BEFORE(), RollTime.ROLL, true,
                               function (character, roll, parameters) {
             roll.add_effect('Bow attacks push target 5ft away');
             return true;
@@ -764,7 +779,7 @@ var Barbs = Barbs || (function () {
     function air_duelist_arc_of_air(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
-        add_persistent_effect(ability, character, ability_info.duration,  Ordering.BEFORE(), RollTime.ROLL, false,
+        add_persistent_effect(character, ability, character, 6,  Ordering.BEFORE(), RollTime.ROLL, false,
                               function (character, roll, parameters) {
             roll.add_damage('2d8', Damage.AIR);
             return true;
@@ -789,7 +804,7 @@ var Barbs = Barbs || (function () {
     function assassin_focus(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
-        add_persistent_effect(ability, character, ability_info.duration,  Ordering.BEFORE(), RollTime.CRIT, true,
+        add_persistent_effect(character, ability, character, ability_info.duration,  Ordering.BEFORE(), RollTime.CRIT, true,
             function (character, roll, parameters) {
                 roll.add_crit_chance(30);
                 return true;
@@ -961,14 +976,14 @@ var Barbs = Barbs || (function () {
         }
 
         if (choice === 'first') {
-            add_persistent_effect(ability, target_character, ability_info.duration,  Ordering.BEFORE(), RollTime.CRIT, true,
+            add_persistent_effect(character, ability, target_character, 6,  Ordering.BEFORE(), RollTime.CRIT, true,
                 function (character, roll, parameters) {
                     roll.add_damage('4d10', Damage.PHYSICAL);
                     return true;
                 });
 
         } else if (choice === 'second') {
-            add_persistent_effect(ability, target_character, ability_info.duration,  Ordering.BEFORE(), RollTime.CRIT, true,
+            add_persistent_effect(character, ability, target_character, 6,  Ordering.BEFORE(), RollTime.CRIT, true,
                 function (character, roll, parameters) {
                     roll.add_multiplier(-0.5, Damage.PHYSICAL, 'self');
                     return true;
@@ -977,6 +992,9 @@ var Barbs = Barbs || (function () {
         } else {
             chat(character, 'Unknown value for "choice" parameter "%s"'.format(choice));
         }
+
+        const ability_info = get_ability_info(ability);
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
     }
 
 
@@ -1059,7 +1077,7 @@ var Barbs = Barbs || (function () {
     function sniper_distance_shooter(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
-        add_persistent_effect(ability, character, 1,  Ordering.AFTER(99), RollTime.ROLL, true,
+        add_persistent_effect(character, ability, character, 1,  Ordering.AFTER(99), RollTime.ROLL, true,
                               function (character, roll, parameters) {
             const parameter = get_parameter('distance', parameters);
             if (parameter === null) {
@@ -1096,7 +1114,7 @@ var Barbs = Barbs || (function () {
     function sniper_precision_shooter(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
-        add_persistent_effect(ability, character, 1, Ordering.BEFORE(), RollTime.ROLL, true,
+        add_persistent_effect(character, ability, character, 1, Ordering.BEFORE(), RollTime.ROLL, true,
                               function (character, roll, parameters) {
             roll.add_effect('Ignores AC');
             roll.add_effect('Ignores MR');
@@ -1122,14 +1140,14 @@ var Barbs = Barbs || (function () {
         }
 
         if (parameter === 'true') {
-            add_persistent_effect(ability, character, ability_info.duration,  Ordering.BEFORE(), RollTime.CRIT, true,
+            add_persistent_effect(character, ability, character, ability_info.duration,  Ordering.BEFORE(), RollTime.CRIT, true,
                 function (character, roll, parameters) {
                     roll.add_crit_chance(10);
                     roll.add_crit_damage_mod(25);
                     return true;
                 });
         } else {
-            add_persistent_effect(ability, character, ability_info.duration,  Ordering.BEFORE(), RollTime.CRIT, true,
+            add_persistent_effect(character, ability, character, ability_info.duration,  Ordering.BEFORE(), RollTime.CRIT, true,
                 function (character, roll, parameters) {
                     roll.add_crit_chance(20);
                     roll.add_crit_damage_mod(50);
@@ -1168,7 +1186,7 @@ var Barbs = Barbs || (function () {
         }
 
         const source = character.name;
-        add_persistent_effect(ability, target_character, 1, Ordering.BEFORE(), RollTime.ROLL, false,
+        add_persistent_effect(character, ability, target_character, 6, Ordering.BEFORE(), RollTime.ROLL, false,
             function (char, roll, parameters) {
                 roll.add_multiplier(0.5, Damage.ALL, source);
                 return true;
@@ -1205,7 +1223,7 @@ var Barbs = Barbs || (function () {
         }
 
         const source = character.name;
-        add_persistent_effect(ability, target_character, 1, Ordering.BEFORE(), RollTime.ROLL, true,
+        add_persistent_effect(character, ability, target_character, 1, Ordering.BEFORE(), RollTime.ROLL, true,
             function (char, roll, parameters) {
                 roll.add_multiplier(0.25, Damage.ALL, source);
                 return true;
@@ -1262,7 +1280,7 @@ var Barbs = Barbs || (function () {
             }
 
             const source = character.name;
-            add_persistent_effect(ability, target_character, 1, Ordering.BEFORE(), RollTime.ROLL, false,
+            add_persistent_effect(character, ability, target_character, 1, Ordering.BEFORE(), RollTime.ROLL, false,
                 function (char, roll, parameters) {
                     roll.add_multiplier(0.5, Damage.ALL, source);
                     return true;
@@ -1411,11 +1429,137 @@ var Barbs = Barbs || (function () {
 
 
     function do_turn_order_change() {
+        const turn = get_current_turn();
+        if (turn.id === state[STATE_NAME][LAST_TURN_ID]) {
+            return;
+        }
 
+        const last_turn_id = state[STATE_NAME][LAST_TURN_ID];
+        state[STATE_NAME][LAST_TURN_ID] = turn.id;
+
+        // End effects cast by the character who is currently up
+        const current_token = getObj('graphic', turn.id);
+        const current_name = current_token.get('name');
+        if (current_name === null) {
+            return;
+        }
+
+        // TODO CombatTracker adds a placeholder entry in the turn order that counts the rounds. If the turn is this
+        //  entry, CombatTracker will advance the turn order to the next one automatically. We should wait for this
+        //  change, so that we do our handling on an actual character's turn.
+
+        const current_character = get_character_by_name(current_name);
+        if (current_character === null) {
+            return;
+        }
+
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].caster !== current_character.name) {
+                continue;
+            }
+
+            if (persistent_effects[i].single_application) {
+                continue;
+            }
+
+            if (persistent_effects[i].duration === 0) {
+                log('Persistent effect %s on %s ended'.format(persistent_effects[i].name, persistent_effects[i].target));
+                persistent_effects.splice(i, 1);
+                i--;
+            }
+
+            persistent_effects[i].duration -= 1;
+        }
+
+        // End effects when a character's turn ends. No decrement here, just get rid of ones with 0 duration.
+        const previous_token = getObj('graphic', last_turn_id);
+        const previous_name = previous_token.get('name');
+        if (previous_name === null) {
+            return;
+        }
+        const previous_character = get_character_by_name(previous_name);
+
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].caster !== previous_character.name) {
+                continue;
+            }
+
+            if (persistent_effects[i].single_application) {
+                continue;
+            }
+
+            if (persistent_effects[i].duration === 0) {
+                log('Persistent effect %s on %s ended'.format(persistent_effects[i].name, persistent_effects[i].target));
+                persistent_effects.splice(i, 1);
+                i--;
+            }
+        }
     }
 
 
+    /*
+     * Returns an object like this:
+     * [
+     *     {"id":"-M-C5a0xiYo2A1bLNuZg","pr":"0","custom":"","_pageid":"-LjmruGu018C64mngzAF"},
+     *     {"id":"-M3TKw8c9XOY5jkr5MUn","pr":-1,"custom":"","pageid":"-LjmruGu018C64mngzAF","_pageid":"-LjmruGu018C64mngzAF"},
+     *     {"id":"-M0_UPCxQT49IBrQe1Ex","pr":"0","custom":"","_pageid":"-LjmruGu018C64mngzAF"}
+     * ]
+     *
+     * or an empty array, if there is no turn order.
+     */
+    function get_turn_order() {
+        const turn_order = Campaign().get('turnorder');
+        if (turn_order === '') {
+            return [];
+        } else {
+            return Array.from(JSON.parse(turn_order));
+        }
+    }
+
+
+    /*
+     * Returns an object like this:
+     * {
+     *    "id":"-M-C5a0xiYo2A1bLNuZg",
+     *    "pr":"0",
+     *     "custom":"",
+     *     "_pageid":"-LjmruGu018C64mngzAF"
+     * }
+     */
+    function get_current_turn() {
+        return get_turn_order().shift();
+    }
+
+
+    /*
+     * current = {
+     *     "_type":"campaign",
+     *     "turnorder": [
+     *         {"id":"-M-C5a0xiYo2A1bLNuZg","pr":"0","custom":"","_pageid":"-LjmruGu018C64mngzAF"},
+     *         {"id":"-M3TKw8c9XOY5jkr5MUn","pr":-1,"custom":"","pageid":"-LjmruGu018C64mngzAF","_pageid":"-LjmruGu018C64mngzAF"},
+     *         {"id":"-M0_UPCxQT49IBrQe1Ex","pr":"0","custom":"","_pageid":"-LjmruGu018C64mngzAF"}
+     *     ],
+     *     "initiativepage":"-LjmruGu018C64mngzAF",
+     *     "playerpageid":"-LjmruGu018C64mngzAF",
+     *     "playerspecificpages":false,
+     *     ...
+     * }
+     *
+     * previous = {
+     *     "_type":"campaign",
+     *     "turnorder":"[
+     *         {"id":"-M0_UPCxQT49IBrQe1Ex","pr":"0","custom":"","_pageid":"-LjmruGu018C64mngzAF"},
+     *         {"id":"-M-C5a0xiYo2A1bLNuZg","pr":"0","custom":"","_pageid":"-LjmruGu018C64mngzAF"},
+     *         {"id":"-M3TKw8c9XOY5jkr5MUn","pr":-1,"custom":"","pageid":"-LjmruGu018C64mngzAF","_pageid":"-LjmruGu018C64mngzAF"}
+     *     ]",
+     *     "initiativepage":"-LjmruGu018C64mngzAF",
+     *     "playerpageid":"-LjmruGu018C64mngzAF",
+     *     "playerspecificpages":false,
+     *     ...
+     * }
+     */
     function handle_turn_order_change(current, previous) {
+        // current and previous are json blobs for the Campaign object.
         if (current.get('turnorder') === previous.turnorder) {
             return;
         }
@@ -1423,14 +1567,11 @@ var Barbs = Barbs || (function () {
         const turn_order = (current.get('turnorder') === '') ? [] : JSON.parse(current.get('turnorder'));
         const previous_turn_order = (previous.turnorder === '') ? [] : JSON.parse(previous.turnorder);
 
-        if (turn_order.length && previous_turn_order.length && turn_order[0].id !== previous_turn_order[0].id) {
+        // If we have a previous and current turn order, and the item at the top of the turn order is different, the
+        // order has changed.
+        if (turn_order.length > 0 && previous_turn_order.length > 0 && turn_order[0].id !== previous_turn_order[0].id) {
             do_turn_order_change();
         }
-    }
-
-
-    function handle_initiative_page_change(current, previous) {
-
     }
 
 
@@ -1450,6 +1591,21 @@ var Barbs = Barbs || (function () {
     function handle_input(msg) {
         // Regular API call
         if (msg.content.startsWith('!')) {
+            if (msg.content === '!ct next') {
+                // A masterful hack. CombatTracker is an API script that will update the turn order when a player
+                // clicks a button to say their turn is done. As this is the API modifying the turn order, it does
+                // not trigger the 'change:campaign:turnorder' event. To catch this turn order change, we look for the
+                // CombatTracker API command to go to the next turn, '!ct next', and then schedule our work to occur
+                // asynchronously after 1s. We're assuming that CombatTracker will complete it's updates within this
+                // time.
+                //
+                // TODO I could do better and make something that repeatedly, asynchronously, waits for the turn order
+                //  to change, courtesy of CombatTracker, rather than a one-time check and hope.
+                //
+                setTimeout(do_turn_order_change, 1000);
+                return;
+            }
+
             const pieces = msg.content.split(' ');
             if (pieces.length < 2) {
                 return;
@@ -1480,9 +1636,14 @@ var Barbs = Barbs || (function () {
 
 
     const register_event_handlers = function () {
+        // Set up permanent state
+        if (!(STATE_NAME in state)) {
+            state[STATE_NAME] = {};
+            state[STATE_NAME][LAST_TURN_ID] = '';
+        }
+
         on('chat:message', handle_input);
         on('change:campaign:turnorder', handle_turn_order_change);
-        on('change:campaign:initiativepage', handle_initiative_page_change);
     };
 
 
