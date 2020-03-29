@@ -456,12 +456,12 @@ var Barbs = Barbs || (function () {
         assert_not_null(parameters, 'add_extras() parameters');
 
         add_items_to_roll(character, roll, roll_time);
-        if (!add_persistent_effects_to_roll(character, roll, roll_time, parameters, Ordering.BEFORE())) {
-            log('Problem adding persistent effects to roll at time ' + roll_time);
-            return false;
-        }
         if (!handle_arbitrary_parameters(roll, roll_time, parameters)) {
             log('Problem handling arbitrary parameters at time ' + roll_time);
+            return false;
+        }
+        if (!add_persistent_effects_to_roll(character, roll, roll_time, parameters, Ordering.BEFORE())) {
+            log('Problem adding persistent effects to roll at time ' + roll_time);
             return false;
         }
 
@@ -627,7 +627,7 @@ var Barbs = Barbs || (function () {
         const pieces = parameter.split(' ');
         const multiplier = pieces[1];
         const type = pieces[2];
-        const source = pieces[3];
+        const source = pieces.splice(3).join(' ');
         roll.add_multiplier(multiplier, type, source);
         return true;
     }
@@ -642,6 +642,17 @@ var Barbs = Barbs || (function () {
         const damage = pieces[1];
         const type = pieces[2];
         roll.add_damage(damage, type);
+        return true;
+    }
+
+
+    function assassin_pursue_mark(roll, roll_time, parameter) {
+        if (roll_time !== RollTime.ROLL) {
+            return true;
+        }
+
+        const stacks = parseInt(parameter.split(' ')[1]);
+        roll.add_crit_damage_mod(stacks * 50);
         return true;
     }
 
@@ -705,6 +716,7 @@ var Barbs = Barbs || (function () {
         'frostbite': cryomancer_frostbite,
         'misc_multiplier': arbitrary_multiplier,
         'misc_damage': arbitrary_damage,
+        'pursued': assassin_pursue_mark,
         'spotting': sniper_spotter,
         'warper_cc': warper_opportunistic_predator,
     };
@@ -889,6 +901,36 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function assassin_sharpen(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+
+        add_persistent_effect(character, ability, character, 6,  Ordering.BEFORE(90), RollTime.ROLL, false,
+            function (character, roll, parameters) {
+                // We're going to inspect the damages accumulated in the roll and change any d4's to d6's. This relies
+                // on the fact that persistent effects are added to rolls last and that "Ordering 90" will occur after
+                // other effects that add damage to rolls.
+                Object.keys(roll.damages).forEach(function (dmg_type) {
+                    roll.damages[dmg_type] = roll.damages[dmg_type].replace('d4', 'd6');
+                });
+                return true;
+            });
+
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
+    function assassin_skyfall(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('8d4', Damage.PHYSICAL);
+        roll.add_crit_damage_mod(100);
+        add_scale_damage(character, roll);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
     function assassin_focus(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
@@ -910,6 +952,11 @@ var Barbs = Barbs || (function () {
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
         });
+    }
+
+
+    function champion_master_of_arms(character, ability, parameters) {
+        chat(character, 'not yet implemented');
     }
 
 
@@ -1189,7 +1236,7 @@ var Barbs = Barbs || (function () {
     function sniper_distance_shooter(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
-        add_persistent_effect(character, ability, character, 1,  Ordering.AFTER(99), RollTime.ROLL, true,
+        add_persistent_effect(character, ability, character, 1,  Ordering.BEFORE(99), RollTime.ROLL, true,
             function (character, roll, parameters) {
                 const parameter = get_parameter('distance', parameters);
                 if (parameter === null) {
@@ -1226,7 +1273,7 @@ var Barbs = Barbs || (function () {
     function sniper_kill_shot(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('7d8', Damage.PHYSICAL);
-        roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
+        add_scale_damage(character, roll);
 
         const stacks_spent_for_lethality = get_parameter('stacks', parameters);
         if (stacks_spent_for_lethality !== null) {
@@ -1336,6 +1383,37 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function symbiote_empower_soul(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+
+        const target_name = get_parameter('target', parameters);
+        if (target_name === null) {
+            chat(character, '"target" parameter is missing');
+            return;
+        }
+
+        const target_character = get_character_by_name(target_name);
+        if (target_character === null) {
+            return;
+        }
+
+        let percentage = 20;
+        const extra_mana_spent = get_parameter('mana', parameters);
+        if (extra_mana_spent !== null) {
+            percentage += 2 * parseInt(extra_mana_spent);
+        }
+
+        add_persistent_effect(character, ability, target_character, 6, Ordering.BEFORE(), RollTime.ROLL, false,
+            function (char, roll, parameters) {
+                roll.add_hidden_stat(percentage, HiddenStat.ACCURACY);
+                roll.add_hidden_stat(percentage, HiddenStat.GENERAL_MAGIC_PENETRATION);
+                return true;
+            });
+
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
     function symbiote_strengthen_soul(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
@@ -1431,6 +1509,7 @@ var Barbs = Barbs || (function () {
     }
 
 
+    // TODO there is another half of this passive
     function warrior_warleader(character, ability, parameters) {
         const clazz = get_passive_clazz(ability);
 
@@ -1467,10 +1546,14 @@ var Barbs = Barbs || (function () {
             'Focus': assassin_focus,
             'Haste': print_ability_description,
             'Massacre': assassin_massacre,
+            'Pursue': print_ability_description,
+            'Sharpen': assassin_sharpen,
+            'Skyfall': assassin_skyfall,
             'Vanish': print_ability_description,
         },
         'Champion': {
             'Disarming Blow': champion_disarming_blow,
+            'Master of Arms': champion_master_of_arms,
             'Piercing Blow': champion_piercing_blow,
             'Skull Bash': champion_skull_bash,
             'Slice and Dice': champion_slice_and_dice,
@@ -1501,7 +1584,6 @@ var Barbs = Barbs || (function () {
             'Reconstruct Barrier': print_ability_description,
         },
         'Lightning Duelist': {
-            // TODO may want a "marked" parameter for Arc Lightning
             'Arc Lightning': lightning_duelist_arc_lightning,
             'Blade Storm': lightning_duelist_blade_storm,
             'Shock Tendrils': lightning_duelist_shock_tendrils,
@@ -1536,7 +1618,7 @@ var Barbs = Barbs || (function () {
             'Steadfast Strikes': soldier_steadfast_strikes,
         },
         'Symbiote': {
-            'Empower Soul': print_ability_description,  // TODO this could do more
+            'Empower Soul': symbiote_empower_soul,
             'Strengthen Body': print_ability_description,  // TODO this could do more
             'Strengthen Mind': print_ability_description,  // TODO this could do more
             'Strengthen Soul': symbiote_strengthen_soul,
