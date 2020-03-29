@@ -95,7 +95,7 @@ var Barbs = Barbs || (function () {
         }
 
         if (characters.length === 0) {
-            chat(msg, 'Error, did not find a character for ' + msg.who);
+            log('Did not find a character for ' + msg.who);
             return null;
         } else if (characters.length > 1) {
             // warn, but pray we've got the right ones regardless
@@ -657,6 +657,27 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function lightning_duelist_arc_lightning_mark(roll, roll_time, parameter) {
+        if (roll_time !== RollTime.ROLL) {
+            return true;
+        }
+
+        if (roll.roll_type === RollType.PHYSICAL || roll.roll_type === RollType.ALL) {
+            roll.add_damage('6d8', Damage.LIGHTNING);
+
+            // Triggering this also hits another random target
+            const side_roll = new Roll(roll.character, RollType.MAGIC);
+            side_roll.add_damage('6d8', Damage.LIGHTNING);
+
+            // Everything - items, persistent effects - should apply to the main and secondary roll here. I'm losing
+            // the parameters for the secondary roll though, which might matter eventually. For now it's fine.
+            do_roll(side_roll.character, 'Arc Lightning (Random Target)', side_roll, /*parameters=*/[], '');
+        }
+
+        return true;
+    }
+
+
     function sniper_spotter(roll, roll_time, parameter) {
         if (roll_time !== RollTime.ROLL) {
             return true;
@@ -680,10 +701,11 @@ var Barbs = Barbs || (function () {
 
 
     const arbitrary_parameters = {
+        'arc_lightning': lightning_duelist_arc_lightning_mark,
+        'frostbite': cryomancer_frostbite,
         'misc_multiplier': arbitrary_multiplier,
         'misc_damage': arbitrary_damage,
         'spotting': sniper_spotter,
-        'frostbite': cryomancer_frostbite,
         'warper_cc': warper_opportunistic_predator,
     };
 
@@ -763,27 +785,16 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function air_duelist_mistral_bow(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
-        add_persistent_effect(character, ability, character, 6,  Ordering.BEFORE(), RollTime.ROLL, true,
-                              function (character, roll, parameters) {
-            roll.add_effect('Bow attacks push target 5ft away');
-            return true;
-        });
-
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
-    }
-
-
     function air_duelist_arc_of_air(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
         add_persistent_effect(character, ability, character, 6,  Ordering.BEFORE(), RollTime.ROLL, false,
-                              function (character, roll, parameters) {
-            roll.add_damage('2d8', Damage.AIR);
-            return true;
-        });
+            function (character, roll, parameters) {
+                if (roll.roll_type === RollType.PHYSICAL || roll.roll_type === RollType.ALL) {
+                    roll.add_damage('2d8', Damage.AIR);
+                }
+                return true;
+            });
 
         chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
     }
@@ -801,14 +812,14 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function assassin_focus(character, ability, parameters) {
+    function air_duelist_mistral_bow(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
-        add_persistent_effect(character, ability, character, ability_info.duration,  Ordering.BEFORE(), RollTime.CRIT, true,
-            function (character, roll, parameters) {
-                roll.add_crit_chance(30);
-                return true;
-            });
+        add_persistent_effect(character, ability, character, 6,  Ordering.BEFORE(), RollTime.ROLL, true,
+                              function (character, roll, parameters) {
+            roll.add_effect('Bow attacks push target 5ft away');
+            return true;
+        });
 
         chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
     }
@@ -870,7 +881,7 @@ var Barbs = Barbs || (function () {
                 roll.copy_multipliers(dummy_roll);
                 const rolls_per_type = roll.roll();
                 format_and_send_roll(character, '%s (%sd4)'.format(ability, dice_divisions[i]), roll,
-                                     rolls_per_type, crit_section);
+                    rolls_per_type, crit_section);
             }
 
             finalize_roll(character, dummy_roll, parameters);
@@ -878,17 +889,23 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function champion_slice_and_dice(character, ability, parameters) {
-        // TODO
-        chat(character, 'not yet implemented');
+    function assassin_focus(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+
+        add_persistent_effect(character, ability, character, ability_info.duration,  Ordering.BEFORE(), RollTime.CRIT, true,
+            function (character, roll, parameters) {
+                roll.add_crit_chance(30);
+                return true;
+            });
+
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
     }
 
 
-    function champion_skull_bash(character, ability, parameters) {
+    function champion_disarming_blow(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('6d10', Damage.PHYSICAL);
+        roll.add_damage('5d6', Damage.PHYSICAL);
         add_scale_damage(character, roll);
-        roll.add_effect('Stun target until end of their next turn');
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -907,14 +924,57 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function champion_disarming_blow(character, ability, parameters) {
+    function champion_skull_bash(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('5d6', Damage.PHYSICAL);
+        roll.add_damage('6d10', Damage.PHYSICAL);
         add_scale_damage(character, roll);
+        roll.add_effect('Stun target until end of their next turn');
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
         });
+    }
+
+
+    function champion_slice_and_dice(character, ability, parameters) {
+        const keep_highest = get_parameter('keep_highest', parameters);
+        if (keep_highest !== null) {
+            // When using a sword or axe, we can do the whole calculation in one step since we always re-roll and
+            // always take the highest.
+            const roll = new Roll(character, RollType.PHYSICAL);
+            roll.add_damage('2d10d1+2d10d1+2d10d1+2d10d1+2d10d1', Damage.PHYSICAL);
+            add_scale_damage(character, roll);
+
+            roll_crit(roll, parameters, function (crit_section) {
+                do_roll(character, ability, roll, parameters, crit_section);
+            });
+            return;
+        }
+
+        const rolls_to_keep = get_parameter('keep', parameters);
+        if (rolls_to_keep === null) {
+            // If not using a sword or axe, the caller has to select what they want to re-roll. Send out the initial
+            // roll first so that they can select what to re-roll.
+            const roll = new Roll(character, RollType.PHYSICAL);
+            roll.add_damage('5d10', Damage.PHYSICAL);
+            const rolls_per_type = roll.roll();
+            format_and_send_roll(character, ability, roll, rolls_per_type, '');
+
+        } else {
+            const roll = new Roll(character, RollType.PHYSICAL);
+
+            const values = rolls_to_keep.split(' ');
+            values.forEach(function (value) {
+                roll.add_damage(value, Damage.PHYSICAL);
+            });
+
+            roll.add_damage('%sd10'.format(5 - values.length), Damage.PHYSICAL);
+            add_scale_damage(character, roll);
+
+            roll_crit(roll, parameters, function(crit_section) {
+                do_roll(character, ability, roll, parameters, crit_section);
+            });
+        }
     }
 
 
@@ -998,6 +1058,67 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function lightning_duelist_arc_lightning(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('6d8', Damage.LIGHTNING);
+        do_roll(character, ability, roll, parameters, '');
+    }
+
+
+    function lightning_duelist_blade_storm(character, ability, parameters) {
+        // This is d8 damage that repeats 2-6 times, so we do a secret roll first to see how many times we should
+        // execute this attack.
+        chat(character, '[[d5]]',  function (results) {
+            const rolls = results[0].inlinerolls;
+            const repetitions = rolls[0].results.total + 1;
+
+            for (let i = 0; i < repetitions; i++) {
+                const roll = new Roll(character, RollType.PHYSICAL);
+                roll.add_damage('d8', Damage.PHYSICAL);
+                add_scale_damage(character, roll);
+
+                roll_crit(roll, parameters, function (crit_section) {
+                    do_roll(character, ability, roll, parameters, crit_section);
+                });
+            }
+        });
+    }
+
+
+    function lightning_duelist_shock_tendrils(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('3d8', Damage.LIGHTNING);
+        do_roll(character, ability, roll, parameters, '');
+    }
+
+
+    function lightning_duelist_shocking_parry(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d8', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+        roll.add_effect('On hit, you have a 50% chance of recovering half the stamina cost');
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function lightning_duelist_sword_of_lightning(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+
+        add_persistent_effect(character, ability, character, 6,  Ordering.BEFORE(), RollTime.ROLL, false,
+            function (character, roll, parameters) {
+                if (roll.roll_type === RollType.PHYSICAL || roll.roll_type === RollType.ALL) {
+                    roll.add_damage('2d8', Damage.LIGHTNING);
+                }
+                return true;
+            });
+
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
     function noxomancer_darkbomb(character, ability, parameters) {
         const target_name = get_parameter('delay', parameters);
         if (target_name === null) {
@@ -1036,100 +1157,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function sniper_piercing_shot(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('5d8', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
-
-        roll_crit(roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
-    function sniper_kill_shot(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('7d8', Damage.PHYSICAL);
-        roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
-
-        const stacks_spent_for_lethality = get_parameter('stacks', parameters);
-        if (stacks_spent_for_lethality !== null) {
-            roll.add_hidden_stat(10 * parseInt(stacks_spent_for_lethality), HiddenStat.LETHALITY);
-        }
-
-        roll_crit(roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
-    function sniper_shrapnel_shot(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('6d8', Damage.PHYSICAL);
-        roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
-
-        roll_crit(roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
-    function sniper_distance_shooter(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
-        add_persistent_effect(character, ability, character, 1,  Ordering.AFTER(99), RollTime.ROLL, true,
-                              function (character, roll, parameters) {
-            const parameter = get_parameter('distance', parameters);
-            if (parameter === null) {
-                chat(character, '"distance" parameter is missing');
-                return false;
-            }
-
-            const distances = parameter.split(' ');
-            if (distances.length < 1) {
-                chat(character, 'Missing values for "distance" parameter');
-                return false;
-            }
-
-            // Because this effect has the "AFTER" ordering, the distance shooter rolls will be sent after the
-            // base roll. Distance shooter damage will always be calculated after the base roll so that it can cope
-            // with multiple distances. Multipliers from the original roll are copied into a new roll per given
-            // distance.
-            for (let i = 0; i < distances.length; i++) {
-                const distance_roll = new Roll(character, RollType.PHYSICAL);
-                distance_roll.add_damage(2 * parseInt(distances[i]) / 5, Damage.PHYSICAL);
-                distance_roll.copy_multipliers(roll);
-                const rolls_per_type = distance_roll.roll();
-                format_and_send_roll(character, '%s (%s ft)'.format(ability, distances[i]), distance_roll,
-                                     rolls_per_type, '');
-            }
-
-            return true;
-        });
-
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
-    }
-
-
-    function sniper_precision_shooter(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
-        add_persistent_effect(character, ability, character, 1, Ordering.BEFORE(), RollTime.ROLL, true,
-                              function (character, roll, parameters) {
-            roll.add_effect('Ignores AC');
-            roll.add_effect('Ignores MR');
-            roll.add_effect('Cannot miss');
-            roll.add_effect('Cannot be blocked');
-            roll.add_effect('Cannot be reacted to');
-            roll.add_effect('Cannot be blocked or redirected');
-            roll.add_effect('Bypasses barriers and walls');
-            return true;
-        });
-
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
-    }
-
-
     function sniper_analytical_shooter(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
@@ -1159,11 +1186,149 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function sniper_distance_shooter(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+
+        add_persistent_effect(character, ability, character, 1,  Ordering.AFTER(99), RollTime.ROLL, true,
+            function (character, roll, parameters) {
+                const parameter = get_parameter('distance', parameters);
+                if (parameter === null) {
+                    chat(character, '"distance" parameter is missing');
+                    return false;
+                }
+
+                const distances = parameter.split(' ');
+                if (distances.length < 1) {
+                    chat(character, 'Missing values for "distance" parameter');
+                    return false;
+                }
+
+                // Because this effect has the "AFTER" ordering, the distance shooter rolls will be sent after the
+                // base roll. Distance shooter damage will always be calculated after the base roll so that it can cope
+                // with multiple distances. Multipliers from the original roll are copied into a new roll per given
+                // distance.
+                for (let i = 0; i < distances.length; i++) {
+                    const distance_roll = new Roll(character, RollType.PHYSICAL);
+                    distance_roll.add_damage(2 * parseInt(distances[i]) / 5, Damage.PHYSICAL);
+                    distance_roll.copy_multipliers(roll);
+                    const rolls_per_type = distance_roll.roll();
+                    format_and_send_roll(character, '%s (%s ft)'.format(ability, distances[i]), distance_roll,
+                        rolls_per_type, '');
+                }
+
+                return true;
+            });
+
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
+    function sniper_kill_shot(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('7d8', Damage.PHYSICAL);
+        roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
+
+        const stacks_spent_for_lethality = get_parameter('stacks', parameters);
+        if (stacks_spent_for_lethality !== null) {
+            roll.add_hidden_stat(10 * parseInt(stacks_spent_for_lethality), HiddenStat.LETHALITY);
+        }
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function sniper_piercing_shot(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d8', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function sniper_precision_shooter(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+
+        add_persistent_effect(character, ability, character, 1, Ordering.BEFORE(), RollTime.ROLL, true,
+            function (character, roll, parameters) {
+                roll.add_effect('Ignores AC');
+                roll.add_effect('Ignores MR');
+                roll.add_effect('Cannot miss');
+                roll.add_effect('Cannot be blocked');
+                roll.add_effect('Cannot be reacted to');
+                roll.add_effect('Cannot be blocked or redirected');
+                roll.add_effect('Bypasses barriers and walls');
+                return true;
+            });
+
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
+    function sniper_shrapnel_shot(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('6d8', Damage.PHYSICAL);
+        roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
     function sniper_swift_shot(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('3d8', Damage.PHYSICAL);
         roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
         roll.add_effect('Stun until end of turn');
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function soldier_biding_blade(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+
+        const blocked_damage = get_parameter('blocked', parameters);
+        if (blocked_damage !== null) {
+            const half_blocked_damage = parseInt(blocked_damage) / 2;
+            roll.add_damage(half_blocked_damage.toString(), Damage.PHYSICAL);
+        }
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function soldier_fleetfoot_blade(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('4d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function soldier_steadfast_strikes(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('2d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+
+        const hits = get_parameter('hits', parameters);
+        if (hits !== null) {
+            roll.add_damage('%sd10'.format(hits), Damage.PHYSICAL);
+        }
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -1193,6 +1358,64 @@ var Barbs = Barbs || (function () {
             });
 
         chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
+    function warrior_charge(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+
+        const parameter = get_parameter('targets', parameters);
+        if (parameter === null) {
+            chat(character, '"targets" parameter, the list of affected players, is missing');
+            return;
+        }
+
+        const target_names = parameter.split(',');
+        for (let i = 0; i < target_names.length; i++) {
+            const fake_msg = {'who': target_names[i], 'id': ''};
+            const target_character = get_character(fake_msg);
+            if (target_character === null) {
+                return;
+            }
+
+            const source = character.name;
+            add_persistent_effect(character, ability, target_character, 1, Ordering.BEFORE(), RollTime.ROLL, false,
+                function (char, roll, parameters) {
+                    roll.add_multiplier(0.5, Damage.ALL, source);
+                    return true;
+                });
+        }
+
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
+    function warrior_cut_down(character, ability, parameters) {
+        const choice = get_parameter('choice', parameters);
+        if (choice === null) {
+            chat(character, '"choice {first/second/both}" parameter is missing');
+            return;
+        }
+
+        if (choice === 'first' || choice === 'both') {
+            const roll = new Roll(character, RollType.PHYSICAL);
+            roll.add_damage('3d10', Damage.PHYSICAL);
+            add_scale_damage(character, roll);
+
+            roll_crit(roll, parameters, function (crit_section) {
+                do_roll(character, ability, roll, parameters, crit_section);
+            });
+        }
+
+        if (choice === 'second' || choice === 'both') {
+            const roll = new Roll(character, RollType.PHYSICAL);
+            roll.add_damage('3d10', Damage.PHYSICAL);
+            add_scale_damage(character, roll);
+
+            roll_crit(roll, parameters, function (crit_section) {
+                do_roll(character, ability, roll, parameters, crit_section);
+            });
+        }
     }
 
 
@@ -1233,93 +1456,24 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function warrior_cut_down(character, ability, parameters) {
-        const choice = get_parameter('choice', parameters);
-        if (choice === null) {
-            chat(character, '"choice {first/second/both}" parameter is missing');
-            return;
-        }
-
-        if (choice === 'first' || choice === 'both') {
-            const roll = new Roll(character, RollType.PHYSICAL);
-            roll.add_damage('3d10', Damage.PHYSICAL);
-            add_scale_damage(character, roll);
-
-            roll_crit(roll, parameters, function (crit_section) {
-                do_roll(character, ability, roll, parameters, crit_section);
-            });
-        }
-
-        if (choice === 'second' || choice === 'both') {
-            const roll = new Roll(character, RollType.PHYSICAL);
-            roll.add_damage('3d10', Damage.PHYSICAL);
-            add_scale_damage(character, roll);
-
-            roll_crit(roll, parameters, function (crit_section) {
-                do_roll(character, ability, roll, parameters, crit_section);
-            });
-        }
-    }
-
-
-    function warrior_charge(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
-        const parameter = get_parameter('targets', parameters);
-        if (parameter === null) {
-            chat(character, '"targets" parameter, the list of affected players, is missing');
-            return;
-        }
-
-        const target_names = parameter.split(',');
-        for (let i = 0; i < target_names.length; i++) {
-            const fake_msg = {'who': target_names[i], 'id': ''};
-            const target_character = get_character(fake_msg);
-            if (target_character === null) {
-                return;
-            }
-
-            const source = character.name;
-            add_persistent_effect(character, ability, target_character, 1, Ordering.BEFORE(), RollTime.ROLL, false,
-                function (char, roll, parameters) {
-                    roll.add_multiplier(0.5, Damage.ALL, source);
-                    return true;
-                });
-        }
-
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
-    }
-
-
-    function soldier_fleetfoot_blade(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('4d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
-
-        roll_crit(roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
     const abilities_processors = {
         'Air Duelist': {
-            'Mistral Bow': air_duelist_mistral_bow,
             'Arc of Air': air_duelist_arc_of_air,
             'Cutting Winds': air_duelist_cutting_winds,
+            'Mistral Bow': air_duelist_mistral_bow,
         },
         'Assassin': {
-            'Vanish': print_ability_description,
-            'Focus': assassin_focus,
             'Backstab': assassin_backstab,
+            'Focus': assassin_focus,
             'Haste': print_ability_description,
             'Massacre': assassin_massacre,
+            'Vanish': print_ability_description,
         },
         'Champion': {
-            'Slice and Dice': champion_slice_and_dice,
-            'Skull Bash': champion_skull_bash,
-            'Piercing Blow': champion_piercing_blow,
             'Disarming Blow': champion_disarming_blow,
+            'Piercing Blow': champion_piercing_blow,
+            'Skull Bash': champion_skull_bash,
+            'Slice and Dice': champion_slice_and_dice,
         },
         'Cryomancer': {
             'Aurora Beam': cryomancer_aurora_beam,
@@ -1333,52 +1487,71 @@ var Barbs = Barbs || (function () {
             'Ice Crafting': print_ability_description,
             'Ice Spear': cryomancer_ice_spear,
         },
+        'Demon Hunter': {
+            // TODO May want a "marked" parameter for Essence Scatter
+            // 'Demonbane Blast': demon_hunter_demonbane_blast,
+            // 'Banishing Bolt': demon_hunter_banishing_bolt,
+            // "Hunter's Guile": demon_hunter_hunters_guile,
+            'Essence Scatter': print_ability_description,
+            // 'Lifesteal Elegy': demon_hunter_lifesteal_elegy,
+        },
         'Enchanter': {
             'Mint Coinage': print_ability_description,
             'Modify Weapon': enchanter_modify_weapon,
             'Reconstruct Barrier': print_ability_description,
         },
+        'Lightning Duelist': {
+            // TODO may want a "marked" parameter for Arc Lightning
+            'Arc Lightning': lightning_duelist_arc_lightning,
+            'Blade Storm': lightning_duelist_blade_storm,
+            'Shock Tendrils': lightning_duelist_shock_tendrils,
+            'Shocking Parry': lightning_duelist_shocking_parry,
+            'Sword of Lightning': lightning_duelist_sword_of_lightning,
+        },
         'Noxomancer': {
+            'Darkbomb': noxomancer_darkbomb,
             'Defile': print_ability_description,  // TODO this maybe could do more
             'Siphon Soul': print_ability_description,  // TODO this maybe could do more
-            'Darkbomb': noxomancer_darkbomb,
         },
         'Sentinel': {
             'Crossguard Guillotine': sentinel_crossguard_guillotine,
+            'Parallel Shields': print_ability_description,
         },
         'Sniper': {
-            'Piercing Shot': sniper_piercing_shot,
-            'Kill Shot': sniper_kill_shot,
-            'Shrapnel Shot': sniper_shrapnel_shot,
-            'Distance Shooter': sniper_distance_shooter,
-            'Precision Shooter': sniper_precision_shooter,
             'Analytical Shooter': sniper_analytical_shooter,
-            'Swift Sprint': print_ability_description,
+            'Distance Shooter': sniper_distance_shooter,
+            'Kill Shot': sniper_kill_shot,
+            'Piercing Shot': sniper_piercing_shot,
+            'Precision Shooter': sniper_precision_shooter,
+            'Shrapnel Shot': sniper_shrapnel_shot,
             'Swift Shot': sniper_swift_shot,
+            'Swift Sprint': print_ability_description,
         },
         'Soldier': {
+            'Biding Blade': soldier_biding_blade,
+            'Dodge Roll': print_ability_description,  // TODO this could do more
+            'Double Time': print_ability_description,  // TODO this could do more
             'Fleetfoot Blade': soldier_fleetfoot_blade,
             'Intercept': print_ability_description,
-            'Dodge Roll': print_ability_description,
-            'Double Time': print_ability_description,  // TODO this could do more
+            'Steadfast Strikes': soldier_steadfast_strikes,
         },
         'Symbiote': {
-            'Strengthen Soul': symbiote_strengthen_soul,
             'Empower Soul': print_ability_description,  // TODO this could do more
             'Strengthen Body': print_ability_description,  // TODO this could do more
             'Strengthen Mind': print_ability_description,  // TODO this could do more
+            'Strengthen Soul': symbiote_strengthen_soul,
         },
         'Warlord': {
             'Hookshot': warlord_hookshot,
-            'Weapon Swap': print_ability_description,
+            'Weapon Swap: Roll': print_ability_description,
         },
         'Warrior': {
-            'Warleader': warrior_warleader,
-            'Cut Down': warrior_cut_down,
-            'Shields Up': print_ability_description,  // TODO this could do more
-            'Reinforce Armor': print_ability_description,  // TODO this could do more
             '"Charge!"': warrior_charge,
-            '"Fight Me!"': print_ability_description,  // TODO this could do more
+            'Cut Down': warrior_cut_down,
+            '"Fight Me!"': print_ability_description,  // TODO this maybe could do more
+            'Reinforce Armor': print_ability_description,  // TODO this could do more
+            'Shields Up': print_ability_description,
+            'Warleader': warrior_warleader,
         }
     };
 
@@ -1428,75 +1601,6 @@ var Barbs = Barbs || (function () {
     // Turn order tracking
 
 
-    function do_turn_order_change() {
-        const turn = get_current_turn();
-        if (turn.id === state[STATE_NAME][LAST_TURN_ID]) {
-            return;
-        }
-
-        const last_turn_id = state[STATE_NAME][LAST_TURN_ID];
-        state[STATE_NAME][LAST_TURN_ID] = turn.id;
-
-        // End effects cast by the character who is currently up
-        const current_token = getObj('graphic', turn.id);
-        const current_name = current_token.get('name');
-        if (current_name === null) {
-            return;
-        }
-
-        // TODO CombatTracker adds a placeholder entry in the turn order that counts the rounds. If the turn is this
-        //  entry, CombatTracker will advance the turn order to the next one automatically. We should wait for this
-        //  change, so that we do our handling on an actual character's turn.
-
-        const current_character = get_character_by_name(current_name);
-        if (current_character === null) {
-            return;
-        }
-
-        for (let i = 0; i < persistent_effects.length; i++) {
-            if (persistent_effects[i].caster !== current_character.name) {
-                continue;
-            }
-
-            if (persistent_effects[i].single_application) {
-                continue;
-            }
-
-            if (persistent_effects[i].duration === 0) {
-                log('Persistent effect %s on %s ended'.format(persistent_effects[i].name, persistent_effects[i].target));
-                persistent_effects.splice(i, 1);
-                i--;
-            }
-
-            persistent_effects[i].duration -= 1;
-        }
-
-        // End effects when a character's turn ends. No decrement here, just get rid of ones with 0 duration.
-        const previous_token = getObj('graphic', last_turn_id);
-        const previous_name = previous_token.get('name');
-        if (previous_name === null) {
-            return;
-        }
-        const previous_character = get_character_by_name(previous_name);
-
-        for (let i = 0; i < persistent_effects.length; i++) {
-            if (persistent_effects[i].caster !== previous_character.name) {
-                continue;
-            }
-
-            if (persistent_effects[i].single_application) {
-                continue;
-            }
-
-            if (persistent_effects[i].duration === 0) {
-                log('Persistent effect %s on %s ended'.format(persistent_effects[i].name, persistent_effects[i].target));
-                persistent_effects.splice(i, 1);
-                i--;
-            }
-        }
-    }
-
-
     /*
      * Returns an object like this:
      * [
@@ -1528,6 +1632,119 @@ var Barbs = Barbs || (function () {
      */
     function get_current_turn() {
         return get_turn_order().shift();
+    }
+
+
+    function wait_for_turn_order_change(handler) {
+        assert_not_null(handler, 'wait_for_turn_order_change() handler');
+
+        const turn = get_current_turn();
+        if (turn.id === state[STATE_NAME][LAST_TURN_ID]) {
+            setTimeout(function () {
+                wait_for_turn_order_change(handler);
+            }, 100);
+            return;
+        }
+
+        handler();
+    }
+
+
+    function get_name_from_token_id(id) {
+        assert_not_null(id, 'get_name_from_token_id() id');
+
+        const current_token = getObj('graphic', id);
+        if (current_token === null) {
+            log('current_token is null');
+            return null;
+        }
+
+        const current_name = current_token.get('name');
+        if (current_name === null) {
+            log('current_name is null');
+            return null;
+        }
+
+        return current_name;
+    }
+
+
+    function do_turn_order_change() {
+        const turn = get_current_turn();
+        log('turn order changed ' + turn.id);
+        if (turn.id === state[STATE_NAME][LAST_TURN_ID]) {
+            log('no real turn order change');
+            return;
+        }
+
+        const current_name = get_name_from_token_id(turn.id);
+        if (current_name === null) {
+            return;
+        }
+
+        // CombatTracker adds a placeholder entry in the turn order that counts the rounds. If the turn is this
+        // entry, CombatTracker will advance the turn order to the next one automatically. We should wait for this
+        // change, so that we do our handling on an actual character's turn.
+        if (current_name.includes('Round')) {
+            setTimeout(function () {
+                wait_for_turn_order_change(do_turn_order_change);
+            }, 100);
+            log('CombatTracker token ignored');
+            return;
+        }
+
+        const last_turn_id = state[STATE_NAME][LAST_TURN_ID];
+        state[STATE_NAME][LAST_TURN_ID] = turn.id;
+
+        const current_character = get_character_by_name(current_name);
+        if (current_character === null) {
+            return;
+        }
+
+        // End effects cast by the character who is currently up
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].caster !== current_character.name) {
+                continue;
+            }
+
+            if (persistent_effects[i].single_application) {
+                continue;
+            }
+
+            if (persistent_effects[i].duration === 0) {
+                log('Persistent effect %s on %s ended'.format(persistent_effects[i].name, persistent_effects[i].target));
+                persistent_effects.splice(i, 1);
+                i--;
+            }
+
+            persistent_effects[i].duration -= 1;
+        }
+
+        // End effects when a character's turn ends. No decrement here, just get rid of ones with 0 duration.
+        if (last_turn_id !== '') {
+            const previous_name = get_name_from_token_id(last_turn_id);
+            if (previous_name === null) {
+                return;
+            }
+
+            const previous_character = get_character_by_name(previous_name);
+
+            for (let i = 0; i < persistent_effects.length; i++) {
+                if (persistent_effects[i].caster !== previous_character.name) {
+                    continue;
+                }
+
+                if (persistent_effects[i].single_application) {
+                    continue;
+                }
+
+                if (persistent_effects[i].duration === 0) {
+                    log('Persistent effect %s on %s ended'.format(persistent_effects[i].name, persistent_effects[i].target));
+                    persistent_effects.splice(i, 1);
+                    i--;
+                }
+            }
+        }
     }
 
 
@@ -1599,10 +1816,9 @@ var Barbs = Barbs || (function () {
                 // asynchronously after 1s. We're assuming that CombatTracker will complete it's updates within this
                 // time.
                 //
-                // TODO I could do better and make something that repeatedly, asynchronously, waits for the turn order
-                //  to change, courtesy of CombatTracker, rather than a one-time check and hope.
-                //
-                setTimeout(do_turn_order_change, 1000);
+                setTimeout(function () {
+                    wait_for_turn_order_change(do_turn_order_change);
+                }, 100);
                 return;
             }
 
