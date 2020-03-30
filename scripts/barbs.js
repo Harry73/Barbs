@@ -54,7 +54,6 @@ var Barbs = Barbs || (function () {
     const crit_section_format = '{{crit_value=[[%s]]}} {{crit_cutoff=[[%s]]}} {{modified_crit=[[%s-%s]]}}';
     const effects_section_format = '{{effects=%s}}';
 
-    const full_info_block_format = '&{template:5eDefault} {{spell=1}} {{spellshowinfoblock=1}} {{spellshowdesc=1}} {{character_name=@{Kairi Halicarnuss|character_name}}} {{title=%s}} {{subheader=%s}} {{subheaderright=%s}} {{spellcasttime=%s}} {{spellduration=%s}} {{spelltarget=%s}} {{spellrange=%s}} {{spellgainedfrom=%s}} {{spelldescription=Create or destroy 20 gallons of water. You can extinguish flames with this in 30 ft cube if you want. }} @{Kairi Halicarnuss|classactionspellinfo}'
     const ability_block_format = '&{template:5eDefault} {{spell=1}} {{title=%s}} {{subheader=%s}} 0 {{spellshowdesc=1}} {{spelldescription=%s }} 0 0 0 0 0 0 0';
 
     let persistent_effects = [];
@@ -702,6 +701,7 @@ var Barbs = Barbs || (function () {
             // Triggering this also hits another random target
             const side_roll = new Roll(roll.character, RollType.MAGIC);
             side_roll.add_damage('6d8', Damage.LIGHTNING);
+            side_roll.add_damage(roll.character.get_stat(Stat.MAGIC_DAMAGE), Damage.LIGHTNING);
 
             // Everything - items, persistent effects - should apply to the main and secondary roll here. I'm losing
             // the parameters for the secondary roll though, which might matter eventually. For now it's fine.
@@ -758,7 +758,6 @@ var Barbs = Barbs || (function () {
 
         return true;
     }
-
 
 
     // ################################################################################################################
@@ -1059,6 +1058,7 @@ var Barbs = Barbs || (function () {
 
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('%sd8'.format(dice), Damage.ICE);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1066,16 +1066,19 @@ var Barbs = Barbs || (function () {
     function cryomancer_glacial_crash(character, ability, parameters) {
         const roll_1 = new Roll(character, RollType.MAGIC);
         roll_1.add_damage('8d8', Damage.ICE);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
         roll_1.add_effect('Frozen');
         do_roll(character, '%s (5 ft)'.format(ability), roll_1, parameters, '', /*do_finalize=*/false);
 
         const roll_2 = new Roll(character, RollType.MAGIC);
         roll_2.add_damage('6d8', Damage.ICE);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
         roll_1.add_effect('Slowed');
         do_roll(character, '%s (5 ft)'.format(ability), roll_2, parameters, '', /*do_finalize=*/false);
 
         const roll_3 = new Roll(character, RollType.MAGIC);
         roll_3.add_damage('4d8', Damage.ICE);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
         do_roll(character, '%s (5 ft)'.format(ability), roll_3, parameters, '', /*do_finalize=*/true);
     }
 
@@ -1083,6 +1086,7 @@ var Barbs = Barbs || (function () {
     function cryomancer_ice_spear(character, ability, parameters) {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('6d8', Damage.ICE);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1131,6 +1135,7 @@ var Barbs = Barbs || (function () {
     function lightning_duelist_arc_lightning(character, ability, parameters) {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('6d8', Damage.LIGHTNING);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.LIGHTNING);
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1158,6 +1163,7 @@ var Barbs = Barbs || (function () {
     function lightning_duelist_shock_tendrils(character, ability, parameters) {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('3d8', Damage.LIGHTNING);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.LIGHTNING);
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1197,6 +1203,7 @@ var Barbs = Barbs || (function () {
         }
 
         const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.DARK);
 
         if (choice === 'false') {
             roll.add_damage('3d10', Damage.DARK);
@@ -1912,7 +1919,7 @@ var Barbs = Barbs || (function () {
     // ################################################################################################################
     // Basic setup and message handling
 
-    // main message handler
+
     const subcommand_handlers = {
         'item': roll_item,
         'stat': roll_stat,
