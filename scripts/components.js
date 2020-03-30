@@ -119,11 +119,11 @@ var BarbsComponents = BarbsComponents || (function () {
     };
 
 
-    // ########################################################
+    // ####################################################################################################################
     // Stats
 
-    class Stat {
 
+    class StatObject {
         constructor(name, attr_tla, formula) {
             this.type = 'stat';
             this.name = name;
@@ -137,28 +137,68 @@ var BarbsComponents = BarbsComponents || (function () {
     }
 
 
-    const STATS = [
-        new Stat('health', 'VIT', function (v) { return 100 + 10 * v; }),
-        new Stat('stamina', 'END', function (v) { return 100 + 10 * v; }),
-        new Stat('mana', 'SPT', function (v) { return 100 + 10 * v; }),
-        new Stat('health regeneration', 'RCV', function (v) { return 10 + v; }),
-        new Stat('stamina regeneration', 'PER', function (v) { return 10 + v; }),
-        new Stat('mana regeneration', 'SAN', function (v) { return 10 + v; }),
-        new Stat('movement speed', 'AGI', function (v) { return 30 + 5 * Math.floor(v / 2); }),
-        new Stat('ac', 'TGH', function (v) { return 10 + v; }),
-        new Stat('evasion', 'REF', function (v) { return 10 + v; }),
-        new Stat('magic resist', 'RES', function (v) { return 10 + v; }),
-        new Stat('condition resist', 'FRT', function (v) { return 10 + v; }),
-        new Stat('melee damage', 'STR', function (v) { return v; }),
-        new Stat('ranged fine damage', 'DEX', function (v) { return v; }),
-        new Stat('magic damage', 'ATN', function (v) { return v; }),
-        new Stat('critical hit chance', 'PRE', function (v) { return 10 + v; }),
-        new Stat('commands', 'APL', function (v) { return Math.floor((v + 10) / 10) + 1; }),
-        new Stat('languages', 'INT', function (v) { return Math.floor((v + 10) / 3) + 1; }),
-        new Stat('item efficiency', 'WIS', function (v) { return (v + 10) * 5; }),
-        new Stat('buff limit', 'COM', function (v) { return Math.floor((v + 10) / 2); }),
-        new Stat('concentration limit', 'FCS', function (v) { return Math.floor((v + 10) / 2); }),
-    ];
+    const Stat = {
+        HEALTH: new StatObject('health', 'VIT', function (v) {
+            return 100 + 10 * v;
+        }),
+        STAMINA: new StatObject('stamina', 'END', function (v) {
+            return 100 + 10 * v;
+        }),
+        MANA: new StatObject('mana', 'SPT', function (v) {
+            return 100 + 10 * v;
+        }),
+        HEALTH_REGENERATION: new StatObject('health regeneration', 'RCV', function (v) {
+            return 10 + v;
+        }),
+        STAMINA_REGENERATION: new StatObject('stamina regeneration', 'PER', function (v) {
+            return 10 + v;
+        }),
+        MANA_REGENERATION: new StatObject('mana regeneration', 'SAN', function (v) {
+            return 10 + v;
+        }),
+        MOVEMENT_SPEED: new StatObject('movement speed', 'AGI', function (v) {
+            return 30 + 5 * Math.floor(v / 2);
+        }),
+        AC: new StatObject('ac', 'TGH', function (v) {
+            return 10 + v;
+        }),
+        EVASION: new StatObject('evasion', 'REF', function (v) {
+            return 10 + v;
+        }),
+        MAGIC_RESIST: new StatObject('magic resist', 'RES', function (v) {
+            return 10 + v;
+        }),
+        CONDITION_RESIST: new StatObject('condition resist', 'FRT', function (v) {
+            return 10 + v;
+        }),
+        MELEE_DAMAGE: new StatObject('melee damage', 'STR', function (v) {
+            return v;
+        }),
+        RANGED_FINE_DAMAGE: new StatObject('ranged fine damage', 'DEX', function (v) {
+            return v;
+        }),
+        MAGIC_DAMAGE: new StatObject('magic damage', 'ATN', function (v) {
+            return v;
+        }),
+        CRITICAL_HIT_CHANCE: new StatObject('critical hit chance', 'PRE', function (v) {
+            return 10 + v;
+        }),
+        COMMANDS: new StatObject('commands', 'APL', function (v) {
+            return Math.floor((v + 10) / 10) + 1;
+        }),
+        LANGUAGES: new StatObject('languages', 'INT', function (v) {
+            return Math.floor((v + 10) / 3) + 1;
+        }),
+        ITEM_EFFICIENCY: new StatObject('item efficiency', 'WIS', function (v) {
+            return (v + 10) * 5;
+        }),
+        BUFF_LIMIT: new StatObject('buff limit', 'COM', function (v) {
+            return Math.floor((v + 10) / 2);
+        }),
+        CONCENTRATION_LIMIT: new StatObject('concentration limit', 'FCS', function (v) {
+            return Math.floor((v + 10) / 2);
+        }),
+    };
 
 
     const HiddenStat = {
@@ -184,19 +224,140 @@ var BarbsComponents = BarbsComponents || (function () {
     };
 
 
-    function get_stat(name) {
-        for (let i = 0; i < STATS.length; i++) {
-            if (STATS[i].name === name) {
-                return STATS[i];
-            }
-        }
+    // ####################################################################################################################
+    // Skills
 
-        return null;
+
+    class SkillObject {
+        constructor(name, scaling_attr_tla) {
+            this.name = name;
+            this.scaling_attr_tla = scaling_attr_tla;
+        }
     }
 
 
+    const Skill = {
+        ALCHEMY_AUGMENTATION: new SkillObject('Alchemy Augmentation', 'INT'),
+        ALCHEMY_CONSTRUCTS: new SkillObject('Alchemy Constructs', 'INT'),
+        ALCHEMY_ORGANICS: new SkillObject('Alchemy Organics', 'INT'),
+        ALCHEMY_TRANSFORMATION: new SkillObject('Alchemy Transformation', 'INT'),
+        ARMOR_MASTERY_CLOTH: new SkillObject('Armor Mastery Cloth', 'RES'),
+        ARMOR_MASTERY_HEAVY: new SkillObject('Armor Mastery Heavy', 'TGH'),
+        ARMOR_MASTERY_LIGHT: new SkillObject('Armor Mastery Light', 'REF'),
+        ARMOR_MASTERY_SHIELDS: new SkillObject('Armor Mastery Shields', 'TGH'),
+        ARTISTRY_ACTING: new SkillObject('Artistry Acting', 'APL'),
+        ARTISTRY_DANCING: new SkillObject('Artistry Dancing', 'APL'),
+        ARTISTRY_ILLUSTRATION: new SkillObject('Artistry Illustration', 'APL'),
+        ARTISTRY_LITERATURE: new SkillObject('Artistry Literature', 'APL'),
+        ARTISTRY_MUSIC: new SkillObject('Artistry Music', 'APL'),
+        ARTISTRY_SCULPTURE: new SkillObject('Artistry Sculpture', 'APL'),
+        ATHLETICS_BALANCE: new SkillObject('Athletics Balance', 'DEX'),
+        ATHLETICS_CLIMBING: new SkillObject('Athletics Climbing', 'AGI'),
+        ATHLETICS_FLEXIBILITY: new SkillObject('Athletics Flexibility', 'DEX'),
+        ATHLETICS_FORCE: new SkillObject('Athletics Force', 'STR'),
+        ATHLETICS_MOVEMENT: new SkillObject('Athletics Movement', 'AGI'),
+        ATHLETICS_PAIN_TOLERANCE: new SkillObject('Athletics Pain Tolerance', 'COM'),
+        BEAST_MASTERY_BATTLE_PET: new SkillObject('Beast Mastery Battle Pet', 'WIS'),
+        BEAST_MASTERY_RIDING: new SkillObject('Beast Mastery Riding', 'AGI'),
+        BEAST_MASTERY_TAMING: new SkillObject('Beast Mastery Taming', 'WIS'),
+        COMBAT_BLOCKING: new SkillObject('Combat Blocking', 'TGH'),
+        COMBAT_DODGING: new SkillObject('Combat Dodging', 'REF'),
+        COMBAT_GRAPPLING: new SkillObject('Combat Grappling', 'AGI'),
+        COMBAT_TRAPPING: new SkillObject('Combat Trapping', 'FRT'),
+        CRAFTING_ARMORSMITHING: new SkillObject('Crafting Armorsmithing', 'TGH'),
+        CRAFTING_ARTIFICING: new SkillObject('Crafting Artificing', 'RES'),
+        CRAFTING_COOKING: new SkillObject('Crafting Cooking', 'APL'),
+        CRAFTING_ENCHANTING: new SkillObject('Crafting Enchanting', 'RES'),
+        CRAFTING_FINE_WEAPONS: new SkillObject('Crafting Fine Weapons', 'REF'),
+        CRAFTING_FORGERY: new SkillObject('Crafting Forgery', 'PRE'),
+        CRAFTING_LEATHERWORKING: new SkillObject('Crafting Leatherworking', 'REF'),
+        CRAFTING_JEWELRY: new SkillObject('Crafting Jewelry', 'FRT'),
+        CRAFTING_HEAVY_WEAPONS: new SkillObject('Crafting Heavy Weapons', 'TGH'),
+        CRAFTING_POISONS: new SkillObject('Crafting Poisons', 'FRT'),
+        CRAFTING_POTIONS: new SkillObject('Crafting Potions', 'FRT'),
+        CRAFTING_RANGED_WEAPONS: new SkillObject('Crafting Ranged Weapons', 'REF'),
+        CRAFTING_SHORTBLADES: new SkillObject('Crafting Shortblades', 'PRE'),
+        CRAFTING_TAILORING: new SkillObject('Crafting Tailoring', 'RES'),
+        ELEMENT_MASTERY_AIR: new SkillObject('Element Mastery Air', 'AGI'),
+        ELEMENT_MASTERY_DARK: new SkillObject('Element Mastery Dark', 'FRT'),
+        ELEMENT_MASTERY_EARTH: new SkillObject('Element Mastery Earth', 'RES'),
+        ELEMENT_MASTERY_FIRE: new SkillObject('Element Mastery Fire', 'ATN'),
+        ELEMENT_MASTERY_ICE: new SkillObject('Element Mastery Ice', 'FRT'),
+        ELEMENT_MASTERY_LIGHT: new SkillObject('Element Mastery Light', 'FCS'),
+        ELEMENT_MASTERY_LIGHTNING: new SkillObject('Element Mastery Lightning', 'ATN'),
+        ELEMENT_MASTERY_WATER: new SkillObject('Element Mastery Water', 'FCS'),
+        GATHERING_FORESTRY: new SkillObject('Gathering Forestry', 'TGH'),
+        GATHERING_HARVEST: new SkillObject('Gathering Harvest', 'AGI'),
+        GATHERING_HERBOLOGY: new SkillObject('Gathering Herbology', 'RES'),
+        GATHERING_HUNTING: new SkillObject('Gathering Hunting', 'REF'),
+        GATHERING_MINING: new SkillObject('Gathering Mining', 'TGH'),
+        GATHERING_SKINNING: new SkillObject('Gathering Skinning', 'REF'),
+        ITEM_USE_APPRAISAL: new SkillObject('Item Use Appraisal', 'WIS'),
+        ITEM_USE_CONSTRUCTION: new SkillObject('Item Use Construction', 'STR'),
+        ITEM_USE_FIRST_AID: new SkillObject('Item Use First Aid', 'FRT'),
+        ITEM_USE_LITERACY: new SkillObject('Item Use Literacy', 'INT'),
+        ITEM_USE_ROPES: new SkillObject('Item Use Ropes', 'WIS'),
+        ITEM_USE_TINKERING: new SkillObject('Item Use Tinkering', 'WIS'),
+        ITEM_USE_TRAPS: new SkillObject('Item Use Traps', 'COM'),
+        INTERACTION_DECEPTION: new SkillObject('Interaction Deception', 'APL'),
+        INTERACTION_INTENT: new SkillObject('Interaction Intent', 'WIS'),
+        INTERACTION_INTIMIDATION: new SkillObject('Interaction Intimidation', 'COM'),
+        INTERACTION_LEADERSHIP: new SkillObject('Interaction Leadership', 'COM'),
+        INTERACTION_PERSUASION: new SkillObject('Interaction Persuasion', 'APL'),
+        INTERACTION_SEDUCTION: new SkillObject('Interaction Seduction', 'APL'),
+        KNOWLEDGE_ARCANA: new SkillObject('Knowledge Arcana', 'INT'),
+        KNOWLEDGE_CULTURE: new SkillObject('Knowledge Culture', 'INT'),
+        KNOWLEDGE_HISTORY: new SkillObject('Knowledge History', 'INT'),
+        KNOWLEDGE_NATURE: new SkillObject('Knowledge Nature', 'INT'),
+        KNOWLEDGE_RELIGION: new SkillObject('Knowledge Religion', 'INT'),
+        MAGIC_BUFFS: new SkillObject('Magic Buffs', 'FCS'),
+        MAGIC_CONDITIONS: new SkillObject('Magic Conditions', 'ATN'),
+        MAGIC_CONJURATION: new SkillObject('Magic Conjuration', 'FCS'),
+        MAGIC_CONTROL: new SkillObject('Magic Control', 'ATN'),
+        MAGIC_DEFENSIVE: new SkillObject('Magic Defensive', 'RES'),
+        MAGIC_DESTRUCTION: new SkillObject('Magic Destruction', 'ATN'),
+        MAGIC_DIVINATION: new SkillObject('Magic Divination', 'ATN'),
+        MAGIC_ENCHANTMENT: new SkillObject('Magic Enchantment', 'FCS'),
+        MAGIC_ILLUSIONS: new SkillObject('Magic Illusions', 'FCS'),
+        MAGIC_MANA_CHANNELING: new SkillObject('Magic Mana Channeling', 'COM'),
+        MAGIC_RESTORATION: new SkillObject('Magic Restoration', 'ATN'),
+        MAGIC_SUMMONING: new SkillObject('Magic Summoning', 'FCS'),
+        MAGIC_TRANSMUTATION: new SkillObject('Magic Transmutation', 'FCS'),
+        MAGIC_UTILITY: new SkillObject('Magic Utility', 'ATN'),
+        OBSERVATION_LISTEN: new SkillObject('Observation Listen', 'WIS'),
+        OBSERVATION_SEARCH: new SkillObject('Observation Search', 'WIS'),
+        OBSERVATION_TRACKING: new SkillObject('Observation Tracking', 'WIS'),
+        PSIONICS_DEFENSIVE: new SkillObject('Psionics Defensive', 'COM'),
+        PSIONICS_OFFENSIVE: new SkillObject('Psionics Offensive', 'COM'),
+        PSIONICS_UTILITY: new SkillObject('Psionics Utility', 'COM'),
+        STEALTH_DISGUISE: new SkillObject('Stealth Disguise', 'PRE'),
+        STEALTH_LOCKPICKING: new SkillObject('Stealth Lockpicking', 'PRE'),
+        STEALTH_SLEIGHT_OF_HAND: new SkillObject('Stealth Sleight of Hand', 'PRE'),
+        STEALTH_SNEAK: new SkillObject('Stealth Sneak', 'PRE'),
+        STEALTH_STEAL: new SkillObject('Stealth Steal', 'PRE'),
+        TRANSPORTATION_AIR_VEHICLES: new SkillObject('Transportation Air Vehicles', 'COM'),
+        TRANSPORTATION_LAND_VEHICLES: new SkillObject('Transportation Land Vehicles', 'AGI'),
+        TRANSPORTATION_SEA_VEHICLES: new SkillObject('Transportation Sea Vehicles', 'FCS'),
+        WEAPON_MASTERY_AXES: new SkillObject('Weapon Mastery Axes', 'STR'),
+        WEAPON_MASTERY_BLUNT: new SkillObject('Weapon Mastery Blunt', 'STR'),
+        WEAPON_MASTERY_BOWS: new SkillObject('Weapon Mastery Bows', 'DEX'),
+        WEAPON_MASTERY_BULLETS: new SkillObject('Weapon Mastery Bullets', 'DEX'),
+        WEAPON_MASTERY_CROSSBOWS: new SkillObject('Weapon Mastery Crossbows', 'DEX'),
+        WEAPON_MASTERY_FINE: new SkillObject('Weapon Mastery Fine', 'DEX'),
+        WEAPON_MASTERY_IMPROVISED_WEAPONS: new SkillObject('Weapon Mastery Improvised Weapons', 'WIS'),
+        WEAPON_MASTERY_HEAVY_THROWN_WEAPONS: new SkillObject('Weapon Mastery Heavy Thrown Weapons', 'STR'),
+        WEAPON_MASTERY_LIGHT_THROWN_WEAPONS: new SkillObject('Weapon Mastery Light Thrown Weapons', 'DEX'),
+        WEAPON_MASTERY_LONGBLADES: new SkillObject('Weapon Mastery Longblades', 'STR'),
+        WEAPON_MASTERY_POLEARMS: new SkillObject('Weapon Mastery Polearms', 'STR'),
+        WEAPON_MASTERY_SHIELDS: new SkillObject('Weapon Mastery Shields', 'STR'),
+        WEAPON_MASTERY_SHORTBLADES: new SkillObject('Weapon Mastery Shortblades', 'PRE'),
+        WEAPON_MASTERY_UNARMED: new SkillObject('Weapon Mastery Unarmed', 'DEX'),
+        ALL: new SkillObject('All', ''),
+    };
+
+
     // ####################################################################################################################
-    // Main components, excluding items
+    // All components, excluding items, as parsed from the rulebook
 
     // individual collections are built at the end off of `components`, which has everything
     let attributes = [];
@@ -7905,38 +8066,9 @@ var BarbsComponents = BarbsComponents || (function () {
     }
 
 
-    const skill_to_attribute_map = {
-        "Armor Mastery Cloth": "RES", "Armor Mastery Heavy": "TGH", "Armor Mastery Light": "REF",
-        "Armor Mastery Shields": "TGH", "Artistry Acting": "APL", "Artistry Dancing": "APL", "Artistry Illustration": "APL",
-        "Artistry Literature": "APL", "Artistry Music": "APL", "Artistry Sculpture": "APL", "Athletics Balance": "DEX",
-        "Athletics Climbing": "AGI", "Athletics Force": "STR", "Athletics Movement": "AGI",
-        "Athletics Pain Tolerance": "COM", "Beast Mastery Riding": "AGI", "Beast Mastery Taming": "WIS",
-        "Combat Blocking": "TGH", "Combat Dodging": "REF", "Combat Grappling": "AGI",
-        "Crafting Armorsmithing": "TGH", "Crafting Artificing": "RES", "Crafting Cooking": "APL",
-        "Crafting Enchanting": "RES", "Crafting Fine Weapons": "REF", "Crafting Forgery": "PRE",
-        "Crafting Leatherworking": "REF", "Crafting Jewelry": "FRT", "Crafting Heavy Weapons": "TGH",
-        "Crafting Poisons": "FRT", "Crafting Potions": "FRT", "Crafting Ranged Weapons": "REF",
-        "Crafting Shortblades": "PRE", "Crafting Tailoring": "RES", "Element Mastery Air": "AGI",
-        "Element Mastery Dark": "FRT", "Element Mastery Earth": "RES", "Element Mastery Fire": "ATN",
-        "Element Mastery Ice": "FRT", "Element Mastery Lightning": "ATN", "Gathering Forestry": "TGH",
-        "Gathering Harvest": "AGI", "Gathering Herbology": "RES", "Gathering Hunting": "REF", "Gathering Mining": "TGH",
-        "Gathering Skinning": "REF", "Item Use Appraisal": "WIS", "Item Use First Aid": "FRT", "Item Use Literacy": "INT",
-        "Item Use Ropes": "WIS", "Interaction Deception": "APL", "Interaction Intent": "WIS",
-        "Interaction Intimidation": "COM", "Interaction Leadership": "COM", "Interaction Persuasion": "APL",
-        "Interaction Seduction": "APL", "Knowledge Arcana": "INT", "Knowledge Culture": "INT", "Knowledge History": "INT",
-        "Knowledge Nature": "INT", "Magic Buffs": "FCS", "Magic Conjuration": "FCS", "Magic Control": "ATN",
-        "Magic Defensive": "RES", "Magic Destruction": "ATN", "Magic Enchantment": "FCS", "Magic Mana Channeling": "COM",
-        "Magic Restoration": "ATN", "Magic Summoning": "FCS", "Magic Transmutation": "FCS", "Magic Utility": "ATN",
-        "Observation Listen": "WIS", "Observation Search": "WIS", "Stealth Disguise": "PRE", "Stealth Lockpicking": "PRE",
-        "Stealth Sneak": "PRE", "Stealth Steal": "PRE", "Transportation Land Vehicles": "AGI", "Weapon Mastery Axes": "STR",
-        "Weapon Mastery Bows": "DEX", "Weapon Mastery Bullets": "DEX", "Weapon Mastery Crossbows": "DEX",
-        "Weapon Mastery Fine": "DEX", "Weapon Mastery Heavy Thrown Weapons": "STR", "Weapon Mastery Longblades": "STR",
-        "Weapon Mastery Shields": "STR", "Weapon Mastery Shortblades": "PRE",
-    };
-
-
     // ####################################################################################################################
     // Roll
+
 
     const Damage = {
         PHYSICAL: 'physical',
@@ -7953,6 +8085,7 @@ var BarbsComponents = BarbsComponents || (function () {
         ALL: 'all',
     };
 
+
     const RollType = {
         PHYSICAL: 'roll_type_physical',
         MAGIC: 'roll_type_magic',
@@ -7960,14 +8093,18 @@ var BarbsComponents = BarbsComponents || (function () {
         ALL: 'roll_type_all',
     };
 
+
     const RollTime = {
         // Indicates that the effect should be applied when calculating a character stat
         STAT: 'roll_time_stat',
+        // Indicates that the effect should be applied when doing a skill check
+        SKILL: 'roll_time_skill',
         // Indicates that the effect should be applied after we know whether or not a roll was a crit
         ROLL: 'roll_time_roll',
         // Indicates that the effect should be applied before we roll for crit
         CRIT: 'roll_time_crit',
     };
+
 
     class Roll {
         constructor(character, roll_type) {
@@ -7976,7 +8113,9 @@ var BarbsComponents = BarbsComponents || (function () {
             this.damages = {};
             this.multipliers = {};
             this.effects = [];
+            this.stats = {};
             this.hidden_stats = {};
+            this.skills = {};
 
             this.crit = false;
             this.crit_chance = 0;
@@ -8007,11 +8146,30 @@ var BarbsComponents = BarbsComponents || (function () {
             this.effects.push('<li>%s</li>'.format(effect));
         }
 
-        add_hidden_stat(value, type) {
-            if (!(type in this.hidden_stats)) {
-                this.hidden_stats[type] = value;
+        add_stat_bonus(stat, bonus) {
+            assert_not_null(stat, 'add_stat_bonus() stat');
+            assert_not_null(bonus, 'add_stat_bonus() bonus');
+
+            if (!(stat.name in this.stats)) {
+                this.stats[stat.name] = '%s'.format(bonus);
             } else {
-                this.hidden_stats[type] += value;
+                this.stats[stat.name] = this.stats[stat.name] + '+%s'.format(bonus);
+            }
+        }
+
+        add_hidden_stat(hidden_stat, value) {
+            if (!(hidden_stat in this.hidden_stats)) {
+                this.hidden_stats[hidden_stat] = value;
+            } else {
+                this.hidden_stats[hidden_stat] += value;
+            }
+        }
+
+        add_skill_bonus(skill, bonus) {
+            if (!(skill.name in this.skills)) {
+                this.skills[skill.name] = '%s'.format(bonus);
+            } else {
+                this.skills[skill.name] = this.skills[skill.name] + '+%s'.format(bonus);
             }
         }
 
@@ -8122,9 +8280,8 @@ var BarbsComponents = BarbsComponents || (function () {
 
             // self.crit_chance may be upped by abilities. Add that amount into base crit chance from attributes.
             let final_crit_chance = self.crit_chance;
-            const stat = get_stat('critical hit chance');
-            const attribute = parseInt(getAttrByName(self.character.id, stat.attr_tla));
-            final_crit_chance += stat.value(attribute);
+            const attribute = parseInt(getAttrByName(self.character.id, Stat.CRITICAL_HIT_CHANCE.attr_tla));
+            final_crit_chance += Stat.CRITICAL_HIT_CHANCE.value(attribute);
 
             // Then add in crit chance boosts from items
             _.each(self.character.items, function (item) {
@@ -8144,6 +8301,7 @@ var BarbsComponents = BarbsComponents || (function () {
     // ########################################################
     // Items
 
+
     const ItemType = {
         ACCESSORY: 'accessory',
         AXE: 'axe',
@@ -8162,6 +8320,7 @@ var BarbsComponents = BarbsComponents || (function () {
         WAND: 'wand',
     };
 
+
     const ItemSlot = {
         MAIN_HAND: 'main_hand',
         OFFHAND: 'offhand',
@@ -8175,17 +8334,19 @@ var BarbsComponents = BarbsComponents || (function () {
         BELT: 'belt',
     };
 
+
     const ItemRarity = {
         MAGIC: 'magic',
         RARE: 'rare',
     };
 
+
     const ItemScaler = {
         MELEE: function (character, roll) {
-            roll.add_damage(character.get_stat('melee damage'), Damage.PHYSICAL);
+            roll.add_damage(character.get_stat(Stat.MELEE_DAMAGE), Damage.PHYSICAL);
         },
         RANGED_FINE: function (character, roll) {
-            roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
+            roll.add_damage(character.get_stat(Stat.RANGED_FINE_DAMAGE), Damage.PHYSICAL);
         },
         // This one has to be called with a parameter to create the function
         OTHER: function (stat) {
@@ -8195,6 +8356,7 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         NONE: function () {},
     };
+
 
     class Item {
         constructor(name, type, rarity, slot, equip_conditions, base_damage, damage_scaling, range, cantrips, notes, effects) {
@@ -8221,8 +8383,20 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         static stat_effect(stat, mod) {
-            return new Effect(RollTime.STAT, RollType.ALL, function (stat_to_test) {
-                return stat_to_test === stat ? mod : 0
+            assert_not_null(stat, 'stat_effect() stat');
+            assert_not_null(mod, 'stat_effect() mod');
+
+            return new Effect(RollTime.STAT, RollType.ALL, function (roll) {
+                roll.add_stat_bonus(stat, mod);
+            });
+        }
+
+        static skill_effect(skill, mod) {
+            assert_not_null(skill, 'skill_effect() skill');
+            assert_not_null(mod, 'skill_effect() mod');
+
+            return new Effect(RollTime.SKILL, RollType.ALL, function (roll) {
+                roll.add_skill_bonus(skill, mod);
             });
         }
 
@@ -8302,27 +8476,27 @@ var BarbsComponents = BarbsComponents || (function () {
             });
         }
 
-        static hidden_stat(value, stat_type, applicable_roll_type) {
+        static hidden_stat(value, stat, applicable_roll_type) {
             assert_not_null(value, 'hidden_stat() value');
-            assert_not_null(stat_type, 'hidden_stat() stat_type');
+            assert_not_null(stat, 'hidden_stat() stat');
             assert_not_null(applicable_roll_type, 'hidden_stat() applicable_roll_type');
 
             return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
-                    roll.add_hidden_stat(value, stat_type);
+                    roll.add_hidden_stat(stat, value);
                 }
             });
         }
 
-        static crit_hidden_stat(value, stat_type, applicable_roll_type) {
+        static crit_hidden_stat(value, stat, applicable_roll_type) {
             assert_not_null(value, 'crit_hidden_stat() value');
-            assert_not_null(stat_type, 'crit_hidden_stat() stat_type');
+            assert_not_null(stat, 'crit_hidden_stat() stat');
             assert_not_null(applicable_roll_type, 'crit_hidden_stat() applicable_roll_type');
 
             return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
                     if (roll.crit) {
-                        roll.add_hidden_stat(value, stat_type);
+                        roll.add_hidden_stat(stat, value);
                     }
                 }
             });
@@ -8382,8 +8556,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('evasion', 5),
-                Effect.stat_effect('health regeneration', 10),
+                Effect.stat_effect(Stat.EVASION, 5),
+                Effect.stat_effect(Stat.HEALTH_REGENERATION, 10),
             ]
         ),
 
@@ -8399,8 +8573,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('evasion', 20),
-                Effect.stat_effect('magic resist', 10),
+                Effect.stat_effect(Stat.EVASION, 20),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
             ]
         ),
 
@@ -8416,8 +8590,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('evasion', 15),
-                Effect.stat_effect('condition resist', 10),
+                Effect.stat_effect(Stat.EVASION, 15),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
             ]
         ),
 
@@ -8433,9 +8607,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('evasion', 15),
-                Effect.stat_effect('stamina regeneration', 10),
-                Effect.stat_effect('ac', -10),
+                Effect.stat_effect(Stat.EVASION, 15),
+                Effect.stat_effect(Stat.STAMINA_REGENERATION, 10),
+                Effect.stat_effect(Stat.AC, -10),
             ]
         ),
 
@@ -8481,8 +8655,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('stamina', 30),
-                Effect.stat_effect('mana', 40),
+                Effect.stat_effect(Stat.STAMINA, 30),
+                Effect.stat_effect(Stat.MANA, 40),
             ]
         ),
 
@@ -8498,8 +8672,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('stamina', 60),
-                Effect.stat_effect('stamina regeneration', 15),
+                Effect.stat_effect(Stat.STAMINA, 60),
+                Effect.stat_effect(Stat.STAMINA_REGENERATION, 15),
             ]
         ),
 
@@ -8515,9 +8689,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('evasion', 20),
-                Effect.stat_effect('magic resist', 10),
-                Effect.stat_effect('ac', -10),
+                Effect.stat_effect(Stat.EVASION, 20),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.stat_effect(Stat.AC, -10),
             ]
         ),
 
@@ -8533,9 +8707,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('evasion', 20),
-                Effect.stat_effect('condition resist', 10),
-                Effect.stat_effect('ac', -10),
+                Effect.stat_effect(Stat.EVASION, 20),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                Effect.stat_effect(Stat.AC, -10),
             ]
         ),
 
@@ -8551,9 +8725,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('evasion', 20),
-                Effect.stat_effect('condition resist', 10),
-                Effect.stat_effect('ac', -10),
+                Effect.stat_effect(Stat.EVASION, 20),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                Effect.stat_effect(Stat.AC, -10),
             ]
         ),
 
@@ -8569,7 +8743,7 @@ var BarbsComponents = BarbsComponents || (function () {
             ['Expend 30 mana as a Major Action to clease 1 condition on yourself'],
             '',
             [
-                Effect.stat_effect('mana', 40),
+                Effect.stat_effect(Stat.MANA, 40),
             ]
         ),
 
@@ -8599,8 +8773,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('health', 40),
-                Effect.stat_effect('stamina', 40),
+                Effect.stat_effect(Stat.HEALTH, 40),
+                Effect.stat_effect(Stat.STAMINA, 40),
             ]
         ),
 
@@ -8617,7 +8791,7 @@ var BarbsComponents = BarbsComponents || (function () {
             0, [], '',
             [
                 Effect.roll_damage('4d10', Damage.LIGHT, RollType.PHYSICAL),
-                Effect.hidden_stat(20, HiddenStat.ACCURACY, RollType.PHYSICAL),
+                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.PHYSICAL),
             ]
         ),
 
@@ -8634,9 +8808,9 @@ var BarbsComponents = BarbsComponents || (function () {
             0, [],
             'You take no fall damage',
             [
-                Effect.stat_effect('evasion', 20),
-                Effect.stat_effect('movement speed', 20),
-                Effect.stat_effect('ac', -10),
+                Effect.stat_effect(Stat.EVASION, 20),
+                Effect.stat_effect(Stat.MOVEMENT_SPEED, 20),
+                Effect.stat_effect(Stat.AC, -10),
                 Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.ALL),
             ]
         ),
@@ -8670,8 +8844,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.MELEE,
             0, [], '',
             [
-                Effect.hidden_stat(20, HiddenStat.ACCURACY, RollType.PHYSICAL),
-                Effect.roll_effect(30, HiddenStat.PARALYZE, RollType.PHYSICAL),
+                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.PHYSICAL),
+                Effect.hidden_stat(HiddenStat.PARALYZE, 30, RollType.PHYSICAL),
             ]
         ),
 
@@ -8686,7 +8860,7 @@ var BarbsComponents = BarbsComponents || (function () {
             0, [], '',
             [
                 Effect.roll_damage('2d8', Damage.LIGHTNING, RollType.ALL),
-                Effect.stat_effect('critical hit chance', 5),
+                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 5),
             ]
         ),
 
@@ -8700,9 +8874,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('critical hit chance', 20),
-                Effect.crit_hidden_stat(1, HiddenStat.BUFF_STRIP, RollType.PHYSICAL),
-                Effect.crit_hidden_stat(10, HiddenStat.REDUCE_EVASION, RollType.PHYSICAL),
+                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 20),
+                Effect.crit_hidden_stat(HiddenStat.BUFF_STRIP, 1, RollType.PHYSICAL),
+                Effect.crit_hidden_stat(HiddenStat.REDUCE_EVASION, 10, RollType.PHYSICAL),
             ]
         ),
 
@@ -8716,7 +8890,7 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('critical hit chance', 10),
+                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 10),
                 Effect.crit_damage_mod(100),
                 Effect.crit_effect('Ignore blocks and shielding', RollType.PHYSICAL),
                 Effect.crit_damage('3d6', Damage.WATER, RollType.PHYSICAL),
@@ -8749,7 +8923,7 @@ var BarbsComponents = BarbsComponents || (function () {
             0, [], '',
             [
                 Effect.roll_multiplier(0.1, Damage.ALL_MAGIC, RollType.MAGIC),
-                Effect.hidden_stat(50, HiddenStat.ICE_MAGIC_PENETRATION, RollType.MAGIC),
+                Effect.hidden_stat(HiddenStat.ICE_MAGIC_PENETRATION, 50, RollType.MAGIC),
                 Effect.roll_multiplier(0.25, Damage.ICE, RollType.MAGIC),
             ]
         ),
@@ -8764,8 +8938,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.hidden_stat(20, HiddenStat.GENERAL_MAGIC_PENETRATION, RollType.MAGIC),
-                Effect.hidden_stat(5, HiddenStat.REDUCE_CR, RollType.MAGIC),
+                Effect.hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 20, RollType.MAGIC),
+                Effect.hidden_stat(HiddenStat.REDUCE_CR, 5, RollType.MAGIC),
                 Effect.roll_multiplier(0.3, Damage.ICE, RollType.MAGIC),
                 Effect.roll_multiplier(0.2, Damage.ICE, RollType.MAGIC),
             ]
@@ -8781,11 +8955,11 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('magic resist', 20),
-                Effect.stat_effect('ac', -20),
-                Effect.stat_effect('mana', 40),
-                Effect.hidden_stat(20, HiddenStat.ACCURACY, RollType.ALL),
-                Effect.stat_effect('concentration limit', 30),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 20),
+                Effect.stat_effect(Stat.AC, -20),
+                Effect.stat_effect(Stat.MANA, 40),
+                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
+                // TODO? +30 to concentration checks
             ]
         ),
 
@@ -8799,11 +8973,11 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('magic resist', 20),
-                Effect.stat_effect('ac', -20),
-                Effect.stat_effect('mana', 60),
-                Effect.stat_effect('mana regeneration', 20),
-                Effect.stat_effect('health', 60),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 20),
+                Effect.stat_effect(Stat.AC, -20),
+                Effect.stat_effect(Stat.MANA, 60),
+                Effect.stat_effect(Stat.MANA_REGENERATION, 20),
+                Effect.stat_effect(Stat.HEALTH, 60),
                 // TODO: Your healing spells are 30% more effective
             ]
         ),
@@ -8818,12 +8992,12 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('magic resist', 20),
-                Effect.stat_effect('ac', -20),
-                Effect.hidden_stat(20, HiddenStat.UNBLOCKABLE_CHANCE, RollType.ALL),
-                Effect.hidden_stat(20, HiddenStat.ACCURACY, RollType.ALL),
-                Effect.hidden_stat(10, HiddenStat.GENERAL_MAGIC_PENETRATION, RollType.ALL),
-                Effect.hidden_stat(25, HiddenStat.ICE_MAGIC_PENETRATION, RollType.ALL),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 20),
+                Effect.stat_effect(Stat.AC, -20),
+                Effect.hidden_stat(HiddenStat.UNBLOCKABLE_CHANCE, 20, RollType.ALL),
+                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
+                Effect.hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 10, RollType.ALL),
+                Effect.hidden_stat(HiddenStat.ICE_MAGIC_PENETRATION, 25, RollType.ALL),
             ]
         ),
 
@@ -8837,11 +9011,11 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('magic resist', 20),
-                Effect.stat_effect('ac', -20),
-                Effect.stat_effect('mana', 40),
-                Effect.stat_effect('mana regeneration', 15),
-                Effect.stat_effect('movement speed', 20),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 20),
+                Effect.stat_effect(Stat.AC, -20),
+                Effect.stat_effect(Stat.MANA, 40),
+                Effect.stat_effect(Stat.MANA_REGENERATION, 15),
+                Effect.stat_effect(Stat.MOVEMENT_SPEED, 20),
             ]
         ),
 
@@ -8855,8 +9029,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('mana', 40),
-                Effect.stat_effect('concentration limit', 20),
+                Effect.stat_effect(Stat.MANA, 40),
+                // TODO? +20 to concentration checks
                 // TODO: Your healing spells are 30% more effective
             ]
         ),
@@ -8873,8 +9047,8 @@ var BarbsComponents = BarbsComponents || (function () {
             [
                 Effect.roll_multiplier(0.2, Damage.ALL_MAGIC, RollType.MAGIC),
                 Effect.roll_multiplier(0.3, Damage.ICE, RollType.MAGIC),
-                Effect.hidden_stat(15, HiddenStat.GENERAL_MAGIC_PENETRATION, RollType.ALL),
-                Effect.hidden_stat(10, HiddenStat.UNBLOCKABLE_CHANCE, RollType.ALL),
+                Effect.hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 15, RollType.ALL),
+                Effect.hidden_stat(HiddenStat.UNBLOCKABLE_CHANCE, 10, RollType.ALL),
             ]
         ),
 
@@ -8888,8 +9062,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect('mana', 40),
-                Effect.stat_effect('health', 50),
+                Effect.stat_effect(Stat.MANA, 40),
+                Effect.stat_effect(Stat.HEALTH, 50),
                 // TODO poison specifically: Effect.stat_effect('condition resist', 50),
             ]
         ),
@@ -8988,12 +9162,11 @@ var BarbsComponents = BarbsComponents || (function () {
             return attr_value;
         }
 
-        get_stat(stat_name) {
-            if (stat_name in this.stats) {
-                return this.stats[stat_name];
+        get_stat(stat) {
+            if (stat.name in this.stats) {
+                return this.stats[stat.name];
             }
 
-            const stat = get_stat(stat_name);
             const attr_value = this.get_attribute(stat.attr_tla);
             let stat_value = stat.value(attr_value);
 
@@ -9005,7 +9178,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 }
             });
 
-            this.stats[stat] = stat_value;
+            this.stats[stat.name] = stat_value;
             return stat_value;
         }
 
@@ -9039,18 +9212,18 @@ var BarbsComponents = BarbsComponents || (function () {
 
     return {
         characters_by_owner,
-        get_stat,
+        Stat,
+        HiddenStat,
+        Skill,
         components,
         clazzes,
         abilities,
-        skill_to_attribute_map,
-        HiddenStat,
-        Character,
         Damage,
         RollType,
         RollTime,
         Roll,
         ITEMS,
+        Character,
     };
 
 })();

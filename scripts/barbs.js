@@ -36,7 +36,9 @@ var Barbs = Barbs || (function () {
     const STATE_NAME = 'Barbs';
     const LAST_TURN_ID = 'last_turn_id';
 
+    const Stat = BarbsComponents.Stat;
     const HiddenStat = BarbsComponents.HiddenStat;
+    const Skill = BarbsComponents.Skill;
     const Damage = BarbsComponents.Damage;
     const RollType = BarbsComponents.RollType;
     const RollTime = BarbsComponents.RollTime;
@@ -107,34 +109,52 @@ var Barbs = Barbs || (function () {
 
 
     function get_character_by_name(name) {
+        assert_not_null(name, 'get_character_by_name() name');
+
         const fake_msg = {'who': name, 'id': ''};
         return get_character(fake_msg);
     }
 
 
-    function apply_items(character, thing_to_roll, effect_type) {
-        let mod = '';
+    function get_roll_with_items_and_effects(character, roll_time) {
+        assert_not_null(character, 'get_roll_with_items_and_effects() character');
+        assert_not_null(roll_time, 'get_roll_with_items_and_effects() roll_time');
+
+        const roll = new Roll(character, RollType.ALL);
+
+        // Apply effects from items that have the proper roll time
         _.each(character.items, function (item) {
             for (let i = 0; i < item.effects.length; i++) {
-                if (item.effects[i].type === effect_type) {
-                    const item_mod = item.effects[i].apply(thing_to_roll).toString(10);
-                    mod = mod + '+%s'.format(item_mod);
+                if (item.effects[i].roll_time === roll_time) {
+                    item.effects[i].apply(roll);
                 }
             }
         });
 
-        return mod;
+        // Apply persistent effects that have the proper roll time
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].target === character.name && persistent_effects[i].roll_time === roll_time) {
+                persistent_effects[i].handler(character, roll, /*parameters=*/[]);
+            }
+        }
+
+        return roll;
     }
 
 
-    function generate_stat_roll_modifier_from_items(character, stat_to_roll, effect_type) {
-        const stat = BarbsComponents.get_stat(stat_to_roll);
-        const attribute = parseInt(getAttrByName(character.id, stat.attr_tla), 10);
-        let mod = stat.value(attribute).toString(10);
+    function get_stat_roll_modifier(character, roll, stat) {
+        assert_not_null(character, 'generate_stat_roll_modifier_from_items() character');
+        assert_not_null(roll, 'generate_stat_roll_modifier_from_items() roll');
+        assert_not_null(stat, 'generate_stat_roll_modifier_from_items() stat');
 
-        mod = mod + apply_items(character, stat_to_roll, effect_type);
+        const attribute = parseInt(getAttrByName(character.id, stat.attr_tla));
+        const mod = '%s'.format(stat.value(attribute));
 
-        return mod;
+        if (stat.name in roll.stats) {
+            return '%s+%s'.format(mod, roll.stats[stat.name]);
+        } else {
+            return mod;
+        }
     }
 
 
@@ -145,99 +165,96 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const stat_to_roll = msg.content.split(' ')[2].replace(/_/g, ' ').toLowerCase();
-        roll_stat_inner(character, stat_to_roll)
-    }
+        const stat = Stat[msg.content.split(' ')[2].toUpperCase()];
+        const roll = get_roll_with_items_and_effects(character, RollTime.STAT);
+        const modifier = get_stat_roll_modifier(character, roll, stat);
 
-
-    function roll_stat_inner(character, stat_to_roll, handler) {
-        const modifier = generate_stat_roll_modifier_from_items(character, stat_to_roll, 'stat');
-
-        switch (stat_to_roll) {
-            case 'health':
+        switch (stat.name) {
+            case Stat.HEALTH.name:
                 chat(character, total_format.format('Total Health', 'Health', modifier));
                 break;
-            case 'stamina':
+
+            case Stat.STAMINA.name:
                 chat(character, total_format.format('Total Stamina', 'Stamina', modifier));
                 break;
 
-            case 'mana':
+            case Stat.MANA.name:
                 chat(character, total_format.format('Total Mana', 'Mana', modifier));
                 break;
 
-            case 'health regeneration':
-                const total_health = generate_stat_roll_modifier_from_items(character, 'health', 'stat');
+            case Stat.HEALTH_REGENERATION.name:
+                const total_health = get_stat_roll_modifier(character, roll, Stat.HEALTH);
                 chat(character, regen_format.format('Health Regeneration', 'Regen', total_health, modifier));
                 break;
 
-            case 'stamina regeneration':
-                const total_stamina = generate_stat_roll_modifier_from_items(character, 'stamina', 'stat');
+            case Stat.STAMINA_REGENERATION.name:
+                const total_stamina = get_stat_roll_modifier(character, roll, Stat.STAMINA);
                 chat(character, regen_format.format('Stamina Regeneration', 'Regen', total_stamina, modifier));
                 break;
 
-            case 'mana regeneration':
-                const total_mana = generate_stat_roll_modifier_from_items(character, 'mana', 'stat');
+            case Stat.MANA_REGENERATION.name:
+                const total_mana = get_stat_roll_modifier(character, roll, Stat.MANA);
                 chat(character, regen_format.format('Mana Regeneration', 'Regen', total_mana, modifier));
                 break;
 
-            case 'movement speed':
+            case Stat.MOVEMENT_SPEED.name:
                 chat(character, total_format.format('Total Movement Speed', 'Speed', modifier));
                 break;
 
-            case 'ac':
+            case Stat.AC.name:
                 chat(character, total_format.format('Total AC', 'AC', modifier));
                 break;
 
-            case 'evasion':
+            case Stat.EVASION.name:
                 chat(character, percent_format.format('Evasion', 'Evasion', modifier));
                 break;
 
-            case 'magic resist':
+            case Stat.MAGIC_RESIST.name:
                 chat(character, total_format.format('Total Magic Resist', 'Magic Resist', modifier));
                 break;
 
-            case 'condition resist':
+            case Stat.CONDITION_RESIST.name:
                 chat(character, percent_format.format('Condition Resist', 'CR', modifier));
                 break;
 
-            case 'melee damage':
+            case Stat.MELEE_DAMAGE.name:
                 chat(character, total_format.format('Bonus Melee Damage', 'Damage', modifier));
                 break;
 
-            case 'ranged fine damage':
+            case Stat.RANGED_FINE_DAMAGE.name:
                 chat(character, total_format.format('Bonus Ranged/Fine Damage', 'Damage', modifier));
                 break;
 
-            case 'magic damage':
+            case Stat.MAGIC_DAMAGE.name:
                 chat(character, total_format.format('Bonus Magic Damage', 'Damage', modifier));
                 break;
 
-            case 'critical hit chance':
-                chat(character, percent_format.format('Critical Hit Chance', 'Crit', modifier), handler);
+            case Stat.CRITICAL_HIT_CHANCE.name:
+                chat(character, percent_format.format('Critical Hit Chance', 'Crit', modifier));
                 break;
 
-            case 'commands':
+            case Stat.COMMANDS.name:
                 chat(character, total_format.format('Total Commands', 'Commands', modifier));
                 break;
 
-            case 'languages':
+            case Stat.LANGUAGES.name:
                 chat(character, total_format.format('Total Languages', 'Languages', modifier));
                 break;
 
-            case 'item efficiency':
+            case Stat.ITEM_EFFICIENCY.name:
                 chat(character, total_format.format('Total Item Efficiency', 'Modifier', modifier));
                 break;
 
-            case 'buff limit':
+            case Stat.BUFF_LIMIT.name:
                 chat(character, total_format.format('Total Buff Limit', 'Buff Limit', modifier));
                 break;
 
-            case 'concentration limit':
+            case Stat.CONCENTRATION_LIMIT.name:
                 chat(character, total_format.format('Total Concentration Limit', 'Concentration Limit', modifier));
                 break;
 
             default:
-                chat(character, 'Error, unknown stat ' + stat_to_roll);
+                chat(character, 'Error, unknown stat ' + stat.name);
         }
     }
 
@@ -251,23 +268,29 @@ var Barbs = Barbs || (function () {
 
         const pieces = msg.content.split(' ');
 
-        const bonus = 5 * parseInt(pieces[pieces.length - 1]);
-        const skill_to_roll = pieces.slice(2, pieces.length - 1).join(' ').replace(/:/g, '');
+        const points_in_skill = parseInt(pieces[pieces.length - 1]);
+        const bonus = 5 * points_in_skill;
+        const given_skill_name = pieces.slice(2, pieces.length - 1).join(' ');
+        const skill_name = given_skill_name.replace(/:/g, '').replace(/ /g, '_').toUpperCase();
 
-        if (!(skill_to_roll in BarbsComponents.skill_to_attribute_map)) {
+        if (!(skill_name in Skill)) {
             log('error, skill "' + skill_to_roll + '" not in skill-to-attribute map');
             return;
         }
 
-        const attribute = parseInt(getAttrByName(character.id, BarbsComponents.skill_to_attribute_map[skill_to_roll]));
-
-        const modifier = apply_items(character, skill_to_roll, 'skill');
+        const skill = Skill[skill_name];
+        const attribute = character.get_attribute(skill.scaling_attr_tla);
         let roll_string = 'd100+%s+%s'.format(bonus, attribute);
-        if (modifier !== '') {
-            roll_string += '+' + modifier;
+
+        const roll = get_roll_with_items_and_effects(character, RollTime.SKILL);
+        if (skill.name in roll.skills) {
+            roll_string += '+%s'.format(roll.skills[skill.name]);
+        }
+        if (Skill.ALL.name in roll.skills) {
+            roll_string += '+%s'.format(roll.skills[Skill.ALL.name]);
         }
 
-        chat(msg, total_format.format(skill_to_roll, 'Roll', roll_string));
+        chat(msg, total_format.format(given_skill_name, 'Roll', roll_string));
     }
 
 
@@ -311,7 +334,7 @@ var Barbs = Barbs || (function () {
             'target': target_character.name,
             'duration': duration,
             'ordering': order,
-            'time': roll_time,
+            'roll_time': roll_time,
             'single_application': single_application,
             'handler': handler,
         };
@@ -359,8 +382,8 @@ var Barbs = Barbs || (function () {
     function add_persistent_effects_to_roll(character, roll, roll_time, parameters, ordering) {
         for (let i = 0; i < persistent_effects.length; i++) {
             if (persistent_effects[i].target === character.name
-                && persistent_effects[i].ordering.type === ordering.type
-                && persistent_effects[i].time === roll_time) {
+                    && persistent_effects[i].ordering.type === ordering.type
+                    && persistent_effects[i].roll_time === roll_time) {
 
                 if (!persistent_effects[i].handler(character, roll, parameters)) {
                     return false;
@@ -815,7 +838,7 @@ var Barbs = Barbs || (function () {
     function air_duelist_cutting_winds(character, ability, parameters) {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('6d8', Damage.AIR);
-        roll.add_damage(character.get_stat('magic damage'), Damage.AIR);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.AIR);
         roll.add_effect('Knocks prone');
 
         roll_crit(roll, parameters, function (crit_section) {
@@ -888,7 +911,7 @@ var Barbs = Barbs || (function () {
                 const roll = new Roll(character, RollType.PHYSICAL);
                 roll.add_damage('%sd4'.format(dice_divisions[i]), Damage.PHYSICAL);
                 add_scale_damage(character, roll);
-                roll.add_hidden_stat(5 * dice_divisions[i], HiddenStat.LETHALITY);
+                roll.add_hidden_stat(HiddenStat.LETHALITY, 5 * dice_divisions[i]);
 
                 roll.copy_multipliers(dummy_roll);
                 const rolls_per_type = roll.roll();
@@ -1277,7 +1300,7 @@ var Barbs = Barbs || (function () {
 
         const stacks_spent_for_lethality = get_parameter('stacks', parameters);
         if (stacks_spent_for_lethality !== null) {
-            roll.add_hidden_stat(10 * parseInt(stacks_spent_for_lethality), HiddenStat.LETHALITY);
+            roll.add_hidden_stat(HiddenStat.LETHALITY, 10 * parseInt(stacks_spent_for_lethality));
         }
 
         roll_crit(roll, parameters, function (crit_section) {
@@ -1319,7 +1342,7 @@ var Barbs = Barbs || (function () {
     function sniper_shrapnel_shot(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('6d8', Damage.PHYSICAL);
-        roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
+        add_scale_damage(character, roll);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -1330,7 +1353,7 @@ var Barbs = Barbs || (function () {
     function sniper_swift_shot(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('3d8', Damage.PHYSICAL);
-        roll.add_damage(character.get_stat('ranged fine damage'), Damage.PHYSICAL);
+        add_scale_damage(character, roll);
         roll.add_effect('Stun until end of turn');
 
         roll_crit(roll, parameters, function (crit_section) {
@@ -1353,6 +1376,18 @@ var Barbs = Barbs || (function () {
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
         });
+    }
+
+
+    function soldier_double_time(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+
+        add_persistent_effect(character, ability, character, 6, Ordering.BEFORE(), RollTime.STAT, false,
+            function (char, roll, parameters) {
+                roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 20);
+            });
+
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
     }
 
 
@@ -1405,8 +1440,8 @@ var Barbs = Barbs || (function () {
 
         add_persistent_effect(character, ability, target_character, 6, Ordering.BEFORE(), RollTime.ROLL, false,
             function (char, roll, parameters) {
-                roll.add_hidden_stat(percentage, HiddenStat.ACCURACY);
-                roll.add_hidden_stat(percentage, HiddenStat.GENERAL_MAGIC_PENETRATION);
+                roll.add_hidden_stat(HiddenStat.ACCURACY, percentage);
+                roll.add_hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, percentage);
                 return true;
             });
 
@@ -1611,8 +1646,8 @@ var Barbs = Barbs || (function () {
         },
         'Soldier': {
             'Biding Blade': soldier_biding_blade,
-            'Dodge Roll': print_ability_description,  // TODO this could do more
-            'Double Time': print_ability_description,  // TODO this could do more
+            'Dodge Roll': print_ability_description,
+            'Double Time': soldier_double_time,
             'Fleetfoot Blade': soldier_fleetfoot_blade,
             'Intercept': print_ability_description,
             'Steadfast Strikes': soldier_steadfast_strikes,

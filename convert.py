@@ -63,6 +63,17 @@ def main():
     with open(os.path.join(DATA_PATH, 'skills_to_attributes.json'), 'w') as f:
         json.dump(skill_to_attr, f)
 
+    with open(os.path.join(DATA_PATH, 'skills.txt'), 'w') as f:
+        for skill_name, attr_tla in skill_to_attr.items():
+            string = "%s: new SkillObject('%s', '%s'),\n" % (
+                skill_name.replace(' ', '_').upper(),
+                skill_name,
+                attr_tla,
+            )
+            f.write(string)
+
+        f.write("ALL: new SkillObject('All', ''),\n")
+
     # Create a map of abilities in classes
     clazz_ability_map = {}
     for clazz in clazzes:
