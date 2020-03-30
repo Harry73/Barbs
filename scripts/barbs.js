@@ -1456,6 +1456,56 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function symbiote_strengthen_body(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+
+        const target_name = get_parameter('target', parameters);
+        if (target_name === null) {
+            chat(character, '"target" parameter is missing');
+            return;
+        }
+
+        const target_character = get_character_by_name(target_name);
+        if (target_character === null) {
+            return;
+        }
+
+        add_persistent_effect(character, ability, target_character, 6, Ordering.BEFORE(), RollTime.STAT, false,
+            function (char, roll, parameters) {
+                roll.add_stat_bonus(Stat.EVASION, 40);
+                // TODO: Increase AC by 40%. This is messed up because it's a percentage increase on a stat,
+                //  not a flat number.
+                return true;
+            });
+
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
+    function symbiote_strengthen_mind(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
+
+        const target_name = get_parameter('target', parameters);
+        if (target_name === null) {
+            chat(character, '"target" parameter is missing');
+            return;
+        }
+
+        const target_character = get_character_by_name(target_name);
+        if (target_character === null) {
+            return;
+        }
+
+        add_persistent_effect(character, ability, target_character, 60, Ordering.BEFORE(), RollTime.SKILL, false,
+            function (char, roll, parameters) {
+                roll.add_skill_bonus(Skill.ALL, 30);
+                return true;
+            });
+
+        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
     function symbiote_strengthen_soul(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
 
@@ -1661,8 +1711,8 @@ var Barbs = Barbs || (function () {
         },
         'Symbiote': {
             'Empower Soul': symbiote_empower_soul,
-            'Strengthen Body': print_ability_description,  // TODO this could do more
-            'Strengthen Mind': print_ability_description,  // TODO this could do more
+            'Strengthen Body': symbiote_strengthen_body,
+            'Strengthen Mind': symbiote_strengthen_mind,
             'Strengthen Soul': symbiote_strengthen_soul,
         },
         'Warlord': {
