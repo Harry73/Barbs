@@ -204,6 +204,7 @@ var BarbsComponents = BarbsComponents || (function () {
     const HiddenStat = {
         ACCURACY: '%s% accuracy',
         BUFF_STRIP: 'Strip %s buff(s) from the target',
+        FORCED_MOVEMENT: 'Forcibly move target %s ft',
         LETHALITY: '%s% lethality',
         PARALYZE: '%s% chance to paralyze',
         UNBLOCKABLE_CHANCE: '%s% chance to be unblockable',

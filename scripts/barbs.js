@@ -682,6 +682,32 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function aquamancer_tide(roll, roll_time, parameter) {
+        if (roll_time !== RollTime.ROLL) {
+            return true;
+        }
+
+        const pieces = parameter.split(' ');
+        const tide = pieces.splice(1).join(' ');
+
+        if (tide.toLowerCase() === 'flood tide') {
+            roll.add_multiplier(0.5, Damage.WATER, 'self');
+            if (HiddenStat.FORCED_MOVEMENT in roll.hidden_stats) {
+                roll.add_hidden_stat(HiddenStat.FORCED_MOVEMENT, 20);
+            }
+
+        } else if (tide.toLowerCase() === 'ebb tide') {
+            roll.add_multiplier(0.5, Damage.HEALING, 'self');
+            // TODO: buffs grant 20% general MR
+        } else {
+            chat(roll.character, 'Unknown tide for Aquamancer passive: ' + tide);
+            return false;
+        }
+
+        return true;
+    }
+
+
     function assassin_pursue_mark(roll, roll_time, parameter) {
         if (roll_time !== RollTime.ROLL) {
             return true;
@@ -755,6 +781,7 @@ var Barbs = Barbs || (function () {
         'misc_damage': arbitrary_damage,
         'pursued': assassin_pursue_mark,
         'spotting': sniper_spotter,
+        'tide': aquamancer_tide,
         'warper_cc': warper_opportunistic_predator,
     };
 
@@ -878,6 +905,20 @@ var Barbs = Barbs || (function () {
         roll.add_damage('6d6', Damage.HEALING);
         roll.add_effect('Cleanse a random condition on the target for every 6 you roll');
         do_roll(character, ability, roll, parameters, '');
+    }
+
+
+    function aquamancer_tidal_wave(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('8d6', Damage.WATER);
+        roll.add_effect('Leaves behind a field of shallow water that is difficult terrain for 1 hour');
+        do_roll(character, ability, roll, parameters, '');
+    }
+
+
+    function aquamancer_draught_of_vigor(character, ability, parameters) {
+        // NOTE: It's a "pick two of these effects" case
+        chat(character, 'Not yet implemented');
     }
 
 
@@ -1109,6 +1150,16 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('6d8', Damage.ICE);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
+        do_roll(character, ability, roll, parameters, '');
+    }
+
+
+    function dynamancer_spark_bolt(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('4d12', Damage.LIGHTNING);
+        roll.add_effect('50% chance to deal an additional d12 lightning magic damage');
+        roll.add_effect('30% to inflict Paralyze for 1 minute');
+        roll.add_effect('20% to inflict Stunned until the beginning of your next turn');
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1657,6 +1708,8 @@ var Barbs = Barbs || (function () {
         },
         'Aquamancer': {
             'Baptise': aquamancer_baptise,
+            'Tidal Wave': aquamancer_tidal_wave,
+            'Draught of Vigor': aquamancer_draught_of_vigor,
         },
         'Assassin': {
             'Backstab': assassin_backstab,
@@ -1694,6 +1747,9 @@ var Barbs = Barbs || (function () {
             // "Hunter's Guile": demon_hunter_hunters_guile,
             'Essence Scatter': print_ability_description,
             // 'Lifesteal Elegy': demon_hunter_lifesteal_elegy,
+        },
+        'Dynamancer': {
+            'Spark Bolt': dynamancer_spark_bolt,
         },
         'Enchanter': {
             'Mint Coinage': print_ability_description,
