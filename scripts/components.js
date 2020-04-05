@@ -8103,6 +8103,8 @@ var BarbsComponents = BarbsComponents || (function () {
         STAT: 'roll_time_stat',
         // Indicates that the effect should be applied when doing a skill check
         SKILL: 'roll_time_skill',
+
+        CONCENTRATION: 'roll_time_concentration',
         // Indicates that the effect should be applied after we know whether or not a roll was a crit
         ROLL: 'roll_time_roll',
         // Indicates that the effect should be applied before we roll for crit
@@ -8120,6 +8122,7 @@ var BarbsComponents = BarbsComponents || (function () {
             this.stats = {};
             this.hidden_stats = {};
             this.skills = {};
+            this.concentration_bonus = 0;
 
             this.crit = false;
             this.crit_chance = 0;
@@ -8175,6 +8178,10 @@ var BarbsComponents = BarbsComponents || (function () {
             } else {
                 this.skills[skill.name] = this.skills[skill.name] + '+%s'.format(bonus);
             }
+        }
+
+        add_concentration_bonus(bonus) {
+            this.concentration_bonus += bonus;
         }
 
         dump_multipliers() {
@@ -8386,6 +8393,10 @@ var BarbsComponents = BarbsComponents || (function () {
             this.apply = effect;
         }
 
+        static no_op_roll_effect() {
+            return new Effect(RollTime.ROLL, RollType.ALL, function () {});
+        }
+
         static stat_effect(stat, mod) {
             assert_not_null(stat, 'stat_effect() stat');
             assert_not_null(mod, 'stat_effect() mod');
@@ -8404,8 +8415,12 @@ var BarbsComponents = BarbsComponents || (function () {
             });
         }
 
-        static no_op_roll_effect() {
-            return new Effect(RollTime.ROLL, RollType.ALL, function () {});
+        static concentration_bonus(bonus) {
+            assert_not_null(bonus, 'concentration_bonus() bonus');
+
+            return new Effect(RollTime.CONCENTRATION, RollType.ALL, function (roll) {
+                roll.add_concentration_bonus(bonus);
+            });
         }
 
         static roll_damage(dmg, dmg_type, applicable_roll_type) {
@@ -8480,27 +8495,27 @@ var BarbsComponents = BarbsComponents || (function () {
             });
         }
 
-        static hidden_stat(value, stat, applicable_roll_type) {
+        static hidden_stat(hidden_stat, value, applicable_roll_type) {
             assert_not_null(value, 'hidden_stat() value');
-            assert_not_null(stat, 'hidden_stat() stat');
+            assert_not_null(hidden_stat, 'hidden_stat() stat');
             assert_not_null(applicable_roll_type, 'hidden_stat() applicable_roll_type');
 
             return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
-                    roll.add_hidden_stat(stat, value);
+                    roll.add_hidden_stat(hidden_stat, value);
                 }
             });
         }
 
-        static crit_hidden_stat(value, stat, applicable_roll_type) {
+        static crit_hidden_stat(hidden_stat, value, applicable_roll_type) {
             assert_not_null(value, 'crit_hidden_stat() value');
-            assert_not_null(stat, 'crit_hidden_stat() stat');
+            assert_not_null(hidden_stat, 'crit_hidden_stat() stat');
             assert_not_null(applicable_roll_type, 'crit_hidden_stat() applicable_roll_type');
 
             return new Effect(RollTime.ROLL, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
                     if (roll.crit) {
-                        roll.add_hidden_stat(stat, value);
+                        roll.add_hidden_stat(hidden_stat, value);
                     }
                 }
             });
@@ -8911,8 +8926,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.roll_effect('When thrown, this dagger cannot miss', RollType.ALL),
-                Effect.roll_effect('Inflict Paralysis', RollType.ALL),
+                Effect.roll_effect('When thrown, this dagger cannot miss', RollType.PHYSICAL),
+                Effect.roll_effect('Inflict Paralysis', RollType.PHYSICAL),
             ]
         ),
 
@@ -8963,7 +8978,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.AC, -20),
                 Effect.stat_effect(Stat.MANA, 40),
                 Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
-                // TODO? +30 to concentration checks
+                Effect.concentration_bonus(30),
             ]
         ),
 
@@ -8982,7 +8997,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.MANA, 60),
                 Effect.stat_effect(Stat.MANA_REGENERATION, 20),
                 Effect.stat_effect(Stat.HEALTH, 60),
-                // TODO: Your healing spells are 30% more effective
+                Effect.roll_multiplier(0.3, Damage.HEALING, RollType.HEALING),
             ]
         ),
 
@@ -9034,8 +9049,8 @@ var BarbsComponents = BarbsComponents || (function () {
             0, [], '',
             [
                 Effect.stat_effect(Stat.MANA, 40),
-                // TODO? +20 to concentration checks
-                // TODO: Your healing spells are 30% more effective
+                Effect.concentration_bonus(20),
+                Effect.roll_multiplier(0.3, Damage.HEALING, RollType.HEALING),
             ]
         ),
 

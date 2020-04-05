@@ -293,6 +293,20 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function roll_concentration(msg) {
+        const character = get_character(msg);
+        if (character === null) {
+            log('error, unknown character for ' + msg.who);
+            return;
+        }
+
+        const roll = get_roll_with_items_and_effects(character, RollTime.CONCENTRATION);
+        const roll_string = 'd100+%s'.format(roll.concentration_bonus);
+        chat(msg, total_format.format('Concentration Check', 'Roll', roll_string));
+
+    }
+
+
     // ################################################################################################################
     // Managing persistent effects
 
@@ -856,6 +870,14 @@ var Barbs = Barbs || (function () {
         });
 
         chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+    }
+
+
+    function aquamancer_baptise(character, ability, parameters) {
+        const roll = new Roll(character, RollType.HEALING);
+        roll.add_damage('6d6', Damage.HEALING);
+        roll.add_effect('Cleanse a random condition on the target for every 6 you roll');
+        do_roll(character, ability, roll, parameters, '');
     }
 
 
@@ -1633,6 +1655,9 @@ var Barbs = Barbs || (function () {
             'Cutting Winds': air_duelist_cutting_winds,
             'Mistral Bow': air_duelist_mistral_bow,
         },
+        'Aquamancer': {
+            'Baptise': aquamancer_baptise,
+        },
         'Assassin': {
             'Backstab': assassin_backstab,
             'Focus': assassin_focus,
@@ -1759,11 +1784,11 @@ var Barbs = Barbs || (function () {
 
         // Double check that the class and ability names are correct based on the master components list
         if (!(clazz in BarbsComponents.clazzes)) {
-            log('mismatched class %s'.format(clazz));
+            log('WARNING: mismatched class %s'.format(clazz));
         }
         if (!(BarbsComponents.clazzes[clazz].abilities.includes(ability))
                 && Object.keys(BarbsComponents.clazzes[clazz].passive)[0] !== ability) {
-            log('mismatched ability %s'.format(ability));
+            log('WARNING: mismatched ability %s'.format(ability));
         }
 
         const processor = abilities_processors[clazz][ability];
@@ -1974,6 +1999,7 @@ var Barbs = Barbs || (function () {
         'item': roll_item,
         'stat': roll_stat,
         'skill': roll_skill,
+        'concentration': roll_concentration,
         'ability': process_ability,
         'remove_effect': remove_persistent_effect,
     };
