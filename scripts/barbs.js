@@ -612,6 +612,7 @@ var Barbs = Barbs || (function () {
         });
 
         let effects = Array.from(roll.effects);
+        // TODO: only add specific-magic-type penetrations if that damage type is in the roll
         Object.keys(roll.hidden_stats).forEach(function (hidden_stat_format) {
             const formatted_hidden_stat = hidden_stat_format.format(roll.hidden_stats[hidden_stat_format]);
             effects.push('<li>%s</li>'.format(formatted_hidden_stat));
@@ -1814,7 +1815,7 @@ var Barbs = Barbs || (function () {
     function process_ability(msg) {
         const character = get_character(msg);
         if (character === null) {
-            log('error, unknown character for ' + msg.who);
+            sendChat(msg.who, 'error, unknown character for ' + msg.who);
             return;
         }
 

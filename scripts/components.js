@@ -8113,6 +8113,26 @@ var BarbsComponents = BarbsComponents || (function () {
     };
 
 
+    // This exists so that we can get a proper number for critical hit chance from item effects. Normally we build
+    // a math expression, but for crit chance we'll want an actual number.
+    class FakeRoll {
+        constructor() {
+            this.crit_chance = 0;
+        }
+
+        add_stat_bonus(stat, bonus) {
+            assert_not_null(stat, 'fake add_stat_bonus() stat');
+            assert_not_null(bonus, 'fake add_stat_bonus() bonus');
+
+            if (stat !== Stat.CRITICAL_HIT_CHANCE) {
+                return;
+            }
+
+            this.crit_chance += bonus;
+        }
+    }
+
+
     class Roll {
         constructor(character, roll_type) {
             this.character = character;
@@ -8295,14 +8315,18 @@ var BarbsComponents = BarbsComponents || (function () {
             const attribute = parseInt(getAttrByName(self.character.id, Stat.CRITICAL_HIT_CHANCE.attr_tla));
             final_crit_chance += Stat.CRITICAL_HIT_CHANCE.value(attribute);
 
-            // Then add in crit chance boosts from items
+            // Add in crit chance boosts from items. This uses a horrifying fake class to get items to add up their
+            // bonus into one number, so that we can get that one number and add it to the crit chance. Normally we
+            // don't need the number, and are fine with just a math expression, but here we want it.
+            let fake_roll = new FakeRoll();
             _.each(self.character.items, function (item) {
                 for (let i = 0; i < item.effects.length; i++) {
-                     if (item.effects[i].roll_time === RollTime.STAT) {
-                        final_crit_chance += item.effects[i].apply('critical hit chance');
+                    if (item.effects[i].roll_time === RollTime.STAT) {
+                        item.effects[i].apply(fake_roll);
                     }
                 }
             });
+            final_crit_chance += fake_roll.crit_chance;
 
             // Crit chance can't go over 100%, which we'll interpret as 101 because of the crit chance math.
             return Math.min(101, final_crit_chance);
