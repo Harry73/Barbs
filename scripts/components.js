@@ -9112,6 +9112,182 @@ var BarbsComponents = BarbsComponents || (function () {
             ]
         ),
 
+        new Item(
+            "Ring of Critical Damage",
+            ItemType.ACCESSORY,
+            ItemRarity.MAGIC,
+            ItemSlot.RING,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.crit_damage_mod(100),
+            ]
+        ),
+
+        new Item(
+            "Bestial Skillful Belt of the Working Mage",
+            ItemType.ACCESSORY,
+            ItemRarity.RARE,
+            ItemSlot.BELT,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.HEALTH, 40),
+                Effect.stat_effect(Stat.STAMINA, 40),
+                Effect.stat_effect(Stat.MANA, 40),
+                Effect.skill_effect(Skill.ATHLETICS_BALANCE, 30),
+            ]
+        ),
+
+        new Item(
+            "Energetic Enchanted Band of Lucky Blows",
+            ItemType.ACCESSORY,
+            ItemRarity.MAGIC,
+            ItemSlot.RING,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.STAMINA, 30),
+                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 5),
+            ]
+        ),
+
+        new Item(
+            "Bestial Worker’s Skillful Amulet of the Counterspelling Mage",
+            ItemType.ACCESSORY,
+            ItemRarity.RARE,
+            ItemSlot.NECK,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0,
+            [
+                'Spend 40 mana as a reaction to counter a spell within 30 ft',
+            ],
+            '',
+            [
+                Effect.skill_effect(Skill.MAGIC_CONJURATION, 30),
+                Effect.stat_effect(Stat.HEALTH, 30),
+                Effect.stat_effect(Stat.STAMINA, 30),
+                Effect.stat_effect(Stat.MANA, 30),
+            ]
+        ),
+
+        new Item(
+            "Steadfast Resilient Slippers of Quickness",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.FEET,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.CONDITION_RESIST, 20),
+                Effect.stat_effect(Stat.AC, -20),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 15),
+                // TODO 50% stun resist
+                // TODO 50% slow resist
+            ]
+        ),
+
+        new Item(
+            "Worker’s Resistant Resilient Gloves of the Evasive Viper",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.HANDS,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.AC, -20),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 20),
+                Effect.stat_effect(Stat.STAMINA, 40),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.stat_effect(Stat.EVASION, 10),
+            ]
+        ),
+
+        new Item(
+            "Raptor's Resilient Shawl of the Championed Wizard",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.HANDS,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.AC, -20),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 20),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 15),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 15),
+                Effect.stat_effect(Stat.HEALTH, 55),
+            ]
+        ),
+
+        new Item(
+            "Phasing Powerful Sharpened Knife of Stripping Penetration",
+            ItemType.SHORTBLADE,
+            ItemRarity.RARE,
+            ItemSlot.MAIN_HAND,
+            [],
+            Effect.roll_damage('2d4', Damage.PHYSICAL, RollType.PHYSICAL),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 10),
+                Effect.crit_damage_mod(100),
+                Effect.crit_effect('Ignore 100% of target AC', RollType.PHYSICAL),
+                Effect.crit_effect('Strip 2 buffs from target', RollType.PHYSICAL),
+                Effect.crit_damage('7d10', Damage.PHYSICAL, RollType.PHYSICAL),
+            ]
+        ),
+
+        new Item(
+            "Insulated Resilient Parrying Dagger of Shaded Work",
+            ItemType.SHORTBLADE,
+            ItemRarity.RARE,
+            ItemSlot.OFFHAND,
+            [],
+            Effect.roll_damage('d4', Damage.PHYSICAL, RollType.PHYSICAL),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.EVASION, 20),
+                Effect.stat_effect(Stat.AC, -20),
+                Effect.stat_effect(Stat.STAMINA, 30),
+                // TODO: 20% Lightning MR
+                // TODO: 20% Light MR
+            ]
+        ),
+
+        new Item(
+            "Evasive Pristine Robes of Resistance",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.BODY,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.stat_effect(Stat.AC, -10),
+                Effect.stat_effect(Stat.EVASION, 10),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 30),
+            ]
+        ),
+
     ];
 
 

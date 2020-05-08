@@ -1959,6 +1959,7 @@ var Barbs = Barbs || (function () {
 
         // End effects cast by the character who is currently up
         for (let i = 0; i < persistent_effects.length; i++) {
+            // TODO: why is this necessary?
             if (persistent_effects[i].caster !== current_character.name) {
                 continue;
             }
@@ -1984,6 +1985,9 @@ var Barbs = Barbs || (function () {
             }
 
             const previous_character = get_character_by_name(previous_name);
+            if (previous_character === null) {
+                return;
+            }
 
             for (let i = 0; i < persistent_effects.length; i++) {
                 if (persistent_effects[i].caster !== previous_character.name) {
