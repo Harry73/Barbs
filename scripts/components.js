@@ -9338,6 +9338,188 @@ var BarbsComponents = BarbsComponents || (function () {
             ]
         ),
 
+        new Item(
+            "Resistant Viper's Enchanted Helm of Accurate Solidarity",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.HEAD,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.stat_effect(Stat.AC, 10),
+                Effect.stat_effect(Stat.EVASION, -10),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
+                // TODO: 50% Stun CR
+            ]
+        ),
+
+        new Item(
+            "Resistant Viper's Enchanted Chestplate of the Working Beast",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.BODY,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.stat_effect(Stat.AC, 10),
+                Effect.stat_effect(Stat.EVASION, -10),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                Effect.stat_effect(Stat.HEALTH, 50),
+                Effect.stat_effect(Stat.STAMINA, 50),
+            ]
+        ),
+
+        new Item(
+            "Resistant Viper's Enchanted Gauntlets of the Working Beast",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.HANDS,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.stat_effect(Stat.AC, 10),
+                Effect.stat_effect(Stat.EVASION, -10),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                Effect.stat_effect(Stat.HEALTH, 50),
+                Effect.stat_effect(Stat.STAMINA, 50),
+            ]
+        ),
+
+        new Item(
+            "Resistant Viper's Enchanted Greaves of Solid Adamantium",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.FEET,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.stat_effect(Stat.AC, 10),
+                Effect.stat_effect(Stat.EVASION, -10),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                // TODO: 50% Stun Resist
+                // TODO: 15% Crit Strike Resist
+            ]
+        ),
+
+        new Item(
+            "Resistant Viper's Enchanted Amulet of the Working Beast",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.NECK,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                Effect.stat_effect(Stat.HEALTH, 50),
+                Effect.stat_effect(Stat.STAMINA, 50),
+            ]
+        ),
+
+        new Item(
+            "Powerful Slaying Skillful Ring of Accurate Minion Slaying",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.RING,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
+                Effect.roll_damage('3d10', Damage.PHYSICAL, RollType.ALL),
+                Effect.roll_multiplier(0.2, Damage.PHYSICAL, RollType.ALL),
+                //TODO: 20% Minion Lethality
+            ]
+        ),
+
+        new Item(
+            "Powerful Slaying Enchanted Ring of Accuracy",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.RING,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.hidden_stat(HiddenStat.ACCURACY, 25, RollType.ALL),
+                Effect.roll_damage('4d10', Damage.PHYSICAL, RollType.ALL),
+                Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.ALL),
+                // TODO: 20% Minion Lethality
+            ]
+        ),
+
+        new Item(
+            "Resistant Viper's Enchanted Buckle of the Working Beast",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.BELT,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.NONE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                Effect.stat_effect(Stat.HEALTH, 40),
+                Effect.stat_effect(Stat.STAMINA, 40),
+            ]
+        ),
+
+        new Item(
+            "Slayer",
+            ItemType.SHIELD,
+            ItemRarity.RARE,
+            ItemSlot.MAIN_HAND,
+            [
+                skill_condition('Weapons: Shields', '5'),
+            ],
+            Effect.roll_damage('d10', Damage.PHYSICAL, RollType.PHYSICAL),
+            ItemScaler.MELEE,
+            0, [], '',
+            [
+                Effect.roll_damage('4d10', Damage.PHYSICAL, RollType.PHYSICAL),
+                Effect.roll_multiplier(0.2, Damage.PHYSICAL, RollType.ALL),
+                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
+                // TODO: 50% Minion Lethality
+            ]
+        ),
+
+        new Item(
+            "Vladsbane",
+            ItemType.SHIELD,
+            ItemRarity.RARE,
+            ItemSlot.OFFHAND,
+            [
+                skill_condition('Weapons: Shields', '5'),
+            ],
+            Effect.roll_damage('d10', Damage.PHYSICAL, RollType.PHYSICAL),
+            ItemScaler.MELEE,
+            0, [], '',
+            [
+                Effect.roll_multiplier(0.4, Damage.PHYSICAL, RollType.ALL),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                // TODO: 70% Minion Lethality
+                // TODO: 15% Critical Strike Resist
+            ]
+        ),
+
     ];
 
 
