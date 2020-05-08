@@ -931,12 +931,12 @@ var Barbs = Barbs || (function () {
         }
 
         const roll = new Roll(character, RollType.PHYSICAL);
-        if (parameter === 'true') {
-            roll.add_damage('4+4+4', Damage.PHYSICAL);
-        } else {
-            roll.add_damage('3d4', Damage.PHYSICAL);
-        }
+        roll.add_damage('3d4', Damage.PHYSICAL);
         add_scale_damage(character, roll);
+
+        if (parameter === 'true') {
+            roll.max_damage = true;
+        }
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -976,6 +976,7 @@ var Barbs = Barbs || (function () {
                 add_scale_damage(character, roll);
                 roll.add_hidden_stat(HiddenStat.LETHALITY, 5 * dice_divisions[i]);
 
+                roll.copy_damages(dummy_roll);
                 roll.copy_multipliers(dummy_roll);
                 const rolls_per_type = roll.roll();
                 format_and_send_roll(character, '%s (%sd4)'.format(ability, dice_divisions[i]), roll,

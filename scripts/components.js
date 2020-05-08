@@ -8148,6 +8148,8 @@ var BarbsComponents = BarbsComponents || (function () {
             this.crit = false;
             this.crit_chance = 0;
             this.crit_damage_mod = 2;
+
+            this.max_damage = false;
         }
 
         add_damage(value, type) {
@@ -8217,6 +8219,15 @@ var BarbsComponents = BarbsComponents || (function () {
             }
         }
 
+        copy_damages(other_roll) {
+            const types = Object.keys(other_roll.damages);
+            for (let i = 0; i < types.length; i++) {
+                const type = types[i];
+                const value = other_roll.damages[type];
+                this.add_damage(value, type);
+            }
+        }
+
         copy_multipliers(other_roll) {
             const types = Object.keys(other_roll.multipliers);
             for (let i = 0; i < types.length; i++) {
@@ -8278,9 +8289,48 @@ var BarbsComponents = BarbsComponents || (function () {
             return multiplier_string;
         }
 
+        convert_to_max_damages() {
+            const types = Object.keys(this.damages);
+            for (let i = 0; i < types.length; i++) {
+                const type = types[i];
+                const original_value = this.damages[type];
+
+                const dmg_pieces = original_value.split('+');
+                let max_dmg = '';
+                for (let j = 0; j < dmg_pieces.length; j++) {
+                    const dmg_piece = dmg_pieces[j];
+                    if (!dmg_piece.includes('d')) {
+                        if (max_dmg === '') {
+                            max_dmg = dmg_piece;
+                        } else {
+                            max_dmg = max_dmg + '+' + dmg_piece;
+                        }
+
+                    } else {
+                        const count = parseInt(dmg_piece.split('d')[0]);
+                        const die = dmg_piece.split('d')[1];
+
+                        for (let k = 0; k < count; k++) {
+                            if (max_dmg === '') {
+                                max_dmg = die;
+                            } else {
+                                max_dmg = max_dmg + '+' + die;
+                            }
+                        }
+                    }
+                }
+
+                this.damages[type] = max_dmg;
+            }
+        }
+
         roll() {
             const self = this;
             const rolls = {};
+
+            if (self.max_damage) {
+                self.convert_to_max_damages();
+            }
 
             Object.keys(self.damages).forEach(function (type) {
                 let dmg_str = '(%s)'.format(self.damages[type]);
