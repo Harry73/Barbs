@@ -892,10 +892,10 @@ var Barbs = Barbs || (function () {
         const ability_info = get_ability_info(ability);
 
         add_persistent_effect(character, ability, character, 6,  Ordering.BEFORE(), RollTime.ROLL, true,
-                              function (character, roll, parameters) {
-            roll.add_effect('Bow attacks push target 5ft away');
-            return true;
-        });
+            function (character, roll, parameters) {
+                roll.add_effect('Bow attacks push target 5ft away');
+                return true;
+            });
 
         chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
     }
@@ -1701,6 +1701,30 @@ var Barbs = Barbs || (function () {
         chat(character, ability_block_format.format(ability, 'Warleader', clazz.passive['Warleader']));
     }
 
+    function evangelist_magia_erebia(character, ability, parameters) {
+        const chosen_spell = get_parameter('spell', parameters);
+        if (chosen_spell == null) {
+            chat(character, '"spell" parameter, the absorbed spell, is missing');
+            return;
+        }
+
+        // Duration is effectively infinite, the user has to dispel it
+        // TODO: add parameter to dispel ME
+        const duration = 5000;
+
+        if (chosen_spell === 'KB') {
+            add_persistent_effect(character, ability, character, duration, Ordering.BEFORE(), RollTime.ROLL, false,
+                function (char, roll, parameters) {
+                    roll.add_damage('6d8', Damage.ICE);
+                    roll.add_damage('6d8', Damage.DARK);
+                    return true;
+                }
+            );
+            chat(character,'KB absorbed');
+        } else {
+            chat(character, 'Unrecognized spell "%s"'.format(chosen_spell));
+        }
+    }
 
     const abilities_processors = {
         'Air Duelist': {
@@ -1757,6 +1781,9 @@ var Barbs = Barbs || (function () {
             'Mint Coinage': print_ability_description,
             'Modify Weapon': enchanter_modify_weapon,
             'Reconstruct Barrier': print_ability_description,
+        },
+        'Evangelist': {
+            'Magia Erebia': evangelist_magia_erebia,
         },
         'Lightning Duelist': {
             'Arc Lightning': lightning_duelist_arc_lightning,
