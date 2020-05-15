@@ -1,7 +1,7 @@
-from src.components.component import Component
+from src.parsing.component import Component
 
 """
-Condition: {name}
+Buff: {name}
 
 {duration}
 
@@ -9,10 +9,10 @@ Condition: {name}
 """
 
 
-class Condition(Component):
+class Buff(Component):
 
     def __init__(self, name, duration, description):
-        super(Condition, self).__init__(name, 'Condition')
+        super(Buff, self).__init__(name, 'Buff')
         self.duration = duration
         self.description = description
 
@@ -23,7 +23,7 @@ class Condition(Component):
 
     def to_json(self):
         return {
-            'type': 'condition',
+            'type': 'buff',
             'name': self.name,
             'duration': self.duration,
             'description': self.description,

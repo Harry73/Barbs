@@ -1,9 +1,9 @@
-from src.components.attribute import Attribute
-from src.components.buff import Buff
-from src.components.condition import Condition
-from src.components.clazz import Clazz
-from src.components.race import Race
-from src.components.skill import Skill
+from src.parsing.attribute import Attribute
+from src.parsing.buff import Buff
+from src.parsing.condition import Condition
+from src.parsing.clazz import Clazz
+from src.parsing.race import Race
+from src.parsing.skill import Skill
 
 
 # Cut off period at the end, if there is one

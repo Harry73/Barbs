@@ -1,4 +1,4 @@
-from src.components.component import Component
+from src.parsing.component import Component
 
 """
 {class} ability: {name}

@@ -3,7 +3,7 @@
 import os
 import json
 
-from src.parser import parse_data
+from src.parsing.parser import parse_data
 
 CURRENT_PATH = os.getcwd()
 DATA_PATH = os.path.join(CURRENT_PATH, 'data')

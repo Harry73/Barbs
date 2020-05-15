@@ -1,6 +1,6 @@
-from src.components.branch import Branch
-from src.components.ability import Ability
-from src.components.component import Component
+from src.parsing.branch import Branch
+from src.parsing.ability import Ability
+from src.parsing.component import Component
 
 
 class Clazz(Component):
