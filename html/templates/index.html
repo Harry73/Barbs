@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://html5-templates.com/" />
+    <title>Responsive HTML5 Page Layout Template</title>
+    <meta name="description" content="Simple HTML5 Page layout template with header, footer, sidebar etc.">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+
+<body>
+	<header>
+		<div id="logo">
+			<img src="https://i.imgur.com/6m8DpgS.png">
+		</div>
+	</header>
+
+	<section id="pageContent">
+		<main role="main">
+			<article>
+				<h2>Foreword</h2>
+				<p>To the readers of this document,</p><br>
+				<p>2013 marked the beginning of my journey as a Dungeon Master. I went to my college’s Dungeons and Dragons club very early in my first semester there, and got the chance to play 3.5 edition with a very good DM. That same DM learned it was my first time playing, and encouraged me to try to learn his craft as well. As a total newbie to tabletop gaming, he suggested I try a module called Barbarians of Lemuria.</p><br>
+				<p>Barbarians of Lemuria is a tabletop RPG designed by Simon Washbourne, based off the characters and settings made by Lin Carter. The game’s mechanics are the simplest I’ve ever seen for an RPG; the rulebook only has about 20 pages of actual mechanical rules (the rest of the book is fluff about Lin Carter’s setting). The system was suggested to me as an easy game to DM for that didn’t require too much reading for me or my players. When I began my first campaign, I didn’t use any of Carter’s assets, and instead created my setting and characters from the ground up. My players consisted of a number of friends from my home town, and we met at least once a week to dive into my version of Lemuria.</p><br>
+				<p>I learned a lot about how to DM from that first campaign, which eventually took on the affectionate nickname of Barbs. I learned how to craft a story, to create characters and places, and much more. But the extremely simplified rules left much more to be desired by me and my players. Partly because of my inexperience DMing and partly because of the growing amount of experience my group was accumulating, Barbs was quickly becoming too bland.</p><br>
+				<p>And so I set out to fix the lack of content, and began rapidly homebrewing my own prestige classes, crafting systems, and skills to use in combat. Unfortunately, I was and still am very poor at actual preparation. What I made in the beginning were essentially just ideas, or just names of classes, and I did not bother to flesh them out until one of my players explored those options. Every new class brought new skills that had to be scaled to the ever growing threats that I presented my players. They grew stronger, and I scaled up the difficulty, and the vicious cycle turned Barbs into a horrific monstrosity of power creep. I think the moment that I realized things had gone too far was when my players almost destroyed an entire city out of pure whim.</p><br>
+				<p>That campaign lasted for a year and a half. Eventually, many of us grew bored with the story I had crafted, and frustrated with the sheer number of players (which was 10 people at one point) and the messy, insensible complexity of the game. We moved on to Dungeons and Dragons 4e, and eventually 5e. I’m currently a DM for the same players split into two separate groups for D&D 5e, both playing the same, brutally difficult campaign, and we’re having a blast.</p><br>
+				<p>And yet despite all of Barbs’ shortcomings, both from a player and a creator standpoint, my friends and I still find ourselves talking about our campaign, dreaming about what it would be like to return to it, laughing about all of the insane skills and classes I had made, and appreciating what it was to us. Now, I’ll be the first to say, as the madman responsible for creating that mess, that we cannot go back to Barbs in any serious fashion. I’m not even sure that I could properly DM for it again. But sometime before the campaign ended, I was on the brink of overhauling the class and skill system to try and simplify it, so that turns in combat were easier to manage and didn’t take as long.</p><br>
+				<p>Well, I’ve been recently inspired to try and take that overhaul and make a completely new system. Bio Duality (name subject to change) is my attempt at a spiritual successor to the Barbs campaign I created in my freshman year. To be honest, this foreword is the first part of this book that I’m writing, and I’m not sure that this will ever come to completion, especially considering how busy my personal and professional life is getting. But, if this game does ever see the light of day, than I hope that anyone who gives it a try will be able to capture some of the crazy fun that I had with its predecessor. And so, to the readers of this document, I hope that soon you will become the players of this game, at least until your campaign dies in a blazing fireball of complexity and ridiculousness that mine did. And hopefully you’ll revel in the chaos, too.</p><br>
+				<p>Sincerely,</p>
+				<p>Adam Chiyezhan</p>
+			</article>
+
+			<article>
+				<h2>Design Goals</h2>
+				<p>In creating B2 (which is what this document will use as an abbreviation for Bio Duality henceforth), there are various design goals I’d like to keep in mind, inspired by my experiences with Barbs and with D&D.</p><br>
+				<li><b>Deep and Wide Complexity</b> – Barbs had a level of complexity that, while eventually led to its downfall, was fun while it lasted. I’d like to go beyond the number of skills, classes, and attributes that the original game had, so that players will have character progress options for a long time, but this time I’d like them to synergize more intelligently</li><br>
+				<li><b>Proper Documentation</b> – Barbs suffered largely because I made every skill, class, and event without putting serious thought into it. This document will hopefully serve as a full record of all the rules of the game, and that way I won’t have to amend or repair anything after its done any damage to the game</li><br>
+				<li><b>Avoid Power Creep</b> – Barbs became an absolute nightmare to DM for, forcing me to up the ante so often that fights became crazy, long, titanic events and PvP was completely out of the question. This time I want to make sure that there is sensible scaling and even power levels across classes, so that when a player gains a new class or learns a new skill, they are receiving new, flexible options, instead of just getting a direct buff to their power level</li><br>
+				<li><b>Heavy Emphasis on Crafting</b> – One of my favorite additions I made to Barbs, and one I’m upset isn’t more prevalent in D&D 5e, is the complex and detailed crafting systems for armor, potions, etc. While I won’t exactly be copy-pasting them to this game, there will be a variety of crafting options for players to explore for hours</li><br>
+				<li><b>Emphasis on Roleplay and Problem Solving</b> – I’ve always been the type to prefer roleplay to combat. I know that every player is different and some are the exact opposite of me. But I figure that since this is my original game, it should have a focus on the parts of tabletop gaming that I like the most. That being said, I’m sure the end product will have plenty of combat-centric skills and classes anyway</li><br>
+				<li><b>Highly Specific Terminology</b> – In other RPGs, you might be used to the words, “skills,” “abilities,” and “attributes,” meaning largely the same thing, but in B2, these terms will all refer to different things entirely. For a game as complex and meaty as I’m planning, the terminology will have to be tight, sensible, and familiar. I’m not going to be pulling any punches with the game’s design, so DMs and players need to be just as vigilant with what they call things as this document will be</li><br>
+			</article>
+
+			<article>
+				<h2>System Basics</h2>
+				<p>B2 is a <b><i>d100 system</i></b>; that is, most rolls are based upon rolling 2d10, where one dice represents the tens place and the other represents the ones place, for a result lying between 1-100 inclusive. The reason I’ve decided to go the route of a d100 system instead of a more typical d20 system that Barbarians of Lemuria and Dungeons and Dragons both use is because it will more effectively support the high complexity that I intend for the game. As such, rolling for success will come down to rolling d100 and adding modifiers based on your character’s attributes and skills.</p><br>
+				<p>Because I’m of the mind that a DM is best suited making their own setting and world, this document will primarily only feature characterization options and rules, as well as a small mechanics section. While the sheer number of skills should cover most situations in which a player attempts an action, the DM should feel free to use whatever mix of skills he or she deems necessary for any action that does not strictly match an available skill.</p><br>
+				<p>A player character (PC) is defined by the following non-mechanical, flavorful aspects: <b><i>name, gender, appearance</i></b>, and  <b><i>background</i></b>. The mechanical aspects that go behind creating a player are the <b><i>race, attributes, skills</i></b>, and <b><i>classes</i></b> the PC has, although the initial creation of a Level 1 PC will only require the selection of a race and the distribution of attributes. PCs gain skills and classes as they discover them throughout a campaign. If you desire to make a character who is higher than Level 1, either give the player a starting set of skills/classes appropriate to their background or desired method of play, or provide them a suitable number of additional points to grow their character to a proper level.</p><br>
+				<p>When a player desires to take an action, the DM decides whether that action requires a d100 roll to see if the action is successful. As a general rule of thumb, have your players roll if the action they are taking might have either a chance of failure or of success, and if those chances depend on the personal ability of the PC. Then, decide what kind of check is required. These <b><i>skill checks</i></b> involve rolling d100, then adding two modifiers. The first modifier is dependent on the skill rank in question. The second modifier is dependent on the attribute value that corresponds to the skill in question (each skill will only correspond to a single attribute, although unlocking any given skill may require certain levels of multiple attributes). After your PC rolls, decide whether their roll was high enough to achieve success.</p><br>
+				<p>For example, let’s say Timmy wants to fish for a trout. The skill being used is Fishing, and if Timmy is F rank in Fishing, that means he gets a +5 skill modifier. Let’s also say that Timmy’s Dexterity is +5, which gets added as a flat bonus. You, as the DM, decide that catching the trout requires a roll of at least 50. Timmy rolls a 42, and adds +10 for a final result of 52, and is successful in catching the trout. You might decide what size the trout is based on how much higher than the target roll Timmy gets, or it can be a binary success/failure.</p><br>
+				<p>Outside of combat, the actions taken by a PC are not usually under time constraints, and as such PCs can take whatever types of actions they are capable of in any order and at any time. Inside of combat, time is limited to what you can complete in a <b><i>turn</i></b>. Every round of combat allows each entity currently engaged to take a turn. A turn consists of a <b><i>Move Action</i></b>, a <b><i>Major Action</i></b> and a <b><i>Minor Action</i></b>. A Move Action allows the entity to move a certain distance depending on its attributes. A Major Action is usually performing a skill check, using a class ability, attacking with a weapon, or interacting with another entity in some meaningful way. A Minor Action could be using a class ability, interacting with a held/stored item, or a variety of shorter, easier tasks that the DM feels does not constitute a Major Action. The PC is allowed to reduce a Move Action to a Major or Minor action, and a Major Action can be reduced to a Minor action. What this means is that a PC, during their turn in combat, might do something like move up to an enemy, then attack with a sword, and then drink a potion from his pack, or maybe he might spend his entire turn drinking three potions from his pack, or maybe he might drink one potion and then take two attack actions on an adjacent enemy.</p><br>
+				<p>AP (Advancement Points) are rewarded by the DM to players so that players can progress their character’s attributes, skills, and classes. PC Level starts at 0, and each AP raises the level by one, making PC Level a good way for a player to keep track of how many AP they’ve received.</p><br>
+				<p>And that’s essentially it for the most basic rules of play. The rest of this document will have explanations for all of the PC options such as races, attributes, skills, and classes, and is meant as a guide to creating a character. The document will finish with a number of crafting systems and downtime activities and all of the details that these systems would require.</p><br>
+			</article>
+
+			<article>
+				<h2>Attributes</h2>
+				{attributes}
+			</article>
+
+			<article>
+				<h2>Races</h2>
+				<p>Before deciding your character’s name, appearance, and background, it might first serve you to select the race of your character, as it will have a large bearing on all other aspects of your character’s creation. Each race has a generalized set of guidelines for appearance and behavior (the behavioral guidelines need not be strictly followed) as well as two racial traits which are unaffected by any other attributes, skills, or classes (consider these traits to be freebies which may or may not have a significant impact on your adventures). You might decide on your race based on which traits you want, or you might pick your race because you have a specific appearance and background in mind.</p><br>
+
+				{races}
+				<br>
+
+				<p><b>Racial Languages</b></p><br>
+				<li>Celestial: Aasimar, Shifters</li>
+				<li>Infernal: Demonspawn, Djinn</li>
+				<li>Elvish: Elves, Arrists</li>
+				<li>Dwarvish: Dwarves, Cyclopses</li>
+				<li>Aquan: Overminds, Merfolk</li>
+				<li>Sylvan: Dryads, Manti</li>
+				<li>Anima: Beastkin, Kajeem</li>
+				<li>Old Common: Vampires, Humans</li>
+				<li>Mutus: Shades, Chrom</li>
+				<li>Energia: Manaliths, Zoltrons</li>
+			</article>
+
+			<article>
+				<h2>Buffs and Conditions</h2>
+				<h3>Buffs</h3><br>
+				<p>A buff is any effect, magical or not, that is beneficial to an entity. Buffs can be applied by a variety of sources, such as items or abilities. Buffs can also be stripped, or removed, by items or abilities. Most buffs have a standard duration, which could vary based on the source applying them. While many abilities grant unique buffs, the following list of buffs are common and are granted by many sources (all mentions of “you” or “your” refer to the afflicted entity):</p><br>
+
+				{buffs_and_conditions}
+				<br>
+
+				<h3>Conditions</h3><br>
+				<p>A condition is any effect, magical or not, that is detrimental to an entity. Conditions can be applied by a variety of sources, such as items or abilities. Conditions can also be cleansed, or removed, by items or abilities. Most conditions have a standard duration, which could vary based on the source applying them. While many abilities inflict unique conditions, the following list of conditions are global and are granted by many sources (all mentions of “you” or “your” refer to the afflicted entity):</p>
+			</article>
+
+			<article>
+				<h2>Additional Rules</h2>
+
+				<h3>Concentration</h3><br>
+				<p>Some spells and abilities require concentration to maintain. You may concentrate on a number of effects up to your Concentration Limit, which is a stat defined by your Focus as well as by gear. If you try and concentrate on a new effect when you are already at your limit, you choose to either drop concentration on an effect to start concentrating on the new one, or to fail to begin concentration on the new one.</p><br>
+				<p>When you take damage, you must roll to maintain concentration. You roll d100 against a DC of X, where X is twice as much damage you took. You can additionally roll a skill check and add the result of that check to your initial roll, if applicable (most commonly, this will be a Pain Tolerance check if you have the skill, but other skills could be used at the discretion of the DM). If you succeed at the roll, you maintain concentration on all effects. If you fail at the roll, you break concentration on all effects, and they all immediately end.</p><br>
+
+				<h3>Misfire Effects</h3><br>
+				<p>When you use a firearm’s primary or secondary fire, you roll for the firearm’s misfire chance. Every firearm has a misfire chance between 0% and 100%, which describes the odds that your firearm will instead malfunction when you try and fire it. If you have a 50% misfire chance, you need to roll at least a 51 to avoid misfire. When you misfire, instead of doing the damage and effects of the chosen fire type, you roll a d100 and compare it to the following chart:</p><br>
+
+				<table style="width:100%">
+					<tr>
+						<th>D100 Roll</th>
+						<th>Effect</th>
+					</tr>
+					<tr>
+						<td>1-50</td>
+						<td>The gunshot fails and nothing else happens.</td>
+					</tr>
+					<tr>
+						<td>51-75</td>
+						<td>The gunshot fails and the gun becomes jammed for 3 turns.</td>
+					</tr>
+					<tr>
+						<td>76-90</td>
+						<td>The gunshot fails and the firearm becomes damaged, requiring minor repairs.</td>
+					</tr>
+					<tr>
+						<td>91-100</td>
+						<td>The gunshot fails and the firearm becomes damaged, requiring major repairs.</td>
+					</tr>
+				</table><br>
+
+				<p>Minor repairs can be performed by a player, and require an hour of work and a DC 70 skill check that is appropriate (possible choices include Crafting: Bullet Weapons, Tinkering, etc.). Major repairs cannot be performed by a player; you must pay a gunsmith NPC to perform repairs for you.</p><br>
+
+				<h3>Running an Organization</h3><br>
+				<p><b>Introduction</b></p><br>
+				<p>The following document outlines the process of successfully starting and managing an organization of NPCs. Reasons for running an organization include maintaining a steady source of income, influencing a region economically and/or politically, and completing specific long term goals or missions.</p><br>
+
+				<p><b>Organization Type</b></p><br>
+				<p>First, choose what type of organization you’d like to run and what its goals will be. The following is a list of potential ideas, but this list is not exhaustive, and players are encouraged to be as specific or as broad as they would like:</p><br>
+				<li>Adventurer’s Guild – with the goal of acquiring and nurturing exceptional adventuring talent and handling threats on a local, regional, or global scale</li>
+				<li>Criminal Syndicate – examples including thieves’ guilds or smuggling crews, with the goal of making money and protecting talent from the law</li>
+				<li>University – examples including magic schools or art schools, with the goal of nurturing talent and gaining revenue through tuition and board</li>
+				<li>Entertainment – examples including opera houses, traveling theater troupes, etc, with the goal of gaining revenue and notoriety</li><br>
+				<p>Notably, if you intend to make an organization, you should have proper long term goals that require a lot of manpower. You don’t need to make an organization to complete a job that you could do yourself in a day.</p><br>
+
+				<p><b>Upfront Costs</b></p><br>
+				<p>After selecting a type of organization you’d like to run, you need to be prepared to pay the upfront costs for establishment. This usually involves purchasing some sort of building at the very least, but might also include paying for licenses granted by the local government or making initial investments elsewhere. The price of buildings and land varies greatly based on where you intend to establish your headquarters. How much space you need depends heavily on what kind of organization you are building, and you may need to pay extra for certain types of amenities such as housing. Players should also take care to have enough money to pay employees if applicable, especially if the organization itself does not bring in enough income to support itself.</p><br>
+				<p>On average, you can expect an acre of land itself to cost about 3,000 gold. The cost could be as low as 1,000 gold in a small village, or as high as 5,000 gold in a city’s middle-class district. Wages to be paid to employees varies based on their job, but to be on the safe side, you should assume you’re paying at least 50 gold per week for middle-class employees and much more for experts.</p><br>
+
+				<p><b>Leadership</b></p><br>
+				<p>As players are busy adventurers, it is impossible to fully manage your organization without NPC help. After all, your character will be traveling and questing, and might rarely visit the organization’s headquarters. You must select at least one NPC who will lead the organization, answering directly to your whims. This NPC, assuming they are trustworthy, should lead the organization the way you demand of them, but will take care of small problems and bookkeeping on their own, leaving you to make large scale decisions. You can select more than one NPC if you think it is appropriate for your organization to have a council or some other group of leaders. Additionally, you may create a ranking system in your organization to establish a chain of command if needed, or a pay-grade ladder that members can look forward to working their way up. Take care who you end up selecting for leadership, as they will have a similar level of access to your organization as you do. They should be trustworthy and they should be experts in the field of the organization’s interest.</p><br>
+
+				<p><b>Members</b></p><br>
+				<p>Each individual NPC that joins your roster will be able to complete jobs, learn skills, and bring in revenue if applicable. Your roster will be a list of NPC names and their general information (race, sex, personality tics) as well as a list of their relevant skills and the ranks of those skills. Obviously, if the members of your roster are employees who are doing jobs for you, then you should value members with high skill ranks more. Additionally, members of your roster will have some level of loyalty to you, the player character, ranked similarly to skills from F to 1. This is a way for you to generally measure how trustworthy an individual is. You can screen applicants to your organization yourself or allow your NPC leadership to take care of recruiting and training new applicants. Members may pay dues or membership fees based on your organization types, and may themselves need to be paid as well. Remember that there needs to be some sort of reason why an NPC would join your organization as opposed to working alone or for rival organizations; perhaps you promise high wages or protection or notoriety.</p><br>
+
+				<p><b>Goals and Projects</b></p><br>
+				<p>You can either allow your NPC leadership to choose what specific jobs and projects are being tackled by your organization or you can do this yourself. What kinds of projects you are tackling obviously will depend on your goals. A criminal syndicate may require you to choose which types of crimes you’re willing to be involved in, or what smuggling routes you want to try to monopolize. An opera house would require you to select which types of shows you’d like to focus on. Then, you or your leadership will send specific members from your roster to complete these projects, such as selecting specific courses for students or specific monsters for your adventurers to hunt. Based on their skill levels, you’ll know the odds of the member succeeding or failing ahead of time. Different projects require different skills and difficulty determines how high member skills need to be to have a reasonable chance at success.</p><br>
+
+				<p><b>The Results of a Production Cycle</b></p><br>
+				<p>Typically, every 3 days you will need to interact with your leadership to manage your organization. We call this 3 day period a production cycle, but you can call it something else based on your organization’s specialties (like a workweek, a tour, etc). During each production cycle, you will do the following:</p><br>
+				<li>Gain Income – If your organization is one that gains a steady amount of income from completed jobs or membership dues, you will gain that income every 3 days and learn of the success or failures of your short term ventures. Your organization might not be one that gains income at all, or it might be one that gains income sporadically or less often than every 3 days. Additionally, if members fail their missions, you might not get the income you expected to get.</li><br>
+				<li>Learn News – Your leadership will inform you of anything relevant they feel you need to know every cycle. This includes things like new monsters for your adventuring guild to fight, recent activities of rival organizations, or potential new investments and projects the leadership thinks of.</li><br>
+				<li>Pay Maintenance Costs – There will usually be some level of base costs you will need to pay to maintain your headquarters, licenses, agreements with other organizations, and stockpiles of essential resources.</li><br>
+				<li>Pay Employees – If the members of your roster make their income through your organization, you will need to pay them based on their level of expertise. Of course, you and your leadership decide what their wages will be.</li><br>
+				<li>Member Experience – If your members are learning from your organization or gaining real world experience through their jobs, their skills may increase once every few production cycles.</li><br>
+				<li>Upgrades and Changes – This is your opportunity to make upgrades to your buildings if applicable. Examples include expanding your university library or building more boarding room for members who live at your headquarters. Additionally you may decide it’s time to change things up, like shuffling who’s in your leadership or changing the specific projects you want to focus on.</li><br>
+				<li>Events – Certain types of events, both good and bad, can positively or negatively influence your organization in a variety of ways. You might get lucky and pull in extra income and member experience one cycle, only to have an accident happen and have to pay increased maintenance costs the next cycle. These events are randomly rolled by the DM. The chance of a negative event can be very high in the initial phase of building up your organization, but goes down as your organization expands and improves its infrastructure and membership.</li>
+			</article>
+
+			<article>
+				<h2>Skills</h2>
+
+				<p>There are 115 available skills in the game. When a player tries to do something that has a chance of failure and is dependent on that player’s competence, odds are they will be doing a skill check. Each skill scales from F to A, and then from 9 to 1, which means there are 15 skill ranks for any given skill. There is also an “untrained” rank below F, representing that your character knows of the skill and can put point into it, but has yet to do so. Untrained skills confer a skill check modifier of 0. A skill check consists of rolling a d100, then adding the bonus from your skill rank (which will be a multiple of 5), then adding the bonus from the attribute that skill is based off of (which is just the raw attribute modifier). The following is a table of skill bonuses at each skill rank:</p><br>
+
+				<table style="width:100%">
+					<tr>
+						<th>Rank</th>
+						<th>Modifier</th>
+						<th>Rank</th>
+						<th>Modifier</th>
+						<th>Rank</th>
+						<th>Modifier</th>
+					</tr>
+					<tr>
+						<td>F</td>
+						<td>+5</td>
+						<td>A</td>
+						<td>+30</td>
+						<td>5</td>
+						<td>+55</td>
+					</tr>
+					<tr>
+						<td>E</td>
+						<td>+10</td>
+						<td>9</td>
+						<td>+35</td>
+						<td>4</td>
+						<td>+60</td>
+					</tr>
+					<tr>
+						<td>D</td>
+						<td>+15</td>
+						<td>8</td>
+						<td>+40</td>
+						<td>3</td>
+						<td>+65</td>
+					</tr>
+					<tr>
+						<td>C</td>
+						<td>+20</td>
+						<td>7</td>
+						<td>+45</td>
+						<td>2</td>
+						<td>+70</td>
+					</tr>
+					<tr>
+						<td>B</td>
+						<td>+25</td>
+						<td>6</td>
+						<td>+50</td>
+						<td>1</td>
+						<td>+75</td>
+					</tr>
+				</table><br>
+
+				<p>It should be noted that for most skills, ranks F, A, 5, and 1 represent special breakpoints, at which the skill usually can be used more effectively or in more varied ways when doing checks. Skills also act as prerequisites for classes.</p><br>
+				<p>This document will list all the skills in the game, listing the attribute that affects its skill checks, the common usages of the skill during regular play, and the classes for which the skill is a prerequisite for, as well as what breakpoints the skill has and how they change the skill. It is recommended that the DM, for a group’s first time playing the game, keep the list of skills to himself, and allow the players to discover the skills as they need them.</p><br>
+
+				{skills}
+			</article>
+
+			<article>
+				<h2>Crafing</h2>
+				{crafting}
+			</article>
+
+			<article>
+				<h2>Classes</h2>
+
+				<p>A class gives a PC distinct class abilities which they can use inside and outside of combat. Most players will be working towards specific classes, and the classes that a player has will largely define his or her role in the party. A PC can have any number of classes. Each class has the following parts:</p><br>
+				<li>Name – the name of the class, as well as a 3 letter abbreviation</li>
+				<li>Requirements – the attribute and skill requirements necessary to unlock the class</li>
+				<li>Passive – each class has a passive that you get for no investment</li>
+				<li>Branches – each class has 3 branches of abilities, and each branch has its own theme</li>
+				<li>Tiers – each class has 4 tiers of abilities. Each tier has 1 ability from each branch; therefore, tiers have 3 abilities each.</li>
+				<li>Abilities – abilities are defined by a name, an action type (Move, Major, Minor), a cost (in health, stamina, or mana), and a description of what the ability does.</li><br>
+				<p>So, in order to unlock a class, you must put points into skills and attributes until you meet the class’s requirements. Then, you unlock the class’s passive, as well as its 1st tier. To unlock the 2nd tier, you need 1 AP of investment. To unlock the 3rd tier, you need 3 AP of investment. To unlock the 4th tier, you need 6 AP of investment. You can invest AP to unlock each ability individually, and can skip the ones you don’t like as long as you have enough investment to progress overall. This way, you can pick and choose (for the most part) your favorite parts of each class you start, and don’t have to waste AP on abilities you don’t find useful.</p><br>
+				<p>Higher tiers are generally more powerful than lower ones, and thus require higher investment of AP. Each tier’s abilities cost AP equal to the tier number. So, 2nd tier abilities cost 2 AP each, and 4th tier abilities cost 4 AP each.</p><br>
+				<p>You might recall ultimate abilities from the original game. I’ve decided that they will not be making a return, because they are too difficult to balance while still feeling sufficiently powerful.</p><br>
+
+				<table style="width:100%">
+					<tr>
+						<th>Tier</th>
+						<th>Required Investment of AP in the Class to Unlock this Tier</th>
+						<th>Required AP to Unlock an Ability in this Tier</th>
+					</tr>
+					<tr>
+						<td>1st</td>
+						<td>0</td>
+						<td>1</td>
+					</tr>
+					<tr>
+						<td>2nd</td>
+						<td>1</td>
+						<td>2</td>
+					</tr>
+					<tr>
+						<td>3rd</td>
+						<td>3</td>
+						<td>3</td>
+					</tr>
+					<tr>
+						<td>4th</td>
+						<td>6</td>
+						<td>4</td>
+					</tr>
+				</table><br>
+
+				<h3>Class Hint Unlocks</h3><br>
+				<p>This is a list of all the classes for which at least 1 skill requirement has been achieved. These hints will provide players with some direction as to what the other skill requirements might be. The following lists have mixed together all players’ unlocked hints. Classes whose requirements have all been discovered are highlighted in green.</p><br>
+				{class_hint_unlocks}
+				<br>
+				{classes}
+			</article>
+
+			<article>
+				<h2>Gameplay Patches</h2>
+
+				<h3>Patch 1.2</h3><br>
+
+				<p><b>Introduction</b></p><br>
+				<p>Welcome to Patch 1.2, the one where we release our first set of new classes and explain why your alignment isn’t just for show.</p><br>
+				<p>With this patch comes a change to future class hint and ability releases. Everything previously released has been moved to your group rulebooks, and new releases will also be solely in the rulebooks. This is for better organization, and so that you don’t have to go scrolling back in Discord to find class abilities you unlocked months ago.</p><br>
+				<p>Additionally, there will be explanations of the more esoteric systems, like attribute based defenses, alignment, class lore and flavor, etc.</p><br>
+				<p>Lastly, a new program will be starting to allow players to assist with some of the creation process.</p><br>
+				<p>Enjoy!</p><br>
+				<p>-Adam</p><br>
+
+				<p><b>New Classes Hype</b></p><br>
+				<p>The following 18 new classes have been added to the game:</p><br>
+				<li>Visionary</li>
+				<li>Viper Knight [Z]</li>
+				<li>Chronomancer</li>
+				<li>Ambusher [Z] [S]</li>
+				<li>Auramancer</li>
+				<li>Clawmaster</li>
+				<li>Eldritch Knight [Z] [S]</li>
+				<li>Soulbinder</li>
+				<li>Herald</li>
+				<li>Hemoplague [Z]</li>
+				<li>Card Master</li>
+				<li>Druid</li>
+				<li>Infection Mage</li>
+				<li>Corpselight [Z]</li>
+				<li>Defiler</li>
+				<li>Peacemaker</li>
+				<li>Mistguard [Z] [S]</li>
+				<li>Daggerspell [Z] [S]</li><br>
+				<p>Classes with a [Z] are already in the Zenith Rulebook as hints. The same is true for classes with an [S] for the Singularity rulebook. Whenever new classes come out, there’s a chance a PC already has one or more of the skill requirements met, which is why hints are immediately added. In future patches, you can expect a bit more focus on a few key skills, namely archery, poisons, summoning, buffing, crafters, and more race/religion/alignment restricted classes. Also still missing from the game are some notable absences from other games, like Warlock, and classes from original Barbs. Those will come in future patches, and in fact, each patch will likely have new classes coming with it</p><br>
+
+				<p><b>It’s Time To Duel</b></p><br>
+				<p>Adric Vapeiros has unlocked the fourth tier of abilities in the Dark Duelist class. Likewise, Russ Finnegan has unlocked the third tier of abilities in the Lightning Duelist class. Your rulebooks have been updated and contain your new abilities.</p><br>
+
+				<p><b>Venomous Bugman</b></p><br>
+				<p>Suro N’Gamma has achieved Rank A in Poison Crafting, and has unlocked hints for the following classes: Venomist, Viper Knight, Ambusher. You can find the hints for these classes in your rulebook.</p><br>
+
+				<p><b>Class Flavor</b></p><br>
+				<p>This isn’t something that comes up often but you all should know that your classes do have some flavor built in that you can take advantage of. Encourage your DM to allow you to do certain actions based on the classes you have. For example, assassins could go looking for signs of a local assassins’ guild, or archers might passively be superior at spotting distant foes. Roleplaying your class is also encouraged, and could be a reliable way to earn MVP. Lastly, I encourage players to try getting into classes which have interesting flavor as well as those that synergize with your intended build.</p><br>
+				<p>Additionally, being in a class can provide you some free AP in the form of naturally learned skills. When you pick up your first tier 1, 2, and 3 ability respectively in any given class, you will be granted a free point in a pre-determined skill, related to the flavor of the class. You can even ask your DM for alternative choices if you’d like, as long as you can justify it within the flavor of the class. Most if not all of the skill points you get this way will be in the more flavorful categories, like Artistry, Gathering, Item Use, Interaction, etc.</p><br>
+
+				<p><b>Alignment Matters</b></p><br>
+				<p>Most of you by now are used to DnD 5e’s way of handling alignment, in that it almost never matters. That’s not the case in BARBS. Your alignment could allow or restrict access to certain magic items, areas, or even classes. For example, the new Corpselight class is restricted to LN, TN, and CN characters. For that reason, your actions are closely tracked, and acting out of alignment could see your alignment changed. Remember, alignment is descriptive, not prescriptive: your actions and attitudes will tell me what alignment you are, not your character sheet. If I have to change your alignment, don’t worry about it too much; it just means your character is evolving, which is good. What’s bad is being inconsistent, acting like a different alignment each week. On the flip side, you can expect consistent roleplaying of your alignment (or the evolution of your alignment) to be rewarded with MVP frequently.</p><br>
+
+				<p><b>Attribute Based Defenses</b></p><br>
+				<p>Sometimes, enemies might use attacks on you that force you to roll d100 + an attribute. This would most commonly occur when you try to maintain concentration (without a relevant skill check to make, you would roll d100 + Focus), but could also occur when you are hit by charms or other condition applying attacks. Whenever you are asked to roll such an attribute save, you are allowed to request your DM to allow you to make a skill check instead, provided you can justify why it fits. Depending on the situation you may also be able to use your reaction to make a skill check in order to avoid these kinds of attacks, although that might require you to have high levels in certain skills first.</p><br>
+
+				<p><b>Added Difficulty</b></p><br>
+				<p>Both groups have gotten through a good chunk of their first class, so you can expect difficulty to begin rising steadily from this point onwards. Bosses will have multiple turns and hit harder, and regular enemies will have increased health and damage, more varied skillsets, and contest multiple types of defenses. Since most of you are finishing up your first class soon, I recommend spending some time dipping into your crafting classes (maybe just a point or 2) to make use of all of the crafting materials you’ve been getting and craft better gear. It would also be a good idea to pick up some auxiliary skills like Persuasion or First Aid, as I’m going to be stricter about asking for them for certain types of actions. Lastly, you should consider padding your attributes and getting some much needed stats, like Condition Resist or Buff Limit/Concentration Limit. That way, when you move on to your second class, you’ll be well prepared, instead of scrambling to fix your character’s weakness farther down the line.</p><br>
+
+				<p><b>Help Me Make BARBS Content</b></p><br>
+				<p>I am hoping that this will be the first of many large content patches to come out for the game. I have plans to continue to release classes, and eventually new mechanics like Signature Moves, Heroic Feats, and who knows what else. If any players have good ideas for new classes, new races or additional flavor for existing races, or even smaller things like mods for crafting or ability/cantrip ideas, please PM them to me. If an idea of yours finds its way into the main game you could be rewarded. Together we can flesh out the game’s mechanics as well as the world’s flavor.</p>
+				<p>Which leads me to my first Content Contest announcement! Every once and a while I’d like to start some friendly competition, and invite you guys to create something to improve BARBS in some way. Our first contest will be related to improving the rulebook entries on the 20 races. This is entirely voluntary, but the rewards include rare crafting materials, gold, and AP. We’ll see how many people actually decide to try it out. The first round of the Race Improvement Contest will be for the Voltron race. In order to compete, submit a document that is no more than 1 page, containing:</p><br>
+				<li>Artwork you’ve selected or drawn, or at least ample space for artwork so I can fill it in later</li>
+				<li>The traits as they’re written in the rulebook</li>
+				<li>One or several paragraphs describing the lore and flavor of the Voltron race. You do not have to work with the existing information in rulebook; treat it as a starting point, but be as creative as you would like and add interesting aspects to the Voltron physiology, culture, environment, etc</li>
+				<li>Bonus points if the whole thing is edited nicely so I don’t have to do that shit.</li><br>
+
+				<p>This competition will start today, 9/9/18, and end in approximately 5 weeks, on 10/15/18. Only one player can win the AP, but any number of people can win gold and crafting materials for the quality of their submission, and everyone who submits something will win at least some type of prize. Keep in mind that all submissions need to be in some sort of document PM’d to me; I won’t consider suggestions you casually make on Discord or in person as a submission for this contest. And once again, this is totally voluntary; if you think it’ll be fun, try it out. Good luck!</p><br>
+
+				<p><b>Bug Fixes</b></p><br>
+				<p>The following bugs were fixed in this patch:</li>
+				<li>Fixed a bug where the hint of Night Lord implied it required Dark Magic</li>
+				<li>Ninja’s hint was changed to be less misleading</li>
+				<li>Ahasan’s changelog was missing recent ability additions</li>
+				<li>Fixed a bug where Jason’s changelog had incorrectly calculated current level and banked AP</li>
+				<li>Filled in some missing class unlocks for Kirin Inagami</li>
+				<li>Fixed a bug where Shadowdancer did not display properly under class hints acquired by both Orpheus Glacierum and Janatris</li><br>
+
+
+				<h3>Patch 1.3</h3><br>
+
+				<p><b>Introduction</b></p><br>
+				<p>	Welcome to patch 1.3, the one where we lay down some ground rules for player versus player combat in preparation for the Champion of Fire Tourney. The hope is to use this as a reference to fall back on when disputes inevitably arise due to calls made during PvP matches. It's impossible to cover every possible edge case, but this should serve as a good start. Along with PvP rules, I’ll be clarifying some key rules that have been mentioned but not actually ever put down in text, like death saves and increased vs added stats on equipment. Lastly, there will be a new batch of classes for players to select from and some long overdue class unlocks. Enjoy!</p><br>
+				<p>-Adam</p><br>
+
+				<p><b>New Classes</b></p><br>
+				<p>	There are 13 new classes being added with this patch. Classes are labeled with [S] or [Z] to designate whether Singularity or Zenith have unlocked a hint for the class</p><br>
+				<li>Allomancer</li>
+				<li>Firewheeler [S]</li>
+				<li>Harrier [S] [Z]</li>
+				<li>Horizon Stalker [S] [Z]</li>
+				<li>Juggernaut [Z]</li>
+				<li>Lorekeeper [Z]</li>
+				<li>Master of Disguise</li>
+				<li>Mirror Mage [S] [Z]</li>
+				<li>Steam Mage [S] [Z]</li>
+				<li>Vastwood Knight</li>
+				<li>Viking [S] [Z]</li>
+				<li>Warlock</li>
+				<li>Woodsman [S] [Z]</li><br>
+				<p>Of special note from this list are Warlock, which is limited to characters who are of any chaotic alignment and worship one of the chaotic gods (Aloys, Phaxet, or Dren), and Vastwood Knight, which is only obtainable by dryads who are knighted by the Queen of Vastwood. Next patch will likely include a large number of race restricted classes, as the goal is to have at least one per race aside from human.</p><br
+
+				<p><b>Other Class Details</b></p><br>
+				<p>Also included in this patch are class unlocks for both Adric and Orpheus, as well as Tier 1 abilities for Aquamancer for Orpheus and Tier 1 abilities for Reaper for Adric.</p><br>
+
+				<p><b>Player Vs Player Combat</b></p><br>
+				<p>Firstly, let's go over changes that will occur to player characters (PCs) when they are engaging in PvP. It's necessarily to re-balance some numbers as BARBS class design is entirely based around PvE, where enemy health tends to be much higher and damage tends to be much lower.</p><br>
+				<p>Players will have their maximum health multiplied by 10. For example, a PC with 150 maximum health will have 1500 maximum health when begin a PvP match. This change can occur on the fly, so if you start with 20 health missing at the beginning of a PvP match, you will have 200 health missing instead. Likewise, at the end of a PvP match, your current health is divided by 10, meaning if you finish the fight with 800 out of 1500 health, you will have 80 health when you re-enter the PvE environment. This also means that fights will be strictly defined as either PvP or PvE from now on (unless you are told otherwise, assume a fight is using PvE scaling). The hope is that combat will at least last 5 rounds but not take longer than 15 rounds. Player average damage per round comes out to about 100, with some players capable of over 300 damage with the right circumstances, so 10x seems like the easiest way to have matches be the intended length.</p><br>
+				<p>Players will also be granted Lethality immunity. Lethality is a modifier on some abilities and equipment that gives a percentage chance that a hit will instantly kill the target. It's a stat that enemies in PvE can never have, and so to keep with that philosophy, players will not be able to use Lethality against each other. For the upcoming tournament, you should expect all competitors to have Lethality immunity as most bosses tend to have.</p><br>
+				<p>Secondly, let's go over some ground rules that will additionally apply during the Champion of Fire tourney. These rules will have an in game justification as well, but it's good to announce them here as they mostly have an OOC effect.</p><br>
+				<p>Players will be unable to use improvised actions during PvP. During PvE players frequently ask for the opportunity to cut off a limb or block for an ally or react to trip enemies or stop their spellcasting. These are all different types of improvised actions, usually taking some stamina and mana and requiring some sort of skill check. In PvE, being able to do these things tends to be granted more often than not because of the Rule of Cool. During PvP, it's impossible to be fair about these sorts of things, and so they'll be universally illegal during the tourney's PvP bouts. This limits a player's possible actions to moving, basic attacks (mainhand and offhand), class abilities, and item use. I know that there are some players who heavily rely on improvised actions and others who don't use them at all, and unfortunately they represent a part of BARBS combat that would be impossible to balance, so I hope that players who normally rely on improvised actions will find abilities to use as an alternative.</p><br>
+				<p>Players will always be able to identify what their opponent is doing, assuming they can see their opponent. While players will be able to become hidden or hide behind cover, while they are visible their actions will be visible as well. This means that when a mage begins casting a spell, other players will be able to identify what kind of spell is about to be cast. The same is true for physical abilities; if a fighter swings his sword and it's about to push you back, you'll know. What won't be immediately transparent is the effects of equipment and final damage: On Hit and On Crit effects are usually calculated after damage or with damage, and many players usually run their damage calculations after they've confirmed a hit. If you plan on dodging, blocking, or counterspelling, you should do so before damage is calculated (AKA before you are actually hit). Normally in PvE player are allowed to see damage calculations before they decide to avoid attacks but that won't be the case in PvP; if damage calculations are being done than the hit has been confirmed.</p><br>
+				<p>Players will be expected to interact with their opponents. Part of your job as a competitor in the Champion of Fire Tourney is to be entertaining; the tourney is one of the most watched sporting events in the world, after all. Judges can end a fight prematurely if no interesting progress is being made or if a stalemate has been established and maintained for too long. As long as players are interacting with their opponents (whether through attacks or DOTs or conditions), there shouldn't be a problem.</p><br>
+				<p>That should cover just about everything that we’ll need to establish ahead of time. As DM I might need to make some awkward judge calls for situations we don’t foresee, so I’ll just ask once for some patience if/when this occurs. I’m looking forward to some healthy competition and hilarious trash talking.</p><br>
+
+				<p><b>Death Saves</b></p><br>
+				<p>So there's no record of how death saves actually work anywhere in the rulebook as you guys currently have it, so here it is.</p><br>
+				<p>When your health drops to zero, you fall prone and unconscious and are considered Downed. You lose all buffs, drop all concentration, and most conditions end on you (some persist, such as Bleed or Poison). While Downed you do not take turns; instead you roll death saving rolls each turn. You also gain no benefits from your AC, evasion, or MR, although other players can still block for you with appropriate skill checks and class abilities.</p><br>
+				<p>While Downed, you have 100 Downed Health. Every one of your turns, you roll a d100 death saving throw and subtract the result from your Downed Health. Additionally, if you take damage from a condition or from being attacked, the damage is subtracted from your Downed Health. When your Downed Health reaches 0, your character permanently perishes. There is no resurrection in BARBS; when your character dies, their soul passes through the Gates of the Afterlife and becomes sole possession of Adol.</p><br>
+				<p>While downed, any healing you receive immediately affects your regular health as normal. If the amount of healing you receive that brings you above zero health is greater than your missing Downed Health, you immediately wake up prone. If you are missing more Downed Health than the amount of healing you receive, you become stabilized (meaning you no longer need to make death saving throws, although you can still perish from damage that depletes your Downed Health to zero). If stabilized in this way, you wake up after missing 1d4 turns of combat. You can also be stabilized without healing if another character makes a First Aid or Restoration Magic skill check with a DC of 30 + X, where X is your missing Downed Health divided by 2. If you are stabilized but your health is still zero, you will not wake up until you receive healing (you can gain the benefits of a short rest while unconscious this way, healing from your health regeneration and waking up after the short rest).</p><br>
+
+				<p><b>Bug Fixes</b></p><br>
+				<li>Fixed a bug where concentration checks and Water Duelist did not display properly in the Singularity rulebook.</li><br>
+
+			</article>
+		</main>
+	</section>
+
+</body>
+</html>

@@ -22,7 +22,7 @@ def fix_quotes(obj):
 
 
 # One method to call them all, and in the syntax run them
-def main():
+def process_data_file():
 
     # Read the data file
     with open(DATA_TXT, encoding='utf16') as f:
@@ -83,8 +83,3 @@ def main():
 
     with open(os.path.join(DATA_PATH, 'clazz_abilities.json'), 'w') as f:
         json.dump(clazz_ability_map, f)
-
-
-# One method to compose them all, one method to hash them
-if '__main__' == __name__:
-    main()
