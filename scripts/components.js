@@ -295,6 +295,12 @@ var BarbsComponents = BarbsComponents || (function () {
         GATHERING_HUNTING: new SkillObject('Gathering Hunting', 'REF'),
         GATHERING_MINING: new SkillObject('Gathering Mining', 'TGH'),
         GATHERING_SKINNING: new SkillObject('Gathering Skinning', 'REF'),
+        INTERACTION_DECEPTION: new SkillObject('Interaction Deception', 'APL'),
+        INTERACTION_INTENT: new SkillObject('Interaction Intent', 'WIS'),
+        INTERACTION_INTIMIDATION: new SkillObject('Interaction Intimidation', 'COM'),
+        INTERACTION_LEADERSHIP: new SkillObject('Interaction Leadership', 'COM'),
+        INTERACTION_PERSUASION: new SkillObject('Interaction Persuasion', 'APL'),
+        INTERACTION_SEDUCTION: new SkillObject('Interaction Seduction', 'APL'),
         ITEM_USE_APPRAISAL: new SkillObject('Item Use Appraisal', 'WIS'),
         ITEM_USE_CONSTRUCTION: new SkillObject('Item Use Construction', 'STR'),
         ITEM_USE_FIRST_AID: new SkillObject('Item Use First Aid', 'FRT'),
@@ -302,12 +308,6 @@ var BarbsComponents = BarbsComponents || (function () {
         ITEM_USE_ROPES: new SkillObject('Item Use Ropes', 'WIS'),
         ITEM_USE_TINKERING: new SkillObject('Item Use Tinkering', 'WIS'),
         ITEM_USE_TRAPS: new SkillObject('Item Use Traps', 'COM'),
-        INTERACTION_DECEPTION: new SkillObject('Interaction Deception', 'APL'),
-        INTERACTION_INTENT: new SkillObject('Interaction Intent', 'WIS'),
-        INTERACTION_INTIMIDATION: new SkillObject('Interaction Intimidation', 'COM'),
-        INTERACTION_LEADERSHIP: new SkillObject('Interaction Leadership', 'COM'),
-        INTERACTION_PERSUASION: new SkillObject('Interaction Persuasion', 'APL'),
-        INTERACTION_SEDUCTION: new SkillObject('Interaction Seduction', 'APL'),
         KNOWLEDGE_ARCANA: new SkillObject('Knowledge Arcana', 'INT'),
         KNOWLEDGE_CULTURE: new SkillObject('Knowledge Culture', 'INT'),
         KNOWLEDGE_HISTORY: new SkillObject('Knowledge History', 'INT'),
@@ -668,151 +668,151 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "buff",
-            "name": "* Hidden",
+            "name": "Hidden",
             "duration": "Until broken",
             "description": "Enemies cannot track you for the purposes of targeting you. If you attack an enemy while Hidden, you will lose the Hidden buff, but your target cannot use a Reaction in response to the attack."
         },
         {
             "type": "buff",
-            "name": "* Immunity",
+            "name": "Immunity",
             "duration": "Permanent",
             "description": "You have immunity to a certain type of damage or a certain condition. Some entities will have innate immunity, which is not a buff."
         },
         {
             "type": "buff",
-            "name": "* Increased Stats",
+            "name": "Increased Stats",
             "duration": "Varies",
             "description": "You have your stats increased temporarily due to the effects of skills, abilities, consumables, items, battlefield effects, etc."
         },
         {
             "type": "buff",
-            "name": "* Invisible",
+            "name": "Invisible",
             "duration": "1 minute",
             "description": "You are Hidden and cannot be seen at all. Hidden is not lost until this buff ends."
         },
         {
             "type": "condition",
-            "name": "* Bleeding",
+            "name": "Bleeding",
             "duration": "Until broken",
             "description": "At the beginning of each of your turns, you take a varying amount of physical damage. Skill checks can be used to cleanse this condition, as determined by the DM."
         },
         {
             "type": "condition",
-            "name": "* Blinded",
+            "name": "Blinded",
             "duration": "1 minute",
             "description": "Ranged attacks you make always miss. Melee attacks you make have a 50% chance of missing before factoring in your target's Evasion. You automatically fail skill check requiring sight, like Search. You have no line of sight for targeting with spells."
         },
         {
             "type": "condition",
-            "name": "* Cursed",
+            "name": "Cursed",
             "duration": "Varies",
             "description": "When you have at least 3 curses, you instantly take Xd20 dark magic damage, where X is the number of curses you have"
         },
         {
             "type": "condition",
-            "name": "* Charmed",
+            "name": "Charmed",
             "duration": "Varies",
             "description": "You consider the entity that charmed you as a friend."
         },
         {
             "type": "condition",
-            "name": "* Confused",
+            "name": "Confused",
             "duration": "1 minute",
             "description": "When you move or make an attack, you will move in a random direction instead of your intended direction."
         },
         {
             "type": "condition",
-            "name": "* Crippled",
+            "name": "Crippled",
             "duration": "Until cleansed",
             "description": "Your movement speed is halved and you cannot jump, climb, or take flight through physical means."
         },
         {
             "type": "condition",
-            "name": "* Decreased Stats",
+            "name": "Decreased Stats",
             "duration": "Varies",
             "description": "You have your stats decreased temporarily due to the effects of skills, abilities, consumables, items, battlefield effects, etc."
         },
         {
             "type": "condition",
-            "name": "* Fear",
+            "name": "Fear",
             "duration": "1 minute",
             "description": "You cannot move towards the object of your fear."
         },
         {
             "type": "condition",
-            "name": "* Frozen",
+            "name": "Frozen",
             "duration": "1 minute",
             "description": "You cannot take any actions. You gain 10 AC. If you are attacked, Frozen has a 50% chance of being cleansed."
         },
         {
             "type": "condition",
-            "name": "* Helpless",
+            "name": "Helpless",
             "duration": "Until broken",
             "description": "You are susceptible to non-combat execution."
         },
         {
             "type": "condition",
-            "name": "* Immobilized",
+            "name": "Immobilized",
             "duration": "Varies",
             "description": "You may not take the Move Action or dash."
         },
         {
             "type": "condition",
-            "name": "* Knocked Down (Prone)",
+            "name": "Knocked Down (Prone)",
             "duration": "Until broken",
             "description": "You lie prone on the floor, and cannot take a Move Action unless you get up, which takes half your movement. Being prone may also confer other effects depending on other abilities or situations."
         },
         {
             "type": "condition",
-            "name": "* Knocked Up (Airborne)",
+            "name": "Knocked Up (Airborne)",
             "duration": "Until the beginning of target's next turn",
             "description": "You are helplessly flying in the air and cannot evade or use reactions. At the beginning of your next turn you fall to the ground prone unless you make an appropriate skill check to land on your feet."
         },
         {
             "type": "condition",
-            "name": "* Paralyzed",
+            "name": "Paralyzed",
             "duration": "1 minute",
             "description": "When you take a Move or Major Action, you have a 25% chance of failing the action. This condition can stack multiple times, and each additional stack increases the chance of failing your action by 25%, up to a limit of 3 stacks for a 75% failure chance."
         },
         {
             "type": "condition",
-            "name": "* Petrified",
+            "name": "Petrified",
             "duration": "1 minute",
             "description": "You cannot take any actions. You become attuned to earth. At the beginning of your turn you can make an appropriate skill check to break out of your stone casing."
         },
         {
             "type": "condition",
-            "name": "* Silenced",
+            "name": "Silenced",
             "duration": "Varies",
             "description": "You cannot speak or cast spells."
         },
         {
             "type": "condition",
-            "name": "* Sleeping",
+            "name": "Sleeping",
             "duration": "Until broken",
             "description": "You are asleep, and cannot take any actions nor perceive anything. You are considered helpless. If you are attacked, Sleeping is cleansed. Other entities can use a Minor Action to shake you awake, and you can also be awakened by loud noises."
         },
         {
             "type": "condition",
-            "name": "* Slowed",
+            "name": "Slowed",
             "duration": "1 minute",
             "description": "Your movement speed is halved."
         },
         {
             "type": "condition",
-            "name": "* Stunned",
+            "name": "Stunned",
             "duration": "1 round",
             "description": "You cannot take any actions."
         },
         {
             "type": "condition",
-            "name": "* Taunted",
+            "name": "Taunted",
             "duration": "1 minute",
             "description": "When you make an attack on an enemy that did not Taunt you, roll a d6. If you roll 4 or lower, you must redirect your attack to the enemy that Taunted you if possible. You do not have to redirect your attack if attacking the enemy that Taunted you would be impossible (due to being out of range, or behind a barrier, or out of sight)."
         },
         {
             "type": "condition",
-            "name": "* Weakened",
+            "name": "Weakened",
             "duration": "1 minute",
             "description": "All your damage output is decreased by X%, after all other modifiers. This condition does not stack; subsequent Weakened effects simply change the original."
         },
@@ -823,7 +823,8 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Intelligence",
             "rank_notes": {
                 "Untrained": "You cannot perform Augmentation Alchemy",
-                "Rank F": "You can perform Augmentation Alchemy from basic blueprints"
+                "Rank F": "You can perform Augmentation Alchemy from basic blueprints",
+                "Rank A": "You can perform Augmentation Alchemy from class abilities without penalties"
             }
         },
         {
@@ -843,7 +844,8 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Intelligence",
             "rank_notes": {
                 "Untrained": "You cannot perform Organics Alchemy",
-                "Rank F": "You can perform Organics Alchemy from basic blueprints"
+                "Rank F": "You can perform Organics Alchemy from basic blueprints",
+                "Rank A": "You can perform Organics Alchemy from class abilities without penalties"
             }
         },
         {
@@ -874,7 +876,8 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Toughness",
             "rank_notes": {
                 "Untrained": "You cannot wear heavy armor",
-                "Rank F": "You can wear normal and magic heavy armor"
+                "Rank F": "You can wear normal and magic heavy armor",
+                "Rank A": "You can wear rare and unique heavy armor"
             }
         },
         {
@@ -1007,7 +1010,9 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Agility",
             "rank_notes": {
                 "Untrained": "You automatically fail Movement checks",
-                "Rank F": "You can perform Movement checks"
+                "Rank F": "You can perform Movement checks",
+                "Rank 5": "You can sprint at twice your movement speed",
+                "Rank 1": "You can maintain a full speed run indefinitely while unburdened"
             }
         },
         {
@@ -1187,7 +1192,10 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Fortitude",
             "rank_notes": {
                 "Untrained": "You cannot craft poisons",
-                "Rank F": "You can craft poisons"
+                "Rank F": "You can craft poisons",
+                "Rank A": "Successful poison crafting produces 2 vials of poison",
+                "Rank 5": "Poisons you make have double effectiveness",
+                "Rank 1": "You can make poisons with two effects"
             }
         },
         {
@@ -1196,8 +1204,8 @@ var BarbsComponents = BarbsComponents || (function () {
             "description": "Potion Crafting allows you to make any number of invigorating concoctions. Because the nature of all of these items can have abnormal side effects if not properly prepared, you need to be tough willed to create potions",
             "attribute": "Fortitude",
             "rank_notes": {
-                "Untrained": "You cannot craft potions",
-                "Rank F": "You can craft potions"
+                "Untrained": "You cannot craft potions.Rank F",
+                "Rank A": "Successful poison crafting produces 2 vials of poison"
             }
         },
         {
@@ -1280,7 +1288,9 @@ var BarbsComponents = BarbsComponents || (function () {
             "rank_notes": {
                 "Untrained": "You cannot use ice magic",
                 "Rank F": "You can cast ice cantrips",
-                "Rank A": "You can cast ice spells given to you by class abilities without penalties"
+                "Rank A": "You can cast ice spells given to you by class abilities without penalties",
+                "Rank 5": "Ice spells you cast ignore elemental typing disadvantages",
+                "Rank 1": "Ice spells you cast that inflict crowd control conditions have doubled duration and have 50% increased range"
             }
         },
         {
@@ -1312,7 +1322,8 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Focus",
             "rank_notes": {
                 "Untrained": "You cannot use water magic",
-                "Rank F": "You can cast water cantrips"
+                "Rank F": "You can cast water cantrips",
+                "Rank A": "You can cast water spells given to you by class abilities"
             }
         },
         {
@@ -1377,6 +1388,67 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "skill",
+            "name": "Interaction Deception",
+            "description": "Deception checks are for successfully lying to people or withholding/bending the truth. You might use this to lie to a guard or hide some family secret",
+            "attribute": "Appeal",
+            "rank_notes": {
+                "Untrained": "You automatically fail Deception checks",
+                "Rank F": "You can perform Deception checks"
+            }
+        },
+        {
+            "type": "skill",
+            "name": "Interaction Intent",
+            "description": "Intent checks are for discerning whether others are lying to you or hiding details by watching for verbal tics or visual cues. It can be used to find deeper meaning in what people are saying",
+            "attribute": "Wisdom",
+            "rank_notes": {
+                "Untrained": "You automatically fail Intent checks",
+                "Rank F": "You can perform Intent checks"
+            }
+        },
+        {
+            "type": "skill",
+            "name": "Interaction Intimidation",
+            "description": "Intimidation checks are for scaring people into doing things you want. You might use this to interrogate a captured enemy or convince a group of bandits to stand down",
+            "attribute": "Composure",
+            "rank_notes": {
+                "Untrained": "You automatically fail Intimidation checks",
+                "Rank F": "You can perform Intimidation checks"
+            }
+        },
+        {
+            "type": "skill",
+            "name": "Interaction Leadership",
+            "description": "Leadership checks are for inspiring groups and guiding them to act together. You might use this to boost the morale of a vast army or convince a mercenary band of the soundness of your tactics",
+            "attribute": "Composure",
+            "rank_notes": {
+                "Untrained": "You automatically fail Leadership checks",
+                "Rank F": "You can perform Leadership checks",
+                "Rank A": "You may add your INT to your Leadership checks"
+            }
+        },
+        {
+            "type": "skill",
+            "name": "Interaction Persuasion",
+            "description": "Persuasion checks are for convincing people to do things you want. You might use this to barter for better prices, convince someone to give you information, or convince an enemy to stand down",
+            "attribute": "Appeal",
+            "rank_notes": {
+                "Untrained": "You automatically fail Persuasion checks",
+                "Rank F": "You can perform Persuasion checks"
+            }
+        },
+        {
+            "type": "skill",
+            "name": "Interaction Seduction",
+            "description": "Seduction checks are for charming people and making them fall for you. With a high rank in Seduction, even the ugliest players can find love",
+            "attribute": "Appeal",
+            "rank_notes": {
+                "Untrained": "You automatically fail Seduction checks",
+                "Rank F": "You can perform Seduction checks"
+            }
+        },
+        {
+            "type": "skill",
             "name": "Item Use Appraisal",
             "description": "Appraisal checks are for discerning the inherent value and properties of an object or entity upon closer inspection of it. What you do with that knowledge is up to you",
             "attribute": "Wisdom",
@@ -1432,7 +1504,9 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Wisdom",
             "rank_notes": {
                 "Untrained": "You automatically fail Tinkering checks",
-                "Rank F": "You can perform Tinkering checks"
+                "Rank F": "You can perform Tinkering checks",
+                "Rank 5": "Tinkered constructs you build will stay together without regular repair",
+                "Rank 1": "You can perform Tinkering checks twice as fast"
             }
         },
         {
@@ -1443,66 +1517,6 @@ var BarbsComponents = BarbsComponents || (function () {
             "rank_notes": {
                 "Untrained": "You automatically fail Traps checks",
                 "Rank F": "You can perform Traps checks"
-            }
-        },
-        {
-            "type": "skill",
-            "name": "Interaction Deception",
-            "description": "Deception checks are for successfully lying to people or withholding/bending the truth. You might use this to lie to a guard or hide some family secret",
-            "attribute": "Appeal",
-            "rank_notes": {
-                "Untrained": "You automatically fail Deception checks",
-                "Rank F": "You can perform Deception checks"
-            }
-        },
-        {
-            "type": "skill",
-            "name": "Interaction Intent",
-            "description": "Intent checks are for discerning whether others are lying to you or hiding details by watching for verbal tics or visual cues. It can be used to find deeper meaning in what people are saying",
-            "attribute": "Wisdom",
-            "rank_notes": {
-                "Untrained": "You automatically fail Intent checks",
-                "Rank F": "You can perform Intent checks"
-            }
-        },
-        {
-            "type": "skill",
-            "name": "Interaction Intimidation",
-            "description": "Intimidation checks are for scaring people into doing things you want. You might use this to interrogate a captured enemy or convince a group of bandits to stand down",
-            "attribute": "Composure",
-            "rank_notes": {
-                "Untrained": "You automatically fail Intimidation checks",
-                "Rank F": "You can perform Intimidation checks"
-            }
-        },
-        {
-            "type": "skill",
-            "name": "Interaction Leadership",
-            "description": "Leadership checks are for inspiring groups and guiding them to act together. You might use this to boost the morale of a vast army or convince a mercenary band of the soundness of your tactics",
-            "attribute": "Composure",
-            "rank_notes": {
-                "Untrained": "You automatically fail Leadership checks",
-                "Rank F": "You can perform Leadership checks"
-            }
-        },
-        {
-            "type": "skill",
-            "name": "Interaction Persuasion",
-            "description": "Persuasion checks are for convincing people to do things you want. You might use this to barter for better prices, convince someone to give you information, or convince an enemy to stand down",
-            "attribute": "Appeal",
-            "rank_notes": {
-                "Untrained": "You automatically fail Persuasion checks",
-                "Rank F": "You can perform Persuasion checks"
-            }
-        },
-        {
-            "type": "skill",
-            "name": "Interaction Seduction",
-            "description": "Seduction checks are for charming people and making them fall for you. With a high rank in Seduction, even the ugliest players can find love",
-            "attribute": "Appeal",
-            "rank_notes": {
-                "Untrained": "You automatically fail Seduction checks",
-                "Rank F": "You can perform Seduction checks"
             }
         },
         {
@@ -1543,7 +1557,8 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Intelligence",
             "rank_notes": {
                 "Untrained": "You automatically fail Nature checks",
-                "Rank F": "You can perform Nature checks"
+                "Rank F": "You can perform Nature checks",
+                "Rank A": "You can make a Nature check during combat as a free action or free reaction once per round"
             }
         },
         {
@@ -1574,7 +1589,8 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Attunement",
             "rank_notes": {
                 "Untrained": "You automatically fail Condition Magic checks",
-                "Rank F": "You can perform Condition Magic checks"
+                "Rank F": "You can perform Condition Magic checks",
+                "Rank A": "You can perform improvised magic arts with condition spells"
             }
         },
         {
@@ -1584,7 +1600,8 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Focus",
             "rank_notes": {
                 "Untrained": "You automatically fail Conjuration Magic checks",
-                "Rank F": "You can perform Conjuration Magic checks"
+                "Rank F": "You can perform Conjuration Magic checks",
+                "Rank A": "You can perform improvised magic arts with conjuration spells"
             }
         },
         {
@@ -1594,7 +1611,8 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Attunement",
             "rank_notes": {
                 "Untrained": "You automatically fail Control Magic checks",
-                "Rank F": "You can perform Control Magic checks"
+                "Rank F": "You can perform Control Magic checks",
+                "Rank A": "You can perform improvised magic arts with control spells"
             }
         },
         {
@@ -1604,7 +1622,8 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Resistance",
             "rank_notes": {
                 "Untrained": "You automatically fail Defensive Magic checks",
-                "Rank F": "You can perform Defensive Magic checks"
+                "Rank F": "You can perform Defensive Magic checks",
+                "Rank A": "You can perform improvised magic arts with defense spells"
             }
         },
         {
@@ -1676,7 +1695,9 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Focus",
             "rank_notes": {
                 "Untrained": "You automatically fail Summoning Magic checks",
-                "Rank F": "You can perform Summoning Magic checks"
+                "Rank F": "You can perform Summoning Magic checks",
+                "Rank 5": "Your summoning spells cost 50% less mana",
+                "Rank 1": "Your summoning spells last 50% longer"
             }
         },
         {
@@ -1746,7 +1767,8 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Composure",
             "rank_notes": {
                 "Untrained": "You cannot use psionics offensively",
-                "Rank F": "You can use psionics offensively"
+                "Rank F": "You can use psionics offensively",
+                "Rank A": "You can use improvised psionic arts"
             }
         },
         {
@@ -1954,7 +1976,9 @@ var BarbsComponents = BarbsComponents || (function () {
             "attribute": "Strength",
             "rank_notes": {
                 "Untrained": "You deal half damage with polearms",
-                "Rank F": "You deal regular damage with polearms"
+                "Rank F": "You deal regular damage with polearms",
+                "Rank A": "You can perform improvised physical arts with polearms",
+                "Rank 5": "You deal 50% more damage at maximum range with polearms"
             }
         },
         {
@@ -1966,7 +1990,8 @@ var BarbsComponents = BarbsComponents || (function () {
                 "Untrained": "You deal half damage with shields",
                 "Rank F": "You deal regular damage with shields",
                 "Rank A": "You can perform improvised physical arts with shields",
-                "Rank 5": "You can wield shields in your main hand"
+                "Rank 5": "You can wield shields in your main hand",
+                "Rank 1": "Your shield attacks have +50% physical damage"
             }
         },
         {
@@ -1977,7 +2002,8 @@ var BarbsComponents = BarbsComponents || (function () {
             "rank_notes": {
                 "Untrained": "You deal half damage with short blades",
                 "Rank F": "You deal regular damage with short blades",
-                "Rank A": "You can perform improvised physical arts with short blades"
+                "Rank A": "You can perform improvised physical arts with short blades",
+                "Rank 5": "You can strike twice with your mainhand short blade in one Attack action"
             }
         },
         {
@@ -1992,348 +2018,35 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "clazz",
-            "name": "Ice Duelist",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Cryomancer",
-            "flavor_text": "Skating gracefully on the ice, she applies the finishing touches to the goblins, now tasteful frozen sculptures, and then continues deeper into their lair, followed by a cold tailwind.",
-            "description": "The Cryomancer is one of 8 offensive elemental mages. Harnessing the merciless aspect of ice, the Cryomancer is a flexible class that deals both single target and AOE damage, but especially excels at controlling the battlefield with crowd control spells. She can create spears of ice to impale enemies or freeze dozens of enemies solid. The Cryomancer provides a powerful defense with the power of ice and cold, and has plenty of offensive options to finish a fight.",
-            "num_requirements": 2,
-            "full_requirements": [
-                "Ice Mastery A",
-                "Destruction Magic A or Cloth Armor Mastery A"
-            ],
-            "branches": [
-                "Arctic",
-                "Chilling",
-                "Snow"
-            ],
-            "passive": {
-                "Frostbite": "For every round an enemy is affected by a condition applied by one of your spells, they gain a stack of Frostbite. When you inflict ice magic damage on a target, you may choose to consume all stacks of Frostbite on that target. Your ice magic damage is increased by 50% for every stack of Frostbite consumed in this manner for that instance of ice magic damage. Frostbite is not a condition, and does not require concentration"
-            },
-            "abilities": [
-                "Ice Spear",
-                "Glacial Crash",
-                "Shatter",
-                "Aurora Beam",
-                "Flash Freeze",
-                "Freezing Wind",
-                "Hypothermia",
-                "Heart of Ice",
-                "Ice Crafting",
-                "Extinguish",
-                "Ice Block",
-                "Frozen  Arena"
-            ]
-        },
-        {
-            "type": "clazz",
-            "name": "Luxomancer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Martial Artist",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Symbiote",
-            "flavor_text": "\"He's far too humble for his own good. Always in the background, trying his best to avoid the spotlight. Doesn't speak a word, except when he's casting one of his spells. But without those spells, this team would be nothing. Hell, we probably would have died on our first mission. Kid won't admit it, but he's the backbone of the squad. Everyone might look to me for leadership, but not before I look to him for assurance.\"",
-            "description": "The Symbiote is a standard part of many mage cadres, as an intermediate level mage with a mastery of buff magic. Buff spells allow this class to assist their allies without having to attack their enemies and put themselves in harms way. As long as allies have enough composure to handle the strain of multiple buff spells, this class can turn the party into ruthless killing machines or steadfast and unbreakable defenders. As the entry level class for buff magic, this class contains a wide variety of buffing effects and the ability to maintain those effects for an extended period of time.",
-            "num_requirements": 2,
-            "full_requirements": [
-                "Buff Magic Rank A",
-                "Cloth Armor Rank A"
-            ],
-            "branches": [
-                "Fiery Soul",
-                "Stone Body",
-                "Fluid Mind"
-            ],
-            "passive": {
-                "Eternal Bond": "When an ally you can see has a buff's duration expire on them for a buff spell that you originally casted, you may recast the spell if they are in range as a free reaction. Mana costs are halved for spells cast this way."
-            },
-            "abilities": [
-                "Strengthen Soul",
-                "Empower Soul",
-                "Bolster Soul",
-                "Strengthen Body",
-                "Empower Body",
-                "Bolster Body",
-                "Strengthen Mind",
-                "Power Spike",
-                "Bolster Speed"
-            ]
-        },
-        {
-            "type": "clazz",
-            "name": "Corrupter",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Conjurer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Controller",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Arcanist",
-            "flavor_text": "\"Magic can regenerate lost limbs and necrotic organs. It can send messages across time and space, teleport us to unfathomably bizarre worlds, help us build entire cities in just a few days, and give us glimpses into both the future and the past. And yet here we are, killing each other with it. What a farce.\"",
-            "description": "The Arcanist is the entry level destruction mage. For those mages who do not wish to pigeonhole themselves in one element, this class provides damaging spells which can utilize all 8, although it sacrifices some of the special strengths of those classes. The class's passive also grants the user some extra flexibility as far as targeting their spells is concerned, which works well with the class's overall emphasis on both single-target and multi-target/AOE damage. A third branch provides some extra utility, rounding the class out as an excellent first class for a new mage character. Functionally the class is designed to be simple and straightforward, acting as a segway to more complicated mage classes.",
-            "num_requirements": 2,
-            "full_requirements": [
-                "Destruction Magic Rank A",
-                "Cloth Armor Rank A"
-            ],
-            "branches": [
-                "Zapping",
-                "Blasting",
-                "Arcane"
-            ],
-            "passive": {
-                "Focus Fire": "When you cast a damaging spell attack that targets a single enemy, you may have the spell become a 15 ft square AOE instead, decreasing the spell's effectiveness by 25%. Alternatively, when you cast a damaging spell attack that is AOE, you may have the spell become single-target instead, increasing the spell's effectiveness by 25%."
-            },
-            "abilities": [
-                "Magic Dart",
-                "Magic Bomb",
-                "Magic Primer"
-            ]
-        },
-        {
-            "type": "clazz",
             "name": "Abjurer",
-            "flavor_text": "",
-            "description": "",
             "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Diviner",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Enchanter",
-            "flavor_text": "I watched on as he carefully inscribed his runes upon animal bones, knit together leather with magical seals, brushed the eerie skin tone paints upon a wooden, lifeless face, all while deftly avoiding the ritual circle he had encased his work inside of, and I lamented. For this doll, this macabre mockery of the young master's image, might soon move with enchanted grace and intelligence. But it would never love him as the boy did, only imitate.",
-            "description": "The Enchanter is an entry level mage that specializes in the magical school of Enchantment, using magical runes and inscriptions to apply effects to objects and equipment. Such mages are a mainstay of many armies, using their spells to augment the power of weapons and armor as well as reinforcing walls and defensive structures. They are also effective on a smaller scale, assisting party members by providing buff-like effects without taxing buff limit. This class provides a good number of entry level offensive, defensive, and utility effects for the aspiring party mage.",
-            "num_requirements": 2,
-            "full_requirements": [
-                "Enchantment Magic A",
-                "Cloth Armor A"
+            "flavor_text": "The 41st Mage Corps' first training objective is usually to learn how to form a proper defensive line. Unlike regular infantry, a defense line for a horde of mage soldiers involves a complex layering of defensive magical fields, floating magical shields, reflecting panels, and a host of other defensive spells. The result is a nearly unbreakable line with enough redundancy to cover the loss of up to half the squad.",
+            "description": "The Abjurer is a mid-level magical practitioner who has specialized in the magical school of Defense. As the name suggests, Defense magic protects the caster and their allies from enemy attacks. The school contains spells such as shields, temporary health, counterspells, buffs that boost defensive stats, and a variety of other methods to defend a person or group. The class contains no offensive abilities whatsoever, so such a mage is usually included as part of a party or regularly seen with other defensive mages within a section of an army. The class plays especially well with other members of the party who play the tank role, further augmenting their ability to protect the backline. Being an effective Abjurer requires excellent concentration.",
+            "requirements": [
+                "Magic: Defense A",
+                "Cloth Armor Mastery A"
             ],
             "branches": [
-                "Personal",
-                "Structural",
-                "Minutiae"
+                "Secure",
+                "Contain",
+                "Protect"
             ],
             "passive": {
-                "Perpetual Runology": "You may have enchantment spells you cast that require concentration continue without your concentration at half effectiveness when your concentration breaks or when you choose not to concentrate on the spell when you cast it."
+                "Positive Feedback": "When a Defense spell you control prevents damage, 10% of the damage prevented is converted to recover your mana, up to a limit of the cost of the Defense spell that prevented that damage."
             },
             "abilities": [
-                "Modify Weapon",
-                "Reforge Armor",
-                "Alter Jewelry",
-                "Reconstruct Barrier",
-                "Rebuild Floor",
-                "Secure Building",
-                "Mint Coinage",
-                "Enhance Vehicle",
-                "Empower Ammo"
+                "Shield",
+                "Weak",
+                "Stoneskin"
             ]
-        },
-        {
-            "type": "clazz",
-            "name": "Illusionist",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Healer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Summoner",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Transmuter",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Archaeomancer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Amplifier",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Evolutionist",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Inventor",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Bioengineer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Necromancer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Pyromancer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Aquamancer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
         },
         {
             "type": "clazz",
             "name": "Aeromancer",
+            "num_requirements": 2,
             "flavor_text": "\"When I quit the Academy to become an adventurer, they told me I'd be successful as long as I remembered to go where the wind blows. But then the wind kept blowing me straight towards trouble, so I figured I'd take the wheel; now, the wind blows where I go.\"",
             "description": "The Aeromancer is one of 8 offensive elemental mages. Harnessing the whimsical aspect of air, the Aeromancer values speed, creativity, and taking the initiative. Unlike other mages who plant themselves in the backlines, the Aeromancer uses its high mobility to literally fly across the battlefield, controlling wind to speed allies and slow enemies while inflicting damage through wind blasts and tornados. An adept Aeromancer never stays in one spot, abusing its speed and range to maximum effect to kite and whittle down even the staunchest foes.",
-            "num_requirements": 2,
-            "full_requirements": [
+            "requirements": [
                 "Air Magic A",
                 "Destruction Magic A or Cloth Armor Mastery A"
             ],
@@ -2362,148 +2075,143 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "clazz",
-            "name": "Terramancer",
-            "flavor_text": "",
-            "description": "",
+            "name": "Air Duelist",
             "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "flavor_text": "\"I used to think I was the best. I could hit a goblin off its warg from 300 feet away. I used to split my first arrow with my second at the shooting range at school. But I had a rude awakening when I met her. She could shoot dragons out of the sky against the winds created by their beating wings. Her arrows whistled like mystical birdsong. I shot for sport; she created art.\"",
+            "description": "The Air Duelist is one of many spellblade variants that focuses on one element and one weapon. This class wields a bow as well as powerful air magic. By interlacing shots from her bow with precise wind strikes, the Air Duelist maximizes its action economy. Her individual spells are weaker than a dedicated air mage's, but her weapon provides increased flexibility and effectiveness at longer ranges, and his offensive output can surpass a regular duelist's with efficient usage of physical and magical arts. Her spells are primarily buffing and damaging in nature, with all the additional support and utility that air magic tends to provide, and there is a heavy emphasis on forced movement and mobility.",
+            "requirements": [
+                "Bow Mastery A",
+                "Air Magic A"
+            ],
+            "branches": [
+                "Dueling",
+                "Casting",
+                "Buffing"
+            ],
+            "passive": {
+                "Whirlwind Quiver": "Once per turn, when you deal air magic damage to a target with a spell, gain one Whirlwind Arrow special ammunition. You may have up to 2 Whirlwind Arrows at a time, this special ammunition can not be recovered, and they expire at the end of combat. When you use a Whirlwind Arrow to make an attack with a bow, you may do so as a free action (you still pay any other costs)."
+            },
+            "abilities": [
+                "Gale Shot",
+                "Zephyr Shot",
+                "Storm Shot",
+                "Wind Strike",
+                "Cutting Winds",
+                "Harassing Whirlwind",
+                "Mistral Bow",
+                "Arc of Air",
+                "Bow of Hurricanes"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Dynamancer",
-            "flavor_text": "",
-            "description": "",
+            "name": "Amplifier",
             "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "flavor_text": "It was complete. Finally, I would become beautiful. Finally, I would obtain the life I deserved. Finally, I would become the girl I always wanted to be. The cost was great. But the reward will be worth it. It has to be\u2026",
+            "description": "The Amplifier is a practitioner of Augmentation alchemy. As one of the most common types of alchemy, many towns will have an amplifier, selling blueprints for strengthening tools and weapons. The Amplifier provides an avenue for buffing allies and their equipment without requiring concentration, buff limit, or even mana or stamina. Instead, the Amplifier takes time outside of combat to complete the products of their abilities and blueprints, in order to provide bonuses in combat.",
+            "requirements": [
+                "Augmentation Alchemy Rank A",
+                "Cloth Armor Rank A"
+            ],
+            "branches": [
+                "Bolster",
+                "Fortify",
+                "Supplement"
+            ],
+            "passive": {
+                "Overclock": "At the end of a long rest, you may create the product of an Amplifier ability without needing the materials. An augmentation made this way has its Duration extended to 6 hours."
+            },
+            "abilities": [
+                "Improved Aggression",
+                "Enhanced Vigor",
+                "Refined Agility"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Noxomancer",
-            "flavor_text": "Why is it that children are always afraid of the dark? It's not something their parents teach them, after all. Is it a natural human fear of the unknown and the unseen? Or is there something about darkness itself that should be feared?",
-            "description": "The Noxomancer is one of 8 offensive elemental mages. Harnessing the sinister aspect of dark, the Noxomancer is an aggressive class that deals both single target and AOE damage, but especially excels at stacking conditions on enemies, especially curses. He can inflict a variety of debilitating effects from blindness to fear, all while piling on damage. A small suite of utility spells allows the Noxomancer to take advantage of a variety of situations. Overall, the Noxomancer's slow and steady damage output is a force to be reckoned with.",
+            "name": "Aquamancer",
             "num_requirements": 2,
-            "full_requirements": [
-                "Dark Magic A",
+            "flavor_text": "Water flows around obstacles, or wears them down to nothing. Water is flexible and conforms to the shape of its environment, yet dominates a space and fills it entirely. Water caresses and nourishes, but also drowns and destroys. Water is patient and powerful. As you must be.",
+            "description": "Aquamancer is an entry level mage that has begun to master the element of water. Water, as an element, is focused on balance and flexibility, and the aquamancer spell list reflects this philosophy. An adept aquamancer will be able to deal moderate water magic damage to single and multiple targets effectively while also manipulating the battlefield and controlling enemy movement. Likewise, the aquamancer can turn inward towards the party and assist with a defensive suite of spells and some moderate healing. While other elemental mages are more focused on dealing damage, inflicting crowd control, or healing, none of them have the sheer number of options that the aquamancer has.",
+            "requirements": [
+                "Water Mastery A",
                 "Destruction Magic A or Cloth Armor Mastery A"
             ],
             "branches": [
-                "Devastation",
-                "Affliction",
-                "Obfuscation"
+                "Geyser",
+                "Harbor",
+                "Confluence"
             ],
             "passive": {
-                "Neverending Nightmare": "Whenever a non-curse condition that was inflicted by you ends (in any manner, including cleanse) on an enemy in sight, they gain a curse."
+                "Turning Tides": "At the beginning of your first turn of combat, choose Flood Tide or Ebb Tide. After your first turn, you swap between Flood Tide and Ebb Tide at the beginning of each new turn. During Flood Tide, your damaging water spells deal 50% increased damage and your forced movement water spells cause 20 additional feet of forced movement. During Ebb Tide, your healing water spells have 50% increased healing and your buffs grant an additional 20% general MR for their duration."
             },
             "abilities": [
-                "Shadow Bolt",
-                "Darkbomb",
-                "Corruption",
-                "Defile",
-                "Shriek",
-                "Spreading Madness",
-                "Siphon Soul",
-                "Treachery",
-                "Fiendish Circle"
+                "Hydro Pump",
+                "Tidal Wave",
+                "Water Whip",
+                "Whirlpool",
+                "Water Pulse",
+                "Washout",
+                "Bubble Barrier",
+                "Summon Water Weird",
+                "Baptize",
+                "Rain of Wellness",
+                "Draught of Vigor",
+                "Fountain of Purity"
             ]
         },
         {
             "type": "clazz",
-            "name": "Gladiator",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "name": "Arcane Archer",
+            "num_requirements": 1,
+            "preview": "An archer/mage that specializes in very advanced buffing spells. As a master of self-targeted buff spells with some skill in the bow, this class prepares with both offensive and defensive buffs, then brings death from afar.",
+            "requirements": [
+                "Bow or Crossbow Mastery Rank A"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Warrior",
-            "flavor_text": "We were lost in the heat of battle, our once advantageous position shattered like glass. Acrid, fetid smoke, tinged with the flavors of blood and bile, filled our lungs and threatened to steal our lives even as we were cut down by the dozens. We were green recruits in a war far too brutal for the most hardened of veterans. And it was his cry, that glorious call to arms, which saved us.",
-            "description": "The Warrior is by nature a specialist. On the outside, he appears to be a run of the mill fighter that you might expect to see as a city guardsman or a caravanserai. However, the Warrior has made the simple act of waging war into a carefully measured process. The Warrior efficiently slays masses of foes while protecting his squad; he fells giant beasts while holding a defensive line; he is a centerpiece of calm when the rest of the team panics during an ambush. The warrior has simple and effective options for single and multi-target attacks, straightforward defensive techniques, and special warcries that provide buffs or apply conditions to large groups.",
+            "name": "Arcanist",
             "num_requirements": 2,
-            "full_requirements": [
-                "Any melee weapon mastery skill at Rank A",
-                "Any armor mastery skill at Rank A (but not Cloth Armor Mastery)"
+            "flavor_text": "\"Magic can regenerate lost limbs and necrotic organs. It can send messages across time and space, teleport us to unfathomably bizarre worlds, help us build entire cities in just a few days, and give us glimpses into both the future and the past. And yet here we are, killing each other with it. What a farce.\"",
+            "description": "The Arcanist is the entry level destruction mage. For those mages who do not wish to pigeonhole themselves in one element, this class provides damaging spells which can utilize all 8, although it sacrifices some of the special strengths of those classes. The class's passive also grants the user some extra flexibility as far as targeting their spells is concerned, which works well with the class's overall emphasis on both single-target and multi-target/AOE damage. A third branch provides some extra utility, rounding the class out as an excellent first class for a new mage character. Functionally the class is designed to be simple and straightforward, acting as a segway to more complicated mage classes.",
+            "requirements": [
+                "Destruction Magic Rank A",
+                "Cloth Armor Rank A"
             ],
             "branches": [
-                "Assault",
-                "Protect",
-                "Warcry"
+                "Zapping",
+                "Blasting",
+                "Arcane"
             ],
             "passive": {
-                "Warleader": "You gain 25% increased physical damage for each buff active on you. On your turn, you may end any buff on you of your choice as a free action to empower an ally who can hear you, increasing their next attack's damage by 25%."
+                "Focus Fire": "When you cast a damaging spell attack that targets a single enemy, you may have the spell become a 15 ft square AOE instead, decreasing the spell's effectiveness by 25%. Alternatively, when you cast a damaging spell attack that is AOE, you may have the spell become single-target instead, increasing the spell's effectiveness by 25%."
             },
             "abilities": [
-                "Spill Blood",
-                "Cut Down",
-                "Hack and Slash",
-                "Summary Execution",
-                "Shields Up",
-                "Reinforce Armor",
-                "Take Cover",
-                "Paragon of Victory",
-                "\"Charge!\"",
-                "\"Fight me!\"",
-                "\"Overcome!\"",
-                "\"Kill them all!\""
+                "Magic Dart",
+                "Magic Sear",
+                "Magic Bomb",
+                "Magic Ray",
+                "Magic Primer",
+                "Force Spike"
             ]
         },
         {
             "type": "clazz",
-            "name": "Warlord",
-            "flavor_text": "I could feel the scream trapped in my throat and could not tear my eyes away from the grisly spectacle before me. Blood dripped from the corpses pinned to the walls, and the sound of each drop threatened madness. The guilty and innocent lay here; eviscerated, torn to shreds, filled with holes. In a brief moment of poignant horror, I wondered how I would explain to the children. And I questioned what kind of man would lust for such senseless violence.",
-            "description": "The Warlord is a fighter that understands the value of flexibility. Adept at fighting at close range with a variety of melee abilities and controlling longer ranges with a ranged weapon of their choice, the Warlord dominates the battlefield by abusing range advantages against less prepared foes. Diving in close against archers and mages, kiting other fighters, harrying enemies as they approach, this class can reliably put down a constant stream of damage and never wastes turns getting into position due to good mobility. The Warlord is rewarded, however, for switching between ranged and melee attacks frequently, forcing enemies to keep up with constantly changing tactics.",
-            "num_requirements": 2,
-            "full_requirements": [
-                "Any Melee Weapon A (but not Unarmed Mastery)",
-                "Any Ranged Weapon A"
-            ],
-            "branches": [
-                "Close Range",
-                "Long Range",
-                "Weapon Swap"
-            ],
-            "passive": {
-                "Calculated Aggression": "When you successfully deal physical damage with a melee weapon to a target, your next ranged attack becomes empowered for 50% increased physical damage. When you successfully deal physical damage with a ranged weapon to a target, your next melee attack becomes empowered for 50% increased physical damage. Calculated Aggression can trigger at most once per turn and the empowered effect does not stack."
-            },
-            "abilities": [
-                "Pivot and Slash",
-                "Knock Aside",
-                "Crippling Blow",
-                "Advancing Fire",
-                "Hookshot",
-                "Stopping Shot",
-                "Weapon Swap: Roll",
-                "Weapon Swap: Quaff",
-                "Weapon Swap: Attack"
+            "name": "Archaeomancer",
+            "num_requirements": 1,
+            "preview": "A mage that specializes in the magical school of Utilities. As a mid-tier practitioner, this class has the highest number of raw utility spells, and acts as a magical Swiss army knife of spell for any situation.",
+            "requirements": [
+                "Cloth Armor Mastery Rank A"
             ]
-        },
-        {
-            "type": "clazz",
-            "name": "Skald",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
         },
         {
             "type": "clazz",
             "name": "Assassin",
+            "num_requirements": 2,
             "flavor_text": "Leaping down from the rafters, he lands soundlessly behind the two guards and slips daggers between their ribs before they can react, then turns and sneaks into the King's quarters, his footsteps masked by the monarch's snores.",
             "description": "The Assassin has always been a career of necessity. When a sword is too direct and a fireball too flashy, the dagger has always served as an inconspicuous tool to end someone's life. The Assassin excels at its use, as well as finding its way on top of its prey without being detected. With an excess of frontloaded damage, and the necessary abilities to prepare for a kill, the Assassin always tries to end a fight with the first blow. This class has access to abilities to increase its damage and critical strike chance, as well as various tools to track and sneak up on prey, and close in quickly.",
-            "num_requirements": 2,
-            "full_requirements": [
+            "requirements": [
                 "Sneak A",
                 "Shortblades Mastery A"
             ],
@@ -2532,191 +2240,165 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "clazz",
-            "name": "Sentinel",
-            "flavor_text": "\"There is a place where civilization gives way to twisting undergrowth and unknown shores. Where good and evil just barely begin to blur together. A place where brave heroics fail and terror dominates the heart. This is the place where he stands guard. Waiting for the end.\"",
-            "description": "The Sentinel is a fighter class that has mastered the use of shields as weapons. Dual wielding bladed shields with specialized chain systems attached to their wristguards, the Sentinel has redefined the art of shield combat with innovative new techniques. Being able to double down on the defensive aspects of shields, the Sentinel also brings vicious new attacking opportunities and a wealth of utility and mobility. This class bides its time playing defensively in order to release energy in a burst of explosive movements and attacks in later rounds. The chains on his shields allow for easy shield tossing and dragging himself and opponents where he pleases, and opens up his effective range and target selection. While dual wielding is technically optional with this class, choosing to hold two shields maximizes the abilities this class provides. In order to help these specialized shields mesh with other classes, the Sentinel treats all shields that have implicit damage as axes, longblades, blunt weapons, and heavy throwing weapons as well. The default range for a Sentinel's shield chain is 30 ft, and can be picked up from range using the chains as a free action.",
-            "num_requirements": 2,
-            "full_requirements": [
-                "Armor: Shields A",
-                "Weapons: Shields 5"
-            ],
-            "branches": [
-                "Dauntless",
-                "Stalwart",
-                "Tenacious"
-            ],
-            "passive": {
-                "Perfect Shield": "While you are not in Shield stance, when you block an attack, gain a Shield stack. At the end of your turn, you may expend all Shield stacks to gain that many special reactions and enter Shield stance until the beginning of your next turn. You may use special reactions gained this way as normal reactions or to cast any Sentinel ability. Sentinel abilities you cast this way have their stamina cost halved."
-            },
-            "abilities": [
-                "Crossguard Guillotine",
-                "Bladeshield Arc",
-                "Parallel Shields",
-                "Rapid Shields",
-                "Chain Rush",
-                "Chain Drag"
-            ]
-        },
-        {
-            "type": "clazz",
-            "name": "Soldier",
-            "flavor_text": "They teach you a whole lot about keeping yourself together in Basic. How to swing your sword so you don't injure your wrist or shoulder. How to brace yourself for an impact against your shield. How to keep moving so a random archer doesn't end your career early. And most importantly, how to strike first, so they die before you do. They don't really talk about what to do after you've killed a man, though. And you've got to kill a lot of men before you learn the meaning of being a soldier.",
-            "description": "The Soldier is a fighter who wields sword and shield, but boasts an impressive level of mobility as well. Trained with more modern techniques of striking quickly and focusing on survival, this class provides a multitude of options for blocking or dodging incoming attacks, and fighting in a responsive, calculated style that wouldn't normally be expected of a fighter. The Soldier fights on the front lines like other fighters, but isn't restricted to heavy armor, and utilizes strategy over raw power to whittle down opponents.",
-            "num_requirements": 2,
-            "full_requirements": [
-                "Longblades Mastery A",
-                "Shield Armor Mastery A"
-            ],
-            "branches": [
-                "Skirmish",
-                "Safeguard",
-                "Sprint"
-            ],
-            "passive": {
-                "Defensive Footwork": "When you use your reaction to use a block ability and successfully avoid/reduce damage from an incoming attack, gain a special reaction until the beginning of your next turn which can only be used for a dash reaction ability. When you use your reaction to use a dash reaction ability and successfully avoid/reduce damage from an incoming attack, gain a special reaction until the beginning of your next turn which can only be used for a block reaction ability. Special reactions provided by Defensive Footwork have their mana and stamina costs halved. Defensive Footwork can activate at most once per round, and refreshes at the beginning of each of your turns."
-            },
-            "abilities": [
-                "Fleetfoot Blade",
-                "Steadfast Strikes",
-                "Biding Blade",
-                "Sever The Head",
-                "Intercept",
-                "Shield Bash",
-                "Protective Sweep",
-                "Long Live The King",
-                "Dodge Roll",
-                "Double Time",
-                "Tactical Withdrawal",
-                "Vigor of Battle"
-            ]
-        },
-        {
-            "type": "clazz",
-            "name": "Air Duelist",
-            "flavor_text": "\"I used to think I was the best. I could hit a goblin off its warg from 300 feet away. I used to split my first arrow with my second at the shooting range at school. But I had a rude awakening when I met her. She could shoot dragons out of the sky against the winds created by their beating wings. Her arrows whistled like mystical birdsong. I shot for sport; she created art.\"",
-            "description": "The Air Duelist is one of many spellblade variants that focuses on one element and one weapon. This class wields a bow as well as powerful air magic. By interlacing shots from her bow with precise wind strikes, the Air Duelist maximizes its action economy. Her individual spells are weaker than a dedicated air mage's, but her weapon provides increased flexibility and effectiveness at longer ranges, and his offensive output can surpass a regular duelist's with efficient usage of physical and magical arts. Her spells are primarily buffing and damaging in nature, with all the additional support and utility that air magic tends to provide, and there is a heavy emphasis on forced movement and mobility.",
-            "num_requirements": 2,
-            "full_requirements": [
-                "Bow Mastery A",
-                "Air Magic A"
-            ],
-            "branches": [
-                "Dueling",
-                "Casting",
-                "Buffing"
-            ],
-            "passive": {
-                "Whirlwind Quiver": "Once per turn, when you deal air magic damage to a target with a spell, gain one Whirlwind Arrow special ammunition. You may have up to 2 Whirlwind Arrows at a time, this special ammunition can not be recovered, and they expire at the end of combat. When you use a Whirlwind Arrow to make an attack with a bow, you may do so as a free action (you still pay any other costs)."
-            },
-            "abilities": [
-                "Gale Shot",
-                "Zephyr Shot",
-                "Storm Shot",
-                "Wind Strike",
-                "Cutting Winds",
-                "Harassing Whirlwind",
-                "Mistral Bow",
-                "Arc of Air",
-                "Bow of Hurricanes"
-            ]
-        },
-        {
-            "type": "clazz",
-            "name": "Sniper",
-            "flavor_text": "At 30 seconds to midnight, I reconfirmed my target, still sipping wine on the veranda. At 26 seconds, I drew my longbow, custom crafted for this single shot. I planned to shatter it and toss the remains in the nearby river afterwards. At 18 seconds, I finished applying the oils to the ammo I'd use. And at 7 seconds, I finally lined up the shot, and synced the rhythm of breath and heart to my countdown. 5\u20264\u20263\u20262\u2026",
-            "description": "The Sniper delivers death from afar. Unlike archers who use shortbows and crossbows for medium range engagements, firing dozens of arrows to slay their target, the Sniper relies on single, extremely powerful and accurate shots from extreme ranges. The firing rate of the average longbow tends to be lower, but the range and damage output easily make up for it. The Sniper expands upon the longbow's strengths by preparing carefully for each shot. He spots his target, tracks their movement, the way they dodge, the weak points in their armor. And finally, when he is ready to take the shot, he has already stacked all the cards in his favor.",
-            "num_requirements": 2,
-            "full_requirements": [
-                "Bow Mastery A",
-                "Light Armor Mastery A"
-            ],
-            "branches": [
-                "Shooting",
-                "Aiming",
-                "Improvising"
-            ],
-            "passive": {
-                "Spotter": "At any time, you may mark an enemy target you can see as Spotted. While you have a Spotted target, you gain 1 stack of Spotting whenever you take a Major action that does not involve dealing damage or moving. You can also use your Major action to track your target, gaining 2 stacks of Spotting. You have a maximum limit of 8 stacks of Spotting. You lose all stacks of Spotting when a Spotted target dies, or when you switch the mark to a new target. When you attack a Spotted target with a ranged attack from a longbow, you expend all stacks of Spotting, and deal 25% increased damage per stack expended this way."
-            },
-            "abilities": [
-                "Piercing Shot",
-                "Kill Shot",
-                "Shrapnel Shot",
-                "Rapid Shot",
-                "Distance Shooter",
-                "Precision Shooter",
-                "Analytical Shooter",
-                "Professional Shooter",
-                "Swift Sprint",
-                "Swift Shot",
-                "Bola Shot",
-                "Evasive Maneuvers"
-            ]
-        },
-        {
-            "type": "clazz",
-            "name": "Arcane Archer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Marksman",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Rifleman",
-            "flavor_text": "\"DANGER! MISHANDLING OF FIREARM CAN RESULT IN SERIOUS INJURY OR DEATH. You are now the proud owner of an Achak Industries firearm, which comes with certain responsibilities which the Sultanate of Kraithan requires our company to inform you of. Do not point a firearm at anyone or anything you do not intend to fire at. Always assume a firearm is loaded. Achak Industries is not liable for any harm that comes to any law-abiding citizens as a result of improper or reckless use of our equipment. Do not even think of suing us; our lawyers are better than yours and also have guns. Thank you for your patronage.\"",
-            "description": "The Rifleman is the entry level bullet weapon class. The use of firearms is difficult for multiple reasons, which the Rifleman helps remedy: firearms require a special action called a Reload Action, which takes two Major Actions, to reload their ammunition, and firearms have an inherent misfire rate that forces a player to roll everytime they attack to see if their gun doesn't just fall apart. To make up for these weaknesses, the average firearm has improved damage capabilities thanks to the secondary fire, an alternative to regular autoattacks. The Rifleman has abilities to minimize misfire, improve damage and speed, and abuse secondary fire and ammunition types to great effect, and acts as an excellent first step to any character who wishes to use firearms for the long term. Damage is high and range is medium compared to other ranged options, and firearms combine many of the unique strengths of both crossbows and bows, often piercing and pushing enemies back.",
-            "num_requirements": 2,
-            "full_requirements": [
-                "Bullet Weapons Rank A",
-                "Light Armor Rank A"
-            ],
-            "branches": [
-                "Operation",
-                "Assembly",
-                "Maintenance"
-            ],
-            "passive": {
-                "Silver Bullet": "At the beginning of your turn, select a bullet currently chambered in a firearm in your inventory. It becomes a silver bullet, this class's unique special ammunition (if the bullet chosen is already special ammunition, it retains its other properties). When you create a silver bullet, you may choose an additional effect for the ammunition from the list below:\n* An attack with this ammunition ignores AC\n* An attack with this ammunition ignores MR\n* An attack with this ammunition cannot miss\n* An attack with this ammunition gains an extra damage die"
-            },
-            "abilities": [
-                "Bodyshot",
-                "Iron Sights",
-                "Quick Reload"
-            ]
-        },
-        {
-            "type": "clazz",
             "name": "Bard",
-            "flavor_text": "",
-            "description": "",
+            "num_requirements": 1,
+            "preview": "An artist who plays in a midline position, using music to attack enemies and buff allies. Many of the bard's songs are continuous buffs in the form of songs they play over the course of a battle.",
+            "requirements": [
+                "Light Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Bioengineer",
             "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "flavor_text": "He was a strange fellow really, and his owl that was not quite an owl was even stranger. \"She's a beauty, isn't she?\" he said, smiling up at the beast perched on his shoulder, even as its horrifically human eyes stared back. \"I made her myself.\"",
+            "description": "The Bioengineer is a practitioner of Organics alchemy. Frequently, towns will have one or two of these, working on their own blueprints for sale. Organics alchemy is considered the darkest of the alchemical arts, and while some Bioengineers will stick to simple organisms like birds or dogs, others have been known to turn to darker experiments involving people. However, regardless of how they make their living, most Bioengineers aspire to the lost art of creating life in vitro. This class spends time outside of combat creating organisms to be used for a variety of purposes.",
+            "requirements": [
+                "Cloth Armor A",
+                "Organics Alchemy A"
+            ],
+            "branches": [
+                "Aggressive",
+                "Steadfast",
+                "Research"
+            ],
+            "passive": {
+                "Gift of Life": "At the end of a long rest, you may create the product of a Bioengineer ability without needing the materials. An organism made this way has its Duration extended to 6 hours."
+            },
+            "abilities": [
+                "Amalgam Hunter",
+                "Amalgam Artillery",
+                "Amalgam Trapper",
+                "Amalgam Bomber",
+                "Crafted Cleric",
+                "Generate Guardian",
+                "Absorbing Angel",
+                "Child of Life",
+                "Call to Heel",
+                "Transfer Lifeforce",
+                "Hibernate",
+                "Adoption"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Builder",
+            "num_requirements": 1,
+            "preview": "An inventor that combines small gadgets with large constructions and deploys them in combat, including mobile walls, turrets, and barriers.",
+            "requirements": [
+                "Tinkering Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Cavalier",
+            "num_requirements": 1,
+            "preview": "A fighter that specializes in warfare from horseback. Excellent as a front line, the class boasts high movespeed, excellent synergy with its mount, and various unique attacks with the mount's assistance.",
+            "requirements": [
+                "Heavy Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Conjurer",
+            "num_requirements": 2,
+            "flavor_text": "\"Instead of worrying about what you cannot control, shift your energy to what you can create.\"",
+            "description": "The Conjurer is an entry level mage that specializes in the magical school of Conjurations. This school contains spells that allow the conjurer to form objects out of thin air, using their mana to summon matter or even forming mana into a solid object temporarily. Requiring a fine control of mana and powerful creativity, the Conjurer is designed to have a variety of useful spells for exploration, and is well suited to the life of an adventurer. The branches of this class are loosely divided into short term and long term spells, allowing the Conjurer to make temporary portals for a few seconds, weapons and armor for a few minutes, or walls and bridges to use for hours. While the class lacks some of the more combat oriented spells of other mages, like a proper counterspell or damage spell, Conjurer makes up for it in utility and creative potential, and should be a welcome addition to any party looking to make day to day life easier.",
+            "requirements": [
+                "Conjuration Magic A",
+                "Cloth Armor Mastery A"
+            ],
+            "branches": [
+                "Ephemeral",
+                "Formed",
+                "Lasting"
+            ],
+            "passive": {
+                "Arcane Toolbox": "After you complete a long rest, select any number of conjuration spells whose mana costs add up to at most 30% of your maximum Mana. Until the beginning of your next long rest, you may cast each of those spells once without paying their mana costs."
+            },
+            "abilities": [
+                "Web",
+                "Fog",
+                "Armament",
+                "Self Defense Turret",
+                "Force Wall",
+                "Mansion"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Controller",
+            "num_requirements": 2,
+            "flavor_text": "\"Rebel, if you must. Resist, if you can. As you pathetically flail about, trying to take back your freedom, you will inevitably realize: you were never in control anyway.\"",
+            "description": "The Controller is a mid-level practitioner of magic which specializes in the school of Control. These spells deal primarily with controlling the actions of other entities. The name of the game here is limiting the number of options your opponents have available to them, or outright determining their actions for yourself. Slows, stuns, and other crowd control spells fall under this category, inhibiting the actions that enemies can make in combat. Outside of combat, charms are available to this class, emulating full-blown mind control with some basic restrictions (typically, no self-harm). This class lacks any significant damaging spells, but makes up for this by having the most robust list of control spells in the system. A Controller is an excellent addition to a large army, a small adventuring group, or even in a solo-build. That being said, some view Control magic as the most evil kind of magic, taking away people's freedoms.",
+            "requirements": [
+                "Control Magic A",
+                "Cloth Armor Mastery A"
+            ],
+            "branches": [
+                "Subjugate",
+                "Dominate",
+                "Tyranny"
+            ],
+            "passive": {
+                "Internalized Oppression": "When you target an entity with a control spell, apply a stack of the Oppression mark. Your spells against targets with Oppression have 30% increased effectiveness per stack of the mark."
+            },
+            "abilities": [
+                "Hold Person",
+                "Mass Slow",
+                "Baneful Curse"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Corrupter",
+            "num_requirements": 2,
+            "preview": "A mage that specializes in the magical school of Conditions. As a mid-tier practitioner, this class can inflict buffs on single and multiple targets, primarily for offensive purposes, but with some utility mixed in as well.",
+            "requirements": [
+                "Cloth Armor Mastery Rank A",
+                "Condition Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Cryomancer",
+            "num_requirements": 2,
+            "flavor_text": "Skating gracefully on the ice, she applies the finishing touches to the goblins, now tasteful frozen sculptures, and then continues deeper into their lair, followed by a cold tailwind.",
+            "description": "The Cryomancer is one of 8 offensive elemental mages. Harnessing the merciless aspect of ice, the Cryomancer is a flexible class that deals both single target and AOE damage, but especially excels at controlling the battlefield with crowd control spells. She can create spears of ice to impale enemies or freeze dozens of enemies solid. The Cryomancer provides a powerful defense with the power of ice and cold, and has plenty of offensive options to finish a fight.",
+            "requirements": [
+                "Ice Mastery A",
+                "Destruction Magic A or Cloth Armor Mastery A"
+            ],
+            "branches": [
+                "Arctic",
+                "Chilling",
+                "Snow"
+            ],
+            "passive": {
+                "Frostbite": "For every round an enemy is affected by a condition applied by one of your spells, they gain a stack of Frostbite. When you inflict ice magic damage on a target, you may choose to consume all stacks of Frostbite on that target. Your ice magic damage is increased by 50% for every stack of Frostbite consumed in this manner for that instance of ice magic damage. Frostbite is not a condition, and does not require concentration"
+            },
+            "abilities": [
+                "Ice Spear",
+                "Glacial Crash",
+                "Shatter",
+                "Aurora Beam",
+                "Flash Freeze",
+                "Freezing Wind",
+                "Hypothermia",
+                "Heart of Ice",
+                "Ice Crafting",
+                "Extinguish",
+                "Ice Block",
+                "Frozen  Arena"
+            ]
         },
         {
             "type": "clazz",
             "name": "Dancer",
+            "num_requirements": 2,
             "flavor_text": "\"Dance, when you're broken open. Dance, if you've torn the bandage off. Dance in the middle of the fighting. Dance in your blood. Dance when you're perfectly free.\"",
             "description": "The Dancer is one of many classes that evolves from the simple non-combat art of dancing. Combining their love for dance with the natural rhythm and furor of combat, the Dancer is able to move between enemies and allies while maintaining the fluid movements of their many forms. Dancing while moving costs additional stamina, but the Dancer can save on stamina costs by being an intelligent choreographer and moving through their many dances in a specific order. Most dances either provide allies with vigor and strength or confuse allies with bewitching and undulating movement.",
-            "num_requirements": 2,
-            "full_requirements": [
+            "requirements": [
                 "Dancing A",
                 "Light Armor Mastery A"
             ],
@@ -2742,13 +2424,238 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "clazz",
+            "name": "Dark Duelist",
+            "num_requirements": 2,
+            "flavor_text": "The last remaining knight clutched at the locket hanging from his neck, drenched in blood both his and not. \"My love\u2026soon I will join you in Paradise\u2026\" Then, he infused the last of his energy into his sword, which glowed black as death, and traded his life for thousands.",
+            "description": "The Dark Duelist is one of many spellblade variants that focuses on one element and one weapon. This class wields a two-handed greatsword, and channels terrible dark magic through his weapon. By seamlessly weaving together sword strikes with dark magic spells, the Dark Duelist has excellent action economy. His individual spells are weaker than a dedicated dark mage, but his weapon provides additional flexibility, and his offensive output can surpass a regular warrior's with efficient usage of both physical and magical arts. His spells are primarily offensive or buffing in nature, with some additional condition spells due to his dark aspect, and a manipulation of Curses for more damage.",
+            "requirements": [
+                "Longblades Mastery A",
+                "Dark Magic Mastery A"
+            ],
+            "branches": [
+                "Dueling",
+                "Casting",
+                "Buffing"
+            ],
+            "passive": {
+                "Scars of Darkness": "When you deal physical damage to a target with a greatsword, you afflict them with a Scar. Dealing dark magic damage with a spell to a Scarred target consumes the Scar and refreshes your Major Action."
+            },
+            "abilities": [
+                "Shadow Strike",
+                "Void Slash",
+                "Vampiric Slash",
+                "Lifereaper",
+                "Dark Pulse",
+                "Shadow Missiles",
+                "Shadow Grasp",
+                "Shadow Puppet",
+                "Accursed Blade",
+                "Sword of Darkness",
+                "Blade of Shadows",
+                "Accursed Armor"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Destroyer",
+            "num_requirements": 2,
+            "flavor_text": "\"I will fall upon the earth like a plague. I will sow the seeds of destruction in every hamlet and village. Rivers will run red with the blood of the innocent, and warriors will trade gold for death. The world will become one of violence and stagnation. Mankind will remember this day as the beginning of the end.\"",
+            "description": "The Destroyer is the entry level fighter class for the use of blunt weapons. Blunt weapons usually have lower damage peaks than other weapons, but come with additional on-hit effects such as Cripple or Vulnerable, and crafted blunt weapons tend towards applying other types of on hit effects. Their compatibility overall with crafting materials is high, and the vast majority of these weapons are one handed so a shield can be used (dual wielding is out of the question though). The Destroyer maximizes the use of these weapons with expanding on the on hit effects available through its vicious, high damage attacks, and also adds some terrain destruction and powerful AOE attacks. The focus of this class is to keep enemies from moving too far while dealing increasing amounts of damage, and to be straightforward instead of bogging down the player with decisions. Any weapon in the Blunt Weapons category is fair game for this class, so whether its clubs or flails that mark your fancy, the Destroyer will function the same.",
+            "requirements": [
+                "\u00b7         Weapons: Blunt A",
+                "\u00b7         Heavy Armor Mastery A"
+            ],
+            "branches": [
+                "Sunder",
+                "Raze",
+                "Teardown"
+            ],
+            "passive": {
+                "Aggravated Assault": "Your attacks with melee weapons that inflict crowd control conditions ignore 20% of your targets' AC and CR."
+            },
+            "abilities": [
+                "Slam",
+                "Mortal Strike",
+                "Execute",
+                "Cleave",
+                "Whirlwind",
+                "Rampage",
+                "Demolish",
+                "Challenge",
+                "Flatten"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Diviner",
+            "num_requirements": 1,
+            "preview": "A mage that specializes in the magical school of Divinations. As a mid-tier practitioner, this class has various spells to learn about future events, foresee the immediate and the distant future, and gain knowledge magically.",
+            "requirements": [
+                "Cloth Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Dynamancer",
+            "num_requirements": 2,
+            "flavor_text": "\"Thunder roars but does not strike. Lightning strikes but does not roar. Choose to be lightning.\"",
+            "description": "The Dynamancer is the entry level lightning mage. Specializing in the turbulent and wild aspect of lightning, the Dynamancer is a class focused mostly on dealing damage to one or multiple enemies, with some small capability to paralyze and stun as well. In exchange for increased offensive power compared to other elements and a heavy amount of flexibility with each spell, lightning mages must deal with the inherent randomness that comes with playing with lightning. Sometimes, the Dynamancer's spells strike true, but other times they fail to reach parity with other mages' spells. The passive provides a small amount of reprieve from the web of random chance, allowing the class to reroll spell damage and effects when their luck is not in their favor and improving average damage in a decently reliable manner.",
+            "requirements": [
+                "\u00b7         Lightning Mastery A",
+                "\u00b7         Destruction Magic A or Cloth Armor Mastery A"
+            ],
+            "branches": [
+                "Shock",
+                "Electrify",
+                "Thunder"
+            ],
+            "passive": {
+                "Volatile Energy": "When you deal damage with a lightning spell or when you roll lower than a spell's average damage, gain a stack of Energy (gain 2 stacks if both of these are fulfilled). You may spend 1 stack of Energy when you cast a spell to reroll any damage dice of your choice and/or reroll any random effects that spell has. You may only do this once per spell."
+            },
+            "abilities": [
+                "Spark Bolt",
+                "Live Wire",
+                "Lightning Bolt",
+                "Lightning Rod",
+                "Energize",
+                "Frazzle"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Enchanter",
+            "num_requirements": 2,
+            "flavor_text": "I watched on as he carefully inscribed his runes upon animal bones, knit together leather with magical seals, brushed the eerie skin tone paints upon a wooden, lifeless face, all while deftly avoiding the ritual circle he had encased his work inside of, and I lamented. For this doll, this macabre mockery of the young master's image, might soon move with enchanted grace and intelligence. But it would never love him as the boy did, only imitate.",
+            "description": "The Enchanter is an entry level mage that specializes in the magical school of Enchantment, using magical runes and inscriptions to apply effects to objects and equipment. Such mages are a mainstay of many armies, using their spells to augment the power of weapons and armor as well as reinforcing walls and defensive structures. They are also effective on a smaller scale, assisting party members by providing buff-like effects without taxing buff limit. This class provides a good number of entry level offensive, defensive, and utility effects for the aspiring party mage.",
+            "requirements": [
+                "\u00b7         Enchantment Magic A",
+                "\u00b7         Cloth Armor A"
+            ],
+            "branches": [
+                "Personal",
+                "Structural",
+                "Minutiae"
+            ],
+            "passive": {
+                "Perpetual Runology": "You may have enchantment spells you cast that require concentration continue without your concentration at half effectiveness when your concentration breaks or when you choose not to concentrate on the spell when you cast it."
+            },
+            "abilities": [
+                "Modify Weapon",
+                "Reforge Armor",
+                "Alter Jewelry",
+                "Reconstruct Barrier",
+                "Rebuild Floor",
+                "Secure Building",
+                "Mint Coinage",
+                "Enhance Vehicle",
+                "Empower Ammo"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Evolutionist",
+            "num_requirements": 1,
+            "preview": "An alchemist that has mastered transformation alchemy. This class has its own transformations that can change objects and creatures into new things entirely, for various offensive, defensive, and utilitarian purposes.",
+            "requirements": [
+                "Cloth Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Fire Duelist",
+            "num_requirements": 1,
+            "preview": "A fighter that primarily uses longswords, using their free hand to cast fire magic spells both damaging and buffing in nature, and performing brilliant magic/melee combos.",
+            "requirements": [
+                "Longblade Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Gladiator",
+            "num_requirements": 1,
+            "preview": "A fighter forged in the pits that uses a one handed weapon in one hand and nets/ropes in the other hand to fight tactically and impress spectators, thereby increasing his own power.",
+            "requirements": [
+                "Any Melee Weapon (no Unarmed) Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Healer",
+            "num_requirements": 1,
+            "preview": "A mage that specializes in the magical school of Restoration. As a mid-tier practitioner, this class has many spells to heal himself, other allies, and entire groups, as well as cleanse conditions and cure diseases.",
+            "requirements": [
+                "Cloth Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Ice Duelist",
+            "num_requirements": 1,
+            "preview": "A fighter that primarily uses onehanded spears, using their free hand to cast ice magic spells both damaging and buffing in nature, and performing brilliant magic/melee combos.",
+            "requirements": [
+                "Ice Magic Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Illusionist",
+            "num_requirements": 1,
+            "preview": "A mage that specializes in the magical school of Illusions. As a mid-tier practitioner, this class has a variety of types of illusions, for offensive and utilitarian purposes, and a handful of other manipulative buffs, conditions, and utilities.",
+            "requirements": [
+                "Cloth Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Inventor",
+            "num_requirements": 2,
+            "flavor_text": "\"There are no rules. That is how art is born, how breakthroughs happen. Go against the rules or ignore the rules. That is what invention is about.\"",
+            "description": "Inventor is the entry level alchemist that specializes in construct alchemy. Construct alchemy allows one to bring pseudo-life to inanimate objects by first building a body that houses a mixture of chemical and electronic parts to imitate biological functions and intelligence. Constructs, when compared to the organic products of organics alchemy, tend to be more fragile but a little more modular and flexible. Some larger cities might have construct alchemists who build various quality of life constructs to help with day to day work, but this class specializes in constructs more apt at the rigors of an adventuring day. All of the constructs available from this class are made to be deployed in combat as a Minor Action, so they are designed to be compact and straightforward, but many constructs can be highly complex with a lot of moving parts. Finally, the class has abilities allowing you to quickly modify deployed constructs during combat.",
+            "requirements": [
+                "\u00b7         Construct Alchemy A",
+                "\u00b7         Cloth Armor Mastery A"
+            ],
+            "branches": [
+                "Haywire",
+                "Processor",
+                "Maintenance"
+            ],
+            "passive": {
+                "Gift of Knowledge": "At the end of a long rest, you may create the product of an Inventor ability without needing the materials. A construct made this way has its Duration extended to 6 hours."
+            },
+            "abilities": [
+                "Burner Bot",
+                "Potion Puppet",
+                "Remodulate"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Jouster",
+            "num_requirements": 1,
+            "preview": "A fighter that specializes in the use of polearms. It uses its reach to play defensively while setting up good positions for devastating charge attacks and piercing blows.",
+            "requirements": [
+                "Heavy Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Lasher",
+            "num_requirements": 1,
+            "preview": "A fighter who uses whips and chains to control enemies at medium range, while dealing damage with lashes and whip strikes. The lasher fights on a unique axis because of the various types of techniques possible with an undulating weapon such as the whip.",
+            "requirements": [
+                "Fine Weapon Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
             "name": "Lightning Duelist",
+            "num_requirements": 2,
             "flavor_text": "One second, the two strangers were calmly watching each other from opposite sides of the raucous tavern; the next second, we heard a clap of thunder, and the smaller one had closed the gap in the blink of an eye. Everything was suddenly quiet, but for the slightest hum of energy and tension. We all held our breath even as the hair on the backs of our necks stood on end, and we prayed that the stranger's sword would stay in its scabbard.",
             "description": "The Lightning Duelist is one of many spellblade variants that focuses on one element and one weapon. This class wields a rapier in one hand and volatile lightning magic in the other. By seamlessly weaving together rapier lunges and jabs with lightning magic spells, the Lightning Duelist has excellent action economy. His individual spells are weaker than a dedicated lightning mage's, but his weapon provides increased flexibility and effectiveness at shorter ranges, and his offensive output can surpass a regular duelist's with efficient usage of physical and magical arts. His spells are primary buffing and damaging in nature, with all of the random, violent flavor that lightning spells tend to have, and there is a heavy emphasis on mobility and flexibility of aggressive attack patterns.",
-            "num_requirements": 2,
-            "full_requirements": [
-                "Lightning Mastery A",
-                "Fine Weapons Mastery A"
+            "requirements": [
+                "\u00b7         Lightning Mastery A",
+                "\u00b7         Fine Weapons Mastery A"
             ],
             "branches": [
                 "Dueling",
@@ -2775,220 +2682,632 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "clazz",
-            "name": "Lasher",
-            "flavor_text": "",
-            "description": "",
+            "name": "Luxomancer",
             "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "flavor_text": "\"It is during our darkest moments that we must focus to see the light.\"",
+            "description": "The Luxomancer is a mage who has begun to specialize in the use of light as a magical element. Light is a powerfully supportive element with some high powered damage spells to round out the suite. Light can provide a number of useful buffs such as additional damage, accuracy, and penetration, or defense spells in the form of shielding yourself or blinding enemies. Healing and cleansing spells are also the purview of light; the element has access to the highest value healing spells amongst all eight elements. The damaging spells in the light element tend to have good ratios; AOE damage spells tend to prefer lines instead of squares. A Luxomancer will find that they have a solid suite of spells to play a backline mage within a party, healing and supporting the frontline when necessary, and providing DPS whenever possible. The passive provides the opportunity to convert some of the actions you spend dealing damage into increased healing to be spent on later turns or even at the end of a combat encounter. Luxomancer is an excellent first choice for elemental mages.",
+            "requirements": [
+                "\u00b7         Element: Light A",
+                "\u00b7         Cloth Armor Mastery A"
+            ],
+            "branches": [
+                "Luminosity",
+                "Radiance",
+                "Gleam"
+            ],
+            "passive": {
+                "Guiding Light": "When you spend mana on an attack spell, bank half that amount in a special pool of Healing Mana. You can spend Healing Mana only on Restoration spells. Your Healing Mana pool dumps at the end of a combat encounter if you don't spend it beforehand."
+            },
+            "abilities": [
+                "Lightbolt",
+                "Light Touch",
+                "Dancing Lights"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Fire Duelist",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "name": "Marksman",
+            "num_requirements": 1,
+            "preview": "An archer that specializes in the use of the crossbow. Eschewing the superior range and damage of the bow, the marksman gains additional versatility and ease of use with their weapon of choice.",
+            "requirements": [
+                "Light Armor Mastery Rank A"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Dark Duelist",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "name": "Martial Artist",
+            "num_requirements": 1,
+            "preview": "A monk that uses punches and kicks to devastating effect. By chaining a number of techniques together, this class ramps up in damage before eventually ending fights with powerful finishers.",
+            "requirements": [
+                "Cloth or Light Armor Mastery Rank A"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Water Duelist",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "name": "Mentalist",
+            "num_requirements": 1,
+            "preview": "A user of psionic arts, using their mind for various utilitarian purposes such as telekinesis and mind reading. This class also protects its allies from psionic and magic invasion.",
+            "requirements": [
+                "Defensive Psionics Rank A"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Viking",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Jouster",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Destroyer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Cavalier",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 2,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Chain Master",
-            "flavor_text": "",
-            "description": "",
+            "name": "Necromancer",
             "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "preview": "A mage/alchemist that raises corpses as mindless zombies or skeletons to do their bidding, using either the power of dark and horrible magics or forbidden alchemy on humans. Uses their undead slaves to fight with numbers, as well as perform other spells manipulating the forces of undeath.",
+            "requirements": [
+                "Any 2 of Organics Alchemy Rank A",
+                "Dark Magic Rank A",
+                "Summoning Magic Rank A"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Pinpoint Monk",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "name": "Noxomancer",
+            "num_requirements": 2,
+            "flavor_text": "Why is it that children are always afraid of the dark? It's not something their parents teach them, after all. Is it a natural human fear of the unknown and the unseen? Or is there something about darkness itself that should be feared?",
+            "description": "The Noxomancer is one of 8 offensive elemental mages. Harnessing the sinister aspect of dark, the Noxomancer is an aggressive class that deals both single target and AOE damage, but especially excels at stacking conditions on enemies, especially curses. He can inflict a variety of debilitating effects from blindness to fear, all while piling on damage. A small suite of utility spells allows the Noxomancer to take advantage of a variety of situations. Overall, the Noxomancer's slow and steady damage output is a force to be reckoned with.",
+            "requirements": [
+                "\u00b7         Dark Magic A",
+                "\u00b7         Destruction Magic A or Cloth Armor Mastery A"
+            ],
+            "branches": [
+                "Devastation",
+                "Affliction",
+                "Obfuscation"
+            ],
+            "passive": {
+                "Neverending Nightmare": "Whenever a non-curse condition that was inflicted by you ends (in any manner, including cleanse) on an enemy in sight, they gain a curse."
+            },
+            "abilities": [
+                "Shadow Bolt",
+                "Darkbomb",
+                "Corruption",
+                "Defile",
+                "Shriek",
+                "Spreading Madness",
+                "Siphon Soul",
+                "Treachery",
+                "Fiendish Circle"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Psion",
+            "num_requirements": 2,
+            "flavor_text": "\"I wish I could tell you that the mind is like an open book, but it rarely is. Even the dullard who spends every day shoveling cow shit at his farm has a mind like a fortress, whose hallways twist like a labyrinth, whose deepest treasure rooms are guarded by iron wrought portcullises and inscrutable guardians. Diving into someone else's psyche is an incredible risk. Take care whose mind you go idly waltzing through.\"",
+            "description": "The Psion is one of two entry level classes that use psionics as their primary way of engaging in combat. Psionics are unique in a number of ways from other combat styles. Psionic attacks deal psychic damage, a type of physical damage that cannot be dodged and ignores AC, but checks against defensive psionics and works in an all or nothing fashion. When you make a psionic attack, you roll Offensive Psionics to determine the DC that the target needs to beat with Defensive Psionics in order to negate all damage and effects. Additionally, you can pay for psionic abilities with health, stamina, or mana, meaning you have a lot of flexibility and can maintain psionic combat for quite a bit longer than other combat styles. You are still restricted to targets you have line of sight on, and psionic builds are difficult to support with gear. Psion provides ways to deal psionic damage to one or multiple targets, as well as a number of offensive psychic conditions and displacements as well as defense for both you and your party.",
+            "requirements": [
+                "\u00b7         Offensive Psionics Rank A",
+                "\u00b7         Defensive Psionics Rank A"
+            ],
+            "branches": [
+                "Migraine",
+                "Mentalism",
+                "Memory"
+            ],
+            "passive": {
+                "Stress Headache": "You may make a psionic autoattack as a Major Action, which deals 2d10 psychic damage to any target you can see within 100 ft. Additionally, all psychic damage you deal is increased by X%, where X is three times the percentage of total health, stamina, and mana added up that you are missing."
+            },
+            "abilities": [
+                "Psyshock",
+                "Psywave",
+                "Befuddle",
+                "Insinuate",
+                "Focal Point",
+                "Brain Barrier"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Pyromancer",
+            "num_requirements": 2,
+            "flavor_text": "\"There may be a great fire in our hearts, yet no one ever comes to warm himself at it, and the passers-by see only a wisp of smoke\"",
+            "description": "The Pyromancer is the entry level mage that specializes in the use of spells aspected to the aggressive element of Fire. Fire magic sees heavy use in mage cadres of armies as well as heavy personal use for mage adventurers. As the premiere damage dealing element, Pyromancers enjoy a variety of high damage spells to target single or multiple enemies. Additional damage over time in the form of the Burn condition helps maintain a high level of DPS for a Pyromancer even when they find themselves forced to reposition or focus on other objectives in combat. The passive of the class helps make sure that this class's damage spells are relevant even in fights against magic damage tanks. The class has access to some minor area control, creating fields of flames that deter enemies from staying in one spot too long, and as all the other elemental mages do, the Pyromancer has access to a counterspell, but the vast majority of spells in the class's repertoire involve dealing damage in a straightforward manner, making the class an excellent choice for players looking to play a less complex style that still utilizes the system's flexible and powerful magic system.",
+            "requirements": [
+                "Element: Fire A",
+                "Cloth Armor A"
+            ],
+            "branches": [
+                "Incineration",
+                "Conflagration",
+                "Wildfire"
+            ],
+            "passive": {
+                "Reduce To Ashes": "Your damage-dealing fire spell attacks and your Burn damage triggers inflict targets with -5% Fire MR and +5% Fire Vulnerability, stacking."
+            },
+            "abilities": [
+                "Firebolt",
+                "Searing Blaze",
+                "Banefire",
+                "Magma Spray",
+                "Fireball",
+                "Heat Ray",
+                "Burn Trail",
+                "Pyroblast",
+                "Inflame"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Rifleman",
+            "num_requirements": 2,
+            "flavor_text": "\"DANGER! MISHANDLING OF FIREARM CAN RESULT IN SERIOUS INJURY OR DEATH. You are now the proud owner of an Achak Industries firearm, which comes with certain responsibilities which the Sultanate of Kraithan requires our company to inform you of. Do not point a firearm at anyone or anything you do not intend to fire at. Always assume a firearm is loaded. Achak Industries is not liable for any harm that comes to any law-abiding citizens as a result of improper or reckless use of our equipment. Do not even think of suing us; our lawyers are better than yours and also have guns. Thank you for your patronage.\"",
+            "description": "The Rifleman is the entry level bullet weapon class. The use of firearms is difficult for multiple reasons, which the Rifleman helps remedy: firearms require a special action called a Reload Action, which takes two Major Actions, to reload their ammunition, and firearms have an inherent misfire rate that forces a player to roll everytime they attack to see if their gun doesn't just fall apart. To make up for these weaknesses, the average firearm has improved damage capabilities thanks to the secondary fire, an alternative to regular autoattacks. The Rifleman has abilities to minimize misfire, improve damage and speed, and abuse secondary fire and ammunition types to great effect, and acts as an excellent first step to any character who wishes to use firearms for the long term. Damage is high and range is medium compared to other ranged options, and firearms combine many of the unique strengths of both crossbows and bows, often piercing and pushing enemies back.",
+            "requirements": [
+                "\u00b7         Bullet Weapons Rank A",
+                "\u00b7         Light Armor Rank A"
+            ],
+            "branches": [
+                "Operation",
+                "Assembly",
+                "Maintenance"
+            ],
+            "passive": {
+                "Silver Bullet": "At the beginning of your turn, select a bullet currently chambered in a firearm in your inventory. It becomes a silver bullet, this class's unique special ammunition (if the bullet chosen is already special ammunition, it retains its other properties). When you create a silver bullet, you may choose an additional effect for the ammunition from the list below:\nAn attack with this ammunition ignores AC\nAn attack with this ammunition ignores MR\nAn attack with this ammunition cannot miss\nAn attack with this ammunition gains an extra damage die"
+            },
+            "abilities": [
+                "Bodyshot",
+                "Burst Fire",
+                "Iron Sights",
+                "Bleeding Bullet",
+                "Quick Reload",
+                "Steady Shooting"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Samurai",
+            "num_requirements": 1,
+            "preview": "A fighter who never backs down from a fight, defying pain and death to continue attacking fiercely. Uses katanas and special blade drawing strikes for swift and powerful attacks.",
+            "requirements": [
+                "Longblade Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Sentinel",
+            "num_requirements": 2,
+            "flavor_text": "\"There is a place where civilization gives way to twisting undergrowth and unknown shores. Where good and evil just barely begin to blur together. A place where brave heroics fail and terror dominates the heart. This is the place where he stands guard. Waiting for the end.\"",
+            "description": "The Sentinel is a fighter class that has mastered the use of shields as weapons. Dual wielding bladed shields with specialized chain systems attached to their wristguards, the Sentinel has redefined the art of shield combat with innovative new techniques. Being able to double down on the defensive aspects of shields, the Sentinel also brings vicious new attacking opportunities and a wealth of utility and mobility. This class bides its time playing defensively in order to release energy in a burst of explosive movements and attacks in later rounds. The chains on his shields allow for easy shield tossing and dragging himself and opponents where he pleases, and opens up his effective range and target selection. While dual wielding is technically optional with this class, choosing to hold two shields maximizes the abilities this class provides. In order to help these specialized shields mesh with other classes, the Sentinel treats all shields that have implicit damage as axes, longblades, blunt weapons, and heavy throwing weapons as well. The default range for a Sentinel's shield chain is 30 ft, and can be picked up from range using the chains as a free action.",
+            "requirements": [
+                "\u00b7         Armor: Shields A",
+                "\u00b7         Weapons: Shields 5"
+            ],
+            "branches": [
+                "Dauntless",
+                "Stalwart",
+                "Tenacious"
+            ],
+            "passive": {
+                "Perfect Shield": "While you are not in Shield stance, when you block an attack, gain a Shield stack. At the end of your turn, you may expend all Shield stacks to gain that many special reactions and enter Shield stance until the beginning of your next turn. You may use special reactions gained this way as normal reactions or to cast any Sentinel ability. Sentinel abilities you cast this way have their stamina cost halved."
+            },
+            "abilities": [
+                "Crossguard Guillotine",
+                "Bladeshield Arc",
+                "Parallel Shields",
+                "Rapid Shields",
+                "Chain Rush",
+                "Chain Drag"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Skald",
+            "num_requirements": 1,
+            "preview": "A fighter/mage that specializes in very advanced buffing spells. As a master of self-targeted buff spells with some skill in the sword, this class prepares with both offensive and defensive buffs, then fights on the front lines.",
+            "requirements": [
+                "Any Melee Weapon (no Unarmed) Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Sniper",
+            "num_requirements": 2,
+            "flavor_text": "At 30 seconds to midnight, I reconfirmed my target, still sipping wine on the veranda. At 26 seconds, I drew my longbow, custom crafted for this single shot. I planned to shatter it and toss the remains in the nearby river afterwards. At 18 seconds, I finished applying the oils to the ammo I'd use. And at 7 seconds, I finally lined up the shot, and synced the rhythm of breath and heart to my countdown. 5\u20264\u20263\u20262\u2026",
+            "description": "The Sniper delivers death from afar. Unlike archers who use shortbows and crossbows for medium range engagements, firing dozens of arrows to slay their target, the Sniper relies on single, extremely powerful and accurate shots from extreme ranges. The firing rate of the average longbow tends to be lower, but the range and damage output easily make up for it. The Sniper expands upon the longbow's strengths by preparing carefully for each shot. He spots his target, tracks their movement, the way they dodge, the weak points in their armor. And finally, when he is ready to take the shot, he has already stacked all the cards in his favor.",
+            "requirements": [
+                "\u00b7         Bow Mastery A",
+                "\u00b7         Light Armor Mastery A"
+            ],
+            "branches": [
+                "Shooting",
+                "Aiming",
+                "Improvising"
+            ],
+            "passive": {
+                "Spotter": "At any time, you may mark an enemy target you can see as Spotted. While you have a Spotted target, you gain 1 stack of Spotting whenever you take a Major action that does not involve dealing damage or moving. You can also use your Major action to track your target, gaining 2 stacks of Spotting. You have a maximum limit of 8 stacks of Spotting. You lose all stacks of Spotting when a Spotted target dies, or when you switch the mark to a new target. When you attack a Spotted target with a ranged attack from a longbow, you expend all stacks of Spotting, and deal 25% increased damage per stack expended this way."
+            },
+            "abilities": [
+                "Piercing Shot",
+                "Kill Shot",
+                "Shrapnel Shot",
+                "Rapid Shot",
+                "Distance Shooter",
+                "Precision Shooter",
+                "Analytical Shooter",
+                "Professional Shooter",
+                "Swift Sprint",
+                "Swift Shot",
+                "Bola Shot",
+                "Evasive Maneuvers"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Soldier",
+            "num_requirements": 2,
+            "flavor_text": "They teach you a whole lot about keeping yourself together in Basic. How to swing your sword so you don't injure your wrist or shoulder. How to brace yourself for an impact against your shield. How to keep moving so a random archer doesn't end your career early. And most importantly, how to strike first, so they die before you do. They don't really talk about what to do after you've killed a man, though. And you've got to kill a lot of men before you learn the meaning of being a soldier.",
+            "description": "The Soldier is a fighter who wields sword and shield, but boasts an impressive level of mobility as well. Trained with more modern techniques of striking quickly and focusing on survival, this class provides a multitude of options for blocking or dodging incoming attacks, and fighting in a responsive, calculated style that wouldn't normally be expected of a fighter. The Soldier fights on the front lines like other fighters, but isn't restricted to heavy armor, and utilizes strategy over raw power to whittle down opponents.",
+            "requirements": [
+                "\u00b7         Longblades Mastery A",
+                "\u00b7         Shield Armor Mastery A"
+            ],
+            "branches": [
+                "Skirmish",
+                "Safeguard",
+                "Sprint"
+            ],
+            "passive": {
+                "Defensive Footwork": "When you use your reaction to use a block ability and successfully avoid/reduce damage from an incoming attack, gain a special reaction until the beginning of your next turn which can only be used for a dash reaction ability. When you use your reaction to use a dash reaction ability and successfully avoid/reduce damage from an incoming attack, gain a special reaction until the beginning of your next turn which can only be used for a block reaction ability. Special reactions provided by Defensive Footwork have their mana and stamina costs halved. Defensive Footwork can activate at most once per round, and refreshes at the beginning of each of your turns."
+            },
+            "abilities": [
+                "Fleetfoot Blade",
+                "Steadfast Strikes",
+                "Biding Blade",
+                "Sever The Head",
+                "Intercept",
+                "Shield Bash",
+                "Protective Sweep",
+                "Long Live The King",
+                "Dodge Roll",
+                "Double Time",
+                "Tactical Withdrawal",
+                "Vigor of Battle"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Summoner",
+            "num_requirements": 2,
+            "flavor_text": "\"The world is full of beautiful and intelligent creatures, just as it is filled to the brim with horrific, malevolent monsters. Which would you prefer?\"",
+            "description": "The Summoner is an entry level mage that has begun to master the school of summoning magic, a school that calls forth entities from distant lands and even other planes to fight by the caster's side. There is usually at least one summoner in every mage cadre, as the style lends itself well to fighting in the backline. As a mid-level practitioner of the art, the Summoner focuses on having a wide variety of options for summoning targets, including combat ready companions to attack and defend and utility based partners for problem solving, scouting, and skill usage. Each of the Summoner's spells creates an entity that has its own actions but also has a passive effect to help support other summons, which makes an army of summons increasingly powerful. Efficiency is all about picking the right summons for the right situations and finding a way to deal with the setup time required to build up a small army.",
+            "requirements": [
+                "\u00b7         Summoning Magic A",
+                "\u00b7         Cloth Armor Mastery A"
+            ],
+            "branches": [
+                "Pack",
+                "Herd",
+                "Flock"
+            ],
+            "passive": {
+                "Return to Aether": "While not in combat, you may dispel any of your summons freely. If you dispel a summon this way, you gain mana equal to half the mana spent to summon it."
+            },
+            "abilities": [
+                "Summon Ascarion Beast",
+                "Summon Asiok Dracolord",
+                "Summon Throatslitter Demon",
+                "Summon Siretsu Leviathan",
+                "Summon Batusan Golem",
+                "Summon Noxian Seraph",
+                "Summon Vilyrian Spellmaster",
+                "Summon Warpwurm",
+                "Summon Unseen Servant",
+                "Summon Estian Wayfinder",
+                "Summon Xat'hul Charmspirit",
+                "Summon Watcher"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Symbiote",
+            "num_requirements": 2,
+            "flavor_text": "\"He's far too humble for his own good. Always in the background, trying his best to avoid the spotlight. Doesn't speak a word, except when he's casting one of his spells. But without those spells, this team would be nothing. Hell, we probably would have died on our first mission. Kid won't admit it, but he's the backbone of the squad. Everyone might look to me for leadership, but not before I look to him for assurance.\"",
+            "description": "The Symbiote is a standard part of many mage cadres, as an intermediate level mage with a mastery of buff magic. Buff spells allow this class to assist their allies without having to attack their enemies and put themselves in harms way. As long as allies have enough composure to handle the strain of multiple buff spells, this class can turn the party into ruthless killing machines or steadfast and unbreakable defenders. As the entry level class for buff magic, this class contains a wide variety of buffing effects and the ability to maintain those effects for an extended period of time.",
+            "requirements": [
+                "\u00b7         Buff Magic Rank A",
+                "\u00b7         Cloth Armor Rank A"
+            ],
+            "branches": [
+                "Fiery Soul",
+                "Stone Body",
+                "Fluid Mind"
+            ],
+            "passive": {
+                "Eternal Bond": "When an ally you can see has a buff's duration expire on them for a buff spell that you originally casted, you may recast the spell if they are in range as a free reaction. Mana costs are halved for spells cast this way."
+            },
+            "abilities": [
+                "Strengthen Soul",
+                "Empower Soul",
+                "Bolster Soul",
+                "Embolden Soul",
+                "Strengthen Body",
+                "Empower Body",
+                "Bolster Body",
+                "Embolden Body",
+                "Strengthen Mind",
+                "Power Spike",
+                "Bolster Speed",
+                "Power Surge"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Techno Knight",
+            "num_requirements": 1,
+            "preview": "A fighter that wields a massive wrench in one hand, using the other to deploy a variety of tinkered inventions that assist in melee combat",
+            "requirements": [
+                "Tinkering Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Terramancer",
+            "num_requirements": 1,
+            "preview": "A mage that has begun to master the basics of earth magic. At this entry level, this class mostly focuses on spells that inflict damage on enemies, with the added aspects and flavors that earth spells tend to provide in terms of defense and terrain manipulation.",
+            "requirements": [
+                "Cloth Armor Mastery Rank A or Destruction Magic Rank A"
+            ]
         },
         {
             "type": "clazz",
             "name": "Tinkerer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "num_requirements": 2,
+            "preview": "An inventor that uses a quick hand and experience with small gadgets to quickly create and deftly deploy a variety of tinkering products, such as turrets, traps, and containers",
+            "requirements": [
+                "Tinkering Rank A",
+                "Lightning Magic Rank A"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Ki Monk",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "name": "Transmuter",
+            "num_requirements": 1,
+            "preview": "A mage that specializes in the magical school of Transmutation. As a mid-tier practitioner, this class has various spells to transform himself and his allies as well as entire groups, and a handful of utility spells too.",
+            "requirements": [
+                "Cloth Armor Mastery Rank A"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Golem Master",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "name": "Viking",
+            "num_requirements": 2,
+            "preview": "A fighter that wields an axe in one hand and a shield in the other. Using their shield to push enemies off balance, they follow up with axe strikes for critical strikes and powerful cleaves.",
+            "requirements": [
+                "Shield Armor Mastery Rank A",
+                "Axe Mastery Rank A"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Transfusionist",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "name": "Warlord",
+            "num_requirements": 2,
+            "flavor_text": "I could feel the scream trapped in my throat and could not tear my eyes away from the grisly spectacle before me. Blood dripped from the corpses pinned to the walls, and the sound of each drop threatened madness. The guilty and innocent lay here; eviscerated, torn to shreds, filled with holes. In a brief moment of poignant horror, I wondered how I would explain to the children. And I questioned what kind of man would lust for such senseless violence.",
+            "description": "The Warlord is a fighter that understands the value of flexibility. Adept at fighting at close range with a variety of melee abilities and controlling longer ranges with a ranged weapon of their choice, the Warlord dominates the battlefield by abusing range advantages against less prepared foes. Diving in close against archers and mages, kiting other fighters, harrying enemies as they approach, this class can reliably put down a constant stream of damage and never wastes turns getting into position due to good mobility. The Warlord is rewarded, however, for switching between ranged and melee attacks frequently, forcing enemies to keep up with constantly changing tactics.",
+            "requirements": [
+                "\u00b7         Any Melee Weapon A (but not Unarmed Mastery)",
+                "\u00b7         Any Ranged Weapon A"
+            ],
+            "branches": [
+                "Close Range",
+                "Long Range",
+                "Weapon Swap"
+            ],
+            "passive": {
+                "Calculated Aggression": "When you successfully deal physical damage with a melee weapon to a target, your next ranged attack becomes empowered for 50% increased physical damage. When you successfully deal physical damage with a ranged weapon to a target, your next melee attack becomes empowered for 50% increased physical damage. Calculated Aggression can trigger at most once per turn and the empowered effect does not stack."
+            },
+            "abilities": [
+                "Pivot and Slash",
+                "Knock Aside",
+                "Crippling Blow",
+                "Advancing Fire",
+                "Hookshot",
+                "Stopping Shot",
+                "Weapon Swap: Roll",
+                "Weapon Swap: Quaff",
+                "Weapon Swap: Attack"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Morphologist",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "name": "Warrior",
+            "num_requirements": 2,
+            "flavor_text": "We were lost in the heat of battle, our once advantageous position shattered like glass. Acrid, fetid smoke, tinged with the flavors of blood and bile, filled our lungs and threatened to steal our lives even as we were cut down by the dozens. We were green recruits in a war far too brutal for the most hardened of veterans. And it was his cry, that glorious call to arms, which saved us.",
+            "description": "The Warrior is by nature a specialist. On the outside, he appears to be a run of the mill fighter that you might expect to see as a city guardsman or a caravanserai. However, the Warrior has made the simple act of waging war into a carefully measured process. The Warrior efficiently slays masses of foes while protecting his squad; he fells giant beasts while holding a defensive line; he is a centerpiece of calm when the rest of the team panics during an ambush. The warrior has simple and effective options for single and multi-target attacks, straightforward defensive techniques, and special warcries that provide buffs or apply conditions to large groups.",
+            "requirements": [
+                "\u00b7         Any melee weapon mastery skill at Rank A",
+                "\u00b7         Any armor mastery skill at Rank A (but not Cloth Armor Mastery)"
+            ],
+            "branches": [
+                "Assault",
+                "Protect",
+                "Warcry"
+            ],
+            "passive": {
+                "Warleader": "You gain 25% increased physical damage for each buff active on you. On your turn, you may end any buff on you of your choice as a free action to empower an ally who can hear you, increasing their next attack's damage by 25%."
+            },
+            "abilities": [
+                "Spill Blood",
+                "Cut Down",
+                "Hack and Slash",
+                "Summary Execution",
+                "Shields Up",
+                "Reinforce Armor",
+                "Take Cover",
+                "Paragon of Victory",
+                "\"Charge!\"",
+                "\"Fight me!\"",
+                "\"Overcome!\"",
+                "\"Kill them all!\""
+            ]
         },
         {
             "type": "clazz",
-            "name": "Upgrade Alchemist",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "name": "Water Duelist",
+            "num_requirements": 2,
+            "preview": "A fighter/mage that wields a whip in one hand and water magic in the other. Boasting the balanced, jack-of-all-trades style of water magic with the flexibility and speed of a whip, the class plays to a careful, combo focused style.",
+            "requirements": [
+                "Water Mastery Rank A",
+                "Fine Weapon Mastery Rank A"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Reconstructionist",
-            "flavor_text": "",
-            "description": "",
+            "name": "Ambusher",
             "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "preview": "A rogue that hides amongst nature to set up deadly ambushes with its special weapon, the blow gun. This weapon allows them to inject toxins from afar with great precision, and the weapon is faster than the more modern firearm.",
+            "requirements": [
+                "Sneak Rank A",
+                "Bullet Weapon Mastery Rank A",
+                "Poison Crafting A"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Modifier",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "name": "Arcane Artist",
+            "num_requirements": 2,
+            "preview": "A mage that infuses magic into its drawings in order to summon them to the material realm. Invoking the liquid of their ink as a medium, their pictures fight alongside them as fragile yet powerful summoned minions.",
+            "requirements": [
+                "Water Mastery Rank A",
+                "Summoning Magic Rank A"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Lifedrinker",
-            "flavor_text": "",
-            "description": "",
+            "name": "Arcane Trickster",
+            "num_requirements": 1,
+            "preview": "A rogue/mage that uses a magical hand for various utilitarian purposes, including unlocking doors and chests from afar and picking pockets without needing to approach. Has a variety of useful utility spells along with magically enhanced rogue abilities.",
+            "requirements": [
+                "Steal Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Assault Trooper",
+            "num_requirements": 2,
+            "preview": "An archer that uses a hand crossbow in one hand and a shield in the other. Mixing the defense of a shield with natural evasiveness and mobility, this class fights on the front line while maintaining a medium range in order to inflict damage.",
+            "requirements": [
+                "Shield Armor Mastery Rank A",
+                "Light Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Axelord",
+            "num_requirements": 1,
+            "preview": "A fighter that has mastered the use of axes, preferring to dual wield them and throw them whenever possible. Aggressive, combo-oriented, and excellent at dealing with large crowds of enemies.",
+            "requirements": [
+                "Heavy Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Barrager",
+            "num_requirements": 2,
+            "preview": "A fighter that specializes in throwing javelins, boulders, and other heavy artillery. The barrager uses different abilities for different types of ammunition, providing some flexibility to an otherwise straightforward fighting style.",
+            "requirements": [
+                "Light or Heavy Armor Mastery Rank A",
+                "Heavy Throwing Weapon Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Battle Architect",
+            "num_requirements": 2,
+            "preview": "A tradesman who adapts guns or crossbows to turrets and walls, rapidly deploying these constructs in battle. Requires a knack for invention and building.",
+            "requirements": [
+                "Bullet Weapon or Crossbow Mastery Rank A",
+                "Tinkering Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Blade Lord",
+            "num_requirements": 2,
+            "preview": "A rogue that eschews stealth in favor of practicing a high profile, flashy fighting style while dual wielding knives. Moving quickly in light and flexible armor, this class dominates short range with dagger combo strikes and mid-range with some of the most impressive dagger throwing abilities available to players.",
+            "requirements": [
+                "Shortblade Mastery Rank 5",
+                "Light Armor A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Bladerunner",
             "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "preview": "A fighter/mage that conjures blades of air to fight with. Highly mobile, this classes uses its dashes to stick to enemies and reposition around the map, and summons blades to deal more damage or control more zones.",
+            "requirements": [
+                "Longblade Mastery Rank A or Shortblade Mastery Rank A",
+                "Air Magic Rank A",
+                "Conjuration Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Bladesinger",
+            "num_requirements": 2,
+            "preview": "An artist/fighter who combines the fine arts of music and dance with the martial art of the duelist's sword or whip. By using the power of song to amplify their speed and power and dance to evade and maneuver, this class turns combat into a performance.",
+            "requirements": [
+                "Fine Weapon Mastery Rank A",
+                "Dancing Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Bodyguard",
+            "num_requirements": 1,
+            "preview": "A fighter that focuses on protecting his allies. Usually covered head to toe in plate mail and hefting a massive shield, this class is a fantastic defender, constantly by the side of their charge. It falters a bit in defending more than one person, but protecting one VIP is this class's specialty.",
+            "requirements": [
+                "Shield Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Bomber",
+            "num_requirements": 2,
+            "preview": "An inventor that creates bombs and mines. It tosses small grenades at enemies and plants hidden mines, all with self-made explosives",
+            "requirements": [
+                "Heavy or Light Throwing Weapons Rank A",
+                "Tinkering Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Captain",
+            "num_requirements": 3,
+            "preview": "A fighter who leads their fellow party members into battle. He stands on the front lines to inspire the troops, and gives party wide orders that manifest and buffs and enables party members to act out of turn.",
+            "requirements": [
+                "Any Melee Weapon (no Unarmed) Rank A",
+                "Heavy Armor Mastery Rank A",
+                "Interaction Leadership Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Card Master",
+            "num_requirements": 1,
+            "preview": "A rogue/mage that enchants a deck of playing cards with magical effects, randomly drawing these cards to throw at opponents at short range. Requires dexterity and luck.",
+            "requirements": [
+                "Enchantment Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Chain Master",
+            "num_requirements": 1,
+            "preview": "A mage that summons chains of ice. After understanding the use of chains in combat and combining this with a mastery of ice magic, this class uses these chains to bind and damage enemies, and control the battlefield with pulls, roots, and other crowd control abilities.",
+            "requirements": [
+                "Ice Magic Rank A"
+            ]
         },
         {
             "type": "clazz",
             "name": "Champion",
+            "num_requirements": 1,
             "flavor_text": "\"This one's the Spear of the Frozen Throne! Papa got it after looting the lair of a lich up north! And this one's the Blade of Sunlight! It shoots beams when in the hands of a hero! And here's the Bow of True Death! I'm not allowed to touch it because Papa says it's cursed. Pretty cool, huh? C'mon, Papa's got even cooler stuff in the attic!\"",
             "description": "The Champion is a fighter that has devoted his life to the mastery of as many weapons as possible. Just like how a mage might study for years to master a wide variety of spells, the Champion trains for years to master a wide variety of both melee and ranged weapons. The Champion has high strength to swing around greatsword and halberds but also has high dexterity to deftly handle whips and rapiers. The class swaps weapons easily, adapting to the situation, and is especially good at showing off the specific strengths and flairs of each type of weapon. The Champion may only require 3 weapon types to unlock, but is further rewarded for mastering more weapons over the course of their adventuring career.",
-            "num_requirements": 1,
-            "full_requirements": [
+            "requirements": [
                 "Any 3 Weapon Masteries Rank A"
             ],
             "branches": [
@@ -2997,7 +3316,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 "Type C Weapons"
             ],
             "passive": {
-                "Master of Arms": "Once per turn, you may freely swap weapons in both hands. After you do, you may make a free autoattack with an extra damage die on the weapon and with the following additional effects, based on weapon type:\n* Axe - Cleave reaches an additional space from your target\n* Blunt - The weapon's implicit condition cannot be resisted\n* Longblade - The weapon keeps its additional damage die for the rest of the round\n* Polearm - Reach is extended to 15 ft for the rest of the round\n* Shield - Blocking allows you to repeat this autoattack for the rest of the round as long as a shield remains equipped\n* Heavy Throwing Weapon - This attack creates a shockwave around the target, dealing its damage to enemies adjacent to your target as well\n* Bow - This attack pushes the target 20 ft away from you\n* Bullets - This attack causes a muzzle blast to deal damage to enemies adjacent to you as well\n* Crossbow - This attack penetrates enemies to travel its full length\n* Fine - This attack ignores AC and MR\n* Unarmed - This attack repeats twice more\n* Light Throwing Weapons - This attack cannot miss\n* Shortblade - This attack has +20% critical strike chance\n* Improvised - This attack has 2 more extra damage dice"
+                "Master of Arms": "Once per turn, you may freely swap weapons in both hands. After you do, you may make a free autoattack with an extra damage die on the weapon and with the following additional effects, based on weapon type:\nAxe - Cleave reaches an additional space from your target\nBlunt - The weapon's implicit condition cannot be resisted\nLongblade - The weapon keeps its additional damage die for the rest of the round\nPolearm - Reach is extended to 15 ft for the rest of the round\nShield - Blocking allows you to repeat this autoattack for the rest of the round as long as a shield remains equipped\nHeavy Throwing Weapon - This attack creates a shockwave around the target, dealing its damage to enemies adjacent to your target as well\nBow - This attack pushes the target 20 ft away from you\nBullets - This attack causes a muzzle blast to deal damage to enemies adjacent to you as well\nCrossbow - This attack penetrates enemies to travel its full length\nFine - This attack ignores AC and MR\nUnarmed - This attack repeats twice more\nLight Throwing Weapons - This attack cannot miss\nShortblade - This attack has +20% critical strike chance\nImprovised - This attack has 2 more extra damage dice"
             },
             "abilities": [
                 "Slice and Dice",
@@ -3016,36 +3335,446 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "clazz",
-            "name": "Captain",
-            "flavor_text": "",
-            "description": "",
+            "name": "Daggerspell",
             "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "flavor_text": "The difference between controlling magic and letting it control you is paper thin. By taking hold of this power, you accept that you shall spend the rest of your days walking a knife's edge, lest you fall prey to magic's perils.",
+            "description": "The Daggerspell is a rogue that has adapted some minor magics into their kit. In combat, this class uses damaging spells to attack enemies from medium ranges while closing in for the kill with an empowered dagger. The interplay of magic attacks and knife attacks will encourage the player to constantly change their angle of attack, and the benefits to doing so will allow them to dominate short to medium ranges. If melee combat isn't immediately a viable option, the class's passive generates potential while the player casts spells, enabling a powerful singular hit with the knife once the player is ready to execute on a site. Outside of combat, a number of rogue-themed utility spells provide the Daggerspell with magically enhanced rogue abilities, assisting them in various stealth based skills as well as providing them with a powerful set of abilities to lock in a scout archetype when running dungeons. This makes the class an excellent choice for adventurers and less so for anyone working in a more organized function such as an army.",
+            "requirements": [
+                "Shortblade Mastery A",
+                "Destruction Magic A",
+                "Utility Magic A"
+            ],
+            "branches": [
+                "Finesse",
+                "Acumen",
+                "Guile"
+            ],
+            "passive": {
+                "Ritual Dagger": "When you cast a spell, empower your next attack with a shortblade, granting it on-hit physical damage equal to half of the mana spent."
+            },
+            "abilities": [
+                "Fadeaway Slice",
+                "Rapid Jab",
+                "Shieldbreaker",
+                "Calling Card",
+                "Witchbolt",
+                "Exposing Tear",
+                "Hidden Blade",
+                "Invisibility",
+                "Rogue's Anlace"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Bladerunner",
-            "flavor_text": "",
-            "description": "",
+            "name": "Defiler",
+            "num_requirements": 1,
+            "preview": "A counterpart to the Auramancer, that creates patches of defiled ground to inflict conditions and CC over a wide area. With excellent area control and battlefield control, this class is one of the better offensive condition appliers.",
+            "requirements": [
+                "Condition Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Demonologist",
+            "num_requirements": 2,
+            "preview": "A mage that summons and binds demons to their will for nefarious purposes. This mage has carefully studied demonic influence through mortal worship and develops powerfully violent spells to copy the abilities of summoned demons. Restricted to Evil alignment characters",
+            "requirements": [
+                "Destruction Magic Rank A",
+                "Summoning Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Dragon Caller",
             "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "preview": "A mage that calls upon and fights alongside dragons of varying size and species. This mage has carefully studied draconic biology and develops powerfully violent spells to copy the abilities of summoned dragons. Restricted to Good alignment characters",
+            "requirements": [
+                "Destruction Magic Rank A",
+                "Summoning Magic Rank A",
+                "Knowledge Nature Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Dragonslayer",
+            "num_requirements": 2,
+            "preview": "A fighter that specializes in the hunting of large mythical beasts. Armed with abilities to follow their trail and cut away means of escape, this class wields a longsword or greatsword and wears specialized suits of armor.",
+            "requirements": [
+                "Longblade Mastery Rank A",
+                "Heavy Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Duelist",
+            "num_requirements": 2,
+            "preview": "A fighter that wields the rapier, fighting in a swift, graceful manner. Focusing on dodging as its main defense, the duelist attacks relentlessly and moves seamlessly between targets, delivering a series of jabs, parries, and dash strikes.",
+            "requirements": [
+                "Light Armor Mastery Rank A",
+                "Fine Weapon Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Eldritch Knight",
+            "num_requirements": 2,
+            "preview": "A fighter/mage that wields a melee weapon of their choice in one hand and defensive magic in the other. Using water magic for its balanced offensive and defensive properties, this class fights on the front line and relies on a host of defensive spells to avoid damage.",
+            "requirements": [
+                "Any Melee Weapon (no Unarmed) Rank A",
+                "Water Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Firewheeler",
+            "num_requirements": 2,
+            "preview": "A fighter/mage that wields a large circular weapon called a crescent blade, attacking swiftly with the large yet light weapon and augmenting long combos with fire attacks and boomerang tosses of the blade. The Firewheelers were originally a free spirited guild of dancers and warriors, and taking up the crescent blade means adopting their philosophy, so this class is restricted to Chaotic Good characters.",
+            "requirements": [
+                "Fine Weapon Mastery Rank A",
+                "Heavy Throwing Weapons Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Ghostspeaker",
+            "num_requirements": 1,
+            "preview": "A mage that digs through the annals of history to find and summon ghosts from the past. Can communicate with spirits and allies through telepathy and summon them to fight alongside him.",
+            "requirements": [
+                "Summoning Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Golem Master",
+            "num_requirements": 3,
+            "flavor_text": "Many forget that the creation of golems, conventionally thought to be creepy if not evil, is actually a type of alchemy invented by Aloys himself, a god of goodness and charity. One could even say that every golem is a disciple of the tenets of Aloys, and that their creation makes one a prophet.",
+            "description": "Golem Master is an alchemist that has combined its knowledge of organics and construct alchemy to unlock the lost art of golem creation. Golems are the ultimate in alchemical created life, just falling short of the final goal of all alchemists: true humanoid in vitro development. Golems have many of the qualities of regular humanoids, including middling intelligence, the ability to use equipment and tools, specialized skill sets, and class abilities. They have longer durations and are more durable than regular organics or constructs products, designed to act as extra party members during a dungeon delve or extra guards during open battlefield combat. They even roll death saves when their Health is depleted, just like player characters. This class provides several types of golems one can develop, as well as various ways of assisting golems in their long-term survival.",
+            "requirements": [
+                "\u00b7         Construct Alchemy A",
+                "\u00b7         Organics Alchemy A",
+                "\u00b7         Cloth Armor Mastery A"
+            ],
+            "branches": [
+                "Knighthood",
+                "Cadre",
+                "Retrain"
+            ],
+            "passive": {
+                "Gift of Intelligence": "At the end of a long rest, select a golem in your inventory. It has its Duration extended to 6 hours and its base Health, Stamina, and Mana are doubled. Only one golem may benefit from Gift of Intelligence at a time."
+            },
+            "abilities": [
+                "Golem Soldier",
+                "Golem Sapper",
+                "Golem Mage",
+                "Golem Scholar",
+                "Temporary Shutdown",
+                "Recycle"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Groveguard",
+            "num_requirements": 1,
+            "preview": "A fighter that has become one with nature, and defends it with powerfully defensive earth magic and a magically augmented shield. This class combines shield techniques with earth magic to create a powerful defense, with limited offensive capabilities.",
+            "requirements": [
+                "Shield Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Harrier",
+            "num_requirements": 3,
+            "preview": "An archer/mage that enchants their bolts and arrows with crowd control magic. This class excels at pinning down enemies at a range so that melee allies can effectively close in, and the class overall packs a lot of utility at the expense of damage.",
+            "requirements": [
+                "Bow Mastery Rank A",
+                "Enchantment Magic Rank A",
+                "Control Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Herald",
+            "num_requirements": 2,
+            "preview": "An artist/mage that uses the unique instrument of a horn to play music infused with air magic, providing buffs over a large area and creating sonic blasts.",
+            "requirements": [
+                "Air Magic Rank A",
+                "Buff Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Horizon Stalker",
+            "num_requirements": 3,
+            "preview": "An archer/mage that uses dark portals to kite or hunt enemies. The ranged version of the Voidwalker, this class sacrifices stealth for speed, and hammers enemies quickly before teleporting out of dicey situations to emphasize a guerilla warfare style of play.",
+            "requirements": [
+                "Dark Magic Rank A",
+                "Bow Mastery Rank A",
+                "Conjuration Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Infiltrator",
+            "num_requirements": 1,
+            "preview": "A rogue equipped with a unique weapon, the wrist crossbow, which requires a deft hand to use without being seen. Uses it for low profile assassinations at medium range. This class will usually use its abilities to stop targets in their tracks before closing in for a kill.",
+            "requirements": [
+                "Sneak Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Juggernaut",
+            "num_requirements": 3,
+            "flavor_text": "\"He's got a funny reputation as a guardian. Always putting himself in the front lines and protecting the rest of the party. People think it's because he cares about us. Truth is, he's just a fucking psychopath.\"",
+            "description": "The Juggernaut is a middle tier fighter that can very effectively front line for a party by acting as a health tank. Decent melee damage with either axes or blunt weapons is augmented by hefty amounts of high efficiency lifesteal, and a handful of other defensive abilities provide greater maximum health, passive healing in combat, or a variety of other health/healing based survivability options. Combine this with the ability to use health as stamina and the Juggernaut stands out as a particularly appealing option for any character with a high amount of Vitality, or a build that prioritizes maximum health. High Pain Tolerance allows a Juggernaut to maintain concentration without worrying about all the damage they're taking. The playstyle of Juggernaut rewards aggressive action, putting yourself in the middle of many enemies, and keeping your health as low as possible without putting yourself dangerously low. The class is purely focused on combat, providing no real out of combat utility, so it works excellently as a mercenary or soldier in an army.",
+            "requirements": [
+                "\u00b7         Weapons: Axes A or Weapons: Blunt A",
+                "\u00b7         Heavy Armor Mastery A",
+                "\u00b7         Athletics: Pain Tolerance A"
+            ],
+            "branches": [
+                "Butchery",
+                "Bloodshed",
+                "Gore"
+            ],
+            "passive": {
+                "What Doesn't Kill You": "Attack abilities that cost stamina can be paid for with an equal amount of health instead. Attacks cast this way have their physical damage increased by a percentage equal to the percentage of your missing health."
+            },
+            "abilities": [
+                "Wild Swing",
+                "Violent Riot",
+                "Draining Blow",
+                "Deathstroke",
+                "Hypertension",
+                "Blood Boil",
+                "Purge",
+                "Critical Condition",
+                "Hostility",
+                "Blood For Power",
+                "Tachycardia",
+                "Blood For Vigor"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Ki Monk",
+            "num_requirements": 2,
+            "preview": "A monk that fights both with its fists and its mind. This class uses its psionic powers to generate Ki, and then expends Ki in order to perform specialized psionic attacks at a range. Ki is primarily offensive, and can be used for buffs as well.",
+            "requirements": [
+                "Cloth or Light Armor Mastery Rank A",
+                "Offensive Psionics Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Lifedrinker",
+            "num_requirements": 2,
+            "preview": "A mage/alchemist that combines his natural healing magic with corrupted organic chemistry to manipulate the lives of enemies and allies. This class drains health, can transfer health/stamina/mana between party members, and can destroy organic creatures to regain resources.",
+            "requirements": [
+                "Cloth Armor Mastery Rank A",
+                "Organics Alchemy Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Lorekeeper",
+            "num_requirements": 1,
+            "preview": "A fighter that collects stories to pass onto future generations. Armed with a handaxe to cleave through falsehoods, this class records the history they observe, with an uncanny magical ability to foresee where and when history will unfold in a dramatic way.",
+            "requirements": [
+                "Axe Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Magic Gunner",
+            "num_requirements": 2,
+            "preview": "A gunner who augments his bullet clips with powerful destructive magic, allowing bullets to transform midflight for increased damage, area of effect, and utility",
+            "requirements": [
+                "Bullet Weapon Mastery Rank A",
+                "Destruction Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Mirror Mage",
+            "num_requirements": 3,
+            "flavor_text": "Mirrors don't lie; they only show a part of the truth. A broken mirror can distort the proportions of the reflected image such that it's no longer an accurate representation of reality. Or, perhaps more accurately put, it has the potential to show a nearly infinite number of new points of view. Thus, what you see is just a fraction of what could be.",
+            "description": "The Mirror Mage is an advanced mage that uses mirrors made of a combination of ice and light magic to reflect attacks and spells. This class is a natural step for the ice or light mage that sees the potential of line AOE spells or projectiles that are fired in a straight line to be improved upon. Mirrors provide the caster with new angles of attack, helping their spells avoid obstacles and helping the caster achieve line of sight of a target that might be hiding behind cover. As a class that utilizes defensive magic, there's also a host of use cases for these mirrors to protect the caster and their allies by providing reflective barriers, breaking line of sight, and sending enemy attacks right back. Playing this class requires some setup; the Mirror Mage will likely find themselves drawing lines and angles to set up mirrors so that they can fire off projectiles and line AOE spells without having to put themselves in harm's way. With good geometrical sense, the Mirror Mage can hammer enemies from anywhere on the battlefield, regardless of the barriers between.",
+            "requirements": [
+                "\u00b7         Magic: Defense A",
+                "\u00b7         Element: Light A",
+                "\u00b7         Element: Ice A"
+            ],
+            "branches": [
+                "Ray",
+                "Refraction",
+                "Reflection"
+            ],
+            "passive": {
+                "Alter Course": "Attacks that are redirected by you have their damage increased by 50%."
+            },
+            "abilities": [
+                "Glass Shot",
+                "Plane Mirror",
+                "Reflective Barrier"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Mistguard",
+            "num_requirements": 2,
+            "preview": "A mage that dons heavy armor and fights on the front line as a main tank, using ice magic to cast a wide array of defensive spells. One of the few mages that can be considered a true tank.",
+            "requirements": [
+                "Ice Magic Rank A",
+                "Heavy Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Modifier",
+            "num_requirements": 3,
+            "flavor_text": "\"Twin manasurge engines, a silicon-omensteel processor, a chassis of 60% adamantium and 40% mythril, and coils of true ice for cooling. Yeah, this thing's a monster, and that's not even getting into all the modular weapons systems. We're gonna revolutionize the war with this one.\"",
+            "description": "The Modifier is an advanced alchemist that has combined construct alchemy and augmentation alchemy and taken their study into a new direction. By focusing on constantly improving a single construct instead of diverting attention to many, the Modifier manages to build a truly powerful construct designed to survive many combats and be useful in many types of situations. The class has abilities to create specialized constructs with endless durations, which initially start out very weak but over time can be crafted by the alchemist into a true war machine, a perfect partner for investigations, or a sleepless bodyguard for many nights to come. Effectively using this class requires taking one of the abilities to develop a base form for the specialized construct, then adding to it with the other abilities from this class or other augmentation alchemy classes.",
+            "requirements": [
+                "\u00b7         Construct Alchemy A",
+                "\u00b7         Augmentation Alchemy A",
+                "\u00b7         Cloth Armor Mastery A"
+            ],
+            "branches": [
+                "Generate",
+                "Attachment",
+                "Extension"
+            ],
+            "passive": {
+                "Pet Project": "At the end of each of your turns, gain a special Major Action which can only be used for a Command Action directed to a construct. Command Actions given this way gain an additional Command."
+            },
+            "abilities": [
+                "Basic Voltron Chassis",
+                "Modular Weapons and Armor Set",
+                "Voltron Heart"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Morphologist",
+            "num_requirements": 2,
+            "preview": "An alchemist that has mastered organics and transformation alchemy. This class creates organic creatures that have the ability to morph freely to other organic creatures, in order to be highly adaptable to any situation and conserve alchemy resources.",
+            "requirements": [
+                "Cloth Armor Mastery Rank A",
+                "Organics Alchemy Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Pegasus Knight",
+            "num_requirements": 1,
+            "preview": "A fighter that rides a pegasus. Flying through the air on their trusty steed, wielding lithe spears in hand, the pegasus knight has improved mobility but lower damage than the cavalier, and is especially effective against mages.",
+            "requirements": [
+                "Light Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Pinpoint Monk",
+            "num_requirements": 2,
+            "preview": "A monk that uses precision strikes augmented with electricity to strike at a target's pressure points in order to paralyze and disable enemies. Their damage is low, but they make up for this in mobility, speed, crowd control, and amplified critical strikes.",
+            "requirements": [
+                "Cloth Armor Mastery Rank A",
+                "Lightning Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Ranger",
+            "num_requirements": 2,
+            "preview": "An archer that excels in the wilderness. Combining their impressive ability with ranged weapons with their superior ability to follow prey, this class can mark a target for death and follow it to the ends of the earth, before finishing it with arrows.",
+            "requirements": [
+                "Bow or Crossbow Mastery Rank A",
+                "Light Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Reaper",
+            "num_requirements": 3,
+            "flavor_text": "Nothing's quite as pointless as the last words of a man who's yet to realize he's already dead. Yet, those words must be uttered. Because beyond the gate lies an otherworldly quietness.",
+            "description": "A Reaper is more than just a mage or fighter; they are an omen of finality. Reaping the spirits of those cursed for death, a reaper cuts short lives with a gruesome mastery of the wicked scythe, or snuffs out souls with a unique curse signaling doomsday. The reaper's melee with scythe and spell leave behind harvestable souls which provide the reaper with the vigor to continue their solemn duty. Curses both mundane and unique make escaping the reaper's toll extremely difficult. With this combination of deadly conditions and scythe attacks, the reaper gives men a good reason to fear their deaths.",
+            "requirements": [
+                "\u00b7         Dark Mastery A",
+                "\u00b7         Axe Mastery A",
+                "\u00b7         Condition Magic A"
+            ],
+            "branches": [
+                "Decapitate",
+                "Dread",
+                "Doomsday"
+            ],
+            "passive": {
+                "Ferryman of the Dead": "When you kill an enemy with an attack from a scythe, or when an enemy dies while affected by one of your condition spells, they leave behind a soul that occupies the space they died in. Walking through a space occupied by a soul allows you or an ally to pick up the soul freely, healing for 20% of maximum health."
+            },
+            "abilities": [
+                "Soul Rend",
+                "Tornado of Souls",
+                "Deathstroke",
+                "Inevitable End",
+                "Call of the Void",
+                "Harvester of Life",
+                "Drag To Hell",
+                "Enslaved Soul",
+                "The End Is Coming",
+                "Death Throes",
+                "Frailty of Man",
+                "Final Fate"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Reconstructionist",
+            "num_requirements": 1,
+            "preview": "An alchemist that has mastered transformation and construct alchemy. This class creates transforming tools, weapons, and constructs with various autonomous functions and transformative abilities.",
+            "requirements": [
+                "Cloth Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Shadowdancer",
+            "num_requirements": 3,
+            "preview": "An artist that combines mystical dancing with shadowy black magics. This class can move through shadows and manipulate them at will. It also can move into a special dance, becoming a mass of shadows.",
+            "requirements": [
+                "Dark Magic Rank A",
+                "Cloth Armor Mastery Rank A",
+                "Dancing Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Soulbinder",
+            "num_requirements": 1,
+            "preview": "A mage that performs rituals to summon lost souls from beyond the veil of death, binding the souls to clay or dirt dolls to fight alongside them.",
+            "requirements": [
+                "Enchantment Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Steam Mage",
+            "num_requirements": 1,
+            "preview": "A mage that combines the powers of ice and fire in order to create powerful clouds of steam that scald enemies. With a unique mix of damage types and a powerful vector for damage delivery, the steam mage is excellent at both damage and obscuring battlefield clarity.",
+            "requirements": [
+                "Ice Magic Rank A"
+            ]
         },
         {
             "type": "clazz",
             "name": "Thief",
+            "num_requirements": 3,
             "flavor_text": "WANTED: The craven criminal who continues to harry our humble hamlet! The unnamed, unknown, unscrupulous usurper of the rightfully received revenues of our most righteous regime! This wanton mobster, whether man or woman or what have you, will with certainty maintain a masterful circumvention of our most muddled constabulary! The government guarantees a generous guerdon, gifted to the group who swiftly seizes this serpentine scofflaw!",
             "description": "The Thief is a career of daring exploits and mischief. Stealing from the rich and poor, the strong and weak, the Thief preys upon the riches of others for their own personal gain. With excellent abilities to sneak past watchful eyes and a knack for knifeplay, the Thief augments its meager combat ability with excellent stealing and sneaking abilities. This class switches between focusing on stealing and focusing on sneaking and adapts to the situation at hand, fluidly sifting through a bag of both offensive and defensive tricks, and is effective at critical strikes when stealth fails and combat breaks out.",
-            "num_requirements": 3,
-            "full_requirements": [
-                "Steal A",
-                "Sneak A",
-                "Shortblade Mastery A"
+            "requirements": [
+                "\u00b7         Steal A",
+                "\u00b7         Sneak A",
+                "\u00b7         Shortblade Mastery A"
             ],
             "branches": [
                 "Predator",
@@ -3072,502 +3801,180 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "clazz",
-            "name": "Assault Trooper",
-            "flavor_text": "",
-            "description": "",
+            "name": "Transfusionist",
             "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Groveguard",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Bodyguard",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Warper",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Ranger",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Paladin",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Duelist",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Barrager",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Blade Lord",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Pegasus Knight",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Bladesinger",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Shadowdancer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Ambusher",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Eldritch Knight",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Mistguard",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Daggerspell",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Dragonslayer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Reaper",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Firewheeler",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Harrier",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Horizon Stalker",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Mirror Mage",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Steam Mage",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Woodsman",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Herald",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Soulbinder",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Card Master",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Warlock",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Arcane Trickster",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Magic Gunner",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Battle Architect",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Bomber",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Visionary",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Dragon Caller",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Demonologist",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Axelord",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Juggernaut",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 3,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Tempest",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 4,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Evangelist",
-            "flavor_text": "\"To think that there would be somebody foolish enough to willingly choose darkness. You should realize that darkness is not such a simple thing. The shadow opposite light. The night opposite day. Right and wrong. Good and evil. Order and chaos. Reason and irrationality. Look at it. Savor it. Remember it well. This is the source of your power. Your initial impulses. Your first dive. Your original self. If you can't handle it, it's the end for you. Prepare yourself.\"",
-            "description": "Evangelist brings together the most powerful parts of ice and dark magic, casting high powered AOE spells with ease and causing widespread destruction. It also applies the typical conditions that ice and dark are capable of, but goes a step further with some unique curse abilities, including some that work with ice spells. However, the most integral part of the class is the passive, allowing the Evangelist to turn any damaging spell into a powerful and dangerous steroid. Evangelist is designed to be the final step for an ice or dark mage, and thus has a lot of extra power and complexity in its spells, but the passive also grants some extra synergy with other mages, allowing you to recontextualize your spell list into a list of possible augmentations.",
-            "num_requirements": 4,
-            "full_requirements": [
-                "Ice Mastery Rank A",
-                "Dark Mastery Rank A",
-                "Enchantment Magic Rank A",
-                "Destruction Magic Rank A"
+            "flavor_text": "Subject 12-C is a bipedal, endothermic amniote seeming to be created from an arachnid and a feliform carnivore. Subject is highly dangerous and has an unusually powerful sense of smell, and company personnel with any sort of uncovered wounds are advised to avoid assisting in containment procedures. If assistance from wounded personnel becomes necessary, it is advised that auditory impedance equipment be used, as Subject 12-C will speak the following hypnotic suggestion to its prey before attacking: \"Daddy will make it all better, sweetheart\u2026\"",
+            "description": "The Transfusionist is an alchemist that has taken the next step in the development of organics alchemy. With a dangerous blend of fine tuned chemistry and unethical augmentation alchemy, the Transfusionist evolves their organisms haphazardly by fusing them together to create volatile but superior creatures. Most of this alchemist's speciality is in taking the common products of organics alchemy and augmenting them with the powers of other creatures. Sometimes this involves roughly and messily stitching creatures together; other times, it involves forcing parasitism between species that would never normally associate. This class works best when the character has amassed a good number of organics products through other class abilities and organics blueprints.",
+            "requirements": [
+                "\u00b7         Organics Alchemy Rank A",
+                "\u00b7         Augmentation Alchemy Rank A",
+                "\u00b7         Cloth Armor Rank A"
             ],
             "branches": [
-                "Gelidus Ouranos",
-                "Nivis Obscurans",
-                "Magia Ensis"
+                "Mutualism",
+                "Parasitism",
+                "Experimentation"
             ],
             "passive": {
-                "Magia Erebea": "When you cast a damaging spell attack, instead of releasing the spell, you may absorb its energy to enchant your soul. You may only do so with one spell at a time; activating this passive with a new spell when you already have it active will end the previous effect to allow you to absorb the new spell and gain its effects. While enchanted this way, you lose 10 maximum health per turn. Maximum health lost this way is restored after a long rest and is not considered a condition. You may release Magia Erebea as a free reaction; otherwise, it continues until your maximum health reaches one. Magia Erebea is neither spell nor buff. While under the effects of Magia Erebea, you gain the following effects, based on the absorbed spell:\n* Your spell attacks gain on hit damage die equal to the damage die of the absorbed spell (if the spell has multiple modes resulting in multiple possible damage die configurations, take the mode with the lowest potential maximum damage)\n* Your spell attacks inflict any conditions that the absorbed spell would inflict as an on hit effect\n* Your spell attacks have their range extended by an amount equal to the range of the absorbed spell\n* You may have your spell attacks have their damage type changed to any element that the absorbed spell has\n* You become elementally aspected to the elements of the absorbed spell"
+                "Last Minute Fix": "Once per round, when you deploy an organism you've crafted, you may cast an Augmentation alchemy ability or use an Augmentation alchemy blueprint on that organism as a free action."
             },
             "abilities": [
-                "Krystalline Basileia",
-                "Iaculatio Orcus",
-                "Frigerans Barathrum",
-                "Anthos Pagetou Khilion Eton",
-                "Actus Noctis Erebeae",
-                "Supplementum Pro Armationem"
+                "Abhorrent Chimera",
+                "Organ Donor",
+                "Brain Worm",
+                "Perfect Fusion",
+                "Restoring Parasite",
+                "Corrupting Parasite",
+                "Enhancing Parasite",
+                "Parasitic Plague",
+                "Augment Transfer",
+                "Product Recall",
+                "Swap Parts",
+                "Adrenaline Rush"
             ]
         },
         {
             "type": "clazz",
-            "name": "Night Lord",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 4,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "name": "Upgrade Alchemist",
+            "num_requirements": 1,
+            "preview": "An alchemist that has mastered augmentation and transformation alchemy. This class combines the two disciples to create hybrid upgrades, with various modal functions and tiers of strength that can be built on top of one another, at the risk of harming its subject.",
+            "requirements": [
+                "Cloth Armor Mastery Rank A"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Ninja",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 4,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "name": "Venomist",
+            "num_requirements": 3,
+            "preview": "A mage that has learned to integrate a lifestyle of crafting toxins with their study of water spells, inflicting poisonous conditions with magic.",
+            "requirements": [
+                "Poison Crafting Rank A",
+                "Condition Magic Rank A",
+                "Water Mastery Rank A"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Voidwalker",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 4,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "name": "Viper Knight",
+            "num_requirements": 1,
+            "preview": "A fighter that uses a poison tipped whip and an evasive fighting style to aggressively apply toxins to enemies with multiple strikes.",
+            "requirements": [
+                "Poison Crafting Rank A"
+            ]
         },
         {
             "type": "clazz",
-            "name": "Gatekeeper",
-            "flavor_text": "",
-            "description": "",
+            "name": "Visionary",
+            "num_requirements": 1,
+            "preview": "A fighter/mage that uses magic to see briefly into the future to divine the best possible outcomes of their attacks, covering close and long ranges with spears and javelins and using planning and foresight to win",
+            "requirements": [
+                "Heavy Throwing Weapons Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Warlock",
+            "num_requirements": 1,
+            "preview": "A mage that gains chaotic divine powers from Aloys, Phaxet, or Dren. They perform rituals in their god's name and are granted visions and tasks from their deity. They must swear a binding oath to their god of choice and be of matching alignment. Ability branches have varying power based on which god is followed.",
+            "requirements": [
+                "Enchantment Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Warper",
+            "num_requirements": 3,
+            "flavor_text": "Blink. An unsuspecting guard, a gate left ajar. Blink. A startled scullery maid, a kitchen cleaning supper. Blink. A resplendent armored door, a hall lined with busts and paintings. Blink. A rich tyrant, a place to die.",
+            "description": "The Warper is an assassin that has augmented all of his techniques with magic. Instead of standard infiltration with lockpick and stealth, the Warper uses short range teleports to close gaps and move from shadow to shadow. Instead of the usual process of slitting throats and poisoning dinners, the Warper uses control magic to make their targets helpless. The Warper is all about the process of getting to your target and locking it down. It is an enabling class that allows you to execute on the fantasy of an assassin mage.",
+            "requirements": [
+                "\u00b7         Conjuration Magic Rank A",
+                "\u00b7         Control Magic Rank A",
+                "\u00b7         Shortblades Mastery Rank A"
+            ],
+            "branches": [
+                "Stabbing",
+                "Translocations",
+                "Hexes"
+            ],
+            "passive": {
+                "Opportunistic Predator": "When you make an attack against an enemy that is crowd controlled, gain 50% increased critical strike chance on that attack. This triggers at most only once per round."
+            },
+            "abilities": [
+                "Quicksilver Dagger",
+                "Sever Tendons",
+                "Hunter's Knife",
+                "From Nowhere",
+                "Controlled Blink",
+                "Dispersal",
+                "Teleport Other",
+                "Malign Gateway",
+                "Stunbolt",
+                "Ensorcelled Hibernation",
+                "Dazzling Spray",
+                "Fulminant Prism"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Woodsman",
+            "num_requirements": 2,
+            "preview": "A fighter/archer who uses their trusty axe and shortbow to hunt game, assisted by all manner of game hunting traps. Right at home in the wild, this class carefully plans hunts with a variety of melee and ranged options augmented by carefully deployed traps.",
+            "requirements": [
+                "Bow Mastery Rank A",
+                "Axe Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Auramancer",
             "num_requirements": 4,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "preview": "A mage that infuses their surroundings with magic, creating enchanted pockets of air that provide large groups with powerful boons or debuffs.",
+            "requirements": [
+                "Air Magic Rank A",
+                "Enchantment Magic Rank A",
+                "Buff Magic Rank A",
+                "Condition Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Brawler",
+            "num_requirements": 1,
+            "preview": "A monk that eschews the noble martial arts of its predecessors, preferring to fight without holding back. This class will use underhanded tactics like punching below the belt, using surrounding materials as weapons, and augmenting its attacks with terrible dark spells and blazing fire spells.",
+            "requirements": [
+                "Dark Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Cleric",
+            "num_requirements": 3,
+            "preview": "A mage that has sworn to fight against the forces of evil. Using powerful lighting strikes and beams of light from the heavens, the cleric is effective at smiting enemies, but is also one of the best healing classes available.",
+            "requirements": [
+                "Lightning Magic Rank A",
+                "Light Magic Rank A",
+                "Destruction Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Corpselight",
+            "num_requirements": 4,
+            "preview": "A mage that can conjure a special lantern that attracts evil aligned entities, in order to capture them for later summoning. Running a fine line between dark and light, good and evil, the class is alignment restricted to LN, TN, CN.",
+            "requirements": [
+                "Dark Magic Rank A",
+                "Light Magic Rank A",
+                "Conjuration Magic Rank A",
+                "Summoning Magic Rank A"
+            ]
         },
         {
             "type": "clazz",
             "name": "Demon Hunter",
+            "num_requirements": 4,
             "flavor_text": "\"There will never be peace between humanity and Hell. We create these demons; they're born of our own twisted hearts and blackened souls. Folks ask me what's the worst I've seen while on the job; I don't have the heart to tell them that those memories have nothing to do with demons. It makes an old, melodramatic coot like me want to turn my guns on the ones I've sworn to protect, sometimes. But as long as there's still one good person left on this earth...Well, I can tolerate any number of demons for just one angel.\"",
             "description": "The Demon Hunter has a thankless job. A master of light and lightning magic, and armed with demon slaying weapons, he dives into the fray against the foulest creatures in the multiverse. Sometimes persisting for weeks amongst their kind, doling out holy death in an almost reckless manner; in reality, the Demon Hunter specializes in the simple act of survival against beings who have lived for centuries and mastered every dark art in the book. This class understands well the balance between maintaining a careful defensive manner and exploiting brilliant yet narrow offensive opportunities. The class's passive provides ample defensive options to allow the user to spend their action economy on attacking instead, which in turn grants them further use of their passive. With powerful light and lightning spells similar to the Cleric's, but with a focus on defense, and deadly ranged attacks, the Demon Hunter represents a pinnacle of efficiency, a maelstrom of human willpower, and a nightmare to every demon that crosses his path.",
-            "num_requirements": 4,
-            "full_requirements": [
+            "requirements": [
                 "Light Mastery Rank A",
                 "Lightning Mastery Rank A",
                 "Bow, Crossbow, or Bullet Weapons Rank A",
@@ -3579,901 +3986,253 @@ var BarbsComponents = BarbsComponents || (function () {
                 "Humanity"
             ],
             "passive": {
-                "Evil's Bane": "At the beginning of each turn, gain a stack of Hunter. You also gain a Hunter stack when you successfully deal 100 damage in a single round, but only once per round (this effect refreshes at the beginning of your turn). Lose all stacks of Hunter after combat ends. You may expend a Hunter stack as a free reaction at any time to perform one of the following:\n* Gain an additional reaction this round\n* Cleanse a condition of your choice on yourself\n* Heal for 5d10 health\n* Ignore all effects from enemy fields until the beginning of your next turn"
+                "Evil's Bane": "At the beginning of each turn, gain a stack of Hunter. You also gain a Hunter stack when you successfully deal 100 damage in a single round, but only once per round (this effect refreshes at the beginning of your turn). Lose all stacks of Hunter after combat ends. You may expend a Hunter stack as a free reaction at any time to perform one of the following:\nGain an additional reaction this round\nCleanse a condition of your choice on yourself\nHeal for 5d10 health\nIgnore all effects from enemy fields until the beginning of your next turn"
             },
             "abilities": [
                 "Demonbane Blast",
                 "Consecrated Carnage",
+                "Sanctifying Skewer",
                 "Banishing Bolt",
                 "Lifesteal Elegy",
+                "Soul Searing Light",
                 "Hunter's Guile",
-                "Essence Scatter"
+                "Essence Scatter",
+                "Hunter's Instinct"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Evangelist",
+            "num_requirements": 4,
+            "flavor_text": "\"To think that there would be somebody foolish enough to willingly choose darkness. You should realize that darkness is not such a simple thing. The shadow opposite light. The night opposite day. Right and wrong. Good and evil. Order and chaos. Reason and irrationality. Look at it. Savor it. Remember it well. This is the source of your power. Your initial impulses. Your first dive. Your original self. If you can't handle it, it's the end for you. Prepare yourself.\"",
+            "description": "Evangelist brings together the most powerful parts of ice and dark magic, casting high powered AOE spells with ease and causing widespread destruction. It also applies the typical conditions that ice and dark are capable of, but goes a step further with some unique curse abilities, including some that work with ice spells. However, the most integral part of the class is the passive, allowing the Evangelist to turn any damaging spell into a powerful and dangerous steroid. Evangelist is designed to be the final step for an ice or dark mage, and thus has a lot of extra power and complexity in its spells, but the passive also grants some extra synergy with other mages, allowing you to recontextualize your spell list into a list of possible augmentations.",
+            "requirements": [
+                "\u00b7         Ice Mastery Rank A",
+                "\u00b7         Dark Mastery Rank A",
+                "\u00b7         Enchantment Magic Rank A",
+                "\u00b7         Destruction Magic Rank A"
+            ],
+            "branches": [
+                "Gelidus Ouranos",
+                "Nivis Obscurans",
+                "Magia Ensis"
+            ],
+            "passive": {
+                "Magia Erebea": "When you cast a damaging spell attack, instead of releasing the spell, you may absorb its energy to enchant your soul. You may only do so with one spell at a time; activating this passive with a new spell when you already have it active will end the previous effect to allow you to absorb the new spell and gain its effects. While enchanted this way, you lose 10 maximum health per turn. Maximum health lost this way is restored after a long rest and is not considered a condition. You may release Magia Erebea as a free reaction; otherwise, it continues until your maximum health reaches one. Magia Erebea is neither spell nor buff. While under the effects of Magia Erebea, you gain the following effects, based on the absorbed spell:\nYour spell attacks gain on hit damage die equal to the damage die of the absorbed spell (if the spell has multiple modes resulting in multiple possible damage die configurations, take the mode with the lowest potential maximum damage)\nYour spell attacks inflict any conditions that the absorbed spell would inflict as an on hit effect\nYour spell attacks have their range extended by an amount equal to the range of the absorbed spell\nYou may have your spell attacks have their damage type changed to any element that the absorbed spell has\nYou become elementally aspected to the elements of the absorbed spell"
+            },
+            "abilities": [
+                "Krystalline Basileia",
+                "Iaculatio Orcus",
+                "Ensis Exsequens",
+                "Frigerans Barathrum",
+                "Anthos Pagetou Khilion Eton",
+                "Aperantos Capulus",
+                "Actus Noctis Erebeae",
+                "Supplementum Pro Armationem",
+                "Armis Cantamen"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Gatekeeper",
+            "num_requirements": 2,
+            "preview": "A fighter hefting a trident and shield, this class excels at creating zones of defense, harrying enemies who try to move through their spheres of influence. To further augment their battlefield control, this class has access to water spells, to further control the tide of battle.",
+            "requirements": [
+                "Shield Armor Mastery Rank A",
+                "Water Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Hemoplague",
+            "num_requirements": 3,
+            "preview": "A mage that has unlocked the forbidden arts of blood magic by combining dark evil magic with the liquid in their own body. This mage controls blood to attack enemies internally and externally, can conjure blood from thin air, and can restore blood in the living.",
+            "requirements": [
+                "Dark Magic Rank A",
+                "Conjuration Magic Rank A",
+                "Water Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Kickboxer",
+            "num_requirements": 1,
+            "preview": "A monk that fights with punches and kicks, and uses both blocks and dodges. With a wealth of defensive options, the kickboxer is an effective front liner, using jabs for chip damage and haymakers as finishers.",
+            "requirements": [
+                "Light Armor Mastery Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Night Lord",
+            "num_requirements": 2,
+            "preview": "A rogue that has mastered the repertoire of the average thief. This class further amplifies its ability of thievery, stealthy movement, dexterity, and unlocking the secrets of its foes to perform criminal feats beyond those of any other rogue class.",
+            "requirements": [
+                "Sneak Rank A",
+                "Steal Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Ninja",
+            "num_requirements": 3,
+            "preview": "A rogue that has learned the lost of ninja magic, called ninjutsu. They wield short bladed weapons or shuriken and attack at night, employing damaging spells or stealth spells for a distinct edge both in and out of combat.",
+            "requirements": [
+                "Sneak Rank A",
+                "Shortblade Mastery Rank A",
+                "Conjuration or Destruction Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Paladin",
+            "num_requirements": 3,
+            "preview": "A holy fighter sworn in the service of Aloys or Nox. Uses powerful light magic and stands on the front lines to heal and protect his allies, while tanking damage and blasting evil with divine smites.",
+            "requirements": [
+                "Any Melee Weapon (no Unarmed) Rank A",
+                "Light Magic Rank A",
+                "Heavy Armor Mastery Rank A"
             ]
         },
         {
             "type": "clazz",
             "name": "Raider",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 4,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Kickboxer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 4,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "num_requirements": 2,
+            "preview": "An archer/gunman that dual wields crossbows or pistols. They fight up close and personal and are experts at dodging melee and ranged attacks, while maintaining a furious offense at impossible to miss ranges with an impressive array of trick shots and specialized gunkata abilities.",
+            "requirements": [
+                "Light Armor Mastery Rank A",
+                "Bullet Weapon or Crossbow Mastery A"
+            ]
         },
         {
             "type": "clazz",
             "name": "Ravager",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 4,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Cleric",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 4,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Brawler",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 4,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Hemoplague",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 4,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Corpselight",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 4,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
-        },
-        {
-            "type": "clazz",
-            "name": "Auramancer",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 4,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "num_requirements": 2,
+            "preview": "A monk/mage that fights with the violent, destructive elements. This melee combatant uses flaming punches, thunderous kicks, and shadow strikes to deliver a relentless barrage of constantly increasing punishment.",
+            "requirements": [
+                "Lightning Magic Rank A",
+                "Dark Magic Rank A"
+            ]
         },
         {
             "type": "clazz",
             "name": "Synergist",
-            "flavor_text": "",
-            "description": "",
+            "num_requirements": 3,
+            "preview": "A mage that has mastered the art of buffing and healing. With access to the powers of both water and light combined, this class is one of the best classical support mages available to players.",
+            "requirements": [
+                "Buff Magic Rank A",
+                "Light Magic Rank A",
+                "Water Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Tempest",
             "num_requirements": 4,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "preview": "A mage that has mastered all elemental magic involving the forces of storms. This class summons devastating blizzards, floods, hurricanes, and thunderstorms to create massive, battlefield scarring spells that intensify over time.",
+            "requirements": [
+                "Ice Magic Rank A",
+                "Lightning Magic Rank A",
+                "Air Magic Rank A",
+                "Water Magic Rank A"
+            ]
+        },
+        {
+            "type": "clazz",
+            "name": "Voidwalker",
+            "num_requirements": 3,
+            "preview": "A rogue/mage specializing in magic to move short or great distances. He knows additional spells to protect himself and his party and move through the ethereal, and his spells are greatly beneficial to allies despite being powered by dark magic.",
+            "requirements": [
+                "Sneak Rank A",
+                "Dark Magic Rank A",
+                "Conjuration Magic Rank A"
+            ]
         },
         {
             "type": "clazz",
             "name": "Master Alchemist",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 5,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "num_requirements": 3,
+            "preview": "An alchemist that has mastered organics, construct, transformation, and augmentation alchemy. This class can create brand new blueprints that non-alchemists can use, combine blueprints for new effects, and break the fundamental rules of alchemy to get more than they give.",
+            "requirements": [
+                "Organics Alchemy Rank A",
+                "Cloth Armor Mastery Rank A",
+                "Augmentation Alchemy Rank A"
+            ]
         },
         {
             "type": "clazz",
             "name": "Elementalist",
-            "flavor_text": "",
-            "description": "",
-            "num_requirements": 8,
-            "full_requirements": [],
-            "branches": [],
-            "passive": {},
-            "abilities": []
+            "num_requirements": 4,
+            "preview": "A mage that has mastered all the elements. With this level of mastery, this class can combine elements to form new ones, with brand new powers rarely seen before. This class also has a vast degree of flexibility provided by all of the elements and their specialties, and can alter the rules of elemental magic at will.",
+            "requirements": [
+                "Ice Magic A",
+                "Lighting Magic A",
+                "Dark Magic Rank A",
+                "Water Magic Rank A"
+            ]
         },
         {
             "type": "ability",
-            "name": "Ice Spear",
-            "clazz": "Cryomancer",
-            "branch": "Arctic",
+            "name": "Shield",
+            "clazz": "Abjurer",
+            "branch": "Secure",
             "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 mana",
-            "rng": "30 ft",
-            "duration": "Instant",
-            "description": [
-                "You form a spear of ice and fire it at a nearby target. Deal 6d8 ice magic damage to a target in range. The ice spear passes through any enemies along its path, dealing half damage."
-            ],
-            "tags": [
-                "Spell",
-                "attack",
-                "ranged",
-                "ice",
-                "destruction",
-                "damage",
-                "single-target",
-                "multi-target"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Glacial Crash",
-            "clazz": "Cryomancer",
-            "branch": "Arctic",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "30 mana",
-            "rng": "Self",
-            "duration": "Instant",
-            "description": [
-                "You cause spears of ice to erupt around you. Enemies within 5 ft of you take 6d8 ice magic damage and are Frozen. Enemies within 10 ft of you take 4d8 ice magic damage and are Slowed. Enemies within 15 ft of you take 2d8 damage."
-            ],
-            "tags": [
-                "Spell",
-                "attack",
-                "ice",
-                "destruction",
-                "damage",
-                "self-target",
-                "condition",
-                "control",
-                "Slow",
-                "Frozen",
-                "AOE"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Shatter",
-            "clazz": "Cryomancer",
-            "branch": "Arctic",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "50 mana",
-            "rng": "30 ft",
-            "duration": "Instant",
-            "description": [
-                "You shatter an enemy encased in ice. Deal 10d8 ice magic damage to a target within range who is Frozen. Their Frozen condition ends, and they are Slowed. Then, this spell's effect repeat for an adjacent Frozen target. A target cannot be damaged by this spell more than once per cast."
-            ],
-            "tags": [
-                "Spell",
-                "attack",
-                "ice",
-                "destruction",
-                "damage",
-                "single-target",
-                "conditional",
-                "Frozen",
-                "Slow",
-                "repeatable"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Aurora Beam",
-            "clazz": "Cryomancer",
-            "branch": "Arctic",
-            "tier": 4,
-            "action": "1 Major Action",
-            "cost": "X mana",
-            "rng": "60 ft",
-            "duration": "Instant",
-            "description": [
-                "You emit a powerful beam of ice. Deal Xd8 ice magic damage to all targets in a line, where X is the amount of mana expended on this spell divided by 5. You may choose to concentrate on this spell further, and if you do, you may use a major action to repeat this spell for no mana cost, at half its previous damage. If this spell consumes at least 5 stacks of Frostbite, refund half of the mana cost. If this attack consumes at least 10 stacks of Frostbite, refund the full mana cost."
-            ],
-            "tags": [
-                "Spell",
-                "attack",
-                "ice",
-                "destruction",
-                "damage",
-                "AOE",
-                "line",
-                "modal",
-                "continuous",
-                "concentration",
-                "gain mana"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Flash Freeze",
-            "clazz": "Cryomancer",
-            "branch": "Chilling",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "15 mana",
-            "rng": "30 ft",
-            "duration": "1 minute",
-            "description": [
-                "You freeze a target solid. Apply Frozen to a target in range, and apply Slow to any enemies adjacent to your target. Applies a stack of your passive on cast, even if resisted."
-            ],
-            "tags": [
-                "Spell",
-                "attack",
-                "ice",
-                "condition",
-                "control",
-                "Frozen",
-                "Slow",
-                "single target"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Freezing Wind",
-            "clazz": "Cryomancer",
-            "branch": "Chilling",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "35 mana",
-            "rng": "60 ft cone",
-            "duration": "Instant",
-            "description": [
-                "You conjure a cone of icy wind. Enemies in a 60 ft cone in front of you are Slowed. If an enemy is hit by this spell, and already is Slowed or has a stack of your passive on them, they are Frozen instead."
-            ],
-            "tags": [
-                "Spell",
-                "attack",
-                "ice",
-                "conjuration",
-                "control",
-                "Frozen",
-                "Slow",
-                "AOE",
-                "cone"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Hypothermia",
-            "clazz": "Cryomancer",
-            "branch": "Chilling",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "70 mana",
-            "rng": "30 ft",
-            "duration": "Instant",
-            "description": [
-                "You drop a target's body temperature, slowing their metabolism. A target within range becomes Slowed, loses its Major action, Minor action, and reaction, and loses all Evasion. This spell requires concentration."
-            ],
-            "tags": [
-                "Spell",
-                "attack",
-                "ice",
-                "condition",
-                "control",
-                "Slow",
-                "action loss",
-                "evasion loss",
-                "single-target",
-                "concentration"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Heart of Ice",
-            "clazz": "Cryomancer",
-            "branch": "Chilling",
-            "tier": 4,
-            "action": "1 Major Action",
-            "cost": "100 mana",
-            "rng": "Self",
-            "duration": "1 hour",
-            "description": [
-                "You drape yourself in an icy aura. For the duration of this spell, enemies who move into a space within 30 feet of you become Slowed. Adjacent enemies who attack you become Frozen. Attacks from enemies more than 30 ft away grant you 40% evasion for that attack. Allies who are adjacent to you have all types of damage they deal converted to ice magic damage, and inflict Frostbite on-hit (limited to once per turn). You may use your reaction to cast any ice spell while this buff is active."
-            ],
-            "tags": [
-                "Spell",
-                "ice",
-                "buff",
-                "condition",
-                "Slow",
-                "Frozen",
-                "self-target",
-                "on-hit",
-                "add evasion",
-                "ally buff",
-                "concentration"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Ice Crafting",
-            "clazz": "Cryomancer",
-            "branch": "Snow",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "5 mana",
-            "rng": "50 ft",
-            "duration": "10 minutes",
-            "description": [
-                "You create sheets of ice and snow. Cover the ground in a target space in your choice of either ice or snow. Ice spaces force creatures to make Balance checks or fall prone. Snow spaces count as difficult terrain. When you cast this spell, you can repeat it for as many spaces within range as desired, expending 5 more mana for every additional space. You can also create a pillar of ice or snow, with a height of up to 10 ft, in any space for an additional 5 mana."
-            ],
-            "tags": [
-                "Spell",
-                "smite-target",
-                "conjuration",
-                "ice",
-                "modal",
-                "repeatable"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Extinguish",
-            "clazz": "Cryomancer",
-            "branch": "Snow",
-            "tier": 2,
             "action": "1 Reaction",
-            "cost": "20 mana",
-            "rng": "100 ft",
+            "cost": "5 mana",
+            "rng": "80 ft",
             "duration": "Instant",
             "description": [
-                "You take advantage of a mage casting a spell, freezing his mana. As a reaction to a target in range casting a spell, you may counter that spell. That target becomes Silenced until the end of their next turn."
+                "You protect an ally with a brief yet powerful shield. Block one attack on yourself or an ally in range. Until the beginning of the target's next turn, they have +10 AC and +10% MR"
             ],
             "tags": [
                 "Spell",
-                "counterspell",
+                "defensive",
+                "gain AC",
+                "gain MR"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Weak",
+            "clazz": "Abjurer",
+            "branch": "Contain",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "80 ft",
+            "duration": "1 minute",
+            "description": [
+                "You dampen an enemy's aggression with magic. A target in range gains a 20% Weaken if they aren't already weakened; otherwise, they gain a 10% Weaken."
+            ],
+            "tags": [
+                "Spell",
+                "defensive",
                 "condition",
-                "defensive",
-                "Silence",
-                "control",
-                "ice",
+                "Weaken",
                 "single-target"
             ]
         },
         {
             "type": "ability",
-            "name": "Ice Block",
-            "clazz": "Cryomancer",
-            "branch": "Snow",
-            "tier": 3,
+            "name": "Stoneskin",
+            "clazz": "Abjurer",
+            "branch": "Protect",
+            "tier": 1,
             "action": "1 Major Action",
-            "cost": "40 mana",
-            "rng": "Self",
-            "duration": "Instant",
+            "cost": "20 mana",
+            "rng": "80 ft",
+            "duration": "1 minute",
             "description": [
-                "You surround yourself in an icy armor, and manipulate a shield of ice. Increase your AC by 20, and increase your general MR by 30% until the beginning of your next turn. While you have this buff, you may use your reaction to completely block one attack on you or an ally within 30 ft, for no additional mana."
+                "You boost the natural armor of your allies. Up to 5 targets in range have their AC and MR increased by 30%. You may spend 1 minute to cast this spell as a minor ritual; if you do, its duration is extended to 1 hour. You may spend 10 minutes to cast this spell as a major ritual; if you do, its duration is extended to 6 hours."
             ],
             "tags": [
                 "Spell",
                 "defensive",
-                "buff",
-                "AC increase",
-                "MR increase",
-                "block",
-                "self-target",
-                "single-target"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Frozen  Arena",
-            "clazz": "Cryomancer",
-            "branch": "Snow",
-            "tier": 4,
-            "action": "1 Major Action",
-            "cost": "60 mana",
-            "rng": "1000 ft",
-            "duration": "1 minute",
-            "description": [
-                "You create an arena surrounded in ice. Create a 200 ft cube zone centered on a point within range. Within this zone, all enemies have the following: they are revealed; they cannot leave the zone unless you allow them as a free reaction; if they have at least 1 stack of Frostbite, they have their Frostbite doubled at the beginning of each turn. Any entity that dies with at least 1 stack of Frostbite has its Frostbite stacks transferred to another entity of your choice within the zone."
-            ],
-            "tags": [
-                "Spell",
-                "ice",
-                "AOE",
-                "zone",
-                "cube",
-                "on-death",
-                "concentration"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Strengthen Soul",
-            "clazz": "Symbiote",
-            "branch": "Fiery Soul",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 mana",
-            "rng": "50 ft",
-            "duration": "1 minute",
-            "description": [
-                "You strengthen an ally's conviction and confidence. Target ally in range gains a buff that increases their damage by 50% for the duration. When an ally gains this buff, they may use their reaction to make an autoattack."
-            ],
-            "tags": [
-                "Spell",
-                "buff",
-                "increase damage"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Empower Soul",
-            "clazz": "Symbiote",
-            "branch": "Fiery Soul",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "20 mana",
-            "rng": "50 ft",
-            "duration": "1 minute",
-            "description": [
-                "You empower an ally's willpower and forcefulness. Target ally in range gains a buff that causes their attacks to ignore 20% MR and evasion for the duration. You may expend any amount of additional mana when you cast this spell to add to the percentage MR and evasion ignored by twice the amount of additional mana spent."
-            ],
-            "tags": [
-                "Spell",
-                "buff",
-                "modal"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Bolster Soul",
-            "clazz": "Symbiote",
-            "branch": "Fiery Soul",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "30 mana",
-            "rng": "50 ft",
-            "duration": "1 minute",
-            "description": [
-                "You bolster an ally's focus and precision. Target ally in range gains a buff that grants +20% critical strike chance and +100% critical damage modifier for the duration. As a free reaction to attacking an enemy, an ally with this buff may end the buff early to make the triggering attack a critical hit that cannot be reacted to."
-            ],
-            "tags": [
-                "Spell",
-                "buff",
+                "gain AC",
+                "gain MR",
                 "modal",
-                "increase critical strike chance",
-                "increase critical damage modifier"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Strengthen Body",
-            "clazz": "Symbiote",
-            "branch": "Stone Body",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 mana",
-            "rng": "50 ft",
-            "duration": "1 minute",
-            "description": [
-                "You strengthen an ally's attention and constitution. Target ally in range gains a buff that increases their AC and Evasion by 40% for the duration. You may cast this spell as a reaction for an additional 10 mana."
-            ],
-            "tags": [
-                "Spell",
-                "buff",
-                "increase AC",
-                "increase Evasion",
-                "modal"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Empower Body",
-            "clazz": "Symbiote",
-            "branch": "Stone Body",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "20 mana",
-            "rng": "50 ft",
-            "duration": "1 minute",
-            "description": [
-                "You suffuse an ally's body with protective magic. Target ally in range gains a buff that grants +20% general MR and +20% MR for an element of your choice for the duration. You may cast this spell as a reaction for an additional 10 mana."
-            ],
-            "tags": [
-                "Spell",
-                "buff",
-                "defensive",
-                "increase MR",
-                "modal"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Bolster Body",
-            "clazz": "Symbiote",
-            "branch": "Stone Body",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "30 mana",
-            "rng": "50 ft",
-            "duration": "1 minute",
-            "description": [
-                "You bolster an ally's natural defenses against conditions. Target ally in range gains a buff that grants +20% general CR and +20% CR for a condition of your choice for the duration. You may cast this spell as a reaction for an additional 10 mana."
-            ],
-            "tags": [
-                "Spell",
-                "buff",
-                "defensive",
-                "increase CR",
-                "modal"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Strengthen Mind",
-            "clazz": "Symbiote",
-            "branch": "Fluid Mind",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 mana",
-            "rng": "50 ft",
-            "duration": "1 hour",
-            "description": [
-                "You strengthen an ally's instincts and proficiency. Target ally in range gains a buff that grants +30 to all skill checks for the duration. The target may consume 10 minutes of this buff's duration to reroll a skill check and take the new result while this buff is active."
-            ],
-            "tags": [
-                "Spell",
-                "buff",
-                "skill boost"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Power Spike",
-            "clazz": "Symbiote",
-            "branch": "Fluid Mind",
-            "tier": 2,
-            "action": "1 Minor Action",
-            "cost": "15 mana",
-            "rng": "50 ft",
-            "duration": "Instant",
-            "description": [
-                "You empower a buff effect at the cost of its duration. Target buff effect in range that you originally granted has its effectiveness increased by 50% and its current duration cut in half (always rounded down to the nearest 10 second, 10 minute, or 6 hour interval as applicable for minute, hour, and day long buffs)."
-            ],
-            "tags": [
-                "Spell",
-                "utility"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Bolster Speed",
-            "clazz": "Symbiote",
-            "branch": "Fluid Mind",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "30 mana",
-            "rng": "50 ft",
-            "duration": "1 minute",
-            "description": [
-                "You bolster an ally's quickness and endurance. Target ally in range gains a buff that grants +30 move speed for the duration. The target may consume 10 seconds of this buff's duration to dash 30 ft in any direction as a minor action or reaction."
-            ],
-            "tags": [
-                "Spell",
-                "buff",
-                "increase speed"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Magic Dart",
-            "clazz": "Arcanist",
-            "branch": "Zapping",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 mana",
-            "rng": "70 ft",
-            "duration": "Instant",
-            "description": [
-                "You fire bolts of pure magic at one or more enemies. Create 3 magic darts of any elements and divide them as you choose amongst 1, 2, or 3 enemies. Each dart deals d12 magic damage of its chosen element."
-            ],
-            "tags": [
-                "Spell",
-                "attack",
-                "destruction",
-                "single-target",
-                "multi-target",
-                "modal"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Magic Bomb",
-            "clazz": "Arcanist",
-            "branch": "Blasting",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "20 mana",
-            "rng": "70 ft",
-            "duration": "Instant",
-            "description": [
-                "You create a small explosive ball of mana. Deal 3d12 magic damage of a chosen element type in one of the following AOE shapes of your choice:",
-                "* A 25 ft cube",
-                "* A 45 ft cross"
-            ],
-            "tags": [
-                "Spell",
-                "attack",
-                "destruction",
-                "AOE",
-                "square",
-                "cross",
-                "modal"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Magic Primer",
-            "clazz": "Arcanist",
-            "branch": "Arcane",
-            "tier": 1,
-            "action": "1 Minor Action",
-            "cost": "15 mana",
-            "rng": "Self",
-            "duration": "Instant",
-            "description": [
-                "You charge mana to augment your next spell with raw power. Your next spell attack's damage increases by 30% and will be affected by your critical strike chance and critical damage modifier."
-            ],
-            "tags": [
-                "Spell",
-                "empower",
-                "destruction",
-                "self-target",
-                "damage increase"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Modify Weapon",
-            "clazz": "Enchanter",
-            "branch": "Personal",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 mana",
-            "rng": "Touch",
-            "duration": "1 minute",
-            "description": [
-                "You temper a weapon with runes of strengthening or weakening. Choose one:",
-                "* Target weapon in range gains, \"On Hit: Deal 4d10 physical damage.\"",
-                "* Target weapon in range gains, \"While equipped, deal 50% decreased physical damage.\""
-            ],
-            "tags": [
-                "Spell",
-                "enchantment",
-                "modal",
-                "concentration"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Reforge Armor",
-            "clazz": "Enchanter",
-            "branch": "Personal",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "20 mana",
-            "rng": "Touch",
-            "duration": "1 minute",
-            "description": [
-                "You temper armor with runes of strengthening or weakening. Choose one:",
-                "* Target armor in range has its implicit AC, Evasion, MR, and CR increased by 50%.",
-                "* Target armor in range loses all AC, Evasion, MR, and CR."
-            ],
-            "tags": [
-                "Spell",
-                "enchantment",
-                "modal",
-                "concentration"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Alter Jewelry",
-            "clazz": "Enchanter",
-            "branch": "Personal",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "30 mana",
-            "rng": "Touch",
-            "duration": "1 minute",
-            "description": [
-                "You affix runes to an accessory for a variety of effects. Choose one:",
-                "* Target ring in range gains, \"On Hit: Deal 2d20 magic damage of a chosen type.\"",
-                "* Target ring in range gains, \"At the beginning of your turn, lose 40 mana and stamina.\"",
-                "* Target belt in range gains, \"You have elemental resistance against 2 chosen types.\"",
-                "* Target belt in range gains, \"You have elemental weakness against 2 chosen types.\"",
-                "* Target necklace in range gains, \"At the beginning of your turn, heal 30 health.\"",
-                "* Target necklace in range gains, \"At the beginning of your turn, lose 30 health.\"",
-                "You may spend an additional 20 mana to choose a second effect for a type of accessory not previously chosen. You may then spend another additional 10 mana to choose a third effect for the last accessory type not previously chosen."
-            ],
-            "tags": [
-                "Spell",
-                "enchantment",
-                "modal",
-                "concentration"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Reconstruct Barrier",
-            "clazz": "Enchanter",
-            "branch": "Structural",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 mana",
-            "rng": "Touch",
-            "duration": "1 minute",
-            "description": [
-                "You rebuild a wall or door with runes of locking or breaking. Choose one:",
-                "* Target wall in range becomes unbreakable, and all windows and doors in that wall become magically locked.",
-                "* Target wall in range crumbles and weakens to become easily breakable, and all windows and doors in that wall become unlocked.",
-                "After choosing an effect, you may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
-            ],
-            "tags": [
-                "Spell",
-                "enchantment",
-                "utility",
                 "minor ritual",
-                "major ritual",
-                "modal",
-                "concentration"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Rebuild Floor",
-            "clazz": "Enchanter",
-            "branch": "Structural",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "20 mana",
-            "rng": "Touch",
-            "duration": "1 minute",
-            "description": [
-                "You reconstruct the floor or ceiling to various effect. Choose one:",
-                "* The surface becomes difficult terrain.",
-                "* The surface becomes fragile, crumbling underneath the weight of entities walking over it.",
-                "* The surface becomes slick, granting entities doubled move speed.",
-                "* The surface becomes unbreakable.",
-                "After choosing an effect, you may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
-            ],
-            "tags": [
-                "Spell",
-                "enchantment",
-                "utility",
-                "minor ritual",
-                "major ritual",
-                "modal",
-                "concentration"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Secure Building",
-            "clazz": "Enchanter",
-            "branch": "Structural",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "30 mana",
-            "rng": "Touch",
-            "duration": "1 minute",
-            "description": [
-                "You magically ward a building or some number of rooms in a building against enemy magic. Target building in range has any number of its rooms or the entire building gain the following effects: scrying and teleportation magic in or out of the warded area fails; you know if anyone casts a spell inside the warded area and what spell was cast; you know the positions and true magic signatures of all entities within the warded area. You may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
-            ],
-            "tags": [
-                "Spell",
-                "enchantment",
-                "utility",
-                "defense",
-                "minor ritual",
-                "major ritual",
-                "modal",
-                "concentration"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Mint Coinage",
-            "clazz": "Enchanter",
-            "branch": "Minutiae",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 mana",
-            "rng": "Touch",
-            "duration": "24 hours",
-            "description": [
-                "You stamp a variety of runes on the face of a coin. While touching a target coin, choose one:",
-                "* Inscribe a magical telepathic message of up to 100 words or 10 images that can be heard/seen by anyone who picks up the coin.",
-                "* Inscribe a magical access point that allows you to telepathically communicate freely with anyone holding the coin.",
-                "* Inscribe a magical tracker that allows you to always know the coin's position and if/when it changes owners.",
-                "* Inscribe a magical storage space that grants the wielder of the coin +1 buff limit and +1 concentration limit.",
-                "* Inscribe a restorative rune that grants the wielder of the coin 5% health, mana, and stamina regeneration.",
-                "* Inscribe a rune of luck that grants the wielder of the coin +5 to all skill checks.",
-                "When you cast this spell, you may choose to expend an additional 5 mana to choose a second effect for the coin's opposite face. An entity can only benefit from one coin made by this ability at a time."
-            ],
-            "tags": [
-                "Spell",
-                "enchantment",
-                "modal"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Enhance Vehicle",
-            "clazz": "Enchanter",
-            "branch": "Minutiae",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "20 mana",
-            "rng": "Touch",
-            "duration": "24 hours",
-            "description": [
-                "You power up or power down a vehicle. Choose one:",
-                "* Target vehicle in range has its move speed doubled and no longer requires a system to propel it forward (horses, engines) for the duration.",
-                "* Target vehicle becomes immotile through its regular means (wheels lock, sails fail, etc) for the duration.",
-                "When you cast this spell, you may choose to expend an additional 10 mana to affect another target Vehicle with a new choice, and you may do this any number of times. Concentration is held once for all instances of this spell within one cast."
-            ],
-            "tags": [
-                "Spell",
-                "enchantment",
-                "utility",
-                "modal",
-                "concentration"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Empower Ammo",
-            "clazz": "Enchanter",
-            "branch": "Minutiae",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "30 mana",
-            "rng": "Touch",
-            "duration": "24 hours",
-            "description": [
-                "You bless any type of ammo with empowering runes. Target set of up to 10 pieces of ammunition becomes special ammo for the duration, gaining, \"Attacks with this ammo have 50% increased damage and inflict a random condition chosen from the following list: Slow, Immobilize, Cripple, Stun, Blind, Confuse, Sleep, Silence.\""
-            ],
-            "tags": [
-                "Spell",
-                "enchantment",
-                "utility",
-                "modal",
-                "concentration"
+                "major ritual"
             ]
         },
         {
@@ -4761,685 +4520,719 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "ability",
-            "name": "Shadow Bolt",
-            "clazz": "Noxomancer",
-            "branch": "Devastation",
+            "name": "Gale Shot",
+            "clazz": "Air Duelist",
+            "branch": "Dueling",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 stamina",
+            "rng": "150 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire at an enemy while making evasive maneuvers. Deal 4d8 physical damage to a target in range, then dash 10 ft in any direction"
+            ],
+            "tags": [
+                "Attack",
+                "ranged",
+                "physical",
+                "bow",
+                "dash",
+                "single-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Zephyr Shot",
+            "clazz": "Air Duelist",
+            "branch": "Dueling",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "25 stamina",
+            "rng": "150 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire a series of several arrows at the enemy. Deal d8 physical damage to a target in range. This attack repeats 5 times, and you may change targets with each hit."
+            ],
+            "tags": [
+                "Attack",
+                "ranged",
+                "physical",
+                "bow",
+                "single-target",
+                "multi-target",
+                "multi-hit"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Storm Shot",
+            "clazz": "Air Duelist",
+            "branch": "Dueling",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "30 stamina",
+            "rng": "150 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire a rain of arrows from the skies. Deal 6d8 physical damage to all enemies in a 25 ft square centered on a space in range, Crippling them for 1 minute. Flying enemies take 100% increased damage from this ability, cannot evade this attack, and are additionally Knocked Prone."
+            ],
+            "tags": [
+                "Attack",
+                "ranged",
+                "physical",
+                "bow",
+                "AOE",
+                "square",
+                "condition",
+                "Cripple",
+                "conditional",
+                "no-miss",
+                "Knock Prone"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Wind Strike",
+            "clazz": "Air Duelist",
+            "branch": "Casting",
             "tier": 1,
             "action": "1 Major Action",
             "cost": "10 mana",
-            "rng": "40 ft",
+            "rng": "150 ft",
             "duration": "Instant",
             "description": [
-                "You amass dark energy and toss it at an enemy. Deal 3d10 dark magic damage to a target in range, and inflict the target with a curse for every 15 dark magic damage dealt this way."
+                "You fire a powerful gust of air to blow enemies away. Deal 5d8 air magic damage to a target in range, pushing them 10 ft away from you."
             ],
             "tags": [
                 "Spell",
                 "attack",
                 "ranged",
-                "dark",
+                "air",
                 "destruction",
-                "condition",
-                "Curse",
-                "conditional",
-                "single target"
+                "single-target",
+                "control",
+                "utility",
+                "conjuration",
+                "push."
             ]
         },
         {
             "type": "ability",
-            "name": "Darkbomb",
-            "clazz": "Noxomancer",
-            "branch": "Devastation",
+            "name": "Cutting Winds",
+            "clazz": "Air Duelist",
+            "branch": "Casting",
             "tier": 2,
             "action": "1 Major Action",
-            "cost": "30 mana",
-            "rng": "40 ft",
+            "cost": "25 mana",
+            "rng": "150 ft",
             "duration": "Instant",
             "description": [
-                "You release an orb of dark magic, primed to explode. Create a Darkbomb in an unoccupied space in range. You may have it detonate immediately to deal 3d10 dark magic damage and inflict a curse on every entity within 20 ft of the bomb. Alternatively, you may delay the explosion until the beginning of your next turn; if you do, it will deal 6d10 dark magic damage and inflict 2 curses on every entity within 20 ft of the bomb."
+                "You conjure winds as sharp as blades to damage and knock down enemies. Deal 6d8 air magic damage to all entities in a 25 ft square centered on a space in range, knocking them all Prone."
             ],
             "tags": [
                 "Spell",
                 "attack",
-                "dark",
+                "ranged",
+                "air",
                 "destruction",
-                "condition",
-                "Curse",
                 "AOE",
-                "modal"
+                "square",
+                "conjuration",
+                "Knock Prone"
             ]
         },
         {
             "type": "ability",
-            "name": "Corruption",
-            "clazz": "Noxomancer",
-            "branch": "Devastation",
+            "name": "Harassing Whirlwind",
+            "clazz": "Air Duelist",
+            "branch": "Casting",
             "tier": 3,
             "action": "1 Major Action",
             "cost": "40 mana",
-            "rng": "40 ft",
+            "rng": "150 ft",
             "duration": "1 minute",
             "description": [
-                "You corrupt an enemy's body with dark energy. Deal 5d10 dark magic damage to a target and inflict them with a condition that causes them to gain a Curse and take 3d10 dark magic damage at the beginning of each turn and prevents Curses from expunging until the condition ends."
+                "You create a whirlwind around a target that constantly damages and pushes them. Deal 4d8 air magic damage to a target in range. While concentrating on this spell, for the spell's duration, the target takes 4d8 air magic damage and is pushed 20 ft in a direction of your choice at the beginning of each turn."
             ],
             "tags": [
                 "Spell",
                 "attack",
-                "single-target",
-                "dark",
+                "ranged",
+                "air",
                 "destruction",
-                "condition",
-                "Curse",
+                "control",
+                "conjuration",
+                "forced movement",
                 "concentration"
             ]
         },
         {
             "type": "ability",
-            "name": "Defile",
-            "clazz": "Noxomancer",
-            "branch": "Affliction",
+            "name": "Mistral Bow",
+            "clazz": "Air Duelist",
+            "branch": "Buffing",
             "tier": 1,
-            "action": "1 Major Action",
-            "cost": "15 mana",
-            "rng": "40 ft",
+            "action": "1 Minor Action",
+            "cost": "10 mana",
+            "rng": "Self",
             "duration": "1 minute",
             "description": [
-                "You infuse an enemy with dark energy, weakening and cursing them. Select a target in range, and choose one of the following:",
-                "* Inflict a 30% Weaken for 1 minute",
-                "* Inflict a 20% Weaken for 1 minute, and inflict 1 curse",
-                "* Inflict a 10% Weaken for 1 minute, and inflict 2 curses"
+                "You use air magic to provide your bow with extra stopping power. For the spell's duration, when you hit a target with a bow attack, push the target 5 ft away from you as an on-hit effect."
             ],
             "tags": [
                 "Spell",
-                "attack",
-                "dark",
-                "condition",
-                "Weakened",
-                "Curse",
-                "modal",
-                "single target"
+                "air",
+                "buff",
+                "self-target",
+                "on-hit",
+                "bow",
+                "push"
             ]
         },
         {
             "type": "ability",
-            "name": "Shriek",
-            "clazz": "Noxomancer",
-            "branch": "Affliction",
+            "name": "Arc of Air",
+            "clazz": "Air Duelist",
+            "branch": "Buffing",
             "tier": 2,
-            "action": "1 Major Action",
+            "action": "1 Minor Action",
+            "cost": "20 mana",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You envelop your bow in air magic energy. For the spell's duration, when you hit a target with a bow attack, deal an additional 2d8 air magic damage on hit."
+            ],
+            "tags": [
+                "Spell",
+                "air",
+                "buff",
+                "self-target",
+                "on-hit",
+                "bow",
+                ""
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Bow of Hurricanes",
+            "clazz": "Air Duelist",
+            "branch": "Buffing",
+            "tier": 3,
+            "action": "1 Minor Action",
             "cost": "30 mana",
             "rng": "Self",
-            "duration": "Instant",
+            "duration": "1 minute",
             "description": [
-                "You release dark energy through your words, affecting the nervous system of nearby opponents. Enemies within 40 ft of you are Blinded and enemies within 20 ft of you are instead Feared."
+                "Your bow becomes a thick arc of air magic. For the spell's duration, all damage that you would deal with bow attacks have their damage converted to air magic damage. While this buff is active, your bow attacks using special ammunition have 50% increased range."
             ],
             "tags": [
                 "Spell",
-                "attack",
-                "dark",
-                "condition",
-                "control",
-                "Blind",
-                "Fear",
-                "conditional",
-                "AOE"
+                "air",
+                "buff",
+                "self-target",
+                "on-hit",
+                "bow",
+                "damage convert",
+                "increase range",
+                "conditional"
             ]
         },
         {
             "type": "ability",
-            "name": "Spreading Madness",
-            "clazz": "Noxomancer",
-            "branch": "Affliction",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "50 mana",
-            "rng": "40 ft",
+            "name": "Improved Aggression",
+            "clazz": "Amplifier",
+            "branch": "Bolster",
+            "tier": 1,
+            "action": "1 minute",
+            "cost": "2 animal ingredients",
+            "rng": "---",
             "duration": "1 minute",
             "description": [
-                "You corrupt the mind of an enemy with infectious dark magic. Inflict a condition on a target in range that causes 50% of their targeted attacks to be redirected at one of their allies in range if possible. When an enemy with this condition deals damage to another enemy, they inflict the same condition on hit. When you break concentration on this ability, all copies of this condition end as well."
+                "You amplify an entity's aggressive nature. Target entity's physical damage increases by 25%. That entity may expend 30 HP as a free action in order to increase the physical damage of its next attack by an additional 25%."
+            ],
+            "tags": [
+                "alchemy",
+                "augmentation",
+                "increase damage",
+                "gain action"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Enhanced Vigor",
+            "clazz": "Amplifier",
+            "branch": "Fortify",
+            "tier": 1,
+            "action": "1 minute",
+            "cost": "2 mineral ingredients",
+            "rng": "---",
+            "duration": "1 minute",
+            "description": [
+                "You amplify an entity's heartiness. Target entity's maximum HP increases by 25% (its current HP increases by the same amount, and also decreases by the same amount when this effect expires). That entity may convert any amount of its current stamina and/or mana in order to heal HP equal to that amount as a free action."
+            ],
+            "tags": [
+                "alchemy",
+                "augmentation",
+                "increase max HP",
+                "gain action"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Refined Agility",
+            "clazz": "Amplifier",
+            "branch": "Supplement",
+            "tier": 1,
+            "action": "1 minute",
+            "cost": "2 plant ingredients",
+            "rng": "---",
+            "duration": "1 minute",
+            "description": [
+                "You amplify an entity's natural reflexes. Target entity's gains an additional 20 ft of speed. That entity may use a second Reaction in a round, but if they do so, they lose their next turn's Minor action."
+            ],
+            "tags": [
+                "alchemy",
+                "augmentation",
+                "add speed",
+                "action conversion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Hydro Pump",
+            "clazz": "Aquamancer",
+            "branch": "Geyser",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "60 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire a stream of powerfully moving water. Deal 6d6 water magic damage to all enemies in a 60 foot line starting from your position in any direction. The last enemy in the line is pushed 10 ft away from you."
             ],
             "tags": [
                 "Spell",
                 "attack",
-                "single-target",
-                "multi-target",
-                "dark",
-                "condition",
+                "water",
+                "destruction",
+                "damage",
+                "AOE",
+                "line",
+                "forced movement"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Tidal Wave",
+            "clazz": "Aquamancer",
+            "branch": "Geyser",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "25 mana",
+            "rng": "60 ft",
+            "duration": "Instant",
+            "description": [
+                "You conjure a large wave of water that crashes into your foes. Deal 8d6 water magic damage to all enemies in a 30 ft cube, centered on a space in range, leaving behind a field of shallow water in the spaces affected that act as difficult terrain for 1 hour."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "water",
+                "destruction",
                 "control",
+                "conjuration",
+                "AOE",
+                "cube",
+                "field"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Water Whip",
+            "clazz": "Aquamancer",
+            "branch": "Geyser",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "35 mana",
+            "rng": "60 ft",
+            "duration": "Instant",
+            "description": [
+                "You create a thin whip of liquid that lacerates enemies. Deal 9d6 water magic damage to a target in range. This attack cannot be blocked and cannot miss, and it is affected by your critical strike chance and critical damage modifier. If this attack does not fail, you may pull the target towards you by 10 ft."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "ranged",
+                "water",
+                "destruction",
+                "control",
+                "conjuration",
+                "no-miss",
+                "no-block",
+                "conditional",
+                "modal",
+                "forced movement"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Whirlpool",
+            "clazz": "Aquamancer",
+            "branch": "Geyser",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "60 mana",
+            "rng": "60 ft",
+            "duration": "Instant",
+            "description": [
+                "You create a swirling pool of dangerous waters. Create a 35 ft square whirlpool centered on a space in range. At the beginning of each enemy's turn that is within the whirlpool, they become Immobilized, take 10d6 water magic damage, and are pulled to the center of the whirlpool (or as far as available space will allow), skirting around any other entities or blockages during their forced movement (but not blockages that completely encircle the center of the whirlpool). If they are within the center 15 ft square of the whirlpool when their turn begins, they instead take 15d6 water magic damage, are Immobilized, and begin drowning. Drowning entities have a 25% chance of instantly dying at the end of their turn. You may use a Major Action to move the whirlpool up to 20 ft in any direction at no mana cost."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "ranged",
+                "water",
+                "destruction",
+                "conjuration",
+                "condition",
+                "Immobilize",
+                "conditional",
+                "modal",
+                "forced movement",
+                "instant death",
                 "concentration"
             ]
         },
         {
             "type": "ability",
-            "name": "Siphon Soul",
-            "clazz": "Noxomancer",
-            "branch": "Obfuscation",
+            "name": "Water Pulse",
+            "clazz": "Aquamancer",
+            "branch": "Harbor",
             "tier": 1,
             "action": "1 Major Action",
             "cost": "15 mana",
-            "rng": "40 ft",
+            "rng": "60 ft",
             "duration": "Instant",
             "description": [
-                "You tear away magical effects on allies and enemies. Choose one of the following:",
-                "* Target entity in range loses a buff of your choice",
-                "* Target entity in range is cleansed of a condition of your choice",
-                "You may choose to expend an additional 10 mana to use both options."
+                "You push and pull water to adjust the position of others. For all targets in range, choose one or neither:",
+                "Push the target 10 feet away from you",
+                "Pull the target 10 feet towards you.",
+                "Targets cannot occupy the same space, and so they will bump into each other and stop their forced movement as needed to accommodate. All forced movement occurs simultaneously."
             ],
             "tags": [
                 "Spell",
-                "dark",
+                "water",
+                "control",
+                "multi-target",
                 "modal",
-                "buff strip",
-                "cleanse",
-                "single-target",
-                "multi-target"
+                "forced movement"
             ]
         },
         {
             "type": "ability",
-            "name": "Treachery",
-            "clazz": "Noxomancer",
-            "branch": "Obfuscation",
+            "name": "Washout",
+            "clazz": "Aquamancer",
+            "branch": "Harbor",
             "tier": 2,
             "action": "1 Reaction",
             "cost": "20 mana",
             "rng": "100 ft",
             "duration": "Instant",
             "description": [
-                "You cause a mage to lose control of a spell during its casting. As a reaction to a target in range casting a spell, you may counter that spell. The target then expends 10 mana to deal 2d10 dark magic damage and inflict a curse on all of its allies within 10 ft of them."
+                "You turn a mage's mana into nourishing water. As a reaction to a target in range casting a spell, you may counter that spell. You heal equal to the amount of mana spent on the countered spell."
             ],
             "tags": [
                 "Spell",
-                "dark",
-                "single-target",
-                "AOE",
-                "destruction",
+                "water",
                 "defensive",
                 "counterspell",
-                "condition",
-                "Curse"
+                "conditional",
+                "single-target",
+                "heal"
             ]
         },
         {
             "type": "ability",
-            "name": "Fiendish Circle",
-            "clazz": "Noxomancer",
-            "branch": "Obfuscation",
+            "name": "Bubble Barrier",
+            "clazz": "Aquamancer",
+            "branch": "Harbor",
             "tier": 3,
             "action": "1 Major Action",
-            "cost": "40 mana",
-            "rng": "40 ft",
+            "cost": "30 mana",
+            "rng": "60 ft",
             "duration": "Instant",
             "description": [
-                "You call upon imps from a dark realm. Summon an Imp with 50 HP and 40 speed. Imps follow your Command Actions; otherwise, they use their Move Action to move towards enemies, their Major Action to make a melee attack that deals 4d10 dark magic damage, and their Minor Action to drink any potions they are carrying. When you cast this spell, you may choose to concentrate on this spell in order to spend an additional 20 mana to summon an extra Imp, and you may do this up to two more times to have a maximum of 4 Imps at one time."
+                "You create orbs of water to protect allies. Create 3 orbs of water which surround yourself or a target ally in range (you may divide the 3 orbs amongst multiple targets). The first orb grants a +20 AC buff. The second orb grants a +30% MR buff. The third orb grants a +25% Evasion buff. An orb will automatically block 1 attack targeting the entity it is surrounding before dissipating if the entity would otherwise take damage."
             ],
             "tags": [
                 "Spell",
-                "summoning",
-                "dark",
-                "minion",
+                "water",
+                "defensive",
+                "conjuration",
+                "modal",
                 "conditional",
+                "buff",
+                "block"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Summon Water Weird",
+            "clazz": "Aquamancer",
+            "branch": "Harbor",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "70 mana",
+            "rng": "60 ft",
+            "duration": "1 minute",
+            "description": [
+                "You summon a creature made of magically enhanced water. Summon a Weird with large size, 100 health, 50% evasion, 50% MR, 100% CR, water element affinity, and immunity to physical damage. It follows your Commands; otherwise, it uses its Move Action to approach nearby enemies, its Major Action to either swipe at all adjacent enemies for 10d6 physical damage, pushing them back 20 ft, or fire a blast of water that deals 12d6 water magic damage in a 15 ft square centered on a space within 60 ft, inflicting 20% water vulnerability which stacks, and its reaction to block an attack targeting an adjacent ally."
+            ],
+            "tags": [
+                "Spell",
+                "water",
+                "summoning",
+                "minion",
+                "forced movement",
+                "water vulnerability",
+                "block"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Baptize",
+            "clazz": "Aquamancer",
+            "branch": "Confluence",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "15 mana",
+            "rng": "60 ft",
+            "duration": "Instant",
+            "description": [
+                "You spray an ally with a soothing mist. Heal 6d6 to a target in range. For every 6 you roll, cleanse a random condition on the target."
+            ],
+            "tags": [
+                "Spell",
+                "water",
+                "restoration",
+                "heal",
+                "conditional",
+                "random",
+                "cleanse",
+                "single-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Rain of Wellness",
+            "clazz": "Aquamancer",
+            "branch": "Confluence",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "60 ft",
+            "duration": "Instant",
+            "description": [
+                "You conjure a healing rain to restore multiple allies. All allies in a 30 ft cube centered on a space in range are cleansed of a condition of their choice. This rain persists, granting allies inside of it +20% general condition resist until the beginning of your next turn, at which point it cleanses all allies of a condition of their choice before dissipating."
+            ],
+            "tags": [
+                "Spell",
+                "water",
+                "restoration",
+                "buff field",
+                "cleanse",
+                "AOE",
+                "cube"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Draught of Vigor",
+            "clazz": "Aquamancer",
+            "branch": "Confluence",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "40 mana",
+            "rng": "60 ft",
+            "duration": "1 minute",
+            "description": [
+                "You provide a swig of magically enhanced drink to an ally. Target ally in range gains two of the following buffs for the duration of your choosing (you can't choose the same effect more than once and similar effects from multiple casts of this spell do not stack):",
+                "Physical attacks gain, \"On Hit: Deal 4d6 water magic damage\"",
+                "Spell attacks have their magic damage increased by 30%",
+                "At the beginning of each turn, heal for 10 health",
+                "Gain +20 movement speed",
+                "Gain +10% critical strike chance",
+                "Gain +100% critical damage modifier",
+                "Gain +20 to all skill checks",
+                "Gain the ability to roll a skill of the caster's choosing that the caster has, with the caster's modifier",
+                "Gain the ability to speak, understand, read, and write a language of the caster's choosing that the caster knows",
+                "You may expend an additional 20 mana to bottle the effects you choose into a potion which will expire in 1 hour."
+            ],
+            "tags": [
+                "Spell",
+                "water",
+                "restoration",
+                "buffing",
+                "divination",
+                "buff",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Fountain of Purity",
+            "clazz": "Aquamancer",
+            "branch": "Confluence",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "60 mana",
+            "rng": "60 ft",
+            "duration": "1 minute",
+            "description": [
+                "You create nourishing fountains. Create 2 large fountains in empty spaces within range. When the fountains initially appear, allies within 10 ft heal for 30 health and cleanse 1 condition of their choice. Allies standing next to a fountain gain 30% CR and 30% evasion. While the fountains persist, allies may use a minor action to drink from an adjacent fountain, healing for 30 health and cleansing for 1 condition of their choice. When you cast this spell, you may create additional fountains for 30 additional mana each."
+            ],
+            "tags": [
+                "Spell",
+                "water",
+                "restoration",
+                "conjuration",
+                "cleanse",
+                "heal",
+                "buff field",
                 "modal",
                 "concentration"
             ]
         },
         {
             "type": "ability",
-            "name": "Spill Blood",
-            "clazz": "Warrior",
-            "branch": "Assault",
+            "name": "Magic Dart",
+            "clazz": "Arcanist",
+            "branch": "Zapping",
             "tier": 1,
             "action": "1 Major Action",
-            "cost": "10 stamina",
-            "rng": "Melee",
+            "cost": "10 mana",
+            "rng": "70 ft",
             "duration": "Instant",
             "description": [
-                "You hack at an enemy, severing blood vessels. Deal 4d10 physical damage to a target in range. Inflict a d10 Bleed on the target. This Bleed's damage is amplified by your passive."
+                "You fire bolts of pure magic at one or more enemies. Create 3 magic darts of any elements and divide them as you choose amongst 1, 2, or 3 enemies. Each dart deals d12 magic damage of its chosen element."
             ],
             "tags": [
-                "Attack",
-                "physical",
+                "Spell",
+                "attack",
+                "destruction",
                 "single-target",
-                "melee",
-                "condition",
-                "Bleed"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Cut Down",
-            "clazz": "Warrior",
-            "branch": "Assault",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "20 stamina",
-            "rng": "Melee",
-            "duration": "Instant",
-            "description": [
-                "You deliver a wide slash to the enemy's frontlines, adjusting for their formation. Choose one of the following:",
-                "* Deal 3d10 damage to all enemies in a 10 ft cone, knocking them prone.",
-                "* Deal 3d10 damage to all enemies in a 25 ft horizontal line, knocking them back 10 ft",
-                "If you have at least 3 buffs active on you, choose both options."
-            ],
-            "tags": [
-                "Attack",
-                "physical",
-                "melee",
-                "AOE",
-                "cone",
-                "horizontal line",
-                "Knock Prone",
-                "Knock Back",
-                "modal",
-                "conditional"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Hack and Slash",
-            "clazz": "Warrior",
-            "branch": "Assault",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "40 stamina",
-            "rng": "Melee",
-            "duration": "Instant",
-            "description": [
-                "You turn vigor into violence, attacking quickly. Deal 3d10 physical damage to a target in range. Then, you may sacrifice a buff on you to repeat this skill at no cost."
-            ],
-            "tags": [
-                "Attack",
-                "physical",
-                "single-target",
-                "melee",
-                "repeatable",
-                "sacrifice"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Summary Execution",
-            "clazz": "Warrior",
-            "branch": "Assault",
-            "tier": 4,
-            "action": "1 Major Action",
-            "cost": "90 stamina",
-            "rng": "Melee",
-            "duration": "Instant",
-            "description": [
-                "You finish off weakened enemies. Deal 5d10 physical damage to all targets in range. This attack has lethality equal to each target's percentage of missing health (calculated after this ability's damage). You may sacrifice any number of buffs on you as you cast this ability to increase the base lethality of this attack by 10% per buff sacrificed this way."
-            ],
-            "tags": [
-                "Attack",
-                "physical",
                 "multi-target",
-                "melee",
-                "sacrifice",
-                "lethality",
-                "missing health"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Shields Up",
-            "clazz": "Warrior",
-            "branch": "Protect",
-            "tier": 1,
-            "action": "1 Reaction",
-            "cost": "15 stamina",
-            "rng": "Self",
-            "duration": "Instant",
-            "description": [
-                "You toss up your shield or armguard to defend against an attack. Block an attack on you or an adjacent ally, reducing damage by 25%. Gain an additional 25% damage reduction for each buff you have."
-            ],
-            "tags": [
-                "Block",
-                "damage reduction",
-                "self-target",
-                "ally-target"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Reinforce Armor",
-            "clazz": "Warrior",
-            "branch": "Protect",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "25 stamina",
-            "rng": "Self",
-            "duration": "1 minute",
-            "description": [
-                "You strengthen your armor's natural defenses. Sacrifice any number of buffs active on you. Gain 25% increased AC, Evasion, or MR for each buff sacrificed this way for 1 minute. Recasting this ability while its buff is active will end your previous buff and start a new one."
-            ],
-            "tags": [
-                "Buff",
-                "concentration",
-                "sacrifice",
-                "increase AC",
-                "increase Evasion",
-                "increase MR"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Take Cover",
-            "clazz": "Warrior",
-            "branch": "Protect",
-            "tier": 3,
-            "action": "1 Reaction",
-            "cost": "35 stamina",
-            "rng": "30 ft",
-            "duration": "Instant",
-            "description": [
-                "You dive and roll to rescue a comrade from danger. As a reaction to an attack on an allied target in range, immediately dash to them before the attack lands. Then, choose one of the following:",
-                "* Use your body as a shield. Your target gains 30 AC, and the attack will be redirected to both you and your target",
-                "* Tackle your target to the ground. You and your target gain 30% evasion, and both of you are knocked prone",
-                "* Drag them to safety. Dash an additional 20 ft in any direction, dragging your target with you, and your target loses their reaction if they still have one."
-            ],
-            "tags": [
-                "Dash",
-                "ally-target",
-                "modal",
-                "redirect",
-                "knock prone",
-                "increase AC",
-                "increase Evasion"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Paragon of Victory",
-            "clazz": "Warrior",
-            "branch": "Protect",
-            "tier": 4,
-            "action": "1 Major Action",
-            "cost": "100 stamina",
-            "rng": "Self",
-            "duration": "1 minute",
-            "description": [
-                "You become a powerful avatar of war. When you cast this ability, sacrifice any number of buffs on you. Gain the following effects, depending on the number of buffs sacrificed.",
-                "* 5 Buffs - Gain immunity to physical damage",
-                "* 10 Buffs - Gain all of the above in addition to immunity to conditions and crowd control.",
-                "* 15 Buffs - Gain all of the above in addition to 50 ft of added speed and 100% increased damage"
-            ],
-            "tags": [
-                "Buff",
-                "concentration",
-                "sacrifice",
-                "Immunity",
-                "add speed",
-                "increase damage",
                 "modal"
             ]
         },
         {
             "type": "ability",
-            "name": "\"Charge!\"",
-            "clazz": "Warrior",
-            "branch": "Warcry",
-            "tier": 1,
+            "name": "Magic Sear",
+            "clazz": "Arcanist",
+            "branch": "Zapping",
+            "tier": 2,
             "action": "1 Major Action",
-            "cost": "20 stamina",
-            "rng": "---",
-            "duration": "Instant",
+            "cost": "20 mana",
+            "rng": "70 ft",
+            "duration": "1 minute",
             "description": [
-                "You bellow a righteous cry, calling all to drive forward into battle. You and all allies who can hear you gain 50% increased damage until the end of your next turn. When you cast this ability, all allies who can hear you may use their reaction to move up to their speed in any direction."
+                "You douse an enemy in destructive mana. Deal 3d12 magic damage of a chosen element to a target in range. The target takes d12 magic damage of the same type at the beginning of each of its turns."
             ],
             "tags": [
-                "Buff",
-                "multi-target",
+                "Spell",
+                "attack",
+                "destruction",
+                "single-target",
+                "condition"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Magic Bomb",
+            "clazz": "Arcanist",
+            "branch": "Blasting",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "70 ft",
+            "duration": "Instant",
+            "description": [
+                "You create a small explosive ball of mana. Deal 4d12 magic damage of a chosen element type in one of the following AOE shapes of your choice:",
+                "A 25 ft cube",
+                "A 45 ft cross"
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "destruction",
+                "AOE",
+                "square",
+                "cross",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Magic Ray",
+            "clazz": "Arcanist",
+            "branch": "Blasting",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "70 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire rays of destructive mana. Deal 4d12 magic damage of a chosen element type to all enemies in a 70 ft cone, inflicting a 10% Magic Vulnerability to all targets."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "destruction",
+                "AOE",
+                "cone",
+                "condition",
+                "Vulnerability"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Magic Primer",
+            "clazz": "Arcanist",
+            "branch": "Arcane",
+            "tier": 1,
+            "action": "1 Minor Action",
+            "cost": "15 mana",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You charge mana to augment your next spell with raw power. Your next spell attack's damage increases by 30% and will be affected by your critical strike chance and critical damage modifier."
+            ],
+            "tags": [
+                "Spell",
+                "empower",
+                "destruction",
                 "self-target",
-                "ally-target",
                 "damage increase"
             ]
         },
         {
             "type": "ability",
-            "name": "\"Fight me!\"",
-            "clazz": "Warrior",
-            "branch": "Warcry",
+            "name": "Force Spike",
+            "clazz": "Arcanist",
+            "branch": "Arcane",
             "tier": 2,
-            "action": "1 Major Action",
-            "cost": "30 stamina",
-            "rng": "---",
-            "duration": "1 minute",
-            "description": [
-                "You bellow a belligerent cry, igniting your enemies' fury. All enemies who can hear you are Taunted for 1 minute. An enemy Taunted by this ability previously is Immune to this ability's Taunt. When you cast this ability, all enemies who can hear you break concentration."
-            ],
-            "tags": [
-                "Condition",
-                "Taunt",
-                "multi-target",
-                "break concentration"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "\"Overcome!\"",
-            "clazz": "Warrior",
-            "branch": "Warcry",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "40 stamina",
-            "rng": "---",
-            "duration": "Instant",
-            "description": [
-                "You bellow an inspiring cry, encouraging everyone to persist. You and all allies who can hear you are cleansed of Fear, Stun, Paralysis, Confusion, Sleep, and Charm. Allies in a 1000 ft range who are in a downed state become immediately stabilized. When you cast this ability, all allies who can hear you may use their reaction to cleanse an additional condition on them of their choice."
-            ],
-            "tags": [
-                "Cleanse",
-                "Stabilize",
-                "multi-target",
-                "self-target",
-                "ally-target"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "\"Kill them all!\"",
-            "clazz": "Warrior",
-            "branch": "Warcry",
-            "tier": 4,
-            "action": "1 Major Action",
-            "cost": "70 stamina",
-            "rng": "---",
-            "duration": "Instant",
-            "description": [
-                "You bellow a powerful cry, cowing your enemies and announcing their coming deaths. All enemies who can hear you gain 50% physical damage vulnerability, lose natural elemental resistances, and become Feared. When you cast this ability, all enemies who can hear you are stripped of all buffs, and those buffs are distributed as you choose amongst you and all allies who can hear you."
-            ],
-            "tags": [
-                "Condition",
-                "multi-target",
-                "Fear",
-                "vulnerability",
-                "buff stripping",
-                "buff"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Pivot and Slash",
-            "clazz": "Warlord",
-            "branch": "Close Range",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 stamina",
-            "rng": "Melee",
-            "duration": "Instant",
-            "description": [
-                "You focus on your footwork while you attack, looking for an opening. Deal 4d10 physical damage to a target in range. You may dash up to 5 ft in any direction before or after this attack."
-            ],
-            "tags": [
-                "Attack",
-                "physical",
-                "single-target",
-                "melee",
-                "modal",
-                "dash"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Knock Aside",
-            "clazz": "Warlord",
-            "branch": "Close Range",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "20 stamina",
-            "rng": "Melee",
-            "duration": "Instant",
-            "description": [
-                "You slam your weapon into your opponent to push them. Deal 4d10 physical damage to a target in range, pushing them 10 ft in any direction except towards you."
-            ],
-            "tags": [
-                "Attack",
-                "physical",
-                "single-target",
-                "melee",
-                "forced movement"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Crippling Blow",
-            "clazz": "Warlord",
-            "branch": "Close Range",
-            "tier": 3,
             "action": "1 Reaction",
-            "cost": "25 stamina",
-            "rng": "Melee",
+            "cost": "20 mana",
+            "rng": "100 ft",
             "duration": "Instant",
             "description": [
-                "You aim for an enemy's legs as they attempt to escape. As a reaction to an enemy attempt to move out of your reach, deal 4d10 physical damage to them, reduce their move speed to 0 for the turn, and inflict Crippled."
+                "You turn a mage's mana against them. As a reaction to a spell being cast within range, counter that spell. The caster of the countered spell loses health equal to the amount of mana spent on the countered spell."
             ],
             "tags": [
-                "Attack",
-                "physical",
-                "single-target",
-                "melee",
-                "Crippled"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Advancing Fire",
-            "clazz": "Warlord",
-            "branch": "Long Range",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 stamina",
-            "rng": "Weapon",
-            "duration": "Instant",
-            "description": [
-                "You fire at an enemy as you approach. Deal 4d10 physical damage to a target in range. You may dash up to 15 ft towards the target if your attack does not miss."
-            ],
-            "tags": [
-                "Attack",
-                "physical",
-                "single-target",
-                "ranged",
-                "conditional",
-                "modal",
-                "dash"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Hookshot",
-            "clazz": "Warlord",
-            "branch": "Long Range",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "20 stamina",
-            "rng": "Weapon",
-            "duration": "Instant",
-            "description": [
-                "You fire at an enemy with a projectile and chain. Deal 4d10 physical damage to a target in range, then pull them 20 ft towards you."
-            ],
-            "tags": [
-                "Attack",
-                "physical",
-                "single-target",
-                "ranged",
-                "forced movement"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Stopping Shot",
-            "clazz": "Warlord",
-            "branch": "Long Range",
-            "tier": 3,
-            "action": "1 Reaction",
-            "cost": "25 stamina",
-            "rng": "Weapon",
-            "duration": "Instant",
-            "description": [
-                "You shoot an enemy with a heavy projectile designed to stop their progression. As a reaction to an enemy moving into range or moving towards you, deal 4d10 physical damage to that enemy, reduce their move speed to 0 for the turn, and inflict Crippled."
-            ],
-            "tags": [
-                "Attack",
-                "physical",
-                "single-target",
-                "ranged",
-                "forced movement"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Weapon Swap: Roll",
-            "clazz": "Warlord",
-            "branch": "Weapon Swap",
-            "tier": 1,
-            "action": "1 Minor Action",
-            "cost": "10 stamina",
-            "rng": "Self",
-            "duration": "Instant",
-            "description": [
-                "You roll while swapping weapons. Dash up to 20 ft in any direction, then you may swap weapons in both hands."
-            ],
-            "tags": [
-                "Modal",
-                "dash"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Weapon Swap: Quaff",
-            "clazz": "Warlord",
-            "branch": "Weapon Swap",
-            "tier": 2,
-            "action": "1 Minor Action",
-            "cost": "15 stamina",
-            "rng": "Self",
-            "duration": "Instant",
-            "description": [
-                "You quickly down a potion while swapping weapons. Quaff a potion from your inventory, then you may swap weapons in both hands."
-            ],
-            "tags": [
-                "Modal"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Weapon Swap: Attack",
-            "clazz": "Warlord",
-            "branch": "Weapon Swap",
-            "tier": 3,
-            "action": "1 Minor Action",
-            "cost": "20 stamina",
-            "rng": "Self",
-            "duration": "Instant",
-            "description": [
-                "You swap weapons and make a quick attack. Swap weapons in both hands, then you may make an autoattack with each weapon currently equipped if applicable."
-            ],
-            "tags": [
-                "Modal",
-                "attack",
-                "physical",
-                "melee",
-                "ranged",
-                "single-target"
+                "Spell",
+                "destruction",
+                "defensive",
+                "counterspell"
             ]
         },
         {
@@ -5689,6 +5482,2924 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "ability",
+            "name": "Amalgam Hunter",
+            "clazz": "Bioengineer",
+            "branch": "Aggressive",
+            "tier": 1,
+            "action": "1 minute",
+            "cost": "2 different creatures with teeth/claws",
+            "rng": "---",
+            "duration": "1 minute",
+            "description": [
+                "You fuse two already dangerous beasts together. Create a Hunter organism with 30 HP to fight in combat. The Hunter acts on your turn, and has a Move, Major, and Minor action. You can use Command Actions to give it various orders; otherwise, it attacks the closest enemy. It can use its Move action to move up to 30 ft. It can use its Major action to deal 3d12 physical damage to targets in melee range. It can use its Minor action to heal itself for 20 HP"
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "minion",
+                "physical",
+                "melee"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Amalgam Artillery",
+            "clazz": "Bioengineer",
+            "branch": "Aggressive",
+            "tier": 2,
+            "action": "1 minute",
+            "cost": "1 elemental ingredient and 1 creature",
+            "rng": "---",
+            "duration": "1 minute",
+            "description": [
+                "You create a ranged attacker organism. Create an Artillery organism with 20 HP to fight in combat. The Artillery acts on your turn, and has a Move, Major, and Minor action. You can use Command Actions to give it various orders; otherwise, it attacks the closest enemy. It can use its Move action to move up to 10 ft. It can use its Major action to deal 3d12 physical damage to targets up to 60 ft away. It can use its Minor action to mark targets up to 60 ft away, decreasing their evasion by 20%."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "minion",
+                "physical",
+                "single-target",
+                "evasion loss"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Amalgam Trapper",
+            "clazz": "Bioengineer",
+            "branch": "Aggressive",
+            "tier": 3,
+            "action": "1 minute",
+            "cost": "1 corrosive or toxic ingredient and 1 creature",
+            "rng": "---",
+            "duration": "1 minute",
+            "description": [
+                "You create a melee trapper organism. Create an Trapper organism with 40 HP to fight in combat. The Trapper acts on your turn, and has a Move, Major, and Minor action. You can use Command Actions to give it various orders; otherwise, it attacks the closest enemy. It can use its Move action to move up to 70 ft. It can use its Major action to grapple an adjacent target, Immobilizing it. It can use its Minor action to decrease a grappled target's AC or MR by half (if you don't specify, it will choose one randomly)."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "minion",
+                "single-target",
+                "AC loss",
+                "MR loss",
+                "condition",
+                "Immobilize"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Amalgam Bomber",
+            "clazz": "Bioengineer",
+            "branch": "Aggressive",
+            "tier": 4,
+            "action": "1 minute",
+            "cost": "5 explosive ingredients and 5 large creatures",
+            "rng": "---",
+            "duration": "1 minute",
+            "description": [
+                "You create a bloated creature rigged to explode. Create a Bomber organism with 20 HP to fight in combat. The Bomber acts on your turn, and has a Move, Major, and Minor action. You can use Command Actions to give it various orders; otherwise, it walks towards the closest enemy. It can use its Move action to move up to 15 ft. It can use its Major action to self destruct, dealing 8d12 magic damage of its aspected element in a 25 ft cube (it deals physical damage if non-aspected instead). It can use its Minor action to change its aspected element (if you don't specify, it will choose one randomly; it begins as non-elemental)."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "minion",
+                "AOE",
+                "physical",
+                "magic",
+                ""
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Crafted Cleric",
+            "clazz": "Bioengineer",
+            "branch": "Steadfast",
+            "tier": 1,
+            "action": "5 minutes",
+            "cost": "2 healing ingredients and 1 creature",
+            "rng": "---",
+            "duration": "1 minute",
+            "description": [
+                "You invent an organism that can donate its own life force. Create a Healer organism with 30 HP and 30 mana to heal in combat. The Healer acts on your turn, and has a Move, Major, and Minor action. You can use Command Actions only to give it an order to heal a specific target; otherwise, it heals the closest ally. It can use its Move action to move up to 20 ft. It can use its Major action to expend 10 mana to heal an adjacent target for 3d12. It can use its Minor Action to drink health or mana potions."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "minion",
+                "heal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Generate Guardian",
+            "clazz": "Bioengineer",
+            "branch": "Steadfast",
+            "tier": 2,
+            "action": "5 minutes",
+            "cost": "2 healing ingredients and 1 creature",
+            "rng": "---",
+            "duration": "1 minute",
+            "description": [
+                "You design an organism to protect you and your allies. Create a Guardian organism with 50 HP, 20 AC, and 50% general MR. The Guardian acts on your turn, and has a Move, Major, and Minor action, as well as a reaction. You can use Command Actions to give it various orders; otherwise, it stays near you and uses all abilities on you. It can use its Move action to move up to 30 ft. It can use its Major action to transfer either its AC or MR to a target within 30 ft. It can use its Minor action to heal itself for 5 HP or cleanse a condition on itself. It can use its reaction in response to an attack to block the attack, redirecting the attack to itself instead."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "minion",
+                "defensive"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Absorbing Angel",
+            "clazz": "Bioengineer",
+            "branch": "Steadfast",
+            "tier": 3,
+            "action": "5 minutes",
+            "cost": "2 healing ingredients and 1 creature",
+            "rng": "---",
+            "duration": "1 minute",
+            "description": [
+                "You design an organism to cleanse conditions from you and your allies. Create an Angel organism with 10 HP. The Angel acts on your turn, and has a Move and Major action. You can use Command Actions to give it various orders; otherwise, it stays near you and uses all abilities on you. It can use its Move action to move up to 30 ft. It can use its Major action to cleanse a condition on an adjacent target, taking 2 damage in the process."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "minion",
+                "cleanse"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Child of Life",
+            "clazz": "Bioengineer",
+            "branch": "Steadfast",
+            "tier": 4,
+            "action": "5 minutes",
+            "cost": "6 healing ingredients and 3 creatures",
+            "rng": "---",
+            "duration": "1 minute",
+            "description": [
+                "You design an organism to protect you from fatal attacks. Create a homunculus organism with 1 HP. The homunculus acts on your turn, and has a Move and Major action, as well as a Reaction. You can use Command Actions to give it various orders; otherwise, it attaches itself to you and becomes Immune to all damage and conditions. It can use its Move action to move up to 30 ft. It can use its Major action to attach to an entity and become Immune to all damage and conditions, or to stabilize a downed entity. It can use its Reaction to completely absorb an attack that would down/kill the entity it is attached to, killing itself in the process."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "minion",
+                "defensive"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Call to Heel",
+            "clazz": "Bioengineer",
+            "branch": "Research",
+            "tier": 1,
+            "action": "1 Minor Action",
+            "cost": "---",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You call your creations to return to your side. Any number of target organisms that you created dash up to 100 ft to any space adjacent to you."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "command",
+                "minion",
+                "dash"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Transfer Lifeforce",
+            "clazz": "Bioengineer",
+            "branch": "Research",
+            "tier": 2,
+            "action": "1 Minor Action",
+            "cost": "---",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You sacrifice an organism to heal another organism. Destroy a target organism you created in range, then heal another target organism in range for the amount of HP the destroyed organism had left."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "command",
+                "minion",
+                "sacrifice"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Hibernate",
+            "clazz": "Bioengineer",
+            "branch": "Research",
+            "tier": 3,
+            "action": "1 Minor Action",
+            "cost": "---",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You command an organism to freeze its metabolism. A target organism you created becomes Incapacitated. While Incapacitated in this way, an organism does not deplete its duration. If you cast this ability on an organism that is already Incapacitated in this manner, it cleanses the condition"
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "command",
+                "minion",
+                "condition",
+                "Incapacitate"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Adoption",
+            "clazz": "Bioengineer",
+            "branch": "Research",
+            "tier": 4,
+            "action": "1 Minor Action",
+            "cost": "---",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You command an organism to obey a new master. Choose an ally you can see. A target organism you created in range has control if it given to that ally. If you cast this ability on an organism you created in range that is under someone else's control, you may either take control of the organism or give control of it to a new ally."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "command",
+                "minion",
+                "condition",
+                "Incapacitate"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Web",
+            "clazz": "Conjurer",
+            "branch": "Ephemeral",
+            "tier": 1,
+            "action": "1 Major Action or Reaction",
+            "cost": "10 mana",
+            "rng": "50 ft",
+            "duration": "Instant",
+            "description": [
+                "You spew out skeins of sticky mana. Choose one:",
+                "Attach yourself or another target in range to a surface within range, preventing them from falling or being pushed further from that surface until the beginning of your next turn",
+                "Target in range becomes Immobilized until the end of their next turn"
+            ],
+            "tags": [
+                "Spell",
+                "conjuration",
+                "modal",
+                "attack",
+                "condition",
+                "Immobilize"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Fog",
+            "clazz": "Conjurer",
+            "branch": "Ephemeral",
+            "tier": 2,
+            "action": "1 Major Action or Reaction",
+            "cost": "15 mana",
+            "rng": "50 ft",
+            "duration": "20 seconds",
+            "description": [
+                "You cast out mana as a cloud. Create a Fog field in a 35 ft square centered on a point in range. You and your allies can see through the Fog; other entities have obscured vision (Blinded) within the field. The field lasts until the end of your next turn. If this spell would end, you may recast this spell as a free reaction instead."
+            ],
+            "tags": [
+                "Spell",
+                "conjuration",
+                "field",
+                "condition",
+                "Blind",
+                "AOE",
+                "square"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Armament",
+            "clazz": "Conjurer",
+            "branch": "Formed",
+            "tier": 1,
+            "action": "1 Minor Action",
+            "cost": "10 mana",
+            "rng": "50 ft",
+            "duration": "1 minute",
+            "description": [
+                "You create a weapon or piece of armor for temporary use. Create a mundane weapon or piece of armor of your choosing and equip it to a target in range. This spell fails if the equipment slot being affected is already filled."
+            ],
+            "tags": [
+                "Spell",
+                "conjuration",
+                "modal",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Self Defense Turret",
+            "clazz": "Conjurer",
+            "branch": "Formed",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "50 ft",
+            "duration": "1 minute",
+            "description": [
+                "You create a specialized defense totem. Create an SDF totem in an empty space within range, with 100 HP. When the totem takes damage, it deals twice as much damage of the same type back at the attacker. While the SDF totem is active and within 50 ft of you, you may use your reaction to redirect an attack targeting you or an ally to the totem."
+            ],
+            "tags": [
+                "Spell",
+                "conjuration",
+                "modal",
+                "conditional",
+                "totem"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Force Wall",
+            "clazz": "Conjurer",
+            "branch": "Lasting",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "50 ft",
+            "duration": "1 hour",
+            "description": [
+                "You form a surface of solidified mana. Choose one:",
+                "Create a 10 ft wide, 100 ft long bridge starting in an empty space in range. Allies cannot be pushed off the bridge.",
+                "Create a 20 ft high, 20 ft wide wall centered on an empty space in range. Allies can freely see through, walk through, and fire projectiles through the wall."
+            ],
+            "tags": [
+                "Spell",
+                "conjuration",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Mansion",
+            "clazz": "Conjurer",
+            "branch": "Lasting",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "200 ft",
+            "duration": "6 hours",
+            "description": [
+                "You create a large building for a group to rest in. Create a Mansion that occupies an empty 105 ft square centered on a point in range (you may optionally decrease the size of the Mansion to fit smaller spaces, down to a lower limit of 35 ft square). You freely control who can enter the Mansion, and occupants of the Mansion can freely control the interior's furnishings. The Mansion protects occupants from the elements as well as from intruders."
+            ],
+            "tags": [
+                "Spell",
+                "conjuration",
+                "modal",
+                "AOE",
+                "square"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Hold Person",
+            "clazz": "Controller",
+            "branch": "Subjugate",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "60 ft",
+            "duration": "20 seconds",
+            "description": [
+                "You bind an enemy with magic. A target in range becomes Stunned until the end of your next turn. You may recast this spell while concentrating on it for 10 mana; if you do, the duration is extended for an additional round."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "single-target",
+                "control",
+                "condition",
+                "Stun",
+                "conditional",
+                "modal",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Mass Slow",
+            "clazz": "Controller",
+            "branch": "Dominate",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "25 mana",
+            "rng": "60 ft",
+            "duration": "1 minute",
+            "description": [
+                "You cast out many skeins of mana to impede opponents. Up to 4 targets in range become Slowed for the duration. For every additional 15 mana you spend when you cast this spell, you may choose 4 additional targets."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "multi-target",
+                "control",
+                "condition",
+                "Slow",
+                "modal",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Baneful Curse",
+            "clazz": "Controller",
+            "branch": "Tyranny",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "15 mana",
+            "rng": "60 ft",
+            "duration": "1 hour",
+            "description": [
+                "You curse an enemy with bad luck. A target in range gains a mark which gives -20 to all skill checks for the duration. You may spend 1 minute casting this spell as a minor ritual; if you do, its duration is 6 hours. You may spend 10 minutes casting this spell as a major ritual; if you do, its duration is 24 hours."
+            ],
+            "tags": [
+                "Spell",
+                "control",
+                "modal",
+                "minor ritual",
+                "major ritual"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Ice Spear",
+            "clazz": "Cryomancer",
+            "branch": "Arctic",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "30 ft",
+            "duration": "Instant",
+            "description": [
+                "You form a spear of ice and fire it at a nearby target. Deal 6d8 ice magic damage to a target in range. The ice spear passes through any enemies along its path, dealing half damage."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "ranged",
+                "ice",
+                "destruction",
+                "damage",
+                "single-target",
+                "multi-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Glacial Crash",
+            "clazz": "Cryomancer",
+            "branch": "Arctic",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You cause spears of ice to erupt around you. Enemies within 5 ft of you take 8d8 ice magic damage and are Frozen. Enemies within 10 ft of you take 6d8 ice magic damage and are Slowed. Enemies within 15 ft of you take 4d8 damage."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "ice",
+                "destruction",
+                "damage",
+                "self-target",
+                "condition",
+                "control",
+                "Slow",
+                "Frozen",
+                "AOE"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Shatter",
+            "clazz": "Cryomancer",
+            "branch": "Arctic",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "50 mana",
+            "rng": "30 ft",
+            "duration": "Instant",
+            "description": [
+                "You shatter an enemy encased in ice. Deal 10d8 ice magic damage to a target within range who is Frozen. Their Frozen condition ends, and they are Slowed. Then, this spell's effect repeat for an adjacent Frozen target. A target cannot be damaged by this spell more than once per cast."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "ice",
+                "destruction",
+                "damage",
+                "single-target",
+                "conditional",
+                "Frozen",
+                "Slow",
+                "repeatable"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Aurora Beam",
+            "clazz": "Cryomancer",
+            "branch": "Arctic",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "X mana",
+            "rng": "60 ft",
+            "duration": "Instant",
+            "description": [
+                "You emit a powerful beam of ice. Deal Xd8 ice magic damage to all targets in a line, where X is the amount of mana expended on this spell divided by 5. You may choose to concentrate on this spell further, and if you do, you may use a major action to repeat this spell for no mana cost, at half its previous damage. If this spell consumes at least 5 stacks of Frostbite, refund half of the mana cost. If this attack consumes at least 10 stacks of Frostbite, refund the full mana cost."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "ice",
+                "destruction",
+                "damage",
+                "AOE",
+                "line",
+                "modal",
+                "continuous",
+                "concentration",
+                "gain mana"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Flash Freeze",
+            "clazz": "Cryomancer",
+            "branch": "Chilling",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "15 mana",
+            "rng": "30 ft",
+            "duration": "1 minute",
+            "description": [
+                "You freeze a target solid. Apply Frozen to a target in range, and apply Slow to any enemies adjacent to your target. Applies a stack of your passive on cast, even if resisted."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "ice",
+                "condition",
+                "control",
+                "Frozen",
+                "Slow",
+                "single target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Freezing Wind",
+            "clazz": "Cryomancer",
+            "branch": "Chilling",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "35 mana",
+            "rng": "60 ft cone",
+            "duration": "Instant",
+            "description": [
+                "You conjure a cone of icy wind. Enemies in a 60 ft cone in front of you are Slowed. If an enemy is hit by this spell, and already is Slowed or has a stack of your passive on them, they are Frozen instead."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "ice",
+                "conjuration",
+                "control",
+                "Frozen",
+                "Slow",
+                "AOE",
+                "cone"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Hypothermia",
+            "clazz": "Cryomancer",
+            "branch": "Chilling",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "70 mana",
+            "rng": "30 ft",
+            "duration": "Instant",
+            "description": [
+                "You drop a target's body temperature, slowing their metabolism. A target within range becomes Slowed, loses its Major action, Minor action, and reaction, and loses all Evasion. This spell requires concentration."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "ice",
+                "condition",
+                "control",
+                "Slow",
+                "action loss",
+                "evasion loss",
+                "single-target",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Heart of Ice",
+            "clazz": "Cryomancer",
+            "branch": "Chilling",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "100 mana",
+            "rng": "Self",
+            "duration": "1 hour",
+            "description": [
+                "You drape yourself in an icy aura. For the duration of this spell, enemies who move into a space within 30 feet of you become Slowed. Adjacent enemies who attack you become Frozen. Attacks from enemies more than 30 ft away grant you 40% evasion for that attack. Allies who are adjacent to you have all types of damage they deal converted to ice magic damage, and inflict Frostbite on-hit (limited to once per turn). You may use your reaction to cast any ice spell while this buff is active."
+            ],
+            "tags": [
+                "Spell",
+                "ice",
+                "buff",
+                "condition",
+                "Slow",
+                "Frozen",
+                "self-target",
+                "on-hit",
+                "add evasion",
+                "ally buff",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Ice Crafting",
+            "clazz": "Cryomancer",
+            "branch": "Snow",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "5 mana",
+            "rng": "50 ft",
+            "duration": "10 minutes",
+            "description": [
+                "You create sheets of ice and snow. Cover the ground in a target space in your choice of either ice or snow. Ice spaces force creatures to make Balance checks or fall prone. Snow spaces count as difficult terrain. When you cast this spell, you can repeat it for as many spaces within range as desired, expending 5 more mana for every additional space. You can also create a pillar of ice or snow, with a height of up to 10 ft, in any space for an additional 5 mana."
+            ],
+            "tags": [
+                "Spell",
+                "smite-target",
+                "conjuration",
+                "ice",
+                "modal",
+                "repeatable"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Extinguish",
+            "clazz": "Cryomancer",
+            "branch": "Snow",
+            "tier": 2,
+            "action": "1 Reaction",
+            "cost": "20 mana",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You take advantage of a mage casting a spell, freezing his mana. As a reaction to a target in range casting a spell, you may counter that spell. That target becomes Silenced until the end of their next turn."
+            ],
+            "tags": [
+                "Spell",
+                "counterspell",
+                "condition",
+                "defensive",
+                "Silence",
+                "control",
+                "ice",
+                "single-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Ice Block",
+            "clazz": "Cryomancer",
+            "branch": "Snow",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "40 mana",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You surround yourself in an icy armor, and manipulate a shield of ice. Increase your AC by 20, and increase your general MR by 30% until the beginning of your next turn. While you have this buff, you may use your reaction to completely block one attack on you or an ally within 30 ft, for no additional mana."
+            ],
+            "tags": [
+                "Spell",
+                "defensive",
+                "buff",
+                "AC increase",
+                "MR increase",
+                "block",
+                "self-target",
+                "single-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Frozen  Arena",
+            "clazz": "Cryomancer",
+            "branch": "Snow",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "60 mana",
+            "rng": "1000 ft",
+            "duration": "1 minute",
+            "description": [
+                "You create an arena surrounded in ice. Create a 200 ft cube zone centered on a point within range. Within this zone, all enemies have the following: they are revealed; they cannot leave the zone unless you allow them as a free reaction; if they have at least 1 stack of Frostbite, they have their Frostbite doubled at the beginning of each turn. Any entity that dies with at least 1 stack of Frostbite has its Frostbite stacks transferred to another entity of your choice within the zone."
+            ],
+            "tags": [
+                "Spell",
+                "ice",
+                "AOE",
+                "zone",
+                "cube",
+                "on-death",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Belly Dance",
+            "clazz": "Dancer",
+            "branch": "Sway",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 stamina",
+            "rng": "Touch",
+            "duration": "1 minute",
+            "description": [
+                "You charm attackers with your sensual touch and dull their strikes. Inflict a 10% Weaken to a target in range for the duration. This Weaken can stack up to 4 times. This ability costs 10 less stamina if your last Move Action included a Step 3 dance ability."
+            ],
+            "tags": [
+                "Attack",
+                "condition",
+                "Weaken",
+                "stacking",
+                "conditional",
+                "dance",
+                "Step 1"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Swing",
+            "clazz": "Dancer",
+            "branch": "Sway",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "15 stamina",
+            "rng": "Touch",
+            "duration": "Instant",
+            "description": [
+                "You force enemies to join you in dance. Push a target in range 20 ft in any direction. If the target hits other entities during its forced movement, it pushes them as well. This ability costs 15 less stamina if your last Move Action included a Step 1 dance ability."
+            ],
+            "tags": [
+                "Attack",
+                "push",
+                "conditional",
+                "dance",
+                "Step 2"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Jive",
+            "clazz": "Dancer",
+            "branch": "Sway",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "20 stamina",
+            "rng": "Touch",
+            "duration": "Instant",
+            "description": [
+                "You confound enemies with swirling limb and step. Inflict Confusion on an enemy in range. While an enemy is Confused in this manner, you may choose a specific direction when they move or attack, and the chosen direction becomes 3 times as likely to be selected when they roll. This ability costs 20 less stamina if your last Move Action included a Step 2 dance ability."
+            ],
+            "tags": [
+                "Attack",
+                "condition",
+                "Confuse",
+                "modal",
+                "dance",
+                "Step 3"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Tango",
+            "clazz": "Dancer",
+            "branch": "Strut",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 stamina",
+            "rng": "Touch",
+            "duration": "Instant",
+            "description": [
+                "You join up with a partner, giving them time to recover while you guide their step. Cleanse 1 condition on yourself or cleanse 1 condition on an ally in range and push them 5 ft in any direction. This ability costs 10 less stamina if your last Move Action included a Step 1 dance ability."
+            ],
+            "tags": [
+                "Cleanse",
+                "push",
+                "conditional",
+                "dance",
+                "Step 2"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Waltz",
+            "clazz": "Dancer",
+            "branch": "Strut",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "15 stamina",
+            "rng": "Touch",
+            "duration": "Instant",
+            "description": [
+                "You reinvigorate an ally with your beautiful dance moves. Heal 3d10 for a target in range and cleanse Poison, Bleed, and Burn. This ability costs 15 less stamina if your last Move Action included a Step 2 ability."
+            ],
+            "tags": [
+                "Cleanse",
+                "heal",
+                "conditional",
+                "dance",
+                "Step 3"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Boogie",
+            "clazz": "Dancer",
+            "branch": "Strut",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "20 stamina",
+            "rng": "Touch",
+            "duration": "Instant",
+            "description": [
+                "You dance with an ally, energizing them. Dash up to your move speed, moving an ally in range with you (if you cast this ability as a Move Action, your movement becomes a dash instead). That ally gains an additional Major Action during their next turn. This ability costs 20 less stamina if your last Move Action included a Step 3 ability."
+            ],
+            "tags": [
+                "Dash",
+                "conditional",
+                "dance",
+                "Step 1"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Foxtrot",
+            "clazz": "Dancer",
+            "branch": "Shimmy",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 stamina",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You quickly step and weave across the dance hall. Gain 10% evasion and 10% general MR for the duration. This buff can stack up to 4 times. This ability costs 10 less stamina if your last Move Action included a Step 2 dance ability."
+            ],
+            "tags": [
+                "Buff",
+                "gain evasion",
+                "gain MR",
+                "dance",
+                "Step 3"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Moonwalk",
+            "clazz": "Dancer",
+            "branch": "Shimmy",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "15 stamina",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You slide across the dance hall. Gain 10 movement speed. This buff can stack up to 4 times. This ability costs 15 less stamina if your last Move Action included a Step 3 dance ability."
+            ],
+            "tags": [
+                "Buff",
+                "gain move speed",
+                "conditional",
+                "dance",
+                "Step 1"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Ballet",
+            "clazz": "Dancer",
+            "branch": "Shimmy",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "20 stamina",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "Your mystical dance seems graceful on the outside, yet requires incredible athletics. Gain +10% general CR and +10% CR of a type of your choice. This buff can stack up to 2 times. This ability costs 20 less stamina if your last Move Action included a Step 1 dance ability."
+            ],
+            "tags": [
+                "Buff",
+                "gain CR",
+                "conditional",
+                "dance",
+                "Step 2"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Shadow Strike",
+            "clazz": "Dark Duelist",
+            "branch": "Dueling",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You slash with your blade, which thirsts for cursed flesh. Deal 3d12 + Xd12 physical damage to a target in range, where X is the number of Curses on the target."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "greatsword",
+                "conditional",
+                "Curse"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Void Slash",
+            "clazz": "Dark Duelist",
+            "branch": "Dueling",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 stamina",
+            "rng": "40 ft",
+            "duration": "Instant",
+            "description": [
+                "You strike from afar as your blade seeks cursed flesh. Deal 4d12 physical damage to a target you can see within range. If your target is Cursed, this attack can hit through barriers and walls, ignores shields and blocks, and bypasses AC."
+            ],
+            "tags": [
+                "Attack",
+                "ranged",
+                "physical",
+                "greatsword",
+                "conditional",
+                "Curse",
+                "armor penetration",
+                "phase wall",
+                "phase block"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Vampiric Slash",
+            "clazz": "Dark Duelist",
+            "branch": "Dueling",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "35 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You reap life energy from cursed flesh. Deal 5d12 physical damage to a target in range. If the target has any Curses, expunge those Curses immediately, then select one of the following effects for each Curse expunged this way:",
+                "\u00b7         Heal for 2d12",
+                "\u00b7         Empower your next attack with a greatsword or dark spell, increasing damage by 50%"
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "greatsword",
+                "conditional",
+                "Curse",
+                "modal",
+                "heal",
+                "empower"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Lifereaper",
+            "clazz": "Dark Duelist",
+            "branch": "Dueling",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "80 stamina",
+            "rng": "20 ft",
+            "duration": "Instant",
+            "description": [
+                "Your blade expands, empowered by dark magic, and you raze entire groups in one swing. Deal 8d12 physical damage to all targets in range. During the turn you use this ability, Scars of Darkness is changed such that consumed Scars grant you a bonus Major Action rather than refreshing your Major Action."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "greatsword",
+                "passive alter",
+                "AOE"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Dark Pulse",
+            "clazz": "Dark Duelist",
+            "branch": "Casting",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "20 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire a wave of dark, cursed energy. Deal 3d12 dark magic damage and apply a stack of Curse to all enemies in a 20 ft cone in front of you."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "dark",
+                "AOE",
+                "cone",
+                "condition",
+                "Curse"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Shadow Missiles",
+            "clazz": "Dark Duelist",
+            "branch": "Casting",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "15 mana",
+            "rng": "40 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire a series of dark missiles. Deal 3d12 dark magic damage and apply a stack of Curse to up to 3 targets in range. If the target is Cursed, this spell cannot miss and ignores MR."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "dark",
+                "multi-target",
+                "condition",
+                "Curse",
+                "conditional",
+                "no-miss",
+                "MR penetration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Shadow Grasp",
+            "clazz": "Dark Duelist",
+            "branch": "Casting",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "25 mana",
+            "rng": "40 ft",
+            "duration": "Instant",
+            "description": [
+                "You wrap a target in dark energy. Deal 3d12 dark magic damage to a target in range and inflict Immobilize. While a target is Immobilized by this ability, it takes d12 dark magic damage at the beginning of each of its turns, gains a stack of Curse, and cannot have its Curse stacks expunged, except by your abilities or by a free action you can take at any time."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "dark",
+                "single-target",
+                "condition",
+                "Immobilize",
+                "Curse",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Shadow Puppet",
+            "clazz": "Dark Duelist",
+            "branch": "Casting",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "50 mana",
+            "rng": "10 ft",
+            "duration": "1 minute",
+            "description": [
+                "You summon your shadow to fight by your side. Create a Shadow in range. The shadow has 1 HP and is Immune to physical damage, magic damage, and all conditions. At the beginning of your turn, the Shadow teleports to and attacks an enemy of your choice within 80 ft, dealing damage as if you had autoattacked that enemy, and inflicting any on-hit effects, including a Scar. Instead of using an autoattack, you may have the Shadow use one of your greatsword abilities or one of your dark spells instead, but you must make any stamina or mana expenditures if you do so."
+            ],
+            "tags": [
+                "Spell",
+                "summoning",
+                "dark",
+                "concentration",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Accursed Blade",
+            "clazz": "Dark Duelist",
+            "branch": "Buffing",
+            "tier": 1,
+            "action": "1 Minor Action",
+            "cost": "10 mana",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You infuse your sword with a terrible curse. For the spell's duration, when you hit a target with a greatsword attack, inflict a Curse on the target."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "buff",
+                "self-target",
+                "condition",
+                "Curse",
+                "on-hit",
+                "greatsword"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Sword of Darkness",
+            "clazz": "Dark Duelist",
+            "branch": "Buffing",
+            "tier": 2,
+            "action": "1 Minor Action",
+            "cost": "20 mana",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You infuse your sword with dark magic energy. For the spell's duration, when you hit a target with a greatsword attack, deal an additional 2d12 dark magic damage on hit."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "buff",
+                "self-target",
+                "on-hit",
+                "greatsword"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Blade of Shadows",
+            "clazz": "Dark Duelist",
+            "branch": "Buffing",
+            "tier": 3,
+            "action": "1 Minor Action",
+            "cost": "30 mana",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "Your blade becomes a thin sheet of dark magic. All damage that you would deal with greatsword attacks have their damage converted to dark magic damage. While this buff is active, dark magic damage you deal with melee sword attacks creates Scars, and consuming Scars additionally refreshes your Minor Action and regenerates 10 stamina."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "buff",
+                "self-target",
+                "damage convert",
+                "greatsword",
+                "gain stamina"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Accursed Armor",
+            "clazz": "Dark Duelist",
+            "branch": "Buffing",
+            "tier": 4,
+            "action": "1 Minor Action",
+            "cost": "70 mana",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You don magically conjured dark armor. Whenever a cursed enemy targets you with an attack, they take 2d12 dark magic damage for each curse on them, gain a 25% chance to miss with their attack (even for attacks that cannot be evaded) for each curse on them, and are dragged 10 ft towards you for each curse on them. For each curse you inflict that is expunged while this ability is active, you gain a stack of Darkness. Each stack of darkness increases your physical and dark magic damage by 25%, up to a limit of 20 stacks."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "buff",
+                "conjuration",
+                "self-target",
+                "condition",
+                "Curse",
+                "stacking buff",
+                "concentration",
+                "pull"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Slam",
+            "clazz": "Destroyer",
+            "branch": "Sunder",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You hit an enemy hard and expose their weakness. Deal 4d10 physical damage to a target in range, and inflict Physical Vulnerability equal to 10% + X%, where X is the target's current Physical Vulnerability."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "single-target",
+                "blunt weapon",
+                "on hit",
+                "condition",
+                "vulnerability"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Mortal Strike",
+            "clazz": "Destroyer",
+            "branch": "Sunder",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You crush an enemy's armor. Deal 5d10 physical damage to a target in range. This attack destroys armor before damage calculation, reducing the target's armor by 25% on hit."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "single-target",
+                "blunt weapon",
+                "on hit",
+                "armor shred"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Execute",
+            "clazz": "Destroyer",
+            "branch": "Sunder",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "30 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You finish off a weakened foe. Deal 6d10 physical damage to a target in range, with lethality equal to the target's missing health after damage calculation."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "single-target",
+                "blunt weapon",
+                "lethality"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Cleave",
+            "clazz": "Destroyer",
+            "branch": "Raze",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "15 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You swing at two enemies. Deal 4d10 physical damage to up to 2 different targets in range. If either target dies, deal 8d10 physical damage to the other target."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "single-target",
+                "multi-target",
+                "blunt weapon",
+                "modal",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Whirlwind",
+            "clazz": "Destroyer",
+            "branch": "Raze",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "25 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You swing in a wide arc. Deal 5d10 physical damage to all targets in range. Targets with full health take double damage."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "multi-target",
+                "blunt weapon",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Rampage",
+            "clazz": "Destroyer",
+            "branch": "Raze",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "35 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You slam your weapon down on a large group. Deal 6d10 physical damage to all targets in a 15 ft cone starting in range, knocking targets prone."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "multi-target",
+                "blunt weapon"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Demolish",
+            "clazz": "Destroyer",
+            "branch": "Teardown",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You destroy buildings and constructs. Attack a construct, building, vehicle, or terrain object that is destructible, and destroy it. You may need to make a Blunt Weapons check for larger or armored targets, and some objects aren't destructible at all (such as hills or mountains)."
+            ],
+            "tags": [
+                "Terrain destruction"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Challenge",
+            "clazz": "Destroyer",
+            "branch": "Teardown",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 stamina",
+            "rng": "20 ft",
+            "duration": "1 minute",
+            "description": [
+                "You force enemies to turn their attention to you. Taunt all enemies within range for the duration. Gain 10% increased AC and MR for every enemy taunted this way for the duration"
+            ],
+            "tags": [
+                "Condition",
+                "Taunt",
+                "gain AC",
+                "gain MR"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Flatten",
+            "clazz": "Destroyer",
+            "branch": "Teardown",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "25 stamina",
+            "rng": "20 ft",
+            "duration": "Instant",
+            "description": [
+                "You reduce parts of the ground to flat earth, or create a ditch. Create a shockwave centered on you that causes all spaces within range to be depressed downwards by 20 ft."
+            ],
+            "tags": [
+                "Terrain destruction"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Spark Bolt",
+            "clazz": "Dynamancer",
+            "branch": "Shock",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "150 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire a small bolt of lightning at an enemy. Deal 4d12 lightning magic damage to a target in range, then randomly choose one of the following:",
+                "50% chance: Deal an additional d12 lightning magic damage",
+                "30% chance: Inflict Paralyzed for 1 minute",
+                "20% chance: Inflict Stunned until the beginning of your next turn"
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "lightning",
+                "destruction",
+                "modal",
+                "random",
+                "condition",
+                "Paralysis",
+                "Stun",
+                "single-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Live Wire",
+            "clazz": "Dynamancer",
+            "branch": "Shock",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "25 mana",
+            "rng": "150 ft",
+            "duration": "1 minute",
+            "description": [
+                "You charge an enemy with electricity. Deal 2d12 lightning magic damage to a target in range. For the duration, one of the following effects randomly occurs at the beginning of each of the target's turns:",
+                "50% chance: The target takes 2d12 lightning magic damage",
+                "30% chance: The target and all adjacent enemies take 2d12 lightning magic damage",
+                "20% chance: The target and all adjacent enemies take 2d12 lightning magic damage and are inflicted with 20% Lightning Vulnerability"
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "lightning",
+                "destruction",
+                "modal",
+                "random",
+                "condition",
+                "Vulnerability",
+                "single-target",
+                "multi-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Lightning Bolt",
+            "clazz": "Dynamancer",
+            "branch": "Electrify",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "150 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire a large bolt of lightning at multiple enemies. Deal 4d12 lightning magic damage and inflict Paralyzed to all enemies in a 150 ft line starting from your position in any direction. This spell randomly has the following additional properties:",
+                "50% chance: Deal an additional d12 lightning magic damage",
+                "30% chance: This attack ignores MR",
+                "20% chance: This spell cannot be counterspelled"
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "lightning",
+                "destruction",
+                "modal",
+                "random",
+                "AOE",
+                "line",
+                "condition",
+                "Paralysis",
+                "ignore MR"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Lightning Rod",
+            "clazz": "Dynamancer",
+            "branch": "Electrify",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "150 ft",
+            "duration": "Instant",
+            "description": [
+                "You erect a rod that attracts lightning. Deal 3d12 lightning magic damage to all enemies in a 25 ft square centered on a space in range, leaving behind a Lightning Rod totem. The totem activates and deals a random amount of lightning magic damage to all enemies within 25 ft whenever a lightning spell is cast within 100 ft, with the random damage varying between d12 and 3d12."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "lightning",
+                "destruction",
+                "random",
+                "AOE",
+                "square",
+                "conditional",
+                "totem"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Energize",
+            "clazz": "Dynamancer",
+            "branch": "Thunder",
+            "tier": 1,
+            "action": "1 Minor Action",
+            "cost": "15 mana",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You take advantage of random energy to power your spells. The next damaging spell you cast is affected by your critical strike chance and critical damage modifier. That spell also randomly gains one of the following effects:",
+                "50% chance: The spell deals an additional d12 lightning magic damage",
+                "30% chance: The spell's range increases by 20 or 20%, whichever is higher",
+                "20% chance: The spell's mana cost is decreased by 20 or 20%, whichever is lower."
+            ],
+            "tags": [
+                "Empower",
+                "modal",
+                "random",
+                "range increase",
+                "spell",
+                "lightning",
+                "transmutation",
+                "utility"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Frazzle",
+            "clazz": "Dynamancer",
+            "branch": "Thunder",
+            "tier": 2,
+            "action": "1 Reaction",
+            "cost": "20 mana",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You ignite enemy mana with random energy. As a reaction to a target in range casting a spell, counter that spell, then randomly choose one:",
+                "50% chance: The target takes 2d12 lightning magic damage",
+                "30% chance: The target is inflicted with Paralysis",
+                "20% chance: The target is Stunned until the end of its turn"
+            ],
+            "tags": [
+                "Spell",
+                "counterspell",
+                "lightning",
+                "defensive",
+                "condition",
+                "Paralysis",
+                "Stun",
+                "random",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Modify Weapon",
+            "clazz": "Enchanter",
+            "branch": "Personal",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "Touch",
+            "duration": "1 minute",
+            "description": [
+                "You temper a weapon with runes of strengthening or weakening. Choose one:",
+                "Target weapon in range gains, \"On Hit: Deal 4d10 physical damage.\"",
+                "Target weapon in range gains, \"While equipped, deal 50% decreased physical damage.\""
+            ],
+            "tags": [
+                "Spell",
+                "enchantment",
+                "modal",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Reforge Armor",
+            "clazz": "Enchanter",
+            "branch": "Personal",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "Touch",
+            "duration": "1 minute",
+            "description": [
+                "You temper armor with runes of strengthening or weakening. Choose one:",
+                "Target armor in range has its implicit AC, Evasion, MR, and CR increased by 50%.",
+                "Target armor in range loses all AC, Evasion, MR, and CR."
+            ],
+            "tags": [
+                "Spell",
+                "enchantment",
+                "modal",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Alter Jewelry",
+            "clazz": "Enchanter",
+            "branch": "Personal",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "Touch",
+            "duration": "1 minute",
+            "description": [
+                "You affix runes to an accessory for a variety of effects. Choose one:",
+                "Target ring in range gains, \"On Hit: Deal 2d20 magic damage of a chosen type.\"",
+                "Target ring in range gains, \"At the beginning of your turn, lose 40 mana and stamina.\"",
+                "Target belt in range gains, \"You have elemental resistance against 2 chosen types.\"",
+                "Target belt in range gains, \"You have elemental weakness against 2 chosen types.\"",
+                "Target necklace in range gains, \"At the beginning of your turn, heal 30 health.\"",
+                "Target necklace in range gains, \"At the beginning of your turn, lose 30 health.\"",
+                "You may spend an additional 20 mana to choose a second effect for a type of accessory not previously chosen. You may then spend another additional 10 mana to choose a third effect for the last accessory type not previously chosen."
+            ],
+            "tags": [
+                "Spell",
+                "enchantment",
+                "modal",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Reconstruct Barrier",
+            "clazz": "Enchanter",
+            "branch": "Structural",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "Touch",
+            "duration": "1 minute",
+            "description": [
+                "You rebuild a wall or door with runes of locking or breaking. Choose one:",
+                "Target wall in range becomes unbreakable, and all windows and doors in that wall become magically locked.",
+                "Target wall in range crumbles and weakens to become easily breakable, and all windows and doors in that wall become unlocked.",
+                "After choosing an effect, you may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
+            ],
+            "tags": [
+                "Spell",
+                "enchantment",
+                "utility",
+                "minor ritual",
+                "major ritual",
+                "modal",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Rebuild Floor",
+            "clazz": "Enchanter",
+            "branch": "Structural",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "Touch",
+            "duration": "1 minute",
+            "description": [
+                "You reconstruct the floor or ceiling to various effect. Choose one:",
+                "The surface becomes difficult terrain.",
+                "The surface becomes fragile, crumbling underneath the weight of entities walking over it.",
+                "The surface becomes slick, granting entities doubled move speed.",
+                "The surface becomes unbreakable.",
+                "After choosing an effect, you may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
+            ],
+            "tags": [
+                "Spell",
+                "enchantment",
+                "utility",
+                "minor ritual",
+                "major ritual",
+                "modal",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Secure Building",
+            "clazz": "Enchanter",
+            "branch": "Structural",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "Touch",
+            "duration": "1 minute",
+            "description": [
+                "You magically ward a building or some number of rooms in a building against enemy magic. Target building in range has any number of its rooms or the entire building gain the following effects: scrying and teleportation magic in or out of the warded area fails; you know if anyone casts a spell inside the warded area and what spell was cast; you know the positions and true magic signatures of all entities within the warded area. You may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
+            ],
+            "tags": [
+                "Spell",
+                "enchantment",
+                "utility",
+                "defense",
+                "minor ritual",
+                "major ritual",
+                "modal",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Mint Coinage",
+            "clazz": "Enchanter",
+            "branch": "Minutiae",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "Touch",
+            "duration": "24 hours",
+            "description": [
+                "You stamp a variety of runes on the face of a coin. While touching a target coin, choose one:",
+                "Inscribe a magical telepathic message of up to 100 words or 10 images that can be heard/seen by anyone who picks up the coin.",
+                "Inscribe a magical access point that allows you to telepathically communicate freely with anyone holding the coin.",
+                "Inscribe a magical tracker that allows you to always know the coin's position and if/when it changes owners.",
+                "Inscribe a magical storage space that grants the wielder of the coin +1 buff limit and +1 concentration limit.",
+                "Inscribe a restorative rune that grants the wielder of the coin 5% health, mana, and stamina regeneration.",
+                "Inscribe a rune of luck that grants the wielder of the coin +5 to all skill checks.",
+                "When you cast this spell, you may choose to expend an additional 5 mana to choose a second effect for the coin's opposite face. An entity can only benefit from one coin made by this ability at a time."
+            ],
+            "tags": [
+                "Spell",
+                "enchantment",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Enhance Vehicle",
+            "clazz": "Enchanter",
+            "branch": "Minutiae",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "Touch",
+            "duration": "24 hours",
+            "description": [
+                "You power up or power down a vehicle. Choose one:",
+                "Target vehicle in range has its move speed doubled and no longer requires a system to propel it forward (horses, engines) for the duration.",
+                "Target vehicle becomes immotile through its regular means (wheels lock, sails fail, etc) for the duration.",
+                "When you cast this spell, you may choose to expend an additional 10 mana to affect another target Vehicle with a new choice, and you may do this any number of times. Concentration is held once for all instances of this spell within one cast."
+            ],
+            "tags": [
+                "Spell",
+                "enchantment",
+                "utility",
+                "modal",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Empower Ammo",
+            "clazz": "Enchanter",
+            "branch": "Minutiae",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "Touch",
+            "duration": "24 hours",
+            "description": [
+                "You bless any type of ammo with empowering runes. Target set of up to 10 pieces of ammunition becomes special ammo for the duration, gaining, \"Attacks with this ammo have 50% increased damage and inflict a random condition chosen from the following list: Slow, Immobilize, Cripple, Stun, Blind, Confuse, Sleep, Silence.\""
+            ],
+            "tags": [
+                "Spell",
+                "enchantment",
+                "utility",
+                "modal",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Burner Bot",
+            "clazz": "Inventor",
+            "branch": "Haywire",
+            "tier": 1,
+            "action": "1 minute",
+            "cost": "1 lb of steel, 1 lb of copper, 2L of lantern oil",
+            "rng": "5 ft",
+            "duration": "1 minute",
+            "description": [
+                "You build a small robot filled with flammable oil. Create a Burner Bot with 25 HP and 25 ft Move Speed. It obeys your Commands; otherwise, it uses its Move Action to approach the closest enemy, its Major Action to attack an enemy in melee range for 4d6 physical damage, and its Minor Action to quaff potions or flasks of oil from its inventory. When you create this construct, choose one of the following Modular Components:",
+                "The construct consumes half a liter of oil to augment each attack, dealing an additional 2d10 fire magic damage with each attack.",
+                "The construct explodes upon dying, dealing 4d10 fire magic damage to all enemies within 10 ft."
+            ],
+            "tags": [
+                "alchemy",
+                "constructs",
+                "minion",
+                "physical",
+                "melee",
+                "modular component",
+                "modal",
+                "fire",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Potion Puppet",
+            "clazz": "Inventor",
+            "branch": "Processor",
+            "tier": 1,
+            "action": "1 minute",
+            "cost": "1 lb of steel, 1 lb of copper, 1 health, stamina, or mana potion",
+            "rng": "5 ft",
+            "duration": "1 minute",
+            "description": [
+                "You build a bulbous puppet with a large abdominal sinus. Create a Potion Puppet with 20 HP and 25 ft Move Speed. It obeys your Commands; otherwise, it uses its Move Action to stay near you and its Minor Action to take a potion from your inventory if it is adjacent to you and does not already have a potion. When ordered to do so, it will attempt to use its Major Action to use its potion on an ally within 30 ft. When you create this construct, choose one of the following Modular Components:",
+                "The construct has a 30 ft aura, providing allies with 30% Item Efficiency",
+                "The construct explodes upon dying, providing its potion effect to all allies within 10 ft."
+            ],
+            "tags": [
+                "alchemy",
+                "constructs",
+                "minion",
+                "modular component",
+                ""
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Remodulate",
+            "clazz": "Inventor",
+            "branch": "Maintenance",
+            "tier": 1,
+            "action": "1 Minor Action",
+            "cost": "---",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You make adjustments to a currently existing construct. Change the Modular Component of a target allied construct in range to another installed Modular Component."
+            ],
+            "tags": [
+                "alchemy",
+                "constructs"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Lightning Lunge",
+            "clazz": "Lightning Duelist",
+            "branch": "Dueling",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You make a lunging strike at an enemy with your rapier. Dash up to 10 ft, then deal 4d8 physical damage to a target in range."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "rapier",
+                "dash",
+                "single-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Blade Storm",
+            "clazz": "Lightning Duelist",
+            "branch": "Dueling",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "25 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You stab rapidly and repeatedly at an enemy with your rapier. Deal d8 physical damage to a target in range. This attack repeats 2-6 times."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "rapier",
+                "multi-hit",
+                "single-target."
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Shocking Parry",
+            "clazz": "Lightning Duelist",
+            "branch": "Dueling",
+            "tier": 3,
+            "action": "1 Reaction",
+            "cost": "30 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You parry an enemy's strike and counter. As a reaction to an enemy in range attacking you with a weapon, fully block the attack with your rapier and counterattack, dealing 5d8 physical damage to that enemy. When you hit an enemy with this ability, you have a 50% chance of recovering half the stamina cost."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "rapier",
+                "single-target",
+                "restore stamina",
+                "reaction",
+                "counter",
+                "block"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Flash of Swords",
+            "clazz": "Lightning Duelist",
+            "branch": "Dueling",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "70 stamina",
+            "rng": "25 ft",
+            "duration": "Instant",
+            "description": [
+                "You move and strike in a blur of deadly speed. Deal 8d8 physical damage to all enemies adjacent to you. Then, dash up to 25 ft to an empty space in range, dealing 4d8 physical damage to all enemies in spaces you pass through. Finally, deal 8d8 physical damage to all enemies adjacent to your dash's final destination. An enemy cannot be hit more than once with this ability per cast (Battle Current's activation counts as a separate cast)."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "multi-target",
+                "physical",
+                "rapier",
+                "dash"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Shock Tendrils",
+            "clazz": "Lightning Duelist",
+            "branch": "Casting",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "20 ft",
+            "duration": "Instant",
+            "description": [
+                "You release tendril of energy in front of you. Deal 3d8 lightning magic damage to all enemy targets in a 20 ft line. Then at the end of your turn, this spell deals 3d8 damage to all targets in a 20 ft line with random direction."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "lightning",
+                "AOE",
+                "line",
+                "random"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Ball Lightning",
+            "clazz": "Lightning Duelist",
+            "branch": "Casting",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "25 mana",
+            "rng": "20 ft",
+            "duration": "1 minute",
+            "description": [
+                "You summon a ball of energy that erratically flies around attacking enemies. Summon a Ball Lightning object in an empty space in range. When summoned, it deals 4d8 lightning magic damage to all adjacent enemies. At the beginning of each of your turns, it travels 20 ft in a random direction (stopping when it hits a space it can't enter), then discharges, dealing 2d8 lightning magic damage to all adjacent targets."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "lightning",
+                "AOE",
+                "summoning",
+                "destruction",
+                "random",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Thunder Blast",
+            "clazz": "Lightning Duelist",
+            "branch": "Casting",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "40 mana",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You call down a mighty bolt of thunder. Deal 8d8 lightning magic damage to all entities in a 20 ft square. Until the beginning of your next turn, random lightning strikes occur every turn in the target square, dealing 4d8 lightning magic damage to entities struck."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "lightning",
+                "AOE",
+                "ground-target",
+                "random"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Arc Lightning",
+            "clazz": "Lightning Duelist",
+            "branch": "Casting",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "60 mana",
+            "rng": "40 ft",
+            "duration": "1 round",
+            "description": [
+                "You release a powerful bolt of lightning that bounces between targets. Deal 6d8 lightning magic damage to a target in range, marking them until the end of your next turn. Dealing physical damage to the marked target with a rapier causes a lightning bolt to fire from their bodies, dealing 6d8 lightning magic damage to them and cleansing their mark, as well as dealing 6d8 lightning magic damage to another random enemy within 40 ft and marking them until the end of your next turn."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "ranged",
+                "lightning",
+                "single-target",
+                "mark",
+                "random",
+                ""
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Taser Blade",
+            "clazz": "Lightning Duelist",
+            "branch": "Buffing",
+            "tier": 1,
+            "action": "1 Minor Action",
+            "cost": "10 mana",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You envelop your blade in an electric current. For the spell's duration, when you hit a target with a rapier attack, inflict a stack of Paralysis on the target."
+            ],
+            "tags": [
+                "Spell",
+                "lightning",
+                "buff",
+                "self-target",
+                "on-hit",
+                "condition",
+                "Paralysis",
+                "rapier"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Sword of Lightning",
+            "clazz": "Lightning Duelist",
+            "branch": "Buffing",
+            "tier": 2,
+            "action": "1 Minor Action",
+            "cost": "20 mana",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You envelop your blade in lightning magic energy. For the spell's duration, when you hit a target with a rapier attack, deal an additional 2d8 lightning magic damage on hit."
+            ],
+            "tags": [
+                "Spell",
+                "lightning",
+                "buff",
+                "self-target",
+                "on-hit",
+                "rapier"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Plasma Saber",
+            "clazz": "Lightning Duelist",
+            "branch": "Buffing",
+            "tier": 3,
+            "action": "1 Minor Action",
+            "cost": "30 mana",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "Your blade becomes a thin sheet of lightning magic. All damage that you would deal with rapier attacks have their damage converted to lightning magic damage. While this buff is active, Battle Current empowered attacks recover 5, 10, or 15 stamina randomly."
+            ],
+            "tags": [
+                "Spell",
+                "lightning",
+                "buff",
+                "self-target",
+                "damage convert",
+                "rapier",
+                "gain stamina"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Lightning Coil Cuirass",
+            "clazz": "Lightning Duelist",
+            "branch": "Buffing",
+            "tier": 4,
+            "action": "1 Minor Action",
+            "cost": "80 mana",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You don magically conjured lightning armor. Whenever an adjacent enemy targets you with an attack, they are inflicted with a stack of Paralysis and take 2d8 lightning magic damage. Whenever you take damage, you may freely dash up to your speed in any direction. While this ability is active, you gain a stack of Lightning on every physical damage hit. You expend all stacks of Lightning when you cast a lightning spell attack, increasing lightning magic damage by 10% for each stack of Lightning expended this way, up to a limit of 20 stacks."
+            ],
+            "tags": [
+                "Spell",
+                "lightning",
+                "buff",
+                "self-target",
+                "condition",
+                "Paralysis",
+                "stacking buff",
+                "concentration",
+                "dash"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Lightbolt",
+            "clazz": "Luxomancer",
+            "branch": "Luminosity",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire photons at an enemy. Deal 4d10 light magic damage to a target in range. This spell banks 100% of its mana cost for your Guiding Light passive."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "light",
+                "destruction",
+                "single-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Light Touch",
+            "clazz": "Luxomancer",
+            "branch": "Radiance",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You pass light into an ally's wounds. Heal a target for 4d10 health. If you cast this spell at touch range, heal the target for 6d10 health instead."
+            ],
+            "tags": [
+                "Spell",
+                "light",
+                "restoration",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Dancing Lights",
+            "clazz": "Luxomancer",
+            "branch": "Gleam",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "100 ft",
+            "duration": "1 minute",
+            "description": [
+                "You create motes of floating light to see in the dark. Create up to 5 motes of light in spaces within range; they can be attached to visible surfaces or entities. They each cast light in a 50 ft radius. You may spend 1 minute to cast this spell as a minor ritual; if you do, its duration is extended to 1 hour. You may spend 10 minutes to cast this spell as a major ritual; if you do, its duration is extended to 6 hours."
+            ],
+            "tags": [
+                "Spell",
+                "light",
+                "conjuration",
+                "utility",
+                "modal",
+                "minor ritual",
+                "major ritual"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Shadow Bolt",
+            "clazz": "Noxomancer",
+            "branch": "Devastation",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "40 ft",
+            "duration": "Instant",
+            "description": [
+                "You amass dark energy and toss it at an enemy. Deal 4d10 dark magic damage to a target in range, and inflict the target with a curse for every 15 dark magic damage dealt this way."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "ranged",
+                "dark",
+                "destruction",
+                "condition",
+                "Curse",
+                "conditional",
+                "single target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Darkbomb",
+            "clazz": "Noxomancer",
+            "branch": "Devastation",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "40 ft",
+            "duration": "Instant",
+            "description": [
+                "You release an orb of dark magic, primed to explode. Create a Darkbomb in an unoccupied space in range. You may have it detonate immediately to deal 4d10 dark magic damage and inflict a curse on every entity within 20 ft of the bomb. Alternatively, you may delay the explosion until the beginning of your next turn; if you do, it will deal 8d10 dark magic damage and inflict 2 curses on every entity within 20 ft of the bomb."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "dark",
+                "destruction",
+                "condition",
+                "Curse",
+                "AOE",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Corruption",
+            "clazz": "Noxomancer",
+            "branch": "Devastation",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "40 mana",
+            "rng": "40 ft",
+            "duration": "1 minute",
+            "description": [
+                "You corrupt an enemy's body with dark energy. Deal 5d10 dark magic damage to a target and inflict them with a condition that causes them to gain a Curse and take 3d10 dark magic damage at the beginning of each turn and prevents Curses from expunging until the condition ends."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "single-target",
+                "dark",
+                "destruction",
+                "condition",
+                "Curse",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Defile",
+            "clazz": "Noxomancer",
+            "branch": "Affliction",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "15 mana",
+            "rng": "40 ft",
+            "duration": "1 minute",
+            "description": [
+                "You infuse an enemy with dark energy, weakening and cursing them. Select a target in range, and choose one of the following:",
+                "Inflict a 30% Weaken for 1 minute",
+                "Inflict a 20% Weaken for 1 minute, and inflict 1 curse",
+                "Inflict a 10% Weaken for 1 minute, and inflict 2 curses"
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "dark",
+                "condition",
+                "Weakened",
+                "Curse",
+                "modal",
+                "single target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Shriek",
+            "clazz": "Noxomancer",
+            "branch": "Affliction",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You release dark energy through your words, affecting the nervous system of nearby opponents. Enemies within 40 ft of you are Blinded and enemies within 20 ft of you are instead Feared."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "dark",
+                "condition",
+                "control",
+                "Blind",
+                "Fear",
+                "conditional",
+                "AOE"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Spreading Madness",
+            "clazz": "Noxomancer",
+            "branch": "Affliction",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "50 mana",
+            "rng": "40 ft",
+            "duration": "1 minute",
+            "description": [
+                "You corrupt the mind of an enemy with infectious dark magic. Inflict a condition on a target in range that causes 50% of their targeted attacks to be redirected at one of their allies in range if possible. When an enemy with this condition deals damage to another enemy, they inflict the same condition on hit. When you break concentration on this ability, all copies of this condition end as well."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "single-target",
+                "multi-target",
+                "dark",
+                "condition",
+                "control",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Siphon Soul",
+            "clazz": "Noxomancer",
+            "branch": "Obfuscation",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "15 mana",
+            "rng": "40 ft",
+            "duration": "Instant",
+            "description": [
+                "You tear away magical effects on allies and enemies. Choose one of the following:",
+                "Target entity in range loses a buff of your choice",
+                "Target entity in range is cleansed of a condition of your choice",
+                "You may choose to expend an additional 10 mana to use both options."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "modal",
+                "buff strip",
+                "cleanse",
+                "single-target",
+                "multi-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Treachery",
+            "clazz": "Noxomancer",
+            "branch": "Obfuscation",
+            "tier": 2,
+            "action": "1 Reaction",
+            "cost": "20 mana",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You cause a mage to lose control of a spell during its casting. As a reaction to a target in range casting a spell, you may counter that spell. The target then expends 20 mana to deal 3d10 dark magic damage and inflict a curse on all of its allies within 10 ft of them."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "single-target",
+                "AOE",
+                "destruction",
+                "defensive",
+                "counterspell",
+                "condition",
+                "Curse"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Fiendish Circle",
+            "clazz": "Noxomancer",
+            "branch": "Obfuscation",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "40 mana",
+            "rng": "40 ft",
+            "duration": "Instant",
+            "description": [
+                "You call upon imps from a dark realm. Summon an Imp with 50 HP and 40 speed. Imps follow your Command Actions; otherwise, they use their Move Action to move towards enemies, their Major Action to make a melee attack that deals 4d10 dark magic damage, and their Minor Action to drink any potions they are carrying. When you cast this spell, you may choose to concentrate on this spell in order to spend an additional 20 mana to summon an extra Imp, and you may do this up to two more times to have a maximum of 4 Imps at one time."
+            ],
+            "tags": [
+                "Spell",
+                "summoning",
+                "dark",
+                "minion",
+                "conditional",
+                "modal",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Psyshock",
+            "clazz": "Psion",
+            "branch": "Migraine",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 of any resource",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You send waves of harmful energy directly into someone's mind. Deal 4d10 psychic damage to a target in range. When you cast this ability, you may expend an additional 10 of any resource aside from the type initially used; if you do, this attack deals 100% increased damage and your Offensive Psionics check gains +20."
+            ],
+            "tags": [
+                "Psionic",
+                "offensive",
+                "attack",
+                "psychic",
+                "single-target",
+                "damage",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Psywave",
+            "clazz": "Psion",
+            "branch": "Migraine",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 of any resource",
+            "rng": "50 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire waves of errant psionics. Deal 5d10 psychic damage to all enemies in a 50 ft cone starting in front of you. When you cast this ability, you may expend an additional 20 of any resource aside from the type initially used; if you do, this attack deals 100% increased damage and strips a random buff from all affected targets."
+            ],
+            "tags": [
+                "Psionic",
+                "offensive",
+                "attack",
+                "psychic",
+                "damage",
+                "modal",
+                "multi-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Befuddle",
+            "clazz": "Psion",
+            "branch": "Mentalism",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "15 of any resource",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You scramble an enemy's thoughts. Inflict Confusion on a target in range until the end of its next turn. When you cast this ability, you may expend an additional 15 of any resource aside from the type initially used; if you do, Stun the target until the end of its next turn instead."
+            ],
+            "tags": [
+                "Psionic",
+                "offensive",
+                "attack",
+                "condition",
+                "Confusion",
+                "modal",
+                "Stun"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Insinuate",
+            "clazz": "Psion",
+            "branch": "Mentalism",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 of any resource",
+            "rng": "100 ft",
+            "duration": "1 minute",
+            "description": [
+                "You corrupt minds with paranoia. Choose one:",
+                "Inflict Fear on up to 5 targets in range for the duration. When you cast this ability and choose this mode, you may expend an additional 30 of any resource aside from the type initially used; if you do, you may target up to 10 targets in range instead, and they are additionally inflicted with Slowed for the duration",
+                "Spend an additional 5 minutes casting this ability while speaking to a target. If the target loses the psionic contest, the target becomes marked, becoming paranoid and fearful, and immediately seeks the safest place they know and avoids both friend and foe due to mistrust. The mark lasts for 1 hour. When you cast this ability and choose this mode, you may expend an additional 30 of any resource aside from the type initially used; if you do, the duration of the mark is extended to 6 hours. If you lose the psionic contest when you choose this mode, the target will not know you attempted to attack it, and becomes immune to psionic attacks until its next short rest."
+            ],
+            "tags": [
+                "Psionic",
+                "offensive",
+                "attack",
+                "condition",
+                "modal",
+                "Fear",
+                "Slow"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Focal Point",
+            "clazz": "Psion",
+            "branch": "Memory",
+            "tier": 1,
+            "action": "1 Reaction",
+            "cost": "10 of any resource",
+            "rng": "30 ft",
+            "duration": "Instant",
+            "description": [
+                "You draw in aberrant psionic attacks to protect your fellow man. As a reaction to a psionic attack on an ally in range, choose one:",
+                "Redirect the attack to yourself. You make the Defensive Psionics skill check instead",
+                "Add half your Defensive Psionics skill check bonus to the ally's Defensive Psionics skill check"
+            ],
+            "tags": [
+                "Psionics",
+                "defensive",
+                "modal",
+                "redirect"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Brain Barrier",
+            "clazz": "Psion",
+            "branch": "Memory",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 of any resource",
+            "rng": "30 ft",
+            "duration": "1 minute",
+            "description": [
+                "You use powerful psionics to boost your allies' defensive instincts. A target ally in range gains 20% General Damage Reduction against psychic damage, and additionally gains the following effects, based on their stats:",
+                "If TGH is their highest defensive attribute, their AC is increased by 50%",
+                "If REF is their highest defensive attribute, their Evasion is increased by 50%",
+                "If RES is their highest defensive attribute, their General MR is increased by 50%",
+                "If FRT is their highest defensive attribute, their General CR is increased by 50%",
+                "When you cast this ability, you may expend an additional 30 of any resource aside from the type initially used; if you do, you may target an additional ally, and the psychic GDR increases to 40%. You may spend an additional 30 of the final unused resource aside from the two types used in order to target a third ally and have the psychic GDR increase to 60%."
+            ],
+            "tags": [
+                "Psionics",
+                "defensive",
+                "modal",
+                "conditional",
+                "increase AC",
+                "increase Evasion",
+                "increase MR",
+                "increase CR",
+                "GDR"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Firebolt",
+            "clazz": "Pyromancer",
+            "branch": "Incineration",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "120 ft",
+            "duration": "Instant",
+            "description": [
+                "You toss a mote of fire at an enemy. Deal 4d12 fire magic damage to a target in range. This spell deals an additional 2d12 fire magic damage if it's the second fire spell you've cast this turn."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "fire",
+                "destruction",
+                "single-target",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Searing Blaze",
+            "clazz": "Pyromancer",
+            "branch": "Incineration",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "120 ft",
+            "duration": "Instant",
+            "description": [
+                "You scald an enemy with vicious flames. Deal 5d12 fire magic damage to a target in range. The target is then inflicted with Burn X, where X is equal to the amount of damage rolled."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "fire",
+                "destruction",
+                "single-target",
+                "condition",
+                "Burn",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Banefire",
+            "clazz": "Pyromancer",
+            "branch": "Incineration",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "120 ft",
+            "duration": "Instant",
+            "description": [
+                "You burn an enemy with overpowering fire. Deal 6d12 fire magic damage to a target in range. This spell cannot be blocked or counterspelled if it's the second fire spell you've cast this turn."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "fire",
+                "destruction",
+                "single-target",
+                "conditional",
+                "no block",
+                "no counter"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Magma Spray",
+            "clazz": "Pyromancer",
+            "branch": "Conflagration",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "15 mana",
+            "rng": "30 ft",
+            "duration": "Instant",
+            "description": [
+                "You spray flames from outstretched hands. Deal 4d12 fire magic damage to all enemies in a 30 ft cone. Enemies hit by this spell that are at most 15 ft from you are additionally inflicted with Burn X, where X is equal to the amount of damage rolled."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "fire",
+                "destruction",
+                "AOE",
+                "cone",
+                "conditional",
+                "condition",
+                "Burn"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Fireball",
+            "clazz": "Pyromancer",
+            "branch": "Conflagration",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "25 mana",
+            "rng": "120 ft",
+            "duration": "Instant",
+            "description": [
+                "You conjure a massive ball of flames. Deal 5d12 fire magic damage to all enemies in a 35 ft square centered on a space in range. When you cast this spell, you may pay an additional 5 mana to add 1 damage die to the spell's damage roll, and you may do this any number of times."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "fire",
+                "destruction",
+                "AOE",
+                "square",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Heat Ray",
+            "clazz": "Pyromancer",
+            "branch": "Conflagration",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "35 mana",
+            "rng": "120 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire a beam of heat and fire. Deal 6d12 fire magic damage to all enemies in a 120 ft line. This spell deals an additional 3d12 fire magic damage if it's the second fire spell you've cast this turn."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "fire",
+                "destruction",
+                "AOE",
+                "cone",
+                "conditional",
+                "condition",
+                "Burn"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Burn Trail",
+            "clazz": "Pyromancer",
+            "branch": "Wildfire",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "15 mana",
+            "rng": "60 ft",
+            "duration": "1 minute",
+            "description": [
+                "You let your flames run loose. Create flames in up to 5 spaces within range for the duration; all target spaces must touch at least one other target space in an orthogonal or diagonal direction. These flames deal 3d12 fire magic damage to any entity that passes through their space, starts in their space, or ends a turn in their space."
+            ],
+            "tags": [
+                "Spell",
+                "fire",
+                "conjuration",
+                "modal",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Pyroblast",
+            "clazz": "Pyromancer",
+            "branch": "Wildfire",
+            "tier": 2,
+            "action": "1 Reaction",
+            "cost": "20 mana",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You ignite an enemy mage's mana. As a reaction to a target in range casting a spell, you may counter that spell. The target takes fire magic damage equal to the amount of mana they spent on the countered spell"
+            ],
+            "tags": [
+                "Spell",
+                "fire",
+                "destruction",
+                "defensive",
+                "counterspell",
+                "single-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Inflame",
+            "clazz": "Pyromancer",
+            "branch": "Wildfire",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "25 mana",
+            "rng": "120 ft",
+            "duration": "1 minute",
+            "description": [
+                "You create a flame within a target. Target in range gains the Inflame mark. When a target marked this way dies (or is knocked unconscious), they deal fire magic damage equal to half the amount of damage taken from the lethal hit to all adjacent targets, inflicting those targets with the Inflame mark. You may cast this spell as a reaction if you spend an additional 15 mana."
+            ],
+            "tags": [
+                "Spell",
+                "fire",
+                "conjuration",
+                "destruction",
+                "conditional",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Bodyshot",
+            "clazz": "Rifleman",
+            "branch": "Operation",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 stamina",
+            "rng": "50 ft",
+            "duration": "Instant",
+            "description": [
+                "You aim for center of mass. Fire your currently equipped firearm at an enemy in range, dealing an additional 3d12 physical damage. Your target then chooses to either fall prone or be pushed back 10 ft. If this attack is made with a silver bullet, your target must choose both.",
+                "Secondary Fire: Fire your currently equipped firearm at an enemy in range, dealing an additional 2d12 physical damage. The target is inflicted with 10% physical vulnerability, which can stack up to 5 times. If this attack is made with a silver bullet, your target gains 2 stacks of this vulnerability."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "single-target",
+                "ranged",
+                "firearm",
+                "vulnerability",
+                "knock prone",
+                "forced movement",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Burst Fire",
+            "clazz": "Rifleman",
+            "branch": "Operation",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 stamina",
+            "rng": "50 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire several shots in quick succession. Fire your currently equipped firearm 3 times at up to 3 targets in range, with each shot dealing an additional d12 physical damage. If the first shot is a silver bullet, the other two bullets gain its properties.",
+                "Secondary Fire: Fire your currently equipped firearm at a target in range, dealing 3d12 physical damage, inflicting any on-hit effects with tripled effectiveness."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "single-target",
+                "multi-target",
+                "ranged",
+                "firearm",
+                "modal",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Iron Sights",
+            "clazz": "Rifleman",
+            "branch": "Assembly",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 stamina",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You aim down your iron sights for increased accuracy. Your next firearm attack has +10% critical strike chance; it also has +100% critical damage modifier if it is made with a silver bullet."
+            ],
+            "tags": [
+                "Empower",
+                "conditional",
+                "increase critical"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Bleeding Bullet",
+            "clazz": "Rifleman",
+            "branch": "Assembly",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 stamina",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You aim for areas of high blood flow. Your next firearm attack inflicts a d12 Bleed, increased to 2d12 Bleed if it is made with a silver bullet."
+            ],
+            "tags": [
+                "Empower",
+                "conditional",
+                "condition",
+                "Bleed"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Quick Reload",
+            "clazz": "Rifleman",
+            "branch": "Maintenance",
+            "tier": 1,
+            "action": "1 Minor Action",
+            "cost": "10 stamina",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You've learned how to quickly load a new clip of ammo. Reload each firearm you have currently equipped. When you do, each firearm you have currently equipped gains a silver bullet in a chamber of your choice."
+            ],
+            "tags": [
+                "Reload"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Steady Shooting",
+            "clazz": "Rifleman",
+            "branch": "Maintenance",
+            "tier": 2,
+            "action": "1 Minor Action",
+            "cost": "15 stamina",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You've learned to steady your gun to minimize misfire rate. Your next attack has -10% Misfire Rate. When you cast this ability, you may drop into a prone position; if you do, your next attack has -20% Misfire Rate instead."
+            ],
+            "tags": [
+                "Modal"
+            ]
+        },
+        {
+            "type": "ability",
             "name": "Crossguard Guillotine",
             "clazz": "Sentinel",
             "branch": "Dauntless",
@@ -5819,6 +8530,264 @@ var BarbsComponents = BarbsComponents || (function () {
                 "pull",
                 "conditional",
                 "shield"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Piercing Shot",
+            "clazz": "Sniper",
+            "branch": "Shooting",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 stamina",
+            "rng": "200 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire an empowered arrow, skewering multiple enemies. Deal 5d8 physical damage to all enemy targets in a 200 ft line. Targets beyond the first one hit take half damage, unless they are Spotted."
+            ],
+            "tags": [
+                "Attack",
+                "ranged",
+                "physical",
+                "multi-target",
+                ""
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Kill Shot",
+            "clazz": "Sniper",
+            "branch": "Shooting",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 stamina",
+            "rng": "200 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire a single, massive arrow with deadly accuracy. Deal 7d8 physical damage to a target in range. You may choose to expend any number of Spotting stacks to add 10% Lethality to the attack per stack."
+            ],
+            "tags": [
+                "Attack",
+                "ranged",
+                "physical",
+                "single-target",
+                "modal",
+                "Lethal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Shrapnel Shot",
+            "clazz": "Sniper",
+            "branch": "Shooting",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "45 stamina",
+            "rng": "200 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire an arrow rigged to detonate, shooting deadly shrapnel from the arrowhead after initial impact. Deal 6d8 to a target in range. If the target is Spotted, this ability deals half as much damage taken by the target to all enemies within 20 ft of the target. If the target was killed by the initial hit, this ability deals damage equal to the damage taken by the target to all enemies within 20 ft of the target instead."
+            ],
+            "tags": [
+                "Attack",
+                "ranged",
+                "physical",
+                "single-target",
+                "conditional",
+                "AOE"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Rapid Shot",
+            "clazz": "Sniper",
+            "branch": "Shooting",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "X stamina",
+            "rng": "200 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire a heavy stream of arrows. Expend any amount of stamina in order to deal 2d8 physical damage to a target in range for every 10 stamina spent this way. If the target is Spotted, these hits gain the damage increase from consuming Spotting stacks without actually consuming them until the last hit."
+            ],
+            "tags": [
+                "Attack",
+                "ranged",
+                "physical",
+                "single-target",
+                "multi-hit",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Distance Shooter",
+            "clazz": "Sniper",
+            "branch": "Aiming",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "15 stamina",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You fire specialized arrows which speed up as they fly. Your next ranged attack deals 2 additional damage for every 5 ft between you and your target."
+            ],
+            "tags": [
+                "Buff",
+                "self-target",
+                "conditional",
+                "ranged",
+                "bow"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Precision Shooter",
+            "clazz": "Sniper",
+            "branch": "Aiming",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 stamina",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You fire specialized arrows which fly faster and punch through armor. Your next ranged attack ignores AC and MR, cannot miss, bypasses barriers and walls, cannot be blocked or redirected, and cannot be reacted to."
+            ],
+            "tags": [
+                "Buff",
+                "self-target",
+                "ignore AC",
+                "ignore MR",
+                "ignore barriers/walls/blocks",
+                "no-miss",
+                "no-react",
+                "bow"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Analytical Shooter",
+            "clazz": "Sniper",
+            "branch": "Aiming",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "55 stamina",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You aim carefully, scanning for a target's weak points. Your next ranged attack gains 20% critical strike chance and 50% critical damage modifier. When you cast this ability, you may choose to concentrate on it. While concentrating on this ability, you may use a Major Action to gain an additional 10% critical strike chance and 25% critical damage modifier on your next ranged attack. This ability cannot grant more than 100% critical strike chance or more than 200% critical damage modifier. Concentration on this ability ends immediately upon making an attack."
+            ],
+            "tags": [
+                "Buff",
+                "self-target",
+                "stat improve",
+                "critical",
+                "concentration",
+                "repeatable",
+                "bow"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Professional Shooter",
+            "clazz": "Sniper",
+            "branch": "Aiming",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "120 stamina",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You force your senses past their limit. If you have an enemy Spotted, when you cast this ability, you instantly gain max Spotting stacks. After casting this ability, you lose the benefits of the Spotter passive until your next long rest."
+            ],
+            "tags": [
+                "Self-target",
+                "bow"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Swift Sprint",
+            "clazz": "Sniper",
+            "branch": "Improvising",
+            "tier": 1,
+            "action": "1 Major Action or Reaction",
+            "cost": "15 stamina",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You quickly spring to your feet and sprint from danger. Cleanse Slow, Immobilize, Crippled, and Prone, then dash 10 ft in any direction. You may choose to expend a stack of Spotting to dash 25 ft instead."
+            ],
+            "tags": [
+                "Dash",
+                "modal",
+                "cleanse"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Swift Shot",
+            "clazz": "Sniper",
+            "branch": "Improvising",
+            "tier": 2,
+            "action": "1 Minor Action or Reaction",
+            "cost": "25 stamina",
+            "rng": "200 ft",
+            "duration": "Instant",
+            "description": [
+                "You flick your aim elsewhere and take a snap potshot. Deal 3d8 physical damage to a target in range, Stunning them until the end of the turn."
+            ],
+            "tags": [
+                "Attack",
+                "ranged",
+                "physical",
+                "single-target",
+                "condition",
+                "Stun"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Bola Shot",
+            "clazz": "Sniper",
+            "branch": "Improvising",
+            "tier": 3,
+            "action": "1 Major Action or Reaction",
+            "cost": "35 stamina",
+            "rng": "200 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire an arrow with a bola head. Deal 4d8 damage and inflict Slow on a target in range. You may choose to expend a stack of Spotting to inflict Immobilize instead."
+            ],
+            "tags": [
+                "Attack",
+                "ranged",
+                "physical",
+                "single-target",
+                "condition",
+                "Slow",
+                "modal",
+                "Immobilize"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Evasive Maneuvers",
+            "clazz": "Sniper",
+            "branch": "Improvising",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "70 stamina",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You concentrate all your energy on avoiding attacks. Expend any number of Spotting stacks to gain 10% evasion per stack expended this way. While this buff is active, you may use your Reaction to cast any Sniper ability."
+            ],
+            "tags": [
+                "Buff",
+                "concentration",
+                "add evasion",
+                ""
             ]
         },
         {
@@ -6076,1009 +9045,948 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "ability",
-            "name": "Gale Shot",
-            "clazz": "Air Duelist",
-            "branch": "Dueling",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 stamina",
-            "rng": "150 ft",
-            "duration": "Instant",
-            "description": [
-                "You fire at an enemy while making evasive maneuvers. Deal 4d8 physical damage to a target in range, then dash 10 ft in any direction"
-            ],
-            "tags": [
-                "Attack",
-                "ranged",
-                "physical",
-                "bow",
-                "dash",
-                "single-target"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Zephyr Shot",
-            "clazz": "Air Duelist",
-            "branch": "Dueling",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "25 stamina",
-            "rng": "150 ft",
-            "duration": "Instant",
-            "description": [
-                "You fire a series of several arrows at the enemy. Deal d8 physical damage to a target in range. This attack repeats 5 times, and you may change targets with each hit."
-            ],
-            "tags": [
-                "Attack",
-                "ranged",
-                "physical",
-                "bow",
-                "single-target",
-                "multi-target",
-                "multi-hit"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Storm Shot",
-            "clazz": "Air Duelist",
-            "branch": "Dueling",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "30 stamina",
-            "rng": "150 ft",
-            "duration": "Instant",
-            "description": [
-                "You fire a rain of arrows from the skies. Deal 6d8 physical damage to all enemies in a 25 ft square centered on a space in range, Crippling them for 1 minute. Flying enemies take 100% increased damage from this ability, cannot evade this attack, and are additionally Knocked Prone."
-            ],
-            "tags": [
-                "Attack",
-                "ranged",
-                "physical",
-                "bow",
-                "AOE",
-                "square",
-                "condition",
-                "Cripple",
-                "conditional",
-                "no-miss",
-                "Knock Prone"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Wind Strike",
-            "clazz": "Air Duelist",
-            "branch": "Casting",
+            "name": "Summon Ascarion Beast",
+            "clazz": "Summoner",
+            "branch": "Pack",
             "tier": 1,
             "action": "1 Major Action",
             "cost": "10 mana",
-            "rng": "150 ft",
-            "duration": "Instant",
-            "description": [
-                "You fire a powerful gust of air to blow enemies away. Deal 5d8 air magic damage to a target in range, pushing them 10 ft away from you."
-            ],
-            "tags": [
-                "Spell",
-                "attack",
-                "ranged",
-                "air",
-                "destruction",
-                "single-target",
-                "control",
-                "utility",
-                "conjuration",
-                "push."
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Cutting Winds",
-            "clazz": "Air Duelist",
-            "branch": "Casting",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "25 mana",
-            "rng": "150 ft",
-            "duration": "Instant",
-            "description": [
-                "You conjure winds as sharp as blades to damage and knock down enemies. Deal 6d8 air magic damage to all entities in a 25 ft square centered on a space in range, knocking them all Prone."
-            ],
-            "tags": [
-                "Spell",
-                "attack",
-                "ranged",
-                "air",
-                "destruction",
-                "AOE",
-                "square",
-                "conjuration",
-                "Knock Prone"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Harassing Whirlwind",
-            "clazz": "Air Duelist",
-            "branch": "Casting",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "40 mana",
-            "rng": "150 ft",
+            "rng": "20 ft",
             "duration": "1 minute",
             "description": [
-                "You create a whirlwind around a target that constantly damages and pushes them. Deal 4d8 air magic damage to a target in range. While concentrating on this spell, for the spell's duration, the target takes 4d8 air magic damage and is pushed 20 ft in a direction of your choice at the beginning of each turn."
+                "You summon one of the monstrous, toxic beasts of Ascari, the plane of amethyst poisons. Summon an Ascarion Beast with 30 HP, 40 ft Move Speed, 10 AC, 20% Evasion, 20% MR, and 20% CR. The Beast obeys your commands; otherwise, it uses its Move Action to approach enemies and its Major Action to attack them for 4d6 physical damage with \"On Hit: Inflict 2d6 Poison\". The Beast has a 20 ft aura that causes attacks made by allies to ignore 20% of their targets' CR."
             ],
             "tags": [
                 "Spell",
-                "attack",
-                "ranged",
-                "air",
-                "destruction",
-                "control",
-                "conjuration",
-                "forced movement",
+                "summoning",
+                "minion",
+                "physical",
+                "condition",
+                "Poison"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Summon Asiok Dracolord",
+            "clazz": "Summoner",
+            "branch": "Pack",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "20 ft",
+            "duration": "1 minute",
+            "description": [
+                "You summon one of the elite Draconian siegebreakers of Asiok, the war-scarred plane of scarlet tragedy. Summon an Asiok Dracolord with 50 HP, 40 ft Move Speed, 40 AC, 30% MR, and 30% CR. The Dracolord obeys your commands; otherwise, it uses its Move Action to approach enemies and its Major Action to use Firebreath, dealing 6d10 fire magic damage in a 30 ft cone. Firebreath deals double damage to constructs and buildings. The Dracolord has a 20 ft aura that increases ally damage by 30%."
+            ],
+            "tags": [
+                "Spell",
+                "summoning",
+                "minion",
+                "AOE",
+                "cone"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Summon Throatslitter Demon",
+            "clazz": "Summoner",
+            "branch": "Pack",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "20 ft",
+            "duration": "1 minute",
+            "description": [
+                "You summon one of the terrifying, evil demons that stalk the Aetherways. Summon a Throatslitter Demon with 50 HP, 50 ft Move Speed, 70% EV, 20% MR, 100% Armor Penetration, 50% Critical Strike Chance, and +100% Critical Damage Modifier. The Demon obeys your commands; otherwise, it uses its Move Action to approach enemies, its Major Action to attack in melee range for 6d6 physical damage, and its Minor Action to make Sneak checks with a +20 bonus. The Demon has a 20 ft aura that increases ally critical strike chance by +15%."
+            ],
+            "tags": [
+                "Spell",
+                "summoning",
+                "minion",
+                "physical"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Summon Siretsu Leviathan",
+            "clazz": "Summoner",
+            "branch": "Pack",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "60 mana",
+            "rng": "20 ft",
+            "duration": "1 minute",
+            "description": [
+                "You summon a monster from the depths of the oceans of Siretsu, the plane of lifestealing waters. Summon a Leviathan with 200 HP, massive size, 100 ft speed on land and in water, 50 AC, 50% MR, and 50% CR. The Leviathan obeys your commands; otherwise, it uses its Move Action to approach enemies, its Major Action to spawn tidal waves that deal 10d10 water magic damage in a 45 ft square centered on a space within 100 ft, and its Minor Action to grapple up to 4 enemies with its tentacles or to devour grappled enemies, dealing 10d10 physical damage and banishing them to Siretsu. The Leviathan has a 100 ft aura that drains 30 stamina and 30 mana from each enemy within the aura."
+            ],
+            "tags": [
+                "Spell",
+                "summoning",
+                "minion",
+                "water",
+                "AOE",
+                "square"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Summon Batusan Golem",
+            "clazz": "Summoner",
+            "branch": "Herd",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "20 ft",
+            "duration": "1 minute",
+            "description": [
+                "You summon an armored golem from Batusa, the plane of blacksteel mountains. Summon a Batusan Golem with 60 HP, 30 ft Move Speed, 30 AC, 50% MR, and 40% CR. The Golem obeys your commands; otherwise, it uses its Move Action to move towards you, its Major Action to make a melee multi-target attack, knocking back enemies 20 ft away from you, and its Reaction to block one attack or AOE hit on you. The Golem has a 20 ft aura that increases the AC of allies by 30%."
+            ],
+            "tags": [
+                "Spell",
+                "summoning",
+                "minion",
+                "knockback",
+                "AC increase"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Summon Noxian Seraph",
+            "clazz": "Summoner",
+            "branch": "Herd",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "20 ft",
+            "duration": "1 minute",
+            "description": [
+                "You summon an angel from the domain of Nox. Summon a Noxian Seraph with 50 HP, 40 ft Move Speed, 10 AC, 50% MR, and 70% CR. The Seraph obeys your commands; otherwise, it uses its Move Action to move towards you, its Major Action to heal you for 5d10 health, and its Minor Action to cleanse you of 1 random condition. The Seraph has a 20 ft aura that increases the MR of allies by 30%."
+            ],
+            "tags": [
+                "Spell",
+                "summoning",
+                "minion",
+                "healing",
+                "cleanse",
+                "MR increase"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Summon Vilyrian Spellmaster",
+            "clazz": "Summoner",
+            "branch": "Herd",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "20 ft",
+            "duration": "1 minute",
+            "description": [
+                "You summon a wizard from Vilyr, the Infinite Library. Summon a Vilyrian Spellmaster with 40 HP, 30 ft Move Speed, 70% MR, and 20% CR. The Spellmaster obeys your commands; otherwise, it uses its Move Action to move towards you, its Major Action to dispel a non-allied magical field or effect that it is adjacent to or inside of, and its reaction to cast a counterspell, countering an enemy spell cast within 50 ft. The Spellcaster has a 20 ft aura that increases the CR of allies by 20%."
+            ],
+            "tags": [
+                "Spell",
+                "summoning",
+                "minion",
+                "defense",
+                "counterspell"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Summon Warpwurm",
+            "clazz": "Summoner",
+            "branch": "Herd",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "40 mana",
+            "rng": "20 ft",
+            "duration": "1 minute",
+            "description": [
+                "You summon a warpwurm from the Aetherways. Summon a Warpwurm with 50 HP. The Warpwurm obeys you commands; otherwise, it does nothing. It uses its Major Action to create up to 2  temporary portals in empty spaces within 100 ft, linked to its own duration; these portals can be walked into to teleport to any other portal made by the Warpwurm. It uses its reaction to teleport you or other allies out of danger, such as to avoid AOE spells or to rescue someone from falling. The Warpwurm has a 20 ft aura; within this aura, all allies are spatially locked to the current plane of existence and cannot be forcibly banished or teleported."
+            ],
+            "tags": [
+                "Spell",
+                "summoning",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Summon Unseen Servant",
+            "clazz": "Summoner",
+            "branch": "Flock",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "20 ft",
+            "duration": "1 hour",
+            "description": [
+                "You summon a spirit from beyond the gates of Adol. Summon an Unseen Servant with 1 HP, 30 ft Move Speed, and natural invisibility. The Unseen Servant obeys your commands; otherwise, it follows you and does nothing. The Servant is able to use tools and make the following skill checks with a +25 bonus:",
+                "Athletics: Balance, Climbing, Force, Movement",
+                "Gathering: All",
+                "Item Use: Construction, First Aid, Ropes, Tinkering, Traps",
+                "Observation: Listen, Search",
+                "Stealth: Lockpicking, Sleight of Hand, Sneak, Steal",
+                "Transportation: Air Vehicles, Land Vehicles, Sea Vehicles"
+            ],
+            "tags": [
+                "Spell",
+                "summoning",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Summon Estian Wayfinder",
+            "clazz": "Summoner",
+            "branch": "Flock",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "20 ft",
+            "duration": "1 hour",
+            "description": [
+                "You summon a psionic guide from Estia, the plane of ephemeral, psychic pleasures. Summon an Estian Wayfinder with 30 HP, 150 ft Move Speed, 100% Evasion, and 50% CR. The Wayfinder obeys your commands; otherwise, it follows you and does nothing. The Wayfinder has masterful knowledge of most planes, and can act as a guide to nearly any location on a plane that isn't a well kept secret or whose location isn't lost to the ages. The Wayfinder has a 150 ft aura with the following effects: allies, mounts, and vehicles have doubled Move Speed; allies have +30 to Psionics: Defense checks; allies cannot be charmed, Feared, Confused, or put to Sleep."
+            ],
+            "tags": [
+                "Spell",
+                "summoning",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Summon Xat'hul Charmspirit",
+            "clazz": "Summoner",
+            "branch": "Flock",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "20 ft",
+            "duration": "1 hour",
+            "description": [
+                "You summon a small totemic spirit from Xat'hul, the plane of living, virulent mana. Summon a Xat'hul Charmspirit with 10 HP and 60 ft Move Speed. The Charmspirit obeys your commands; otherwise, it follows you and does nothing. The Charmspirit will imprint upon a humanoid of your choice, following them instead and granting them a random benefit (a humanoid cannot be imprinted by more than one Charmspirit at a time). The Charmspirit is attracted to sources of mana, informing its imprinted humanoid of nearby people or objects that contain mana up to a range of 1 mile, although it struggles with expressing exact numbers. The Charmspirit has a 5 ft aura with the following effects: allies have +25 to Artistry and Interaction skill checks; allies have +10% Health Regeneration; allies automatically stabilize if downed."
+            ],
+            "tags": [
+                "Spell",
+                "summoning",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Summon Watcher",
+            "clazz": "Summoner",
+            "branch": "Flock",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "50 mana",
+            "rng": "20 ft",
+            "duration": "6 hours",
+            "description": [
+                "You summon a silent guardian from a plane long dead. Summon a Watcher with 1 HP and immunity to all damage and conditions. The Watcher maintains a vigilant guard upon all spaces within 100 ft of it, has true sight and can see through walls and barriers, and can telepathically inform the caster of the status of all entities within its sight. The Watcher will warn the caster of any changes or threats in the area. The Watcher prevents scrying magic or teleportation magic from affecting the spaces it watches unless otherwise commanded. If commanded, the Watcher can cause the spaces and entities it sees to phase out of the current plane of existence, moving everyone within its area of influence to a pocket realm for 1 hour before dying. Allies that short rest while being guarded by a Watcher gain +30% health regeneration, +30% stamina regeneration, and +30% mana regeneration. Allies that long rest while being guarded by a Watcher have dreams of possible future events."
+            ],
+            "tags": [
+                "Spell",
+                "summoning",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Strengthen Soul",
+            "clazz": "Symbiote",
+            "branch": "Fiery Soul",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "50 ft",
+            "duration": "1 minute",
+            "description": [
+                "You strengthen an ally's conviction and confidence. Target ally in range gains a buff that increases their damage by 50% for the duration. When an ally gains this buff, they may use their reaction to make an autoattack."
+            ],
+            "tags": [
+                "Spell",
+                "buff",
+                "increase damage"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Empower Soul",
+            "clazz": "Symbiote",
+            "branch": "Fiery Soul",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "50 ft",
+            "duration": "1 minute",
+            "description": [
+                "You empower an ally's willpower and forcefulness. Target ally in range gains a buff that causes their attacks to ignore 20% MR and evasion for the duration. You may expend any amount of additional mana when you cast this spell to add to the percentage MR and evasion ignored by twice the amount of additional mana spent."
+            ],
+            "tags": [
+                "Spell",
+                "buff",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Bolster Soul",
+            "clazz": "Symbiote",
+            "branch": "Fiery Soul",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "50 ft",
+            "duration": "1 minute",
+            "description": [
+                "You bolster an ally's focus and precision. Target ally in range gains a buff that grants +20% critical strike chance and +100% critical damage modifier for the duration. As a free reaction to attacking an enemy, an ally with this buff may end the buff early to make the triggering attack a critical hit that cannot be reacted to."
+            ],
+            "tags": [
+                "Spell",
+                "buff",
+                "modal",
+                "increase critical strike chance",
+                "increase critical damage modifier"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Embolden Soul",
+            "clazz": "Symbiote",
+            "branch": "Fiery Soul",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "50 mana",
+            "rng": "50 ft",
+            "duration": "1 minute",
+            "description": [
+                "You embolden an ally's forward advance. Target ally in range gains a buff that causes them to lose their Minor Action but gain an extra Major Action each turn. When this buff ends (for any reason), the target may make an attack as a free reaction."
+            ],
+            "tags": [
+                "Spell",
+                "buff",
                 "concentration"
             ]
         },
         {
             "type": "ability",
-            "name": "Mistral Bow",
-            "clazz": "Air Duelist",
-            "branch": "Buffing",
+            "name": "Strengthen Body",
+            "clazz": "Symbiote",
+            "branch": "Stone Body",
             "tier": 1,
-            "action": "1 Minor Action",
+            "action": "1 Major Action",
             "cost": "10 mana",
-            "rng": "Self",
+            "rng": "50 ft",
             "duration": "1 minute",
             "description": [
-                "You use air magic to provide your bow with extra stopping power. For the spell's duration, when you hit a target with a bow attack, push the target 5 ft away from you as an on-hit effect."
+                "You strengthen an ally's attention and constitution. Target ally in range gains a buff that increases their AC and Evasion by 40% for the duration. You may cast this spell as a reaction for an additional 10 mana."
             ],
             "tags": [
                 "Spell",
-                "air",
                 "buff",
-                "self-target",
-                "on-hit",
-                "bow",
-                "push"
+                "increase AC",
+                "increase Evasion",
+                "modal"
             ]
         },
         {
             "type": "ability",
-            "name": "Arc of Air",
-            "clazz": "Air Duelist",
-            "branch": "Buffing",
+            "name": "Empower Body",
+            "clazz": "Symbiote",
+            "branch": "Stone Body",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "50 ft",
+            "duration": "1 minute",
+            "description": [
+                "You suffuse an ally's body with protective magic. Target ally in range gains a buff that grants +20% general MR and +20% MR for an element of your choice for the duration. You may cast this spell as a reaction for an additional 10 mana."
+            ],
+            "tags": [
+                "Spell",
+                "buff",
+                "defensive",
+                "increase MR",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Bolster Body",
+            "clazz": "Symbiote",
+            "branch": "Stone Body",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "50 ft",
+            "duration": "1 minute",
+            "description": [
+                "You bolster an ally's natural defenses against conditions. Target ally in range gains a buff that grants +20% general CR and +20% CR for a condition of your choice for the duration. You may cast this spell as a reaction for an additional 10 mana."
+            ],
+            "tags": [
+                "Spell",
+                "buff",
+                "defensive",
+                "increase CR",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Embolden Body",
+            "clazz": "Symbiote",
+            "branch": "Stone Body",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "50 mana",
+            "rng": "50 ft",
+            "duration": "1 minute",
+            "description": [
+                "You embolden an ally's forward advance. Target ally in range gains a buff that causes them to lose their Minor Action but gain an extra Reaction each turn. When this buff ends (for any reason), the target becomes invulnerable to damage until the end of the turn."
+            ],
+            "tags": [
+                "Spell",
+                "buff",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Strengthen Mind",
+            "clazz": "Symbiote",
+            "branch": "Fluid Mind",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 mana",
+            "rng": "50 ft",
+            "duration": "1 hour",
+            "description": [
+                "You strengthen an ally's instincts and proficiency. Target ally in range gains a buff that grants +30 to all skill checks for the duration. The target may consume 10 minutes of this buff's duration to reroll a skill check and take the new result while this buff is active."
+            ],
+            "tags": [
+                "Spell",
+                "buff",
+                "skill boost"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Power Spike",
+            "clazz": "Symbiote",
+            "branch": "Fluid Mind",
             "tier": 2,
             "action": "1 Minor Action",
-            "cost": "20 mana",
-            "rng": "Self",
-            "duration": "1 minute",
+            "cost": "15 mana",
+            "rng": "50 ft",
+            "duration": "Instant",
             "description": [
-                "You envelop your bow in air magic energy. For the spell's duration, when you hit a target with a bow attack, deal an additional 2d8 air magic damage on hit."
+                "You empower a buff effect at the cost of its duration. Target buff effect in range that you originally granted has its effectiveness increased by 50% and its current duration cut in half (always rounded down to the nearest 10 second, 10 minute, or 6 hour interval as applicable for minute, hour, and day long buffs)."
             ],
             "tags": [
                 "Spell",
-                "air",
-                "buff",
-                "self-target",
-                "on-hit",
-                "bow",
-                ""
+                "utility"
             ]
         },
         {
             "type": "ability",
-            "name": "Bow of Hurricanes",
-            "clazz": "Air Duelist",
-            "branch": "Buffing",
+            "name": "Bolster Speed",
+            "clazz": "Symbiote",
+            "branch": "Fluid Mind",
             "tier": 3,
-            "action": "1 Minor Action",
+            "action": "1 Major Action",
             "cost": "30 mana",
-            "rng": "Self",
+            "rng": "50 ft",
             "duration": "1 minute",
             "description": [
-                "Your bow becomes a thick arc of air magic. For the spell's duration, all damage that you would deal with bow attacks have their damage converted to air magic damage. While this buff is active, your bow attacks using special ammunition have 50% increased range."
+                "You bolster an ally's quickness and endurance. Target ally in range gains a buff that grants +30 move speed for the duration. The target may consume 10 seconds of this buff's duration to dash 30 ft in any direction as a minor action or reaction."
             ],
             "tags": [
                 "Spell",
-                "air",
                 "buff",
-                "self-target",
-                "on-hit",
-                "bow",
-                "damage convert",
-                "increase range",
+                "increase speed"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Power Surge",
+            "clazz": "Symbiote",
+            "branch": "Fluid Mind",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "30 + X mana",
+            "rng": "---",
+            "duration": "Instant",
+            "description": [
+                "You layer multiple buff spells together. When you successfully cast this spell, immediately cast 2 different buff spells on a target in range. Those buff spells cannot be countered when cast this way, and if one of those buff effects is targeted by the Power Spike spell, the other is also affected by it. The mana cost of Power Surge is 30 + X where X is the sum of the mana costs of the 2 buff spells being cast by Power Surge."
+            ],
+            "tags": [
+                "Spell",
+                "utility",
+                "modal",
                 "conditional"
             ]
         },
         {
             "type": "ability",
-            "name": "Piercing Shot",
-            "clazz": "Sniper",
-            "branch": "Shooting",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 stamina",
-            "rng": "200 ft",
-            "duration": "Instant",
-            "description": [
-                "You fire an empowered arrow, skewering multiple enemies. Deal 5d8 physical damage to all enemy targets in a 200 ft line. Targets beyond the first one hit take half damage, unless they are Spotted."
-            ],
-            "tags": [
-                "Attack",
-                "ranged",
-                "physical",
-                "multi-target",
-                ""
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Kill Shot",
-            "clazz": "Sniper",
-            "branch": "Shooting",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "30 stamina",
-            "rng": "200 ft",
-            "duration": "Instant",
-            "description": [
-                "You fire a single, massive arrow with deadly accuracy. Deal 7d8 physical damage to a target in range. You may choose to expend any number of Spotting stacks to add 10% Lethality to the attack per stack."
-            ],
-            "tags": [
-                "Attack",
-                "ranged",
-                "physical",
-                "single-target",
-                "modal",
-                "Lethal"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Shrapnel Shot",
-            "clazz": "Sniper",
-            "branch": "Shooting",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "45 stamina",
-            "rng": "200 ft",
-            "duration": "Instant",
-            "description": [
-                "You fire an arrow rigged to detonate, shooting deadly shrapnel from the arrowhead after initial impact. Deal 6d8 to a target in range. If the target is Spotted, this ability deals half as much damage taken by the target to all enemies within 20 ft of the target. If the target was killed by the initial hit, this ability deals damage equal to the damage taken by the target to all enemies within 20 ft of the target instead."
-            ],
-            "tags": [
-                "Attack",
-                "ranged",
-                "physical",
-                "single-target",
-                "conditional",
-                "AOE"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Rapid Shot",
-            "clazz": "Sniper",
-            "branch": "Shooting",
-            "tier": 4,
-            "action": "1 Major Action",
-            "cost": "X stamina",
-            "rng": "200 ft",
-            "duration": "Instant",
-            "description": [
-                "You fire a heavy stream of arrows. Expend any amount of stamina in order to deal 2d8 physical damage to a target in range for every 10 stamina spent this way. If the target is Spotted, these hits gain the damage increase from consuming Spotting stacks without actually consuming them until the last hit."
-            ],
-            "tags": [
-                "Attack",
-                "ranged",
-                "physical",
-                "single-target",
-                "multi-hit",
-                "modal"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Distance Shooter",
-            "clazz": "Sniper",
-            "branch": "Aiming",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "15 stamina",
-            "rng": "Self",
-            "duration": "Instant",
-            "description": [
-                "You fire specialized arrows which speed up as they fly. Your next ranged attack deals 2 additional damage for every 5 ft between you and your target."
-            ],
-            "tags": [
-                "Buff",
-                "self-target",
-                "conditional",
-                "ranged",
-                "bow"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Precision Shooter",
-            "clazz": "Sniper",
-            "branch": "Aiming",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "30 stamina",
-            "rng": "Self",
-            "duration": "Instant",
-            "description": [
-                "You fire specialized arrows which fly faster and punch through armor. Your next ranged attack ignores AC and MR, cannot miss, bypasses barriers and walls, cannot be blocked or redirected, and cannot be reacted to."
-            ],
-            "tags": [
-                "Buff",
-                "self-target",
-                "ignore AC",
-                "ignore MR",
-                "ignore barriers/walls/blocks",
-                "no-miss",
-                "no-react",
-                "bow"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Analytical Shooter",
-            "clazz": "Sniper",
-            "branch": "Aiming",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "55 stamina",
-            "rng": "Self",
-            "duration": "Instant",
-            "description": [
-                "You aim carefully, scanning for a target's weak points. Your next ranged attack gains 20% critical strike chance and 50% critical damage modifier. When you cast this ability, you may choose to concentrate on it. While concentrating on this ability, you may use a Major Action to gain an additional 10% critical strike chance and 25% critical damage modifier on your next ranged attack. This ability cannot grant more than 100% critical strike chance or more than 200% critical damage modifier. Concentration on this ability ends immediately upon making an attack."
-            ],
-            "tags": [
-                "Buff",
-                "self-target",
-                "stat improve",
-                "critical",
-                "concentration",
-                "repeatable",
-                "bow"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Professional Shooter",
-            "clazz": "Sniper",
-            "branch": "Aiming",
-            "tier": 4,
-            "action": "1 Major Action",
-            "cost": "120 stamina",
-            "rng": "Self",
-            "duration": "Instant",
-            "description": [
-                "You force your senses past their limit. If you have an enemy Spotted, when you cast this ability, you instantly gain max Spotting stacks. After casting this ability, you lose the benefits of the Spotter passive until your next long rest."
-            ],
-            "tags": [
-                "Self-target",
-                "bow"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Swift Sprint",
-            "clazz": "Sniper",
-            "branch": "Improvising",
-            "tier": 1,
-            "action": "1 Major Action or Reaction",
-            "cost": "15 stamina",
-            "rng": "Self",
-            "duration": "Instant",
-            "description": [
-                "You quickly spring to your feet and sprint from danger. Cleanse Slow, Immobilize, and Prone, then dash 10 ft in any direction. You may choose to expend a stack of Spotting to dash 25 ft instead."
-            ],
-            "tags": [
-                "Dash",
-                "modal",
-                "cleanse"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Swift Shot",
-            "clazz": "Sniper",
-            "branch": "Improvising",
-            "tier": 2,
-            "action": "1 Minor Action or Reaction",
-            "cost": "25 stamina",
-            "rng": "200 ft",
-            "duration": "Instant",
-            "description": [
-                "You flick your aim elsewhere and take a snap potshot. Deal 3d8 physical damage to a target in range, Stunning them until the end of the turn."
-            ],
-            "tags": [
-                "Attack",
-                "ranged",
-                "physical",
-                "single-target",
-                "condition",
-                "Stun"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Bola Shot",
-            "clazz": "Sniper",
-            "branch": "Improvising",
-            "tier": 3,
-            "action": "1 Major Action or Reaction",
-            "cost": "35 stamina",
-            "rng": "200 ft",
-            "duration": "Instant",
-            "description": [
-                "You fire an arrow with a bola head. Deal 4d8 damage and inflict Slow on a target in range. You may choose to expend a stack of Spotting to inflict Immobilize instead."
-            ],
-            "tags": [
-                "Attack",
-                "ranged",
-                "physical",
-                "single-target",
-                "condition",
-                "Slow",
-                "modal",
-                "Immobilize"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Evasive Maneuvers",
-            "clazz": "Sniper",
-            "branch": "Improvising",
-            "tier": 4,
-            "action": "1 Major Action",
-            "cost": "70 stamina",
-            "rng": "Self",
-            "duration": "1 minute",
-            "description": [
-                "You concentrate all your energy on avoiding attacks. Expend any number of Spotting stacks to gain 10% evasion per stack expended this way. While this buff is active, you may use your Reaction to cast any Sniper ability."
-            ],
-            "tags": [
-                "Buff",
-                "concentration",
-                "add evasion",
-                ""
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Bodyshot",
-            "clazz": "Rifleman",
-            "branch": "Operation",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 stamina",
-            "rng": "50 ft",
-            "duration": "Instant",
-            "description": [
-                "You aim for center of mass. Fire your currently equipped firearm at an enemy in range, dealing an additional 3d12 physical damage. Your target then chooses to either fall prone or be pushed back 10 ft. If this attack is made with a silver bullet, your target must choose both.",
-                "Secondary Fire: Fire your currently equipped firearm at an enemy in range, dealing an additional 2d12 physical damage. The target is inflicted with 10% physical vulnerability, which can stack up to 5 times. If this attack is made with a silver bullet, your target gains 2 stacks of this vulnerability."
-            ],
-            "tags": [
-                "Attack",
-                "physical",
-                "single-target",
-                "ranged",
-                "firearm",
-                "vulnerability",
-                "knock prone",
-                "forced movement",
-                "modal"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Iron Sights",
-            "clazz": "Rifleman",
-            "branch": "Assembly",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 stamina",
-            "rng": "Self",
-            "duration": "Instant",
-            "description": [
-                "You aim down your iron sights for increased accuracy. Your next firearm attack has +10% critical strike chance; it also has +100% critical damage modifier if it is made with a silver bullet."
-            ],
-            "tags": [
-                "Buff",
-                "conditional",
-                "increase critical"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Quick Reload",
-            "clazz": "Rifleman",
-            "branch": "Maintenance",
-            "tier": 1,
-            "action": "1 Minor Action",
-            "cost": "10 stamina",
-            "rng": "Self",
-            "duration": "Instant",
-            "description": [
-                "You've learned how to quickly load a new clip of ammo. Reload each firearm you have currently equipped. When you do, each firearm you have currently equipped gains a silver bullet in a chamber of your choice."
-            ],
-            "tags": [
-                "Reload"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Belly Dance",
-            "clazz": "Dancer",
-            "branch": "Sway",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 stamina",
-            "rng": "Touch",
-            "duration": "1 minute",
-            "description": [
-                "You charm attackers with your sensual touch and dull their strikes. Inflict a 10% Weaken to a target in range for the duration. This Weaken can stack up to 4 times. This ability costs 10 less stamina if your last Move Action included a Step 3 dance ability."
-            ],
-            "tags": [
-                "Attack",
-                "condition",
-                "Weaken",
-                "stacking",
-                "conditional",
-                "dance",
-                "Step 1"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Swing",
-            "clazz": "Dancer",
-            "branch": "Sway",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "15 stamina",
-            "rng": "Touch",
-            "duration": "Instant",
-            "description": [
-                "You force enemies to join you in dance. Push a target in range 20 ft in any direction. If the target hits other entities during its forced movement, it pushes them as well. This ability costs 15 less stamina if your last Move Action included a Step 1 dance ability."
-            ],
-            "tags": [
-                "Attack",
-                "push",
-                "conditional",
-                "dance",
-                "Step 2"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Jive",
-            "clazz": "Dancer",
-            "branch": "Sway",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "20 stamina",
-            "rng": "Touch",
-            "duration": "Instant",
-            "description": [
-                "You confound enemies with swirling limb and step. Inflict Confusion on an enemy in range. While an enemy is Confused in this manner, you may choose a specific direction when they move or attack, and the chosen direction becomes 3 times as likely to be selected when they roll. This ability costs 20 less stamina if your last Move Action included a Step 2 dance ability."
-            ],
-            "tags": [
-                "Attack",
-                "condition",
-                "Confuse",
-                "modal",
-                "dance",
-                "Step 3"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Tango",
-            "clazz": "Dancer",
-            "branch": "Strut",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 stamina",
-            "rng": "Touch",
-            "duration": "Instant",
-            "description": [
-                "You join up with a partner, giving them time to recover while you guide their step. Cleanse 1 condition on yourself or cleanse 1 condition on an ally in range and push them 5 ft in any direction. This ability costs 10 less stamina if your last Move Action included a Step 1 dance ability."
-            ],
-            "tags": [
-                "Cleanse",
-                "push",
-                "conditional",
-                "dance",
-                "Step 2"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Waltz",
-            "clazz": "Dancer",
-            "branch": "Strut",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "15 stamina",
-            "rng": "Touch",
-            "duration": "Instant",
-            "description": [
-                "You reinvigorate an ally with your beautiful dance moves. Heal 3d10 for a target in range and cleanse Poison, Bleed, and Burn. This ability costs 15 less stamina if your last Move Action included a Step 2 ability."
-            ],
-            "tags": [
-                "Cleanse",
-                "heal",
-                "conditional",
-                "dance",
-                "Step 3"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Boogie",
-            "clazz": "Dancer",
-            "branch": "Strut",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "20 stamina",
-            "rng": "Touch",
-            "duration": "Instant",
-            "description": [
-                "You dance with an ally, energizing them. Dash up to your move speed, moving an ally in range with you (if you cast this ability as a Move Action, your movement becomes a dash instead). That ally gains an additional Major Action during their next turn. This ability costs 20 less stamina if your last Move Action included a Step 3 ability."
-            ],
-            "tags": [
-                "Dash",
-                "conditional",
-                "dance",
-                "Step 1"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Foxtrot",
-            "clazz": "Dancer",
-            "branch": "Shimmy",
-            "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 stamina",
-            "rng": "Self",
-            "duration": "1 minute",
-            "description": [
-                "You quickly step and weave across the dance hall. Gain 10% evasion and 10% general MR for the duration. This buff can stack up to 4 times. This ability costs 10 less stamina if your last Move Action included a Step 2 dance ability."
-            ],
-            "tags": [
-                "Buff",
-                "gain evasion",
-                "gain MR",
-                "dance",
-                "Step 3"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Moonwalk",
-            "clazz": "Dancer",
-            "branch": "Shimmy",
-            "tier": 2,
-            "action": "1 Major Action",
-            "cost": "15 stamina",
-            "rng": "Self",
-            "duration": "1 minute",
-            "description": [
-                "You slide across the dance hall. Gain 10 movement speed. This buff can stack up to 4 times. This ability costs 15 less stamina if your last Move Action included a Step 3 dance ability."
-            ],
-            "tags": [
-                "Buff",
-                "gain move speed",
-                "conditional",
-                "dance",
-                "Step 1"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Ballet",
-            "clazz": "Dancer",
-            "branch": "Shimmy",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "20 stamina",
-            "rng": "Self",
-            "duration": "1 minute",
-            "description": [
-                "Your mystical dance seems graceful on the outside, yet requires incredible athletics. Gain +10% general CR and +10% CR of a type of your choice. This buff can stack up to 2 times. This ability costs 20 less stamina if your last Move Action included a Step 1 dance ability."
-            ],
-            "tags": [
-                "Buff",
-                "gain CR",
-                "conditional",
-                "dance",
-                "Step 2"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Lightning Lunge",
-            "clazz": "Lightning Duelist",
-            "branch": "Dueling",
+            "name": "Pivot and Slash",
+            "clazz": "Warlord",
+            "branch": "Close Range",
             "tier": 1,
             "action": "1 Major Action",
             "cost": "10 stamina",
             "rng": "Melee",
             "duration": "Instant",
             "description": [
-                "You make a lunging strike at an enemy with your rapier. Dash up to 10 ft, then deal 4d8 physical damage to a target in range."
+                "You focus on your footwork while you attack, looking for an opening. Deal 4d10 physical damage to a target in range. You may dash up to 5 ft in any direction before or after this attack."
             ],
             "tags": [
                 "Attack",
-                "melee",
                 "physical",
-                "rapier",
-                "dash",
+                "single-target",
+                "melee",
+                "modal",
+                "dash"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Knock Aside",
+            "clazz": "Warlord",
+            "branch": "Close Range",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You slam your weapon into your opponent to push them. Deal 5d10 physical damage to a target in range, pushing them 10 ft in any direction except towards you."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "single-target",
+                "melee",
+                "forced movement"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Crippling Blow",
+            "clazz": "Warlord",
+            "branch": "Close Range",
+            "tier": 3,
+            "action": "1 Reaction",
+            "cost": "25 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You aim for an enemy's legs as they attempt to escape. As a reaction to an enemy attempt to move out of your reach, deal 5d10 physical damage to them, reduce their move speed to 0 for the turn, and inflict Crippled."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "single-target",
+                "melee",
+                "Crippled"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Advancing Fire",
+            "clazz": "Warlord",
+            "branch": "Long Range",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 stamina",
+            "rng": "Weapon",
+            "duration": "Instant",
+            "description": [
+                "You fire at an enemy as you approach. Deal 4d10 physical damage to a target in range. You may dash up to 15 ft towards the target if your attack does not miss."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "single-target",
+                "ranged",
+                "conditional",
+                "modal",
+                "dash"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Hookshot",
+            "clazz": "Warlord",
+            "branch": "Long Range",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "20 stamina",
+            "rng": "Weapon",
+            "duration": "Instant",
+            "description": [
+                "You fire at an enemy with a projectile and chain. Deal 5d10 physical damage to a target in range, then pull them 20 ft towards you."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "single-target",
+                "ranged",
+                "forced movement"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Stopping Shot",
+            "clazz": "Warlord",
+            "branch": "Long Range",
+            "tier": 3,
+            "action": "1 Reaction",
+            "cost": "25 stamina",
+            "rng": "Weapon",
+            "duration": "Instant",
+            "description": [
+                "You shoot an enemy with a heavy projectile designed to stop their progression. As a reaction to an enemy moving into range or moving towards you, deal 5d10 physical damage to that enemy, reduce their move speed to 0 for the turn, and inflict Crippled."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "single-target",
+                "ranged",
+                "forced movement"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Weapon Swap: Roll",
+            "clazz": "Warlord",
+            "branch": "Weapon Swap",
+            "tier": 1,
+            "action": "1 Minor Action",
+            "cost": "10 stamina",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You roll while swapping weapons. Dash up to 20 ft in any direction, then you may swap weapons in both hands."
+            ],
+            "tags": [
+                "Modal",
+                "dash"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Weapon Swap: Quaff",
+            "clazz": "Warlord",
+            "branch": "Weapon Swap",
+            "tier": 2,
+            "action": "1 Minor Action",
+            "cost": "15 stamina",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You quickly down a potion while swapping weapons. Quaff a potion from your inventory, then you may swap weapons in both hands."
+            ],
+            "tags": [
+                "Modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Weapon Swap: Attack",
+            "clazz": "Warlord",
+            "branch": "Weapon Swap",
+            "tier": 3,
+            "action": "1 Minor Action",
+            "cost": "20 stamina",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You swap weapons and make a quick attack. Swap weapons in both hands, then you may make an autoattack with each weapon currently equipped if applicable."
+            ],
+            "tags": [
+                "Modal",
+                "attack",
+                "physical",
+                "melee",
+                "ranged",
                 "single-target"
             ]
         },
         {
             "type": "ability",
-            "name": "Blade Storm",
-            "clazz": "Lightning Duelist",
-            "branch": "Dueling",
+            "name": "Spill Blood",
+            "clazz": "Warrior",
+            "branch": "Assault",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "10 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You hack at an enemy, severing blood vessels. Deal 4d10 physical damage to a target in range. Inflict a d10 Bleed on the target. This Bleed's damage is amplified by your passive."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "single-target",
+                "melee",
+                "condition",
+                "Bleed"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Cut Down",
+            "clazz": "Warrior",
+            "branch": "Assault",
             "tier": 2,
             "action": "1 Major Action",
-            "cost": "25 stamina",
+            "cost": "20 stamina",
             "rng": "Melee",
             "duration": "Instant",
             "description": [
-                "You stab rapidly and repeatedly at an enemy with your rapier. Deal d8 physical damage to a target in range. This attack repeats 2-6 times."
+                "You deliver a wide slash to the enemy's frontlines, adjusting for their formation. Choose one of the following:",
+                "Deal 3d10 damage to all enemies in a 10 ft cone, knocking them prone.",
+                "Deal 3d10 damage to all enemies in a 25 ft horizontal line, knocking them back 10 ft",
+                "If you have at least 3 buffs active on you, choose both options."
             ],
             "tags": [
                 "Attack",
-                "melee",
                 "physical",
-                "rapier",
-                "multi-hit",
-                "single-target."
+                "melee",
+                "AOE",
+                "cone",
+                "horizontal line",
+                "Knock Prone",
+                "Knock Back",
+                "modal",
+                "conditional"
             ]
         },
         {
             "type": "ability",
-            "name": "Shocking Parry",
-            "clazz": "Lightning Duelist",
-            "branch": "Dueling",
+            "name": "Hack and Slash",
+            "clazz": "Warrior",
+            "branch": "Assault",
             "tier": 3,
-            "action": "1 Reaction",
-            "cost": "30 stamina",
+            "action": "1 Major Action",
+            "cost": "40 stamina",
             "rng": "Melee",
             "duration": "Instant",
             "description": [
-                "You parry an enemy's strike and counter. As a reaction to an enemy in range attacking you with a weapon, fully block the attack with your rapier and counterattack, dealing 4d8 physical damage to that enemy. When you hit an enemy with this ability, you have a 50% chance of recovering half the stamina cost."
+                "You turn vigor into violence, attacking quickly. Deal 4d10 physical damage to a target in range. Then, you may sacrifice a buff on you to repeat this skill at no cost."
             ],
             "tags": [
                 "Attack",
-                "melee",
                 "physical",
-                "rapier",
                 "single-target",
-                "restore stamina",
-                "reaction",
-                "counter",
-                "block"
+                "melee",
+                "repeatable",
+                "sacrifice"
             ]
         },
         {
             "type": "ability",
-            "name": "Flash of Swords",
-            "clazz": "Lightning Duelist",
-            "branch": "Dueling",
+            "name": "Summary Execution",
+            "clazz": "Warrior",
+            "branch": "Assault",
             "tier": 4,
             "action": "1 Major Action",
             "cost": "70 stamina",
-            "rng": "25 ft",
+            "rng": "Melee",
             "duration": "Instant",
             "description": [
-                "You move and strike in a blur of deadly speed. Deal 8d8 physical damage to all enemies adjacent to you. Then, dash up to 25 ft to an empty space in range, dealing 4d8 physical damage to all enemies in spaces you pass through. Finally, deal 8d8 physical damage to all enemies adjacent to your dash's final destination. An enemy cannot be hit more than once with this ability per cast (Battle Current's activation counts as a separate cast)."
+                "You finish off weakened enemies. Deal 8d10 physical damage to all targets in range. This attack has lethality equal to each target's percentage of missing health (calculated after this ability's damage). You may sacrifice any number of buffs on you as you cast this ability to increase the base lethality of this attack by 10% per buff sacrificed this way."
             ],
             "tags": [
                 "Attack",
-                "melee",
-                "multi-target",
                 "physical",
-                "rapier",
-                "dash"
+                "multi-target",
+                "melee",
+                "sacrifice",
+                "lethality",
+                "missing health"
             ]
         },
         {
             "type": "ability",
-            "name": "Shock Tendrils",
-            "clazz": "Lightning Duelist",
-            "branch": "Casting",
+            "name": "Shields Up",
+            "clazz": "Warrior",
+            "branch": "Protect",
             "tier": 1,
-            "action": "1 Major Action",
-            "cost": "10 mana",
-            "rng": "20 ft",
+            "action": "1 Reaction",
+            "cost": "15 stamina",
+            "rng": "Self",
             "duration": "Instant",
             "description": [
-                "You release tendril of energy in front of you. Deal 3d8 lightning magic damage to all enemy targets in a 20 ft line. Then at the end of your turn, this spell deals 3d8 damage to all targets in a 20 ft line with random direction."
+                "You toss up your shield or armguard to defend against an attack. Block an attack on you or an adjacent ally, reducing damage by 25%. Gain an additional 25% damage reduction for each buff you have."
             ],
             "tags": [
-                "Spell",
-                "attack",
-                "lightning",
-                "AOE",
-                "line",
-                "random"
+                "Block",
+                "damage reduction",
+                "self-target",
+                "ally-target"
             ]
         },
         {
             "type": "ability",
-            "name": "Ball Lightning",
-            "clazz": "Lightning Duelist",
-            "branch": "Casting",
+            "name": "Reinforce Armor",
+            "clazz": "Warrior",
+            "branch": "Protect",
             "tier": 2,
             "action": "1 Major Action",
-            "cost": "25 mana",
-            "rng": "20 ft",
-            "duration": "1 minute",
-            "description": [
-                "You summon a ball of energy that erratically flies around attacking enemies. Summon a Ball Lightning object in an empty space in range. When summoned, it deals 4d8 lightning magic damage to all adjacent enemies. At the beginning of each of your turns, it travels 20 ft in a random direction (stopping when it hits a space it can't enter), then discharges, dealing 2d8 lightning magic damage to all adjacent targets."
-            ],
-            "tags": [
-                "Spell",
-                "attack",
-                "lightning",
-                "AOE",
-                "summoning",
-                "destruction",
-                "random",
-                "concentration"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Thunder Blast",
-            "clazz": "Lightning Duelist",
-            "branch": "Casting",
-            "tier": 3,
-            "action": "1 Major Action",
-            "cost": "40 mana",
-            "rng": "100 ft",
-            "duration": "Instant",
-            "description": [
-                "You call down a mighty bolt of thunder. Deal 8d8 lightning magic damage to all entities in a 20 ft square. Until the beginning of your next turn, random lightning strikes occur every turn in the target square, dealing 4d8 lightning magic damage to entities struck."
-            ],
-            "tags": [
-                "Spell",
-                "attack",
-                "lightning",
-                "AOE",
-                "ground-target",
-                "random"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Arc Lightning",
-            "clazz": "Lightning Duelist",
-            "branch": "Casting",
-            "tier": 4,
-            "action": "1 Major Action",
-            "cost": "60 mana",
-            "rng": "40 ft",
-            "duration": "1 round",
-            "description": [
-                "You release a powerful bolt of lightning that bounces between targets. Deal 6d8 lightning magic damage to a target in range, marking them until the end of your next turn. Dealing physical damage to the marked target with a rapier causes a lightning bolt to fire from their bodies, dealing 6d8 lightning magic damage to them and cleansing their mark, as well as dealing 6d8 lightning magic damage to another random enemy within 40 ft and marking them until the end of your next turn."
-            ],
-            "tags": [
-                "Spell",
-                "attack",
-                "ranged",
-                "lightning",
-                "single-target",
-                "mark",
-                "random",
-                ""
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Taser Blade",
-            "clazz": "Lightning Duelist",
-            "branch": "Buffing",
-            "tier": 1,
-            "action": "1 Minor Action",
-            "cost": "10 mana",
+            "cost": "25 stamina",
             "rng": "Self",
             "duration": "1 minute",
             "description": [
-                "You envelop your blade in an electric current. For the spell's duration, when you hit a target with a rapier attack, inflict a stack of Paralysis on the target."
+                "You strengthen your armor's natural defenses. Sacrifice any number of buffs active on you. Gain 25% increased AC, Evasion, or MR for each buff sacrificed this way for 1 minute. Recasting this ability while its buff is active will end your previous buff and start a new one."
             ],
             "tags": [
-                "Spell",
-                "lightning",
-                "buff",
-                "self-target",
-                "on-hit",
-                "condition",
-                "Paralysis",
-                "rapier"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Sword of Lightning",
-            "clazz": "Lightning Duelist",
-            "branch": "Buffing",
-            "tier": 2,
-            "action": "1 Minor Action",
-            "cost": "20 mana",
-            "rng": "Self",
-            "duration": "1 minute",
-            "description": [
-                "You envelop your blade in lightning magic energy. For the spell's duration, when you hit a target with a rapier attack, deal an additional 2d8 lightning magic damage on hit."
-            ],
-            "tags": [
-                "Spell",
-                "lightning",
-                "buff",
-                "self-target",
-                "on-hit",
-                "rapier"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Plasma Saber",
-            "clazz": "Lightning Duelist",
-            "branch": "Buffing",
-            "tier": 3,
-            "action": "1 Minor Action",
-            "cost": "30 mana",
-            "rng": "Self",
-            "duration": "1 minute",
-            "description": [
-                "Your blade becomes a thin sheet of lightning magic. All damage that you would deal with rapier attacks have their damage converted to lightning magic damage. While this buff is active, Battle Current empowered attacks recover 5, 10, or 15 stamina randomly."
-            ],
-            "tags": [
-                "Spell",
-                "lightning",
-                "buff",
-                "self-target",
-                "damage convert",
-                "rapier",
-                "gain stamina"
-            ]
-        },
-        {
-            "type": "ability",
-            "name": "Lightning Coil Cuirass",
-            "clazz": "Lightning Duelist",
-            "branch": "Buffing",
-            "tier": 4,
-            "action": "1 Minor Action",
-            "cost": "80 mana",
-            "rng": "Self",
-            "duration": "1 minute",
-            "description": [
-                "You don magically conjured lightning armor. Whenever an adjacent enemy targets you with an attack, they are inflicted with a stack of Paralysis and take 2d8 lightning magic damage. Whenever you take damage, you may freely dash up to your speed in any direction. While this ability is active, you gain a stack of Lightning on every physical damage hit. You expend all stacks of Lightning when you cast a lightning spell attack, increasing lightning magic damage by 10% for each stack of Lightning expended this way, up to a limit of 20 stacks."
-            ],
-            "tags": [
-                "Spell",
-                "lightning",
-                "buff",
-                "self-target",
-                "condition",
-                "Paralysis",
-                "stacking buff",
+                "Buff",
                 "concentration",
-                "dash"
+                "sacrifice",
+                "increase AC",
+                "increase Evasion",
+                "increase MR"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Take Cover",
+            "clazz": "Warrior",
+            "branch": "Protect",
+            "tier": 3,
+            "action": "1 Reaction",
+            "cost": "35 stamina",
+            "rng": "30 ft",
+            "duration": "Instant",
+            "description": [
+                "You dive and roll to rescue a comrade from danger. As a reaction to an attack on an allied target in range, immediately dash to them before the attack lands. Then, choose one of the following:",
+                "Use your body as a shield. Your target gains 30 AC, and the attack will be redirected to both you and your target",
+                "Tackle your target to the ground. You and your target gain 30% evasion, and both of you are knocked prone",
+                "Drag them to safety. Dash an additional 20 ft in any direction, dragging your target with you, and your target loses their reaction if they still have one."
+            ],
+            "tags": [
+                "Dash",
+                "ally-target",
+                "modal",
+                "redirect",
+                "knock prone",
+                "increase AC",
+                "increase Evasion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Paragon of Victory",
+            "clazz": "Warrior",
+            "branch": "Protect",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "100 stamina",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You become a powerful avatar of war. When you cast this ability, sacrifice any number of buffs on you. Gain the following effects, depending on the number of buffs sacrificed.",
+                "5 Buffs - Gain immunity to physical damage",
+                "10 Buffs - Gain all of the above in addition to immunity to conditions and crowd control.",
+                "15 Buffs - Gain all of the above in addition to 50 ft of added speed and 100% increased damage"
+            ],
+            "tags": [
+                "Buff",
+                "concentration",
+                "sacrifice",
+                "Immunity",
+                "add speed",
+                "increase damage",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "\"Charge!\"",
+            "clazz": "Warrior",
+            "branch": "Warcry",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "20 stamina",
+            "rng": "---",
+            "duration": "Instant",
+            "description": [
+                "You bellow a righteous cry, calling all to drive forward into battle. You and all allies who can hear you gain 50% increased damage until the end of your next turn. When you cast this ability, all allies who can hear you may use their reaction to move up to their speed in any direction."
+            ],
+            "tags": [
+                "Buff",
+                "multi-target",
+                "self-target",
+                "ally-target",
+                "damage increase"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "\"Fight me!\"",
+            "clazz": "Warrior",
+            "branch": "Warcry",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 stamina",
+            "rng": "---",
+            "duration": "1 minute",
+            "description": [
+                "You bellow a belligerent cry, igniting your enemies' fury. All enemies who can hear you are Taunted for 1 minute. An enemy Taunted by this ability previously is Immune to this ability's Taunt. When you cast this ability, all enemies who can hear you break concentration."
+            ],
+            "tags": [
+                "Condition",
+                "Taunt",
+                "multi-target",
+                "break concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "\"Overcome!\"",
+            "clazz": "Warrior",
+            "branch": "Warcry",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "40 stamina",
+            "rng": "---",
+            "duration": "Instant",
+            "description": [
+                "You bellow an inspiring cry, encouraging everyone to persist. You and all allies who can hear you are cleansed of Fear, Stun, Paralysis, Confusion, Sleep, and Charm. Allies in a 1000 ft range who are in a downed state become immediately stabilized. When you cast this ability, all allies who can hear you may use their reaction to cleanse an additional condition on them of their choice."
+            ],
+            "tags": [
+                "Cleanse",
+                "Stabilize",
+                "multi-target",
+                "self-target",
+                "ally-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "\"Kill them all!\"",
+            "clazz": "Warrior",
+            "branch": "Warcry",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "70 stamina",
+            "rng": "---",
+            "duration": "Instant",
+            "description": [
+                "You bellow a powerful cry, cowing your enemies and announcing their coming deaths. All enemies who can hear you gain 50% physical damage vulnerability, lose natural elemental resistances, and become Feared. When you cast this ability, all enemies who can hear you are stripped of all buffs, and those buffs are distributed as you choose amongst you and all allies who can hear you."
+            ],
+            "tags": [
+                "Condition",
+                "multi-target",
+                "Fear",
+                "vulnerability",
+                "buff stripping",
+                "buff"
             ]
         },
         {
@@ -7183,12 +10091,12 @@ var BarbsComponents = BarbsComponents || (function () {
             "duration": "Instant",
             "description": [
                 "You use every heavy weapon available to you to pound an enemy into submission. Swap weapons in both hands, then choose one of the following:",
-                "* With an axe equipped, deal 8d10 physical damage to a target in range, inflicting half your damage dealt as Bleed for 1 minute",
-                "* With a blunt weapon equipped, deal 8d10 physical damage to a target in range, inflicting a condition that decreases the target's move speed by half your damage dealt for 1 minute",
-                "* With a longblade equipped, deal 8d10 physical damage to a target in range, inflicting physical vulnerability equal to half your damage dealt for 1 minute (append a \"%\" to the value)",
-                "* With a polearm equipped, deal 8d10 physical damage to a target in range, inflicting AC loss equal to half your damage dealt for 1 minute",
-                "* With a shield equipped, deal 8d10 physical damage to a target in range, gaining AC equal to half you damage dealt for 1 minute",
-                "* With a heavy throwing weapon equipped, deal 8d10 physical damage to a target in range, and this attack does not consume special ammunition (unless it is special ammunition granted by a class ability)",
+                "With an axe equipped, deal 8d10 physical damage to a target in range, inflicting half your damage dealt as Bleed for 1 minute",
+                "With a blunt weapon equipped, deal 8d10 physical damage to a target in range, inflicting a condition that decreases the target's move speed by half your damage dealt for 1 minute",
+                "With a longblade equipped, deal 8d10 physical damage to a target in range, inflicting physical vulnerability equal to half your damage dealt for 1 minute (append a \"%\" to the value)",
+                "With a polearm equipped, deal 8d10 physical damage to a target in range, inflicting AC loss equal to half your damage dealt for 1 minute",
+                "With a shield equipped, deal 8d10 physical damage to a target in range, gaining AC equal to half you damage dealt for 1 minute",
+                "With a heavy throwing weapon equipped, deal 8d10 physical damage to a target in range, and this attack does not consume special ammunition (unless it is special ammunition granted by a class ability)",
                 "Then, you may concentrate on this ability. If you do, you may repeat it as a free action at no cost once per turn, choosing a new selection from the list above. Concentration ends when you exhaust the list."
             ],
             "tags": [
@@ -7314,12 +10222,12 @@ var BarbsComponents = BarbsComponents || (function () {
             "duration": "Instant",
             "description": [
                 "You attack quickly with all of your fast weapons. Swap weapons in both hands, then choose one of the following:",
-                "* With a bow equipped, deal 7d10 physical damage to a target in range, inflicting evasion loss equal to half the damage dealt (append a \"%\" to the value)",
-                "* With a crossbow equipped, deal 7d10 physical damage to a target in range, pushing the target back a distance equal to half your damage dealt in feet",
-                "* With a bullet weapon equipped, deal 7d10 physical damage to a target in range; this attack has a chance of stunning equal to half your damage dealt as a percentage",
-                "* With a fine weapon equipped, deal 7d10 physical damage to a target in range, then dash up to half your damage dealt in any direction",
-                "* With unarmed combat, deal 7d10 physical damage to a target in range; this attack has a chance to combo equal to 10% of your damage dealt as a percentage",
-                "* With a light throwing weapon equipped, deal 7d10 physical damage to a target in range, and this attack does not consume special ammunition (unless it is special ammunition granted by a class ability)",
+                "With a bow equipped, deal 7d10 physical damage to a target in range, inflicting evasion loss equal to half the damage dealt (append a \"%\" to the value)",
+                "With a crossbow equipped, deal 7d10 physical damage to a target in range, pushing the target back a distance equal to half your damage dealt in feet",
+                "With a bullet weapon equipped, deal 7d10 physical damage to a target in range; this attack has a chance of stunning equal to half your damage dealt as a percentage",
+                "With a fine weapon equipped, deal 7d10 physical damage to a target in range, then dash up to half your damage dealt in any direction",
+                "With unarmed combat, deal 7d10 physical damage to a target in range; this attack has a chance to combo equal to 10% of your damage dealt as a percentage",
+                "With a light throwing weapon equipped, deal 7d10 physical damage to a target in range, and this attack does not consume special ammunition (unless it is special ammunition granted by a class ability)",
                 "Then, you may concentrate on this ability. If you do, you may repeat it as a free action at no cost once per turn, choosing a new selection from the list above. Concentration ends when you exhaust the list."
             ],
             "tags": [
@@ -7430,6 +10338,991 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "ability",
+            "name": "Fadeaway Slice",
+            "clazz": "Daggerspell",
+            "branch": "Finesse",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "15 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You slash at an enemy while retreating. Deal 4d4 physical damage to a target in range, then dash up 10 ft in any direction. If this attack was made with an empowered shortblade, dash up to 20 ft instead."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "conditional",
+                "melee",
+                "single-target",
+                "dash",
+                "shortblade"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Rapid Jab",
+            "clazz": "Daggerspell",
+            "branch": "Finesse",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "25 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You stab repeatedly with your favored knife. Deal d4 physical damage to a target in range, repeating this attack twice more. If the initial hit was made with an empowered shortblade, the subsequent two hits are empowered in the same manner."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "conditional",
+                "melee",
+                "single-target",
+                "multi-target",
+                "shortblade"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Shieldbreaker",
+            "clazz": "Daggerspell",
+            "branch": "Finesse",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "30 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You slash at magical weavings. Deal 6d4 physical damage to a target in range. This attack cannot be blocked by spells or magical effects and inflicts the target with -20% MR, non-stacking. If this attack was made with an empowered shortblade, inflict -40% MR instead."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "melee",
+                "shortblade",
+                "single-target",
+                "condition",
+                "lose MR",
+                "no block",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Calling Card",
+            "clazz": "Daggerspell",
+            "branch": "Acumen",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "15 mana",
+            "rng": "30 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire an opening salvo of magic before approaching. Deal 5d8 magic damage of a chosen type to a target in range, then dash up to 20 ft towards the target. This spell triggers your Ritual Dagger passive for twice as much empowerment damage."
+            ],
+            "tags": [
+                "Spell",
+                "destruction",
+                "attack",
+                "single-target",
+                "dash"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Witchbolt",
+            "clazz": "Daggerspell",
+            "branch": "Acumen",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "30 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire a repeating chain of spells. Deal 6d8 magic damage of a chosen type to a target in range, then concentrate on this spell. While you are concentrating on this spell, you may cast it as a major action for no mana cost (treat this as having spent 30 mana for the purposes of your Ritual Dagger passive)."
+            ],
+            "tags": [
+                "Spell",
+                "destruction",
+                "attack",
+                "single-target",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Exposing Tear",
+            "clazz": "Daggerspell",
+            "branch": "Acumen",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "40 mana",
+            "rng": "30 ft",
+            "duration": "Instant",
+            "description": [
+                "You slash at an enemy with blades of mana. Deal 8d8 magic damage of a chosen type to a target in range and mark the target. A target marked this way grants attacks against the marked target +10% Critical Strike Chance, and additionally grants attacks with an empowered weapon +100% Critical Damage Modifier."
+            ],
+            "tags": [
+                "Spell",
+                "destruction",
+                "attack",
+                "single-target",
+                "mark",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Hidden Blade",
+            "clazz": "Daggerspell",
+            "branch": "Guile",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You prepare yourself to engage with your knife. You gain +15% Critical Strike Chance, and your attacks with empowered shortblades grant you Hidden."
+            ],
+            "tags": [
+                "Spell",
+                "utility",
+                "buff",
+                "conditional",
+                "Hidden"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Invisibility",
+            "clazz": "Daggerspell",
+            "branch": "Guile",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "40 mana",
+            "rng": "Touch",
+            "duration": "Instant",
+            "description": [
+                "You mask your approach with concealing magic. Choose one:",
+                "Target in range becomes invisible for 1 minute.",
+                "Target in range becomes invisible for 1 hour, which ends when the target casts a spell or makes an attack.",
+                "When you cast this spell, you may spend an additional 20 mana to recast it on a new target, and you may do this any number of times."
+            ],
+            "tags": [
+                "Spell",
+                "utility",
+                "buff",
+                "modal",
+                "Hidden"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Rogue's Anlace",
+            "clazz": "Daggerspell",
+            "branch": "Guile",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "45 mana",
+            "rng": "Touch",
+            "duration": "1 hour",
+            "description": [
+                "You enchant your dagger with a variety of utility effects. Enchant a target shortblade in range with the following effects: this weapon acts as a magical key, able to unlock mundanely locked doors and chests with ease; this weapon dowses for mundane traps and can disarm them with ease; this weapon warns of enemies within 30 ft, but doesn't provide any other info; when balanced by its hilt on a finger, this weapon falls in the direction of a safe exit path to a building or dungeon one is currently in."
+            ],
+            "tags": [
+                "Spell",
+                "destruction",
+                "attack",
+                "single-target",
+                "dash"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Golem Soldier",
+            "clazz": "Golem Master",
+            "branch": "Knighthood",
+            "tier": 1,
+            "action": "10 minutes",
+            "cost": "20 lbs organic material, 10 lbs steel, 10 lbs copper , 2 crafting materials of at least Grade D",
+            "rng": "5 ft",
+            "duration": "1 hour",
+            "description": [
+                "You develop a golem suited to warfare. Create a Golem Soldier with 100 Health, 50 Stamina, and 30 ft Move Speed. The Soldier obeys all your commands; otherwise, it acts according to its basic level of intelligence to fight with you in combat encounters. The Soldier can equip at most 1 piece of armor, 1 accessory, and 1 weapon. The Soldier can learn physical arts and abilities from other entities by spending 1 minute per ability concentrating with the teaching entity."
+            ],
+            "tags": [
+                "alchemy",
+                "golem",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Golem Sapper",
+            "clazz": "Golem Master",
+            "branch": "Knighthood",
+            "tier": 2,
+            "action": "10 minutes",
+            "cost": "20 lbs organic material, 10 lbs steel, 10 lbs copper , 2 crafting materials of at least Grade D",
+            "rng": "5 ft",
+            "duration": "2 hours",
+            "description": [
+                "You develop a golem suited to physical effort. Create a Golem Sapper with 50 Health, 100 Stamina, and 30 ft Move Speed. The Sapper obeys all your commands; otherwise, it acts according to its basic level of intelligence to fight with you in combat encounters. The Sapper can equip at most 1 piece of armor, 1 accessory, and 1 weapon. The Sapper is trained in physical skills, and can make any Armor, Athletics, Beast Mastery, Combat, Item Use, or Weapons skill check with a +25 bonus."
+            ],
+            "tags": [
+                "alchemy",
+                "golem",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Golem Mage",
+            "clazz": "Golem Master",
+            "branch": "Cadre",
+            "tier": 1,
+            "action": "10 minutes",
+            "cost": "20 lbs organic material, 10 lbs steel, 10 lbs copper , 2 crafting materials of at least Grade D",
+            "rng": "5 ft",
+            "duration": "1 hour",
+            "description": [
+                "You develop a golem suited to sorcery. Create a Golem Mage with 100 Health, 50 Mana, and 30 ft Move Speed. The Mage obeys all your commands; otherwise, it acts according to its basic level of intelligence to fight with you in combat encounters. The Mage can equip at most 1 piece of armor, 1 accessory, and 1 magic focus. The Mage can learn magical arts and abilities from other entities by spending 1 minute per ability concentrating with the teaching entity."
+            ],
+            "tags": [
+                "alchemy",
+                "golem",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Golem Scholar",
+            "clazz": "Golem Master",
+            "branch": "Cadre",
+            "tier": 2,
+            "action": "10 minutes",
+            "cost": "20 lbs organic material, 10 lbs steel, 10 lbs copper , 2 crafting materials of at least Grade D",
+            "rng": "5 ft",
+            "duration": "2 hours",
+            "description": [
+                "You develop a golem suited to magical knowledge. Create a Golem Scholar with 50 Health, 100 Mana, and 30 ft Move Speed. The Scholar obeys all your commands; otherwise, it acts according to its basic level of intelligence to fight with you in combat encounters. The Scholar can equip at most 1 piece of armor, 1 accessory, and 1 magic focus. The Scholar is trained in studious skills and can make any Alchemy, Artistry, Elements, Knowledge, Magic, or Psionics skill check with a +25 bonus."
+            ],
+            "tags": [
+                "alchemy",
+                "golem",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Temporary Shutdown",
+            "clazz": "Golem Master",
+            "branch": "Retrain",
+            "tier": 1,
+            "action": "1 Minor Action",
+            "cost": "---",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You disable a golem to save up its life span. Target golem in range returns to your inventory, retaining its current Duration, Health, Stamina, Mana, and any equipment or abilities it has."
+            ],
+            "tags": [
+                "alchemy",
+                "constructs",
+                "organics"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Recycle",
+            "clazz": "Golem Master",
+            "branch": "Retrain",
+            "tier": 2,
+            "action": "1 Minor Action",
+            "cost": "---",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You store away a dead golem's brain for later use. Target golem corpse in range is broken down, and its brain is added to your inventory. The brain can be used in crafting any golem to impart the owner's knowledge, skills, and abilities to the newly crafted golem."
+            ],
+            "tags": [
+                "alchemy",
+                "constructs",
+                "organics"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Wild Swing",
+            "clazz": "Juggernaut",
+            "branch": "Butchery",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "30 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You swing at an enemy and steal their ardor. Deal 5d10 physical damage to a target in range, and lifesteal for 30% of the damage dealt, increasing to 60% instead if your health is below 30%."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "single-target",
+                "blunt weapon",
+                "axe",
+                "on hit",
+                "lifesteal",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Violent Riot",
+            "clazz": "Juggernaut",
+            "branch": "Butchery",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "40 stamina",
+            "rng": "20 ft",
+            "duration": "Instant",
+            "description": [
+                "You hit multiple enemies to steal their health. Deal 6d10 physical damage to any number of targets in range. Heal 10 health for every enemy who takes damage from this ability."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "multi-target",
+                "blunt weapon",
+                "axe",
+                "heal",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Draining Blow",
+            "clazz": "Juggernaut",
+            "branch": "Butchery",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "50 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You focus on a single enemy to constantly drain their health. Deal 7d10 physical damage to a target in range, healing for the amount of damage rolled. Then you may begin concentrating on this ability. For as long as you maintain concentration, you may repeat this ability at half its cost as long as you continue attacking the same target."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "single-target",
+                "blunt weapon",
+                "axes",
+                "heal",
+                "concentration",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Deathstroke",
+            "clazz": "Juggernaut",
+            "branch": "Butchery",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "60 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You convert missing health into pure power. Deal X physical damage to a target in range, where X is your missing health. Until your next long rest, your current health becomes your new maximum health. If your maximum health is reduced by this effect, you are immune to other effects that reduce your maximum health (except casting this ability again)."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "physical",
+                "single-target",
+                "blunt weapon",
+                "axes"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Hypertension",
+            "clazz": "Juggernaut",
+            "branch": "Bloodshed",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "20 stamina",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You increase your blood pressure and maximize your heartiness. Increase your maximum health by 100%; your current health changes by the same ratio. When this buff ends, your current health reverts using the same ratio."
+            ],
+            "tags": [
+                "Buff",
+                "health increase",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Blood Boil",
+            "clazz": "Juggernaut",
+            "branch": "Bloodshed",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 stamina",
+            "rng": "30 ft",
+            "duration": "1 minute",
+            "description": [
+                "You stand at the front lines and dare enemies to come close. All enemies in range are Taunted for the duration. For every enemy Taunted this way, heal for 10% of your maximum health at the beginning of each of your turns for the duration."
+            ],
+            "tags": [
+                "Buff",
+                "heal",
+                "condition",
+                "Taunt",
+                "multi-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Purge",
+            "clazz": "Juggernaut",
+            "branch": "Bloodshed",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "35 stamina",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You shed off some health or stamina to shrug off conditions. Cleanse yourself of a condition of your choice; if you spend health for this ability, cleanse 2 conditions instead. Then gain a percentage general CR equal to your percentage missing health for the duration."
+            ],
+            "tags": [
+                "Cleanse",
+                "conditional",
+                "gain CR",
+                "buff",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Critical Condition",
+            "clazz": "Juggernaut",
+            "branch": "Bloodshed",
+            "tier": 4,
+            "action": "Free Reaction",
+            "cost": "100 stamina",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You make a final stand before falling. If you would take damage or would pay Health that would deplete your Health to 0, your Health becomes 1 instead. Until the end of your next turn, you gain 100% increased physical damage, 100% Accuracy, 100% Armor Penetration, and your attacks cannot be blocked. At the end of your next turn your health drops to 0 and you become Downed with 70 Downed Health."
+            ],
+            "tags": [
+                "---"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Hostility",
+            "clazz": "Juggernaut",
+            "branch": "Gore",
+            "tier": 1,
+            "action": "1 Minor Action",
+            "cost": "15 health",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You fuel your attacks with health draining power. Your weapon attacks gain, \"On Hit: 15% Lifesteal\" for the duration. If you choose to concentrate on this ability when you cast it, instead your weapon attacks gain, \"On Hit: 25% Lifesteal\"."
+            ],
+            "tags": [
+                "Buff",
+                "modal",
+                "concentration",
+                "on hit",
+                "lifesteal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Blood For Power",
+            "clazz": "Juggernaut",
+            "branch": "Gore",
+            "tier": 2,
+            "action": "1 Minor Action",
+            "cost": "40 health",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You exchange health for stamina or mana. Choose one:",
+                "Recover 6d10 stamina",
+                "Recover 6d10 mana",
+                "Recover 3d10 stamina and 3d10 mana"
+            ],
+            "tags": [
+                "Recover mana",
+                "recover stamina"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Tachycardia",
+            "clazz": "Juggernaut",
+            "branch": "Gore",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "50 health",
+            "rng": "Melee",
+            "duration": "1 minute",
+            "description": [
+                "You increase your heart rate and natural speed and power. Gain +30 Move Speed, +5 reach on melee weapons, and +50% Armor Penetration for the duration. Additionally, if you are under 30% health while this buff is active, you have 100% increased physical damage."
+            ],
+            "tags": [
+                "Buff",
+                "concentration",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Blood For Vigor",
+            "clazz": "Juggernaut",
+            "branch": "Gore",
+            "tier": 4,
+            "action": "Free Action",
+            "cost": "100 health",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You exchange health for actions. Gain a Major Action this turn. You cannot cast this ability more than once per turn. This ability cannot be reacted to or prevented. Nothing can reduce or prevent the loss of life caused by paying for this ability's cost."
+            ],
+            "tags": [
+                "---"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Glass Shot",
+            "clazz": "Mirror Mage",
+            "branch": "Ray",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "60 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire a bolt of mana that vacillates between light and ice. Deal 7d8 magic damage to a target in range; if this attack travels over an odd number of spaces, its magic damage type is ice and it inflicts Slow; if this attack travels over an even number of spaces its magic damage type is light and it inflicts -10% EV."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "single-target",
+                "destruction",
+                "ice",
+                "light",
+                "conditional",
+                "condition",
+                "Slow",
+                "lose EV"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Plane Mirror",
+            "clazz": "Mirror Mage",
+            "branch": "Refraction",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "70 ft",
+            "duration": "1 minute",
+            "description": [
+                "You create a mirror of ice and light. Create a Plane Mirror in an empty space in range for the duration, choosing its orientation to be either orthogonal or diagonal direction; it is immune to damage and conditions, cannot be forcibly moved or teleported, but can be dispelled. The Mirror reflects what it sees, providing an additional line of sight for you and allies alone; it acts as an opaque barrier otherwise. When you hit the mirror with a line AOE or straight moving single-target projectile spell, it redirects the attack based on the angle, resetting the attack's range and granting the attack +20% Accuracy. If the mirror is hit by a spell that has been redirected this way twice already, it is dispelled."
+            ],
+            "tags": [
+                "Spell",
+                "ice",
+                "light",
+                "defensive",
+                "conjuration",
+                "utility",
+                "conditional",
+                "modal",
+                "totem"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Reflective Barrier",
+            "clazz": "Mirror Mage",
+            "branch": "Reflection",
+            "tier": 1,
+            "action": "1 Reaction",
+            "cost": "20 mana",
+            "rng": "30 ft",
+            "duration": "10 seconds",
+            "description": [
+                "You protect an area with a mirror. As a reaction to a targeted projectile attack or line AOE attack that would hit you or an ally, create a 15 ft long barrier in empty spaces within range that lasts for the duration. This barrier redirects projectile attacks and line AOEs back at the attacker and also acts as an opaque barrier that blocks line of sight until the end of the turn."
+            ],
+            "tags": [
+                "Spell",
+                "defensive",
+                "conjuration",
+                "ice",
+                "light",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Basic Voltron Chassis",
+            "clazz": "Modifier",
+            "branch": "Generate",
+            "tier": 1,
+            "action": "10 minutes",
+            "cost": "10 lbs of steel, 10 lb of copper",
+            "rng": "5 ft",
+            "duration": "Endless",
+            "description": [
+                "You build a basic chassis for a construct designed to operate forever. Create a Voltron construct with 30 HP and 30 ft Move Speed. This construct can be deployed as a free action and returned to your inventory as a free action. The Voltron obeys your Commands; otherwise, it uses its Move Action to approach enemies and its Major Action to attack an enemy in melee range for 2d10 physical damage. Outside of combat, you may use augmentation alchemy abilities on the construct even if it is not deployed; if you do, the augmentation has its duration extended to match the Voltron's duration. If the Voltron would die, it is instead returned to your inventory, losing 2 augmentations in the process."
+            ],
+            "tags": [
+                "alchemy",
+                "constructs",
+                "minion",
+                "physical",
+                "melee"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Modular Weapons and Armor Set",
+            "clazz": "Modifier",
+            "branch": "Attachment",
+            "tier": 1,
+            "action": "1 minute",
+            "cost": "2 crafting materials of at least grade D",
+            "rng": "5 ft",
+            "duration": "1 minute",
+            "description": [
+                "You arm your construct with powerful weapons and new physical arts. Target construct in range gains one of the following as a Major Action of your choice:",
+                "Attack an enemy in melee range for 5d10 physical damage",
+                "Attack all enemies in melee range for 3d10 physical damage",
+                "Attack an enemy within 60 ft for 4d10 physical damage",
+                "That same target also gains one of the following, of your choice:",
+                "+50 AC, +30% MR",
+                "+50% EV, +30 AC",
+                "+50% MR, +30% EV"
+            ],
+            "tags": [
+                "alchemy",
+                "augmentation",
+                "modal",
+                "increase AC",
+                "increase MR",
+                "increase EV"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Voltron Heart",
+            "clazz": "Modifier",
+            "branch": "Extension",
+            "tier": 1,
+            "action": "1 minute",
+            "cost": "1 crafting material of at least grade D",
+            "rng": "5 ft",
+            "duration": "1 minute",
+            "description": [
+                "You provide a construct with greatly increased life. Target construct gains 200% increased Health, 100% Health Regeneration, and cannot have its maximum Health decreased for any reason while this augmentation is active."
+            ],
+            "tags": [
+                "alchemy",
+                "augmentation",
+                "increase Health"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Soul Rend",
+            "clazz": "Reaper",
+            "branch": "Decapitate",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You swing your magically enchanted scythe to damage an enemy's soul directly. Deal 5d10 physical damage to a target in range, then choose one:",
+                "This attack ignores all AC and cannot be blocked.",
+                "This attack has 20% lifesteal"
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "single-target",
+                "scythe",
+                "AC penetration",
+                "ignore Block",
+                "modal",
+                "heal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Tornado of Souls",
+            "clazz": "Reaper",
+            "branch": "Decapitate",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "40 mana",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You spin your scythe in a wide arc, harvesting power as you take life. Deal 5d10 physical damage to all adjacent targets. If this ability kills a target, you may repeat this ability immediately at no cost."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "multi-target",
+                "scythe",
+                "conditional",
+                "repeatable"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Deathstroke",
+            "clazz": "Reaper",
+            "branch": "Decapitate",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "50 mana",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You absorb the life force of recently slain enemies and deliver a killing blow. Sacrifice any number of souls you've created with your Ferryman of the Dead passive. Deal 6d10 physical damage to a target in range, with 100% increased damage and 20% lethality for each soul sacrificed."
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "single-target",
+                "scythe",
+                "modal",
+                "conditional",
+                "sacrifice"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Inevitable End",
+            "clazz": "Reaper",
+            "branch": "Decapitate",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "60 mana",
+            "rng": "30 ft",
+            "duration": "Instant",
+            "description": [
+                "You cut down flesh which has known your corruption. Deal 8d10 physical damage to all enemies in range. This attack has the following properties for each individual enemy targeted, based on how many different, unique conditions that enemy has suffered over the course of the current combat encounter that originated from you or your minions:",
+                "At least 2 conditions - The attack cannot be blocked or dodged",
+                "At least 4 conditions - The attack penetrates all AC",
+                "At least 6 conditions - The attack deals double damage and has 100% Lethality"
+            ],
+            "tags": [
+                "Attack",
+                "melee",
+                "multi-target",
+                "scythe",
+                "conditional",
+                "Lethality",
+                "no-block",
+                "no-dodge",
+                "ignore AC"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Call of the Void",
+            "clazz": "Reaper",
+            "branch": "Dread",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "25 mana",
+            "rng": "100 ft",
+            "duration": "1 minute",
+            "description": [
+                "You afflict a target with deadly magic to prevent escape. Deal 4d10 dark magic damage to a target in range. They are afflicted with a condition for the duration that makes movement that isn't towards you count as moving over difficult terrain and prevents dashes or teleports that aren't towards you."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "destruction",
+                "damage",
+                "condition",
+                "conditional",
+                "single-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Harvester of Life",
+            "clazz": "Reaper",
+            "branch": "Dread",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "50 mana",
+            "rng": "40 ft",
+            "duration": "1 hour",
+            "description": [
+                "You create a spirit reaper to assist you in your work. Summon a Harvester in an empty space in range with 50 HP, 40 ft flying speed, and 100% evasion. It wields an ephemeral copy of the scythe you wield when you cast this spell. It obeys your Commands and telepathically communicates to you everything it sees or hears, but not across planes. It persists regardless of the distance from its summoner. It can freely travel through mundane walls but cannot pass through enchanted or hallowed barriers. The Harvester's kills with its scythe count towards your Ferryman of the Dead passive. Unless you give it commands otherwise, it automatically does the following on its turn: It uses its Move Action to move up to its speed towards an enemy it sees. It uses its Major Action to attack with its scythe. It uses its Minor Action to inflict a random target within 30 ft with Fear."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "scythe",
+                "summoning",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Drag To Hell",
+            "clazz": "Reaper",
+            "branch": "Dread",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "70 mana",
+            "rng": "100 ft",
+            "duration": "1 minute",
+            "description": [
+                "You chain an enemy's soul to its ultimate fate. Deal 6d10 dark magic damage to a target in range. They are afflicted with a condition for the duration that pulls them 30 ft in a direction of your choice and deals 3d10 dark magic damage to them at the beginning of each of their turns. Additionally, while this condition persists, you may use your reaction to pull the afflicted target 20 ft in a direction of your choice."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "destruction",
+                "damage",
+                "condition",
+                "control",
+                "single-target",
+                "forced movement",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Enslaved Soul",
+            "clazz": "Reaper",
+            "branch": "Dread",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "X mana",
+            "rng": "100 ft",
+            "duration": "1 minute",
+            "description": [
+                "You call upon one of many souls you've harvested. Select an entity whom you have killed at any point in the past. Unless blocked by divine intervention, you summon the soul of the selected entity assuming it is still intact, spending mana equal to the entity's Level. The Enslaved Soul has all of the same stats, abilities, and knowledge as it did in life. It is bound by your magic to assist you in combat and obey Command Actions that involve attacking enemies, defending allies, or being otherwise tactically relevant (including staying near you instead of trying to escape or staying quiet during stealthy operations). However, it knows you had a hand in ending its life, and may not be cooperative if you seek information. The Enslaved Soul remains with you for 1 minute or until its health reaches 0. You may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 6 hours."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "necromancy",
+                "summoning",
+                "control",
+                "minor ritual",
+                "major ritual"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "The End Is Coming",
+            "clazz": "Reaper",
+            "branch": "Doomsday",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "30 mana",
+            "rng": "100 ft",
+            "duration": "Endless",
+            "description": [
+                "You afflict an enemy with a curse that slowly kills. A target in range is afflicted with a condition that causes them to gain a Curse at the beginning of each of their turns (or every 10 seconds while out of combat)."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "destruction",
+                "condition",
+                "Curse",
+                "single-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Death Throes",
+            "clazz": "Reaper",
+            "branch": "Doomsday",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "45 mana",
+            "rng": "100 ft",
+            "duration": "Endless",
+            "description": [
+                "You afflict an enemy with a curse that makes their efforts to avoid death helpless and pathetic. A target in range is afflicted with a condition that forces them to reroll all dice they roll, taking the lower of the two results each time. The sole exception is death saves, for which the target must reroll and take the higher result. Additionally, healing on the target is half as effective while they have this condition."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "condition",
+                "single-target"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Frailty of Man",
+            "clazz": "Reaper",
+            "branch": "Doomsday",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "80 mana",
+            "rng": "100 ft",
+            "duration": "Endless",
+            "description": [
+                "You afflict an enemy with a curse that tears away their strength and leaves them frail. A target in range is stripped of all buffs and breaks all concentration. They are then afflicted with a condition that prevents them from gaining buffs, concentrating on abilities, benefiting from potions or fields, and using reactions and minor actions. This condition also afflicts the target with a 50% Weaken."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "condition",
+                "single-target",
+                "Weaken",
+                "buff strip",
+                "concentration break"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Final Fate",
+            "clazz": "Reaper",
+            "branch": "Doomsday",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "100 mana",
+            "rng": "100 ft",
+            "duration": "24 hours",
+            "description": [
+                "You sentence an enemy to death. A target in range becomes marked for the duration. While marked this way, the target will be vaguely aware of a sense of doom, which will rapidly become more prominent over time. They will also become unable to take life while marked this way, finding that their courage or calmness fails them. When the duration of the mark expires, the target will die, even if it is Lethality-immune. The mark can only be removed by a blessing with divine support, such as from a priest of Adol or a paladin of Nox."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "control",
+                "mark"
+            ]
+        },
+        {
+            "type": "ability",
             "name": "Cloak and Dagger",
             "clazz": "Thief",
             "branch": "Predator",
@@ -7461,7 +11354,7 @@ var BarbsComponents = BarbsComponents || (function () {
             "rng": "30 ft",
             "duration": "Instant",
             "description": [
-                "You toss a knife from the shadows. Deal 4d4 physical damage to a target in range. If you entered Hit Stance this turn, you may dash to a space adjacent to your target after the attack, gaining 50% critical damage modifier until the end of your next turn. If you entered Run Stance this turn, this attack does not break your Hidden status, and you gain 10% critical strike chance until the end of your next turn."
+                "You toss a knife from the shadows. Deal 5d4 physical damage to a target in range. If you entered Hit Stance this turn, you may dash to a space adjacent to your target after the attack, gaining 50% critical damage modifier until the end of your next turn. If you entered Run Stance this turn, this attack does not break your Hidden status, and you gain 10% critical strike chance until the end of your next turn."
             ],
             "tags": [
                 "Attack",
@@ -7486,7 +11379,7 @@ var BarbsComponents = BarbsComponents || (function () {
             "rng": "Melee",
             "duration": "Instant",
             "description": [
-                "You quickly stab with your dagger multiple times. Deal d4 physical damage to a target in range, repeated 3 times. If you are in Hit Stance, these hits have, \"On Hit: Target loses your choice of 5 AC, 10% evasion, or 10% MR.\" If you are in Run Stance, you may dash up to 10 ft before each hit, and you may choose new targets for each hit."
+                "You quickly stab with your dagger multiple times. Deal d4 physical damage to a target in range, repeated 3 times. If you are in Hit Stance, these hits have, \"On Hit: Target loses your choice of 10 AC, 10% evasion, or 10% MR.\" If you are in Run Stance, you may dash up to 10 ft before each hit, and you may choose new targets for each hit."
             ],
             "tags": [
                 "Attack",
@@ -7579,8 +11472,8 @@ var BarbsComponents = BarbsComponents || (function () {
             "duration": "Instant",
             "description": [
                 "Your deft stealing skills allow you to steal an enemy's magic effects. Choose one:",
-                "* Strip all buffs from all enemy targets in range, then gain those buffs yourself, or distribute them as you choose amongst allies within 30 ft.",
-                "* If you are in Hit Stance, cast this ability as a reaction to a spell that is cast within range. Counter that spell, then you may copy and cast it yourself, choosing new targets and paying stamina instead of mana."
+                "Strip all buffs from all enemy targets in range, then gain those buffs yourself, or distribute them as you choose amongst allies within 30 ft.",
+                "If you are in Hit Stance, cast this ability as a reaction to a spell that is cast within range. Counter that spell, then you may copy and cast it yourself, choosing new targets and paying stamina instead of mana."
             ],
             "tags": [
                 "Buff strip",
@@ -7697,175 +11590,526 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "ability",
-            "name": "Krystalline Basileia",
-            "clazz": "Evangelist",
-            "branch": "Gelidus Ouranos",
+            "name": "Abhorrent Chimera",
+            "clazz": "Transfusionist",
+            "branch": "Mutualism",
             "tier": 1,
             "action": "1 Major Action",
-            "cost": "40 mana",
-            "rng": "200 ft",
+            "cost": "2 different organics alchemy products",
+            "rng": "Melee",
             "duration": "Instant",
             "description": [
-                "You cause an explosion of ice shards and dark energy. Deal 6d8 ice magic damage and 6d8 dark magic damage to all enemies in a 65 ft square centered on a space in range, then choose two additional effects from the following list:",
-                "* Inflict Frozen for 1 minute",
-                "* Inflict Slowed for 1 minute",
-                "* Inflict Blinded for 1 minute",
-                "* Inflict 2 curses",
-                "Instead of choosing two effects from the above list, you may instead have this spell deal an additional 4d8 magic damage of either ice or dark.",
-                "If you absorb this spell with Magia Erebea, you may have it be cast when you release Magia Erebea as long as it was absorbed for at least 2 turns. If you do release the spell in this way, you may select 3 conditions from the above list, or have the spell deal an additional 6d8 magic damage of either ice or dark."
+                "You graft one organism onto another's body. Choose a target deployed host organism you've crafted that you can see in range, as well as a target graft organism in your inventory or one you can see in range. Target host replaces any of its stats with the graft's stats if any of the graft's current stats are higher than its own. The host also gains all abilities of the graft."
             ],
             "tags": [
-                "Spell",
-                "attack",
-                "destruction",
-                "AOE",
-                "square",
-                "condition",
-                "Frozen",
-                "Slowed",
-                "Blinded",
-                "curse",
-                "modal",
-                "conditional",
-                "dark",
-                "ice"
+                "alchemy",
+                "organics",
+                "augmentation",
+                "minion"
             ]
         },
         {
             "type": "ability",
-            "name": "Iaculatio Orcus",
-            "clazz": "Evangelist",
-            "branch": "Gelidus Ouranos",
+            "name": "Organ Donor",
+            "clazz": "Transfusionist",
+            "branch": "Mutualism",
             "tier": 2,
             "action": "1 Major Action",
-            "cost": "60 mana",
-            "rng": "Self",
+            "cost": "1 undeployed organics alchemy product with at least 50 health",
+            "rng": "Melee",
             "duration": "Instant",
             "description": [
-                "You cause spears of ice and darkness to fire from your hands in a wide arc. Deal 16d8 magic damage to all enemies in a 60 ft cone in front of you; the type of magic damage dealt and additional effects are dependant on each enemy's distance from you as follows:",
-                "* Within 10 ft: 4d8 ice magic damage and 12d8 dark magic damage, and the attack has 30% Lethality",
-                "* 11 to 20 ft: 6d8 ice magic damage and 10d8 dark magic damage, and inflict a 30% Weaken",
-                "* 21 to 40 ft: 8d8 ice magic damage and 8d8 dark magic damage",
-                "* 41 to 50 ft: 10d8 ice magic damage and 6d8 dark magic damage, and inflict Slowed",
-                "* 51 to 60 ft: 12d8 ice magic damage and 4d8 dark magic damage, and inflict Frozen",
-                "If you absorb this spell with Magia Erebea, you may have it be cast when you release Magia Erebea as long as it was absorbed for at least 2 turns. If you do release the spell in this way, the cone's range extends to 120 ft, and the above list's effect ranges change to within 20 ft, 21 to 40, 41 to 80, 81 to 100, and 101 to 120 respectively."
+                "You fuse one organism into the body of another to extend its lifetime. Choose a target deployed host organism you've crafted that you can see in range or one in your inventory and a graft with the cost of this ability. The host gains 50% increased maximum health, heals to full health, and gains an additional 10 minutes of duration."
             ],
             "tags": [
-                "Spell",
-                "attack",
-                "destruction",
-                "dark",
-                "ice",
-                "AOE",
-                "cone",
-                "conditional",
+                "alchemy",
+                "organics",
+                "augmentation",
+                "minion",
+                "stat improve"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Brain Worm",
+            "clazz": "Transfusionist",
+            "branch": "Mutualism",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "1 undeployed organics alchemy product with at least 30 mana",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You fuse one organism into the nervous system of another to experience its senses. Choose a target deployed host organism you've crafted that you can see in range and graft with the cost of this ability. For the duration of the host's lifetime, you can see and hear what it does as a free action, regardless of how far away it is. You can also provide Command Actions telepathically to the host."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "augmentation",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Perfect Fusion",
+            "clazz": "Transfusionist",
+            "branch": "Mutualism",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "4 undeployed organisms",
+            "rng": "Melee",
+            "duration": "1 hour",
+            "description": [
+                "You use the life force of many organisms to temporarily power your own fusion into an organism. Choose a target deployed organism in range with at least 30 health. Your body, or the body of a humanoid ally, merges with its body. The new hybrid body has combined stats, abilities, knowledge, and inventory. The original organism's duration is ignored and becomes the duration of this ability. When the hybrid's health drops to 0, the original host dies and the humanoid remains with its stats at the time of casting this ability. The humanoid may also use a free major action to terminate the host early."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "augmentation",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Restoring Parasite",
+            "clazz": "Transfusionist",
+            "branch": "Parasitism",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "1 organics alchemy product",
+            "rng": "100 ft",
+            "duration": "1 minute",
+            "description": [
+                "You release an altered, parasitic form of one of your creatures to assist another. You use an organism you can see in range or one in your inventory to do the following: target ally in range recovers health equal to the maximum health of the used organism; for the duration, that same ally may cast abilities originally owned by the organism used, except those abilities are affected by the ally's stats, buffs, and gear. This buff requires the target ally to use concentration."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "augmentation",
+                "buff",
+                "concentration",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Corrupting Parasite",
+            "clazz": "Transfusionist",
+            "branch": "Parasitism",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "1 organics alchemy product",
+            "rng": "100 ft",
+            "duration": "1 minute",
+            "description": [
+                "You release an altered, parasitic form of one of your creatures to attack an enemy. You use an organism you can see in range or one in your inventory to do the following: target enemy in range takes physical damage equal to half the organism's current health and gains an X damage Bleed, where X is the organism's maximum health divided by 5 and rounded down."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "augmentation",
                 "condition",
-                "Lethality",
-                "Weaken",
-                "Slow",
-                "Frozen",
+                "Bleed",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Enhancing Parasite",
+            "clazz": "Transfusionist",
+            "branch": "Parasitism",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "3 organics alchemy products with at least 30 health",
+            "rng": "100 ft",
+            "duration": "1 minute",
+            "description": [
+                "You release an altered, parasitic form of one of your creatures to assist another to push past their limits. You use organisms you can see in range or those in your inventory to do the following: target ally rolls a d4 at the beginning of each of their turns and gains the following effects based on the result:",
+                "1: This buff immediately ends",
+                "2: Gain an additional Minor Action",
+                "3: Gain an additional Major and Minor Action",
+                "4: Gain an additional Move, Major, and Minor Action"
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "augmentation",
+                "minion",
+                "buff",
+                "gain actions"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Parasitic Plague",
+            "clazz": "Transfusionist",
+            "branch": "Parasitism",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "Any number of organisms with at least 30 health and 30 mana",
+            "rng": "200 ft",
+            "duration": "Endless",
+            "description": [
+                "You convert your organisms into a mass of diseased parasites, ready to kill from the inside. Select a number of target enemies in range equal to the number of organisms you choose to pay for this ability's cost. Those enemies become Parasitized (checks against CR). While Parasitized, at the beginning of their turn, an enemy gains a stack of Plague and then rolls for a Lethal Blow, with Lethality equal to 10% times the number of Plague stacks it has. You may have the Parasitized condition remain dormant instead of immediately stacking, and you may activate the pathogen at any time. Dormant conditions cannot be cleansed."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "augmentation",
+                "minion",
+                "condition",
+                "disease",
                 "modal"
             ]
         },
         {
             "type": "ability",
-            "name": "Frigerans Barathrum",
-            "clazz": "Evangelist",
-            "branch": "Nivis Obscurans",
+            "name": "Augment Transfer",
+            "clazz": "Transfusionist",
+            "branch": "Experimentation",
             "tier": 1,
-            "action": "1 Major Action",
-            "cost": "50 mana",
-            "rng": "200 ft",
-            "duration": "Endless",
+            "action": "1 Reaction",
+            "cost": "---",
+            "rng": "100 ft",
+            "duration": "Instant",
             "description": [
-                "You overload the souls of your enemies with corrupting and chilling energy. All enemies in a 65 ft square centered on a space in range gain 2 of the following conditions of your choice:",
-                "* Each turn, their move speed and dash/teleport distance decreases by 10.",
-                "* Using a dash ability, teleport ability, or Move Action causes their move speed and dash/teleport distance to decrease by 10 after their movement ends.",
-                "* Each turn, they gain a curse.",
-                "* Making an attack causes them to gain a curse after their attack concludes.",
-                "If you cast this spell with Magia Erebea active, you may select all 4 options from the above list."
+                "You move augmentations between organisms. When an organism you control that you can see dies in range, you use your reaction to move any number of augmentations or buffs it has to a target organism you control that you can see in range."
             ],
             "tags": [
-                "Spell",
-                "dark",
-                "ice",
-                "condition",
-                "control",
-                "Curse",
-                "AOE",
-                "square",
+                "alchemy",
+                "organics",
+                "augmentation",
+                "minion",
+                "buff"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Product Recall",
+            "clazz": "Transfusionist",
+            "branch": "Experimentation",
+            "tier": 2,
+            "action": "1 Minor Action",
+            "cost": "---",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You recover any currently deployed grafts or parasites. Any target entities in range of your choice that are currently augmented by a graft or parasite organism you crafted lose the effects of those augmentations."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "augmentation",
+                "minion",
+                "cleanse"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Swap Parts",
+            "clazz": "Transfusionist",
+            "branch": "Experimentation",
+            "tier": 3,
+            "action": "1 Minor Action",
+            "cost": "---",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You swap out grafts already deployed. A target organism with a graft in range loses its graft and all grafted abilities. Then you may immediately cast an augmentation alchemy ability that targets that same organism, paying that ability's costs but ignoring that ability's range and cast time."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "augmentation",
+                "minion",
+                "cleanse",
+                "buff"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Adrenaline Rush",
+            "clazz": "Transfusionist",
+            "branch": "Experimentation",
+            "tier": 4,
+            "action": "1 Minor Action",
+            "cost": "---",
+            "rng": "100 ft",
+            "duration": "Instant",
+            "description": [
+                "You overcharge the effects of an organic augmentation. Choose a target in range that is affected by an organism you grafted or parasitized onto them. Double the effectiveness of any persisting effects on that target, and cut the duration of the effect by half, rounded down. If the target is a deployed organism, cut its duration in half as well, rounded down."
+            ],
+            "tags": [
+                "alchemy",
+                "organics",
+                "augmentation",
+                "minion"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Quicksilver Dagger",
+            "clazz": "Warper",
+            "branch": "Stabbing",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "20 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You slip your knife into the back of a weakened foe. Deal 5d4 + Xd4 physical damage to a target in range, where X is the number of crowd control conditions that target has."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "conditional",
+                "melee"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Sever Tendons",
+            "clazz": "Warper",
+            "branch": "Stabbing",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "30 stamina",
+            "rng": "Melee",
+            "duration": "Instant",
+            "description": [
+                "You slice low at the muscles of the leg in order to escape or prevent escape. Deal 6d4 physical damage to a target in range and inflict Crippled. You may then choose to dash 20 ft in any direction."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "melee",
+                "crowd control",
+                "Cripple",
+                "modal",
+                "dash"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Hunter's Knife",
+            "clazz": "Warper",
+            "branch": "Stabbing",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "40 stamina",
+            "rng": "25 ft",
+            "duration": "1 minute",
+            "description": [
+                "You throw your equipped dagger at your prey. Deal 6d4 physical damage to a target in range and mark them, then select one of the following effects:",
+                "The marked target loses 20% of its Condition Resist.",
+                "Your teleports to spaces next to the marked target cost half mana."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "ranged",
+                "stat loss",
+                "Condition Resist",
+                "cost reduction",
+                "mark",
                 "modal",
                 "conditional"
             ]
         },
         {
             "type": "ability",
-            "name": "Anthos Pagetou Khilion Eton",
-            "clazz": "Evangelist",
-            "branch": "Nivis Obscurans",
-            "tier": 2,
+            "name": "From Nowhere",
+            "clazz": "Warper",
+            "branch": "Stabbing",
+            "tier": 4,
             "action": "1 Major Action",
-            "cost": "70 mana",
-            "rng": "200 ft",
-            "duration": "30 seconds",
+            "cost": "60 stamina",
+            "rng": "Self",
+            "duration": "1 minute",
             "description": [
-                "You pull enemies together to set up for later spell attacks. Create a Flower on a space in range; it is immune to damage and conditions and resists all forced movement, but can be dispelled, and it lasts for 30 seconds. You may only have one Flower active at one time. If a damaging AOE spell you cast also hits the Flower, the damage for that spell is doubled and the Flower is dispelled. Enemies within 1000 ft of it roll a d6 at the beginning of their turns, causing the following effects:",
-                "* On a 1 or 2, the enemy gains a curse and is inflicted with Slowed and Confused",
-                "* On a 3 or 4, the enemy gains 2 curses, and may not move away from the Flower in any way",
-                "* On a 5 or 6, the enemy gains 3 curses, and must use its Move Action to move toward the Flower up to its move speed, even if already next to the Flower. The enemy loses any excess move speed that turn",
-                "If you cast this spell with Magia Erebea active, enemies within 1000 ft of the Flower will roll the d6 twice, taking the higher result each time."
+                "You become a spectre of sudden death. For 1 minute, you gain the following effects: When you teleport, you may cast an attack ability as a free action; Your attacks that deal more than 10% of an enemy's maximum health refresh the duration of their crowd control conditions; When you kill an enemy, you gain a special free reaction, allowing you to cast any teleport spell immediately without paying its costs."
             ],
             "tags": [
-                "Spell",
-                "dark",
-                "ice",
-                "condition",
-                "control",
-                "Curse",
-                "AOE",
-                "field",
-                "totem",
+                "Buff",
+                "concentration",
                 "conditional",
-                "Confused"
+                "modal",
+                "teleport"
             ]
         },
         {
             "type": "ability",
-            "name": "Actus Noctis Erebeae",
-            "clazz": "Evangelist",
-            "branch": "Magia Ensis",
+            "name": "Controlled Blink",
+            "clazz": "Warper",
+            "branch": "Translocations",
             "tier": 1,
-            "action": "Free Reaction",
-            "cost": "X mana",
-            "rng": "Self",
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "60 ft",
             "duration": "Instant",
             "description": [
-                "You exploit your enhanced body's new affinity for magic to store spells for quicker casting. You may only cast this ability while under the effects of Magia Erebea. When you cast a spell, you may pay an additional X mana, where X is the spell's mana cost. If you do, you absorb the spell being cast instead of releasing it. While a spell is absorbed in this manner, you may cast it as a Minor Action or reaction at half its mana cost. You may have multiple spells absorbed simultaneously in this manner. When Magia Erebea is released, all absorbed spells are dispelled."
+                "You teleport towards your prey. Teleport to a target empty space within range that you can see. You may cast this ability as a reaction to an enemy gaining a crowd control condition, but if you do, the target space you teleport to must be adjacent to that enemy."
             ],
             "tags": [
-                "Conditional",
+                "Spell",
+                "conjuration",
+                "teleport",
+                "conditional",
                 "modal"
             ]
         },
         {
             "type": "ability",
-            "name": "Supplementum Pro Armationem",
-            "clazz": "Evangelist",
-            "branch": "Magia Ensis",
+            "name": "Dispersal",
+            "clazz": "Warper",
+            "branch": "Translocations",
             "tier": 2,
-            "action": "Free Action",
-            "cost": "None",
-            "rng": "Self",
+            "action": "1 Major Action",
+            "cost": "40 mana",
+            "rng": "100 ft",
             "duration": "Instant",
             "description": [
-                "You reconfigure the mana which flows wildly through you. You may only cast this ability while under the effects of Magia Erebea. Magia Erebea gains the following effects until you release it:",
-                "* Maximum health loss per turn increases to 20",
-                "* Your unarmed and weapon attacks gain the absorbed spell's damage dice and conditions as on-hit damage and conditions, in a similar manner as your spells do",
-                "* Your move speed doubles and your Move Actions are teleports",
-                "* Your single-target attacks ignore AC, MR, and Evasion"
+                "You and your allies teleport randomly to escape. You and up to 4 target allies within range that you can see teleport 1000 ft in a random direction (corrected slightly to avoid barriers). You may target additional allies when you cast this ability, at a cost of an additional 5 mana per additional target."
             ],
             "tags": [
-                "Conditional"
+                "Spell",
+                "conjuration",
+                "multi-target",
+                "teleport",
+                "random",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Teleport Other",
+            "clazz": "Warper",
+            "branch": "Translocations",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "60 mana",
+            "rng": "200 ft",
+            "duration": "Instant",
+            "description": [
+                "You forcibly teleport someone else to a new location. Fire a bolt of dispersed energy at a target within range (checks against Evasion) and teleport them to any empty location up to a distance of 400 ft (checks against Condition Resist). If the target is willing to be teleported, this spell costs half mana."
+            ],
+            "tags": [
+                "Spell",
+                "conjuration",
+                "single-target",
+                "teleport",
+                "conditional",
+                "forced movement"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Malign Gateway",
+            "clazz": "Warper",
+            "branch": "Translocations",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "80 mana",
+            "rng": "1000 ft",
+            "duration": "1 hour",
+            "description": [
+                "You create a temporary portal for you and your allies, guarded by magical lashing tentacles. Create 2 linked portals: one in an adjacent empty space and one in an empty space you can see in range. When you or an ally enters a portal's space, they are teleported to an empty space of their choice adjacent to the other linked portal. Enemies cannot enter spaces with portals, and enemies who begin or end their turn in a space adjacent to a portal take 5d10 physical damage.",
+                "Instead of casting this ability as a Major Action, you may instead choose to spend 10 minutes casting this spell as a minor ritual and expend an additional 40 mana. If you do, the duration of this ability is extended to 12 hours, and you may wait to place the second portal as a Major Action at any time during the ability's duration."
+            ],
+            "tags": [
+                "Spell",
+                "conjuration",
+                "teleport",
+                "modal",
+                "physical",
+                "ritual"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Stunbolt",
+            "clazz": "Warper",
+            "branch": "Hexes",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "20 mana",
+            "rng": "60 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire a pulse of mana to rattle an enemy's senses. A target entity within range becomes Stunned until the beginning of their next turn."
+            ],
+            "tags": [
+                "Spell",
+                "control",
+                "Stun",
+                "crowd control"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Ensorcelled Hibernation",
+            "clazz": "Warper",
+            "branch": "Hexes",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "40 mana",
+            "rng": "40 ft",
+            "duration": "1 minute",
+            "description": [
+                "You put large crowds to sleep. All entities in a 20 ft cube, centered on a point in range, fall Asleep for the duration. Any entity that resists this Sleep becomes Stunned instead."
+            ],
+            "tags": [
+                "Spell",
+                "control",
+                "Sleep",
+                "Stun",
+                "crowd control",
+                "AOE",
+                "cube"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Dazzling Spray",
+            "clazz": "Warper",
+            "branch": "Hexes",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "60 mana",
+            "rng": "60 ft",
+            "duration": "1 minute",
+            "description": [
+                "You fire magical bolts designed to disorient. All entities in a 60 ft cone in front of you become Confused. You are considered Hidden from any entities Confused in this way."
+            ],
+            "tags": [
+                "Spell",
+                "control",
+                "AOE",
+                "cone",
+                "Confuse",
+                "Hidden"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Fulminant Prism",
+            "clazz": "Warper",
+            "branch": "Hexes",
+            "tier": 4,
+            "action": "1 Major Action",
+            "cost": "80 mana",
+            "rng": "100 ft",
+            "duration": "1 minute",
+            "description": [
+                "You capture an enemy in a magical prison. A target entity within range becomes captured by your magic and has their current position locked. While captured in this way, they cannot move, dash, teleport, planeswalk, or be displaced by any means. For the duration of this ability, teleport spells you cast can have their target destination be an empty space adjacent to the captured target instead."
+            ],
+            "tags": [
+                "Spell",
+                "control",
+                "single-target",
+                "conjuration",
+                "condition",
+                "Immobilize"
             ]
         },
         {
@@ -7923,6 +12167,33 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "ability",
+            "name": "Sanctifying Skewer",
+            "clazz": "Demon Hunter",
+            "branch": "Slayer",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "60 stamina",
+            "rng": "30 ft",
+            "duration": "Instant",
+            "description": [
+                "You fire penetrating bullets into ranks of demons. Deal 12d8 physical damage to all enemies in a 30 ft line. For every entity of demonic origin this attack targets, its range is increased by 10 ft, and its damage increases by 50%. Enemies damaged by this ability are afflicted with a 20% Light and Lightning Vulnerability, increased to 40% for entities of demonic origin. You may cast this ability as a free action if you expend 2 Hunter stacks; if you do, this attack ignores AC, cannot be blocked, and bypasses magical barriers."
+            ],
+            "tags": [
+                "Attack",
+                "physical",
+                "multi-target",
+                "condition",
+                "Vulnerability",
+                "conditional",
+                "modal",
+                "no-block",
+                "bow",
+                "crossbow",
+                "firearm"
+            ]
+        },
+        {
+            "type": "ability",
             "name": "Banishing Bolt",
             "clazz": "Demon Hunter",
             "branch": "Exorcism",
@@ -7966,8 +12237,8 @@ var BarbsComponents = BarbsComponents || (function () {
             "duration": "Instant",
             "description": [
                 "You fire waves of magical energy to sap strength from demons. Choose one:",
-                "* Deal 10d8 lightning magic damage to all enemies in range. Your next attack is empowered to deal additional light magic damage equal to half the damage dealt by this spell. If this attack hits at least 5 enemies, it also inflicts 2 stacks of Paralysis.",
-                "* Deal 9d10 light magic damage to all enemies in range. Heal for half the damage dealt. If this attack hits at least 5 enemies, it also cleanses 3 conditions.",
+                "Deal 10d8 lightning magic damage to all enemies in range. Your next attack is empowered to deal additional light magic damage equal to half the damage dealt by this spell. If this attack hits at least 5 enemies, it also inflicts 2 stacks of Paralysis.",
+                "Deal 9d10 light magic damage to all enemies in range. Heal for half the damage dealt. If this attack hits at least 5 enemies, it also cleanses 3 conditions on any targets within range of your choosing.",
                 "Entities of demonic origin take double damage from this spell and count as 3 enemies each. You may cast this ability as a free action if you expend 2 Hunter stacks; if you do, this attack ignores MR, cannot be blocked, and bypasses magical barriers."
             ],
             "tags": [
@@ -7989,6 +12260,31 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         {
             "type": "ability",
+            "name": "Soul Searing Light",
+            "clazz": "Demon Hunter",
+            "branch": "Exorcism",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "50 mana",
+            "rng": "30 ft",
+            "duration": "Instant",
+            "description": [
+                "You burn away demonic ichor with your light. Target in range is afflicted with a condition with the following effects: they take 4d8 light magic damage and 4d8 lightning magic damage at the beginning of each of their turns, which is doubled for entities of demonic origin; they are afflicted with a 20% physical damage vulnerability, increased to 40% for entities of demonic origin. You may cast this ability as a free action if you expend 2 Hunter stacks; if you do, this attack cannot be blocked and bypasses magical barriers."
+            ],
+            "tags": [
+                "Spell",
+                "light",
+                "lightning",
+                "attack",
+                "condition",
+                "Vulnerability",
+                "modal",
+                "conditional",
+                "no-block"
+            ]
+        },
+        {
+            "type": "ability",
             "name": "Hunter's Guile",
             "clazz": "Demon Hunter",
             "branch": "Humanity",
@@ -8002,8 +12298,7 @@ var BarbsComponents = BarbsComponents || (function () {
             ],
             "tags": [
                 "Dash",
-                "block",
-                "AOE",
+                "AOE block",
                 "conditional",
                 "modal",
                 "redirect",
@@ -8031,6 +12326,270 @@ var BarbsComponents = BarbsComponents || (function () {
                 "defensive",
                 "mark",
                 "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Hunter's Instinct",
+            "clazz": "Demon Hunter",
+            "branch": "Humanity",
+            "tier": 3,
+            "action": "1 Minor Action",
+            "cost": "50 mana",
+            "rng": "1 mile",
+            "duration": "Instant",
+            "description": [
+                "You rely on your finely honed senses to track down demons. You gain information about the position, levels, affinities, and numbers of groups of demons within range. After you detect a demon this way, you can track it regardless of distance for the next 24 hours if you concentrate, even across planes. Demons that are being tracked this way cannot surprise you or hide from you even if invisible, and you see through any illusions they cast. You may track multiple demons this way, but each individual demon requires separate concentration."
+            ],
+            "tags": [
+                "Spell",
+                "divination",
+                "utility",
+                "defense",
+                "modal",
+                "concentration"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Krystalline Basileia",
+            "clazz": "Evangelist",
+            "branch": "Gelidus Ouranos",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "40 mana",
+            "rng": "200 ft",
+            "duration": "Instant",
+            "description": [
+                "You cause an explosion of ice shards and dark energy. Deal 6d8 ice magic damage and 6d8 dark magic damage to all enemies in a 65 ft square centered on a space in range, then choose two additional effects from the following list:",
+                "Inflict Frozen for 1 minute",
+                "Inflict Slowed for 1 minute",
+                "Inflict Blinded for 1 minute",
+                "Inflict 2 curses",
+                "Instead of choosing two effects from the above list, you may instead have this spell deal an additional 4d8 magic damage of either ice or dark.",
+                "If you absorb this spell with Magia Erebea, you may have it be cast when you release Magia Erebea as long as it was absorbed for at least 2 turns. If you do release the spell in this way, you may select 3 conditions from the above list, or have the spell deal an additional 6d8 magic damage of either ice or dark."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "destruction",
+                "AOE",
+                "square",
+                "condition",
+                "Frozen",
+                "Slowed",
+                "Blinded",
+                "curse",
+                "modal",
+                "conditional",
+                "dark",
+                "ice"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Iaculatio Orcus",
+            "clazz": "Evangelist",
+            "branch": "Gelidus Ouranos",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "60 mana",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You cause spears of ice and darkness to fire from your hands in a wide arc. Deal 16d8 magic damage to all enemies in a 60 ft cone in front of you; the type of magic damage dealt and additional effects are dependant on each enemy's distance from you as follows:",
+                "Within 10 ft: 4d8 ice magic damage and 12d8 dark magic damage, and the attack has 30% Lethality",
+                "11 to 20 ft: 6d8 ice magic damage and 10d8 dark magic damage, and inflict a 30% Weaken",
+                "21 to 40 ft: 8d8 ice magic damage and 8d8 dark magic damage",
+                "41 to 50 ft: 10d8 ice magic damage and 6d8 dark magic damage, and inflict Slowed",
+                "51 to 60 ft: 12d8 ice magic damage and 4d8 dark magic damage, and inflict Frozen",
+                "If you absorb this spell with Magia Erebea, you may have it be cast when you release Magia Erebea as long as it was absorbed for at least 2 turns. If you do release the spell in this way, the cone's range extends to 120 ft, and the above list's effect ranges change to within 20 ft, 21 to 40, 41 to 80, 81 to 100, and 101 to 120 respectively."
+            ],
+            "tags": [
+                "Spell",
+                "attack",
+                "destruction",
+                "dark",
+                "ice",
+                "AOE",
+                "cone",
+                "conditional",
+                "condition",
+                "Lethality",
+                "Weaken",
+                "Slow",
+                "Frozen",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Ensis Exsequens",
+            "clazz": "Evangelist",
+            "branch": "Gelidus Ouranos",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "70 mana",
+            "rng": "Self",
+            "duration": "1 minute",
+            "description": [
+                "You conjure a sword of ice and darkness to cut down enemies. When you cast this spell, create and equip a Sword of Conviction in your main hand. The Sword deals 6d8 ice magic damage and 6d8 dark magic damage to all enemies within 20 ft whenever you make an attack with it. Additionally, it has 50% Lethality against minions and ignores magical barriers. This spell can be absorbed via Magia Erebea as a free Major Action even after the Sword has been deployed as long as it still has at least 20 seconds of its Duration left. If you are under the effects of Magia Erebea, the sword gains your passive's on-hit effects. You may have up to 2 Swords active at a time, with the second Sword occupying your off hand, allowing you to make standard off hand weapon attacks with the same effects as the main hand Sword."
+            ],
+            "tags": [
+                "Spell",
+                "conjuration",
+                "destruction",
+                "dark",
+                "ice",
+                "conditional",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Frigerans Barathrum",
+            "clazz": "Evangelist",
+            "branch": "Nivis Obscurans",
+            "tier": 1,
+            "action": "1 Major Action",
+            "cost": "50 mana",
+            "rng": "200 ft",
+            "duration": "Endless",
+            "description": [
+                "You overload the souls of your enemies with corrupting and chilling energy. All enemies in a 65 ft square centered on a space in range gain 2 of the following conditions of your choice:",
+                "Each turn, their move speed and dash/teleport distance decreases by 10.",
+                "Using a dash ability, teleport ability, or Move Action causes their move speed and dash/teleport distance to decrease by 10 after their movement ends.",
+                "Each turn, they gain a curse.",
+                "Making an attack causes them to gain a curse after their attack concludes.",
+                "If you cast this spell with Magia Erebea active, you may select all 4 options from the above list."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "ice",
+                "condition",
+                "control",
+                "Curse",
+                "AOE",
+                "square",
+                "modal",
+                "conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Anthos Pagetou Khilion Eton",
+            "clazz": "Evangelist",
+            "branch": "Nivis Obscurans",
+            "tier": 2,
+            "action": "1 Major Action",
+            "cost": "70 mana",
+            "rng": "200 ft",
+            "duration": "30 seconds",
+            "description": [
+                "You pull enemies together to set up for later spell attacks. Create a Flower on a space in range; it is immune to damage and conditions and resists all forced movement, but can be dispelled, and it lasts for 30 seconds. You may only have one Flower active at one time. If a damaging AOE spell you cast also hits the Flower, the damage for that spell is doubled and the Flower is dispelled. Enemies within 1000 ft of it roll a d6 at the beginning of their turns, causing the following effects:",
+                "On a 1 or 2, the enemy gains a curse and is inflicted with Slowed and Confused",
+                "On a 3 or 4, the enemy gains 2 curses, and may not move away from the Flower in any way",
+                "On a 5 or 6, the enemy gains 3 curses, and must use its Move Action to move toward the Flower up to its move speed, even if already next to the Flower. The enemy loses any excess move speed that turn",
+                "If you cast this spell with Magia Erebea active, enemies within 1000 ft of the Flower will roll the d6 twice, taking the higher result each time."
+            ],
+            "tags": [
+                "Spell",
+                "dark",
+                "ice",
+                "condition",
+                "control",
+                "Curse",
+                "AOE",
+                "field",
+                "totem",
+                "conditional",
+                "Confused"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Aperantos Capulus",
+            "clazz": "Evangelist",
+            "branch": "Nivis Obscurans",
+            "tier": 3,
+            "action": "1 Major Action",
+            "cost": "90 mana",
+            "rng": "200 ft",
+            "duration": "1 minute",
+            "description": [
+                "You create a field that absorbs magical energy to gain power. Create a 65 ft field centered on a space within range. For each enemy within the field, the field triggers at the beginning of each of their turns, causing the following effects: they gain 1 curse; they gain 10% Vulnerability; they gain 10% Weaken.",
+                "If you cast this spell with Magia Erebea active, the field triggers twice at the beginning of each enemy turn instead.",
+                "Whenever you cast an AOE spell that at least partially hits the field, the field is permanently extended to include the spaces affected by the AOE spell.",
+                "Whenever an enemy casts a spell while inside the field, or whenever they cast a spell that affects a space or entity within the field, the field triggers once."
+            ],
+            "tags": [
+                "Spell",
+                "field",
+                "concentration",
+                "conditional",
+                "condition",
+                "Weaken",
+                "Vulnerability",
+                "Curse"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Actus Noctis Erebeae",
+            "clazz": "Evangelist",
+            "branch": "Magia Ensis",
+            "tier": 1,
+            "action": "Free Reaction",
+            "cost": "X mana",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You exploit your enhanced body's new affinity for magic to store spells for quicker casting. You may only cast this ability while under the effects of Magia Erebea. When you cast a spell, you may pay an additional X mana, where X is the spell's mana cost. If you do, you absorb the spell being cast instead of releasing it. While a spell is absorbed in this manner, you may cast it as a Minor Action or reaction at half its mana cost. You may have multiple spells absorbed simultaneously in this manner. When Magia Erebea is released, all absorbed spells are dispelled."
+            ],
+            "tags": [
+                "Conditional",
+                "modal"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Supplementum Pro Armationem",
+            "clazz": "Evangelist",
+            "branch": "Magia Ensis",
+            "tier": 2,
+            "action": "Free Action",
+            "cost": "None",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You reconfigure the mana which flows wildly through you. You may only cast this ability while under the effects of Magia Erebea. Magia Erebea gains the following effects until you release it:",
+                "Maximum health loss per turn increases to 20",
+                "Your unarmed and weapon attacks gain the absorbed spell's damage dice and conditions as on-hit damage and conditions, in a similar manner as your spells do",
+                "Your move speed doubles and your Move Actions are teleports",
+                "Your single-target attacks ignore AC, MR, and Evasion"
+            ],
+            "tags": [
+                "Conditional"
+            ]
+        },
+        {
+            "type": "ability",
+            "name": "Armis Cantamen",
+            "clazz": "Evangelist",
+            "branch": "Magia Ensis",
+            "tier": 3,
+            "action": "Free Reaction",
+            "cost": "20 mana",
+            "rng": "Self",
+            "duration": "Instant",
+            "description": [
+                "You convert mana into physical shielding. You may only cast this ability while under the effects of Magia Erebea. When you cast a damaging spell, you may pay an additional 20 mana. If you do, you absorb the spell being cast instead of releasing it. While a spell is absorbed in this manner, the next instance of damage you would take is negated (along with any negative effects associated with that damage), activating the absorbed spell in response and casting it on the damage's source, regardless of distance. When an absorbed spell is cast this way, it cannot be counterspelled. You may have multiple spells absorbed simultaneously in this manner; if you do, they activate one at a time per incoming damage instance, in an order of your choosing. When Magia Erebea is released, all absorbed spells are dispelled."
+            ],
+            "tags": [
+                "Conditional",
+                "modal",
+                "negate damage"
             ]
         }
     ];

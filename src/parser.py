@@ -67,8 +67,11 @@ def parse_races(lines):
     # Handle in sets of 4
     for i in range(0, len(lines), 4):
         race_line = lines[i]
-        trait1_line = lines[i+2]
-        trait2_line = lines[i+3]
+        trait1_line = lines[i + 2]
+        trait2_line = lines[i + 3]
+
+        if race_line == 'Racial Languages':
+            break
 
         # Split further
         race_name = race_line.split('–')[0].strip()
@@ -199,7 +202,6 @@ def parse_skills(lines, attributes):
 # Parse classes section into objects
 def parse_clazzes(lines, skills):
     clazzes = []
-    skill_req = {}
 
     # Skills listed as requirements for a class don't match skill names perfectly,
     # so this is weird "closest match" logic
@@ -271,135 +273,138 @@ def parse_clazzes(lines, skills):
 
     lines = lines[class_hint_index+2:]
 
+    first_class_index = None
+    for i in range(0, len(lines)):
+        if lines[i] == 'Abjurer':
+            first_class_index = i
+
+    if first_class_index is None:
+        raise Exception('did not find first class')
+
+    class_hint_lines = lines[0:first_class_index]
+
+    # Process class previews
+    for i in range(0, len(class_hint_lines)):
+        preview_line = class_hint_lines[i]
+
+        if 'Classes with' in preview_line:
+            continue
+
+        split_char = _get_split_char(preview_line)
+        clazz_name = _trim(preview_line.split(split_char, 1)[0].strip())
+        rest = preview_line.split(split_char, 1)[1].strip()
+        clazz_preview = rest.split('[')[0].strip()
+        skill_reqs = rest.split('[')[1].split(']')[0].strip()
+        skill_reqs = [skill_req.strip() for skill_req in skill_reqs.split(',')]
+
+        clazz = get_clazz(clazz_name)
+        if clazz:
+            raise Exception('Class %s already exists' % clazz_name)
+
+        clazz = Clazz(clazz_name)
+        clazz.add_preview(clazz_preview, skill_reqs)
+        clazzes.append(clazz)
+
+    # Process full classes
     i = 0
+    lines = lines[first_class_index:]
     while i < len(lines):
-        line = lines[i]
+        clazz_name = lines[i]
+        clazz = get_clazz(clazz_name)
+        if not clazz:
+            raise Exception('Class %s does not exist' % clazz_name)
 
-        if 'Classes with' in line:  # Process class previews
-            assert skill_req is not None
-            num_requirements = int(line.split(' ')[2])
+        i += 1  # skip requirements line
+        requirements = []
+        while True:
+            i += 1
+            if lines[i].startswith('Description'):
+                break  # No longer handling requirements, go back to class handling
 
-            while True:
-                i += 1
-                if i == len(lines) or not lines[i].startswith('·'):
-                    break  # No longer handling class previews, go back to regular handling
+            # TODO: attempt to parse these better so we can link the skill
+            requirements.append(lines[i].strip())
 
-                preview_line = lines[i]
-                preview_line = preview_line[2:]  # Cut off bullet
+        flavor_text = lines[i + 1]
+        description = lines[i + 2]
 
-                split_char = _get_split_char(preview_line)
-                clazz_name = _trim(preview_line.split(split_char, 1)[0].strip())
-                clazz_preview = preview_line.split(split_char, 1)[1].strip()
+        branch1_description = lines[i + 3]
+        branch2_description = lines[i + 4]
+        branch3_description = lines[i + 5]
+        branch1_name = branch1_description[3:branch1_description.index('branch')-1].strip()
+        branch2_name = branch2_description[3:branch2_description.index('branch')-1].strip()
+        branch3_name = branch3_description[3:branch3_description.index('branch')-1].strip()
+        branch_names = [branch1_name, branch2_name, branch3_name]
+        branch_descriptions = [branch1_description, branch2_description, branch3_description]
 
-                clazz = get_clazz(clazz_name)
-                if clazz:
-                    clazz.add_preview(clazz_preview, num_requirements, skill_req)
-                else:
-                    clazz = Clazz(clazz_name)
-                    clazz.add_preview(clazz_preview, num_requirements, skill_req)
-                    clazzes.append(clazz)
-
-        else:  # Process full classes
-            clazz_name = line
-
-            # TODO: remove this when bladerunner is properly filled out
-            if clazz_name == 'Bladerunner':
+        # Get the passive, which may be multiple lines
+        i += 5
+        passive_line_start = i + 1
+        while True:
+            if lines[i].startswith(branch1_name):
                 break
-
-            clazz = get_clazz(clazz_name) or Clazz(clazz_name)
-            clazz.add_clazz_requirement(skill_req)
-
             i += 1
-            requirements = []
-            while True:
-                i += 1
-                if i == len(lines) or not lines[i].startswith('·'):
-                    break  # No longer handling requirements, go back to class handling
 
-                # TODO: attempt to parse these better so we can link the skill
-                requirements.append(lines[i][2:].strip())
+        passive_lines = lines[passive_line_start:i]
+        split_char = _get_split_char(passive_lines[0])
+        passive_name = passive_lines[0].split(split_char, 1)[0].split(':', 1)[1].strip()
+        passive_description = passive_lines[0].split(split_char, 1)[1].strip()
+        if len(passive_lines) > 1:
+            passive_description += '\n' + '\n'.join(passive_lines[1:])
 
-            flavor_text = lines[i + 1]
-            description = lines[i + 2]
+        clazz.add_passive(flavor_text, description, len(requirements), requirements, branch_names,
+                          branch_descriptions, passive_name, passive_description)
 
-            branch1_description = lines[i + 3]
-            branch2_description = lines[i + 4]
-            branch3_description = lines[i + 5]
-            branch1_name = branch1_description[3:branch1_description.index('branch')-1].strip()
-            branch2_name = branch2_description[3:branch2_description.index('branch')-1].strip()
-            branch3_name = branch3_description[3:branch3_description.index('branch')-1].strip()
-            branch_names = [branch1_name, branch2_name, branch3_name]
-            branch_descriptions = [branch1_description, branch2_description, branch3_description]
-
-            # Get the passive, which may be multiple lines
-            i += 5
-            passive_line_start = i + 1
-            while True:
-                if lines[i].startswith(branch1_name):
-                    break
-                i += 1
-
-            passive_lines = lines[passive_line_start:i]
-            split_char = _get_split_char(passive_lines[0])
-            passive_name = passive_lines[0].split(split_char, 1)[0].split(':', 1)[1].strip()
-            passive_description = passive_lines[0].split(split_char, 1)[1].strip()
-            if len(passive_lines) > 1:
-                passive_description += '\n' + '\n'.join(passive_lines[1:])
-
-            clazz.add_passive(flavor_text, description, len(requirements), requirements, branch_names,
-                              branch_descriptions, passive_name, passive_description)
-
-            # Handle class skills
-            i -= 1  # because i'm too lazy to do this nicer. i is at the first branch name
-            known_tiers = None
-            for throw_away in range(3):
-                i += 1
-                if i == len(lines):
-                    raise Exception('Out of lines before processing class skills, %s' % clazz)
-
-                current_branch = get_branch(lines[i], clazz)
-                if not known_tiers:
-                    tier = 0
-                    while True:
-                        if lines[i + 1] in branch_names:  # Expecting to find the info line, move to next branch if not
-                            known_tiers = tier
-                            break  # Done with skills in first branch
-
-                        tier += 1
-
-                        # Determine where skill ends by "Tags" line, because the description can be multiple lines
-                        start = i + 1
-                        for tag_line_index in range(start, len(lines)):
-                            if 'Tags:' in lines[tag_line_index]:
-                                end = tag_line_index
-                                break
-                        else:
-                            raise Exception('No tags found while process class "%s"' % clazz_name)
-
-                        name, action, cost, rng, duration, description, tags = parse_clazz_skill(lines[start:end+1])
-                        clazz.add_ability(current_branch, tier, name, action, cost, rng, duration, description, tags)
-                        i = end
-
-                else:
-                    for tier in range(known_tiers):
-                        # Determine where skill ends by "Tags" line, because the description can be multiple lines
-                        start = i + 1
-                        for tag_line_index in range(start, len(lines)):
-                            if 'Tags:' in lines[tag_line_index]:
-                                end = tag_line_index
-                                break
-                        else:
-                            raise Exception('No tags found while process class "%s"' % clazz_name)
-
-                        name, action, cost, rng, duration, description, tags = parse_clazz_skill(lines[start:end+1])
-                        clazz.add_ability(current_branch, tier + 1, name, action, cost, rng, duration, description,
-                                          tags)
-                        i = end
-
-            if clazz not in clazzes:  # Safety check, though it shouldn't be necessary anymore
-                clazzes.append(clazz)
-
+        # Handle class skills
+        i -= 1  # because i'm too lazy to do this nicer. i is at the first branch name
+        known_tiers = None
+        for throw_away in range(3):
             i += 1
+            if i == len(lines):
+                raise Exception('Out of lines before processing class skills, %s' % clazz)
+
+            current_branch = get_branch(lines[i], clazz)
+            if not known_tiers:
+                tier = 0
+                while True:
+                    if lines[i + 1] in branch_names:  # Expecting to find the info line, move to next branch if not
+                        known_tiers = tier
+                        break  # Done with skills in first branch
+
+                    tier += 1
+
+                    # Determine where skill ends by "Tags" line, because the description can be multiple lines
+                    start = i + 1
+                    for tag_line_index in range(start, len(lines)):
+                        if 'Tags:' in lines[tag_line_index]:
+                            end = tag_line_index
+                            break
+                    else:
+                        raise Exception('No tags found while process class "%s"' % clazz_name)
+
+                    name, action, cost, rng, duration, description, tags = parse_clazz_skill(lines[start:end+1])
+                    clazz.add_ability(current_branch, tier, name, action, cost, rng, duration, description, tags)
+                    i = end
+
+            else:
+                for tier in range(known_tiers):
+                    # Determine where skill ends by "Tags" line, because the description can be multiple lines
+                    start = i + 1
+                    for tag_line_index in range(start, len(lines)):
+                        if 'Tags:' in lines[tag_line_index]:
+                            end = tag_line_index
+                            break
+                    else:
+                        raise Exception('No tags found while process class "%s"' % clazz_name)
+
+                    name, action, cost, rng, duration, description, tags = parse_clazz_skill(lines[start:end+1])
+                    clazz.add_ability(current_branch, tier + 1, name, action, cost, rng, duration, description,
+                                      tags)
+                    i = end
+
+        if clazz not in clazzes:  # Safety check, though it shouldn't be necessary anymore
+            clazzes.append(clazz)
+
+        i += 1
 
     return clazzes
 

@@ -12,19 +12,16 @@ class Clazz(Component):
         self.flavor_text = ''
         self.description = ''
         self.num_requirements = 0
-        self.known_requirements = {}
+        self.known_requirements = []
         self.full_requirements = []
         self.branches = []
         self.passive = {}
         self.abilities = []
 
-    def add_preview(self, preview, num_reqs, skill_req):
-        if not self.preview:
-            self.preview = preview
-            self.num_requirements = num_reqs
-
-        for k, v in skill_req.items():  # We may have multiple previews that tell different requirements
-            self.known_requirements[k] = v
+    def add_preview(self, preview, skill_reqs):
+        self.preview = preview
+        self.num_requirements = len(skill_reqs)
+        self.known_requirements.extend(skill_reqs)
 
     def add_passive(self, flavor_text, description, num_reqs, skill_reqs, branch_names, branch_descriptions,
                     passive_name, passive_description):
@@ -45,10 +42,6 @@ class Clazz(Component):
             self.abilities.append(ability)
         branch.add_ability(ability)
 
-    def add_clazz_requirement(self, skill_req):
-        for k, v in skill_req.items():
-            self.known_requirements[k] = v
-
     def info(self):
         return ('%s[name="%s", preview="%s", flavor_text="%s", description="%s", num_requirements=%s, '
                 'known_requirements=%s, full_requirements=%s, branches=%s, passive=%s, clazz_skills=%s]') % (
@@ -57,14 +50,25 @@ class Clazz(Component):
         )
 
     def to_json(self):
-        return {
+        j = {
             'type': 'clazz',
             'name': self.name,
-            'flavor_text': self.flavor_text,
-            'description': self.description,
             'num_requirements': self.num_requirements,
-            'full_requirements': self.full_requirements,
-            'branches': [branch.name for branch in self.branches],
-            'passive': self.passive,
-            'abilities': [ability.name for ability in self.abilities],
         }
+
+        if self.passive:
+            j.update({
+                'flavor_text': self.flavor_text,
+                'description': self.description,
+                'requirements': self.full_requirements,
+                'branches': [branch.name for branch in self.branches],
+                'passive': self.passive,
+                'abilities': [ability.name for ability in self.abilities],
+            })
+        else:
+            j.update({
+                'preview': self.preview,
+                'requirements': self.known_requirements,
+            })
+
+        return j
