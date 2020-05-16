@@ -97,11 +97,35 @@ def build_races():
 
 
 def build_buffs():
-    return '{buffs}'
+    with open(os.path.join(HTML_TEMPLATES, 'buff_or_condition.html'), encoding='utf8') as f:
+        buff_template = f.read().strip()
+
+    with open(os.path.join(RULEBOOK_PATH, 'buffs.json'), encoding='utf8') as f:
+        buffs = json.load(f)
+
+    buff_htmls = []
+    for buff in buffs:
+        _debug('buff', buff)
+        buff_html = buff_template.format(**buff)
+        buff_htmls.append(buff_html)
+
+    return '\n'.join(buff_htmls)
 
 
 def build_conditions():
-    return '{conditions}'
+    with open(os.path.join(HTML_TEMPLATES, 'buff_or_condition.html'), encoding='utf8') as f:
+        condition_template = f.read().strip()
+
+    with open(os.path.join(RULEBOOK_PATH, 'conditions.json'), encoding='utf8') as f:
+        conditions = json.load(f)
+
+    condition_htmls = []
+    for condition in conditions:
+        _debug('condition', condition)
+        condition_html = condition_template.format(**condition)
+        condition_htmls.append(condition_html)
+
+    return '\n'.join(condition_htmls)
 
 
 def build_skills():
