@@ -12,13 +12,66 @@
 <body>
 <header>
 	<div id="logo">
-		<img src="https://i.imgur.com/6m8DpgS.png">
+		<img src="https://i.imgur.com/6m8DpgS.png" alt="logo">
 	</div>
 </header>
+
+<div class="sidenav">
+	<a href="#Foreword">Foreword</a>
+	<a href="#Design Goals">Design Goals</a>
+	<a href="#System Basics">System Basics</a>
+	<a href="#Attributes">Attributes</a>
+
+	<a href="#Races">Races</a>
+	<div class="sidenav-subsection">
+		<a href="#Racial Languages">Racial Languages</a>
+	</div>
+
+	<a href="#Buffs and Conditions">Buffs and Conditions</a>
+	<div class="sidenav-subsection">
+		<a href="#Buffs">Buffs</a>
+		<a href="#Conditions">Conditions</a>
+	</div>
+
+	<a href="#Additional Rules">Additional Rules</a>
+	<div class="sidenav-subsection">
+		<a href="#Concentration">Concentration</a>
+		<a href="#Misfire Effects">Misfire Effects</a>
+		<a href="#Running an Organization">Running an Organization</a>
+	</div>
+
+	<a href="#Skills">Skills</a>
+	<div class="sidenav-subsection">
+		{skills_nav}
+	</div>
+
+	<a href="#Crafting">Crafting</a>
+	<div class="sidenav-subsection">
+		<a href="#Crafting Durations">Crafting Durations</a>
+		<a href="#Potion Crafting and Poison Crafting">Potion Crafting and Poison Crafting</a>
+		<a href="#Cooking">Cooking</a>
+		<a href="#Equipment Crafting">Equipment Crafting</a>
+		<a href="#Enchanting">Enchanting</a>
+	</div>
+
+	<a href="#Classes">Classes</a>
+	<div class="sidenav-subsection">
+		<a href="#Class Hint Unlocks">Class Hint Unlocks</a>
+		{classes_nav}
+	</div>
+
+	<a href="#Gameplay Patches">Gameplay Patches</a>
+	<div class="sidenav-subsection">
+		<a href="#Patch 1.2">Patch 1.2</a>
+		<a href="#Patch 1.3">Patch 1.3</a>
+	</div>
+</div>
+
+<div class="main">
 <section id="pageContent">
 	<main role="main">
 		<article>
-			<h2>Foreword</h2>
+			<a id="Foreword"><h2>Foreword</h2></a>
 			<p>To the readers of this document,</p>
 			<br>
 			<p>2013 marked the beginning of my journey as a Dungeon Master. I went to my college’s Dungeons and Dragons club very early in my first semester there, and got the chance to play 3.5 edition with a very good DM. That same DM learned it was my first time playing, and encouraged me to try to learn his craft as well. As a total newbie to tabletop gaming, he suggested I try a module called Barbarians of Lemuria.</p>
@@ -38,24 +91,23 @@
 			<p>Sincerely,</p>
 			<p>Adam Chiyezhan</p>
 		</article>
+
 		<article>
-			<h2>Design Goals</h2>
+			<a id="Design Goals"><h2>Design Goals</h2></a>
 			<p>In creating B2 (which is what this document will use as an abbreviation for Bio Duality henceforth), there are various design goals I’d like to keep in mind, inspired by my experiences with Barbs and with D&D.</p>
 			<br>
-			<li><b>Deep and Wide Complexity</b> – Barbs had a level of complexity that, while eventually led to its downfall, was fun while it lasted. I’d like to go beyond the number of skills, classes, and attributes that the original game had, so that players will have character progress options for a long time, but this time I’d like them to synergize more intelligently</li>
-			<br>
-			<li><b>Proper Documentation</b> – Barbs suffered largely because I made every skill, class, and event without putting serious thought into it. This document will hopefully serve as a full record of all the rules of the game, and that way I won’t have to amend or repair anything after its done any damage to the game</li>
-			<br>
-			<li><b>Avoid Power Creep</b> – Barbs became an absolute nightmare to DM for, forcing me to up the ante so often that fights became crazy, long, titanic events and PvP was completely out of the question. This time I want to make sure that there is sensible scaling and even power levels across classes, so that when a player gains a new class or learns a new skill, they are receiving new, flexible options, instead of just getting a direct buff to their power level</li>
-			<br>
-			<li><b>Heavy Emphasis on Crafting</b> – One of my favorite additions I made to Barbs, and one I’m upset isn’t more prevalent in D&D 5e, is the complex and detailed crafting systems for armor, potions, etc. While I won’t exactly be copy-pasting them to this game, there will be a variety of crafting options for players to explore for hours</li>
-			<br>
-			<li><b>Emphasis on Roleplay and Problem Solving</b> – I’ve always been the type to prefer roleplay to combat. I know that every player is different and some are the exact opposite of me. But I figure that since this is my original game, it should have a focus on the parts of tabletop gaming that I like the most. That being said, I’m sure the end product will have plenty of combat-centric skills and classes anyway</li>
-			<br>
-			<li><b>Highly Specific Terminology</b> – In other RPGs, you might be used to the words, “skills,” “abilities,” and “attributes,” meaning largely the same thing, but in B2, these terms will all refer to different things entirely. For a game as complex and meaty as I’m planning, the terminology will have to be tight, sensible, and familiar. I’m not going to be pulling any punches with the game’s design, so DMs and players need to be just as vigilant with what they call things as this document will be</li>
+			<ul>
+				<li class="spaced"><b>Deep and Wide Complexity</b> – Barbs had a level of complexity that, while eventually led to its downfall, was fun while it lasted. I’d like to go beyond the number of skills, classes, and attributes that the original game had, so that players will have character progress options for a long time, but this time I’d like them to synergize more intelligently</li>
+				<li class="spaced"><b>Proper Documentation</b> – Barbs suffered largely because I made every skill, class, and event without putting serious thought into it. This document will hopefully serve as a full record of all the rules of the game, and that way I won’t have to amend or repair anything after its done any damage to the game</li>
+				<li class="spaced"><b>Avoid Power Creep</b> – Barbs became an absolute nightmare to DM for, forcing me to up the ante so often that fights became crazy, long, titanic events and PvP was completely out of the question. This time I want to make sure that there is sensible scaling and even power levels across classes, so that when a player gains a new class or learns a new skill, they are receiving new, flexible options, instead of just getting a direct buff to their power level</li>
+				<li class="spaced"><b>Heavy Emphasis on Crafting</b> – One of my favorite additions I made to Barbs, and one I’m upset isn’t more prevalent in D&D 5e, is the complex and detailed crafting systems for armor, potions, etc. While I won’t exactly be copy-pasting them to this game, there will be a variety of crafting options for players to explore for hours</li>
+				<li class="spaced"><b>Emphasis on Roleplay and Problem Solving</b> – I’ve always been the type to prefer roleplay to combat. I know that every player is different and some are the exact opposite of me. But I figure that since this is my original game, it should have a focus on the parts of tabletop gaming that I like the most. That being said, I’m sure the end product will have plenty of combat-centric skills and classes anyway</li>
+				<li><b>Highly Specific Terminology</b> – In other RPGs, you might be used to the words, “skills,” “abilities,” and “attributes,” meaning largely the same thing, but in B2, these terms will all refer to different things entirely. For a game as complex and meaty as I’m planning, the terminology will have to be tight, sensible, and familiar. I’m not going to be pulling any punches with the game’s design, so DMs and players need to be just as vigilant with what they call things as this document will be</li>
+			</ul>
 		</article>
+
 		<article>
-			<h2>System Basics</h2>
+			<a id="System Basics"><h2>System Basics</h2></a>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;B2 is a <b><i>d100 system</i></b>; that is, most rolls are based upon rolling 2d10, where one dice represents the tens place and the other represents the ones place, for a result lying between 1-100 inclusive. The reason I’ve decided to go the route of a d100 system instead of a more typical d20 system that Barbarians of Lemuria and Dungeons and Dragons both use is because it will more effectively support the high complexity that I intend for the game. As such, rolling for success will come down to rolling d100 and adding modifiers based on your character’s attributes and skills.</p>
 			<br>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Because I’m of the mind that a DM is best suited making their own setting and world, this document will primarily only feature characterization options and rules, as well as a small mechanics section. While the sheer number of skills should cover most situations in which a player attempts an action, the DM should feel free to use whatever mix of skills he or she deems necessary for any action that does not strictly match an available skill.</p>
@@ -72,53 +124,63 @@
 			<br>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;And that’s essentially it for the most basic rules of play. The rest of this document will have explanations for all of the PC options such as races, attributes, skills, and classes, and is meant as a guide to creating a character. The document will finish with a number of crafting systems and downtime activities and all of the details that these systems would require.</p>
 		</article>
+
 		<article>
-			<h2>Attributes</h2>
+			<a id="Attributes"><h2>Attributes</h2></a>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;At the most base level, what a character is good at and what a character is bad at is defined by their attributes. Each attribute has three uses: firstly, it determines some sort of important scaling, such as health or movement; secondly, it provides an additional modifier for multiple associated skills; thirdly, it allows the character to fulfill the minimum attribute requirements of the skills or classes they want. The value of an attribute can vary between -10 and +20. When you create a character at Level 1, all attributes start at -10, and you add points to the attributes that you deem important. The flat attribute value is what is added to skill checks that are based off that attribute.</p>
 			<br>
 			{attributes}
 		</article>
+
 		<article>
-			<h2>Races</h2>
+			<a id="Races"><h2>Races</h2></a>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Before deciding your character’s name, appearance, and background, it might first serve you to select the race of your character, as it will have a large bearing on all other aspects of your character’s creation. Each race has a generalized set of guidelines for appearance and behavior (the behavioral guidelines need not be strictly followed) as well as two racial traits which are unaffected by any other attributes, skills, or classes (consider these traits to be freebies which may or may not have a significant impact on your adventures). You might decide on your race based on which traits you want, or you might pick your race because you have a specific appearance and background in mind.</p>
 			<br>
 			{races}
 			<br>
-			<p><b>Racial Languages</b></p>
+			<a id="Racial Languages"><p><b>Racial Languages</b></p></a>
 			<br>
-			<li>Celestial: Aasimar, Shifters</li>
-			<li>Infernal: Demonspawn, Djinn</li>
-			<li>Elvish: Elves, Arrists</li>
-			<li>Dwarvish: Dwarves, Cyclopses</li>
-			<li>Aquan: Overminds, Merfolk</li>
-			<li>Sylvan: Dryads, Manti</li>
-			<li>Anima: Beastkin, Kajeem</li>
-			<li>Old Common: Vampires, Humans</li>
-			<li>Mutus: Shades, Chrom</li>
-			<li>Energia: Manaliths, Zoltrons</li>
+			<ul>
+				<li>Celestial: Aasimar, Shifters</li>
+				<li>Infernal: Demonspawn, Djinn</li>
+				<li>Elvish: Elves, Arrists</li>
+				<li>Dwarvish: Dwarves, Cyclopses</li>
+				<li>Aquan: Overminds, Merfolk</li>
+				<li>Sylvan: Dryads, Manti</li>
+				<li>Anima: Beastkin, Kajeem</li>
+				<li>Old Common: Vampires, Humans</li>
+				<li>Mutus: Shades, Chrom</li>
+				<li>Energia: Manaliths, Zoltrons</li>
+			</ul>
 		</article>
+
 		<article>
-			<h2>Buffs and Conditions</h2>
-			<h3>Buffs</h3>
+			<a id="Buffs and Conditions"><h2>Buffs and Conditions</h2></a>
+			<a id="Buffs"><h3>Buffs</h3></a>
 			<br>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;A buff is any effect, magical or not, that is beneficial to an entity. Buffs can be applied by a variety of sources, such as items or abilities. Buffs can also be stripped, or removed, by items or abilities. Most buffs have a standard duration, which could vary based on the source applying them. While many abilities grant unique buffs, the following list of buffs are common and are granted by many sources (all mentions of “you” or “your” refer to the afflicted entity):</p>
 			<br>
-			{buffs}
+			<ul>
+				{buffs}
+			</ul>
 			<br>
-			<h3>Conditions</h3>
+			<a id="Conditions"><h3>Conditions</h3></a>
 			<br>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;A condition is any effect, magical or not, that is detrimental to an entity. Conditions can be applied by a variety of sources, such as items or abilities. Conditions can also be cleansed, or removed, by items or abilities. Most conditions have a standard duration, which could vary based on the source applying them. While many abilities inflict unique conditions, the following list of conditions are global and are granted by many sources (all mentions of “you” or “your” refer to the afflicted entity):</p>
 			<br>
-			{conditions}
+			<ul>
+				{conditions}
+			</ul>
 		</article>
+
 		<article>
-			<h2>Additional Rules</h2>
-			<h3>Concentration</h3>
+			<a id="Additional Rules"><h2>Additional Rules</h2></a>
+			<a id="Concentration"><h3>Concentration</h3></a>
 			<br>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Some spells and abilities require concentration to maintain. You may concentrate on a number of effects up to your Concentration Limit, which is a stat defined by your Focus as well as by gear. If you try and concentrate on a new effect when you are already at your limit, you choose to either drop concentration on an effect to start concentrating on the new one, or to fail to begin concentration on the new one.</p>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;When you take damage, you must roll to maintain concentration. You roll d100 against a DC of X, where X is twice as much damage you took. You can additionally roll a skill check and add the result of that check to your initial roll, if applicable (most commonly, this will be a Pain Tolerance check if you have the skill, but other skills could be used at the discretion of the DM). If you succeed at the roll, you maintain concentration on all effects. If you fail at the roll, you break concentration on all effects, and they all immediately end.</p>
 			<br>
-			<h3>Misfire Effects</h3>
+			<a id="Misfire Effects"><h3>Misfire Effects</h3></a>
 			<br>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;When you use a firearm’s primary or secondary fire, you roll for the firearm’s misfire chance. Every firearm has a misfire chance between 0% and 100%, which describes the odds that your firearm will instead malfunction when you try and fire it. If you have a 50% misfire chance, you need to roll at least a 51 to avoid misfire. When you misfire, instead of doing the damage and effects of the chosen fire type, you roll a d100 and compare it to the following chart:</p>
 			<br>
@@ -147,7 +209,7 @@
 			<br>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Minor repairs can be performed by a player, and require an hour of work and a DC 70 skill check that is appropriate (possible choices include Crafting: Bullet Weapons, Tinkering, etc.). Major repairs cannot be performed by a player; you must pay a gunsmith NPC to perform repairs for you.</p>
 			<br>
-			<h3>Running an Organization</h3>
+			<a id="Running an Organization"><h3>Running an Organization</h3></a>
 			<br>
 			<p><b>Introduction</b></p>
 			<br>
@@ -157,10 +219,12 @@
 			<br>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;First, choose what type of organization you’d like to run and what its goals will be. The following is a list of potential ideas, but this list is not exhaustive, and players are encouraged to be as specific or as broad as they would like:</p>
 			<br>
-			<li>Adventurer’s Guild – with the goal of acquiring and nurturing exceptional adventuring talent and handling threats on a local, regional, or global scale</li>
-			<li>Criminal Syndicate – examples including thieves’ guilds or smuggling crews, with the goal of making money and protecting talent from the law</li>
-			<li>University – examples including magic schools or art schools, with the goal of nurturing talent and gaining revenue through tuition and board</li>
-			<li>Entertainment – examples including opera houses, traveling theater troupes, etc, with the goal of gaining revenue and notoriety</li>
+			<ul>
+				<li>Adventurer’s Guild – with the goal of acquiring and nurturing exceptional adventuring talent and handling threats on a local, regional, or global scale</li>
+				<li>Criminal Syndicate – examples including thieves’ guilds or smuggling crews, with the goal of making money and protecting talent from the law</li>
+				<li>University – examples including magic schools or art schools, with the goal of nurturing talent and gaining revenue through tuition and board</li>
+				<li>Entertainment – examples including opera houses, traveling theater troupes, etc, with the goal of gaining revenue and notoriety</li>
+			</ul>
 			<br>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Notably, if you intend to make an organization, you should have proper long term goals that require a lot of manpower. You don’t need to make an organization to complete a job that you could do yourself in a day.</p>
 			<br>
@@ -184,22 +248,19 @@
 			<br>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Typically, every 3 days you will need to interact with your leadership to manage your organization. We call this 3 day period a production cycle, but you can call it something else based on your organization’s specialties (like a workweek, a tour, etc). During each production cycle, you will do the following:</p>
 			<br>
-			<li>Gain Income – If your organization is one that gains a steady amount of income from completed jobs or membership dues, you will gain that income every 3 days and learn of the success or failures of your short term ventures. Your organization might not be one that gains income at all, or it might be one that gains income sporadically or less often than every 3 days. Additionally, if members fail their missions, you might not get the income you expected to get.</li>
-			<br>
-			<li>Learn News – Your leadership will inform you of anything relevant they feel you need to know every cycle. This includes things like new monsters for your adventuring guild to fight, recent activities of rival organizations, or potential new investments and projects the leadership thinks of.</li>
-			<br>
-			<li>Pay Maintenance Costs – There will usually be some level of base costs you will need to pay to maintain your headquarters, licenses, agreements with other organizations, and stockpiles of essential resources.</li>
-			<br>
-			<li>Pay Employees – If the members of your roster make their income through your organization, you will need to pay them based on their level of expertise. Of course, you and your leadership decide what their wages will be.</li>
-			<br>
-			<li>Member Experience – If your members are learning from your organization or gaining real world experience through their jobs, their skills may increase once every few production cycles.</li>
-			<br>
-			<li>Upgrades and Changes – This is your opportunity to make upgrades to your buildings if applicable. Examples include expanding your university library or building more boarding room for members who live at your headquarters. Additionally you may decide it’s time to change things up, like shuffling who’s in your leadership or changing the specific projects you want to focus on.</li>
-			<br>
-			<li>Events – Certain types of events, both good and bad, can positively or negatively influence your organization in a variety of ways. You might get lucky and pull in extra income and member experience one cycle, only to have an accident happen and have to pay increased maintenance costs the next cycle. These events are randomly rolled by the DM. The chance of a negative event can be very high in the initial phase of building up your organization, but goes down as your organization expands and improves its infrastructure and membership.</li>
+			<ul>
+				<li class="spaced">Gain Income – If your organization is one that gains a steady amount of income from completed jobs or membership dues, you will gain that income every 3 days and learn of the success or failures of your short term ventures. Your organization might not be one that gains income at all, or it might be one that gains income sporadically or less often than every 3 days. Additionally, if members fail their missions, you might not get the income you expected to get.</li>
+				<li class="spaced">Learn News – Your leadership will inform you of anything relevant they feel you need to know every cycle. This includes things like new monsters for your adventuring guild to fight, recent activities of rival organizations, or potential new investments and projects the leadership thinks of.</li>
+				<li class="spaced">Pay Maintenance Costs – There will usually be some level of base costs you will need to pay to maintain your headquarters, licenses, agreements with other organizations, and stockpiles of essential resources.</li>
+				<li class="spaced">Pay Employees – If the members of your roster make their income through your organization, you will need to pay them based on their level of expertise. Of course, you and your leadership decide what their wages will be.</li>
+				<li class="spaced">Member Experience – If your members are learning from your organization or gaining real world experience through their jobs, their skills may increase once every few production cycles.</li>
+				<li class="spaced">Upgrades and Changes – This is your opportunity to make upgrades to your buildings if applicable. Examples include expanding your university library or building more boarding room for members who live at your headquarters. Additionally you may decide it’s time to change things up, like shuffling who’s in your leadership or changing the specific projects you want to focus on.</li>
+				<li>Events – Certain types of events, both good and bad, can positively or negatively influence your organization in a variety of ways. You might get lucky and pull in extra income and member experience one cycle, only to have an accident happen and have to pay increased maintenance costs the next cycle. These events are randomly rolled by the DM. The chance of a negative event can be very high in the initial phase of building up your organization, but goes down as your organization expands and improves its infrastructure and membership.</li>
+			</ul>
 		</article>
+
 		<article>
-			<h2>Skills</h2>
+			<a id="Skills"><h2>Skills</h2></a>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;There are 115 available skills in the game. When a player tries to do something that has a chance of failure and is dependent on that player’s competence, odds are they will be doing a skill check. Each skill scales from F to A, and then from 9 to 1, which means there are 15 skill ranks for any given skill. There is also an “untrained” rank below F, representing that your character knows of the skill and can put point into it, but has yet to do so. Untrained skills confer a skill check modifier of 0. A skill check consists of rolling a d100, then adding the bonus from your skill rank (which will be a multiple of 5), then adding the bonus from the attribute that skill is based off of (which is just the raw attribute modifier). The following is a table of skill bonuses at each skill rank:</p>
 			<br>
 			<table style="width:100%">
@@ -258,35 +319,42 @@
 			<br>
 			{skills}
 		</article>
+
 		<article>
-			<h2>Crafting</h2>
-			<h3>Crafting Durations</h3>
+			<a id="Crafting"><h2>Crafting</h2></a>
+			<a id="Crafting Durations"><h3>Crafting Durations</h3></a>
 			<br>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;The amount of time it takes to craft a single item depends on what type of crafting disciple you are working with, and no other factors.</p>
 			<br>
 			<p>Short duration crafting disciplines can make a single product in 1 hour. This means one can craft 12 products in a working day. Short duration crafting includes:</p>
-			<li>Cooking</li>
-			<li>Poisons</li>
-			<li>Potions</li>
-			<li>Forgery</li>
+			<ul>
+				<li>Cooking</li>
+				<li>Poisons</li>
+				<li>Potions</li>
+				<li>Forgery</li>
+			</ul>
 			<br>
 			<p>Medium duration crafting disciplines can make a single product in 3 hours. This means one can craft 4 products in a working day. Medium duration crafting includes:</p>
-			<li>Artificing</li>
-			<li>Fine Weapons</li>
-			<li>Jewelry</li>
-			<li>Heavy Weapons</li>
-			<li>Ranged Weapons</li>
-			<li>Shortblades</li>
+			<ul>
+				<li>Artificing</li>
+				<li>Fine Weapons</li>
+				<li>Jewelry</li>
+				<li>Heavy Weapons</li>
+				<li>Ranged Weapons</li>
+				<li>Shortblades</li>
+			</ul>
 			<br>
 			<p>Long duration crafting disciplines can make a single product in 6 hours. This means one can craft 2 products in a working day. Long duration crafting includes:</p>
-			<li>Armorsmithing</li>
-			<li>Enchanting</li>
-			<li>Leatherworking</li>
-			<li>Tailoring</li>
+			<ul>
+				<li>Armorsmithing</li>
+				<li>Enchanting</li>
+				<li>Leatherworking</li>
+				<li>Tailoring</li>
+			</ul>
 			<br>
 			<p>You may not split up the duration of any short crafting process. You may split the duration of a medium or long crafting process into minimum units of hours. So for example, you could have a jewelry product that is 1/3rd finished, or an enchanting product that is 5/6th finished.</p>
 			<br>
-			<h3>Potion Crafting and Poison Crafting</h3>
+			<a id="Potion Crafting and Poison Crafting"><h3>Potion Crafting and Poison Crafting</h3></a>
 			<br>
 			<p><b>Introduction</b></p>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Potion crafting and poison crafting involve the creation of consumable potions you and your allies can drink and poisons you can apply to enemies. It should be noted that the two are separate skills, but because they have similar processes, they will be described in one guide. Access to potion/poison crafting allows you to make more powerful versions of potions and poisons you might buy in town, or brand new concoctions that are otherwise impossible to acquire.</p>
@@ -402,7 +470,7 @@
 				</tr>
 			</table>
 			<br>
-			<h3>Cooking</h3>
+			<a id="Cooking"><h3>Cooking</h3></a>
 			<br>
 			<p><b>Introduction</b></p>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Cooking involves the creation of meals and delicacies you can share between yourself and your allies during meal times. This skill provides both unique opportunities to roleplay as well as small buffs that last for hours. While not as vital to a party's improvement as the crafting of weapons and equipment, cooking is still a crafting skill, and thus contains all the depth that you would normally expect from a crafting system. However, one key difference is the materials used; instead of using crafting materials with set modifiers, cooking combines all different kinds of ingredients to make a wider variety of possible effects. The cooking skill allows for the creation of meals superior to what you might normally find in a tavern or restaurant.</p>
@@ -519,7 +587,7 @@
 			<p><b>Salvaging Materials</b></p>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;There are no special skill checks or rolls required to salvage cooking ingredients from past meals. If you take meatballs from the camp chef’s spaghetti to incorporate into your beef stew, you incur no penalties or special bonuses, and need not make any special skill checks or rolls to extract the meat successfully.</p>
 			<br>
-			<h3>Equipment Crafting</h3>
+			<a id="Equipment Crafting"><h3>Equipment Crafting</h3></a>
 			<br>
 			<p><b>Introduction</b></p>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;The crafting skills of Artificing, Fine Weapon Crafting, Heavy Weapon Crafting, Ranged Weapon Crafting, Shortblade Crafting, Jewelry Crafting, Armorsmithing, Leatherworking, and Tailoring are all ways that you can crafting equipment. Since they all are crafting in more or less the same way, they will be collectively referred to as equipment crafting for this article.</p>
@@ -592,7 +660,7 @@
 				</tr>
 			</table>
 			<br>
-			<h3>Enchanting</h3>
+			<a id="Enchanting"><h3>Enchanting</h3></a>
 			<br>
 			<p><b>Introduction</b></p>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Enchanting involves adding a variety of magical effects to gear. Access to enchanting allows you to further augment the gear you’ve looted or crafted, as well as fine tune the effects of gear you have in order to fit them better to your intended build. Many mages in the world are at least novice enchanters, and enchanted gear is frequently sold in stores and found on adventures.</p>
@@ -901,16 +969,19 @@
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;DC is calculated by adding the base DC of 10 and the DC contributions of the implicit enchantment and the mod enchantment if applicable. Let’s say you decide to enchant with grade C materials for the Unyielding enchantment, and you want to replace a mod; the DC for the roll would be 10 + 60 + 30 = 100. You roll your Enchanting skill check at the end of your crafting process. Every hour spent during the process will cost 20 mana.</p>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;If you beat the DC, you are successful, and your item becomes Enchanted, gaining implicit and mod enchantments as applicable. If you fail to beat the DC, the item does not gain implicit and mod enchantments, but still gains the Enchanted status, blocking it from further enchantments. Regardless of whether you succeed or fail, you consume all crafting materials used in the attempt. There is no salvaging involved with the Enchantment crafting discipline.</p>
 		</article>
+
 		<article>
-			<h2>Classes</h2>
+			<a id="Classes"><h2>Classes</h2></a>
 			<p>A class gives a PC distinct class abilities which they can use inside and outside of combat. Most players will be working towards specific classes, and the classes that a player has will largely define his or her role in the party. A PC can have any number of classes. Each class has the following parts:</p>
 			<br>
-			<li>Name – the name of the class, as well as a 3 letter abbreviation</li>
-			<li>Requirements – the attribute and skill requirements necessary to unlock the class</li>
-			<li>Passive – each class has a passive that you get for no investment</li>
-			<li>Branches – each class has 3 branches of abilities, and each branch has its own theme</li>
-			<li>Tiers – each class has 4 tiers of abilities. Each tier has 1 ability from each branch; therefore, tiers have 3 abilities each.</li>
-			<li>Abilities – abilities are defined by a name, an action type (Move, Major, Minor), a cost (in health, stamina, or mana), and a description of what the ability does.</li>
+			<ul>
+				<li>Name – the name of the class, as well as a 3 letter abbreviation</li>
+				<li>Requirements – the attribute and skill requirements necessary to unlock the class</li>
+				<li>Passive – each class has a passive that you get for no investment</li>
+				<li>Branches – each class has 3 branches of abilities, and each branch has its own theme</li>
+				<li>Tiers – each class has 4 tiers of abilities. Each tier has 1 ability from each branch; therefore, tiers have 3 abilities each.</li>
+				<li>Abilities – abilities are defined by a name, an action type (Move, Major, Minor), a cost (in health, stamina, or mana), and a description of what the ability does.</li>
+			</ul>
 			<br>
 			<p>So, in order to unlock a class, you must put points into skills and attributes until you meet the class’s requirements. Then, you unlock the class’s passive, as well as its 1st tier. To unlock the 2nd tier, you need 1 AP of investment. To unlock the 3rd tier, you need 3 AP of investment. To unlock the 4th tier, you need 6 AP of investment. You can invest AP to unlock each ability individually, and can skip the ones you don’t like as long as you have enough investment to progress overall. This way, you can pick and choose (for the most part) your favorite parts of each class you start, and don’t have to waste AP on abilities you don’t find useful.</p>
 			<br>
@@ -946,7 +1017,7 @@
 				</tr>
 			</table>
 			<br>
-			<h3>Class Hint Unlocks</h3>
+			<a id="Class Hint Unlocks"><h3>Class Hint Unlocks</h3></a>
 			<br>
 			<p>This is a list of all the classes for which at least 1 skill requirement has been achieved. These hints will provide players with some direction as to what the other skill requirements might be. The following lists have mixed together all players’ unlocked hints. Classes whose requirements have all been discovered are highlighted in green.</p>
 			<br>
@@ -954,10 +1025,11 @@
 			<br>
 			{classes}
 		</article>
-		<article>
-			<h2>Gameplay Patches</h2>
 
-			<h3>Patch 1.2</h3><br>
+		<article>
+			<a id="Gameplay Patches"><h2>Gameplay Patches</h2></a>
+
+			<a id="Patch 1.2"><h3>Patch 1.2</h3><br></a>
 
 			<p><b>Introduction</b></p>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Welcome to Patch 1.2, the one where we release our first set of new classes and explain why your alignment isn’t just for show.</p>
@@ -969,24 +1041,26 @@
 			<br>
 			<p><b>New Classes Hype</b></p>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;The following 18 new classes have been added to the game:</p>
-			<li>Visionary</li>
-			<li>Viper Knight [Z]</li>
-			<li>Chronomancer</li>
-			<li>Ambusher [Z] [S]</li>
-			<li>Auramancer</li>
-			<li>Clawmaster</li>
-			<li>Eldritch Knight [Z] [S]</li>
-			<li>Soulbinder</li>
-			<li>Herald</li>
-			<li>Hemoplague [Z]</li>
-			<li>Card Master</li>
-			<li>Druid</li>
-			<li>Infection Mage</li>
-			<li>Corpselight [Z]</li>
-			<li>Defiler</li>
-			<li>Peacemaker</li>
-			<li>Mistguard [Z] [S]</li>
-			<li>Daggerspell [Z] [S]</li>
+			<ul>
+				<li>Visionary</li>
+				<li>Viper Knight [Z]</li>
+				<li>Chronomancer</li>
+				<li>Ambusher [Z] [S]</li>
+				<li>Auramancer</li>
+				<li>Clawmaster</li>
+				<li>Eldritch Knight [Z] [S]</li>
+				<li>Soulbinder</li>
+				<li>Herald</li>
+				<li>Hemoplague [Z]</li>
+				<li>Card Master</li>
+				<li>Druid</li>
+				<li>Infection Mage</li>
+				<li>Corpselight [Z]</li>
+				<li>Defiler</li>
+				<li>Peacemaker</li>
+				<li>Mistguard [Z] [S]</li>
+				<li>Daggerspell [Z] [S]</li>
+			</ul>
 			<br>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Classes with a [Z] are already in the Zenith Rulebook as hints. The same is true for classes with an [S] for the Singularity rulebook. Whenever new classes come out, there’s a chance a PC already has one or more of the skill requirements met, which is why hints are immediately added. In future patches, you can expect a bit more focus on a few key skills, namely archery, poisons, summoning, buffing, crafters, and more race/religion/alignment restricted classes. Also still missing from the game are some notable absences from other games, like Warlock, and classes from original Barbs. Those will come in future patches, and in fact, each patch will likely have new classes coming with it</p>
 			<br>
@@ -1012,24 +1086,28 @@
 			<p><b>Help Me Make BARBS Content</b></p>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;I am hoping that this will be the first of many large content patches to come out for the game. I have plans to continue to release classes, and eventually new mechanics like Signature Moves, Heroic Feats, and who knows what else. If any players have good ideas for new classes, new races or additional flavor for existing races, or even smaller things like mods for crafting or ability/cantrip ideas, please PM them to me. If an idea of yours finds its way into the main game you could be rewarded. Together we can flesh out the game’s mechanics as well as the world’s flavor.</p>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Which leads me to my first Content Contest announcement! Every once and a while I’d like to start some friendly competition, and invite you guys to create something to improve BARBS in some way. Our first contest will be related to improving the rulebook entries on the 20 races. This is entirely voluntary, but the rewards include rare crafting materials, gold, and AP. We’ll see how many people actually decide to try it out. The first round of the Race Improvement Contest will be for the Voltron race. In order to compete, submit a document that is no more than 1 page, containing:</p>
-			<li>Artwork you’ve selected or drawn, or at least ample space for artwork so I can fill it in later</li>
-			<li>The traits as they’re written in the rulebook</li>
-			<li>One or several paragraphs describing the lore and flavor of the Voltron race. You do not have to work with the existing information in rulebook; treat it as a starting point, but be as creative as you would like and add interesting aspects to the Voltron physiology, culture, environment, etc</li>
-			<li>Bonus points if the whole thing is edited nicely so I don’t have to do that shit.</li>
+			<ul>
+				<li>Artwork you’ve selected or drawn, or at least ample space for artwork so I can fill it in later</li>
+				<li>The traits as they’re written in the rulebook</li>
+				<li>One or several paragraphs describing the lore and flavor of the Voltron race. You do not have to work with the existing information in rulebook; treat it as a starting point, but be as creative as you would like and add interesting aspects to the Voltron physiology, culture, environment, etc</li>
+				<li>Bonus points if the whole thing is edited nicely so I don’t have to do that shit.</li>
+			</ul>
 			<br>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;This competition will start today, 9/9/18, and end in approximately 5 weeks, on 10/15/18. Only one player can win the AP, but any number of people can win gold and crafting materials for the quality of their submission, and everyone who submits something will win at least some type of prize. Keep in mind that all submissions need to be in some sort of document PM’d to me; I won’t consider suggestions you casually make on Discord or in person as a submission for this contest. And once again, this is totally voluntary; if you think it’ll be fun, try it out. Good luck!</p>
 			<br>
 			<p><b>Bug Fixes</b></p>
-			<p>&nbsp;&nbsp;&nbsp;&nbsp;The following bugs were fixed in this patch:</li>
-			<li>Fixed a bug where the hint of Night Lord implied it required Dark Magic</li>
-			<li>Ninja’s hint was changed to be less misleading</li>
-			<li>Ahasan’s changelog was missing recent ability additions</li>
-			<li>Fixed a bug where Jason’s changelog had incorrectly calculated current level and banked AP</li>
-			<li>Filled in some missing class unlocks for Kirin Inagami</li>
-			<li>Fixed a bug where Shadowdancer did not display properly under class hints acquired by both Orpheus Glacierum and Janatris</li>
+			<p>&nbsp;&nbsp;&nbsp;&nbsp;The following bugs were fixed in this patch:</p>
+			<ul>
+				<li>Fixed a bug where the hint of Night Lord implied it required Dark Magic</li>
+				<li>Ninja’s hint was changed to be less misleading</li>
+				<li>Ahasan’s changelog was missing recent ability additions</li>
+				<li>Fixed a bug where Jason’s changelog had incorrectly calculated current level and banked AP</li>
+				<li>Filled in some missing class unlocks for Kirin Inagami</li>
+				<li>Fixed a bug where Shadowdancer did not display properly under class hints acquired by both Orpheus Glacierum and Janatris</li>
+			</ul>
 			<br>
 
-			<h3>Patch 1.3</h3>
+			<a id="Patch 1.3"><h3>Patch 1.3</h3></a>
 			<br>
 			<p><b>Introduction</b></p>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Welcome to patch 1.3, the one where we lay down some ground rules for player versus player combat in preparation for the Champion of Fire Tourney. The hope is to use this as a reference to fall back on when disputes inevitably arise due to calls made during PvP matches. It's impossible to cover every possible edge case, but this should serve as a good start. Along with PvP rules, I’ll be clarifying some key rules that have been mentioned but not actually ever put down in text, like death saves and increased vs added stats on equipment. Lastly, there will be a new batch of classes for players to select from and some long overdue class unlocks. Enjoy!</p>
@@ -1037,22 +1115,24 @@
 			<br>
 			<p><b>New Classes</b></p>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;There are 13 new classes being added with this patch. Classes are labeled with [S] or [Z] to designate whether Singularity or Zenith have unlocked a hint for the class</p>
-			<li>Allomancer</li>
-			<li>Firewheeler [S]</li>
-			<li>Harrier [S] [Z]</li>
-			<li>Horizon Stalker [S] [Z]</li>
-			<li>Juggernaut [Z]</li>
-			<li>Lorekeeper [Z]</li>
-			<li>Master of Disguise</li>
-			<li>Mirror Mage [S] [Z]</li>
-			<li>Steam Mage [S] [Z]</li>
-			<li>Vastwood Knight</li>
-			<li>Viking [S] [Z]</li>
-			<li>Warlock</li>
-			<li>Woodsman [S] [Z]</li>
+			<ul>
+				<li>Allomancer</li>
+				<li>Firewheeler [S]</li>
+				<li>Harrier [S] [Z]</li>
+				<li>Horizon Stalker [S] [Z]</li>
+				<li>Juggernaut [Z]</li>
+				<li>Lorekeeper [Z]</li>
+				<li>Master of Disguise</li>
+				<li>Mirror Mage [S] [Z]</li>
+				<li>Steam Mage [S] [Z]</li>
+				<li>Vastwood Knight</li>
+				<li>Viking [S] [Z]</li>
+				<li>Warlock</li>
+				<li>Woodsman [S] [Z]</li>
+			</ul>
 			<br>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Of special note from this list are Warlock, which is limited to characters who are of any chaotic alignment and worship one of the chaotic gods (Aloys, Phaxet, or Dren), and Vastwood Knight, which is only obtainable by dryads who are knighted by the Queen of Vastwood. Next patch will likely include a large number of race restricted classes, as the goal is to have at least one per race aside from human.</p>
-			<br
+			<br>
 			<p><b>Other Class Details</b></p>
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;Also included in this patch are class unlocks for both Adric and Orpheus, as well as Tier 1 abilities for Aquamancer for Orpheus and Tier 1 abilities for Reaper for Adric.</p>
 			<br>
@@ -1073,10 +1153,13 @@
 			<p>&nbsp;&nbsp;&nbsp;&nbsp;While downed, any healing you receive immediately affects your regular health as normal. If the amount of healing you receive that brings you above zero health is greater than your missing Downed Health, you immediately wake up prone. If you are missing more Downed Health than the amount of healing you receive, you become stabilized (meaning you no longer need to make death saving throws, although you can still perish from damage that depletes your Downed Health to zero). If stabilized in this way, you wake up after missing 1d4 turns of combat. You can also be stabilized without healing if another character makes a First Aid or Restoration Magic skill check with a DC of 30 + X, where X is your missing Downed Health divided by 2. If you are stabilized but your health is still zero, you will not wake up until you receive healing (you can gain the benefits of a short rest while unconscious this way, healing from your health regeneration and waking up after the short rest).</p>
 			<br>
 			<p><b>Bug Fixes</b></p>
-			<li>Fixed a bug where concentration checks and Water Duelist did not display properly in the Singularity rulebook.</li>
+			<ul>
+				<li>Fixed a bug where concentration checks and Water Duelist did not display properly in the Singularity rulebook.</li>
+			</ul>
 			<br>
 		</article>
 	</main>
 </section>
+</div>
 </body>
 </html>

@@ -33,6 +33,6 @@ class Branch(Component):
             'type': 'branch',
             'name': self.name,
             'description': self.description,
-            'clazz': self.clazz.name,
+            'class': self.clazz.name,
             'abilities': [ability.name for ability in self.class_abilities],
         }

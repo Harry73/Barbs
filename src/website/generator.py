@@ -11,6 +11,7 @@ HTML_TEMPLATES = os.path.join(HTML_PATH, 'templates')
 HOME_PAGE = os.path.join(HTML_GENERATED, 'index.html')
 
 RULEBOOK_PATH = os.path.join(CURRENT_PATH, 'rulebook')
+
 BR_JOIN = '<br>'.join
 
 
@@ -18,14 +19,18 @@ def _debug(term, component):
     print('Working on %s %s' % (term, component['name']))
 
 
-def _href(term, name):
-    return '<a href="#{type}_{name}">{name}</a>'.format(type=term, name=name)
+def _href(anchor, text):
+    return '<a href="#{anchor}">{text}</a>'.format(anchor=anchor, text=text)
 
 
-def _get_component(component_name, component_list):
+def _get_component(component_name, component_list, condition=None):
     for component in component_list:
         if component['name'] == component_name:
-            return component
+            if condition is None:
+                return component
+
+            if condition(component):
+                return component
 
     raise Exception('Component %s not found' % component_name)
 
@@ -36,14 +41,43 @@ def _try_link_skill_req(skill_req):
 
     for skill in skills:
         if skill['name'] in skill_req:
-            return skill_req.replace(skill['name'], _href('skill', skill['name']))
+            return skill_req.replace(skill['name'], _href('skill_%s' % skill['name'], skill['name']))
 
     for skill in skills:
         if 'any' in skill_req.lower() and skill['category'] in skill_req:
-            return skill_req.replace(skill['category'], _href('skills', skill['category']))
+            return skill_req.replace(skill['category'], _href('skills_%s' % skill['category'], skill['category']))
 
     print('Failed to link skill for requirement "%s"' % skill_req)
     return skill_req
+
+
+def build_skills_nav():
+    with open(os.path.join(RULEBOOK_PATH, 'skills.json'), encoding='utf8') as f:
+        all_skills = json.load(f)
+
+    # The rulebook organizes skills into sections by category. We will make a nav link per category.
+    categorized_skills = {}
+    for skill in all_skills:
+        category = skill['category']
+        if category not in categorized_skills:
+            categorized_skills[category] = None
+
+    nav_htmls = [_href('skills_%s' % category, category) for category in categorized_skills]
+    return '\n'.join(nav_htmls)
+
+
+def build_classes_nav():
+    with open(os.path.join(RULEBOOK_PATH, 'classes.json'), encoding='utf8') as f:
+        classes = json.load(f)
+
+    nav_htmls = []
+    for clazz in classes:
+        if 'flavor_text' not in clazz:
+            continue
+
+        nav_htmls.append(_href('class_%s' % clazz['name'], clazz['name']))
+
+    return '\n'.join(nav_htmls)
 
 
 def build_attributes():
@@ -205,7 +239,7 @@ def build_class_hint_unlocks():
             # We'll link to the full class if it is unlocked.
             name_or_linked_name = clazz['name']
             if 'flavor_text' in clazz:
-                name_or_linked_name = _href('class', clazz['name'])
+                name_or_linked_name = _href('class_%s' % clazz['name'], clazz['name'])
 
             class_hint_html = class_hint_template.format(
                 name=name_or_linked_name,
@@ -231,13 +265,18 @@ def _build_branches_html(clazz, branches, abilities):
 
     branches_htmls = []
     for branch_name in clazz['branches']:
-        branch = _get_component(branch_name, branches)
+        # There are some branches in different classes with the same name, so additionally check that the
+        # class name is right when finding the branch.
+        branch = _get_component(branch_name, branches, condition=lambda b: b['class'] == clazz['name'])
 
         ability_htmls = []
         for ability_name in branch['abilities']:
-            ability = _get_component(ability_name, abilities)
+            # There are some abilities in different classes with the same name, so additionally check that the
+            # class name is right when finding the ability
+            ability = _get_component(ability_name, abilities, condition=lambda c: c['class'] == clazz['name'])
             ability_html = ability_template.format(
-                name=ability['name'],
+                name=ability['name'].replace('"', '&quot'),
+                clazz=ability['class'],
                 action=ability['action'],
                 cost=ability['cost'],
                 range=ability['range'],
@@ -248,6 +287,7 @@ def _build_branches_html(clazz, branches, abilities):
             ability_htmls.append(ability_html)
 
         branch_html = branch_template.format(
+            clazz=clazz['name'],
             branch=branch['name'],
             abilities=BR_JOIN(ability_htmls),
         )
@@ -285,7 +325,8 @@ def build_classes():
         branch_description_htmls = []
         for branch_name in clazz['branches']:
             branch = _get_component(branch_name, branches)
-            linked_branch_description = branch['description'].replace(branch_name, _href('branch', branch_name))
+            branch_anchor = 'class_%s_branch_%s' % (clazz['name'], branch['name'])
+            linked_branch_description = branch['description'].replace(branch_name, _href(branch_anchor, branch_name))
             branch_description_html = list_item_template.format(text=linked_branch_description)
             branch_description_htmls.append(branch_description_html)
 
@@ -315,23 +356,18 @@ def generate_html():
     with open(os.path.join(HTML_TEMPLATES, 'index.html'), encoding='utf8') as f:
         index_template = f.read().strip()
 
-    attributes = build_attributes()
-    races = build_races()
-    buffs = build_buffs()
-    conditions = build_conditions()
-    skills = build_skills()
-    class_hint_unlocks = build_class_hint_unlocks()
-    classes = build_classes()
-
-    index_template = index_template.format(
-        attributes=attributes,
-        races=races,
-        buffs=buffs,
-        conditions=conditions,
-        skills=skills,
-        class_hint_unlocks=class_hint_unlocks,
-        classes=classes,
-    )
+    format_args = {
+        'skills_nav': build_skills_nav(),
+        'classes_nav': build_classes_nav(),
+        'attributes': build_attributes(),
+        'races': build_races(),
+        'buffs': build_buffs(),
+        'conditions': build_conditions(),
+        'skills': build_skills(),
+        'class_hint_unlocks': build_class_hint_unlocks(),
+        'classes': build_classes(),
+    }
+    index_template = index_template.format(**format_args)
 
     with open(os.path.join(HTML_GENERATED, 'index.html'), 'w', encoding='utf8') as f:
         f.write(index_template)
