@@ -358,8 +358,8 @@ def parse_clazzes(lines, skills):
         if len(passive_lines) > 1:
             passive_description += '\n' + '\n'.join(passive_lines[1:])
 
-        clazz.add_passive(flavor_text, description, len(requirements), requirements, branch_names,
-                          branch_descriptions, passive_name, passive_description)
+        clazz.add_passive(flavor_text, description, requirements, branch_names, branch_descriptions, passive_name,
+                          passive_description)
 
         # Handle class skills
         i -= 1  # because i'm too lazy to do this nicer. i is at the first branch name

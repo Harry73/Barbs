@@ -155,7 +155,7 @@ def build_class_hint_unlocks():
         reqs_per_class[reqs].append(clazz)
 
     class_hint_section_htmls = []
-    for reqs in reqs_per_class:
+    for reqs in sorted(reqs_per_class.keys()):
 
         class_hint_htmls = []
         for clazz in reqs_per_class[reqs]:
@@ -176,7 +176,7 @@ def build_class_hint_unlocks():
 
         class_hints_section_html = class_hints_section_template.format(
             reqs=reqs,
-            class_hints=BR_JOIN(class_hint_htmls),
+            class_hints='\n'.join(class_hint_htmls),
         )
         class_hint_section_htmls.append(class_hints_section_html)
 

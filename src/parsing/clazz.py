@@ -23,12 +23,11 @@ class Clazz(Component):
         self.known_requirements.extend(skill_reqs)
         self.num_requirements = num_requirements
 
-    def add_passive(self, flavor_text, description, num_reqs, skill_reqs, branch_names, branch_descriptions,
+    def add_passive(self, flavor_text, description, skill_reqs, branch_names, branch_descriptions,
                     passive_name, passive_description):
         self.full = True
         self.flavor_text = flavor_text
         self.description = description
-        self.num_requirements = num_reqs
         self.full_requirements = list(skill_reqs)  # TODO: change this to dict() if I can parse requirements better
         for i, branch_name in enumerate(branch_names):
             branch = Branch(branch_name, branch_descriptions[i], self)
