@@ -7,7 +7,15 @@ from src.parsing.parser import parse_data
 
 CURRENT_PATH = os.getcwd()
 DATA_PATH = os.path.join(CURRENT_PATH, 'data')
+RULEBOOK_PATH = os.path.join(CURRENT_PATH, 'rulebook')
 DATA_TXT = os.path.join(DATA_PATH, 'data.txt')
+
+
+def make_dirs():
+    if not os.path.exists(DATA_PATH):
+        os.makedirs(DATA_PATH)
+    if not os.path.exists(RULEBOOK_PATH):
+        os.makedirs(RULEBOOK_PATH)
 
 
 def fix_quotes(obj):
@@ -23,14 +31,18 @@ def fix_quotes(obj):
 
 # One method to call them all, and in the syntax run them
 def process_data_file():
+    make_dirs()
 
     # Read the data file
     with open(DATA_TXT, encoding='utf16') as f:
         lines = f.readlines()
 
-    attributes, races, buffs, conditions, skills, clazzes = parse_data(lines)
+    attributes, races, buffs, conditions, skills, classes = parse_data(lines)
+
+    branches = []
     abilities = []
-    for clazz in clazzes:
+    for clazz in classes:
+        branches.extend(clazz.branches)
         abilities.extend(clazz.abilities)
 
     lists = {
@@ -39,9 +51,16 @@ def process_data_file():
         'buffs': buffs,
         'conditions': conditions,
         'skills': skills,
-        'clazzes': clazzes,
-        'abilities': abilities
+        'classes': classes,
+        'branches': branches,
+        'abilities': abilities,
     }
+
+    # Dump raw components to files
+    for collection, items in lists.items():
+        with open(os.path.join(RULEBOOK_PATH, '%s.json' % collection), 'w') as f:
+            json_items = [fix_quotes(item.to_json()) for item in items]
+            json.dump(json_items, f, indent=4)
 
     components = []
     for name, l in lists.items():
@@ -63,6 +82,7 @@ def process_data_file():
     with open(os.path.join(DATA_PATH, 'skills_to_attributes.json'), 'w') as f:
         json.dump(skill_to_attr, f)
 
+    # Create js for SkillObjects in the API scripts
     with open(os.path.join(DATA_PATH, 'skills.txt'), 'w') as f:
         for skill_name, attr_tla in skill_to_attr.items():
             string = "%s: new SkillObject('%s', '%s'),\n" % (
@@ -75,11 +95,11 @@ def process_data_file():
         f.write("ALL: new SkillObject('All', ''),\n")
 
     # Create a map of abilities in classes
-    clazz_ability_map = {}
-    for clazz in clazzes:
-        clazz_ability_map[clazz.name] = []
+    class_ability_map = {}
+    for clazz in classes:
+        class_ability_map[clazz.name] = []
         for ability in clazz.abilities:
-            clazz_ability_map[clazz.name].append(ability.name)
+            class_ability_map[clazz.name].append(ability.name)
 
-    with open(os.path.join(DATA_PATH, 'clazz_abilities.json'), 'w') as f:
-        json.dump(clazz_ability_map, f)
+    with open(os.path.join(DATA_PATH, 'class_abilities.json'), 'w') as f:
+        json.dump(class_ability_map, f)

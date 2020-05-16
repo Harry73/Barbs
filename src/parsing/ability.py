@@ -36,7 +36,7 @@ class Ability(Component):
         self.tags = tags
 
     def info(self):
-        return ('%s[name="%s", clazz=%s, branch=%s, tier=%s, action="%s", cost="%s", rng="%s", duration="%s", '
+        return ('%s[name="%s", class=%s, branch=%s, tier=%s, action="%s", cost="%s", range="%s", duration="%s", '
                 'description="%s", tags=%s]') % (
                    self.cname, self.name, self.clazz, self.branch, self.tier, self.action, self.cost, self.rng,
                    self.duration, self.description, self.tags
@@ -46,12 +46,12 @@ class Ability(Component):
         return {
             'type': 'ability',
             'name': self.name,
-            'clazz': self.clazz.name,
+            'class': self.clazz.name,
             'branch': self.branch.name,
             'tier': self.tier,
             'action': self.action,
             'cost': self.cost,
-            'rng': self.rng,
+            'range': self.rng,
             'duration': self.duration,
             'description': self.description,
             'tags': self.tags,

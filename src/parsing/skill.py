@@ -3,8 +3,10 @@ from src.parsing.component import Component
 
 class Skill(Component):
 
-    def __init__(self, name, description, attribute):
-        super(Skill, self).__init__(name, 'Skill')
+    def __init__(self, category, name, description, attribute):
+        super(Skill, self).__init__('%s %s' % (category, name), 'Skill')
+        self.sub_name = name
+        self.category = category
         self.description = description
         self.attribute = attribute  # an Attribute object
         self.rank_notes = {}
@@ -23,6 +25,8 @@ class Skill(Component):
         return {
             'type': 'skill',
             'name': self.name,
+            'sub_name': self.sub_name,
+            'category': self.category,
             'description': self.description,
             'attribute': self.attribute.name,
             'rank_notes': self.rank_notes,

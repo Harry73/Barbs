@@ -182,7 +182,7 @@ def parse_skills(lines, attributes):
             start += 1
 
         # Split each line into fields
-        skill_field = _trim(skill_line.split(':')[0])
+        skill_category = _trim(skill_line.split(':')[0])
         skill_name = _trim(skill_line.split(':')[1])
         description = _trim(description_line.split(':')[0])
         attribute = get_attribute(_trim(attribute_line.split(' ')[-1]))
@@ -192,7 +192,7 @@ def parse_skills(lines, attributes):
             rank_note = (_trim(rank_line.split(split_char)[0]), _trim(rank_line.split(split_char)[1]))
             rank_notes.append(rank_note)
 
-        skill = Skill('%s %s' % (skill_field, skill_name), description, attribute)
+        skill = Skill(skill_category, skill_name, description, attribute)
         skill.add_rank_notes(rank_notes)
         skills.append(skill)
 
@@ -284,10 +284,15 @@ def parse_clazzes(lines, skills):
     class_hint_lines = lines[0:first_class_index]
 
     # Process class previews
+    num_requirements = None
     for i in range(0, len(class_hint_lines)):
         preview_line = class_hint_lines[i]
 
         if 'Classes with' in preview_line:
+            ints = [int(s) for s in preview_line.split() if s.isdigit()]
+            if len(ints) != 1:
+                raise Exception('Found more than one integer in line "%s"' % preview_line)
+            num_requirements = ints[0]
             continue
 
         split_char = _get_split_char(preview_line)
@@ -302,7 +307,7 @@ def parse_clazzes(lines, skills):
             raise Exception('Class %s already exists' % clazz_name)
 
         clazz = Clazz(clazz_name)
-        clazz.add_preview(clazz_preview, skill_reqs)
+        clazz.add_preview(clazz_preview, skill_reqs, num_requirements)
         clazzes.append(clazz)
 
     # Process full classes

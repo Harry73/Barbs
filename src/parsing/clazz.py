@@ -18,10 +18,10 @@ class Clazz(Component):
         self.passive = {}
         self.abilities = []
 
-    def add_preview(self, preview, skill_reqs):
+    def add_preview(self, preview, skill_reqs, num_requirements):
         self.preview = preview
-        self.num_requirements = len(skill_reqs)
         self.known_requirements.extend(skill_reqs)
+        self.num_requirements = num_requirements
 
     def add_passive(self, flavor_text, description, num_reqs, skill_reqs, branch_names, branch_descriptions,
                     passive_name, passive_description):
@@ -44,14 +44,14 @@ class Clazz(Component):
 
     def info(self):
         return ('%s[name="%s", preview="%s", flavor_text="%s", description="%s", num_requirements=%s, '
-                'known_requirements=%s, full_requirements=%s, branches=%s, passive=%s, clazz_skills=%s]') % (
+                'known_requirements=%s, full_requirements=%s, branches=%s, passive=%s, abilities=%s]') % (
             self.cname, self.name, self.preview, self.flavor_text, self.description, self.num_requirements,
             self.known_requirements, self.full_requirements, self.branches, self.passive, self.abilities
         )
 
     def to_json(self):
         j = {
-            'type': 'clazz',
+            'type': 'class',
             'name': self.name,
             'num_requirements': self.num_requirements,
         }

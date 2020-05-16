@@ -19,11 +19,11 @@ class Branch(Component):
         super(Branch, self).__init__(name, 'Branch')
         self.description = description
         self.clazz = clazz  # a Clazz object
-        self.clazz_abilities = []  # list of Ability objects
+        self.class_abilities = []  # list of Ability objects
 
     def add_ability(self, ability):
-        if ability not in self.clazz_abilities:
-            self.clazz_abilities.append(ability)
+        if ability not in self.class_abilities:
+            self.class_abilities.append(ability)
 
     def info(self):
         return '%s[name="%s", description="%s", clazz=%s]' % (self.cname, self.name, self.description, self.clazz)
@@ -34,5 +34,5 @@ class Branch(Component):
             'name': self.name,
             'description': self.description,
             'clazz': self.clazz.name,
-            'skills': [ability.name for ability in self.clazz_abilities],
+            'abilities': [ability.name for ability in self.class_abilities],
         }
