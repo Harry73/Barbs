@@ -53,7 +53,10 @@ class Clazz(Component):
         j = {
             'type': 'class',
             'name': self.name,
+            # We should always have the information from the class hint
+            'preview': self.preview,
             'num_requirements': self.num_requirements,
+            'known_requirements': self.known_requirements,
         }
 
         if self.passive:
@@ -64,11 +67,6 @@ class Clazz(Component):
                 'branches': [branch.name for branch in self.branches],
                 'passive': self.passive,
                 'abilities': [ability.name for ability in self.abilities],
-            })
-        else:
-            j.update({
-                'preview': self.preview,
-                'requirements': self.known_requirements,
             })
 
         return j

@@ -326,8 +326,10 @@ def parse_clazzes(lines, skills):
             if lines[i].startswith('Description'):
                 break  # No longer handling requirements, go back to class handling
 
-            # TODO: attempt to parse these better so we can link the skill
-            requirements.append(lines[i].strip())
+            requirement = lines[i]
+            if requirement.startswith('·'):
+                requirement = requirement[1:]
+            requirements.append(requirement.strip())
 
         flavor_text = lines[i + 1]
         description = lines[i + 2]

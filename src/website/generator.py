@@ -18,6 +18,10 @@ def _debug(term, component):
     print('Working on %s %s' % (term, component['name']))
 
 
+def _href(term, name):
+    return '<a href="#{type}_{name}">{name}</a>'.format(type=term, name=name)
+
+
 def _get_component(component_name, component_list):
     for component in component_list:
         if component['name'] == component_name:
@@ -36,9 +40,9 @@ def build_attributes():
     attribute_htmls = []
     for attribute in attributes:
         _debug('attribute', attribute)
-        name = '%s (%s)' % (attribute['name'], attribute['abbreviation'])
         attribute_html = attribute_template.format(
-            name=name,
+            name=attribute['name'],
+            name_and_tla='%s (%s)' % (attribute['name'], attribute['abbreviation']),
             description=attribute['description']
         )
         attribute_htmls.append(attribute_html)
@@ -120,6 +124,7 @@ def build_skills():
             skill_html = skill_template.format(
                 name='%s: %s' % (skill['category'], skill['sub_name']),
                 description=skill['description'],
+                attribute=skill['attribute'],
                 rank_notes='\n'.join(rank_note_htmls),
             )
             skill_htmls.append(skill_html)
@@ -134,7 +139,48 @@ def build_skills():
 
 
 def build_class_hint_unlocks():
-    return '{class_hint_unlocks}'
+    with open(os.path.join(HTML_TEMPLATES, 'class_hint.html'), encoding='utf8') as f:
+        class_hint_template = f.read().strip()
+    with open(os.path.join(HTML_TEMPLATES, 'class_hints_section.html'), encoding='utf8') as f:
+        class_hints_section_template = f.read().strip()
+
+    with open(os.path.join(RULEBOOK_PATH, 'classes.json'), encoding='utf8') as f:
+        classes = json.load(f)
+
+    reqs_per_class = {}
+    for clazz in classes:
+        reqs = clazz['num_requirements']
+        if reqs not in reqs_per_class:
+            reqs_per_class[reqs] = []
+        reqs_per_class[reqs].append(clazz)
+
+    class_hint_section_htmls = []
+    for reqs in reqs_per_class:
+
+        class_hint_htmls = []
+        for clazz in reqs_per_class[reqs]:
+            _debug('class hint', clazz)
+
+            # We're using the presence of the flavor_text field to indicate whether or not a class is unlocked.
+            # We'll link to the full class if it is unlocked.
+            name_or_linked_name = clazz['name']
+            if 'flavor_text' in clazz:
+                name_or_linked_name = _href('class', clazz['name'])
+
+            class_hint_html = class_hint_template.format(
+                name=name_or_linked_name,
+                preview=clazz['preview'],
+                known_requirements=', '.join(clazz['known_requirements']),
+            )
+            class_hint_htmls.append(class_hint_html)
+
+        class_hints_section_html = class_hints_section_template.format(
+            reqs=reqs,
+            class_hints=BR_JOIN(class_hint_htmls),
+        )
+        class_hint_section_htmls.append(class_hints_section_html)
+
+    return BR_JOIN(class_hint_section_htmls)
 
 
 def _build_branches_html(clazz, branches, abilities):
@@ -199,7 +245,8 @@ def build_classes():
         branch_description_htmls = []
         for branch_name in clazz['branches']:
             branch = _get_component(branch_name, branches)
-            branch_description_html = list_item_template.format(text=branch['description'])
+            linked_branch_description = branch['description'].replace(branch_name, _href('branch', branch_name))
+            branch_description_html = list_item_template.format(text=linked_branch_description)
             branch_description_htmls.append(branch_description_html)
 
         passive_name = next(iter(clazz['passive']))
