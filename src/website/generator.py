@@ -30,6 +30,22 @@ def _get_component(component_name, component_list):
     raise Exception('Component %s not found' % component_name)
 
 
+def _try_link_skill_req(skill_req):
+    with open(os.path.join(RULEBOOK_PATH, 'skills.json'), encoding='utf8') as f:
+        skills = json.load(f)
+
+    for skill in skills:
+        if skill['name'] in skill_req:
+            return skill_req.replace(skill['name'], _href('skill', skill['name']))
+
+    for skill in skills:
+        if 'any' in skill_req.lower() and skill['category'] in skill_req:
+            return skill_req.replace(skill['category'], _href('skills', skill['category']))
+
+    print('Failed to link skill for requirement "%s"' % skill_req)
+    return skill_req
+
+
 def build_attributes():
     with open(os.path.join(HTML_TEMPLATES, 'attribute.html'), encoding='utf8') as f:
         attribute_template = f.read().strip()
@@ -122,7 +138,7 @@ def build_skills():
                     rank_note_htmls.append(list_item_template.format(text=rank_note))
 
             skill_html = skill_template.format(
-                name='%s: %s' % (skill['category'], skill['sub_name']),
+                name=skill['name'],
                 description=skill['description'],
                 attribute=skill['attribute'],
                 rank_notes='\n'.join(rank_note_htmls),
@@ -170,7 +186,7 @@ def build_class_hint_unlocks():
             class_hint_html = class_hint_template.format(
                 name=name_or_linked_name,
                 preview=clazz['preview'],
-                known_requirements=', '.join(clazz['known_requirements']),
+                known_requirements=', '.join([_try_link_skill_req(req) for req in clazz['known_requirements']]),
             )
             class_hint_htmls.append(class_hint_html)
 
@@ -239,7 +255,7 @@ def build_classes():
 
         requirement_htmls = []
         for requirement in clazz['requirements']:
-            requirement_html = list_item_template.format(text=requirement)
+            requirement_html = list_item_template.format(text=_try_link_skill_req(requirement))
             requirement_htmls.append(requirement_html)
 
         branch_description_htmls = []

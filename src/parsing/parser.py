@@ -182,8 +182,7 @@ def parse_skills(lines, attributes):
             start += 1
 
         # Split each line into fields
-        skill_category = _trim(skill_line.split(':')[0])
-        skill_name = _trim(skill_line.split(':')[1])
+        skill_name = _trim(skill_line)
         description = _trim(description_line.split(':')[0])
         attribute = get_attribute(_trim(attribute_line.split(' ')[-1]))
         rank_notes = [('Untrained', _trim(untrained_line.split('–')[1]))]
@@ -192,7 +191,7 @@ def parse_skills(lines, attributes):
             rank_note = (_trim(rank_line.split(split_char)[0]), _trim(rank_line.split(split_char)[1]))
             rank_notes.append(rank_note)
 
-        skill = Skill(skill_category, skill_name, description, attribute)
+        skill = Skill(skill_name, description, attribute)
         skill.add_rank_notes(rank_notes)
         skills.append(skill)
 

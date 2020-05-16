@@ -424,10 +424,10 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function get_passive_clazz(passive) {
-        const clazz_names = Object.keys(BarbsComponents.clazzes);
-        for (let i = 0; i < clazz_names.length; i++) {
-            const clazz = BarbsComponents.clazzes[clazz_names[i]];
+    function get_passive_class(passive) {
+        const class_names = Object.keys(BarbsComponents.classes);
+        for (let i = 0; i < class_names.length; i++) {
+            const clazz = BarbsComponents.classes[class_names[i]];
             if ('passive' in clazz && passive === Object.keys(clazz.passive)[0]) {
                 return clazz;
             }
@@ -857,7 +857,7 @@ var Barbs = Barbs || (function () {
     // these abilities.
     function print_ability_description(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -872,7 +872,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -897,7 +897,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1002,7 +1002,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1027,7 +1027,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1203,7 +1203,7 @@ var Barbs = Barbs || (function () {
         }
 
         const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1266,7 +1266,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1334,7 +1334,7 @@ var Barbs = Barbs || (function () {
                 });
         }
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1371,7 +1371,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1417,7 +1417,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1469,7 +1469,7 @@ var Barbs = Barbs || (function () {
                 roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 20);
             });
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1527,7 +1527,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1553,7 +1553,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1577,7 +1577,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1602,7 +1602,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1631,7 +1631,7 @@ var Barbs = Barbs || (function () {
                 });
         }
 
-        chat(character, ability_block_format.format(ability, ability_info.clazz, ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1678,7 +1678,7 @@ var Barbs = Barbs || (function () {
 
     // TODO there is another half of this passive
     function warrior_warleader(character, ability, parameters) {
-        const clazz = get_passive_clazz(ability);
+        const clazz = get_passive_class(ability);
 
         const target_name = get_parameter('target', parameters);
         if (target_name === null) {
@@ -1868,11 +1868,11 @@ var Barbs = Barbs || (function () {
         }
 
         // Double check that the class and ability names are correct based on the master components list
-        if (!(clazz in BarbsComponents.clazzes)) {
+        if (!(clazz in BarbsComponents.classes)) {
             log('WARNING: mismatched class %s'.format(clazz));
         }
-        if (!(BarbsComponents.clazzes[clazz].abilities.includes(ability))
-                && Object.keys(BarbsComponents.clazzes[clazz].passive)[0] !== ability) {
+        if (!(BarbsComponents.classes[clazz].abilities.includes(ability))
+                && Object.keys(BarbsComponents.classes[clazz].passive)[0] !== ability) {
             log('WARNING: mismatched ability %s'.format(ability));
         }
 

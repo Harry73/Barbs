@@ -86,7 +86,7 @@ def process_data_file():
     with open(os.path.join(DATA_PATH, 'skills.txt'), 'w') as f:
         for skill_name, attr_tla in skill_to_attr.items():
             string = "%s: new SkillObject('%s', '%s'),\n" % (
-                skill_name.replace(' ', '_').upper(),
+                skill_name.replace(' ', '_').replace(':', '').upper(),
                 skill_name,
                 attr_tla,
             )
