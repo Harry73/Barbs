@@ -8,202 +8,80 @@ html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pr
     background: transparent
 }
 
-body {
-    line-height: 1;
-    font-family: arial;
-}
-
-h1 {
-    font-size: 48px;
-}
-
-h2 {
-    font-size: 36px;
-}
-
-h3 {
-    font-size: 28px;
-}
-
-h4 {
-    font-size: 24px;
-}
-
-article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
-    display: block
-}
-
-nav ul {
-    list-style: none
-}
-
-blockquote, q {
-    quotes: none
-}
-
-blockquote:before, blockquote:after, q:before, q:after {
-    content: none
-}
-
-a {
-    margin: 0;
-    padding: 0;
-    font-size: 100%;
-    vertical-align: baseline;
-    background: transparent
-}
-
-ins {
-    background-color: #ff9;
-    color: #000;
-    text-decoration: none
-}
-
-mark {
-    background-color: #ff9;
-    color: #000;
-    font-style: italic;
-    font-weight: bold
-}
-
-del {
-    text-decoration: line-through
-}
-
-abbr[title], dfn[title] {
-    border-bottom: 1px dotted;
-    cursor: help
-}
-
-table {
-    border-collapse: collapse;
-    border-spacing: 0
-}
-
-hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    margin: 1em 0;
-    padding: 0
-}
-
-input, select {
-    vertical-align: middle
-}
-
 body, html {
     background-color: #999999;
 }
 
-header {
-    background: #999999;
-    padding: 20px 30px;
-    max-width: 940px;
-    margin: auto;
+body {
+    line-height: 1;
+    font-family: "Times New Roman", Times, serif;
 }
 
-nav {
-    display: inline-block;
+section {
+    display: block;
 }
 
-nav ul li a {
-    background: #EEE;
-    padding: 2px 10px;
+h1 {
+    font-size: 48px;
+    padding-bottom: 15px;
+}
+
+h2 {
+    font-size: 36px;
+    font-weight: normal;
+    padding-bottom: 15px;
+}
+
+h3 {
+    font-size: 28px;
+    padding-bottom: 15px;
+}
+
+h4 {
+    /* Same as article text, but bold */
     font-size: 20px;
-    text-decoration: none;
     font-weight: bold;
-    color: #444;
-    border-radius: 10px;
+    padding-bottom: 15px;
 }
 
-nav ul li a:hover {
-    background: #999999;
-}
-
-nav ul li {
-    display: inline-block;
-    margin: 10px;
-}
-
-nav ul {
-    list-style: none;
+#main {
+    margin-left: 20%;  /* Same as the width of the sidenav */
 }
 
 #pageContent {
-    max-width: 1000px;
-    margin: auto;
+    padding-left: 10%;
+    padding-right: 10%;
     border: none;
-}
-
-main {
-    float: left;
-    width: 60%;
-}
-
-aside {
-    float: right;
-    width: 30%;
 }
 
 article {
     border-bottom: 2px dotted #999;
     padding-bottom: 20px;
-    margin-bottom: 20px;
     color: #000000;
     font-size: 20px;
-}
-
-article h2 {
-    font-weight: normal;
-    margin-bottom: 12px;
 }
 
 article p {
     margin-bottom: 8px;
 }
 
-main section {}
+/* Image at the top */
 
-address {
-    padding: 10px 20px 30px 10px;
+#logo-container {
+    display: inline-block;
+    padding-left: 20%;  /* Same as the width of the sidenav */
 }
 
-aside>div {
-    margin: 10px auto;
-    background: #AEC6CF;
-    min-height: 100px;
+#logo {
+    margin-left: 10%;
+    margin-right: 10%;
+    vertical-align: middle;
 }
 
-body>section {
-    max-width: 1000px;
-    margin: auto;
-    padding: 30px 0px;
-    border-bottom: 1px solid #999;
-    color: #333;
+img {
+    width: 100%;
 }
 
-body {
-    font-family: "Lato", sans-serif;
-}
-
-@media screen and (max-width: 1000px) {
-    body>section {
-        padding: 30px 20px;
-    }
-}
-
-@media screen and (max-width: 2000px) {
-    main {
-        float: none;
-        width: 100%;
-    }
-    aside {
-        float: none;
-        width: 100%;
-    }
-}
 
 /* lists */
 
@@ -222,14 +100,21 @@ table, th, td {
     border: 1px solid black;
 }
 
-th, td {
-    padding: 5px;
-    vertical-align: middle;
-}
-
 table {
     table-layout: fixed;
     width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.padded {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+th, td {
+    padding: 5px;
+    vertical-align: middle;
 }
 
 td {
@@ -238,28 +123,11 @@ td {
     width: 25%;
 }
 
-
-/* image at the top */
-
-#logo {
-    display: inline-block;
-    vertical-align: middle;
-    font-size: 30px;
-    margin-right: 75px;
-    color: #FFF;
-}
-
-#logo img {
-    width: 750px;
-    vertical-align: middle;
-    margin-right: 10px;
-}
-
 /* sidebar */
 
 .sidenav {
     height: 100%;
-    width: 320px;
+    width: 20%;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -267,14 +135,15 @@ td {
     background-color: #111;
     overflow-x: hidden;
     padding-top: 20px;
+    transition: 0.1s;
 }
 
 .sidenav a {
-    padding: 6px 8px 6px 16px;
-    text-decoration: none;
+    display: block;
     font-size: 20px;
     color: #818181;
-    display: block;
+    text-decoration: none;
+    padding: 6px 8px 6px 16px;
 }
 
 .sidenav a:hover {
@@ -287,16 +156,21 @@ td {
 }
 
 .sidenav-subsection a {
-    font-size: 14px;
+    font-size: 16px;
 }
 
-.main {
-    margin-left: 160px; /* Same as the width of the sidenav */
-    font-size: 28px; /* Increased text to enable scrolling */
-    padding: 0px 10px;
-}
+@media screen and (max-width: 750px) {
+    /* Shrink text when the screen is very narrow */
+    article {
+        font-size: 16px;
+    }
 
-@media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
-    .sidenav a {font-size: 18px;}
+    .sidenav a {
+        font-size: 14px;
+        padding: 3px 4px 3px 8px;
+    }
+    .sidenav-subsection a {
+        font-size: 10px;
+        padding-left: 10px;
+    }
 }

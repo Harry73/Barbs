@@ -4,12 +4,10 @@ import shutil
 
 
 CURRENT_PATH = os.getcwd()
-
 HTML_PATH = os.path.join(CURRENT_PATH, 'html')
 HTML_GENERATED = os.path.join(HTML_PATH, 'generated')
 HTML_TEMPLATES = os.path.join(HTML_PATH, 'templates')
 HOME_PAGE = os.path.join(HTML_GENERATED, 'index.html')
-
 RULEBOOK_PATH = os.path.join(CURRENT_PATH, 'rulebook')
 
 BR_JOIN = '<br>'.join
@@ -56,13 +54,9 @@ def build_skills_nav():
         all_skills = json.load(f)
 
     # The rulebook organizes skills into sections by category. We will make a nav link per category.
-    categorized_skills = {}
-    for skill in all_skills:
-        category = skill['category']
-        if category not in categorized_skills:
-            categorized_skills[category] = None
+    categorized_skills = set(skill['category'] for skill in all_skills)
 
-    nav_htmls = [_href('skills_%s' % category, category) for category in categorized_skills]
+    nav_htmls = [_href('skills_%s' % category, category) for category in sorted(categorized_skills)]
     return '\n'.join(nav_htmls)
 
 
@@ -71,7 +65,7 @@ def build_classes_nav():
         classes = json.load(f)
 
     nav_htmls = []
-    for clazz in classes:
+    for clazz in sorted(classes, key=lambda c: c['name']):
         if 'flavor_text' not in clazz:
             continue
 
@@ -183,7 +177,7 @@ def build_skills():
 
     skills_section_htmls = []
     for category in sorted(categorized_skills.keys()):
-        skills = categorized_skills[category]
+        skills = sorted(categorized_skills[category], key=lambda s: s['name'])
 
         skill_htmls = []
         for skill in skills:
@@ -310,7 +304,7 @@ def build_classes():
         abilities = json.load(f)
 
     class_htmls = []
-    for clazz in classes:
+    for clazz in sorted(classes, key=lambda c: c['name']):
         # Skip over classes that haven't been unlocked yet. We'll use the flavor_text field to deduce this.
         if 'flavor_text' not in clazz:
             continue
@@ -367,9 +361,9 @@ def generate_html():
         'class_hint_unlocks': build_class_hint_unlocks(),
         'classes': build_classes(),
     }
-    index_template = index_template.format(**format_args)
+    index_html = index_template.format(**format_args)
 
     with open(os.path.join(HTML_GENERATED, 'index.html'), 'w', encoding='utf8') as f:
-        f.write(index_template)
+        f.write(index_html)
 
     shutil.copyfile(os.path.join(HTML_TEMPLATES, 'style.css'), os.path.join(HTML_GENERATED, 'style.css'))
