@@ -11,6 +11,7 @@ HTML_TEMPLATES = os.path.join(HTML_PATH, 'templates')
 HOME_PAGE = os.path.join(HTML_GENERATED, 'index.html')
 
 BR_JOIN = '<br>'.join
+HTML_TAGS = ['<ul>', '</ul>', '<li>', '</li>', '<br>']
 
 
 def _debug(term, component):
@@ -202,6 +203,13 @@ def _build_branches_html(clazz, branches, abilities):
             # There are some abilities in different classes with the same name, so additionally check that the
             # class name is right when finding the ability
             ability = get_component(ability_name, abilities, condition=lambda c: c['class'] == clazz['name'])
+            description = []
+            for line in ability['description']:
+                if any(tag in line for tag in HTML_TAGS):
+                    description.append(line)
+                else:
+                    description.append('<p>%s</p>' % line)
+
             ability_html = ability_template.format(
                 name=ability['name'].replace('"', '&quot'),
                 clazz=ability['class'],
@@ -209,7 +217,7 @@ def _build_branches_html(clazz, branches, abilities):
                 cost=ability['cost'],
                 range=ability['range'],
                 duration=ability['duration'],
-                description=''.join('<p>%s</p>' % line for line in ability['description']),
+                description=''.join(description),
                 tags=', '.join(ability['tags']),
             )
             ability_htmls.append(ability_html)
@@ -253,6 +261,14 @@ def build_classes(abilities, branches, classes, skills):
 
         passive_name = next(iter(clazz['passive']))
         passive_description = clazz['passive'][passive_name]
+        if '<ul>' in passive_description and '</ul>' in passive_description:
+            start_part = passive_description.split('<ul>', 1)[0]
+            html_part = passive_description.split('<ul>', 1)[1].split('</ul>', 1)[0]
+            end_part = passive_description.split('<ul>', 1)[1].split('</ul>', 1)[1]
+            passive_description = '%s</p><ul>%s</ul><p>%s</p>' % (start_part, html_part, end_part)
+        else:
+            passive_description += '</p>'
+
         branches_html = _build_branches_html(clazz, branches, abilities)
 
         class_html = class_template.format(

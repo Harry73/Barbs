@@ -743,8 +743,10 @@
         "duration": "Instant",
         "description": [
             "You push and pull water to adjust the position of others. For all targets in range, choose one or neither:",
-            "Push the target 10 feet away from you",
-            "Pull the target 10 feet towards you.",
+            "<ul>",
+            "<li>Push the target 10 feet away from you</li>",
+            "<li>Pull the target 10 feet towards you</li>",
+            "</ul>",
             "Targets cannot occupy the same space, and so they will bump into each other and stop their forced movement as needed to accommodate. All forced movement occurs simultaneously."
         ],
         "tags": [
@@ -885,15 +887,17 @@
         "duration": "1 minute",
         "description": [
             "You provide a swig of magically enhanced drink to an ally. Target ally in range gains two of the following buffs for the duration of your choosing (you can't choose the same effect more than once and similar effects from multiple casts of this spell do not stack):",
-            "Physical attacks gain, \"On Hit: Deal 4d6 water magic damage\"",
-            "Spell attacks have their magic damage increased by 30%",
-            "At the beginning of each turn, heal for 10 health",
-            "Gain +20 movement speed",
-            "Gain +10% critical strike chance",
-            "Gain +100% critical damage modifier",
-            "Gain +20 to all skill checks",
-            "Gain the ability to roll a skill of the caster's choosing that the caster has, with the caster's modifier",
-            "Gain the ability to speak, understand, read, and write a language of the caster's choosing that the caster knows",
+            "<ul>",
+            "<li>Physical attacks gain, \"On Hit: Deal 4d6 water magic damage\"</li>",
+            "<li>Spell attacks have their magic damage increased by 30%</li>",
+            "<li>At the beginning of each turn, heal for 10 health</li>",
+            "<li>Gain +20 movement speed</li>",
+            "<li>Gain +10% critical strike chance</li>",
+            "<li>Gain +100% critical damage modifier</li>",
+            "<li>Gain +20 to all skill checks</li>",
+            "<li>Gain the ability to roll a skill of the caster's choosing that the caster has, with the caster's modifier</li>",
+            "<li>Gain the ability to speak, understand, read, and write a language of the caster's choosing that the caster knows</li>",
+            "</ul>",
             "You may expend an additional 20 mana to bottle the effects you choose into a potion which will expire in 1 hour."
         ],
         "tags": [
@@ -986,8 +990,10 @@
         "duration": "Instant",
         "description": [
             "You create a small explosive ball of mana. Deal 4d12 magic damage of a chosen element type in one of the following AOE shapes of your choice:",
-            "A 25 ft cube",
-            "A 45 ft cross"
+            "<ul>",
+            "<li>A 25 ft cube</li>",
+            "<li>A 45 ft cross</li>",
+            "</ul>"
         ],
         "tags": [
             "Spell",
@@ -1576,8 +1582,10 @@
         "duration": "Instant",
         "description": [
             "You spew out skeins of sticky mana. Choose one:",
-            "Attach yourself or another target in range to a surface within range, preventing them from falling or being pushed further from that surface until the beginning of your next turn",
-            "Target in range becomes Immobilized until the end of their next turn"
+            "<ul>",
+            "<li>Attach yourself or another target in range to a surface within range, preventing them from falling or being pushed further from that surface until the beginning of your next turn</li>",
+            "<li>Target in range becomes Immobilized until the end of their next turn</li>",
+            "</ul>"
         ],
         "tags": [
             "Spell",
@@ -1664,8 +1672,10 @@
         "duration": "1 hour",
         "description": [
             "You form a surface of solidified mana. Choose one:",
-            "Create a 10 ft wide, 100 ft long bridge starting in an empty space in range. Allies cannot be pushed off the bridge.",
-            "Create a 20 ft high, 20 ft wide wall centered on an empty space in range. Allies can freely see through, walk through, and fire projectiles through the wall."
+            "<ul>",
+            "<li>Create a 10 ft wide, 100 ft long bridge starting in an empty space in range. Allies cannot be pushed off the bridge.</li>",
+            "<li>Create a 20 ft high, 20 ft wide wall centered on an empty space in range. Allies can freely see through, walk through, and fire projectiles through the wall.</li>",
+            "</ul>"
         ],
         "tags": [
             "Spell",
@@ -2313,8 +2323,10 @@
         "duration": "Instant",
         "description": [
             "You reap life energy from cursed flesh. Deal 5d12 physical damage to a target in range. If the target has any Curses, expunge those Curses immediately, then select one of the following effects for each Curse expunged this way:",
-            "\u00b7         Heal for 2d12",
-            "\u00b7         Empower your next attack with a greatsword or dark spell, increasing damage by 50%"
+            "<ul>",
+            "<li>Heal for 2d12</li>",
+            "<li>Empower your next attack with a greatsword or dark spell, increasing damage by 50%</li>",
+            "</ul>"
         ],
         "tags": [
             "Attack",
@@ -2740,9 +2752,11 @@
         "duration": "Instant",
         "description": [
             "You fire a small bolt of lightning at an enemy. Deal 4d12 lightning magic damage to a target in range, then randomly choose one of the following:",
-            "50% chance: Deal an additional d12 lightning magic damage",
-            "30% chance: Inflict Paralyzed for 1 minute",
-            "20% chance: Inflict Stunned until the beginning of your next turn"
+            "<ul>",
+            "<li>50% chance: Deal an additional d12 lightning magic damage</li>",
+            "<li>30% chance: Inflict Paralyzed for 1 minute</li>",
+            "<li>20% chance: Inflict Stunned until the beginning of your next turn</li>",
+            "</ul>"
         ],
         "tags": [
             "Spell",
@@ -2769,9 +2783,11 @@
         "duration": "1 minute",
         "description": [
             "You charge an enemy with electricity. Deal 2d12 lightning magic damage to a target in range. For the duration, one of the following effects randomly occurs at the beginning of each of the target's turns:",
-            "50% chance: The target takes 2d12 lightning magic damage",
-            "30% chance: The target and all adjacent enemies take 2d12 lightning magic damage",
-            "20% chance: The target and all adjacent enemies take 2d12 lightning magic damage and are inflicted with 20% Lightning Vulnerability"
+            "<ul>",
+            "<li>50% chance: The target takes 2d12 lightning magic damage</li>",
+            "<li>30% chance: The target and all adjacent enemies take 2d12 lightning magic damage</li>",
+            "<li>20% chance: The target and all adjacent enemies take 2d12 lightning magic damage and are inflicted with 20% Lightning Vulnerability</li>",
+            "</ul>"
         ],
         "tags": [
             "Spell",
@@ -2798,9 +2814,11 @@
         "duration": "Instant",
         "description": [
             "You fire a large bolt of lightning at multiple enemies. Deal 4d12 lightning magic damage and inflict Paralyzed to all enemies in a 150 ft line starting from your position in any direction. This spell randomly has the following additional properties:",
-            "50% chance: Deal an additional d12 lightning magic damage",
-            "30% chance: This attack ignores MR",
-            "20% chance: This spell cannot be counterspelled"
+            "<ul>",
+            "<li>50% chance: Deal an additional d12 lightning magic damage</li>",
+            "<li>30% chance: This attack ignores MR</li>",
+            "<li>20% chance: This spell cannot be counterspelled</li>",
+            "</ul>"
         ],
         "tags": [
             "Spell",
@@ -2853,9 +2871,11 @@
         "duration": "Instant",
         "description": [
             "You take advantage of random energy to power your spells. The next damaging spell you cast is affected by your critical strike chance and critical damage modifier. That spell also randomly gains one of the following effects:",
-            "50% chance: The spell deals an additional d12 lightning magic damage",
-            "30% chance: The spell's range increases by 20 or 20%, whichever is higher",
-            "20% chance: The spell's mana cost is decreased by 20 or 20%, whichever is lower."
+            "<ul>",
+            "<li>50% chance: The spell deals an additional d12 lightning magic damage</li>",
+            "<li>30% chance: The spell's range increases by 20 or 20%, whichever is higher</li>",
+            "<li>20% chance: The spell's mana cost is decreased by 20 or 20%, whichever is lower.</li>",
+            "</ul>"
         ],
         "tags": [
             "Empower",
@@ -2880,9 +2900,11 @@
         "duration": "Instant",
         "description": [
             "You ignite enemy mana with random energy. As a reaction to a target in range casting a spell, counter that spell, then randomly choose one:",
-            "50% chance: The target takes 2d12 lightning magic damage",
-            "30% chance: The target is inflicted with Paralysis",
-            "20% chance: The target is Stunned until the end of its turn"
+            "<ul>",
+            "<li>50% chance: The target takes 2d12 lightning magic damage</li>",
+            "<li>30% chance: The target is inflicted with Paralysis</li>",
+            "<li>20% chance: The target is Stunned until the end of its turn</li>",
+            "</ul>"
         ],
         "tags": [
             "Spell",
@@ -2908,8 +2930,10 @@
         "duration": "1 minute",
         "description": [
             "You temper a weapon with runes of strengthening or weakening. Choose one:",
-            "Target weapon in range gains, \"On Hit: Deal 4d10 physical damage.\"",
-            "Target weapon in range gains, \"While equipped, deal 50% decreased physical damage.\""
+            "<ul>",
+            "<li>Target weapon in range gains, \"On Hit: Deal 4d10 physical damage.\"</li>",
+            "<li>Target weapon in range gains, \"While equipped, deal 50% decreased physical damage.\"</li>",
+            "</ul>"
         ],
         "tags": [
             "Spell",
@@ -2930,8 +2954,10 @@
         "duration": "1 minute",
         "description": [
             "You temper armor with runes of strengthening or weakening. Choose one:",
-            "Target armor in range has its implicit AC, Evasion, MR, and CR increased by 50%.",
-            "Target armor in range loses all AC, Evasion, MR, and CR."
+            "<ul>",
+            "<li>Target armor in range has its implicit AC, Evasion, MR, and CR increased by 50%.</li>",
+            "<li>Target armor in range loses all AC, Evasion, MR, and CR.</li>",
+            "</ul>"
         ],
         "tags": [
             "Spell",
@@ -2952,12 +2978,14 @@
         "duration": "1 minute",
         "description": [
             "You affix runes to an accessory for a variety of effects. Choose one:",
-            "Target ring in range gains, \"On Hit: Deal 2d20 magic damage of a chosen type.\"",
-            "Target ring in range gains, \"At the beginning of your turn, lose 40 mana and stamina.\"",
-            "Target belt in range gains, \"You have elemental resistance against 2 chosen types.\"",
-            "Target belt in range gains, \"You have elemental weakness against 2 chosen types.\"",
-            "Target necklace in range gains, \"At the beginning of your turn, heal 30 health.\"",
-            "Target necklace in range gains, \"At the beginning of your turn, lose 30 health.\"",
+            "<ul>",
+            "<li>Target ring in range gains, \"On Hit: Deal 2d20 magic damage of a chosen type.\"</li>",
+            "<li>Target ring in range gains, \"At the beginning of your turn, lose 40 mana and stamina.\"</li>",
+            "<li>Target belt in range gains, \"You have elemental resistance against 2 chosen types.\"</li>",
+            "<li>Target belt in range gains, \"You have elemental weakness against 2 chosen types.\"</li>",
+            "<li>Target necklace in range gains, \"At the beginning of your turn, heal 30 health.\"</li>",
+            "<li>Target necklace in range gains, \"At the beginning of your turn, lose 30 health.\"</li>",
+            "</ul>",
             "You may spend an additional 20 mana to choose a second effect for a type of accessory not previously chosen. You may then spend another additional 10 mana to choose a third effect for the last accessory type not previously chosen."
         ],
         "tags": [
@@ -3005,10 +3033,12 @@
         "duration": "1 minute",
         "description": [
             "You reconstruct the floor or ceiling to various effect. Choose one:",
-            "The surface becomes difficult terrain.",
-            "The surface becomes fragile, crumbling underneath the weight of entities walking over it.",
-            "The surface becomes slick, granting entities doubled move speed.",
-            "The surface becomes unbreakable.",
+            "<ul>",
+            "<li>The surface becomes difficult terrain.</li>",
+            "<li>The surface becomes fragile, crumbling underneath the weight of entities walking over it.</li>",
+            "<li>The surface becomes slick, granting entities doubled move speed.</li>",
+            "<li>The surface becomes unbreakable.</li>",
+            "</ul>",
             "After choosing an effect, you may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
         ],
         "tags": [
@@ -3057,12 +3087,14 @@
         "duration": "24 hours",
         "description": [
             "You stamp a variety of runes on the face of a coin. While touching a target coin, choose one:",
-            "Inscribe a magical telepathic message of up to 100 words or 10 images that can be heard/seen by anyone who picks up the coin.",
-            "Inscribe a magical access point that allows you to telepathically communicate freely with anyone holding the coin.",
-            "Inscribe a magical tracker that allows you to always know the coin's position and if/when it changes owners.",
-            "Inscribe a magical storage space that grants the wielder of the coin +1 buff limit and +1 concentration limit.",
-            "Inscribe a restorative rune that grants the wielder of the coin 5% health, mana, and stamina regeneration.",
-            "Inscribe a rune of luck that grants the wielder of the coin +5 to all skill checks.",
+            "<ul>",
+            "<li>Inscribe a magical telepathic message of up to 100 words or 10 images that can be heard/seen by anyone who picks up the coin.</li>",
+            "<li>Inscribe a magical access point that allows you to telepathically communicate freely with anyone holding the coin.</li>",
+            "<li>Inscribe a magical tracker that allows you to always know the coin's position and if/when it changes owners.</li>",
+            "<li>Inscribe a magical storage space that grants the wielder of the coin +1 buff limit and +1 concentration limit.</li>",
+            "<li>Inscribe a restorative rune that grants the wielder of the coin 5% health, mana, and stamina regeneration.</li>",
+            "<li>Inscribe a rune of luck that grants the wielder of the coin +5 to all skill checks.</li>",
+            "</ul>",
             "When you cast this spell, you may choose to expend an additional 5 mana to choose a second effect for the coin's opposite face. An entity can only benefit from one coin made by this ability at a time."
         ],
         "tags": [
@@ -3083,8 +3115,10 @@
         "duration": "24 hours",
         "description": [
             "You power up or power down a vehicle. Choose one:",
-            "Target vehicle in range has its move speed doubled and no longer requires a system to propel it forward (horses, engines) for the duration.",
-            "Target vehicle becomes immotile through its regular means (wheels lock, sails fail, etc) for the duration.",
+            "<ul>",
+            "<li>Target vehicle in range has its move speed doubled and no longer requires a system to propel it forward (horses, engines) for the duration.</li>",
+            "<li>Target vehicle becomes immotile through its regular means (wheels lock, sails fail, etc) for the duration.</li>",
+            "</ul>",
             "When you cast this spell, you may choose to expend an additional 10 mana to affect another target Vehicle with a new choice, and you may do this any number of times. Concentration is held once for all instances of this spell within one cast."
         ],
         "tags": [
@@ -5919,12 +5953,14 @@
         "duration": "Instant",
         "description": [
             "You use every heavy weapon available to you to pound an enemy into submission. Swap weapons in both hands, then choose one of the following:",
-            "With an axe equipped, deal 8d10 physical damage to a target in range, inflicting half your damage dealt as Bleed for 1 minute",
-            "With a blunt weapon equipped, deal 8d10 physical damage to a target in range, inflicting a condition that decreases the target's move speed by half your damage dealt for 1 minute",
-            "With a longblade equipped, deal 8d10 physical damage to a target in range, inflicting physical vulnerability equal to half your damage dealt for 1 minute (append a \"%\" to the value)",
-            "With a polearm equipped, deal 8d10 physical damage to a target in range, inflicting AC loss equal to half your damage dealt for 1 minute",
-            "With a shield equipped, deal 8d10 physical damage to a target in range, gaining AC equal to half you damage dealt for 1 minute",
-            "With a heavy throwing weapon equipped, deal 8d10 physical damage to a target in range, and this attack does not consume special ammunition (unless it is special ammunition granted by a class ability)",
+            "<ul>",
+            "<li>With an axe equipped, deal 8d10 physical damage to a target in range, inflicting half your damage dealt as Bleed for 1 minute</li>",
+            "<li>With a blunt weapon equipped, deal 8d10 physical damage to a target in range, inflicting a condition that decreases the target's move speed by half your damage dealt for 1 minute</li>",
+            "<li>With a longblade equipped, deal 8d10 physical damage to a target in range, inflicting physical vulnerability equal to half your damage dealt for 1 minute (append a \"%\" to the value)</li>",
+            "<li>With a polearm equipped, deal 8d10 physical damage to a target in range, inflicting AC loss equal to half your damage dealt for 1 minute</li>",
+            "<li>With a shield equipped, deal 8d10 physical damage to a target in range, gaining AC equal to half you damage dealt for 1 minute</li>",
+            "<li>With a heavy throwing weapon equipped, deal 8d10 physical damage to a target in range, and this attack does not consume special ammunition (unless it is special ammunition granted by a class ability)</li>",
+            "</ul>",
             "Then, you may concentrate on this ability. If you do, you may repeat it as a free action at no cost once per turn, choosing a new selection from the list above. Concentration ends when you exhaust the list."
         ],
         "tags": [
@@ -6050,12 +6086,14 @@
         "duration": "Instant",
         "description": [
             "You attack quickly with all of your fast weapons. Swap weapons in both hands, then choose one of the following:",
-            "With a bow equipped, deal 7d10 physical damage to a target in range, inflicting evasion loss equal to half the damage dealt (append a \"%\" to the value)",
-            "With a crossbow equipped, deal 7d10 physical damage to a target in range, pushing the target back a distance equal to half your damage dealt in feet",
-            "With a bullet weapon equipped, deal 7d10 physical damage to a target in range; this attack has a chance of stunning equal to half your damage dealt as a percentage",
-            "With a fine weapon equipped, deal 7d10 physical damage to a target in range, then dash up to half your damage dealt in any direction",
-            "With unarmed combat, deal 7d10 physical damage to a target in range; this attack has a chance to combo equal to 10% of your damage dealt as a percentage",
-            "With a light throwing weapon equipped, deal 7d10 physical damage to a target in range, and this attack does not consume special ammunition (unless it is special ammunition granted by a class ability)",
+            "<ul>",
+            "<li>With a bow equipped, deal 7d10 physical damage to a target in range, inflicting evasion loss equal to half the damage dealt (append a \"%\" to the value)</li>",
+            "<li>With a crossbow equipped, deal 7d10 physical damage to a target in range, pushing the target back a distance equal to half your damage dealt in feet</li>",
+            "<li>With a bullet weapon equipped, deal 7d10 physical damage to a target in range; this attack has a chance of stunning equal to half your damage dealt as a percentage</li>",
+            "<li>With a fine weapon equipped, deal 7d10 physical damage to a target in range, then dash up to half your damage dealt in any direction</li>",
+            "<li>With unarmed combat, deal 7d10 physical damage to a target in range; this attack has a chance to combo equal to 10% of your damage dealt as a percentage</li>",
+            "<li>With a light throwing weapon equipped, deal 7d10 physical damage to a target in range, and this attack does not consume special ammunition (unless it is special ammunition granted by a class ability)</li>",
+            "</ul>",
             "Then, you may concentrate on this ability. If you do, you may repeat it as a free action at no cost once per turn, choosing a new selection from the list above. Concentration ends when you exhaust the list."
         ],
         "tags": [
@@ -6332,8 +6370,10 @@
         "duration": "Instant",
         "description": [
             "You mask your approach with concealing magic. Choose one:",
-            "Target in range becomes invisible for 1 minute.",
-            "Target in range becomes invisible for 1 hour, which ends when the target casts a spell or makes an attack.",
+            "<ul>",
+            "<li>Target in range becomes invisible for 1 minute.</li>",
+            "<li>Target in range becomes invisible for 1 hour, which ends when the target casts a spell or makes an attack.</li>",
+            "</ul>",
             "When you cast this spell, you may spend an additional 20 mana to recast it on a new target, and you may do this any number of times."
         ],
         "tags": [
@@ -8260,11 +8300,14 @@
         "duration": "Instant",
         "description": [
             "You cause an explosion of ice shards and dark energy. Deal 6d8 ice magic damage and 6d8 dark magic damage to all enemies in a 65 ft square centered on a space in range, then choose two additional effects from the following list:",
-            "Inflict Frozen for 1 minute",
-            "Inflict Slowed for 1 minute",
-            "Inflict Blinded for 1 minute",
-            "Inflict 2 curses",
+            "<ul>",
+            "<li>Inflict Frozen for 1 minute</li>",
+            "<li>Inflict Slowed for 1 minute</li>",
+            "<li>Inflict Blinded for 1 minute</li>",
+            "<li>Inflict 2 curses</li>",
+            "</ul>",
             "Instead of choosing two effects from the above list, you may instead have this spell deal an additional 4d8 magic damage of either ice or dark.",
+            "<br>",
             "If you absorb this spell with Magia Erebea, you may have it be cast when you release Magia Erebea as long as it was absorbed for at least 2 turns. If you do release the spell in this way, you may select 3 conditions from the above list, or have the spell deal an additional 6d8 magic damage of either ice or dark."
         ],
         "tags": [
@@ -8296,11 +8339,14 @@
         "duration": "Instant",
         "description": [
             "You cause spears of ice and darkness to fire from your hands in a wide arc. Deal 16d8 magic damage to all enemies in a 60 ft cone in front of you; the type of magic damage dealt and additional effects are dependant on each enemy's distance from you as follows:",
-            "Within 10 ft: 4d8 ice magic damage and 12d8 dark magic damage, and the attack has 30% Lethality",
-            "11 to 20 ft: 6d8 ice magic damage and 10d8 dark magic damage, and inflict a 30% Weaken",
-            "21 to 40 ft: 8d8 ice magic damage and 8d8 dark magic damage",
-            "41 to 50 ft: 10d8 ice magic damage and 6d8 dark magic damage, and inflict Slowed",
-            "51 to 60 ft: 12d8 ice magic damage and 4d8 dark magic damage, and inflict Frozen",
+            "<ul>",
+            "<li>Within 10 ft: 4d8 ice magic damage and 12d8 dark magic damage, and the attack has 30% Lethality</li>",
+            "<li>11 to 20 ft: 6d8 ice magic damage and 10d8 dark magic damage, and inflict a 30% Weaken</li>",
+            "<li>21 to 40 ft: 8d8 ice magic damage and 8d8 dark magic damage</li>",
+            "<li>41 to 50 ft: 10d8 ice magic damage and 6d8 dark magic damage, and inflict Slowed</li>",
+            "<li>51 to 60 ft: 12d8 ice magic damage and 4d8 dark magic damage, and inflict Frozen</li>",
+            "</ul>",
+            "<br>",
             "If you absorb this spell with Magia Erebea, you may have it be cast when you release Magia Erebea as long as it was absorbed for at least 2 turns. If you do release the spell in this way, the cone's range extends to 120 ft, and the above list's effect ranges change to within 20 ft, 21 to 40, 41 to 80, 81 to 100, and 101 to 120 respectively."
         ],
         "tags": [
@@ -8355,10 +8401,13 @@
         "duration": "Endless",
         "description": [
             "You overload the souls of your enemies with corrupting and chilling energy. All enemies in a 65 ft square centered on a space in range gain 2 of the following conditions of your choice:",
-            "Each turn, their move speed and dash/teleport distance decreases by 10.",
-            "Using a dash ability, teleport ability, or Move Action causes their move speed and dash/teleport distance to decrease by 10 after their movement ends.",
-            "Each turn, they gain a curse.",
-            "Making an attack causes them to gain a curse after their attack concludes.",
+            "<ul>",
+            "<li>Each turn, their move speed and dash/teleport distance decreases by 10.</li>",
+            "<li>Using a dash ability, teleport ability, or Move Action causes their move speed and dash/teleport distance to decrease by 10 after their movement ends.</li>",
+            "<li>Each turn, they gain a curse.</li>",
+            "<li>Making an attack causes them to gain a curse after their attack concludes.</li>",
+            "</ul>",
+            "<br>",
             "If you cast this spell with Magia Erebea active, you may select all 4 options from the above list."
         ],
         "tags": [
@@ -8386,9 +8435,12 @@
         "duration": "30 seconds",
         "description": [
             "You pull enemies together to set up for later spell attacks. Create a Flower on a space in range; it is immune to damage and conditions and resists all forced movement, but can be dispelled, and it lasts for 30 seconds. You may only have one Flower active at one time. If a damaging AOE spell you cast also hits the Flower, the damage for that spell is doubled and the Flower is dispelled. Enemies within 1000 ft of it roll a d6 at the beginning of their turns, causing the following effects:",
-            "On a 1 or 2, the enemy gains a curse and is inflicted with Slowed and Confused",
-            "On a 3 or 4, the enemy gains 2 curses, and may not move away from the Flower in any way",
-            "On a 5 or 6, the enemy gains 3 curses, and must use its Move Action to move toward the Flower up to its move speed, even if already next to the Flower. The enemy loses any excess move speed that turn",
+            "<ul>",
+            "<li>On a 1 or 2, the enemy gains a curse and is inflicted with Slowed and Confused</li>",
+            "<li>On a 3 or 4, the enemy gains 2 curses, and may not move away from the Flower in any way</li>",
+            "<li>On a 5 or 6, the enemy gains 3 curses, and must use its Move Action to move toward the Flower up to its move speed, even if already next to the Flower. The enemy loses any excess move speed that turn</li>",
+            "</ul>",
+            "<br>",
             "If you cast this spell with Magia Erebea active, enemies within 1000 ft of the Flower will roll the d6 twice, taking the higher result each time."
         ],
         "tags": [
@@ -8417,8 +8469,11 @@
         "duration": "1 minute",
         "description": [
             "You create a field that absorbs magical energy to gain power. Create a 65 ft field centered on a space within range. For each enemy within the field, the field triggers at the beginning of each of their turns, causing the following effects: they gain 1 curse; they gain 10% Vulnerability; they gain 10% Weaken.",
+            "<br>",
             "If you cast this spell with Magia Erebea active, the field triggers twice at the beginning of each enemy turn instead.",
+            "<br>",
             "Whenever you cast an AOE spell that at least partially hits the field, the field is permanently extended to include the spaces affected by the AOE spell.",
+            "<br>",
             "Whenever an enemy casts a spell while inside the field, or whenever they cast a spell that affects a space or entity within the field, the field triggers once."
         ],
         "tags": [
@@ -8462,10 +8517,12 @@
         "duration": "Instant",
         "description": [
             "You reconfigure the mana which flows wildly through you. You may only cast this ability while under the effects of Magia Erebea. Magia Erebea gains the following effects until you release it:",
-            "Maximum health loss per turn increases to 20",
-            "Your unarmed and weapon attacks gain the absorbed spell's damage dice and conditions as on-hit damage and conditions, in a similar manner as your spells do",
-            "Your move speed doubles and your Move Actions are teleports",
-            "Your single-target attacks ignore AC, MR, and Evasion"
+            "<ul>",
+            "<li>Maximum health loss per turn increases to 20</li>",
+            "<li>Your unarmed and weapon attacks gain the absorbed spell's damage dice and conditions as on-hit damage and conditions, in a similar manner as your spells do</li>",
+            "<li>Your move speed doubles and your Move Actions are teleports</li>",
+            "<li>Your single-target attacks ignore AC, MR, and Evasion</li>",
+            "</ul>"
         ],
         "tags": [
             "Conditional"
