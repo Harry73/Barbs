@@ -93,13 +93,3 @@ def process_data_file():
             f.write(string)
 
         f.write("ALL: new SkillObject('All', ''),\n")
-
-    # Create a map of abilities in classes
-    class_ability_map = {}
-    for clazz in classes:
-        class_ability_map[clazz.name] = []
-        for ability in clazz.abilities:
-            class_ability_map[clazz.name].append(ability.name)
-
-    with open(os.path.join(DATA_PATH, 'class_abilities.json'), 'w') as f:
-        json.dump(class_ability_map, f)

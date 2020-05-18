@@ -4,3 +4,5 @@ __pycache__/
 data/
 html/generated/
 *.pem
+build/
+website.spec
