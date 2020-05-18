@@ -178,14 +178,5 @@
             "Scavenge": "The human has 20% better gather rates",
             "Create": "The human has 20% better crafting rates"
         }
-    },
- {
-        "type": "race",
-        "name": "Waifus",
-        "description": "The most prolific race on the planet, humans have been around longer than any other race. It is said that all other races are descendant from ancient humans, which is extremely likely given the race's propensity to mate with anything that moves. The human race is the most balanced choice for players who don't like the demi-human races presented above.",
-        "traits": {
-            "Scavenge": "The human has 20% better gather rates",
-            "Create": "The human has 20% better crafting rates"
-        }
     }
 ]
