@@ -1,6 +1,7 @@
-import json
 import os
 import shutil
+
+from src.website.common import get_component, read_json_file, href, get_link_skill_req
 
 
 CURRENT_PATH = os.getcwd()
@@ -8,7 +9,6 @@ HTML_PATH = os.path.join(CURRENT_PATH, 'html')
 HTML_GENERATED = os.path.join(HTML_PATH, 'generated')
 HTML_TEMPLATES = os.path.join(HTML_PATH, 'templates')
 HOME_PAGE = os.path.join(HTML_GENERATED, 'index.html')
-RULEBOOK_PATH = os.path.join(CURRENT_PATH, 'rulebook')
 
 BR_JOIN = '<br>'.join
 
@@ -17,69 +17,25 @@ def _debug(term, component):
     print('Working on %s %s' % (term, component['name']))
 
 
-def _href(anchor, text):
-    return '<a href="#{anchor}">{text}</a>'.format(anchor=anchor, text=text)
-
-
-def _get_component(component_name, component_list, condition=None):
-    for component in component_list:
-        if component['name'] == component_name:
-            if condition is None:
-                return component
-
-            if condition(component):
-                return component
-
-    raise Exception('Component %s not found' % component_name)
-
-
-def _try_link_skill_req(skill_req):
-    with open(os.path.join(RULEBOOK_PATH, 'skills.json'), encoding='utf8') as f:
-        skills = json.load(f)
-
-    for skill in skills:
-        if skill['name'] in skill_req:
-            return skill_req.replace(skill['name'], _href('skill_%s' % skill['name'], skill['name']))
-
-    for skill in skills:
-        if 'any' in skill_req.lower() and skill['category'] in skill_req:
-            return skill_req.replace(skill['category'], _href('skills_%s' % skill['category'], skill['category']))
-
-    print('Failed to link skill for requirement "%s"' % skill_req)
-    return skill_req
-
-
-def build_skills_nav():
-    with open(os.path.join(RULEBOOK_PATH, 'skills.json'), encoding='utf8') as f:
-        all_skills = json.load(f)
-
-    # The rulebook organizes skills into sections by category. We will make a nav link per category.
-    categorized_skills = set(skill['category'] for skill in all_skills)
-
-    nav_htmls = [_href('skills_%s' % category, category) for category in sorted(categorized_skills)]
+def build_skills_nav(skill_categories):
+    nav_htmls = [href('skills_%s' % category, category) for category in skill_categories]
     return '\n'.join(nav_htmls)
 
 
-def build_classes_nav():
-    with open(os.path.join(RULEBOOK_PATH, 'classes.json'), encoding='utf8') as f:
-        classes = json.load(f)
-
+def build_classes_nav(classes):
     nav_htmls = []
-    for clazz in sorted(classes, key=lambda c: c['name']):
+    for clazz in classes:
         if 'flavor_text' not in clazz:
             continue
 
-        nav_htmls.append(_href('class_%s' % clazz['name'], clazz['name']))
+        nav_htmls.append(href('class_%s' % clazz['name'], clazz['name']))
 
     return '\n'.join(nav_htmls)
 
 
-def build_attributes():
+def build_attributes(attributes):
     with open(os.path.join(HTML_TEMPLATES, 'attribute.html'), encoding='utf8') as f:
         attribute_template = f.read().strip()
-
-    with open(os.path.join(RULEBOOK_PATH, 'attributes.json'), encoding='utf8') as f:
-        attributes = json.load(f)
 
     attribute_htmls = []
     for attribute in attributes:
@@ -94,14 +50,11 @@ def build_attributes():
     return BR_JOIN(attribute_htmls)
 
 
-def build_races():
+def build_races(races):
     with open(os.path.join(HTML_TEMPLATES, 'race.html'), encoding='utf8') as f:
         race_template = f.read().strip()
     with open(os.path.join(HTML_TEMPLATES, 'racial_trait.html'), encoding='utf8') as f:
         racial_trait_template = f.read().strip()
-
-    with open(os.path.join(RULEBOOK_PATH, 'races.json'), encoding='utf8') as f:
-        races = json.load(f)
 
     race_htmls = []
     for race in races:
@@ -124,12 +77,9 @@ def build_races():
     return BR_JOIN(race_htmls)
 
 
-def build_buffs():
+def build_buffs(buffs):
     with open(os.path.join(HTML_TEMPLATES, 'buff_or_condition.html'), encoding='utf8') as f:
         buff_template = f.read().strip()
-
-    with open(os.path.join(RULEBOOK_PATH, 'buffs.json'), encoding='utf8') as f:
-        buffs = json.load(f)
 
     buff_htmls = []
     for buff in buffs:
@@ -140,12 +90,9 @@ def build_buffs():
     return '\n'.join(buff_htmls)
 
 
-def build_conditions():
+def build_conditions(conditions):
     with open(os.path.join(HTML_TEMPLATES, 'buff_or_condition.html'), encoding='utf8') as f:
         condition_template = f.read().strip()
-
-    with open(os.path.join(RULEBOOK_PATH, 'conditions.json'), encoding='utf8') as f:
-        conditions = json.load(f)
 
     condition_htmls = []
     for condition in conditions:
@@ -156,7 +103,7 @@ def build_conditions():
     return '\n'.join(condition_htmls)
 
 
-def build_skills():
+def build_skills(skill_categories, skills):
     with open(os.path.join(HTML_TEMPLATES, 'skill.html'), encoding='utf8') as f:
         skill_template = f.read().strip()
     with open(os.path.join(HTML_TEMPLATES, 'skills_section.html'), encoding='utf8') as f:
@@ -164,23 +111,13 @@ def build_skills():
     with open(os.path.join(HTML_TEMPLATES, 'list_item.html'), encoding='utf8') as f:
         list_item_template = f.read().strip()
 
-    with open(os.path.join(RULEBOOK_PATH, 'skills.json'), encoding='utf8') as f:
-        all_skills = json.load(f)
-
-    # The rulebook organizes skills into sections by category. Group them here so we can easily build each section.
-    categorized_skills = {}
-    for skill in all_skills:
-        category = skill['category']
-        if category not in categorized_skills:
-            categorized_skills[category] = []
-        categorized_skills[category].append(skill)
-
     skills_section_htmls = []
-    for category in sorted(categorized_skills.keys()):
-        skills = sorted(categorized_skills[category], key=lambda s: s['name'])
-
+    for category in skill_categories:
         skill_htmls = []
         for skill in skills:
+            if skill['category'] != category:
+                continue
+
             _debug('skill', skill)
 
             rank_note_htmls = []
@@ -206,14 +143,11 @@ def build_skills():
     return BR_JOIN(skills_section_htmls)
 
 
-def build_class_hint_unlocks():
+def build_class_hint_unlocks(classes, skills):
     with open(os.path.join(HTML_TEMPLATES, 'class_hint.html'), encoding='utf8') as f:
         class_hint_template = f.read().strip()
     with open(os.path.join(HTML_TEMPLATES, 'class_hints_section.html'), encoding='utf8') as f:
         class_hints_section_template = f.read().strip()
-
-    with open(os.path.join(RULEBOOK_PATH, 'classes.json'), encoding='utf8') as f:
-        classes = json.load(f)
 
     reqs_per_class = {}
     for clazz in classes:
@@ -233,12 +167,12 @@ def build_class_hint_unlocks():
             # We'll link to the full class if it is unlocked.
             name_or_linked_name = clazz['name']
             if 'flavor_text' in clazz:
-                name_or_linked_name = _href('class_%s' % clazz['name'], clazz['name'])
+                name_or_linked_name = href('class_%s' % clazz['name'], clazz['name'])
 
             class_hint_html = class_hint_template.format(
                 name=name_or_linked_name,
                 preview=clazz['preview'],
-                known_requirements=', '.join([_try_link_skill_req(req) for req in clazz['known_requirements']]),
+                known_requirements=', '.join([get_link_skill_req(req, skills) for req in clazz['known_requirements']]),
             )
             class_hint_htmls.append(class_hint_html)
 
@@ -261,13 +195,13 @@ def _build_branches_html(clazz, branches, abilities):
     for branch_name in clazz['branches']:
         # There are some branches in different classes with the same name, so additionally check that the
         # class name is right when finding the branch.
-        branch = _get_component(branch_name, branches, condition=lambda b: b['class'] == clazz['name'])
+        branch = get_component(branch_name, branches, condition=lambda b: b['class'] == clazz['name'])
 
         ability_htmls = []
         for ability_name in branch['abilities']:
             # There are some abilities in different classes with the same name, so additionally check that the
             # class name is right when finding the ability
-            ability = _get_component(ability_name, abilities, condition=lambda c: c['class'] == clazz['name'])
+            ability = get_component(ability_name, abilities, condition=lambda c: c['class'] == clazz['name'])
             ability_html = ability_template.format(
                 name=ability['name'].replace('"', '&quot'),
                 clazz=ability['class'],
@@ -290,21 +224,14 @@ def _build_branches_html(clazz, branches, abilities):
     return BR_JOIN(branches_htmls)
 
 
-def build_classes():
+def build_classes(abilities, branches, classes, skills):
     with open(os.path.join(HTML_TEMPLATES, 'class.html'), encoding='utf8') as f:
         class_template = f.read().strip()
     with open(os.path.join(HTML_TEMPLATES, 'list_item.html'), encoding='utf8') as f:
         list_item_template = f.read().strip()
 
-    with open(os.path.join(RULEBOOK_PATH, 'classes.json'), encoding='utf8') as f:
-        classes = json.load(f)
-    with open(os.path.join(RULEBOOK_PATH, 'branches.json'), encoding='utf8') as f:
-        branches = json.load(f)
-    with open(os.path.join(RULEBOOK_PATH, 'abilities.json'), encoding='utf8') as f:
-        abilities = json.load(f)
-
     class_htmls = []
-    for clazz in sorted(classes, key=lambda c: c['name']):
+    for clazz in classes:
         # Skip over classes that haven't been unlocked yet. We'll use the flavor_text field to deduce this.
         if 'flavor_text' not in clazz:
             continue
@@ -313,14 +240,14 @@ def build_classes():
 
         requirement_htmls = []
         for requirement in clazz['requirements']:
-            requirement_html = list_item_template.format(text=_try_link_skill_req(requirement))
+            requirement_html = list_item_template.format(text=get_link_skill_req(requirement, skills))
             requirement_htmls.append(requirement_html)
 
         branch_description_htmls = []
         for branch_name in clazz['branches']:
-            branch = _get_component(branch_name, branches)
+            branch = get_component(branch_name, branches)
             branch_anchor = 'class_%s_branch_%s' % (clazz['name'], branch['name'])
-            linked_branch_description = branch['description'].replace(branch_name, _href(branch_anchor, branch_name))
+            linked_branch_description = branch['description'].replace(branch_name, href(branch_anchor, branch_name))
             branch_description_html = list_item_template.format(text=linked_branch_description)
             branch_description_htmls.append(branch_description_html)
 
@@ -343,23 +270,38 @@ def build_classes():
     return BR_JOIN(class_htmls)
 
 
-def generate_html():
+def generate_html(log):
+    log('Generating HTML rulebook')
+    rulebook_path = os.path.join(CURRENT_PATH, 'rulebook')
+
     if not os.path.exists(HTML_GENERATED):
         os.makedirs(HTML_GENERATED)
 
     with open(os.path.join(HTML_TEMPLATES, 'index.html'), encoding='utf8') as f:
         index_template = f.read().strip()
 
+    abilities = read_json_file(os.path.join(rulebook_path, 'abilities.json'))
+    attributes = read_json_file(os.path.join(rulebook_path, 'attributes.json'))
+    branches = read_json_file(os.path.join(rulebook_path, 'branches.json'))
+    buffs = read_json_file(os.path.join(rulebook_path, 'buffs.json'))
+    classes = read_json_file(os.path.join(rulebook_path, 'classes.json'))
+    conditions = read_json_file(os.path.join(rulebook_path, 'conditions.json'))
+    races = read_json_file(os.path.join(rulebook_path, 'races.json'))
+    skills = read_json_file(os.path.join(rulebook_path, 'skills.json'))
+
+    # The rulebook organizes skills into sections by category
+    skill_categories = sorted(list(set(skill['category'] for skill in skills)))
+
     format_args = {
-        'skills_nav': build_skills_nav(),
-        'classes_nav': build_classes_nav(),
-        'attributes': build_attributes(),
-        'races': build_races(),
-        'buffs': build_buffs(),
-        'conditions': build_conditions(),
-        'skills': build_skills(),
-        'class_hint_unlocks': build_class_hint_unlocks(),
-        'classes': build_classes(),
+        'skills_nav': build_skills_nav(skill_categories),
+        'classes_nav': build_classes_nav(classes),
+        'attributes': build_attributes(attributes),
+        'races': build_races(races),
+        'buffs': build_buffs(buffs),
+        'conditions': build_conditions(conditions),
+        'skills': build_skills(skill_categories, skills),
+        'class_hint_unlocks': build_class_hint_unlocks(classes, skills),
+        'classes': build_classes(abilities, branches, classes, skills),
     }
     index_html = index_template.format(**format_args)
 
@@ -367,3 +309,5 @@ def generate_html():
         f.write(index_html)
 
     shutil.copyfile(os.path.join(HTML_TEMPLATES, 'style.css'), os.path.join(HTML_GENERATED, 'style.css'))
+    log('Generated HTML rulebook')
+

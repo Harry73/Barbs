@@ -296,6 +296,7 @@ def parse_clazzes(lines, skills):
 
         split_char = _get_split_char(preview_line)
         clazz_name = _trim(preview_line.split(split_char, 1)[0].strip())
+        print('parsing class hint %s' % clazz_name)
         rest = preview_line.split(split_char, 1)[1].strip()
         clazz_preview = rest.split('[')[0].strip()
         skill_reqs = rest.split('[')[1].split(']')[0].strip()
@@ -314,6 +315,7 @@ def parse_clazzes(lines, skills):
     lines = lines[first_class_index:]
     while i < len(lines):
         clazz_name = lines[i]
+        print('parsing class %s' % clazz_name)
         clazz = get_clazz(clazz_name)
         if not clazz:
             raise Exception('Class %s does not exist' % clazz_name)
@@ -352,8 +354,13 @@ def parse_clazzes(lines, skills):
 
         passive_lines = lines[passive_line_start:i]
         split_char = _get_split_char(passive_lines[0])
-        passive_name = passive_lines[0].split(split_char, 1)[0].split(':', 1)[1].strip()
-        passive_description = passive_lines[0].split(split_char, 1)[1].strip()
+        if ':' in passive_lines[0]:
+            passive_name = passive_lines[0].split(split_char, 1)[0].split(':', 1)[1].strip()
+            passive_description = passive_lines[0].split(split_char, 1)[1].strip()
+        else:
+            passive_name = passive_lines[0].split(split_char, 1)[0].strip()
+            passive_description = passive_lines[0].split(split_char, 2)[2].strip()
+
         if len(passive_lines) > 1:
             passive_description += '\n' + '\n'.join(passive_lines[1:])
 
