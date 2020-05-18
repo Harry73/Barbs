@@ -51,7 +51,7 @@ class Application(tk.Frame):
         self.textbox = tk.Text(canvas, width=10, height=10, wrap=tk.WORD, yscrollcommand=scrollbar.set,
                                borderwidth=0, highlightthickness=0, bg='black', fg='white')
         self.textbox.tag_config(tk.NW, background='black', foreground='white')
-        self.textbox.configure(yscrollcommand=scrollbar.set)
+        self.textbox.configure(font=('Times New Roman', 12), yscrollcommand=scrollbar.set)
 
         scrollbar.config(command=self.textbox.yview)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -83,7 +83,7 @@ class Application(tk.Frame):
 
     def log_text(self, string):
         print(string)
-        self.textbox.insert(tk.END, string + '\n')
+        self.textbox.insert(tk.END, '%s\n' % string)
         self.textbox.see(tk.END)
         self.master.update()
 

@@ -15,6 +15,7 @@ REMOTE_STYLE_SHEET = "{{ url_for('static', filename='/style.css') }}"
 INSTANCE_HOSTNAME = 'ec2-3-82-252-244.compute-1.amazonaws.com'
 INSTANCE_USER = 'ubuntu'
 KEY_FILE = 'barbs.pem'
+TIMEOUT_SEC = 10
 
 
 def find_ssh_key_path():
@@ -48,9 +49,9 @@ def deploy(log):
         ssh_key = paramiko.RSAKey.from_private_key_file(ssh_key_path)
         ssh_client = paramiko.SSHClient()
         ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh_client.connect(hostname=INSTANCE_HOSTNAME, username=INSTANCE_USER, pkey=ssh_key)
+        ssh_client.connect(hostname=INSTANCE_HOSTNAME, username=INSTANCE_USER, pkey=ssh_key, timeout=TIMEOUT_SEC)
 
-        scp_client = scp.SCPClient(ssh_client.get_transport())
+        scp_client = scp.SCPClient(ssh_client.get_transport(), socket_timeout=TIMEOUT_SEC)
         scp_client.put(GENERATED_INDEX_PATH, remote_path='/home/ubuntu/barbs/templates/index.html')
         scp_client.put(GENERATED_STYLE_PATH, remote_path='/home/ubuntu/barbs/static/style.css')
 
@@ -68,9 +69,9 @@ def deploy(log):
         if ssh_client:
             ssh_client.close()
 
-    # Revert style file
-    with open(GENERATED_INDEX_PATH, 'r', encoding='utf8') as f:
-        index_html = f.read()
-    index_html = index_html.replace(REMOTE_STYLE_SHEET, LOCAL_STYLE_SHEET)
-    with open(GENERATED_INDEX_PATH, 'w+', encoding='utf8') as f:
-        f.write(index_html)
+        # Revert style file
+        with open(GENERATED_INDEX_PATH, 'r', encoding='utf8') as f:
+            index_html = f.read()
+        index_html = index_html.replace(REMOTE_STYLE_SHEET, LOCAL_STYLE_SHEET)
+        with open(GENERATED_INDEX_PATH, 'w+', encoding='utf8') as f:
+            f.write(index_html)
