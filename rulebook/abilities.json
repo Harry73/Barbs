@@ -8133,8 +8133,10 @@
         "duration": "Instant",
         "description": [
             "You fire waves of magical energy to sap strength from demons. Choose one:",
-            "Deal 10d8 lightning magic damage to all enemies in range. Your next attack is empowered to deal additional light magic damage equal to half the damage dealt by this spell. If this attack hits at least 5 enemies, it also inflicts 2 stacks of Paralysis.",
-            "Deal 9d10 light magic damage to all enemies in range. Heal for half the damage dealt. If this attack hits at least 5 enemies, it also cleanses 3 conditions on any targets within range of your choosing.",
+            "<ul>",
+            "<li>Deal 10d8 lightning magic damage to all enemies in range. Your next attack is empowered to deal additional light magic damage equal to half the damage dealt by this spell. If this attack hits at least 5 enemies, it also inflicts 2 stacks of Paralysis.</li>",
+            "<li>Deal 9d10 light magic damage to all enemies in range. Heal for half the damage dealt. If this attack hits at least 5 enemies, it also cleanses 3 conditions on any targets within range of your choosing.</li>",
+            "</ul>",
             "Entities of demonic origin take double damage from this spell and count as 3 enemies each. You may cast this ability as a free action if you expend 2 Hunter stacks; if you do, this attack ignores MR, cannot be blocked, and bypasses magical barriers."
         ],
         "tags": [

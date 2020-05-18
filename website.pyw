@@ -1,5 +1,4 @@
 import os
-import subprocess
 import tkinter as tk
 
 from src.website.generator import generate_html
