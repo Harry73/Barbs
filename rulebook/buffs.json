@@ -1,0 +1,26 @@
+[
+    {
+        "type": "buff",
+        "name": "Hidden",
+        "duration": "Until broken",
+        "description": "Enemies cannot track you for the purposes of targeting you. If you attack an enemy while Hidden, you will lose the Hidden buff, but your target cannot use a Reaction in response to the attack."
+    },
+    {
+        "type": "buff",
+        "name": "Immunity",
+        "duration": "Permanent",
+        "description": "You have immunity to a certain type of damage or a certain condition. Some entities will have innate immunity, which is not a buff."
+    },
+    {
+        "type": "buff",
+        "name": "Increased Stats",
+        "duration": "Varies",
+        "description": "You have your stats increased temporarily due to the effects of skills, abilities, consumables, items, battlefield effects, etc."
+    },
+    {
+        "type": "buff",
+        "name": "Invisible",
+        "duration": "1 minute",
+        "description": "You are Hidden and cannot be seen at all. Hidden is not lost until this buff ends."
+    }
+]

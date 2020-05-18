@@ -1,0 +1,128 @@
+[
+    {
+        "type": "condition",
+        "name": "Bleeding",
+        "duration": "Until broken",
+        "description": "At the beginning of each of your turns, you take a varying amount of physical damage. Skill checks can be used to cleanse this condition, as determined by the DM."
+    },
+    {
+        "type": "condition",
+        "name": "Blinded",
+        "duration": "1 minute",
+        "description": "Ranged attacks you make always miss. Melee attacks you make have a 50% chance of missing before factoring in your target's Evasion. You automatically fail skill check requiring sight, like Search. You have no line of sight for targeting with spells."
+    },
+    {
+        "type": "condition",
+        "name": "Cursed",
+        "duration": "Varies",
+        "description": "When you have at least 3 curses, you instantly take Xd20 dark magic damage, where X is the number of curses you have"
+    },
+    {
+        "type": "condition",
+        "name": "Charmed",
+        "duration": "Varies",
+        "description": "You consider the entity that charmed you as a friend."
+    },
+    {
+        "type": "condition",
+        "name": "Confused",
+        "duration": "1 minute",
+        "description": "When you move or make an attack, you will move in a random direction instead of your intended direction."
+    },
+    {
+        "type": "condition",
+        "name": "Crippled",
+        "duration": "Until cleansed",
+        "description": "Your movement speed is halved and you cannot jump, climb, or take flight through physical means."
+    },
+    {
+        "type": "condition",
+        "name": "Decreased Stats",
+        "duration": "Varies",
+        "description": "You have your stats decreased temporarily due to the effects of skills, abilities, consumables, items, battlefield effects, etc."
+    },
+    {
+        "type": "condition",
+        "name": "Fear",
+        "duration": "1 minute",
+        "description": "You cannot move towards the object of your fear."
+    },
+    {
+        "type": "condition",
+        "name": "Frozen",
+        "duration": "1 minute",
+        "description": "You cannot take any actions. You gain 10 AC. If you are attacked, Frozen has a 50% chance of being cleansed."
+    },
+    {
+        "type": "condition",
+        "name": "Helpless",
+        "duration": "Until broken",
+        "description": "You are susceptible to non-combat execution."
+    },
+    {
+        "type": "condition",
+        "name": "Immobilized",
+        "duration": "Varies",
+        "description": "You may not take the Move Action or dash."
+    },
+    {
+        "type": "condition",
+        "name": "Knocked Down (Prone)",
+        "duration": "Until broken",
+        "description": "You lie prone on the floor, and cannot take a Move Action unless you get up, which takes half your movement. Being prone may also confer other effects depending on other abilities or situations."
+    },
+    {
+        "type": "condition",
+        "name": "Knocked Up (Airborne)",
+        "duration": "Until the beginning of target's next turn",
+        "description": "You are helplessly flying in the air and cannot evade or use reactions. At the beginning of your next turn you fall to the ground prone unless you make an appropriate skill check to land on your feet."
+    },
+    {
+        "type": "condition",
+        "name": "Paralyzed",
+        "duration": "1 minute",
+        "description": "When you take a Move or Major Action, you have a 25% chance of failing the action. This condition can stack multiple times, and each additional stack increases the chance of failing your action by 25%, up to a limit of 3 stacks for a 75% failure chance."
+    },
+    {
+        "type": "condition",
+        "name": "Petrified",
+        "duration": "1 minute",
+        "description": "You cannot take any actions. You become attuned to earth. At the beginning of your turn you can make an appropriate skill check to break out of your stone casing."
+    },
+    {
+        "type": "condition",
+        "name": "Silenced",
+        "duration": "Varies",
+        "description": "You cannot speak or cast spells."
+    },
+    {
+        "type": "condition",
+        "name": "Sleeping",
+        "duration": "Until broken",
+        "description": "You are asleep, and cannot take any actions nor perceive anything. You are considered helpless. If you are attacked, Sleeping is cleansed. Other entities can use a Minor Action to shake you awake, and you can also be awakened by loud noises."
+    },
+    {
+        "type": "condition",
+        "name": "Slowed",
+        "duration": "1 minute",
+        "description": "Your movement speed is halved."
+    },
+    {
+        "type": "condition",
+        "name": "Stunned",
+        "duration": "1 round",
+        "description": "You cannot take any actions."
+    },
+    {
+        "type": "condition",
+        "name": "Taunted",
+        "duration": "1 minute",
+        "description": "When you make an attack on an enemy that did not Taunt you, roll a d6. If you roll 4 or lower, you must redirect your attack to the enemy that Taunted you if possible. You do not have to redirect your attack if attacking the enemy that Taunted you would be impossible (due to being out of range, or behind a barrier, or out of sight)."
+    },
+    {
+        "type": "condition",
+        "name": "Weakened",
+        "duration": "1 minute",
+        "description": "All your damage output is decreased by X%, after all other modifiers. This condition does not stack; subsequent Weakened effects simply change the original."
+    }
+]

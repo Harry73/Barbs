@@ -1,0 +1,1317 @@
+[
+    {
+        "type": "skill",
+        "name": "Alchemy: Augmentation",
+        "category": "Alchemy",
+        "description": "This school of alchemy focuses on the alteration of material objects. Instead of fundamentally changing what the object is, you can change the natural properties of the object, while maintaining some of its original properties",
+        "attribute": "Intelligence",
+        "rank_notes": {
+            "Untrained": "You cannot perform Augmentation Alchemy",
+            "Rank F": "You can perform Augmentation Alchemy from basic blueprints",
+            "Rank A": "You can perform Augmentation Alchemy from class abilities without penalties"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Alchemy: Constructs",
+        "category": "Alchemy",
+        "description": "This school of alchemy focuses on the creation of constructs, like robots and golems, that are technically non-living bodies powered by magic. Constructs lack any intelligence whatsoever, but aren't limited physically the same way organics are",
+        "attribute": "Intelligence",
+        "rank_notes": {
+            "Untrained": "You cannot perform Construct Alchemy",
+            "Rank F": "You can perform Construct Alchemy from basic blueprints"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Alchemy: Organics",
+        "category": "Alchemy",
+        "description": "This school of alchemy focuses on the creation of organic life, like homunculi and chimera. These creatures are intelligent and don't require magical input to operate, but have more realistic physical limitations",
+        "attribute": "Intelligence",
+        "rank_notes": {
+            "Untrained": "You cannot perform Organics Alchemy",
+            "Rank F": "You can perform Organics Alchemy from basic blueprints",
+            "Rank A": "You can perform Organics Alchemy from class abilities without penalties"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Alchemy: Transformation",
+        "category": "Alchemy",
+        "description": "This school of alchemy focuses on the transformation of material objects. Instead of simply altering the properties of an object, you change things into completely different objects entirely",
+        "attribute": "Intelligence",
+        "rank_notes": {
+            "Untrained": "You cannot perform Transmutation Alchemy",
+            "Rank F": "You can perform Transmutation Alchemy from basic blueprints"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Armor Mastery: Cloth",
+        "category": "Armor Mastery",
+        "description": "Cloth Armor Mastery involves the effective use of defensive clothes, cloth armor, and robes, which normally provide magic defense and condition resistance. This skill will help you maximize the defenses provided by such armors while minimizing their weaknesses",
+        "attribute": "Resistance",
+        "rank_notes": {
+            "Untrained": "You cannot wear cloth armor",
+            "Rank F": "You can wear normal and magic cloth armor",
+            "Rank A": "You can wear rare and unique cloth armor"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Armor Mastery: Heavy",
+        "category": "Armor Mastery",
+        "description": "Heavy Armor Mastery involves the effective use of heavy armor with high AC. This skill will help you maximize the defenses provided by such armors while minimizing their weaknesses",
+        "attribute": "Toughness",
+        "rank_notes": {
+            "Untrained": "You cannot wear heavy armor",
+            "Rank F": "You can wear normal and magic heavy armor",
+            "Rank A": "You can wear rare and unique heavy armor"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Armor Mastery: Light",
+        "category": "Armor Mastery",
+        "description": "Light Armor Mastery involves the effective use of light armor with high evasion. This skill will help you maximize the defenses provided by such armors while minimizing their weaknesses",
+        "attribute": "Reflex",
+        "rank_notes": {
+            "Untrained": "You cannot wear light armor",
+            "Rank F": "You can wear normal and magic light armor",
+            "Rank A": "You can wear rare and unique light armor"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Armor Mastery: Shields",
+        "category": "Armor Mastery",
+        "description": "Shield Armor Mastery involves the effective use of a shield for AC. This skill will help you maximize the defenses provided by shields while minimizing their weaknesses",
+        "attribute": "Toughness",
+        "rank_notes": {
+            "Untrained": "You cannot equip shields",
+            "Rank F": "You can equip mundane and magic shields in your offhand",
+            "Rank A": "You can equip rare and unique shields in your offhand"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Artistry: Acting",
+        "category": "Artistry",
+        "description": "Acting Mastery involves the ability to act as someone you are not for the purposes of art, such as in a play or skit. At higher ranks, this skill can be used to empower magic and create your own plays",
+        "attribute": "Appeal",
+        "rank_notes": {
+            "Untrained": "You automatically fail Acting checks",
+            "Rank F": "You can perform Acting checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Artistry: Dancing",
+        "category": "Artistry",
+        "description": "Dancing Mastery involves the ability to twirl, leap, and pirouette, creating art with your body. At higher ranks, this skill can be used to choreograph your own dances and empower magic",
+        "attribute": "Appeal",
+        "rank_notes": {
+            "Untrained": "You automatically fail Dancing checks",
+            "Rank F": "You can perform Dancing checks",
+            "Rank A": "You can infuse magic into dances and perform improvised physical arts with dances"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Artistry: Illustration",
+        "category": "Artistry",
+        "description": "Illustration Mastery involves the ability to draw, sketch, paint, and perform other graphic arts. At higher ranks, this skill can also be used to create magical prints",
+        "attribute": "Appeal",
+        "rank_notes": {
+            "Untrained": "You automatically fail Illustration checks",
+            "Rank F": "You can perform Illustration checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Artistry: Literature",
+        "category": "Artistry",
+        "description": "Literature Mastery involves the creation of poetry, prose, or any other written art. At higher ranks, this skill can be used to empower magic and write faster",
+        "attribute": "Appeal",
+        "rank_notes": {
+            "Untrained": "You automatically fail Literature checks",
+            "Rank F": "You can perform Literature checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Artistry: Music",
+        "category": "Artistry",
+        "description": "Music Mastery involves the ability to play various instruments, and also includes singing. At higher ranks, this skill can also be used to compose your own original scores or empower magic",
+        "attribute": "Appeal",
+        "rank_notes": {
+            "Untrained": "You automatically fail Music checks",
+            "Rank F": "You can perform Music checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Artistry: Sculpture",
+        "category": "Artistry",
+        "description": "Sculpture Mastery involves the creation of artistic pieces using raw materials like stone, wood, glass, ceramics, or gems; it also includes architecture. At higher ranks, this skill can also be used to create magical artifacts and original sculptures",
+        "attribute": "Appeal",
+        "rank_notes": {
+            "Untrained": "You automatically fail Sculpture checks",
+            "Rank F": "You can perform Sculpture checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Athletics: Balance",
+        "category": "Athletics",
+        "description": "Balance involves keeping yourself steady in situations where that would normally be difficult, such as when you traverse slippery terrain, walk along narrow ledges, or drink way too much ale",
+        "attribute": "Dexterity",
+        "rank_notes": {
+            "Untrained": "You automatically fail Balance checks",
+            "Rank F": "You can perform Balance checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Athletics: Climbing",
+        "category": "Athletics",
+        "description": "Climbing includes things like scaling difficult walls and quickly ascending the side of a tower. One might use tools to assist in climbing, but putting points in this skill make it easier to do so, with or without assistance from tools",
+        "attribute": "Agility",
+        "rank_notes": {
+            "Untrained": "You automatically fail Climbing checks",
+            "Rank F": "You can perform Climbing checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Athletics: Flexibility",
+        "category": "Athletics",
+        "description": "Flexibility involves being able to bend or stretch in uncommon ways. You might use this to fit into small spaces, contort your body, or perform dodges that would be impossible for others",
+        "attribute": "Dexterity",
+        "rank_notes": {
+            "Untrained": "You automatically fail Flexibility checks",
+            "Rank F": "You can perform Flexibility checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Athletics: Force",
+        "category": "Athletics",
+        "description": "Force involves the effective use of your muscles to push, pull, lift, drag, or do any sort of athletic ability requiring raw muscles strength",
+        "attribute": "Strength",
+        "rank_notes": {
+            "Untrained": "You automatically fail Force checks",
+            "Rank F": "You can perform Force checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Athletics: Movement",
+        "category": "Athletics",
+        "description": "Movement involves efficient use of your muscles and physical reserves to run long distances, sprint, jump, and continue moving in harsh environments",
+        "attribute": "Agility",
+        "rank_notes": {
+            "Untrained": "You automatically fail Movement checks",
+            "Rank F": "You can perform Movement checks",
+            "Rank 5": "You can sprint at twice your movement speed",
+            "Rank 1": "You can maintain a full speed run indefinitely while unburdened"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Athletics: Pain Tolerance",
+        "category": "Athletics",
+        "description": "Pain Tolerance involves being able to maintain top physical and mental form even when under extreme stress caused by great amounts of pain. You might make a Pain Tolerance check to maintain concentration after damage, or if you're being tortured for information, or to maintain consciousness",
+        "attribute": "Composure",
+        "rank_notes": {
+            "Untrained": "You automatically fail Pain Tolerance checks",
+            "Rank F": "You can perform Pain Tolerance checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Beast Mastery: Battle Pet",
+        "category": "Beast Mastery",
+        "description": "Battle Pet checks allow you to use a pet in combat. Skill checks are needed for specialized commands",
+        "attribute": "Wisdom",
+        "rank_notes": {
+            "Untrained": "You cannot use your pet in combat",
+            "Rank F": "You can command your pet in combat"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Beast Mastery: Riding",
+        "category": "Beast Mastery",
+        "description": "Riding allows you to mount and ride horses, donkeys, and other animals that can normally be mounted. It requires a measure of physical fitness in many areas to ride effectively. Putting points in this skill will allow you to also ride exotic animals and gain further bonuses for riding",
+        "attribute": "Agility",
+        "rank_notes": {
+            "Untrained": "You cannot ride animals at full speed",
+            "Rank F": "You can mount and ride common animals at full speed"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Beast Mastery: Taming",
+        "category": "Beast Mastery",
+        "description": "Taming allows you to calm down and control wild animals. You might use this for simpler tasks like cowing a dangerous wild dog or more involved, longer term actions like raising your own pet. Points in taming allow you to control more exotic beasts",
+        "attribute": "Wisdom",
+        "rank_notes": {
+            "Untrained": "You cannot tame animals",
+            "Rank F": "You can tame common animals"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Combat: Blocking",
+        "category": "Combat",
+        "description": "Blocking skill checks are used whenever you want to absorb incoming damage. It should be noted that such a skill check is only doable with a shield or heavy armor",
+        "attribute": "Toughness",
+        "rank_notes": {
+            "Untrained": "You automatically fail Blocking checks",
+            "Rank F": "You can perform Blocking checks to reduce incoming damage further"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Combat: Dodging",
+        "category": "Combat",
+        "description": "Dodging skill checks are used whenever you want to avoid getting hit by something. It should be noted that such a skill check is for when you need to use your quickness to avoid damage, and as such, Dodging checks can't be rolled against attacks that are inherently unavoidable",
+        "attribute": "Reflex",
+        "rank_notes": {
+            "Untrained": "You automatically fail Dodging checks",
+            "Rank F": "You can perform Dodging checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Combat: Grappling",
+        "category": "Combat",
+        "description": "Grappling checks are for replacing your regular attacks with grapples, holds, throws, etc. Grappling is separate from unarmed combat and is based off of how quickly you can take control of your enemy's balance and weight, so many types of characters can make use of simple holds and throws",
+        "attribute": "Agility",
+        "rank_notes": {
+            "Untrained": "You automatically fail Grappling checks",
+            "Rank F": "You can perform Grappling checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Combat: Trapping",
+        "category": "Combat",
+        "description": "Trapping skill checks are used whenever you must set up or tinker with traps under pressure, which occurs most notably during combat. If interacting with a trap would be easy, then it does not require a skill check",
+        "attribute": "Fortitude",
+        "rank_notes": {
+            "Untrained": "You cannot performing Trapping checks in combat",
+            "Rank F": "You can perform Trapping checks in combat as a Major Action"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Crafting: Armorsmithing",
+        "category": "Crafting",
+        "description": "Armorsmithing involves the creation of heavy armor and shields. With this skill you can create mundane plate or chain mail, as well as more exotic designs. Regular blacksmithing of metal objects also falls under this skill",
+        "attribute": "Toughness",
+        "rank_notes": {
+            "Untrained": "You cannot craft heavy armor",
+            "Rank F": "You can craft heavy armor from recipes"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Crafting: Artificing",
+        "category": "Crafting",
+        "description": "Artificing involves the creation of magical weapons. You can create wands, staves, and magic orbs, as well as more exotic designs. Making magic weapons is dangerous and thus requires good magical resistances. Regular carpentry also falls under this skill",
+        "attribute": "Resistance",
+        "rank_notes": {
+            "Untrained": "You automatically fail Artificing checks",
+            "Rank F": "You can perform Artificing checks to craft items up to magic rarity"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Crafting: Cooking",
+        "category": "Crafting",
+        "description": "Cooking involves the creation of food and drink. You can bake cakes, brew ale, and make a variety of other types of sustenance",
+        "attribute": "Appeal",
+        "rank_notes": {
+            "Untrained": "You automatically fail Cooking checks",
+            "Rank F": "You can perform Cooking checks and cook delicacies"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Crafting: Enchanting",
+        "category": "Crafting",
+        "description": "Enchanting is the ability to apply magical effects to weapons, armor, and other items. The process can be a bit dangerous, so resistance to magical damage is necessary to master it completely",
+        "attribute": "Resistance",
+        "rank_notes": {
+            "Untrained": "You cannot enchant items",
+            "Rank F": "You can enchant items up to magic rarity"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Crafting: Fine Weapons",
+        "category": "Crafting",
+        "description": "Fine Weapon crafting involves the crafting of melee weapons that scale off Dexterity for their damage. You can make things like rapiers or whips, as well as more exotic designs",
+        "attribute": "Reflex",
+        "rank_notes": {
+            "Untrained": "You cannot craft fine weapons",
+            "Rank F": "You can craft fine weapons up to magic rarity"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Crafting: Forgery",
+        "category": "Crafting",
+        "description": "Forgery is the ability to craft fakes. Whether it's a false letter written in the hand of the mayor, or an ornate dagger built with false gems and fool's gold, forgery allows you to create items that are not what they seem",
+        "attribute": "Precision",
+        "rank_notes": {
+            "Untrained": "You cannot perform Forgery checks",
+            "Rank F": "You can create forged written documents and blueprints"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Crafting: Leatherworking",
+        "category": "Crafting",
+        "description": "Leatherworking involves the creation of light armor, as well as various other leather objects. With this skill you can make burnished leather armor or boots, as well as more exotic designs",
+        "attribute": "Reflex",
+        "rank_notes": {
+            "Untrained": "You cannot craft light armor",
+            "Rank F": "You can craft light armor up to magic rarity"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Crafting: Jewelry",
+        "category": "Crafting",
+        "description": "Jewelry Crafting involves the creation of accessories like rings, necklaces, and belts. Since accessories naturally give magical effects, magical resistances are needed to properly work with them. Regular stonecraft also falls under this skill",
+        "attribute": "Fortitude",
+        "rank_notes": {
+            "Untrained": "You cannot craft jewelry",
+            "Rank F": "You can craft jewelry up to magic rarity"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Crafting: Heavy Weapons",
+        "category": "Crafting",
+        "description": "Heavy Weapon Crafting involves the creation of any weapons which have Strength scaling for their damage. You can make things like axes, longblades, or spears, as well as more exotic designs",
+        "attribute": "Toughness",
+        "rank_notes": {
+            "Untrained": "You cannot craft heavy weapons",
+            "Rank F": "You can craft heavy weapons up to magic rarity"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Crafting: Poisons",
+        "category": "Crafting",
+        "description": "Poison Crafting allows you to make any number of debilitating concoctions. Because the nature of all of these items are dangerous, and taste testing is required to make sure you're making the proper progress, you need to be tough willed to create poison",
+        "attribute": "Fortitude",
+        "rank_notes": {
+            "Untrained": "You cannot craft poisons",
+            "Rank F": "You can craft poisons",
+            "Rank A": "Successful poison crafting produces 2 vials of poison",
+            "Rank 5": "Poisons you make have double effectiveness",
+            "Rank 1": "You can make poisons with two effects"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Crafting: Potions",
+        "category": "Crafting",
+        "description": "Potion Crafting allows you to make any number of invigorating concoctions. Because the nature of all of these items can have abnormal side effects if not properly prepared, you need to be tough willed to create potions",
+        "attribute": "Fortitude",
+        "rank_notes": {
+            "Untrained": "You cannot craft potions.Rank F",
+            "Rank A": "Successful poison crafting produces 2 vials of poison"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Crafting: Ranged Weapons",
+        "category": "Crafting",
+        "description": "Ranged Weapon crafting involves the creation ranged weapons which scale off Dexterity for their damage. You can make things like bows, crossbows, and even guns and slings, as well as more exotic designs. You can also craft ammunition for your ranged weapons with this skill",
+        "attribute": "Reflex",
+        "rank_notes": {
+            "Untrained": "You cannot craft ranged weapons",
+            "Rank F": "You can craft ranged weapons up to magic rarity"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Crafting: Shortblades",
+        "category": "Crafting",
+        "description": "Shortblade Weapon crafting involves the creation of shortblades, which do not scale with STR or DEX. You can make things like daggers and specialized throwing knives, as well as more exotic designs. Crafting thieves' tools also falls under this skill",
+        "attribute": "Precision",
+        "rank_notes": {
+            "Untrained": "You cannot craft shortblades",
+            "Rank F": "You can craft shortblades up to magic rarity"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Crafting: Tailoring",
+        "category": "Crafting",
+        "description": "Tailoring involves the creation of cloth armor, as well as various other types of clothing. With this skill you can make magic-resisting robes or dresses, as well as more exotic designs",
+        "attribute": "Resistance",
+        "rank_notes": {
+            "Untrained": "You cannot craft cloth armor",
+            "Rank F": "You can craft cloth armor up to magic rarity"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Element Mastery: Air",
+        "category": "Element Mastery",
+        "description": "Air Mastery involves the effective use of the element air in magic spells. Putting points in Air Mastery will allow you to cast air spells as well as invoke air cantrips from equipment",
+        "attribute": "Agility",
+        "rank_notes": {
+            "Untrained": "You cannot use air magic",
+            "Rank F": "You can cast air cantrips",
+            "Rank A": "You can cast air spells given to you by class abilities"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Element Mastery: Dark",
+        "category": "Element Mastery",
+        "description": "Dark Mastery involves the effective use of the element dark in magic spells. Putting points in Dark Mastery will allow you to cast dark spells as well as invoke dark cantrips from equipment",
+        "attribute": "Fortitude",
+        "rank_notes": {
+            "Untrained": "You cannot use Dark magic",
+            "Rank F": "You can cast dark cantrips",
+            "Rank A": "You can cast dark spells given to you by class abilities"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Element Mastery: Earth",
+        "category": "Element Mastery",
+        "description": "Earth Mastery involves the effective use of the element earth in magic spells. Putting points in Earth Mastery will allow you to cast earth spells as well as invoke earth cantrips from equipment",
+        "attribute": "Resistance",
+        "rank_notes": {
+            "Untrained": "You cannot use earth magic",
+            "Rank F": "You can cast earth cantrips"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Element Mastery: Fire",
+        "category": "Element Mastery",
+        "description": "Fire Mastery involves the effective use of the element fire in magic spells. Putting points in Fire Mastery will allow you to cast fire spells as well as invoke fire cantrips from equipment",
+        "attribute": "Attunement",
+        "rank_notes": {
+            "Untrained": "You cannot use fire magic",
+            "Rank F": "You can cast fire cantrips"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Element Mastery: Ice",
+        "category": "Element Mastery",
+        "description": "Ice Mastery involves the effective use of the element ice in magic spells. Putting points in Ice Mastery will allow you to cast ice spells as well as invoke ice cantrips from equipment",
+        "attribute": "Fortitude",
+        "rank_notes": {
+            "Untrained": "You cannot use ice magic",
+            "Rank F": "You can cast ice cantrips",
+            "Rank A": "You can cast ice spells given to you by class abilities without penalties",
+            "Rank 5": "Ice spells you cast ignore elemental typing disadvantages",
+            "Rank 1": "Ice spells you cast that inflict crowd control conditions have doubled duration and have 50% increased range"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Element Mastery: Light",
+        "category": "Element Mastery",
+        "description": "Light Mastery involves the effective use of the element light in magic spells. Putting points in Light Mastery will allow you to cast light spells as well as invoke light cantrips from equipment",
+        "attribute": "Focus",
+        "rank_notes": {
+            "Untrained": "You cannot use light magic",
+            "Rank F": "You can cast light cantrips",
+            "Rank A": "You can cast light spells given to you by class abilities"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Element Mastery: Lightning",
+        "category": "Element Mastery",
+        "description": "Lightning Mastery involves the effective use of the element lightning in magic spells. Putting points in Lightning Mastery will allow you to cast lightning spells as well as invoke lightning cantrips from equipment",
+        "attribute": "Attunement",
+        "rank_notes": {
+            "Untrained": "You cannot use lightning magic",
+            "Rank F": "You can cast lightning cantrips",
+            "Rank A": "You can cast lightning spells given to you by class abilities"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Element Mastery: Water",
+        "category": "Element Mastery",
+        "description": "Water Mastery involves the effective use of the element water in magic spells. Putting points in Water Mastery will allow you to cast water spells as well as invoke water cantrips from equipment",
+        "attribute": "Focus",
+        "rank_notes": {
+            "Untrained": "You cannot use water magic",
+            "Rank F": "You can cast water cantrips",
+            "Rank A": "You can cast water spells given to you by class abilities"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Gathering: Forestry",
+        "category": "Gathering",
+        "description": "Forestry allows you to cut down and process wood from trees for later use in crafting. Forestry requires an axe, and skill checks are required to quickly cut down trees. Higher level Forestry lets you gather wood from magical trees",
+        "attribute": "Toughness",
+        "rank_notes": {
+            "Untrained": "You automatically fail Forestry checks",
+            "Rank F": "You can perform Forestry checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Gathering: Harvest",
+        "category": "Gathering",
+        "description": "Food Gathering allows you to search for edible plants, such as berries or roots, as well as fish in bodies of water or farm your own crops. Various tools might be needed to search for food, and skill checks are required to find safe foods to eat. Higher level Food Gathering only increases the amount of food you bring in",
+        "attribute": "Agility",
+        "rank_notes": {
+            "Untrained": "You automatically fail Food Gathering checks",
+            "Rank F": "You can perform Harvest Gathering checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Gathering: Herbology",
+        "category": "Gathering",
+        "description": "Gathering allows you to harvest plants from nature for later use in crafting. Herbology requires no special tools, but skill checks are required to safely gather. Higher level Herbology lets you gather magical herbs",
+        "attribute": "Resistance",
+        "rank_notes": {
+            "Untrained": "You automatically fail Herbology checks",
+            "Rank F": "You can perform Herbology checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Gathering: Hunting",
+        "category": "Gathering",
+        "description": "Hunting allows you to go out in search for game to hunt for meat and skins for later use in crafting. Hunting requires a weapon and rope, and skill checks are required to quickly take down targets. Higher level Hunting lets you hunt magical game",
+        "attribute": "Reflex",
+        "rank_notes": {
+            "Untrained": "You automatically fail Hunting checks",
+            "Rank F": "You can perform Hunting checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Gathering: Mining",
+        "category": "Gathering",
+        "description": "Mining allows you to harvest raw ore from the earth for later use in crafting. Mining requires a pick, and skill checks are required to gather large enough, workable pieces. Higher level Mining lets you gather magical ores",
+        "attribute": "Toughness",
+        "rank_notes": {
+            "Untrained": "You automatically fail Mining checks",
+            "Rank F": "You can perform Mining checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Gathering: Skinning",
+        "category": "Gathering",
+        "description": "Skinning allows you to remove the skin of creatures for later use in crafting. Skinning requires a knife, and skill checks are required to skin correctly and quickly. Higher level Skinning lets you skin magical creatures with thicker skins",
+        "attribute": "Reflex",
+        "rank_notes": {
+            "Untrained": "You automatically fail Skinning checks",
+            "Rank F": "You can perform Skinning checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Interaction: Deception",
+        "category": "Interaction",
+        "description": "Deception checks are for successfully lying to people or withholding/bending the truth. You might use this to lie to a guard or hide some family secret",
+        "attribute": "Appeal",
+        "rank_notes": {
+            "Untrained": "You automatically fail Deception checks",
+            "Rank F": "You can perform Deception checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Interaction: Intent",
+        "category": "Interaction",
+        "description": "Intent checks are for discerning whether others are lying to you or hiding details by watching for verbal tics or visual cues. It can be used to find deeper meaning in what people are saying",
+        "attribute": "Wisdom",
+        "rank_notes": {
+            "Untrained": "You automatically fail Intent checks",
+            "Rank F": "You can perform Intent checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Interaction: Intimidation",
+        "category": "Interaction",
+        "description": "Intimidation checks are for scaring people into doing things you want. You might use this to interrogate a captured enemy or convince a group of bandits to stand down",
+        "attribute": "Composure",
+        "rank_notes": {
+            "Untrained": "You automatically fail Intimidation checks",
+            "Rank F": "You can perform Intimidation checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Interaction: Leadership",
+        "category": "Interaction",
+        "description": "Leadership checks are for inspiring groups and guiding them to act together. You might use this to boost the morale of a vast army or convince a mercenary band of the soundness of your tactics",
+        "attribute": "Composure",
+        "rank_notes": {
+            "Untrained": "You automatically fail Leadership checks",
+            "Rank F": "You can perform Leadership checks",
+            "Rank A": "You may add your INT to your Leadership checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Interaction: Persuasion",
+        "category": "Interaction",
+        "description": "Persuasion checks are for convincing people to do things you want. You might use this to barter for better prices, convince someone to give you information, or convince an enemy to stand down",
+        "attribute": "Appeal",
+        "rank_notes": {
+            "Untrained": "You automatically fail Persuasion checks",
+            "Rank F": "You can perform Persuasion checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Interaction: Seduction",
+        "category": "Interaction",
+        "description": "Seduction checks are for charming people and making them fall for you. With a high rank in Seduction, even the ugliest players can find love",
+        "attribute": "Appeal",
+        "rank_notes": {
+            "Untrained": "You automatically fail Seduction checks",
+            "Rank F": "You can perform Seduction checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Item Use: Appraisal",
+        "category": "Item Use",
+        "description": "Appraisal checks are for discerning the inherent value and properties of an object or entity upon closer inspection of it. What you do with that knowledge is up to you",
+        "attribute": "Wisdom",
+        "rank_notes": {
+            "Untrained": "You automatically fail Appraisal checks",
+            "Rank F": "You can perform Appraisal checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Item Use: Construction",
+        "category": "Item Use",
+        "description": "Construction checks can be used to build any large objects that do not require a delicate hand to assemble. This could be anything from wooden fortifications to a trebuchet",
+        "attribute": "Strength",
+        "rank_notes": {
+            "Untrained": "You automatically fail Construction checks",
+            "Rank F": "You can perform Construction checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Item Use: First Aid",
+        "category": "Item Use",
+        "description": "First Aid involves the application of salves and bandages, suturing lacerations, fixing bones, and other emergency medical operations",
+        "attribute": "Fortitude",
+        "rank_notes": {
+            "Untrained": "You automatically fail First Aid checks",
+            "Rank F": "You can perform First Aid checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Item Use: Literacy",
+        "category": "Item Use",
+        "description": "Literacy involves the ability to read and write beyond the basic ability that most people are capable of. Skill checks could include forging a letter, faking your handwriting, writing something down accurately from memory, or keeping up with spoken word while taking records",
+        "attribute": "Intelligence",
+        "rank_notes": {
+            "Untrained": "You automatically fail Literacy checks",
+            "Rank F": "You can perform Literacy checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Item Use: Ropes",
+        "category": "Item Use",
+        "description": "Rope Mastery involves the effective use of ropes, chains, netting, and other cords. Skill checks could include tying people up, tying yourself to a support, or even using chains as weapons",
+        "attribute": "Wisdom",
+        "rank_notes": {
+            "Untrained": "You automatically fail Rope checks",
+            "Rank F": "You can perform Rope checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Item Use: Tinkering",
+        "category": "Item Use",
+        "description": "Tinkering checks will be used largely as a catch-all for any difficult action requiring the delicate operating of various small objects. This could include anything from building a wooden doll to carefully reconstructing an ancient clock",
+        "attribute": "Wisdom",
+        "rank_notes": {
+            "Untrained": "You automatically fail Tinkering checks",
+            "Rank F": "You can perform Tinkering checks",
+            "Rank 5": "Tinkered constructs you build will stay together without regular repair",
+            "Rank 1": "You can perform Tinkering checks twice as fast"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Item Use: Traps",
+        "category": "Item Use",
+        "description": "Traps are mechanisms designed to trigger to an event (like opening a door) and cause something to happen (like releasing poison). They can be simple and made of random objects, or complex and require building in a workshop. Making and disabling traps requires calm handiwork",
+        "attribute": "Composure",
+        "rank_notes": {
+            "Untrained": "You automatically fail Traps checks",
+            "Rank F": "You can perform Traps checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Knowledge: Arcana",
+        "category": "Knowledge",
+        "description": "Arcana skill checks exercise your knowledge of magic. You might use this skill to identify an enemy spell cast or investigate a magic circle",
+        "attribute": "Intelligence",
+        "rank_notes": {
+            "Untrained": "You automatically fail Arcana checks",
+            "Rank F": "You can perform Arcana checks",
+            "Rank A": "You can make an Arcana check during combat as a free action or free reaction once per round"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Knowledge: Culture",
+        "category": "Knowledge",
+        "description": "Culture skill checks exercise your knowledge of the various races and their cultures. You might use this skill to discern whether a piece of pottery is of elven or dwarven design, or to know if manti hunt alone or in packs",
+        "attribute": "Intelligence",
+        "rank_notes": {
+            "Untrained": "You automatically fail Culture checks",
+            "Rank F": "You can perform Culture checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Knowledge: History",
+        "category": "Knowledge",
+        "description": "History skill checks exercise your knowledge of historical events and people or places of the past. You might use this skill to explore the origins of a city, or the fate of a long dead king",
+        "attribute": "Intelligence",
+        "rank_notes": {
+            "Untrained": "You automatically fail History checks",
+            "Rank F": "You can perform History checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Knowledge: Nature",
+        "category": "Knowledge",
+        "description": "Nature skill checks exercise your knowledge of plants and animals. You might use this skill to investigate a mysterious creature you encounter or know if a particular mushroom is safe to eat",
+        "attribute": "Intelligence",
+        "rank_notes": {
+            "Untrained": "You automatically fail Nature checks",
+            "Rank F": "You can perform Nature checks",
+            "Rank A": "You can make a Nature check during combat as a free action or free reaction once per round"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Knowledge: Religion",
+        "category": "Knowledge",
+        "description": "Religion skill checks exercise your knowledge of the various religions of the world. You might use this skill to see what you know about a god, a cult, a certain religious practice, or a religious symbol",
+        "attribute": "Intelligence",
+        "rank_notes": {
+            "Untrained": "You automatically fail Religion checks",
+            "Rank F": "You can perform Religion checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic: Buffs",
+        "category": "Magic",
+        "description": "Buff magic applies positive effects, known as buffs, to creatures. Skill checks usually involve knowledge about the buff magic subtype, or possibly improvised buff spell usage",
+        "attribute": "Focus",
+        "rank_notes": {
+            "Untrained": "You automatically fail Buff Magic checks",
+            "Rank F": "You can perform Buff Magic checks",
+            "Rank A": "You can perform improvised magic arts with buff spells"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic: Conditions",
+        "category": "Magic",
+        "description": "Condition magic applies negative effects, known as conditions, to creatures. Skill checks usually involve knowledge about the condition magic subtype, or possibly improvised condition spell usage",
+        "attribute": "Attunement",
+        "rank_notes": {
+            "Untrained": "You automatically fail Condition Magic checks",
+            "Rank F": "You can perform Condition Magic checks",
+            "Rank A": "You can perform improvised magic arts with condition spells"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic: Conjuration",
+        "category": "Magic",
+        "description": "Conjuration magic creates objects using mana. Skill checks usually involve knowledge about the conjuration magic subtype, or possibly improvised conjuration spell usage",
+        "attribute": "Focus",
+        "rank_notes": {
+            "Untrained": "You automatically fail Conjuration Magic checks",
+            "Rank F": "You can perform Conjuration Magic checks",
+            "Rank A": "You can perform improvised magic arts with conjuration spells"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic: Control",
+        "category": "Magic",
+        "description": "Control magic involves spells that influence the actions of creatures. Skill checks usually involve knowledge about the control magic subtype, or possibly improvised control spell usage",
+        "attribute": "Attunement",
+        "rank_notes": {
+            "Untrained": "You automatically fail Control Magic checks",
+            "Rank F": "You can perform Control Magic checks",
+            "Rank A": "You can perform improvised magic arts with control spells"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic: Defensive",
+        "category": "Magic",
+        "description": "Defensive magic involves spells that protect. Skill checks usually involve knowledge about the defensive magic subtype, or possibly improvised defensive spell usage",
+        "attribute": "Resistance",
+        "rank_notes": {
+            "Untrained": "You automatically fail Defensive Magic checks",
+            "Rank F": "You can perform Defensive Magic checks",
+            "Rank A": "You can perform improvised magic arts with defense spells"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic: Destruction",
+        "category": "Magic",
+        "description": "Destruction magic focuses on inflicting damage upon creatures. Skill checks usually involve knowledge about the destruction magic subtype, or possibly improvised destruction spell usage",
+        "attribute": "Attunement",
+        "rank_notes": {
+            "Untrained": "You automatically fail Destruction Magic checks",
+            "Rank F": "You can perform Destruction Magic checks",
+            "Rank A": "You can perform improvised magic arts with destruction spells"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic: Divination",
+        "category": "Magic",
+        "description": "Divination magic involves spells that protect. Skill checks usually involve knowledge about the divination magic subtype, or possibly improvised divination spell usage",
+        "attribute": "Attunement",
+        "rank_notes": {
+            "Untrained": "You automatically fail Divination Magic checks",
+            "Rank F": "You can perform Divination Magic checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic: Enchantment",
+        "category": "Magic",
+        "description": "Enchantment magic involves applying various effects to objects. Skill checks usually involve knowledge about the enchantment magic subtype, or possibly improvised enchantment spell usage",
+        "attribute": "Focus",
+        "rank_notes": {
+            "Untrained": "You automatically fail Enchantment Magic checks",
+            "Rank F": "You can perform Enchantment Magic checks",
+            "Rank A": "You can perform improvised magic arts with enchantment spells"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic: Illusions",
+        "category": "Magic",
+        "description": "Illusion magic involves creating sensory stimuli with magic to deceive. Skill checks usually involve knowledge about the illusion magic subtype, or possibly improvised illusion spell usage",
+        "attribute": "Focus",
+        "rank_notes": {
+            "Untrained": "You automatically fail Illusion Magic checks",
+            "Rank F": "You can perform Illusion Magic checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic: Mana Channeling",
+        "category": "Magic",
+        "description": "Mana Channeling involves the ability to channel raw mana that isn't being formed into an element for a spell. This skill is primarily used when you want to act as a source of mana for another person or object, or if an action requires so many different types of elemental magic that using raw mana is more appropriate",
+        "attribute": "Composure",
+        "rank_notes": {
+            "Untrained": "You cannot control mana output",
+            "Rank F": "You can control mana output without wasting any when you cast spells"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic: Restoration",
+        "category": "Magic",
+        "description": "Restoration magic focuses on healing conditions and recovering health. Skill checks usually involve knowledge about the restoration magic subtype, or possibly improvised restoration spell usage",
+        "attribute": "Attunement",
+        "rank_notes": {
+            "Untrained": "You automatically fail Restoration Magic checks",
+            "Rank F": "You can perform Restoration Magic checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic: Summoning",
+        "category": "Magic",
+        "description": "Summoning magic involves creating creatures to assist you. Skill checks usually involve knowledge about the summoning magic subtype, or possibly improvised summoning spell usage",
+        "attribute": "Focus",
+        "rank_notes": {
+            "Untrained": "You automatically fail Summoning Magic checks",
+            "Rank F": "You can perform Summoning Magic checks",
+            "Rank 5": "Your summoning spells cost 50% less mana",
+            "Rank 1": "Your summoning spells last 50% longer"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic: Transmutation",
+        "category": "Magic",
+        "description": "Transmutation magic involves transforming objects or creatures into other things. Skill checks usually involve knowledge about the transmutation magic subtype, or possibly improvised transmutation spell usage",
+        "attribute": "Focus",
+        "rank_notes": {
+            "Untrained": "You automatically fail Transmutation Magic checks",
+            "Rank F": "You can perform Transmutation Magic checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Magic: Utility",
+        "category": "Magic",
+        "description": "Utility magic involves spells that provide small benefits of varying types. Skill checks usually involve knowledge about the utility magic subtype, or possibly improvised utility spell usage",
+        "attribute": "Attunement",
+        "rank_notes": {
+            "Untrained": "You automatically fail Utility Magic checks",
+            "Rank F": "You can perform Utility Magic checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Observation: Listen",
+        "category": "Observation",
+        "description": "Listen skill checks are for picking up on sounds that the average person would either not hear or subconsciously ignore. You would use this skill to eavesdrop or listen through a door",
+        "attribute": "Wisdom",
+        "rank_notes": {
+            "Untrained": "You automatically fail Listen checks",
+            "Rank F": "You can perform Listen checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Observation: Search",
+        "category": "Observation",
+        "description": "Search checks are for investigating areas for clues. Higher ranks of Search ensure you don't miss what you're looking for and speed up your searching",
+        "attribute": "Wisdom",
+        "rank_notes": {
+            "Untrained": "You automatically fail Search checks",
+            "Rank F": "You can perform Search checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Observation: Tracking",
+        "category": "Observation",
+        "description": "Tracking checks are for following trails of clues. Higher ranks of Tracking allow you to follow trails of footsteps or other clues that others might normally miss",
+        "attribute": "Wisdom",
+        "rank_notes": {
+            "Untrained": "You automatically fail Tracking checks",
+            "Rank F": "You can perform Tracking checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Psionics: Defensive",
+        "category": "Psionics",
+        "description": "Defensive Psionics are not strictly speaking the use of psionic powers, but it is more of using your body and mind to resist psionic attacks. While some psionic arts are classified as defensive, this skill check is more often used by non-psionic users to resist attacks",
+        "attribute": "Composure",
+        "rank_notes": {
+            "Untrained": "You automatically fail Defensive Psionics checks",
+            "Rank F": "You can perform Defensive Psionic checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Psionics: Offensive",
+        "category": "Psionics",
+        "description": "Offensive Psionics allow you to use your mind as a weapon in a way that is patently different from using magic. It requires raw brain power rather than mana, and thus is a physical exertion of your will",
+        "attribute": "Composure",
+        "rank_notes": {
+            "Untrained": "You cannot use psionics offensively",
+            "Rank F": "You can use psionics offensively",
+            "Rank A": "You can use improvised psionic arts"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Psionics: Utility",
+        "category": "Psionics",
+        "description": "Utility Psionics includes any psionic ability that isn't an attack on another creature or defending against an attack from a creature. This usually involves using psionic abilities on objects",
+        "attribute": "Composure",
+        "rank_notes": {
+            "Untrained": "You automatically fail Utility Psionics checks",
+            "Rank F": "You can perform Utility Psionic checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Stealth: Disguise",
+        "category": "Stealth",
+        "description": "Disguise checks allow you to hide your identity through elaborate disguises or cleverly placed mundane clothing. You would also use this check if you wanted to put a disguise on another person or object",
+        "attribute": "Precision",
+        "rank_notes": {
+            "Untrained": "You automatically fail Disguise checks",
+            "Rank F": "You can perform Disguise checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Stealth: Lockpicking",
+        "category": "Stealth",
+        "description": "Lockpicking is for breaking open locked doors and chests. It usually requires lockpicking tools. Higher ranks of Lockpicking helps you save tools and open harder locks",
+        "attribute": "Precision",
+        "rank_notes": {
+            "Untrained": "You automatically fail Lockpicking checks",
+            "Rank F": "You can perform Lockpicking checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Stealth: Sleight of Hand",
+        "category": "Stealth",
+        "description": "Sleight of Hand is for being deceptive with your hand motions. You can use this skill for cheating at card games, hiding a dagger up your sleeve, or swapping out a goblet of wine with poison, all without being detected",
+        "attribute": "Precision",
+        "rank_notes": {
+            "Untrained": "You automatically fail Sleight of Hand checks",
+            "Rank F": "You can perform Sleight of Hand checks"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Stealth: Sneak",
+        "category": "Stealth",
+        "description": "Sneaking is for moving without being detected. Good sneaking means you won't be spotted even when people are actively looking for you and you won't make noise while moving. High levels of Sneak allow you to move quickly and perform actions that would normally be too loud",
+        "attribute": "Precision",
+        "rank_notes": {
+            "Untrained": "You automatically fail Sneak checks",
+            "Rank F": "You can perform Sneak checks",
+            "Rank A": "You can perform physical and magical arts while sneaking"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Stealth: Steal",
+        "category": "Stealth",
+        "description": "Stealing is for taking things that don't belong to you. This skill is mostly used to steal things in combat or pickpocket people out of combat. Higher levels increase your success rates and let you take more things",
+        "attribute": "Precision",
+        "rank_notes": {
+            "Untrained": "You automatically fail Steal checks",
+            "Rank F": "You can perform Steal checks",
+            "Rank A": "You can steal during combat as a Major Action even while not hidden"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Transportation: Air Vehicles",
+        "category": "Transportation",
+        "description": "Air Vehicle Mastery allows you to effectively drive airships, hot air balloons, and any other vehicle that moves through the air. Checks might be required for difficult maneuvers, and you need to be calm and composed while thousands of feet above solid land",
+        "attribute": "Composure",
+        "rank_notes": {
+            "Untrained": "You cannot drive air vehicles",
+            "Rank F": "You can drive small air vehicles"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Transportation: Land Vehicles",
+        "category": "Transportation",
+        "description": "Land Vehicle Mastery allows you to effectively drive carts, wagons, carriages, chariots, sleds, and any other vehicle that moves over land. Checks might be required for difficult maneuvers, and you need to be able to move and react quickly",
+        "attribute": "Agility",
+        "rank_notes": {
+            "Untrained": "You cannot drive land vehicles",
+            "Rank F": "You can drive small land vehicles"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Transportation: Sea Vehicles",
+        "category": "Transportation",
+        "description": "Sea Vehicle Mastery allows you to effectively drive canoes, boats, ships, and any other vehicle that moves in water. Checks might be required for difficult maneuvers, and you need to be able to focus on all the various parts and little movements that come with driving most waterborne vehicles",
+        "attribute": "Focus",
+        "rank_notes": {
+            "Untrained": "You cannot drive sea vehicles",
+            "Rank F": "You can drive small sea vehicles"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Axes",
+        "category": "Weapon Mastery",
+        "description": "Axe Mastery involves the effective use of axes. If you're looking to maximize the damage and flexibility of a hand axe, throwing axe, great axe, war pick, scythe, or sickle, you want to put points in Axe Mastery",
+        "attribute": "Strength",
+        "rank_notes": {
+            "Untrained": "You deal half damage with axes",
+            "Rank F": "You deal regular damage with axes"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Blunt",
+        "category": "Weapon Mastery",
+        "description": "Blunt Weapons Mastery involves the effective use of bludgeoning weapons. If you're looking to maximize the damage and flexibility of a club, hammer, maul, mace, flail, or quarterstaff, you want to put points in Blunt Weapons Mastery",
+        "attribute": "Strength",
+        "rank_notes": {
+            "Untrained": "You deal half damage with bludgeoning weapons",
+            "Rank F": "You deal regular damage with bludgeoning weapons"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Bows",
+        "category": "Weapon Mastery",
+        "description": "Bow Weapon Mastery involves the effective use of bows. If you're looking to maximize the damage and flexibility of a shortbow, longbow, or composite bow, you want to put points in Ranged Weapon Mastery",
+        "attribute": "Dexterity",
+        "rank_notes": {
+            "Untrained": "You deal half damage with bows",
+            "Rank F": "You deal regular damage with bows",
+            "Rank A": "You can perform improvised physical arts with ranged weapons",
+            "Rank 5": "Your autoattacks with bows pierce once, hitting another target behind your initial target within range"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Bullets",
+        "category": "Weapon Mastery",
+        "description": "Bullet Weapon mastery involves the effective use of ranged weapons that use ammunition that is not bolts or arrows. If you're looking to maximize the damage and flexibility of a sling, pistol, or rifle, you want to put points in Bullet Weapon Mastery",
+        "attribute": "Dexterity",
+        "rank_notes": {
+            "Untrained": "You deal half damage with bullets",
+            "Rank F": "You deal regular damage with bullets",
+            "Rank A": "You can perform improvised physical arts with bullets"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Crossbows",
+        "category": "Weapon Mastery",
+        "description": "Crossbow Weapon Mastery involves the effective use of crossbows. If you're looking to maximize the damage and flexibility of a crossbow of any kind, you want to put points in Crossbow Weapon Mastery",
+        "attribute": "Dexterity",
+        "rank_notes": {
+            "Untrained": "You deal half damage with crossbows",
+            "Rank F": "You deal regular damage with crossbows"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Fine",
+        "category": "Weapon Mastery",
+        "description": "Fine Weapon Mastery involves the effective use of medium sized weapons with the fine weapon subtype. If you're looking to maximize the damage and flexibility of a rapier, whip, or shortsword, you want to put points in Fine Weapon Mastery",
+        "attribute": "Dexterity",
+        "rank_notes": {
+            "Untrained": "You deal half damage with fine weapons",
+            "Rank F": "You deal regular damage with fine weapons",
+            "Rank A": "You can perform improvised physical arts with fine weapons"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Improvised Weapons",
+        "category": "Weapon Mastery",
+        "description": "Improvised Weapon Mastery involves the effective use of any random items as weapons. If you're looking to maximize the damage and flexibility of a chair, a broken bottle, or really any other object that isn't strictly speaking a weapon, you want to put points in Improvised Weapon Mastery",
+        "attribute": "Wisdom",
+        "rank_notes": {
+            "Untrained": "You cannot use improvised weapons",
+            "Rank F": "You can use improvised weapons"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Heavy Thrown Weapons",
+        "category": "Weapon Mastery",
+        "description": "Heavy Throwing Mastery involves the effective use of javelins, nets, throwing axes, and even boulders as weapons. Heavy throwing weapons involve the use of your raw strength instead of any fancy technique, and are a good ranged option for warriors",
+        "attribute": "Strength",
+        "rank_notes": {
+            "Untrained": "You deal half damage with heavy thrown weapons",
+            "Rank F": "You deal regular damage with heavy thrown weapons",
+            "Rank A": "You can perform improvised physical arts with heavy thrown weapons"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Light Thrown Weapons",
+        "category": "Weapon Mastery",
+        "description": "Light Throwing Mastery involves the effective use of throwing knives, needles, shuriken, and even small rocks as weapons. Light throwing weapons involve the use of practiced technique instead of raw strength, and provide many classes additional options at range",
+        "attribute": "Dexterity",
+        "rank_notes": {
+            "Untrained": "You deal half damage with light thrown weapons",
+            "Rank F": "You deal regular damage with light thrown weapons"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Longblades",
+        "category": "Weapon Mastery",
+        "description": "Longblade Mastery involves the effective use of longblade weapons. If you're looking to maximize the damage and flexibility of a longsword, katana, scimitar, or greatsword, you want to put points in Longblade Mastery",
+        "attribute": "Strength",
+        "rank_notes": {
+            "Untrained": "You deal half damage with long blades",
+            "Rank F": "You deal regular damage with long blades",
+            "Rank A": "You can perform improvised physical arts with longblades"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Polearms",
+        "category": "Weapon Mastery",
+        "description": "Polearm Mastery involves the effective use of polearms. If you're looking to maximize the damage and flexibility of a spear, glaive, pike, or javelin, you want to put points in Polearm Mastery",
+        "attribute": "Strength",
+        "rank_notes": {
+            "Untrained": "You deal half damage with polearms",
+            "Rank F": "You deal regular damage with polearms",
+            "Rank A": "You can perform improvised physical arts with polearms",
+            "Rank 5": "You deal 50% more damage at maximum range with polearms"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Shields",
+        "category": "Weapon Mastery",
+        "description": "Shield Weapon Mastery involves the effective use as shields as weapons. If you want to add some offensive options to your sword and board fighting style, or even dual wield shields, you want to put points in Shield Mastery",
+        "attribute": "Strength",
+        "rank_notes": {
+            "Untrained": "You deal half damage with shields",
+            "Rank F": "You deal regular damage with shields",
+            "Rank A": "You can perform improvised physical arts with shields",
+            "Rank 5": "You can wield shields in your main hand",
+            "Rank 1": "Your shield attacks have +50% physical damage"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Shortblades",
+        "category": "Weapon Mastery",
+        "description": "Shortblade Mastery involves the effective use of stabbing weapons. If you're looking to maximize the damage and flexibility of a knife, dagger, kris, or parrying dagger, you want to put points in Shortblade Mastery",
+        "attribute": "Precision",
+        "rank_notes": {
+            "Untrained": "You deal half damage with short blades",
+            "Rank F": "You deal regular damage with short blades",
+            "Rank A": "You can perform improvised physical arts with short blades",
+            "Rank 5": "You can strike twice with your mainhand short blade in one Attack action"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Unarmed",
+        "category": "Weapon Mastery",
+        "description": "Unarmed Combat Mastery involves the effective use of your own body as a weapon. If you're looking to maximize the damage and flexibility of punches, kicks, and open palm strikes, you want to put points in Unarmed Combat Mastery",
+        "attribute": "Dexterity",
+        "rank_notes": {
+            "Untrained": "You deal half damage with unarmed techniques",
+            "Rank F": "You deal regular damage with unarmed techniques"
+        }
+    }
+]
