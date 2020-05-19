@@ -1,5 +1,6 @@
 import os
 import tkinter as tk
+import traceback
 
 from src.website.generator import generate_html
 from src.website.validator import validate
@@ -77,6 +78,7 @@ class Application(tk.Frame):
                 method(self.log_text)
             except Exception as e:
                 self.log_text('Error: %s' % str(e))
+                traceback.print_exc()
 
         return _on_press
 

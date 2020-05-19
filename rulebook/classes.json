@@ -1831,7 +1831,7 @@
             "Maintenance": "The Maintenance branch provides options for reloading and managing misfire chance, as well as other utilities."
         },
         "passive": {
-            "Silver Bullet": "At the beginning of your turn, select a bullet currently chambered in a firearm in your inventory. It becomes a silver bullet, this class's unique special ammunition (if the bullet chosen is already special ammunition, it retains its other properties). When you create a silver bullet, you may choose an additional effect for the ammunition from the list below:\nAn attack with this ammunition ignores AC\nAn attack with this ammunition ignores MR\nAn attack with this ammunition cannot miss\nAn attack with this ammunition gains an extra damage die"
+            "Silver Bullet": "At the beginning of your turn, select a bullet currently chambered in a firearm in your inventory. It becomes a silver bullet, this class's unique special ammunition (if the bullet chosen is already special ammunition, it retains its other properties). When you create a silver bullet, you may choose an additional effect for the ammunition from the list below:<ul><li>An attack with this ammunition ignores AC</li><li>An attack with this ammunition ignores MR</li><li>An attack with this ammunition cannot miss</li><li>An attack with this ammunition gains an extra damage die</li></ul>"
         },
         "abilities": [
             "Bodyshot",
