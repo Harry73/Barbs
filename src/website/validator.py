@@ -32,7 +32,7 @@ def check_for_branch_duplicates(classes, log):
 
 
 def check_class_fields(classes):
-    base_fields = ['type', 'preview', 'num_requirements', 'known_requirements']
+    base_fields = ['type', 'preview', 'num_requirements', 'known_requirements', 'all_reqs_known']
     full_fields = ['description', 'requirements', 'branches', 'passive', 'abilities']
 
     for clazz in classes:

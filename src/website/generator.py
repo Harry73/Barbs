@@ -15,7 +15,7 @@ HTML_TAGS = ['<ul>', '</ul>', '<li>', '</li>', '<br>']
 
 
 def _debug(term, component):
-    print('Working on %s %s' % (term, component['name']))
+    print('Debug: working on %s %s' % (term, component['name']))
 
 
 def build_skills_nav(skill_categories):
@@ -171,6 +171,7 @@ def build_class_hint_unlocks(classes, skills):
                 name_or_linked_name = href('class_%s' % clazz['name'], clazz['name'])
 
             class_hint_html = class_hint_template.format(
+                color='#99747A' if clazz['all_reqs_known'] else 'transparent',
                 name=name_or_linked_name,
                 preview=clazz['preview'],
                 known_requirements=', '.join([get_link_skill_req(req, skills) for req in clazz['known_requirements']]),

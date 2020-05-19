@@ -7,6 +7,7 @@
         "known_requirements": [
             "Cloth Armor Mastery Rank A"
         ],
+        "all_reqs_known": false,
         "flavor_text": "The 41st Mage Corps' first training objective is usually to learn how to form a proper defensive line. Unlike regular infantry, a defense line for a horde of mage soldiers involves a complex layering of defensive magical fields, floating magical shields, reflecting panels, and a host of other defensive spells. The result is a nearly unbreakable line with enough redundancy to cover the loss of up to half the squad.",
         "description": "The Abjurer is a mid-level magical practitioner who has specialized in the magical school of Defense. As the name suggests, Defense magic protects the caster and their allies from enemy attacks. The school contains spells such as shields, temporary health, counterspells, buffs that boost defensive stats, and a variety of other methods to defend a person or group. The class contains no offensive abilities whatsoever, so such a mage is usually included as part of a party or regularly seen with other defensive mages within a section of an army. The class plays especially well with other members of the party who play the tank role, further augmenting their ability to protect the backline. Being an effective Abjurer requires excellent concentration.",
         "requirements": [
@@ -36,6 +37,7 @@
             "Cloth Armor Mastery Rank A or Destruction Magic Rank A",
             "Air Mastery Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"When I quit the Academy to become an adventurer, they told me I'd be successful as long as I remembered to go where the wind blows. But then the wind kept blowing me straight towards trouble, so I figured I'd take the wheel; now, the wind blows where I go.\"",
         "description": "The Aeromancer is one of 8 offensive elemental mages. Harnessing the whimsical aspect of air, the Aeromancer values speed, creativity, and taking the initiative. Unlike other mages who plant themselves in the backlines, the Aeromancer uses its high mobility to literally fly across the battlefield, controlling wind to speed allies and slow enemies while inflicting damage through wind blasts and tornados. An adept Aeromancer never stays in one spot, abusing its speed and range to maximum effect to kite and whittle down even the staunchest foes.",
         "requirements": [
@@ -74,6 +76,7 @@
             "Bow Mastery Rank A",
             "Air Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"I used to think I was the best. I could hit a goblin off its warg from 300 feet away. I used to split my first arrow with my second at the shooting range at school. But I had a rude awakening when I met her. She could shoot dragons out of the sky against the winds created by their beating wings. Her arrows whistled like mystical birdsong. I shot for sport; she created art.\"",
         "description": "The Air Duelist is one of many spellblade variants that focuses on one element and one weapon. This class wields a bow as well as powerful air magic. By interlacing shots from her bow with precise wind strikes, the Air Duelist maximizes its action economy. Her individual spells are weaker than a dedicated air mage's, but her weapon provides increased flexibility and effectiveness at longer ranges, and his offensive output can surpass a regular duelist's with efficient usage of physical and magical arts. Her spells are primarily buffing and damaging in nature, with all the additional support and utility that air magic tends to provide, and there is a heavy emphasis on forced movement and mobility.",
         "requirements": [
@@ -109,7 +112,8 @@
             "Sneak Rank A",
             "Bullet Weapon Mastery Rank A",
             "Poison Crafting A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -120,6 +124,7 @@
             "Cloth Armor Mastery Rank A",
             "Augmentation Alchemy Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "It was complete. Finally, I would become beautiful. Finally, I would obtain the life I deserved. Finally, I would become the girl I always wanted to be. The cost was great. But the reward will be worth it. It has to be\u2026",
         "description": "The Amplifier is a practitioner of Augmentation alchemy. As one of the most common types of alchemy, many towns will have an amplifier, selling blueprints for strengthening tools and weapons. The Amplifier provides an avenue for buffing allies and their equipment without requiring concentration, buff limit, or even mana or stamina. Instead, the Amplifier takes time outside of combat to complete the products of their abilities and blueprints, in order to provide bonuses in combat.",
         "requirements": [
@@ -149,6 +154,7 @@
             "Cloth Armor Mastery Rank A",
             "Water Mastery Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "Water flows around obstacles, or wears them down to nothing. Water is flexible and conforms to the shape of its environment, yet dominates a space and fills it entirely. Water caresses and nourishes, but also drowns and destroys. Water is patient and powerful. As you must be.",
         "description": "Aquamancer is an entry level mage that has begun to master the element of water. Water, as an element, is focused on balance and flexibility, and the aquamancer spell list reflects this philosophy. An adept aquamancer will be able to deal moderate water magic damage to single and multiple targets effectively while also manipulating the battlefield and controlling enemy movement. Likewise, the aquamancer can turn inward towards the party and assist with a defensive suite of spells and some moderate healing. While other elemental mages are more focused on dealing damage, inflicting crowd control, or healing, none of them have the sheer number of options that the aquamancer has.",
         "requirements": [
@@ -185,7 +191,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Bow or Crossbow Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -195,7 +202,8 @@
         "known_requirements": [
             "Water Mastery Rank A",
             "Summoning Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -204,7 +212,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Steal Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -215,6 +224,7 @@
             "Cloth Armor Mastery Rank A",
             "Destruction Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"Magic can regenerate lost limbs and necrotic organs. It can send messages across time and space, teleport us to unfathomably bizarre worlds, help us build entire cities in just a few days, and give us glimpses into both the future and the past. And yet here we are, killing each other with it. What a farce.\"",
         "description": "The Arcanist is the entry level destruction mage. For those mages who do not wish to pigeonhole themselves in one element, this class provides damaging spells which can utilize all 8, although it sacrifices some of the special strengths of those classes. The class's passive also grants the user some extra flexibility as far as targeting their spells is concerned, which works well with the class's overall emphasis on both single-target and multi-target/AOE damage. A third branch provides some extra utility, rounding the class out as an excellent first class for a new mage character. Functionally the class is designed to be simple and straightforward, acting as a segway to more complicated mage classes.",
         "requirements": [
@@ -245,7 +255,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Cloth Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -256,6 +267,7 @@
             "Sneak Rank A",
             "Shortblade Mastery Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "Leaping down from the rafters, he lands soundlessly behind the two guards and slips daggers between their ribs before they can react, then turns and sneaks into the King's quarters, his footsteps masked by the monarch's snores.",
         "description": "The Assassin has always been a career of necessity. When a sword is too direct and a fireball too flashy, the dagger has always served as an inconspicuous tool to end someone's life. The Assassin excels at its use, as well as finding its way on top of its prey without being detected. With an excess of frontloaded damage, and the necessary abilities to prepare for a kill, the Assassin always tries to end a fight with the first blow. This class has access to abilities to increase its damage and critical strike chance, as well as various tools to track and sneak up on prey, and close in quickly.",
         "requirements": [
@@ -293,7 +305,8 @@
         "known_requirements": [
             "Shield Armor Mastery Rank A",
             "Light Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -305,7 +318,8 @@
             "Enchantment Magic Rank A",
             "Buff Magic Rank A",
             "Condition Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -314,7 +328,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Heavy Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -323,7 +338,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Light Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -333,7 +349,8 @@
         "known_requirements": [
             "Light or Heavy Armor Mastery Rank A",
             "Heavy Throwing Weapon Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -343,7 +360,8 @@
         "known_requirements": [
             "Bullet Weapon or Crossbow Mastery Rank A",
             "Tinkering Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -354,6 +372,7 @@
             "Cloth Armor Mastery Rank A",
             "Organics Alchemy A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "He was a strange fellow really, and his owl that was not quite an owl was even stranger. \"She's a beauty, isn't she?\" he said, smiling up at the beast perched on his shoulder, even as its horrifically human eyes stared back. \"I made her myself.\"",
         "description": "The Bioengineer is a practitioner of Organics alchemy. Frequently, towns will have one or two of these, working on their own blueprints for sale. Organics alchemy is considered the darkest of the alchemical arts, and while some Bioengineers will stick to simple organisms like birds or dogs, others have been known to turn to darker experiments involving people. However, regardless of how they make their living, most Bioengineers aspire to the lost art of creating life in vitro. This class spends time outside of combat creating organisms to be used for a variety of purposes.",
         "requirements": [
@@ -391,7 +410,8 @@
         "known_requirements": [
             "Shortblade Mastery Rank 5",
             "Light Armor A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -402,7 +422,8 @@
             "Longblade Mastery Rank A or Shortblade Mastery Rank A",
             "Air Magic Rank A",
             "Conjuration Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -412,7 +433,8 @@
         "known_requirements": [
             "Fine Weapon Mastery Rank A",
             "Dancing Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -421,7 +443,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Shield Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -431,7 +454,8 @@
         "known_requirements": [
             "Heavy or Light Throwing Weapons Rank A",
             "Tinkering Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -440,7 +464,8 @@
         "num_requirements": 4,
         "known_requirements": [
             "Dark Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -449,7 +474,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Tinkering Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -460,7 +486,8 @@
             "Any Melee Weapon (no Unarmed) Rank A",
             "Heavy Armor Mastery Rank A",
             "Interaction Leadership Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -469,7 +496,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Enchantment Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -478,7 +506,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Heavy Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -487,7 +516,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Ice Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -497,6 +527,7 @@
         "known_requirements": [
             "Any 3 Weapons (no Unarmed) Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"This one's the Spear of the Frozen Throne! Papa got it after looting the lair of a lich up north! And this one's the Blade of Sunlight! It shoots beams when in the hands of a hero! And here's the Bow of True Death! I'm not allowed to touch it because Papa says it's cursed. Pretty cool, huh? C'mon, Papa's got even cooler stuff in the attic!\"",
         "description": "The Champion is a fighter that has devoted his life to the mastery of as many weapons as possible. Just like how a mage might study for years to master a wide variety of spells, the Champion trains for years to master a wide variety of both melee and ranged weapons. The Champion has high strength to swing around greatsword and halberds but also has high dexterity to deftly handle whips and rapiers. The class swaps weapons easily, adapting to the situation, and is especially good at showing off the specific strengths and flairs of each type of weapon. The Champion may only require 3 weapon types to unlock, but is further rewarded for mastering more weapons over the course of their adventuring career.",
         "requirements": [
@@ -534,7 +565,8 @@
             "Lightning Magic Rank A",
             "Light Magic Rank A",
             "Destruction Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -545,6 +577,7 @@
             "Cloth Armor Mastery Rank A",
             "Conjuration Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"Instead of worrying about what you cannot control, shift your energy to what you can create.\"",
         "description": "The Conjurer is an entry level mage that specializes in the magical school of Conjurations. This school contains spells that allow the conjurer to form objects out of thin air, using their mana to summon matter or even forming mana into a solid object temporarily. Requiring a fine control of mana and powerful creativity, the Conjurer is designed to have a variety of useful spells for exploration, and is well suited to the life of an adventurer. The branches of this class are loosely divided into short term and long term spells, allowing the Conjurer to make temporary portals for a few seconds, weapons and armor for a few minutes, or walls and bridges to use for hours. While the class lacks some of the more combat oriented spells of other mages, like a proper counterspell or damage spell, Conjurer makes up for it in utility and creative potential, and should be a welcome addition to any party looking to make day to day life easier.",
         "requirements": [
@@ -577,6 +610,7 @@
             "Cloth Armor Mastery Rank A",
             "Control Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"Rebel, if you must. Resist, if you can. As you pathetically flail about, trying to take back your freedom, you will inevitably realize: you were never in control anyway.\"",
         "description": "The Controller is a mid-level practitioner of magic which specializes in the school of Control. These spells deal primarily with controlling the actions of other entities. The name of the game here is limiting the number of options your opponents have available to them, or outright determining their actions for yourself. Slows, stuns, and other crowd control spells fall under this category, inhibiting the actions that enemies can make in combat. Outside of combat, charms are available to this class, emulating full-blown mind control with some basic restrictions (typically, no self-harm). This class lacks any significant damaging spells, but makes up for this by having the most robust list of control spells in the system. A Controller is an excellent addition to a large army, a small adventuring group, or even in a solo-build. That being said, some view Control magic as the most evil kind of magic, taking away people's freedoms.",
         "requirements": [
@@ -607,7 +641,8 @@
             "Light Magic Rank A",
             "Conjuration Magic Rank A",
             "Summoning Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -617,7 +652,8 @@
         "known_requirements": [
             "Cloth Armor Mastery Rank A",
             "Condition Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -628,6 +664,7 @@
             "Ice Magic Mastery Rank A",
             "Cloth Armor Mastery Rank A or Destruction Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "Skating gracefully on the ice, she applies the finishing touches to the goblins, now tasteful frozen sculptures, and then continues deeper into their lair, followed by a cold tailwind.",
         "description": "The Cryomancer is one of 8 offensive elemental mages. Harnessing the merciless aspect of ice, the Cryomancer is a flexible class that deals both single target and AOE damage, but especially excels at controlling the battlefield with crowd control spells. She can create spears of ice to impale enemies or freeze dozens of enemies solid. The Cryomancer provides a powerful defense with the power of ice and cold, and has plenty of offensive options to finish a fight.",
         "requirements": [
@@ -666,6 +703,7 @@
             "Shortblade Mastery Rank A",
             "Destruction Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "The difference between controlling magic and letting it control you is paper thin. By taking hold of this power, you accept that you shall spend the rest of your days walking a knife's edge, lest you fall prey to magic's perils.",
         "description": "The Daggerspell is a rogue that has adapted some minor magics into their kit. In combat, this class uses damaging spells to attack enemies from medium ranges while closing in for the kill with an empowered dagger. The interplay of magic attacks and knife attacks will encourage the player to constantly change their angle of attack, and the benefits to doing so will allow them to dominate short to medium ranges. If melee combat isn't immediately a viable option, the class's passive generates potential while the player casts spells, enabling a powerful singular hit with the knife once the player is ready to execute on a site. Outside of combat, a number of rogue-themed utility spells provide the Daggerspell with magically enhanced rogue abilities, assisting them in various stealth based skills as well as providing them with a powerful set of abilities to lock in a scout archetype when running dungeons. This makes the class an excellent choice for adventurers and less so for anyone working in a more organized function such as an army.",
         "requirements": [
@@ -702,6 +740,7 @@
             "Light Armor Mastery Rank A",
             "Dancing Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"Dance, when you're broken open. Dance, if you've torn the bandage off. Dance in the middle of the fighting. Dance in your blood. Dance when you're perfectly free.\"",
         "description": "The Dancer is one of many classes that evolves from the simple non-combat art of dancing. Combining their love for dance with the natural rhythm and furor of combat, the Dancer is able to move between enemies and allies while maintaining the fluid movements of their many forms. Dancing while moving costs additional stamina, but the Dancer can save on stamina costs by being an intelligent choreographer and moving through their many dances in a specific order. Most dances either provide allies with vigor and strength or confuse allies with bewitching and undulating movement.",
         "requirements": [
@@ -737,6 +776,7 @@
             "Longblade Mastery Rank A",
             "Dark Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "The last remaining knight clutched at the locket hanging from his neck, drenched in blood both his and not. \"My love\u2026soon I will join you in Paradise\u2026\" Then, he infused the last of his energy into his sword, which glowed black as death, and traded his life for thousands.",
         "description": "The Dark Duelist is one of many spellblade variants that focuses on one element and one weapon. This class wields a two-handed greatsword, and channels terrible dark magic through his weapon. By seamlessly weaving together sword strikes with dark magic spells, the Dark Duelist has excellent action economy. His individual spells are weaker than a dedicated dark mage, but his weapon provides additional flexibility, and his offensive output can surpass a regular warrior's with efficient usage of both physical and magical arts. His spells are primarily offensive or buffing in nature, with some additional condition spells due to his dark aspect, and a manipulation of Curses for more damage.",
         "requirements": [
@@ -773,7 +813,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Condition Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -788,6 +829,7 @@
             "Lightning Magic Rank A",
             "Light Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"There will never be peace between humanity and Hell. We create these demons; they're born of our own twisted hearts and blackened souls. Folks ask me what's the worst I've seen while on the job; I don't have the heart to tell them that those memories have nothing to do with demons. It makes an old, melodramatic coot like me want to turn my guns on the ones I've sworn to protect, sometimes. But as long as there's still one good person left on this earth...Well, I can tolerate any number of demons for just one angel.\"",
         "description": "The Demon Hunter has a thankless job. A master of light and lightning magic, and armed with demon slaying weapons, he dives into the fray against the foulest creatures in the multiverse. Sometimes persisting for weeks amongst their kind, doling out holy death in an almost reckless manner; in reality, the Demon Hunter specializes in the simple act of survival against beings who have lived for centuries and mastered every dark art in the book. This class understands well the balance between maintaining a careful defensive manner and exploiting brilliant yet narrow offensive opportunities. The class's passive provides ample defensive options to allow the user to spend their action economy on attacking instead, which in turn grants them further use of their passive. With powerful light and lightning spells similar to the Cleric's, but with a focus on defense, and deadly ranged attacks, the Demon Hunter represents a pinnacle of efficiency, a maelstrom of human willpower, and a nightmare to every demon that crosses his path.",
         "requirements": [
@@ -824,7 +866,8 @@
         "known_requirements": [
             "Destruction Magic Rank A",
             "Summoning Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -835,6 +878,7 @@
             "Heavy Armor Mastery Rank A",
             "Weapons: Blunt Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"I will fall upon the earth like a plague. I will sow the seeds of destruction in every hamlet and village. Rivers will run red with the blood of the innocent, and warriors will trade gold for death. The world will become one of violence and stagnation. Mankind will remember this day as the beginning of the end.\"",
         "description": "The Destroyer is the entry level fighter class for the use of blunt weapons. Blunt weapons usually have lower damage peaks than other weapons, but come with additional on-hit effects such as Cripple or Vulnerable, and crafted blunt weapons tend towards applying other types of on hit effects. Their compatibility overall with crafting materials is high, and the vast majority of these weapons are one handed so a shield can be used (dual wielding is out of the question though). The Destroyer maximizes the use of these weapons with expanding on the on hit effects available through its vicious, high damage attacks, and also adds some terrain destruction and powerful AOE attacks. The focus of this class is to keep enemies from moving too far while dealing increasing amounts of damage, and to be straightforward instead of bogging down the player with decisions. Any weapon in the Blunt Weapons category is fair game for this class, so whether its clubs or flails that mark your fancy, the Destroyer will function the same.",
         "requirements": [
@@ -868,7 +912,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Cloth Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -880,6 +925,7 @@
             "Summoning Magic Rank A",
             "Knowledge Nature Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"If I were you, I wouldn't cross me. I've got friends in high places.\"",
         "description": "The Dragoncaller is a class whose identity is deeply entrenched with its lore. Dragons are known to be the only intelligent species with a lifespan over 200 years. Being that all fully matured dragons are natural forces of good, they have much wisdom to impart to the humanoid races, and great physical and magical power to contribute to causes of good and righteousness. The Dragoncaller is, first and foremost, a scholar whose focus is on the physical and magical nature of the draconic lineage and their influence on the natural world and its history. Many Dragoncallers set out on adventure, primarily to learn what they can of the many dragons that inhabit our world, and to create meaningful connections with the ones they manage to come across. Secondarily, Dragoncallers frequently act as middlemen between humanity and dragons who choose to integrate themselves with humanoid societies. It is typical that such relationships break down without a knowledgeable and level-headed individual to bridge the gap between a dragon's sometimes condescending magnanimousity and a humanoid society's sometimes shortsighted treatises. Finally, Dragoncallers provide those not yet matured dragons, whose chaotic natures have yet to give way to true intelligence, a safely directed output for their violence, by summoning them into combat against the forces of evil.",
         "requirements": [
@@ -909,7 +955,8 @@
         "known_requirements": [
             "Longblade Mastery Rank A",
             "Heavy Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -919,7 +966,8 @@
         "known_requirements": [
             "Light Armor Mastery Rank A",
             "Fine Weapon Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -930,6 +978,7 @@
             "Cloth Armor Mastery Rank A or Destruction Magic Rank A",
             "Lightning Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"Thunder roars but does not strike. Lightning strikes but does not roar. Choose to be lightning.\"",
         "description": "The Dynamancer is the entry level lightning mage. Specializing in the turbulent and wild aspect of lightning, the Dynamancer is a class focused mostly on dealing damage to one or multiple enemies, with some small capability to paralyze and stun as well. In exchange for increased offensive power compared to other elements and a heavy amount of flexibility with each spell, lightning mages must deal with the inherent randomness that comes with playing with lightning. Sometimes, the Dynamancer's spells strike true, but other times they fail to reach parity with other mages' spells. The passive provides a small amount of reprieve from the web of random chance, allowing the class to reroll spell damage and effects when their luck is not in their favor and improving average damage in a decently reliable manner.",
         "requirements": [
@@ -961,7 +1010,8 @@
         "known_requirements": [
             "Any Melee Weapon (no Unarmed) Rank A",
             "Water Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -973,7 +1023,8 @@
             "Lighting Magic A",
             "Dark Magic Rank A",
             "Water Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -984,6 +1035,7 @@
             "Cloth Armor Mastery Rank A",
             "Enchantment Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "I watched on as he carefully inscribed his runes upon animal bones, knit together leather with magical seals, brushed the eerie skin tone paints upon a wooden, lifeless face, all while deftly avoiding the ritual circle he had encased his work inside of, and I lamented. For this doll, this macabre mockery of the young master's image, might soon move with enchanted grace and intelligence. But it would never love him as the boy did, only imitate.",
         "description": "The Enchanter is an entry level mage that specializes in the magical school of Enchantment, using magical runes and inscriptions to apply effects to objects and equipment. Such mages are a mainstay of many armies, using their spells to augment the power of weapons and armor as well as reinforcing walls and defensive structures. They are also effective on a smaller scale, assisting party members by providing buff-like effects without taxing buff limit. This class provides a good number of entry level offensive, defensive, and utility effects for the aspiring party mage.",
         "requirements": [
@@ -1021,6 +1073,7 @@
             "Enchantment Magic Rank A",
             "Destruction Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"To think that there would be somebody foolish enough to willingly choose darkness. You should realize that darkness is not such a simple thing. The shadow opposite light. The night opposite day. Right and wrong. Good and evil. Order and chaos. Reason and irrationality. Look at it. Savor it. Remember it well. This is the source of your power. Your initial impulses. Your first dive. Your original self. If you can't handle it, it's the end for you. Prepare yourself.\"",
         "description": "Evangelist brings together the most powerful parts of ice and dark magic, casting high powered AOE spells with ease and causing widespread destruction. It also applies the typical conditions that ice and dark are capable of, but goes a step further with some unique curse abilities, including some that work with ice spells. However, the most integral part of the class is the passive, allowing the Evangelist to turn any damaging spell into a powerful and dangerous steroid. Evangelist is designed to be the final step for an ice or dark mage, and thus has a lot of extra power and complexity in its spells, but the passive also grants some extra synergy with other mages, allowing you to recontextualize your spell list into a list of possible augmentations.",
         "requirements": [
@@ -1056,7 +1109,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Cloth Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1065,7 +1119,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Longblade Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1075,7 +1130,8 @@
         "known_requirements": [
             "Fine Weapon Mastery Rank A",
             "Heavy Throwing Weapons Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1085,7 +1141,8 @@
         "known_requirements": [
             "Shield Armor Mastery Rank A",
             "Water Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1094,7 +1151,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Summoning Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1103,7 +1161,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Any Melee Weapon (no Unarmed) Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1115,6 +1174,7 @@
             "Organics Alchemy Rank A",
             "Construct Alchemy Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "Many forget that the creation of golems, conventionally thought to be creepy if not evil, is actually a type of alchemy invented by Aloys himself, a god of goodness and charity. One could even say that every golem is a disciple of the tenets of Aloys, and that their creation makes one a prophet.",
         "description": "Golem Master is an alchemist that has combined its knowledge of organics and construct alchemy to unlock the lost art of golem creation. Golems are the ultimate in alchemical created life, just falling short of the final goal of all alchemists: true humanoid in vitro development. Golems have many of the qualities of regular humanoids, including middling intelligence, the ability to use equipment and tools, specialized skill sets, and class abilities. They have longer durations and are more durable than regular organics or constructs products, designed to act as extra party members during a dungeon delve or extra guards during open battlefield combat. They even roll death saves when their Health is depleted, just like player characters. This class provides several types of golems one can develop, as well as various ways of assisting golems in their long-term survival.",
         "requirements": [
@@ -1146,7 +1206,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Shield Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1157,7 +1218,8 @@
             "Bow Mastery Rank A",
             "Enchantment Magic Rank A",
             "Control Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -1166,7 +1228,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Cloth Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1177,7 +1240,8 @@
             "Dark Magic Rank A",
             "Conjuration Magic Rank A",
             "Water Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1187,7 +1251,8 @@
         "known_requirements": [
             "Air Magic Rank A",
             "Buff Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1198,7 +1263,8 @@
             "Dark Magic Rank A",
             "Bow Mastery Rank A",
             "Conjuration Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -1207,7 +1273,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Ice Magic Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1216,7 +1283,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Cloth Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1225,7 +1293,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Sneak Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1236,6 +1305,7 @@
             "Cloth Armor Mastery Rank A",
             "Construct Alchemy Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"There are no rules. That is how art is born, how breakthroughs happen. Go against the rules or ignore the rules. That is what invention is about.\"",
         "description": "Inventor is the entry level alchemist that specializes in construct alchemy. Construct alchemy allows one to bring pseudo-life to inanimate objects by first building a body that houses a mixture of chemical and electronic parts to imitate biological functions and intelligence. Constructs, when compared to the organic products of organics alchemy, tend to be more fragile but a little more modular and flexible. Some larger cities might have construct alchemists who build various quality of life constructs to help with day to day work, but this class specializes in constructs more apt at the rigors of an adventuring day. All of the constructs available from this class are made to be deployed in combat as a Minor Action, so they are designed to be compact and straightforward, but many constructs can be highly complex with a lot of moving parts. Finally, the class has abilities allowing you to quickly modify deployed constructs during combat.",
         "requirements": [
@@ -1263,7 +1333,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Heavy Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1275,6 +1346,7 @@
             "Axe Mastery Rank A",
             "Pain Tolerance A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"He's got a funny reputation as a guardian. Always putting himself in the front lines and protecting the rest of the party. People think it's because he cares about us. Truth is, he's just a fucking psychopath.\"",
         "description": "The Juggernaut is a middle tier fighter that can very effectively front line for a party by acting as a health tank. Decent melee damage with either axes or blunt weapons is augmented by hefty amounts of high efficiency lifesteal, and a handful of other defensive abilities provide greater maximum health, passive healing in combat, or a variety of other health/healing based survivability options. Combine this with the ability to use health as stamina and the Juggernaut stands out as a particularly appealing option for any character with a high amount of Vitality, or a build that prioritizes maximum health. High Pain Tolerance allows a Juggernaut to maintain concentration without worrying about all the damage they're taking. The playstyle of Juggernaut rewards aggressive action, putting yourself in the middle of many enemies, and keeping your health as low as possible without putting yourself dangerously low. The class is purely focused on combat, providing no real out of combat utility, so it works excellently as a mercenary or soldier in an army.",
         "requirements": [
@@ -1313,7 +1385,8 @@
         "known_requirements": [
             "Cloth or Light Armor Mastery Rank A",
             "Offensive Psionics Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -1322,7 +1395,8 @@
         "num_requirements": 4,
         "known_requirements": [
             "Light Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1331,7 +1405,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Fine Weapon Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1341,7 +1416,8 @@
         "known_requirements": [
             "Cloth Armor Mastery Rank A",
             "Organics Alchemy Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1352,6 +1428,7 @@
             "Lightning Magic Rank A",
             "Fine Weapon Mastery Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "One second, the two strangers were calmly watching each other from opposite sides of the raucous tavern; the next second, we heard a clap of thunder, and the smaller one had closed the gap in the blink of an eye. Everything was suddenly quiet, but for the slightest hum of energy and tension. We all held our breath even as the hair on the backs of our necks stood on end, and we prayed that the stranger's sword would stay in its scabbard.",
         "description": "The Lightning Duelist is one of many spellblade variants that focuses on one element and one weapon. This class wields a rapier in one hand and volatile lightning magic in the other. By seamlessly weaving together rapier lunges and jabs with lightning magic spells, the Lightning Duelist has excellent action economy. His individual spells are weaker than a dedicated lightning mage's, but his weapon provides increased flexibility and effectiveness at shorter ranges, and his offensive output can surpass a regular duelist's with efficient usage of physical and magical arts. His spells are primary buffing and damaging in nature, with all of the random, violent flavor that lightning spells tend to have, and there is a heavy emphasis on mobility and flexibility of aggressive attack patterns.",
         "requirements": [
@@ -1388,7 +1465,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Axe Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1399,6 +1477,7 @@
             "Cloth Armor Mastery Rank A or Destruction Magic Rank A",
             "Light Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"It is during our darkest moments that we must focus to see the light.\"",
         "description": "The Luxomancer is a mage who has begun to specialize in the use of light as a magical element. Light is a powerfully supportive element with some high powered damage spells to round out the suite. Light can provide a number of useful buffs such as additional damage, accuracy, and penetration, or defense spells in the form of shielding yourself or blinding enemies. Healing and cleansing spells are also the purview of light; the element has access to the highest value healing spells amongst all eight elements. The damaging spells in the light element tend to have good ratios; AOE damage spells tend to prefer lines instead of squares. A Luxomancer will find that they have a solid suite of spells to play a backline mage within a party, healing and supporting the frontline when necessary, and providing DPS whenever possible. The passive provides the opportunity to convert some of the actions you spend dealing damage into increased healing to be spent on later turns or even at the end of a combat encounter. Luxomancer is an excellent first choice for elemental mages.",
         "requirements": [
@@ -1427,7 +1506,8 @@
         "known_requirements": [
             "Bullet Weapon Mastery Rank A",
             "Destruction Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1436,7 +1516,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Light Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1447,6 +1528,7 @@
             "Cloth or Light Armor Mastery Rank A",
 			"Weapon Mastery: Unarmed"
         ],
+        "all_reqs_known": true,
 		"flavor_text": "The essence of martial arts is not strength, not the art itself, but that which is hidden deep within yourself.",
 		"description": "The Martial Artist is an entry level monk for a character beginning their journey through the long and arduous path of becoming a master of hand to hand combat. This class provides the initial tools for fighting in close quarters with punches, kicks, grapples, and throws. Additionally, it acts as an introduction to the unique mechanics of monk classes as a whole: dU and combo chance. All monk passives, along with whatever the class's specific passive is, also provide a level of monk mastery. Each level of monk mastery augments a character's dU and their base combo chance. The designation dU refers to the damage dice of an unarmed strike; for a non-monk character, this is a d4, but every additional monk mastery passive increases dU by one dice level, to d6, d8, d10, d12, and finally d20. Additionally, each level of monk mastery augments a character's base combo chance. Combo chance is the percentage chance that after casting a major action ability that has the combo tag that you will be able to follow up with another combo ability that has yet to be used that turn. Base combo chance for a non-monk is 0%, and increases with each monk mastery passive to 10%, 20%, 30%, 35%, and finally 40%. Abilities themselves can temporarily improve one's combo chance; the Martial Artist class provides a branch dedicated to monk related utilities such as this; on top of its single and multi target physical attacks with unarmed strikes, which scale off dU rather than having set damage. With some luck to combo frequently and a dedication to the monk archetype, a character will find that their damage scales rapidly, and a monk can be a powerful physical DPS for a team.",
 		"requirements": [
@@ -1476,7 +1558,8 @@
             "Organics Alchemy Rank A",
             "Cloth Armor Mastery Rank A",
             "Augmentation Alchemy Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1485,7 +1568,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Defensive Psionics Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1496,6 +1580,7 @@
             "Ice Magic Rank A",
             "Light Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "Mirrors don't lie; they only show a part of the truth. A broken mirror can distort the proportions of the reflected image such that it's no longer an accurate representation of reality. Or, perhaps more accurately put, it has the potential to show a nearly infinite number of new points of view. Thus, what you see is just a fraction of what could be.",
         "description": "The Mirror Mage is an advanced mage that uses mirrors made of a combination of ice and light magic to reflect attacks and spells. This class is a natural step for the ice or light mage that sees the potential of line AOE spells or projectiles that are fired in a straight line to be improved upon. Mirrors provide the caster with new angles of attack, helping their spells avoid obstacles and helping the caster achieve line of sight of a target that might be hiding behind cover. As a class that utilizes defensive magic, there's also a host of use cases for these mirrors to protect the caster and their allies by providing reflective barriers, breaking line of sight, and sending enemy attacks right back. Playing this class requires some setup; the Mirror Mage will likely find themselves drawing lines and angles to set up mirrors so that they can fire off projectiles and line AOE spells without having to put themselves in harm's way. With good geometrical sense, the Mirror Mage can hammer enemies from anywhere on the battlefield, regardless of the barriers between.",
         "requirements": [
@@ -1525,7 +1610,8 @@
         "known_requirements": [
             "Ice Magic Rank A",
             "Heavy Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -1537,6 +1623,7 @@
             "Augmentation Alchemy Rank A",
             "Construct Alchemy Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"Twin manasurge engines, a silicon-omensteel processor, a chassis of 60% adamantium and 40% mythril, and coils of true ice for cooling. Yeah, this thing's a monster, and that's not even getting into all the modular weapons systems. We're gonna revolutionize the war with this one.\"",
         "description": "The Modifier is an advanced alchemist that has combined construct alchemy and augmentation alchemy and taken their study into a new direction. By focusing on constantly improving a single construct instead of diverting attention to many, the Modifier manages to build a truly powerful construct designed to survive many combats and be useful in many types of situations. The class has abilities to create specialized constructs with endless durations, which initially start out very weak but over time can be crafted by the alchemist into a true war machine, a perfect partner for investigations, or a sleepless bodyguard for many nights to come. Effectively using this class requires taking one of the abilities to develop a base form for the specialized construct, then adding to it with the other abilities from this class or other augmentation alchemy classes.",
         "requirements": [
@@ -1566,7 +1653,8 @@
         "known_requirements": [
             "Cloth Armor Mastery Rank A",
             "Organics Alchemy Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1577,7 +1665,8 @@
             "Any 2 of Organics Alchemy Rank A",
             "Dark Magic Rank A",
             "Summoning Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -1587,7 +1676,8 @@
         "known_requirements": [
             "Sneak Rank A",
             "Steal Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1598,7 +1688,8 @@
             "Sneak Rank A",
             "Shortblade Mastery Rank A",
             "Conjuration or Destruction Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1609,6 +1700,7 @@
             "Cloth Armor Mastery Rank A or Destruction Magic Rank A",
             "Dark Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "Why is it that children are always afraid of the dark? It's not something their parents teach them, after all. Is it a natural human fear of the unknown and the unseen? Or is there something about darkness itself that should be feared?",
         "description": "The Noxomancer is one of 8 offensive elemental mages. Harnessing the sinister aspect of dark, the Noxomancer is an aggressive class that deals both single target and AOE damage, but especially excels at stacking conditions on enemies, especially curses. He can inflict a variety of debilitating effects from blindness to fear, all while piling on damage. A small suite of utility spells allows the Noxomancer to take advantage of a variety of situations. Overall, the Noxomancer's slow and steady damage output is a force to be reckoned with.",
         "requirements": [
@@ -1644,7 +1736,8 @@
             "Any Melee Weapon (no Unarmed) Rank A",
             "Light Magic Rank A",
             "Heavy Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1653,7 +1746,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Light Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1663,7 +1757,8 @@
         "known_requirements": [
             "Cloth Armor Mastery Rank A",
             "Lightning Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1674,6 +1769,7 @@
             "Offensive Psionics Rank A",
             "Defensive Psionics Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"I wish I could tell you that the mind is like an open book, but it rarely is. Even the dullard who spends every day shoveling cow shit at his farm has a mind like a fortress, whose hallways twist like a labyrinth, whose deepest treasure rooms are guarded by iron wrought portcullises and inscrutable guardians. Diving into someone else's psyche is an incredible risk. Take care whose mind you go idly waltzing through.\"",
         "description": "The Psion is one of two entry level classes that use psionics as their primary way of engaging in combat. Psionics are unique in a number of ways from other combat styles. Psionic attacks deal psychic damage, a type of physical damage that cannot be dodged and ignores AC, but checks against defensive psionics and works in an all or nothing fashion. When you make a psionic attack, you roll Offensive Psionics to determine the DC that the target needs to beat with Defensive Psionics in order to negate all damage and effects. Additionally, you can pay for psionic abilities with health, stamina, or mana, meaning you have a lot of flexibility and can maintain psionic combat for quite a bit longer than other combat styles. You are still restricted to targets you have line of sight on, and psionic builds are difficult to support with gear. Psion provides ways to deal psionic damage to one or multiple targets, as well as a number of offensive psychic conditions and displacements as well as defense for both you and your party.",
         "requirements": [
@@ -1705,6 +1801,7 @@
         "known_requirements": [
             "Cloth Armor Mastery Rank A or Destruction Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"There may be a great fire in our hearts, yet no one ever comes to warm himself at it, and the passers-by see only a wisp of smoke\"",
         "description": "The Pyromancer is the entry level mage that specializes in the use of spells aspected to the aggressive element of Fire. Fire magic sees heavy use in mage cadres of armies as well as heavy personal use for mage adventurers. As the premiere damage dealing element, Pyromancers enjoy a variety of high damage spells to target single or multiple enemies. Additional damage over time in the form of the Burn condition helps maintain a high level of DPS for a Pyromancer even when they find themselves forced to reposition or focus on other objectives in combat. The passive of the class helps make sure that this class's damage spells are relevant even in fights against magic damage tanks. The class has access to some minor area control, creating fields of flames that deter enemies from staying in one spot too long, and as all the other elemental mages do, the Pyromancer has access to a counterspell, but the vast majority of spells in the class's repertoire involve dealing damage in a straightforward manner, making the class an excellent choice for players looking to play a less complex style that still utilizes the system's flexible and powerful magic system.",
         "requirements": [
@@ -1739,7 +1836,8 @@
         "known_requirements": [
             "Light Armor Mastery Rank A",
             "Bullet Weapon or Crossbow Mastery A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1749,7 +1847,8 @@
         "known_requirements": [
             "Bow or Crossbow Mastery Rank A",
             "Light Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1759,7 +1858,8 @@
         "known_requirements": [
             "Lightning Magic Rank A",
             "Dark Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1771,6 +1871,7 @@
             "Condition Magic Rank A",
             "Dark Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "Nothing's quite as pointless as the last words of a man who's yet to realize he's already dead. Yet, those words must be uttered. Because beyond the gate lies an otherworldly quietness.",
         "description": "A Reaper is more than just a mage or fighter; they are an omen of finality. Reaping the spirits of those cursed for death, a reaper cuts short lives with a gruesome mastery of the wicked scythe, or snuffs out souls with a unique curse signaling doomsday. The reaper's melee with scythe and spell leave behind harvestable souls which provide the reaper with the vigor to continue their solemn duty. Curses both mundane and unique make escaping the reaper's toll extremely difficult. With this combination of deadly conditions and scythe attacks, the reaper gives men a good reason to fear their deaths.",
         "requirements": [
@@ -1808,7 +1909,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Cloth Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1819,6 +1921,7 @@
             "Light Armor Mastery Rank A",
             "Bullet Weapon Mastery Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"DANGER! MISHANDLING OF FIREARM CAN RESULT IN SERIOUS INJURY OR DEATH. You are now the proud owner of an Achak Industries firearm, which comes with certain responsibilities which the Sultanate of Kraithan requires our company to inform you of. Do not point a firearm at anyone or anything you do not intend to fire at. Always assume a firearm is loaded. Achak Industries is not liable for any harm that comes to any law-abiding citizens as a result of improper or reckless use of our equipment. Do not even think of suing us; our lawyers are better than yours and also have guns. Thank you for your patronage.\"",
         "description": "The Rifleman is the entry level bullet weapon class. The use of firearms is difficult for multiple reasons, which the Rifleman helps remedy: firearms require a special action called a Reload Action, which takes two Major Actions, to reload their ammunition, and firearms have an inherent misfire rate that forces a player to roll everytime they attack to see if their gun doesn't just fall apart. To make up for these weaknesses, the average firearm has improved damage capabilities thanks to the secondary fire, an alternative to regular autoattacks. The Rifleman has abilities to minimize misfire, improve damage and speed, and abuse secondary fire and ammunition types to great effect, and acts as an excellent first step to any character who wishes to use firearms for the long term. Damage is high and range is medium compared to other ranged options, and firearms combine many of the unique strengths of both crossbows and bows, often piercing and pushing enemies back.",
         "requirements": [
@@ -1849,7 +1952,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Longblade Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1860,6 +1964,7 @@
             "Shield Armor Mastery Rank A",
             "Shield Weapon Mastery Rank 5"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"There is a place where civilization gives way to twisting undergrowth and unknown shores. Where good and evil just barely begin to blur together. A place where brave heroics fail and terror dominates the heart. This is the place where he stands guard. Waiting for the end.\"",
         "description": "The Sentinel is a fighter class that has mastered the use of shields as weapons. Dual wielding bladed shields with specialized chain systems attached to their wristguards, the Sentinel has redefined the art of shield combat with innovative new techniques. Being able to double down on the defensive aspects of shields, the Sentinel also brings vicious new attacking opportunities and a wealth of utility and mobility. This class bides its time playing defensively in order to release energy in a burst of explosive movements and attacks in later rounds. The chains on his shields allow for easy shield tossing and dragging himself and opponents where he pleases, and opens up his effective range and target selection. While dual wielding is technically optional with this class, choosing to hold two shields maximizes the abilities this class provides. In order to help these specialized shields mesh with other classes, the Sentinel treats all shields that have implicit damage as axes, longblades, blunt weapons, and heavy throwing weapons as well. The default range for a Sentinel's shield chain is 30 ft, and can be picked up from range using the chains as a free action.",
         "requirements": [
@@ -1892,7 +1997,8 @@
             "Dark Magic Rank A",
             "Cloth Armor Mastery Rank A",
             "Dancing Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -1901,7 +2007,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Any Melee Weapon (no Unarmed) Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1912,6 +2019,7 @@
             "Bow Mastery Rank A",
             "Light Armor Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "At 30 seconds to midnight, I reconfirmed my target, still sipping wine on the veranda. At 26 seconds, I drew my longbow, custom crafted for this single shot. I planned to shatter it and toss the remains in the nearby river afterwards. At 18 seconds, I finished applying the oils to the ammo I'd use. And at 7 seconds, I finally lined up the shot, and synced the rhythm of breath and heart to my countdown. 5\u20264\u20263\u20262\u2026",
         "description": "The Sniper delivers death from afar. Unlike archers who use shortbows and crossbows for medium range engagements, firing dozens of arrows to slay their target, the Sniper relies on single, extremely powerful and accurate shots from extreme ranges. The firing rate of the average longbow tends to be lower, but the range and damage output easily make up for it. The Sniper expands upon the longbow's strengths by preparing carefully for each shot. He spots his target, tracks their movement, the way they dodge, the weak points in their armor. And finally, when he is ready to take the shot, he has already stacked all the cards in his favor.",
         "requirements": [
@@ -1950,6 +2058,7 @@
             "Shield Armor Mastery Rank A",
             "Longblade Mastery Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "They teach you a whole lot about keeping yourself together in Basic. How to swing your sword so you don't injure your wrist or shoulder. How to brace yourself for an impact against your shield. How to keep moving so a random archer doesn't end your career early. And most importantly, how to strike first, so they die before you do. They don't really talk about what to do after you've killed a man, though. And you've got to kill a lot of men before you learn the meaning of being a soldier.",
         "description": "The Soldier is a fighter who wields sword and shield, but boasts an impressive level of mobility as well. Trained with more modern techniques of striking quickly and focusing on survival, this class provides a multitude of options for blocking or dodging incoming attacks, and fighting in a responsive, calculated style that wouldn't normally be expected of a fighter. The Soldier fights on the front lines like other fighters, but isn't restricted to heavy armor, and utilizes strategy over raw power to whittle down opponents.",
         "requirements": [
@@ -1986,7 +2095,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Enchantment Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -1995,7 +2105,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Ice Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -2006,6 +2117,7 @@
             "Cloth Armor Mastery Rank A",
             "Summoning Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"The world is full of beautiful and intelligent creatures, just as it is filled to the brim with horrific, malevolent monsters. Which would you prefer?\"",
         "description": "The Summoner is an entry level mage that has begun to master the school of summoning magic, a school that calls forth entities from distant lands and even other planes to fight by the caster's side. There is usually at least one summoner in every mage cadre, as the style lends itself well to fighting in the backline. As a mid-level practitioner of the art, the Summoner focuses on having a wide variety of options for summoning targets, including combat ready companions to attack and defend and utility based partners for problem solving, scouting, and skill usage. Each of the Summoner's spells creates an entity that has its own actions but also has a passive effect to help support other summons, which makes an army of summons increasingly powerful. Efficiency is all about picking the right summons for the right situations and finding a way to deal with the setup time required to build up a small army.",
         "requirements": [
@@ -2044,6 +2156,7 @@
             "Cloth Armor Mastery Rank A",
             "Buff Magic Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "\"He's far too humble for his own good. Always in the background, trying his best to avoid the spotlight. Doesn't speak a word, except when he's casting one of his spells. But without those spells, this team would be nothing. Hell, we probably would have died on our first mission. Kid won't admit it, but he's the backbone of the squad. Everyone might look to me for leadership, but not before I look to him for assurance.\"",
         "description": "The Symbiote is a standard part of many mage cadres, as an intermediate level mage with a mastery of buff magic. Buff spells allow this class to assist their allies without having to attack their enemies and put themselves in harms way. As long as allies have enough composure to handle the strain of multiple buff spells, this class can turn the party into ruthless killing machines or steadfast and unbreakable defenders. As the entry level class for buff magic, this class contains a wide variety of buffing effects and the ability to maintain those effects for an extended period of time.",
         "requirements": [
@@ -2082,7 +2195,8 @@
             "Buff Magic Rank A",
             "Light Magic Rank A",
             "Water Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -2091,7 +2205,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Tinkering Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -2103,7 +2218,8 @@
             "Lightning Magic Rank A",
             "Air Magic Rank A",
             "Water Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -2112,7 +2228,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Cloth Armor Mastery Rank A or Destruction Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -2124,6 +2241,7 @@
             "Shortblade Mastery Rank A",
             "Steal Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "WANTED: The craven criminal who continues to harry our humble hamlet! The unnamed, unknown, unscrupulous usurper of the rightfully received revenues of our most righteous regime! This wanton mobster, whether man or woman or what have you, will with certainty maintain a masterful circumvention of our most muddled constabulary! The government guarantees a generous guerdon, gifted to the group who swiftly seizes this serpentine scofflaw!",
         "description": "The Thief is a career of daring exploits and mischief. Stealing from the rich and poor, the strong and weak, the Thief preys upon the riches of others for their own personal gain. With excellent abilities to sneak past watchful eyes and a knack for knifeplay, the Thief augments its meager combat ability with excellent stealing and sneaking abilities. This class switches between focusing on stealing and focusing on sneaking and adapts to the situation at hand, fluidly sifting through a bag of both offensive and defensive tricks, and is effective at critical strikes when stealth fails and combat breaks out.",
         "requirements": [
@@ -2162,7 +2280,8 @@
         "known_requirements": [
             "Tinkering Rank A",
             "Lightning Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -2174,6 +2293,7 @@
             "Organics Alchemy Rank A",
             "Augmentation Alchemy Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "Subject 12-C is a bipedal, endothermic amniote seeming to be created from an arachnid and a feliform carnivore. Subject is highly dangerous and has an unusually powerful sense of smell, and company personnel with any sort of uncovered wounds are advised to avoid assisting in containment procedures. If assistance from wounded personnel becomes necessary, it is advised that auditory impedance equipment be used, as Subject 12-C will speak the following hypnotic suggestion to its prey before attacking: \"Daddy will make it all better, sweetheart\u2026\"",
         "description": "The Transfusionist is an alchemist that has taken the next step in the development of organics alchemy. With a dangerous blend of fine tuned chemistry and unethical augmentation alchemy, the Transfusionist evolves their organisms haphazardly by fusing them together to create volatile but superior creatures. Most of this alchemist's speciality is in taking the common products of organics alchemy and augmenting them with the powers of other creatures. Sometimes this involves roughly and messily stitching creatures together; other times, it involves forcing parasitism between species that would never normally associate. This class works best when the character has amassed a good number of organics products through other class abilities and organics blueprints.",
         "requirements": [
@@ -2211,7 +2331,8 @@
         "num_requirements": 2,
         "known_requirements": [
             "Cloth Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -2220,7 +2341,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Cloth Armor Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -2231,7 +2353,8 @@
             "Poison Crafting Rank A",
             "Condition Magic Rank A",
             "Water Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -2241,7 +2364,8 @@
         "known_requirements": [
             "Shield Armor Mastery Rank A",
             "Axe Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -2250,7 +2374,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Poison Crafting Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -2259,7 +2384,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Heavy Throwing Weapons Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -2270,7 +2396,8 @@
             "Sneak Rank A",
             "Dark Magic Rank A",
             "Conjuration Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -2279,7 +2406,8 @@
         "num_requirements": 3,
         "known_requirements": [
             "Enchantment Magic Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     },
     {
         "type": "class",
@@ -2290,6 +2418,7 @@
             "Any Melee Weapon (no Unarmed) Rank A",
             "Any Ranged Weapon Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "I could feel the scream trapped in my throat and could not tear my eyes away from the grisly spectacle before me. Blood dripped from the corpses pinned to the walls, and the sound of each drop threatened madness. The guilty and innocent lay here; eviscerated, torn to shreds, filled with holes. In a brief moment of poignant horror, I wondered how I would explain to the children. And I questioned what kind of man would lust for such senseless violence.",
         "description": "The Warlord is a fighter that understands the value of flexibility. Adept at fighting at close range with a variety of melee abilities and controlling longer ranges with a ranged weapon of their choice, the Warlord dominates the battlefield by abusing range advantages against less prepared foes. Diving in close against archers and mages, kiting other fighters, harrying enemies as they approach, this class can reliably put down a constant stream of damage and never wastes turns getting into position due to good mobility. The Warlord is rewarded, however, for switching between ranged and melee attacks frequently, forcing enemies to keep up with constantly changing tactics.",
         "requirements": [
@@ -2326,6 +2455,7 @@
             "Conjuration Magic A",
             "Control Magic A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "Blink. An unsuspecting guard, a gate left ajar. Blink. A startled scullery maid, a kitchen cleaning supper. Blink. A resplendent armored door, a hall lined with busts and paintings. Blink. A rich tyrant, a place to die.",
         "description": "The Warper is an assassin that has augmented all of his techniques with magic. Instead of standard infiltration with lockpick and stealth, the Warper uses short range teleports to close gaps and move from shadow to shadow. Instead of the usual process of slitting throats and poisoning dinners, the Warper uses control magic to make their targets helpless. The Warper is all about the process of getting to your target and locking it down. It is an enabling class that allows you to execute on the fantasy of an assassin mage.",
         "requirements": [
@@ -2365,6 +2495,7 @@
             "Any Melee Weapon (no Unarmed) Rank A",
             "Any Armor Rank A"
         ],
+        "all_reqs_known": true,
         "flavor_text": "We were lost in the heat of battle, our once advantageous position shattered like glass. Acrid, fetid smoke, tinged with the flavors of blood and bile, filled our lungs and threatened to steal our lives even as we were cut down by the dozens. We were green recruits in a war far too brutal for the most hardened of veterans. And it was his cry, that glorious call to arms, which saved us.",
         "description": "The Warrior is by nature a specialist. On the outside, he appears to be a run of the mill fighter that you might expect to see as a city guardsman or a caravanserai. However, the Warrior has made the simple act of waging war into a carefully measured process. The Warrior efficiently slays masses of foes while protecting his squad; he fells giant beasts while holding a defensive line; he is a centerpiece of calm when the rest of the team panics during an ambush. The warrior has simple and effective options for single and multi-target attacks, straightforward defensive techniques, and special warcries that provide buffs or apply conditions to large groups.",
         "requirements": [
@@ -2402,7 +2533,8 @@
         "known_requirements": [
             "Water Mastery Rank A",
             "Fine Weapon Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": true
     },
     {
         "type": "class",
@@ -2412,6 +2544,7 @@
         "known_requirements": [
             "Bow Mastery Rank A",
             "Axe Mastery Rank A"
-        ]
+        ],
+        "all_reqs_known": false
     }
 ]
