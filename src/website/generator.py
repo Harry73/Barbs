@@ -193,6 +193,8 @@ def _build_branches_html(clazz, abilities):
     with open(os.path.join(HTML_TEMPLATES, 'ability.html'), encoding='utf8') as f:
         ability_template = f.read().strip()
 
+    passive_name = next(iter(clazz['passive']))
+
     branches_htmls = []
     for branch_name, branch_description in clazz['branches'].items():
         branch_abilities = []
@@ -209,6 +211,10 @@ def _build_branches_html(clazz, abilities):
                     description.append(line)
                 else:
                     description.append('<p>%s</p>' % line)
+
+            for i in range(len(description)):
+                link = href('%s_%s' % (clazz['name'], passive_name), passive_name)
+                description[i] = description[i].replace(passive_name, '<i>%s</i>' % link)
 
             ability_html = ability_template.format(
                 name=ability['name'].replace('"', '&quot'),
