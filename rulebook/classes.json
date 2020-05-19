@@ -1525,29 +1525,29 @@
         "preview": "A monk that uses punches and kicks to devastating effect. By chaining a number of techniques together, this class ramps up in damage before eventually ending fights with powerful finishers.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth or Light Armor Mastery Rank A",
-			"Weapon Mastery: Unarmed"
+            "Armor Mastery: Cloth or Armor Mastery: Light Rank A",
+            "Weapon Mastery: Unarmed"
         ],
         "all_reqs_known": true,
-		"flavor_text": "The essence of martial arts is not strength, not the art itself, but that which is hidden deep within yourself.",
-		"description": "The Martial Artist is an entry level monk for a character beginning their journey through the long and arduous path of becoming a master of hand to hand combat. This class provides the initial tools for fighting in close quarters with punches, kicks, grapples, and throws. Additionally, it acts as an introduction to the unique mechanics of monk classes as a whole: dU and combo chance. All monk passives, along with whatever the class's specific passive is, also provide a level of monk mastery. Each level of monk mastery augments a character's dU and their base combo chance. The designation dU refers to the damage dice of an unarmed strike; for a non-monk character, this is a d4, but every additional monk mastery passive increases dU by one dice level, to d6, d8, d10, d12, and finally d20. Additionally, each level of monk mastery augments a character's base combo chance. Combo chance is the percentage chance that after casting a major action ability that has the combo tag that you will be able to follow up with another combo ability that has yet to be used that turn. Base combo chance for a non-monk is 0%, and increases with each monk mastery passive to 10%, 20%, 30%, 35%, and finally 40%. Abilities themselves can temporarily improve one's combo chance; the Martial Artist class provides a branch dedicated to monk related utilities such as this; on top of its single and multi target physical attacks with unarmed strikes, which scale off dU rather than having set damage. With some luck to combo frequently and a dedication to the monk archetype, a character will find that their damage scales rapidly, and a monk can be a powerful physical DPS for a team.",
-		"requirements": [
-			"Armor Mastery: Light or Armor Mastery: Cloth Rank A",
-			"Weapon Mastery: Unarmed Rank A"
-		],
-		"branches": {
-			"Pummel": "The Pummel branch gives options for single-target physical damage on enemies in melee range.",
-			"Thrash": "The Thrash branch gives options for multi-target physical damage on enemies at close ranges.",
-			"Balance": "The Balance branch gives options for monk related utility and defensive abilities."
-		},
-		"passive": {
-			"Flurry Of Blows": "Your monk mastery increases. Additionally, you can make an unarmed autoattack as a Minor Action, or as a free action after succeeding or failing a combo roll."
-		},
-		"abilities": [
-			"Straight Punch",
-			"Roundhouse Kick",
-			"Focus Energy"
-		]
+        "flavor_text": "The essence of martial arts is not strength, not the art itself, but that which is hidden deep within yourself.",
+        "description": "The Martial Artist is an entry level monk for a character beginning their journey through the long and arduous path of becoming a master of hand to hand combat. This class provides the initial tools for fighting in close quarters with punches, kicks, grapples, and throws. Additionally, it acts as an introduction to the unique mechanics of monk classes as a whole: dU and combo chance. All monk passives, along with whatever the class's specific passive is, also provide a level of monk mastery. Each level of monk mastery augments a character's dU and their base combo chance. The designation dU refers to the damage dice of an unarmed strike; for a non-monk character, this is a d4, but every additional monk mastery passive increases dU by one dice level, to d6, d8, d10, d12, and finally d20. Additionally, each level of monk mastery augments a character's base combo chance. Combo chance is the percentage chance that after casting a major action ability that has the combo tag that you will be able to follow up with another combo ability that has yet to be used that turn. Base combo chance for a non-monk is 0%, and increases with each monk mastery passive to 10%, 20%, 30%, 35%, and finally 40%. Abilities themselves can temporarily improve one's combo chance; the Martial Artist class provides a branch dedicated to monk related utilities such as this; on top of its single and multi target physical attacks with unarmed strikes, which scale off dU rather than having set damage. With some luck to combo frequently and a dedication to the monk archetype, a character will find that their damage scales rapidly, and a monk can be a powerful physical DPS for a team.",
+        "requirements": [
+            "Armor Mastery: Light or Armor Mastery: Cloth Rank A",
+            "Weapon Mastery: Unarmed Rank A"
+        ],
+        "branches": {
+            "Pummel": "The Pummel branch gives options for single-target physical damage on enemies in melee range.",
+            "Thrash": "The Thrash branch gives options for multi-target physical damage on enemies at close ranges.",
+            "Balance": "The Balance branch gives options for monk related utility and defensive abilities."
+        },
+        "passive": {
+            "Flurry Of Blows": "Your monk mastery increases. Additionally, you can make an unarmed autoattack as a Minor Action, or as a free action after succeeding or failing a combo roll."
+        },
+        "abilities": [
+            "Straight Punch",
+            "Roundhouse Kick",
+            "Focus Energy"
+        ]
     },
     {
         "type": "class",

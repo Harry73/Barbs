@@ -25,9 +25,14 @@ def get_component(component_name, component_list, condition=None):
 
 
 def get_link_skill_req(skill_req, skills):
+    replaced = False
     for skill in skills:
         if skill['name'] in skill_req:
-            return skill_req.replace(skill['name'], href('skill_%s' % skill['name'], skill['name']))
+            skill_req = skill_req.replace(skill['name'], href('skill_%s' % skill['name'], skill['name']))
+            replaced = True
+
+    if replaced:
+        return skill_req
 
     for skill in skills:
         if 'any' in skill_req.lower() and skill['category'] in skill_req:
