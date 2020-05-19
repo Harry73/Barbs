@@ -3162,8 +3162,10 @@
         "duration": "1 minute",
         "description": [
             "You build a small robot filled with flammable oil. Create a Burner Bot with 25 HP and 25 ft Move Speed. It obeys your Commands; otherwise, it uses its Move Action to approach the closest enemy, its Major Action to attack an enemy in melee range for 4d6 physical damage, and its Minor Action to quaff potions or flasks of oil from its inventory. When you create this construct, choose one of the following Modular Components:",
-            "The construct consumes half a liter of oil to augment each attack, dealing an additional 2d10 fire magic damage with each attack.",
-            "The construct explodes upon dying, dealing 4d10 fire magic damage to all enemies within 10 ft."
+            "<ul>",
+            "<li>The construct consumes half a liter of oil to augment each attack, dealing an additional 2d10 fire magic damage with each attack.</li>",
+            "<li>The construct explodes upon dying, dealing 4d10 fire magic damage to all enemies within 10 ft.</li>",
+            "</ul>"
         ],
         "tags": [
             "alchemy",
@@ -3189,8 +3191,10 @@
         "duration": "1 minute",
         "description": [
             "You build a bulbous puppet with a large abdominal sinus. Create a Potion Puppet with 20 HP and 25 ft Move Speed. It obeys your Commands; otherwise, it uses its Move Action to stay near you and its Minor Action to take a potion from your inventory if it is adjacent to you and does not already have a potion. When ordered to do so, it will attempt to use its Major Action to use its potion on an ally within 30 ft. When you create this construct, choose one of the following Modular Components:",
-            "The construct has a 30 ft aura, providing allies with 30% Item Efficiency",
-            "The construct explodes upon dying, providing its potion effect to all allies within 10 ft."
+            "<ul>",
+            "<li>The construct has a 30 ft aura, providing allies with 30% Item Efficiency</li>",
+            "<li>The construct explodes upon dying, providing its potion effect to all allies within 10 ft.</li>",
+            "</ul>"
         ],
         "tags": [
             "alchemy",
@@ -3644,9 +3648,11 @@
         "duration": "1 minute",
         "description": [
             "You infuse an enemy with dark energy, weakening and cursing them. Select a target in range, and choose one of the following:",
-            "Inflict a 30% Weaken for 1 minute",
-            "Inflict a 20% Weaken for 1 minute, and inflict 1 curse",
-            "Inflict a 10% Weaken for 1 minute, and inflict 2 curses"
+            "<ul>",
+            "<li>Inflict a 30% Weaken for 1 minute</li>",
+            "<li>Inflict a 20% Weaken for 1 minute, and inflict 1 curse</li>",
+            "<li>Inflict a 10% Weaken for 1 minute, and inflict 2 curses</li>",
+            "</ul>"
         ],
         "tags": [
             "Spell",
@@ -3720,8 +3726,10 @@
         "duration": "Instant",
         "description": [
             "You tear away magical effects on allies and enemies. Choose one of the following:",
-            "Target entity in range loses a buff of your choice",
-            "Target entity in range is cleansed of a condition of your choice",
+            "<ul>",
+            "<li>Target entity in range loses a buff of your choice</li>",
+            "<li>Target entity in range is cleansed of a condition of your choice</li>",
+            "</ul>",
             "You may choose to expend an additional 10 mana to use both options."
         ],
         "tags": [
@@ -3863,8 +3871,10 @@
         "duration": "1 minute",
         "description": [
             "You corrupt minds with paranoia. Choose one:",
-            "Inflict Fear on up to 5 targets in range for the duration. When you cast this ability and choose this mode, you may expend an additional 30 of any resource aside from the type initially used; if you do, you may target up to 10 targets in range instead, and they are additionally inflicted with Slowed for the duration",
-            "Spend an additional 5 minutes casting this ability while speaking to a target. If the target loses the psionic contest, the target becomes marked, becoming paranoid and fearful, and immediately seeks the safest place they know and avoids both friend and foe due to mistrust. The mark lasts for 1 hour. When you cast this ability and choose this mode, you may expend an additional 30 of any resource aside from the type initially used; if you do, the duration of the mark is extended to 6 hours. If you lose the psionic contest when you choose this mode, the target will not know you attempted to attack it, and becomes immune to psionic attacks until its next short rest."
+            "<ul>",
+            "<li>Inflict Fear on up to 5 targets in range for the duration. When you cast this ability and choose this mode, you may expend an additional 30 of any resource aside from the type initially used; if you do, you may target up to 10 targets in range instead, and they are additionally inflicted with Slowed for the duration</li>",
+            "<li>Spend an additional 5 minutes casting this ability while speaking to a target. If the target loses the psionic contest, the target becomes marked, becoming paranoid and fearful, and immediately seeks the safest place they know and avoids both friend and foe due to mistrust. The mark lasts for 1 hour. When you cast this ability and choose this mode, you may expend an additional 30 of any resource aside from the type initially used; if you do, the duration of the mark is extended to 6 hours. If you lose the psionic contest when you choose this mode, the target will not know you attempted to attack it, and becomes immune to psionic attacks until its next short rest.</li>",
+            "</ul>"
         ],
         "tags": [
             "Psionic",
@@ -3888,8 +3898,10 @@
         "duration": "Instant",
         "description": [
             "You draw in aberrant psionic attacks to protect your fellow man. As a reaction to a psionic attack on an ally in range, choose one:",
-            "Redirect the attack to yourself. You make the Defensive Psionics skill check instead",
-            "Add half your Defensive Psionics skill check bonus to the ally's Defensive Psionics skill check"
+            "<ul>",
+            "<li>Redirect the attack to yourself. You make the Defensive Psionics skill check instead</li>",
+            "<li>Add half your Defensive Psionics skill check bonus to the ally's Defensive Psionics skill check</li>",
+            "</ul>"
         ],
         "tags": [
             "Psionics",
@@ -3910,10 +3922,12 @@
         "duration": "1 minute",
         "description": [
             "You use powerful psionics to boost your allies' defensive instincts. A target ally in range gains 20% General Damage Reduction against psychic damage, and additionally gains the following effects, based on their stats:",
-            "If TGH is their highest defensive attribute, their AC is increased by 50%",
-            "If REF is their highest defensive attribute, their Evasion is increased by 50%",
-            "If RES is their highest defensive attribute, their General MR is increased by 50%",
-            "If FRT is their highest defensive attribute, their General CR is increased by 50%",
+            "<ul>",
+            "<li>If TGH is their highest defensive attribute, their AC is increased by 50%</li>",
+            "<li>If REF is their highest defensive attribute, their Evasion is increased by 50%</li>",
+            "<li>If RES is their highest defensive attribute, their General MR is increased by 50%</li>",
+            "<li>If FRT is their highest defensive attribute, their General CR is increased by 50%</li>",
+            "</ul>",
             "When you cast this ability, you may expend an additional 30 of any resource aside from the type initially used; if you do, you may target an additional ally, and the psychic GDR increases to 40%. You may spend an additional 30 of the final unused resource aside from the two types used in order to target a third ally and have the psychic GDR increase to 60%."
         ],
         "tags": [
@@ -4148,6 +4162,7 @@
         "duration": "Instant",
         "description": [
             "You aim for center of mass. Fire your currently equipped firearm at an enemy in range, dealing an additional 3d12 physical damage. Your target then chooses to either fall prone or be pushed back 10 ft. If this attack is made with a silver bullet, your target must choose both.",
+            "<br>",
             "Secondary Fire: Fire your currently equipped firearm at an enemy in range, dealing an additional 2d12 physical damage. The target is inflicted with 10% physical vulnerability, which can stack up to 5 times. If this attack is made with a silver bullet, your target gains 2 stacks of this vulnerability."
         ],
         "tags": [
@@ -4174,6 +4189,7 @@
         "duration": "Instant",
         "description": [
             "You fire several shots in quick succession. Fire your currently equipped firearm 3 times at up to 3 targets in range, with each shot dealing an additional d12 physical damage. If the first shot is a silver bullet, the other two bullets gain its properties.",
+            "<br>",
             "Secondary Fire: Fire your currently equipped firearm at a target in range, dealing 3d12 physical damage, inflicting any on-hit effects with tripled effectiveness."
         ],
         "tags": [
@@ -4321,6 +4337,7 @@
         "duration": "Instant",
         "description": [
             "You manipulate two shields to maximize coverage or layer your defenses. For each shield currently equipped, block an attack on yourself or on an ally in an adjacent space. If this ability combos with a dash, you can split up the two blocks to occur at two different points along the dash.",
+            "<br>",
             "Alternatively, if you are dual wielding shields, you may expend a Shield stack to layer the shields atop each other, blocking a single attack on yourself. This block is effective even against attacks that normally cannot be blocked, and an attack blocked this way cannot penetrate AC."
         ],
         "tags": [
@@ -5085,12 +5102,14 @@
         "duration": "1 hour",
         "description": [
             "You summon a spirit from beyond the gates of Adol. Summon an Unseen Servant with 1 HP, 30 ft Move Speed, and natural invisibility. The Unseen Servant obeys your commands; otherwise, it follows you and does nothing. The Servant is able to use tools and make the following skill checks with a +25 bonus:",
-            "Athletics: Balance, Climbing, Force, Movement",
-            "Gathering: All",
-            "Item Use: Construction, First Aid, Ropes, Tinkering, Traps",
-            "Observation: Listen, Search",
-            "Stealth: Lockpicking, Sleight of Hand, Sneak, Steal",
-            "Transportation: Air Vehicles, Land Vehicles, Sea Vehicles"
+            "<ul>",
+            "<li>Athletics: Balance, Climbing, Force, Movement</li>",
+            "<li>Gathering: All</li>",
+            "<li>Item Use: Construction, First Aid, Ropes, Tinkering, Traps</li>",
+            "<li>Observation: Listen, Search</li>",
+            "<li>Stealth: Lockpicking, Sleight of Hand, Sneak, Steal</li>",
+            "<li>Transportation: Air Vehicles, Land Vehicles, Sea Vehicles</li>",
+            "</ul>"
         ],
         "tags": [
             "Spell",
@@ -5611,8 +5630,10 @@
         "duration": "Instant",
         "description": [
             "You deliver a wide slash to the enemy's frontlines, adjusting for their formation. Choose one of the following:",
-            "Deal 3d10 damage to all enemies in a 10 ft cone, knocking them prone.",
-            "Deal 3d10 damage to all enemies in a 25 ft horizontal line, knocking them back 10 ft",
+            "<ul>",
+            "<li>Deal 3d10 damage to all enemies in a 10 ft cone, knocking them prone</li>",
+            "<li>Deal 3d10 damage to all enemies in a 25 ft horizontal line, knocking them back 10 ft</li>",
+            "</ul>",
             "If you have at least 3 buffs active on you, choose both options."
         ],
         "tags": [
@@ -5727,9 +5748,11 @@
         "duration": "Instant",
         "description": [
             "You dive and roll to rescue a comrade from danger. As a reaction to an attack on an allied target in range, immediately dash to them before the attack lands. Then, choose one of the following:",
-            "Use your body as a shield. Your target gains 30 AC, and the attack will be redirected to both you and your target",
-            "Tackle your target to the ground. You and your target gain 30% evasion, and both of you are knocked prone",
-            "Drag them to safety. Dash an additional 20 ft in any direction, dragging your target with you, and your target loses their reaction if they still have one."
+            "<ul>",
+            "<li>Use your body as a shield. Your target gains 30 AC, and the attack will be redirected to both you and your target</li>",
+            "<li>Tackle your target to the ground. You and your target gain 30% evasion, and both of you are knocked prone</li>",
+            "<li>Drag them to safety. Dash an additional 20 ft in any direction, dragging your target with you, and your target loses their reaction if they still have one</li>",
+            "</ul>"
         ],
         "tags": [
             "Dash",
@@ -5753,9 +5776,11 @@
         "duration": "1 minute",
         "description": [
             "You become a powerful avatar of war. When you cast this ability, sacrifice any number of buffs on you. Gain the following effects, depending on the number of buffs sacrificed.",
-            "5 Buffs - Gain immunity to physical damage",
-            "10 Buffs - Gain all of the above in addition to immunity to conditions and crowd control.",
-            "15 Buffs - Gain all of the above in addition to 50 ft of added speed and 100% increased damage"
+            "<ul>",
+            "<li>5 Buffs - Gain immunity to physical damage</li>",
+            "<li>10 Buffs - Gain all of the above in addition to immunity to conditions and crowd control</li>",
+            "<li>15 Buffs - Gain all of the above in addition to 50 ft of added speed and 100% increased damage</li>",
+            "</ul>"
         ],
         "tags": [
             "Buff",
@@ -6794,9 +6819,11 @@
         "duration": "Instant",
         "description": [
             "You exchange health for stamina or mana. Choose one:",
-            "Recover 6d10 stamina",
-            "Recover 6d10 mana",
-            "Recover 3d10 stamina and 3d10 mana"
+            "<ul>",
+            "<li>Recover 6d10 stamina</li>",
+            "<li>Recover 6d10 mana</li>",
+            "<li>Recover 3d10 stamina and 3d10 mana</li>",
+            "</ul>"
         ],
         "tags": [
             "Recover mana",
@@ -6945,13 +6972,18 @@
         "duration": "1 minute",
         "description": [
             "You arm your construct with powerful weapons and new physical arts. Target construct in range gains one of the following as a Major Action of your choice:",
-            "Attack an enemy in melee range for 5d10 physical damage",
-            "Attack all enemies in melee range for 3d10 physical damage",
-            "Attack an enemy within 60 ft for 4d10 physical damage",
+            "<ul>",
+            "<li>Attack an enemy in melee range for 5d10 physical damage</li>",
+            "<li>Attack all enemies in melee range for 3d10 physical damage</li>",
+            "<li>Attack an enemy within 60 ft for 4d10 physical damage</li>",
+            "</ul>",
+            "<br>",
             "That same target also gains one of the following, of your choice:",
-            "+50 AC, +30% MR",
-            "+50% EV, +30 AC",
-            "+50% MR, +30% EV"
+            "<ul>",
+            "<li>+50 AC, +30% MR</li>",
+            "<li>+50% EV, +30 AC</li>",
+            "<li>+50% MR, +30% EV</li>",
+            "</ul>"
         ],
         "tags": [
             "alchemy",
@@ -6993,8 +7025,10 @@
         "duration": "Instant",
         "description": [
             "You swing your magically enchanted scythe to damage an enemy's soul directly. Deal 5d10 physical damage to a target in range, then choose one:",
-            "This attack ignores all AC and cannot be blocked.",
-            "This attack has 20% lifesteal"
+            "<ul>",
+            "<li>This attack ignores all AC and cannot be blocked.</li>",
+            "<li>This attack has 20% lifesteal</li>",
+            "</ul>"
         ],
         "tags": [
             "Attack",
@@ -7064,9 +7098,11 @@
         "duration": "Instant",
         "description": [
             "You cut down flesh which has known your corruption. Deal 8d10 physical damage to all enemies in range. This attack has the following properties for each individual enemy targeted, based on how many different, unique conditions that enemy has suffered over the course of the current combat encounter that originated from you or your minions:",
-            "At least 2 conditions - The attack cannot be blocked or dodged",
-            "At least 4 conditions - The attack penetrates all AC",
-            "At least 6 conditions - The attack deals double damage and has 100% Lethality"
+            "<ul>",
+            "<li>At least 2 conditions - The attack cannot be blocked or dodged</li>",
+            "<li>At least 4 conditions - The attack penetrates all AC</li>",
+            "<li>At least 6 conditions - The attack deals double damage and has 100% Lethality</li>",
+            "</ul>"
         ],
         "tags": [
             "Attack",
@@ -7408,8 +7444,10 @@
         "duration": "Instant",
         "description": [
             "Your deft stealing skills allow you to steal an enemy's magic effects. Choose one:",
-            "Strip all buffs from all enemy targets in range, then gain those buffs yourself, or distribute them as you choose amongst allies within 30 ft.",
-            "If you are in Hit Stance, cast this ability as a reaction to a spell that is cast within range. Counter that spell, then you may copy and cast it yourself, choosing new targets and paying stamina instead of mana."
+            "<ul>",
+            "<li>Strip all buffs from all enemy targets in range, then gain those buffs yourself, or distribute them as you choose amongst allies within 30 ft.</li>",
+            "<li>If you are in Hit Stance, cast this ability as a reaction to a spell that is cast within range. Counter that spell, then you may copy and cast it yourself, choosing new targets and paying stamina instead of mana.</li>",
+            "</ul>"
         ],
         "tags": [
             "Buff strip",
@@ -7661,10 +7699,12 @@
         "duration": "1 minute",
         "description": [
             "You release an altered, parasitic form of one of your creatures to assist another to push past their limits. You use organisms you can see in range or those in your inventory to do the following: target ally rolls a d4 at the beginning of each of their turns and gains the following effects based on the result:",
-            "1: This buff immediately ends",
-            "2: Gain an additional Minor Action",
-            "3: Gain an additional Major and Minor Action",
-            "4: Gain an additional Move, Major, and Minor Action"
+            "<ul>",
+            "<li>1: This buff immediately ends</li>",
+            "<li>2: Gain an additional Minor Action</li>",
+            "<li>3: Gain an additional Major and Minor Action</li>",
+            "<li>4: Gain an additional Move, Major, and Minor Action</li>",
+            "</ul>"
         ],
         "tags": [
             "alchemy",
@@ -7837,8 +7877,10 @@
         "duration": "1 minute",
         "description": [
             "You throw your equipped dagger at your prey. Deal 6d4 physical damage to a target in range and mark them, then select one of the following effects:",
-            "The marked target loses 20% of its Condition Resist.",
-            "Your teleports to spaces next to the marked target cost half mana."
+            "<ul>",
+            "<li>The marked target loses 20% of its Condition Resist.</li>",
+            "<li>Your teleports to spaces next to the marked target cost half mana.</li>",
+            "</ul>"
         ],
         "tags": [
             "Attack",
@@ -7950,6 +7992,7 @@
         "duration": "1 hour",
         "description": [
             "You create a temporary portal for you and your allies, guarded by magical lashing tentacles. Create 2 linked portals: one in an adjacent empty space and one in an empty space you can see in range. When you or an ally enters a portal's space, they are teleported to an empty space of their choice adjacent to the other linked portal. Enemies cannot enter spaces with portals, and enemies who begin or end their turn in a space adjacent to a portal take 5d10 physical damage.",
+            "<br>",
             "Instead of casting this ability as a Major Action, you may instead choose to spend 10 minutes casting this spell as a minor ritual and expend an additional 40 mana. If you do, the duration of this ability is extended to 12 hours, and you may wait to place the second portal as a Major Action at any time during the ability's duration."
         ],
         "tags": [
