@@ -8546,5 +8546,70 @@
             "modal",
             "negate damage"
         ]
+    },
+	{
+        "type": "ability",
+        "name": "Straight Punch",
+        "class": "Martial Artist",
+        "branch": "Pummel",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "10 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You strike at an enemy with your fists. Deal 4dU physical damage to a target in range. Your next combo roll has +20% if this is the first move in the combo."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+			"melee",
+            "single-target",
+			"unarmed",
+			"conditional",
+			"combo"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Roundhouse Kick",
+        "class": "Martial Artist",
+        "branch": "Thrash",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You kick with a wide stance at nearby enemies. Deal 4dU physical damage to all targets in range. Your next combo roll has +5% for every enemy this attack hits."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+			"melee",
+            "multi-target",
+			"unarmed",
+			"conditional",
+			"combo"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Focus Energy",
+        "class": "Martial Artist",
+        "branch": "Balance",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "5 stamina",
+        "range": "Self",
+        "duration": "Instant",
+        "description": [
+            "You focus your energy into your attacks. Your next attack gains an additional +30% combo chance. This buff is consumed even if you fail to combo, if you miss, or your damage is blocked, and it does not stack with itself."
+        ],
+        "tags": [
+            "Self-target",
+			"buff",
+			"combo"
+        ]
     }
 ]
