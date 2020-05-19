@@ -199,6 +199,7 @@ def _build_branches_html(clazz, abilities):
         for ability in abilities:
             if ability['class'] == clazz['name'] and ability['branch'] == branch_name:
                 branch_abilities.append(ability)
+        branch_abilities.sort(key=lambda a: a['tier'])
 
         ability_htmls = []
         for ability in branch_abilities:
