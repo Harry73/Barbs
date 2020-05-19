@@ -1,5 +1,7 @@
 import json
 
+from collections import OrderedDict
+
 
 def href(anchor, text):
     return '<a href="#{anchor}">{text}</a>'.format(anchor=anchor, text=text)
@@ -7,7 +9,7 @@ def href(anchor, text):
 
 def read_json_file(file_path):
     with open(file_path, 'r', encoding='utf8') as f:
-        return sorted(json.load(f), key=lambda item: item['name'])
+        return sorted(json.load(f, object_pairs_hook=OrderedDict), key=lambda item: item['name'])
 
 
 def get_component(component_name, component_list, condition=None):

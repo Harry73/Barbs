@@ -11,6 +11,7 @@ HTML_TEMPLATES = os.path.join(HTML_PATH, 'templates')
 HOME_PAGE = os.path.join(HTML_GENERATED, 'index.html')
 
 BR_JOIN = '<br>'.join
+HTML_TAGS = ['<ul>', '</ul>', '<li>', '</li>', '<br>']
 
 
 def _debug(term, component):
@@ -185,23 +186,28 @@ def build_class_hint_unlocks(classes, skills):
     return BR_JOIN(class_hint_section_htmls)
 
 
-def _build_branches_html(clazz, branches, abilities):
+def _build_branches_html(clazz, abilities):
     with open(os.path.join(HTML_TEMPLATES, 'branch.html'), encoding='utf8') as f:
         branch_template = f.read().strip()
     with open(os.path.join(HTML_TEMPLATES, 'ability.html'), encoding='utf8') as f:
         ability_template = f.read().strip()
 
     branches_htmls = []
-    for branch_name in clazz['branches']:
-        # There are some branches in different classes with the same name, so additionally check that the
-        # class name is right when finding the branch.
-        branch = get_component(branch_name, branches, condition=lambda b: b['class'] == clazz['name'])
+    for branch_name, branch_description in clazz['branches'].items():
+        branch_abilities = []
+        for ability in abilities:
+            if ability['class'] == clazz['name'] and ability['branch'] == branch_name:
+                branch_abilities.append(ability)
 
         ability_htmls = []
-        for ability_name in branch['abilities']:
-            # There are some abilities in different classes with the same name, so additionally check that the
-            # class name is right when finding the ability
-            ability = get_component(ability_name, abilities, condition=lambda c: c['class'] == clazz['name'])
+        for ability in branch_abilities:
+            description = []
+            for line in ability['description']:
+                if any(tag in line for tag in HTML_TAGS):
+                    description.append(line)
+                else:
+                    description.append('<p>%s</p>' % line)
+
             ability_html = ability_template.format(
                 name=ability['name'].replace('"', '&quot'),
                 clazz=ability['class'],
@@ -209,14 +215,14 @@ def _build_branches_html(clazz, branches, abilities):
                 cost=ability['cost'],
                 range=ability['range'],
                 duration=ability['duration'],
-                description=''.join('<p>%s</p>' % line for line in ability['description']),
+                description=''.join(description),
                 tags=', '.join(ability['tags']),
             )
             ability_htmls.append(ability_html)
 
         branch_html = branch_template.format(
             clazz=clazz['name'],
-            branch=branch['name'],
+            branch=branch_name,
             abilities=BR_JOIN(ability_htmls),
         )
         branches_htmls.append(branch_html)
@@ -224,7 +230,7 @@ def _build_branches_html(clazz, branches, abilities):
     return BR_JOIN(branches_htmls)
 
 
-def build_classes(abilities, branches, classes, skills):
+def build_classes(abilities, classes, skills):
     with open(os.path.join(HTML_TEMPLATES, 'class.html'), encoding='utf8') as f:
         class_template = f.read().strip()
     with open(os.path.join(HTML_TEMPLATES, 'list_item.html'), encoding='utf8') as f:
@@ -244,16 +250,23 @@ def build_classes(abilities, branches, classes, skills):
             requirement_htmls.append(requirement_html)
 
         branch_description_htmls = []
-        for branch_name in clazz['branches']:
-            branch = get_component(branch_name, branches)
-            branch_anchor = 'class_%s_branch_%s' % (clazz['name'], branch['name'])
-            linked_branch_description = branch['description'].replace(branch_name, href(branch_anchor, branch_name))
+        for branch_name, branch_description in clazz['branches'].items():
+            branch_anchor = 'class_%s_branch_%s' % (clazz['name'], branch_name)
+            linked_branch_description = branch_description.replace(branch_name, href(branch_anchor, branch_name))
             branch_description_html = list_item_template.format(text=linked_branch_description)
             branch_description_htmls.append(branch_description_html)
 
         passive_name = next(iter(clazz['passive']))
         passive_description = clazz['passive'][passive_name]
-        branches_html = _build_branches_html(clazz, branches, abilities)
+        if '<ul>' in passive_description and '</ul>' in passive_description:
+            start_part = passive_description.split('<ul>', 1)[0]
+            html_part = passive_description.split('<ul>', 1)[1].split('</ul>', 1)[0]
+            end_part = passive_description.split('<ul>', 1)[1].split('</ul>', 1)[1]
+            passive_description = '%s</p><ul>%s</ul><p>%s</p>' % (start_part, html_part, end_part)
+        else:
+            passive_description += '</p>'
+
+        branches_html = _build_branches_html(clazz, abilities)
 
         class_html = class_template.format(
             name=clazz['name'],
@@ -282,7 +295,6 @@ def generate_html(log):
 
     abilities = read_json_file(os.path.join(rulebook_path, 'abilities.json'))
     attributes = read_json_file(os.path.join(rulebook_path, 'attributes.json'))
-    branches = read_json_file(os.path.join(rulebook_path, 'branches.json'))
     buffs = read_json_file(os.path.join(rulebook_path, 'buffs.json'))
     classes = read_json_file(os.path.join(rulebook_path, 'classes.json'))
     conditions = read_json_file(os.path.join(rulebook_path, 'conditions.json'))
@@ -301,7 +313,7 @@ def generate_html(log):
         'conditions': build_conditions(conditions),
         'skills': build_skills(skill_categories, skills),
         'class_hint_unlocks': build_class_hint_unlocks(classes, skills),
-        'classes': build_classes(abilities, branches, classes, skills),
+        'classes': build_classes(abilities, classes, skills),
     }
     index_html = index_template.format(**format_args)
 
