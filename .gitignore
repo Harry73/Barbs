@@ -6,4 +6,4 @@ html/generated/
 *.pem
 build/
 website.spec
-website.exe
+dist/
