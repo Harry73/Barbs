@@ -939,7 +939,7 @@
             "Dignify": "The Dignify branch gives options for spells that emulate the various biological advantages of a dragon."
         },
         "passive": {
-            "Passive": "Each time you create a meaningful bond with an intelligent dragon (by swearing fealty, establishing yourself as an equal, dominating in intellectual debate, proving yourself in combat, indebting yourself or making them indebted to you, learning their history, etc), your summoned creatures permanently gain +100% increased damage."
+            "Draconic Pact": "Each time you create a meaningful bond with an intelligent dragon (by swearing fealty, establishing yourself as an equal, dominating in intellectual debate, proving yourself in combat, indebting yourself or making them indebted to you, learning their history, etc), your summoned creatures permanently gain +100% increased damage."
         },
         "abilities": [
             "Summon Bronze Dragon",
