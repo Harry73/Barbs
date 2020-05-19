@@ -43,24 +43,6 @@ def check_class_skill_requirements(classes, skills, log):
                     'full description requirement "%s"' % (clazz['name'], skill_req))
 
 
-def check_class_branch_links(classes, branches):
-    for branch in branches:
-        try:
-            get_component(branch['class'], classes)
-        except KeyError:
-            raise Exception('Class "%s" for branch "%s" not found in classes.json' % (branch['class'], branch['name']))
-
-    for clazz in classes:
-        if 'branches' not in clazz:
-            continue
-
-        for branch_name in clazz['branches']:
-            try:
-                get_component(branch_name, branches, lambda b: b['class'] == clazz['name'])
-            except KeyError:
-                raise Exception('Branch "%s" in class "%s" not found in branch.json' % (branch_name, clazz['name']))
-
-
 def check_class_ability_links(classes, abilities):
     for ability in abilities:
         try:
@@ -75,26 +57,14 @@ def check_class_ability_links(classes, abilities):
 
         for ability_name in clazz['abilities']:
             try:
-                get_component(ability_name, abilities, lambda a: a['class'] == clazz['name'])
+                ability = get_component(ability_name, abilities, lambda a: a['class'] == clazz['name'])
             except KeyError:
-                raise Exception('Ability "%s" in class "%s" not found in abilities.json' % (ability_name, clazz['name']))
+                raise Exception('Ability "%s" in class "%s" not found in abilities.json'
+                                % (ability_name, clazz['name']))
 
-
-def check_branch_ability_links(branches, abilities):
-    for ability in abilities:
-        try:
-            get_component(ability['branch'], branches)
-        except KeyError:
-            raise Exception('Branch "%s" for ability "%s" not found in branches.json'
-                            % (ability['branch'], ability['name']))
-
-    for branch in branches:
-        for ability_name in branch['abilities']:
-            try:
-                get_component(ability_name, abilities, lambda a: a['branch'] == branch['name'])
-            except KeyError:
-                raise Exception('Ability "%s" in branch "%s" not found in abilities.json'
-                                % (ability_name, branch['name']))
+            if ability['branch'] not in clazz['branches']:
+                raise Exception('Ability "%s" in class "%s" has branch "%s" which is not listed in the class'
+                                % (ability_name, ability['class'], ability['branch']))
 
 
 def validate(log):
@@ -111,11 +81,6 @@ def validate(log):
         attributes = read_json_file(os.path.join(rulebook_path, 'attributes.json'))
     except json.JSONDecodeError as e:
         raise Exception('Failed to parse attributes.json file, %s' % str(e))
-
-    try:
-        branches = read_json_file(os.path.join(rulebook_path, 'branches.json'))
-    except json.JSONDecodeError as e:
-        raise Exception('Failed to parse branches.json file, %s' % str(e))
 
     try:
         buffs = read_json_file(os.path.join(rulebook_path, 'buffs.json'))
@@ -142,10 +107,8 @@ def validate(log):
     except json.JSONDecodeError as e:
         raise Exception('Failed to parse skills.json file, %s' % str(e))
 
-    check_for_duplicates(abilities + attributes + branches + buffs + classes + conditions + races + skills, log)
+    check_for_duplicates(abilities + attributes + buffs + classes + conditions + races + skills, log)
     check_skill_attribute_links(skills, attributes, log)
     check_class_skill_requirements(classes, skills, log)
-    check_class_branch_links(classes, branches)
     check_class_ability_links(classes, abilities)
-    check_branch_ability_links(branches, abilities)
     log('Validated rulebook files')
