@@ -1662,9 +1662,9 @@
         "preview": "A mage/alchemist that raises corpses as mindless zombies or skeletons to do their bidding, using either the power of dark and horrible magics or forbidden alchemy on humans. Uses their undead slaves to fight with numbers, as well as perform other spells manipulating the forces of undeath.",
         "num_requirements": 2,
         "known_requirements": [
-            "Any 2 of Organics Alchemy Rank A",
-            "Dark Magic Rank A",
-            "Summoning Magic Rank A"
+            "Any 2 of Alchemy: Organics Rank A",
+            "Element Mastery: Dark Rank A",
+            "Magic: Summoning Rank A"
         ],
         "all_reqs_known": true
     },
@@ -2492,8 +2492,8 @@
         "preview": "A fighter that uses any weapon or armor. They are the most basic type of fighter, with a straightforward, aggressive fighting style, but are unique in their War Cries to buff themselves and nearby allies.",
         "num_requirements": 2,
         "known_requirements": [
-            "Any Melee Weapon (no Unarmed) Rank A",
-            "Any Armor Rank A"
+            "Any Melee Weapon Mastery (no Unarmed) Rank A",
+            "Any Armor Mastery Rank A"
         ],
         "all_reqs_known": true,
         "flavor_text": "We were lost in the heat of battle, our once advantageous position shattered like glass. Acrid, fetid smoke, tinged with the flavors of blood and bile, filled our lungs and threatened to steal our lives even as we were cut down by the dozens. We were green recruits in a war far too brutal for the most hardened of veterans. And it was his cry, that glorious call to arms, which saved us.",
