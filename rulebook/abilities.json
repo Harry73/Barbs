@@ -8615,6 +8615,55 @@
     },
 	{
         "type": "ability",
+        "name": "Choke Hold",
+        "class": "Martial Artist",
+        "branch": "Pummel",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You hold an enemy in place with a skilled hold. Deal 5dU physical damage to a target in range and grapple them. You have +15% combo chance for any ability targetting an enemy grappled in this manner. At the end of your combo, you may choose to throw the grappled target 20 ft in any direction."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+			"melee",
+            "single-target",
+			"unarmed",
+			"conditional",
+			"combo",
+			"modal",
+			"forced movement"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Flying Kick",
+        "class": "Martial Artist",
+        "branch": "Pummel",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "30 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You fly at an enemy with a strong kick. Dash up to 20 ft, then deal 6dU physical damage to a target in range. This ability has +20% combo chance if your dash's total displacement is 20 ft."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+			"melee",
+            "single-target",
+			"unarmed",
+			"conditional",
+			"combo",
+			"dash"
+        ]
+    },
+	{
+        "type": "ability",
         "name": "Roundhouse Kick",
         "class": "Martial Artist",
         "branch": "Thrash",
@@ -8638,6 +8687,56 @@
     },
 	{
         "type": "ability",
+        "name": "Axe Kick",
+        "class": "Martial Artist",
+        "branch": "Thrash",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You drop your heel on a group of enemies. Deal 5dU physical damage to all targets in a 10 ft cone; adjacent targets are stunned until the beginning of their next turn, and non-adjacent targets are pushed 15 ft from you. If you fail to deal damage to, stun, or push any targets, your next combo roll has +20%."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+			"melee",
+            "multi-target",
+			"unarmed",
+			"conditional",
+			"combo",
+			"condition",
+			"Stun",
+			"forced movement"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Open Palm Strike",
+        "class": "Martial Artist",
+        "branch": "Thrash",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "35 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You dash forward, striking enemies with an open palm. Dash up to 20 ft in any direction, dealing 6dU physical damage to all enemies you dash through. If you dash through at least 3 enemies, or if you dash through an ally, your next combo roll has +20%"
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+			"melee",
+            "multi-target",
+			"unarmed",
+			"conditional",
+			"combo",
+			"dash"
+        ]
+    },
+	{
+        "type": "ability",
         "name": "Focus Energy",
         "class": "Martial Artist",
         "branch": "Balance",
@@ -8653,6 +8752,48 @@
             "Self-target",
 			"buff",
 			"combo"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Backstep",
+        "class": "Martial Artist",
+        "branch": "Balance",
+        "tier": 2,
+        "action": "1 Reaction",
+        "cost": "15 stamina",
+        "range": "Self",
+        "duration": "Instant",
+        "description": [
+            "You quickly evade enemy attacks before preparing for a counterattack. Dash up to 20 ft in any direction. If this dash is used to avoid damage, your next combo roll has +20%."
+        ],
+        "tags": [
+            "Self-target",
+			"dash",
+			"conditional",
+			"combo"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Arrow Catch",
+        "class": "Martial Artist",
+        "branch": "Balance",
+        "tier": 3,
+        "action": "1 Reaction",
+        "cost": "20 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You catch arrows and send them back at archers. Block a ranged attack on you or an adjacent ally, then you may have your next combo roll have +15% or redirect the attack back at the attacker."
+        ],
+        "tags": [
+            "Self-target",
+			"block",
+			"modal",
+			"combo",
+			"conditional",
+			"attack"
         ]
     }
 ]

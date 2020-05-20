@@ -1546,7 +1546,13 @@
         "abilities": [
             "Straight Punch",
             "Roundhouse Kick",
-            "Focus Energy"
+            "Focus Energy",
+			"Choke Hold",
+			"Flying Kick",
+			"Axe Kick",
+			"Open Palm Strike",
+			"Backstep",
+			"Arrow Catch"
         ]
     },
     {
