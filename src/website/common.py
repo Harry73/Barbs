@@ -7,9 +7,14 @@ def href(anchor, text):
     return '<a href="#{anchor}">{text}</a>'.format(anchor=anchor, text=text)
 
 
-def read_json_file(file_path):
+def read_json_file(file_path, sort=True):
     with open(file_path, 'r', encoding='utf8') as f:
-        return sorted(json.load(f, object_pairs_hook=OrderedDict), key=lambda item: item['name'])
+        components = json.load(f, object_pairs_hook=OrderedDict)
+
+    if sort:
+        return sorted(components, key=lambda item: item['name'])
+    else:
+        return components
 
 
 def get_component(component_name, component_list, condition=None):

@@ -302,7 +302,7 @@ def generate_html(log):
         index_template = f.read().strip()
 
     abilities = read_json_file(os.path.join(rulebook_path, 'abilities.json'))
-    attributes = read_json_file(os.path.join(rulebook_path, 'attributes.json'))
+    attributes = read_json_file(os.path.join(rulebook_path, 'attributes.json'), sort=False)
     buffs = read_json_file(os.path.join(rulebook_path, 'buffs.json'))
     classes = read_json_file(os.path.join(rulebook_path, 'classes.json'))
     conditions = read_json_file(os.path.join(rulebook_path, 'conditions.json'))
