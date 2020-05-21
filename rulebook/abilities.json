@@ -8795,5 +8795,216 @@
 			"conditional",
 			"attack"
         ]
+    },
+	{
+        "type": "ability",
+        "name": "Spirit Punch",
+        "class": "Ki Monk",
+        "branch": "Discipline",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You fire a quick punch to energize your body. Deal 4dU physical damage to a target in range and gain Ki equal to the rolled value. When you cast this ability, you may spend 15 Ki to additionally inflict 4dU psychic damage to the target."
+        ],
+        "tags": [
+            "Attack",
+			"physical",
+			"melee",
+			"single-target",
+			"combo",
+			"psionic",
+			"offensive",
+			"psychic",
+			"modal",
+			"conditional"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Drain Punch",
+        "class": "Ki Monk",
+        "branch": "Discipline",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You drain the vital force of an enemy with a punch. Deal 5dU physical damage to a target in range and gain Ki equal to half the rolled value. When you cast this ability, you may spend 25 Ki to additionally inflict 5dU psychic damage to the target; if you do, you heal for an amount equal to the psychic damage rolled."
+        ],
+        "tags": [
+            "Attack",
+			"physical",
+			"melee",
+			"single-target",
+			"combo",
+			"psionic",
+			"offensive",
+			"psychic",
+			"modal",
+			"conditional",
+			"heal"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Stunning Strike",
+        "class": "Ki Monk",
+        "branch": "Discipline",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You use Ki to addle an enemy's senses. Deal 6dU physical damage to a target in range and gain dU ki. When you cast this ability, you may spend 40 Ki to additionally inflict 6dU psychic damage to the target; if you do, the target is Stunned until the end of their next turn."
+        ],
+        "tags": [
+            "Attack",
+			"physical",
+			"melee",
+			"single-target",
+			"combo",
+			"psionic",
+			"offensive",
+			"psychic",
+			"modal",
+			"conditional",
+			"condition",
+			"Stun"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Spirit Gun",
+        "class": "Ki Monk",
+        "branch": "Spirit",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 stamina or ki",
+        "range": "60 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire a bullet of concentrated ki. Deal 4dU psychic damage to a target in range. If ki is spent to cast this ability, it has +50% increased damage and the target's Psionics: Defense roll has -20."
+        ],
+        "tags": [
+            "Attack",
+			"ranged",
+			"single-target",
+			"combo",
+			"psionic",
+			"offensive",
+			"psychic",
+			"modal",
+			"conditional"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Spirit Shotgun",
+        "class": "Ki Monk",
+        "branch": "Spirit",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 stamina or ki",
+        "range": "60 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire a spray of ki bullets at many enemies. Deal 5dU psychic damage to all enemies in a 60 ft cone. If ki is spent to cast this ability, it has +50% increased damage and all targets that are hit are knocked back 20 ft."
+        ],
+        "tags": [
+            "Attack",
+			"ranged",
+			"multi-target",
+			"combo",
+			"psionic",
+			"offensive",
+			"psychic",
+			"modal",
+			"conditional",
+			"forced movement"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Spirit Wave",
+        "class": "Ki Monk",
+        "branch": "Spirit",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "35 stamina or ki",
+        "range": "120 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire a wave of ki. Deal 6dU psychic damage to all enemies in a 120 ft line. If ki is spent to cast this ability, it has +50% increased damage and inflicts 30% Psychic Vulnerability to all targets."
+        ],
+        "tags": [
+            "Attack",
+			"ranged",
+			"single-target",
+			"combo",
+			"psionic",
+			"offensive",
+			"psychic",
+			"modal",
+			"conditional",
+			"condition",
+			"Vulnerability"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Find Center",
+        "class": "Ki Monk",
+        "branch": "Meditation",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "10 stamina",
+        "range": "Self",
+        "duration": "Instant",
+        "description": [
+            "You take a moment to center yourself and find stability. Gain 3dU ki. This ability cannot be reacted to by enemies."
+        ],
+        "tags": [
+			"No-react"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Find Stability",
+        "class": "Ki Monk",
+        "branch": "Meditation",
+        "tier": 2,
+        "action": "Free Reaction",
+        "cost": "30 stamina",
+        "range": "Self",
+        "duration": "Instant",
+        "description": [
+            "You find stability while under fire. As a reaction to taking damage, gain ki equal to half the percentage of your maximum health that is lost. If your health is below 40%, gain twice as much ki."
+        ],
+        "tags": [
+			"Conditional"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Find Solace",
+        "class": "Ki Monk",
+        "branch": "Meditation",
+        "tier": 3,
+        "action": "1 Minor Action",
+        "cost": "35 ki",
+        "range": "Self",
+        "duration": "Instant",
+        "description": [
+            "You use ki to cleanse your body of impurities. Cleanse up to 2 conditions on yourself. If your health is below 40%, cleanse up to 4 conditions on yourself instead."
+        ],
+        "tags": [
+			"Cleanse",
+			"conditional"
+        ]
     }
 ]

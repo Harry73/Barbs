@@ -1383,10 +1383,37 @@
         "preview": "A monk that fights both with its fists and its mind. This class uses its psionic powers to generate Ki, and then expends Ki in order to perform specialized psionic attacks at a range. Ki is primarily offensive, and can be used for buffs as well.",
         "num_requirements": 3,
         "known_requirements": [
-            "Cloth or Light Armor Mastery Rank A",
-            "Offensive Psionics Rank A"
+            "Armor Mastery: Cloth Rank A or Armor Mastery: Light Rank A",
+            "Psionics: Offensive Rank A",
+			"Weapon Mastery: Unarmed Rank A"
         ],
-        "all_reqs_known": true
+        "all_reqs_known": true,
+		"flavor_text": "Ki is more than just the stamina you use to punch or kick, more than the vitality that sustains you. Ki is a vital force that drives each and every cell in your body to achieve feats beyond their physical limitations.",
+		"description": "The Ki Monk is a monk that has managed to unlock the secrets of ki through rigorous physical training and deep meditation. Ki utilizes offensive psionics and allows the Ki Monk to generate ki through their attacks to later use to improve individual attacks in combos as well as improve their combo rate overall. Ki Monks can briefly meditate before combat begins, generating ki for use that combat. Players using this class will be expected to track their ki and learn how to use it wisely; many Ki Monk abilities provide modes that allow for extra effects with the expenditure of ki, but a player might instead choose to hoard ki for the use of extending combos. Ki can convert physical attacks into psionic attacks, add additional psionic damage to physical attacks, provide innate physical and psionic defenses, and provide a variety of other offensively oriented benefits. Perhaps the most useful of these are the abilities involving the use of ki at range, firing powerful blasts of ki at enemies and providing a monk with much needed ranged DPS capabilities.",
+		"requirements": [
+			"Armor Mastery: Cloth Rank A or Armor Mastery: Light Rank A",
+            "Psionics: Offensive Rank A",
+			"Weapon Mastery: Unarmed Rank A"
+		],
+		"branches": {
+			"Discipline": "The Discipline branch gives options for dealing physical damage to gain or spend Ki.",
+			"Spirit": "The Spirit branch gives options for dealing psionic damage via ranged Ki attacks.",
+			"Meditation": "The Meditation branch gives options for Ki related utilities."
+		},
+		"passive": {
+			"Kijong": "When you roll initiative, you may subtract any amount from your rolled value to gain an equal amount of ki. After rolling for combo and failing, you may spend ki to add +1 to the rolled result per ki spent in order to chance the result to a success instead."
+		},
+		"abilities": [
+			"Spirit Punch",
+			"Drain Punch",
+			"Stunning Strike",
+			"Spirit Gun",
+			"Spirit Shotgun",
+			"Spirit Wave",
+			"Find Center",
+			"Find Stability",
+			"Find Solace"
+		]
     },
     {
         "type": "class",
