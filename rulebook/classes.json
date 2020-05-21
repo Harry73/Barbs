@@ -1401,7 +1401,7 @@
 			"Meditation": "The Meditation branch gives options for Ki related utilities."
 		},
 		"passive": {
-			"Kijong": "When you roll initiative, you may subtract any amount from your rolled value to gain an equal amount of ki. After rolling for combo and failing, you may spend ki to add +1 to the rolled result per ki spent in order to change the result to a success instead."
+			"Kijong": "Your monk mastery increases. Additionally, when you roll initiative, you may subtract any amount from your rolled value to gain an equal amount of ki. After rolling for combo and failing, you may spend ki to add +1 to the rolled result per ki spent in order to change the result to a success instead."
 		},
 		"abilities": [
 			"Spirit Punch",
