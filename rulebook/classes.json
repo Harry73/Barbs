@@ -5,14 +5,15 @@
         "preview": "A mage that specializes in the magical school of Defense. As a mid-tier practitioner, this class has various spells to defend himself and his allies from attacks, conditions, and AOE spells.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A"
+	    "Magic: Defensive Rank A",
+            "Armor Mastery: Cloth Rank A"
         ],
         "all_reqs_known": false,
         "flavor_text": "The 41st Mage Corps' first training objective is usually to learn how to form a proper defensive line. Unlike regular infantry, a defense line for a horde of mage soldiers involves a complex layering of defensive magical fields, floating magical shields, reflecting panels, and a host of other defensive spells. The result is a nearly unbreakable line with enough redundancy to cover the loss of up to half the squad.",
         "description": "The Abjurer is a mid-level magical practitioner who has specialized in the magical school of Defense. As the name suggests, Defense magic protects the caster and their allies from enemy attacks. The school contains spells such as shields, temporary health, counterspells, buffs that boost defensive stats, and a variety of other methods to defend a person or group. The class contains no offensive abilities whatsoever, so such a mage is usually included as part of a party or regularly seen with other defensive mages within a section of an army. The class plays especially well with other members of the party who play the tank role, further augmenting their ability to protect the backline. Being an effective Abjurer requires excellent concentration.",
         "requirements": [
-            "Magic: Defense A",
-            "Cloth Armor Mastery A"
+            "Magic: Defensive Rank A",
+            "Armor Mastery: Cloth Rank A"
         ],
         "branches": {
             "Secure": "The Secure branch gives options for immediate and brief protection in response to enemy attacks.",
@@ -34,7 +35,7 @@
         "preview": "A mage that has begun to master the basics of air magic. At this entry level, this class mostly focuses on spells that inflict damage on enemies, with the added aspects and flavors that air spells tend to provide in terms of mobility and positional play.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A or Destruction Magic Rank A",
+            "Armor Mastery: Cloth Rank A or Destruction Magic Rank A",
             "Air Mastery Rank A"
         ],
         "all_reqs_known": true,
@@ -42,7 +43,7 @@
         "description": "The Aeromancer is one of 8 offensive elemental mages. Harnessing the whimsical aspect of air, the Aeromancer values speed, creativity, and taking the initiative. Unlike other mages who plant themselves in the backlines, the Aeromancer uses its high mobility to literally fly across the battlefield, controlling wind to speed allies and slow enemies while inflicting damage through wind blasts and tornados. An adept Aeromancer never stays in one spot, abusing its speed and range to maximum effect to kite and whittle down even the staunchest foes.",
         "requirements": [
             "Air Magic A",
-            "Destruction Magic A or Cloth Armor Mastery A"
+            "Destruction Magic A or Armor Mastery: Cloth Rank A"
         ],
         "branches": {
             "Gale": "The Gale branch provides options for dealing damage to single and multiple targets",
@@ -121,7 +122,7 @@
         "preview": "An alchemist that has mastered augmentation alchemy. This class has its own augmentations that can upgrade the natural abilities of creatures and objects.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A",
+            "Armor Mastery: Cloth Rank A",
             "Augmentation Alchemy Rank A"
         ],
         "all_reqs_known": true,
@@ -129,7 +130,7 @@
         "description": "The Amplifier is a practitioner of Augmentation alchemy. As one of the most common types of alchemy, many towns will have an amplifier, selling blueprints for strengthening tools and weapons. The Amplifier provides an avenue for buffing allies and their equipment without requiring concentration, buff limit, or even mana or stamina. Instead, the Amplifier takes time outside of combat to complete the products of their abilities and blueprints, in order to provide bonuses in combat.",
         "requirements": [
             "Augmentation Alchemy Rank A",
-            "Cloth Armor Rank A"
+            "Armor Mastery: Cloth Rank A"
         ],
         "branches": {
             "Bolster": "The Bolster branch gives options for improving the offensive capabilities of items and entities.",
@@ -151,7 +152,7 @@
         "preview": "A mage that has begun to master the basics of water magic. At this entry level, this class mostly focuses on spells that inflict damage on enemies, with the added aspects and flavors that water spells tend to provide in terms of support magic and battlefield control.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A",
+            "Armor Mastery: Cloth Rank A",
             "Water Mastery Rank A"
         ],
         "all_reqs_known": true,
@@ -159,7 +160,7 @@
         "description": "Aquamancer is an entry level mage that has begun to master the element of water. Water, as an element, is focused on balance and flexibility, and the aquamancer spell list reflects this philosophy. An adept aquamancer will be able to deal moderate water magic damage to single and multiple targets effectively while also manipulating the battlefield and controlling enemy movement. Likewise, the aquamancer can turn inward towards the party and assist with a defensive suite of spells and some moderate healing. While other elemental mages are more focused on dealing damage, inflicting crowd control, or healing, none of them have the sheer number of options that the aquamancer has.",
         "requirements": [
             "Water Mastery A",
-            "Destruction Magic A or Cloth Armor Mastery A"
+            "Destruction Magic A or Armor Mastery: Cloth Rank A"
         ],
         "branches": {
             "Geyser": "The Geyser branch provides options for dealing damage to single and multiple targets as well as minor forced movement.",
@@ -221,7 +222,7 @@
         "preview": "A mage that specializes in the magical school of Destruction. As a mid-tier practitioner, this class has various spells for dealing damage to single or multiple targets, as well as a handful of utility spells.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A",
+            "Armor Mastery: Cloth Rank A",
             "Destruction Magic Rank A"
         ],
         "all_reqs_known": true,
@@ -229,7 +230,7 @@
         "description": "The Arcanist is the entry level destruction mage. For those mages who do not wish to pigeonhole themselves in one element, this class provides damaging spells which can utilize all 8, although it sacrifices some of the special strengths of those classes. The class's passive also grants the user some extra flexibility as far as targeting their spells is concerned, which works well with the class's overall emphasis on both single-target and multi-target/AOE damage. A third branch provides some extra utility, rounding the class out as an excellent first class for a new mage character. Functionally the class is designed to be simple and straightforward, acting as a segway to more complicated mage classes.",
         "requirements": [
             "Destruction Magic Rank A",
-            "Cloth Armor Rank A"
+            "Armor Mastery: Cloth Rank A"
         ],
         "branches": {
             "Zapping": "The Zapping branch provides options for dealing damage to single targets.",
@@ -254,7 +255,7 @@
         "preview": "A mage that specializes in the magical school of Utilities. As a mid-tier practitioner, this class has the highest number of raw utility spells, and acts as a magical Swiss army knife of spell for any situation.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A"
+            "Armor Mastery: Cloth Rank A"
         ],
         "all_reqs_known": false
     },
@@ -369,14 +370,14 @@
         "preview": "An alchemist that has mastered organics alchemy. This class creates its own organic creatures to fight for it, defend it, and provide various utilities.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A",
+            "Armor Mastery: Cloth Rank A",
             "Organics Alchemy A"
         ],
         "all_reqs_known": true,
         "flavor_text": "He was a strange fellow really, and his owl that was not quite an owl was even stranger. \"She's a beauty, isn't she?\" he said, smiling up at the beast perched on his shoulder, even as its horrifically human eyes stared back. \"I made her myself.\"",
         "description": "The Bioengineer is a practitioner of Organics alchemy. Frequently, towns will have one or two of these, working on their own blueprints for sale. Organics alchemy is considered the darkest of the alchemical arts, and while some Bioengineers will stick to simple organisms like birds or dogs, others have been known to turn to darker experiments involving people. However, regardless of how they make their living, most Bioengineers aspire to the lost art of creating life in vitro. This class spends time outside of combat creating organisms to be used for a variety of purposes.",
         "requirements": [
-            "Cloth Armor A",
+            "Armor Mastery: Cloth Rank A",
             "Organics Alchemy A"
         ],
         "branches": {
@@ -574,7 +575,7 @@
         "preview": "A mage that specializes in the magical school of Conjurations. As a mid-tier practitioner, this class can summon various types of constructs and objects for offensive, defensive, and utilitarian purposes.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A",
+            "Armor Mastery: Cloth Rank A",
             "Conjuration Magic Rank A"
         ],
         "all_reqs_known": true,
@@ -582,7 +583,7 @@
         "description": "The Conjurer is an entry level mage that specializes in the magical school of Conjurations. This school contains spells that allow the conjurer to form objects out of thin air, using their mana to summon matter or even forming mana into a solid object temporarily. Requiring a fine control of mana and powerful creativity, the Conjurer is designed to have a variety of useful spells for exploration, and is well suited to the life of an adventurer. The branches of this class are loosely divided into short term and long term spells, allowing the Conjurer to make temporary portals for a few seconds, weapons and armor for a few minutes, or walls and bridges to use for hours. While the class lacks some of the more combat oriented spells of other mages, like a proper counterspell or damage spell, Conjurer makes up for it in utility and creative potential, and should be a welcome addition to any party looking to make day to day life easier.",
         "requirements": [
             "Conjuration Magic A",
-            "Cloth Armor Mastery A"
+            "Armor Mastery: Cloth Rank A"
         ],
         "branches": {
             "Ephemeral": "The Ephemeral branch gives options for conjuration spells meant to last seconds, for immediate emergency use cases.",
@@ -607,7 +608,7 @@
         "preview": "A mage that specializes in the magical school of Control. As a mid-tier practitioner, this class has various spells that can hold enemies down or otherwise manipulate their actions.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A",
+            "Armor Mastery: Cloth Rank A",
             "Control Magic Rank A"
         ],
         "all_reqs_known": true,
@@ -615,7 +616,7 @@
         "description": "The Controller is a mid-level practitioner of magic which specializes in the school of Control. These spells deal primarily with controlling the actions of other entities. The name of the game here is limiting the number of options your opponents have available to them, or outright determining their actions for yourself. Slows, stuns, and other crowd control spells fall under this category, inhibiting the actions that enemies can make in combat. Outside of combat, charms are available to this class, emulating full-blown mind control with some basic restrictions (typically, no self-harm). This class lacks any significant damaging spells, but makes up for this by having the most robust list of control spells in the system. A Controller is an excellent addition to a large army, a small adventuring group, or even in a solo-build. That being said, some view Control magic as the most evil kind of magic, taking away people's freedoms.",
         "requirements": [
             "Control Magic A",
-            "Cloth Armor Mastery A"
+            "Armor Mastery: Cloth Rank A"
         ],
         "branches": {
             "Subjugate": "The Subjugate branch gives options for controlling a single target crowd control and charms.",
@@ -650,7 +651,7 @@
         "preview": "A mage that specializes in the magical school of Conditions. As a mid-tier practitioner, this class can inflict buffs on single and multiple targets, primarily for offensive purposes, but with some utility mixed in as well.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A",
+            "Armor Mastery: Cloth Rank A",
             "Condition Magic Rank A"
         ],
         "all_reqs_known": true
@@ -662,14 +663,14 @@
         "num_requirements": 2,
         "known_requirements": [
             "Ice Magic Mastery Rank A",
-            "Cloth Armor Mastery Rank A or Destruction Magic Rank A"
+            "Armor Mastery: Cloth Rank A or Destruction Magic Rank A"
         ],
         "all_reqs_known": true,
         "flavor_text": "Skating gracefully on the ice, she applies the finishing touches to the goblins, now tasteful frozen sculptures, and then continues deeper into their lair, followed by a cold tailwind.",
         "description": "The Cryomancer is one of 8 offensive elemental mages. Harnessing the merciless aspect of ice, the Cryomancer is a flexible class that deals both single target and AOE damage, but especially excels at controlling the battlefield with crowd control spells. She can create spears of ice to impale enemies or freeze dozens of enemies solid. The Cryomancer provides a powerful defense with the power of ice and cold, and has plenty of offensive options to finish a fight.",
         "requirements": [
             "Ice Mastery A",
-            "Destruction Magic A or Cloth Armor Mastery A"
+            "Destruction Magic A or Armor Mastery: Cloth Rank A"
         ],
         "branches": {
             "Arctic": "The Arctic branch provides options for damage, both single target and multi-target.",
@@ -911,7 +912,7 @@
         "preview": "A mage that specializes in the magical school of Divinations. As a mid-tier practitioner, this class has various spells to learn about future events, foresee the immediate and the distant future, and gain knowledge magically.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A"
+            "Armor Mastery: Cloth Rank A"
         ],
         "all_reqs_known": false
     },
@@ -975,7 +976,7 @@
         "preview": "A mage that has begun to master the basics of lightning magic. At this entry level, this class mostly focuses on spells that inflict damage on enemies, with the added aspects and flavors that lightning spells tend to provide in terms of unpredictability and randomness.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A or Destruction Magic Rank A",
+            "Armor Mastery: Cloth Rank A or Destruction Magic Rank A",
             "Lightning Magic Rank A"
         ],
         "all_reqs_known": true,
@@ -983,7 +984,7 @@
         "description": "The Dynamancer is the entry level lightning mage. Specializing in the turbulent and wild aspect of lightning, the Dynamancer is a class focused mostly on dealing damage to one or multiple enemies, with some small capability to paralyze and stun as well. In exchange for increased offensive power compared to other elements and a heavy amount of flexibility with each spell, lightning mages must deal with the inherent randomness that comes with playing with lightning. Sometimes, the Dynamancer's spells strike true, but other times they fail to reach parity with other mages' spells. The passive provides a small amount of reprieve from the web of random chance, allowing the class to reroll spell damage and effects when their luck is not in their favor and improving average damage in a decently reliable manner.",
         "requirements": [
             "Lightning Mastery A",
-            "Destruction Magic A or Cloth Armor Mastery A"
+            "Destruction Magic A or Armor Mastery: Cloth Rank A"
         ],
         "branches": {
             "Shock": "The Shock branch provides options for dealing damage to single targets.",
@@ -1032,7 +1033,7 @@
         "preview": "A mage that specializes in the magical school of Enchantments. As a mid-tier practitioner, this class has various spells to augment the strengths and exploit the weaknesses of objects, structures, and equipment, as well as a handful of other utilities.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A",
+            "Armor Mastery: Cloth Rank A",
             "Enchantment Magic Rank A"
         ],
         "all_reqs_known": true,
@@ -1040,7 +1041,7 @@
         "description": "The Enchanter is an entry level mage that specializes in the magical school of Enchantment, using magical runes and inscriptions to apply effects to objects and equipment. Such mages are a mainstay of many armies, using their spells to augment the power of weapons and armor as well as reinforcing walls and defensive structures. They are also effective on a smaller scale, assisting party members by providing buff-like effects without taxing buff limit. This class provides a good number of entry level offensive, defensive, and utility effects for the aspiring party mage.",
         "requirements": [
             "Enchantment Magic A",
-            "Cloth Armor A"
+            "Armor Mastery: Cloth Rank A"
         ],
         "branches": {
             "Personal": "The Personal branch gives options for enchanting effects onto weapons and armor, mostly useful for combat purposes.",
@@ -1108,7 +1109,7 @@
         "preview": "An alchemist that has mastered transformation alchemy. This class has its own transformations that can change objects and creatures into new things entirely, for various offensive, defensive, and utilitarian purposes.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A"
+            "Armor Mastery: Cloth Rank A"
         ],
         "all_reqs_known": false
     },
@@ -1170,7 +1171,7 @@
         "preview": "An alchemist that has mastered organics and construct alchemy. This class creates special golems, a hybrid of the two schools of alchemy, that are more powerful and versatile and long lasting than regular constructs or organics. Some golems can even eerily resemble humans.",
         "num_requirements": 3,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A",
+            "Armor Mastery: Cloth Rank A",
             "Organics Alchemy Rank A",
             "Construct Alchemy Rank A"
         ],
@@ -1180,7 +1181,7 @@
         "requirements": [
             "Construct Alchemy A",
             "Organics Alchemy A",
-            "Cloth Armor Mastery A"
+            "Armor Mastery: Cloth Rank A"
         ],
         "branches": {
             "Knighthood": "The Knighthood branch gives options for golems adapted to the arts of physical warfare.",
@@ -1227,7 +1228,7 @@
         "preview": "A mage that specializes in the magical school of Restoration. As a mid-tier practitioner, this class has many spells to heal himself, other allies, and entire groups, as well as cleanse conditions and cure diseases.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A"
+            "Armor Mastery: Cloth Rank A"
         ],
         "all_reqs_known": false
     },
@@ -1282,7 +1283,7 @@
         "preview": "A mage that specializes in the magical school of Illusions. As a mid-tier practitioner, this class has a variety of types of illusions, for offensive and utilitarian purposes, and a handful of other manipulative buffs, conditions, and utilities.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A"
+            "Armor Mastery: Cloth Rank A"
         ],
         "all_reqs_known": false
     },
@@ -1302,7 +1303,7 @@
         "preview": "An alchemist that has mastered construct alchemy. This class creates its own mechanical constructs to fight for it, defend it, and provide various utilities.",
         "num_requirements": 2,
         "known_requirements": [
-            "Cloth Armor Mastery Rank A",
+            "Armor Mastery: Cloth Rank A",
             "Construct Alchemy Rank A"
         ],
         "all_reqs_known": true,
@@ -1310,7 +1311,7 @@
         "description": "Inventor is the entry level alchemist that specializes in construct alchemy. Construct alchemy allows one to bring pseudo-life to inanimate objects by first building a body that houses a mixture of chemical and electronic parts to imitate biological functions and intelligence. Constructs, when compared to the organic products of organics alchemy, tend to be more fragile but a little more modular and flexible. Some larger cities might have construct alchemists who build various quality of life constructs to help with day to day work, but this class specializes in constructs more apt at the rigors of an adventuring day. All of the constructs available from this class are made to be deployed in combat as a Minor Action, so they are designed to be compact and straightforward, but many constructs can be highly complex with a lot of moving parts. Finally, the class has abilities allowing you to quickly modify deployed constructs during combat.",
         "requirements": [
             "Construct Alchemy A",
-            "Cloth Armor Mastery A"
+            "Armor Mastery: Cloth Rank A"
         ],
         "branches": {
             "Haywire": "The Haywire branch gives options for constructs that are aggressive in combat, dealing damage and inflicting conditions.",
