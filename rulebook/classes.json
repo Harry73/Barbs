@@ -484,10 +484,30 @@
         "num_requirements": 3,
         "known_requirements": [
             "Any Melee Weapon (no Unarmed) Rank A",
-            "Heavy Armor Mastery Rank A",
-            "Interaction Leadership Rank A"
+            "Armor Mastery: Heavy Rank A",
+            "Interaction: Leadership Rank A"
         ],
-        "all_reqs_known": true
+        "all_reqs_known": true,
+		"flavor_text": "\"The pessimist complains about the wind. The optimist expects it to change. The leader adjusts the sails.\"",
+		"description": "The Captain is a class that transcends the typical playstyle of a character who's build is self-centered or even that of a playstyle that supports others. The goal of this class is to provide a small party with a focused, goal-oriented playstyle. Captain abilities feed into a passive that provides party-wide action economy, but the possible actions within this team action are fixed by orders given by the Captain. A good Captain will understand how to use their fellow party members well and enable them to do what they do best without putting them into difficult positions, and with time, party members will learn a specific Captain's style and put themselves in positions to be used effectively. If all goes well, and with some smart tactical decision making, the beginning of each round should be a surge in forward momentum for the Captain and his allies.",
+		"requirements": [
+			"Any Melee Weapon (no Unarmed) Rank A",
+            "Armor Mastery: Heavy Rank A",
+            "Interaction: Leadership Rank A"
+		],
+		"branches": {
+			"Tactics": "The Tactics branch gives options for aggressive actions and orders that enable attacks for allies.",
+			"Strategy": "The Strategy branch gives options for defensive actions and orders that focus on retreat and bunkering down.",
+			"Gambits": "The Gambits branch gives options for taking risks and preparing for unique opportunities."
+		},
+		"passive": {
+			"Follow The Leader": "At the beginning of each round of combat, all allies take a free action based on Orders given by Captain abilities. You can only have one set of standing Orders at a time; casting an ability that sets standing Orders changes your standing Orders. If there are no standing Orders, all allies instead get +10 to Initiative, once per combat."
+		},
+		"abilities": [
+			"Blitzkrieg",
+			"Retreat",
+			"Inspirational Speech"
+		]
     },
     {
         "type": "class",

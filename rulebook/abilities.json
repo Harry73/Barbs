@@ -9007,5 +9007,61 @@
 			"Cleanse",
 			"conditional"
         ]
+    },
+	{
+        "type": "ability",
+        "name": "Blitzkrieg",
+        "class": "Captain",
+        "branch": "Tactics",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You lead your forces into swift battle. Deal 5d10 physical damage to a target in range. Then, an ally within 50 ft gains a free reaction to dash to a space adjacent to you. They may then use their normal reaction to cast a non-spell, melee, attack ability. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a non-spell, melee, attack ability."
+        ],
+        "tags": [
+			"Attack",
+			"single-target",
+			"melee",
+			"physical",
+			"modal"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Retreat",
+        "class": "Captain",
+        "branch": "Strategy",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "range": "50 ft",
+        "duration": "Instant",
+        "description": [
+            "You call for a tactical retreat to regroup. All allies in range gain a free reaction to dash up to their Move Speed away from enemies, then any number of allies may use their normal reaction to cast any heal ability. This ability, nor the heal abilities cast by allies due to this ability, cannot be reacted to. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a heal ability."
+        ],
+        "tags": [
+			"Dash",
+			"no-react"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Inspirational Speech",
+        "class": "Captain",
+        "branch": "Gambits",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "range": "50 ft",
+        "duration": "Instant",
+        "description": [
+            "You give a rousing speech to the troops. All allies in range gain +100% increased damage until the beginning of your next turn. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a buff ability."
+        ],
+        "tags": [
+			"Buff"
+        ]
     }
 ]
