@@ -211,6 +211,7 @@ var BarbsComponents = BarbsComponents || (function () {
         ACCURACY: '%s% accuracy',
         AC_PENETRATION: '%s% armor penetration',
         BUFF_STRIP: 'Strip %s buff(s) from the target',
+        CRIPPLE_CHANCE: '%s% cripple chance',
         FORCED_MOVEMENT: 'Forcibly move target %s ft',
         LETHALITY: '%s% lethality',
         PARALYZE: '%s% chance to paralyze',
@@ -12381,6 +12382,7 @@ var BarbsComponents = BarbsComponents || (function () {
         ACCESSORY: 'accessory',
         AXE: 'axe',
         ARMOR: 'armor',
+        BLUNT: 'blunt',
         BULLETS: 'bullets',
         CROSSBOW: 'crossbow',
         HEAVY_THRoWING: 'heavy throwing',
@@ -13506,6 +13508,151 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.CONDITION_RESIST, 10),
                 // TODO: 70% Minion Lethality
                 // TODO: 15% Critical Strike Resist
+            ]
+        ),
+
+        new Item(
+            "Powerful Slaying Sharpened Warhammer of Penetrating Cripples",
+            ItemType.BLUNT,
+            ItemRarity.RARE,
+            ItemSlot.MAIN_HAND,
+            [],
+            Effect.roll_damage('2d12', Damage.PHYSICAL, RollType.PHYSICAL),
+            ItemScaler.MELEE,
+            0, [], '',
+            [
+                Effect.hidden_stat(HiddenStat.CRIPPLE_CHANCE, 20, RollType.PHYSICAL),
+                Effect.roll_damage('6d10', Damage.PHYSICAL, RollType.PHYSICAL),
+                Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.PHYSICAL),
+                Effect.hidden_stat(HiddenStat.AC_PENETRATION, 30, RollType.PHYSICAL),
+                Effect.hidden_stat(HiddenStat.CRIPPLE_CHANCE, 20, RollType.PHYSICAL),
+            ]
+        ),
+
+        new Item(
+            "Resistant Worker's Greathelm of Bestial Stun Resist",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.HEAD,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.MELEE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.AC, 10),
+                Effect.stat_effect(Stat.EVASION, -10),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.stat_effect(Stat.STAMINA, 40),
+                Effect.stat_effect(Stat.HEALTH, 40),
+                // TODO: 50% stun resist
+            ]
+        ),
+
+        new Item(
+            "Resistant Worker's Chestplate of Bestial Slow Resist",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.HEAD,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.MELEE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.AC, 10),
+                Effect.stat_effect(Stat.EVASION, -10),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.stat_effect(Stat.STAMINA, 50),
+                Effect.stat_effect(Stat.HEALTH, 50),
+                // TODO: 50% slow resist
+            ]
+        ),
+
+        new Item(
+            "Resistant Accurate Gauntlets of Penetrating Cripple Resist",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.HEAD,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.MELEE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.AC, 10),
+                Effect.stat_effect(Stat.EVASION, -10),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.hidden_stat(HiddenStat.AC_PENETRATION, 20, RollType.PHYSICAL),
+                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.PHYSICAL),
+                // TODO: 50% cripple resist
+            ]
+        ),
+
+        new Item(
+            "Resistant Speedy Greaves of Bestial Immobilize",
+            ItemType.ARMOR,
+            ItemRarity.RARE,
+            ItemSlot.HEAD,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.MELEE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.AC, 10),
+                Effect.stat_effect(Stat.EVASION, -10),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.stat_effect(Stat.MOVEMENT_SPEED, 20),
+                Effect.stat_effect(Stat.HEALTH, 40),
+                // TODO: 50% immobilize resist
+            ]
+        ),
+
+        new Item(
+            "Lifestealing Leader's Amulet of Swift Fear Resist",
+            ItemType.ACCESSORY,
+            ItemRarity.RARE,
+            ItemSlot.HEAD,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.MELEE,
+            0, [], '',
+            [
+                Effect.roll_effect('5% lifesteal', RollType.ALL),
+                Effect.skill_effect(Skill.INTERACTION_LEADERSHIP, 20),
+                // TODO: +20 to initiative
+                // TODO: 50% fear resist
+            ]
+        ),
+
+        new Item(
+            "Slayer's Penetrating Ring of Critical Power",
+            ItemType.ACCESSORY,
+            ItemRarity.RARE,
+            ItemSlot.HEAD,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.MELEE,
+            0, [], '',
+            [
+                Effect.roll_multiplier(0.2, Damage.PHYSICAL, RollType.ALL),
+                Effect.hidden_stat(HiddenStat.AC_PENETRATION, 10, RollType.PHYSICAL),
+                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 5),
+                Effect.roll_damage('3d10', Damage.PHYSICAL, RollType.PHYSICAL),
+            ]
+        ),
+
+        new Item(
+            "Armored Resistant Buckle of Healing Paralysis Resist",
+            ItemType.ACCESSORY,
+            ItemRarity.RARE,
+            ItemSlot.HEAD,
+            [],
+            Effect.no_op_roll_effect(),
+            ItemScaler.MELEE,
+            0, [], '',
+            [
+                Effect.stat_effect(Stat.AC, 5),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 5),
+                Effect.stat_effect(Stat.HEALTH_REGENERATION, 10),
+                // TODO: 50% paralysis resist
             ]
         ),
 
