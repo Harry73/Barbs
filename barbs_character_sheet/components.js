@@ -12130,7 +12130,10 @@ var BarbsComponents = BarbsComponents || (function () {
             this.damages = {};
             this.multipliers = {};
             this.effects = [];
+
             this.stats = {};
+            this.stat_multipliers = {};
+
             this.hidden_stats = {};
             this.skills = {};
             this.concentration_bonus = 0;
@@ -12175,6 +12178,18 @@ var BarbsComponents = BarbsComponents || (function () {
             } else {
                 this.stats[stat.name] = this.stats[stat.name] + '+%s'.format(bonus);
             }
+        }
+
+        add_stat_multiplier(stat, multiplier) {
+            assert_not_null(stat, 'add_stat_multiplier() stat');
+            assert_not_null(multiplier, 'add_stat_multiplier() multiplier');
+
+            if (!(stat.name in this.stat_multipliers)) {
+                this.stat_multipliers[stat.name] = '%s'.format(multiplier);
+            } else {
+                this.stat_multipliers[stat.name] = '%s+%s'.format(this.stat_multipliers[stat.name], multiplier);
+            }
+
         }
 
         add_hidden_stat(hidden_stat, value) {

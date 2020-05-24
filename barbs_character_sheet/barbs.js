@@ -147,13 +147,17 @@ var Barbs = Barbs || (function () {
         assert_not_null(stat, 'generate_stat_roll_modifier_from_items() stat');
 
         const attribute = parseInt(getAttrByName(character.id, stat.attr_tla));
-        const mod = '%s'.format(stat.value(attribute));
+        let mod = '%s'.format(stat.value(attribute));
 
         if (stat.name in roll.stats) {
-            return '%s+%s'.format(mod, roll.stats[stat.name]);
-        } else {
-            return mod;
+            mod = '%s+%s'.format(mod, roll.stats[stat.name]);
         }
+
+        if (stat.name in roll.stat_multipliers) {
+            mod = '(%s)*(1+%s)'.format(mod, roll.stat_multipliers[stat.name]);
+        }
+
+        return mod;
     }
 
 
@@ -1194,8 +1198,7 @@ var Barbs = Barbs || (function () {
 
         add_persistent_effect(character, ability, character, 6, Ordering.BEFORE(), RollTime.STAT, false,
             function (char, roll, parameters) {
-                // TODO: the AC isn't right here. It's supposed to be a 10% increase on whatever they currently have.
-                roll.add_stat_bonus(Stat.AC, 10 * parseInt(num_targets));
+                roll.add_stat_multiplier(Stat.AC, 0.1 * parseInt(num_targets));
                 roll.add_stat_bonus(Stat.MAGIC_RESIST, 10 * parseInt(num_targets));
 
                 return true;
