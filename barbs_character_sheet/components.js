@@ -122,6 +122,12 @@ var BarbsComponents = BarbsComponents || (function () {
             'Dan B.',
             'Dan',
         ],
+        'Raizzon bin Qalal min Taid al Kurim': [
+            'Raizzon bin Qalal min Taid al Kurim',
+            'Raizzon',
+            'Marcus I.',
+            'Marcus',
+        ],
     };
 
 

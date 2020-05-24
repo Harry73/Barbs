@@ -740,6 +740,32 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function daggerspell_marked(roll, roll_time, parameter, parameters) {
+        if (roll_time !== RollTime.DEFAULT) {
+            return true;
+        }
+
+        roll.add_crit_chance(10);
+
+        const empowered = get_parameter('empowered', parameters);
+        if (empowered !== null) {
+            roll.add_crit_damage_mod(100);
+        }
+        return true;
+    }
+
+
+    function daggerspell_ritual_dagger(roll, roll_time, parameter) {
+        if (roll_time !== RollTime.DEFAULT) {
+            return true;
+        }
+
+        const mana_spent = parameter.split(' ')[1];
+        roll.add_damage(Math.round(mana_spent / 2), Damage.PHYSICAL);
+        return true;
+    }
+
+
     function juggernaut_what_doesnt_kill_you(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
@@ -807,6 +833,8 @@ var Barbs = Barbs || (function () {
         'misc_multiplier': arbitrary_multiplier,
         'misc_damage': arbitrary_damage,
         'pursued': assassin_pursue_mark,
+        'daggerspell_marked': daggerspell_marked,
+        'empowered': daggerspell_ritual_dagger,
         'spotting': sniper_spotter,
         'tide': aquamancer_tide,
         'warper_cc': warper_opportunistic_predator,
@@ -817,7 +845,7 @@ var Barbs = Barbs || (function () {
         for (let i = 0; i < parameters.length; i++) {
             Object.keys(arbitrary_parameters).forEach(function (keyword) {
                 if (parameters[i].includes(keyword)) {
-                    if (!arbitrary_parameters[keyword](roll, roll_time, parameters[i])) {
+                    if (!arbitrary_parameters[keyword](roll, roll_time, parameters[i], parameters)) {
                         return false;
                     }
                 }
@@ -1182,6 +1210,46 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function daggerspell_fadeaway_slice(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('4d4', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function daggerspell_exposing_tear(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('8d4', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+
+    }
+
+    function daggerspell_hidden_blade(character, ability, parameters) {
+        add_persistent_effect(character, ability, character, 6, Ordering(), RollTime.DEFAULT, false,
+            function (char, roll, parameters) {
+                roll.add_crit_chance(15);
+
+                const empowered = get_parameter('empowered', parameters);
+                if (empowered !== null) {
+                    roll.add_effect('Hidden');
+                }
+
+                return true;
+            });
+
+        const ability_info = get_ability_info(ability);
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+    }
+
+
     function dynamancer_spark_bolt(character, ability, parameters) {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('4d12', Damage.LIGHTNING);
@@ -1411,6 +1479,28 @@ var Barbs = Barbs || (function () {
             roll.add_effect('2 curses')
         }
 
+        do_roll(character, ability, roll, parameters, '');
+    }
+
+
+    function pyromancer_banefire(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('6d12', Damage.FIRE);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.FIRE);
+        roll.add_effect('Unblockable/uncounterable if this is your second fire spell this turn');
+        roll.add_effect('-5% Fire MR');
+        roll.add_effect('+5% Fire Vulnerability');
+        do_roll(character, ability, roll, parameters, '');
+    }
+
+
+    function pyromancer_magma_spray(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('4d12', Damage.FIRE);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.FIRE);
+        roll.add_effect('Hit enemies 15 ft from you are inflicted with Burn X, where X is equal to the amount of damage rolled');
+        roll.add_effect('-5% Fire MR');
+        roll.add_effect('+5% Fire Vulnerability');
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1888,6 +1978,11 @@ var Barbs = Barbs || (function () {
             'Ice Crafting': print_ability_description,
             'Ice Spear': cryomancer_ice_spear,
         },
+        'Daggerspell': {
+            'Fadeaway Slice': daggerspell_fadeaway_slice,
+            'Exposing Tear': daggerspell_exposing_tear,
+            'Hidden Blade': daggerspell_hidden_blade,
+        },
         'Demon Hunter': {
             // TODO May want a "marked" parameter for Essence Scatter
             // 'Demonbane Blast': demon_hunter_demonbane_blast,
@@ -1928,6 +2023,11 @@ var Barbs = Barbs || (function () {
             'Darkbomb': noxomancer_darkbomb,
             'Defile': print_ability_description,  // TODO this maybe could do more
             'Siphon Soul': print_ability_description,  // TODO this maybe could do more
+        },
+        'Pyromancer': {
+            'Banefire': pyromancer_banefire,
+            'Magma Spray': pyromancer_magma_spray,
+            'Pyroblast': print_ability_description,
         },
         'Sentinel': {
             'Crossguard Guillotine': sentinel_crossguard_guillotine,
@@ -2282,6 +2382,7 @@ var Barbs = Barbs || (function () {
 
         on('chat:message', handle_input);
         on('change:campaign:turnorder', handle_turn_order_change);
+        log('Barbs API ready');
     };
 
 
