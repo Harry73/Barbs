@@ -56,7 +56,7 @@
         "tags": [
             "Spell",
             "defensive",
-			"buff",
+            "buff",
             "gain AC",
             "gain MR",
             "modal",
@@ -8591,7 +8591,7 @@
             "negate damage"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Straight Punch",
         "class": "Martial Artist",
@@ -8607,14 +8607,14 @@
         "tags": [
             "Attack",
             "physical",
-			"melee",
+            "melee",
             "single-target",
-			"unarmed",
-			"conditional",
-			"combo"
+            "unarmed",
+            "conditional",
+            "combo"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Choke Hold",
         "class": "Martial Artist",
@@ -8630,16 +8630,16 @@
         "tags": [
             "Attack",
             "physical",
-			"melee",
+            "melee",
             "single-target",
-			"unarmed",
-			"conditional",
-			"combo",
-			"modal",
-			"forced movement"
+            "unarmed",
+            "conditional",
+            "combo",
+            "modal",
+            "forced movement"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Flying Kick",
         "class": "Martial Artist",
@@ -8655,15 +8655,15 @@
         "tags": [
             "Attack",
             "physical",
-			"melee",
+            "melee",
             "single-target",
-			"unarmed",
-			"conditional",
-			"combo",
-			"dash"
+            "unarmed",
+            "conditional",
+            "combo",
+            "dash"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Roundhouse Kick",
         "class": "Martial Artist",
@@ -8679,14 +8679,14 @@
         "tags": [
             "Attack",
             "physical",
-			"melee",
+            "melee",
             "multi-target",
-			"unarmed",
-			"conditional",
-			"combo"
+            "unarmed",
+            "conditional",
+            "combo"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Axe Kick",
         "class": "Martial Artist",
@@ -8702,17 +8702,17 @@
         "tags": [
             "Attack",
             "physical",
-			"melee",
+            "melee",
             "multi-target",
-			"unarmed",
-			"conditional",
-			"combo",
-			"condition",
-			"Stun",
-			"forced movement"
+            "unarmed",
+            "conditional",
+            "combo",
+            "condition",
+            "Stun",
+            "forced movement"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Open Palm Strike",
         "class": "Martial Artist",
@@ -8728,15 +8728,15 @@
         "tags": [
             "Attack",
             "physical",
-			"melee",
+            "melee",
             "multi-target",
-			"unarmed",
-			"conditional",
-			"combo",
-			"dash"
+            "unarmed",
+            "conditional",
+            "combo",
+            "dash"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Focus Energy",
         "class": "Martial Artist",
@@ -8751,11 +8751,11 @@
         ],
         "tags": [
             "Self-target",
-			"buff",
-			"combo"
+            "buff",
+            "combo"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Backstep",
         "class": "Martial Artist",
@@ -8770,12 +8770,12 @@
         ],
         "tags": [
             "Self-target",
-			"dash",
-			"conditional",
-			"combo"
+            "dash",
+            "conditional",
+            "combo"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Arrow Catch",
         "class": "Martial Artist",
@@ -8790,14 +8790,14 @@
         ],
         "tags": [
             "Self-target",
-			"block",
-			"modal",
-			"combo",
-			"conditional",
-			"attack"
+            "block",
+            "modal",
+            "combo",
+            "conditional",
+            "attack"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Spirit Punch",
         "class": "Ki Monk",
@@ -8812,18 +8812,18 @@
         ],
         "tags": [
             "Attack",
-			"physical",
-			"melee",
-			"single-target",
-			"combo",
-			"psionic",
-			"offensive",
-			"psychic",
-			"modal",
-			"conditional"
+            "physical",
+            "melee",
+            "single-target",
+            "combo",
+            "psionic",
+            "offensive",
+            "psychic",
+            "modal",
+            "conditional"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Drain Punch",
         "class": "Ki Monk",
@@ -8838,19 +8838,19 @@
         ],
         "tags": [
             "Attack",
-			"physical",
-			"melee",
-			"single-target",
-			"combo",
-			"psionic",
-			"offensive",
-			"psychic",
-			"modal",
-			"conditional",
-			"heal"
+            "physical",
+            "melee",
+            "single-target",
+            "combo",
+            "psionic",
+            "offensive",
+            "psychic",
+            "modal",
+            "conditional",
+            "heal"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Stunning Strike",
         "class": "Ki Monk",
@@ -8865,20 +8865,20 @@
         ],
         "tags": [
             "Attack",
-			"physical",
-			"melee",
-			"single-target",
-			"combo",
-			"psionic",
-			"offensive",
-			"psychic",
-			"modal",
-			"conditional",
-			"condition",
-			"Stun"
+            "physical",
+            "melee",
+            "single-target",
+            "combo",
+            "psionic",
+            "offensive",
+            "psychic",
+            "modal",
+            "conditional",
+            "condition",
+            "Stun"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Spirit Gun",
         "class": "Ki Monk",
@@ -8893,17 +8893,17 @@
         ],
         "tags": [
             "Attack",
-			"ranged",
-			"single-target",
-			"combo",
-			"psionic",
-			"offensive",
-			"psychic",
-			"modal",
-			"conditional"
+            "ranged",
+            "single-target",
+            "combo",
+            "psionic",
+            "offensive",
+            "psychic",
+            "modal",
+            "conditional"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Spirit Shotgun",
         "class": "Ki Monk",
@@ -8918,18 +8918,18 @@
         ],
         "tags": [
             "Attack",
-			"ranged",
-			"multi-target",
-			"combo",
-			"psionic",
-			"offensive",
-			"psychic",
-			"modal",
-			"conditional",
-			"forced movement"
+            "ranged",
+            "multi-target",
+            "combo",
+            "psionic",
+            "offensive",
+            "psychic",
+            "modal",
+            "conditional",
+            "forced movement"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Spirit Wave",
         "class": "Ki Monk",
@@ -8944,19 +8944,19 @@
         ],
         "tags": [
             "Attack",
-			"ranged",
-			"single-target",
-			"combo",
-			"psionic",
-			"offensive",
-			"psychic",
-			"modal",
-			"conditional",
-			"condition",
-			"Vulnerability"
+            "ranged",
+            "single-target",
+            "combo",
+            "psionic",
+            "offensive",
+            "psychic",
+            "modal",
+            "conditional",
+            "condition",
+            "Vulnerability"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Find Center",
         "class": "Ki Monk",
@@ -8970,10 +8970,10 @@
             "You take a moment to center yourself and find stability. Gain 3dU ki. This ability cannot be reacted to by enemies."
         ],
         "tags": [
-			"No-react"
+            "No-react"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Find Stability",
         "class": "Ki Monk",
@@ -8987,10 +8987,10 @@
             "You find stability while under fire. As a reaction to taking damage, gain ki equal to half the percentage of your maximum health that is lost. If your health is below 40%, gain twice as much ki."
         ],
         "tags": [
-			"Conditional"
+            "Conditional"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Find Solace",
         "class": "Ki Monk",
@@ -9004,11 +9004,11 @@
             "You use ki to cleanse your body of impurities. Cleanse up to 2 conditions on yourself. If your health is below 40%, cleanse up to 4 conditions on yourself instead."
         ],
         "tags": [
-			"Cleanse",
-			"conditional"
+            "Cleanse",
+            "conditional"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Blitzkrieg",
         "class": "Captain",
@@ -9022,14 +9022,14 @@
             "You lead your forces into swift battle. Deal 5d10 physical damage to a target in range. Then, an ally within 50 ft gains a free reaction to dash to a space adjacent to you. They may then use their normal reaction to cast a non-spell, melee, attack ability. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a non-spell, melee, attack ability."
         ],
         "tags": [
-			"Attack",
-			"single-target",
-			"melee",
-			"physical",
-			"modal"
+            "Attack",
+            "single-target",
+            "melee",
+            "physical",
+            "modal"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Retreat",
         "class": "Captain",
@@ -9043,11 +9043,11 @@
             "You call for a tactical retreat to regroup. All allies in range gain a free reaction to dash up to their Move Speed away from enemies, then any number of allies may use their normal reaction to cast any heal ability. This ability, nor the heal abilities cast by allies due to this ability, cannot be reacted to. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a heal ability."
         ],
         "tags": [
-			"Dash",
-			"no-react"
+            "Dash",
+            "no-react"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Inspirational Speech",
         "class": "Captain",
@@ -9061,7 +9061,7 @@
             "You give a rousing speech to the troops. All allies in range gain +100% increased damage until the beginning of your next turn. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a buff ability."
         ],
         "tags": [
-			"Buff"
+            "Buff"
         ]
     }
 ]
