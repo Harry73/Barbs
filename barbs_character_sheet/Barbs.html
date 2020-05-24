@@ -167,7 +167,7 @@
                 <div class="sheet-col-1-2">
                     <h4 class="sheet-center">General</h4>
                     <div class="sheet-row sheet-padb">
-                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Initiative" value="&{template:5eDefault} {{title=Initiative}} {{subheader=@{character_name}}} {{rollname=Initiative}} {{roll=[[1d100+@{AGI} &{tracker}]]}}">Initiative</button>
+                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Initiative" value="!barbs initiative">Initiative</button>
 
                         <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Concentration" value="!barbs concentration">Concentration</button>
 
@@ -1985,7 +1985,7 @@
             }
 
             getAttrs(['repeating_skills_skill_name'], function(values) {
-                const skill_name = values.repeating_skills_skill_name.replace(/:/g, '');
+                const skill_name = values.repeating_skills_skill_name;
 
                 if (!(skill_name in skill_to_attribute_map)) {
                     console.log('error, unknown skill ' + skill_name);
