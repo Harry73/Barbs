@@ -32,8 +32,8 @@ def check_for_branch_duplicates(classes, log):
 
 
 def check_class_fields(classes):
-    base_fields = ['type', 'preview', 'num_requirements', 'known_requirements', 'all_reqs_known']
-    full_fields = ['description', 'requirements', 'branches', 'passive', 'abilities']
+    base_fields = ['type', 'preview', 'num_requirements', 'requirements', 'all_reqs_known']
+    full_fields = ['description', 'branches', 'passive', 'abilities']
 
     for clazz in classes:
         if 'name' not in clazz:
@@ -60,23 +60,6 @@ def check_skill_attribute_links(skills, attributes):
 
 def check_class_skill_requirements(classes, skills, log):
     for clazz in classes:
-        for skill_req in clazz['known_requirements']:
-            strings_to_check = skill_req.split(' or ')
-
-            for string_to_check in strings_to_check:
-                # We should get link text back for each skill req
-                if string_to_check == get_link_skill_req(string_to_check, skills):
-                    log('Warning: Failed to find corresponding skill for class "%s" hint requirement "%s"'
-                        % (clazz['name'], string_to_check))
-
-                # Each skill req should have an associated rank
-                if 'Rank' not in string_to_check:
-                    log('Warning: Missing keyword "Rank" in skill requirement "%s" for class "%s" hint'
-                        % (string_to_check, clazz['name']))
-
-        if 'requirements' not in clazz:
-            continue
-
         for skill_req in clazz['requirements']:
             strings_to_check = skill_req.split(' or ')
 

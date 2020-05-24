@@ -174,7 +174,7 @@ def build_class_hint_unlocks(classes, skills):
                 color='#99747A' if clazz['all_reqs_known'] else 'transparent',
                 name=name_or_linked_name,
                 preview=clazz['preview'],
-                known_requirements=', '.join([get_link_skill_req(req, skills) for req in clazz['known_requirements']]),
+                requirements=', '.join([get_link_skill_req(req, skills) for req in clazz['requirements']]),
             )
             class_hint_htmls.append(class_hint_html)
 

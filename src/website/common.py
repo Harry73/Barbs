@@ -30,13 +30,15 @@ def get_component(component_name, component_list, condition=None):
 
 
 def get_link_skill_req(skill_req, skills):
-    replaced = False
+    longest_match = None
     for skill in skills:
         if skill['name'] in skill_req:
-            skill_req = skill_req.replace(skill['name'], href('skill_%s' % skill['name'], skill['name']))
-            replaced = True
+            if longest_match is None or len(skill['name']) > len(longest_match['name']):
+                longest_match = skill
 
-    if replaced:
+    if longest_match is not None:
+        skill_req = skill_req.replace(longest_match['name'],
+                                      href('skill_%s' % longest_match['name'], longest_match['name']))
         return skill_req
 
     for skill in skills:
