@@ -412,10 +412,12 @@ var Barbs = Barbs || (function () {
     // Class abilities helpers
 
 
-    function get_ability_info(ability) {
-        for (let i = 0; i < BarbsComponents.abilities.length; i++) {
-            if (BarbsComponents.abilities[i].name === ability) {
-                return BarbsComponents.abilities[i];
+    function get_ability_info(ability_name) {
+        const ability_names = Object.keys(BarbsComponents.abilities);
+        for (let i = 0; i < ability_names.length; i++) {
+            const ability = BarbsComponents.abilities[ability_names[i]];
+            if (ability.name === ability_name) {
+                return ability;
             }
         }
 
@@ -731,6 +733,22 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function juggernaut_what_doesnt_kill_you(roll, roll_time, parameter) {
+        if (roll_time !== RollTime.ROLL) {
+            return true;
+        }
+
+        const pieces = parameter.split(' ');
+        const ratio = pieces[1];
+        const current_health = parseInt(ratio.split('/')[0]);
+        const total_health = parseInt(ratio.split('/')[1]);
+        const missing_health = total_health - current_health;
+
+        roll.add_multiplier(missing_health / total_health, Damage.PHYSICAL, 'self');
+        return true;
+    }
+
+
     function lightning_duelist_arc_lightning_mark(roll, roll_time, parameter) {
         if (roll_time !== RollTime.ROLL) {
             return true;
@@ -778,6 +796,7 @@ var Barbs = Barbs || (function () {
     const arbitrary_parameters = {
         'arc_lightning': lightning_duelist_arc_lightning_mark,
         'frostbite': cryomancer_frostbite,
+        'juggernaut': juggernaut_what_doesnt_kill_you,
         'misc_multiplier': arbitrary_multiplier,
         'misc_damage': arbitrary_damage,
         'pursued': assassin_pursue_mark,
@@ -1166,6 +1185,51 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function destroyer_challenge(character, ability, parameters) {
+        const num_targets = get_parameter('targets', parameters);
+        if (num_targets === null) {
+            chat(character, '"targets" parameter is missing');
+            return;
+        }
+
+        add_persistent_effect(character, ability, character, 6, Ordering.BEFORE(), RollTime.STAT, false,
+            function (char, roll, parameters) {
+                // TODO: the AC isn't right here. It's supposed to be a 10% increase on whatever they currently have.
+                roll.add_stat_bonus(Stat.AC, 10 * parseInt(num_targets));
+                roll.add_stat_bonus(Stat.MAGIC_RESIST, 10 * parseInt(num_targets));
+
+                return true;
+            });
+
+        const ability_info = get_ability_info(ability);
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+    }
+
+
+    function destroyer_rampage(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('6d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+        roll.add_effect('Knock targets prone');
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function destroyer_slam(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('4d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+        roll.add_effect('Inflict Physical Vulnerability equal to 10% + X%, where X is the target\'s current Physical Vulnerability');
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
     function enchanter_modify_weapon(character, ability, parameters) {
         const target_name = get_parameter('target', parameters);
         if (target_name === null) {
@@ -1201,6 +1265,65 @@ var Barbs = Barbs || (function () {
         } else {
             chat(character, 'Unknown value for "choice" parameter "%s"'.format(choice));
         }
+
+        const ability_info = get_ability_info(ability);
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+    }
+
+
+    function juggernaut_wild_swing(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+        roll.add_effect('30% lifesteal, or 60% if your health is below 30%');
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function juggernaut_hostility(character, ability, parameters) {
+        const concentration = get_parameter('conc', parameters);
+
+        add_persistent_effect(character, ability, character, 6,  Ordering.BEFORE(), RollTime.ROLL, false,
+            function (character, roll, parameters) {
+                if (concentration !== null) {
+                    roll.add_effect('25% lifesteal');
+                } else {
+                    roll.add_effect('15% lifesteal');
+                }
+
+                return true;
+            });
+
+        const ability_info = get_ability_info(ability);
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+    }
+
+
+    function juggernaut_tachycardia(character, ability, parameters) {
+        // TODO: these should really be one buff, but they have different roll times, so I can't combine them
+        add_persistent_effect(character, ability, character, 6,  Ordering.BEFORE(), RollTime.STAT, false,
+            function (character, roll, parameters) {
+                roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 30);
+                return true;
+            });
+
+        add_persistent_effect(character, ability, character, 6,  Ordering.BEFORE(), RollTime.ROLL, false,
+            function (character, roll, parameters) {
+                if (roll.roll_type === RollType.PHYSICAL) {
+                    roll.add_hidden_stat(HiddenStat.REACH, 5);
+                }
+                roll.add_hidden_stat(HiddenStat.AC_PENETRATION, 50);
+
+                const parameter = get_parameter('low_health', parameters);
+                if (parameter !== null) {
+                    roll.add_multiplier(1, Damage.PHYSICAL, 'self');
+                }
+
+                return true;
+            });
 
         const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
@@ -1774,6 +1897,11 @@ var Barbs = Barbs || (function () {
             'Essence Scatter': print_ability_description,
             // 'Lifesteal Elegy': demon_hunter_lifesteal_elegy,
         },
+        'Destroyer': {
+            'Challenge': destroyer_challenge,
+            'Rampage': destroyer_rampage,
+            'Slam': destroyer_slam,
+        },
         'Dynamancer': {
             'Spark Bolt': dynamancer_spark_bolt,
         },
@@ -1784,6 +1912,11 @@ var Barbs = Barbs || (function () {
         },
         'Evangelist': {
             'Magia Erebia': evangelist_magia_erebia,
+        },
+        'Juggernaut': {
+            'Wild Swing': juggernaut_wild_swing,
+            'Hostility': juggernaut_hostility,
+            'Tachycardia': juggernaut_tachycardia,
         },
         'Lightning Duelist': {
             'Arc Lightning': lightning_duelist_arc_lightning,

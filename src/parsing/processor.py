@@ -4,6 +4,7 @@ import os
 import json
 
 from src.parsing.parser import parse_data
+from src.website.common import read_json_file, get_component
 
 CURRENT_PATH = os.getcwd()
 DATA_PATH = os.path.join(CURRENT_PATH, 'data')
@@ -14,8 +15,6 @@ DATA_TXT = os.path.join(DATA_PATH, 'data.txt')
 def make_dirs():
     if not os.path.exists(DATA_PATH):
         os.makedirs(DATA_PATH)
-    if not os.path.exists(RULEBOOK_PATH):
-        os.makedirs(RULEBOOK_PATH)
 
 
 def fix_quotes(obj):
@@ -33,39 +32,29 @@ def fix_quotes(obj):
 def process_data_file():
     make_dirs()
 
-    # Read the data file
-    with open(DATA_TXT, encoding='utf16') as f:
-        lines = f.readlines()
-
-    attributes, races, buffs, conditions, skills, classes = parse_data(lines)
-
-    branches = []
-    abilities = []
-    for clazz in classes:
-        branches.extend(clazz.branches)
-        abilities.extend(clazz.abilities)
+    abilities = read_json_file(os.path.join(RULEBOOK_PATH, 'abilities.json'))
+    attributes = read_json_file(os.path.join(RULEBOOK_PATH, 'attributes.json'))
+    buffs = read_json_file(os.path.join(RULEBOOK_PATH, 'buffs.json'))
+    classes = read_json_file(os.path.join(RULEBOOK_PATH, 'classes.json'))
+    conditions = read_json_file(os.path.join(RULEBOOK_PATH, 'conditions.json'))
+    races = read_json_file(os.path.join(RULEBOOK_PATH, 'races.json'))
+    skills = read_json_file(os.path.join(RULEBOOK_PATH, 'skills.json'))
 
     lists = {
-        'attributes': attributes,
-        'races': races,
-        'buffs': buffs,
-        'conditions': conditions,
-        'skills': skills,
-        'classes': classes,
-        'branches': branches,
         'abilities': abilities,
+        'attributes': attributes,
+        'buffs': buffs,
+        'classes': classes,
+        'conditions': conditions,
+        'races': races,
+        'skills': skills,
     }
 
     # Dump raw components to files
-    for collection, items in lists.items():
-        with open(os.path.join(RULEBOOK_PATH, '%s.json' % collection), 'w') as f:
-            json_items = [fix_quotes(item.to_json()) for item in items]
-            json.dump(json_items, f, indent=4)
-
     components = []
     for name, l in lists.items():
         for item in l:
-            components.append(fix_quotes(item.to_json()))
+            components.append(fix_quotes(item))
 
     with open(os.path.join(DATA_PATH, 'components.json'), 'w') as f:
         json.dump(components, f, indent=4)
@@ -73,11 +62,14 @@ def process_data_file():
     # Create a map of skills to their attribute acronyms
     skill_to_attr = {}
     for skill in skills:
-        if not skill.attribute or not skill.attribute.abbreviation:
-            print('error, skill missing data, %s' % skill)
-            return
+        if 'attribute' not in skill:
+            raise Exception('Error, skill missing data, %s' % skill)
 
-        skill_to_attr[skill.name] = skill.attribute.abbreviation
+        attribute = get_component(skill['attribute'], attributes)
+        if attribute is None:
+            raise Exception('Error, attribute %s not found' % skill['attribute'])
+
+        skill_to_attr[skill['name']] = attribute['abbreviation']
 
     with open(os.path.join(DATA_PATH, 'skills_to_attributes.json'), 'w') as f:
         json.dump(skill_to_attr, f)
