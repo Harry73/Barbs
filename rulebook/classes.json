@@ -410,7 +410,7 @@
         "num_requirements": 3,
         "known_requirements": [
             "Weapon Mastery: Shortblades Rank 5",
-            "Armor Mastery: Light A"
+            "Armor Mastery: Light Rank A"
         ],
         "all_reqs_known": false
     },
@@ -602,8 +602,8 @@
         "flavor_text": "\"Instead of worrying about what you cannot control, shift your energy to what you can create.\"",
         "description": "The Conjurer is an entry level mage that specializes in the magical school of Conjurations. This school contains spells that allow the conjurer to form objects out of thin air, using their mana to summon matter or even forming mana into a solid object temporarily. Requiring a fine control of mana and powerful creativity, the Conjurer is designed to have a variety of useful spells for exploration, and is well suited to the life of an adventurer. The branches of this class are loosely divided into short term and long term spells, allowing the Conjurer to make temporary portals for a few seconds, weapons and armor for a few minutes, or walls and bridges to use for hours. While the class lacks some of the more combat oriented spells of other mages, like a proper counterspell or damage spell, Conjurer makes up for it in utility and creative potential, and should be a welcome addition to any party looking to make day to day life easier.",
         "requirements": [
-            "Magic: Conjuration A",
-            "Armor Mastery: Cloth Rank A"
+            "Armor Mastery: Cloth Rank A",
+            "Magic: Conjuration Rank A"
         ],
         "branches": {
             "Ephemeral": "The Ephemeral branch gives options for conjuration spells meant to last seconds, for immediate emergency use cases.",
@@ -951,9 +951,9 @@
         "flavor_text": "\"If I were you, I wouldn't cross me. I've got friends in high places.\"",
         "description": "The Dragoncaller is a class whose identity is deeply entrenched with its lore. Dragons are known to be the only intelligent species with a lifespan over 200 years. Being that all fully matured dragons are natural forces of good, they have much wisdom to impart to the humanoid races, and great physical and magical power to contribute to causes of good and righteousness. The Dragoncaller is, first and foremost, a scholar whose focus is on the physical and magical nature of the draconic lineage and their influence on the natural world and its history. Many Dragoncallers set out on adventure, primarily to learn what they can of the many dragons that inhabit our world, and to create meaningful connections with the ones they manage to come across. Secondarily, Dragoncallers frequently act as middlemen between humanity and dragons who choose to integrate themselves with humanoid societies. It is typical that such relationships break down without a knowledgeable and level-headed individual to bridge the gap between a dragon's sometimes condescending magnanimousity and a humanoid society's sometimes shortsighted treatises. Finally, Dragoncallers provide those not yet matured dragons, whose chaotic natures have yet to give way to true intelligence, a safely directed output for their violence, by summoning them into combat against the forces of evil.",
         "requirements": [
-            "Magic: Summoning A",
             "Magic: Destruction Rank A",
-            "Knowledge: Nature A"
+            "Magic: Summoning Rank A",
+            "Knowledge: Nature Rank A"
         ],
         "branches": {
             "Descent": "The Descent branch gives options for summoning dragons to assist in and out of combat.",
@@ -1061,8 +1061,8 @@
         "flavor_text": "I watched on as he carefully inscribed his runes upon animal bones, knit together leather with magical seals, brushed the eerie skin tone paints upon a wooden, lifeless face, all while deftly avoiding the ritual circle he had encased his work inside of, and I lamented. For this doll, this macabre mockery of the young master's image, might soon move with enchanted grace and intelligence. But it would never love him as the boy did, only imitate.",
         "description": "The Enchanter is an entry level mage that specializes in the magical school of Enchantment, using magical runes and inscriptions to apply effects to objects and equipment. Such mages are a mainstay of many armies, using their spells to augment the power of weapons and armor as well as reinforcing walls and defensive structures. They are also effective on a smaller scale, assisting party members by providing buff-like effects without taxing buff limit. This class provides a good number of entry level offensive, defensive, and utility effects for the aspiring party mage.",
         "requirements": [
-            "Magic: Enchantment A",
-            "Armor Mastery: Cloth Rank A"
+            "Armor Mastery: Cloth Rank A",
+            "Magic: Enchantment Rank A"
         ],
         "branches": {
             "Personal": "The Personal branch gives options for enchanting effects onto weapons and armor, mostly useful for combat purposes.",
@@ -1574,14 +1574,14 @@
         "preview": "A monk that uses punches and kicks to devastating effect. By chaining a number of techniques together, this class ramps up in damage before eventually ending fights with powerful finishers.",
         "num_requirements": 2,
         "known_requirements": [
-            "Armor Mastery: Cloth or Armor Mastery: Light Rank A",
-            "Weapon Mastery: Unarmed"
+            "Armor Mastery: Cloth Rank A or Armor Mastery: Light Rank A",
+            "Weapon Mastery: Unarmed Rank A"
         ],
         "all_reqs_known": true,
         "flavor_text": "The essence of martial arts is not strength, not the art itself, but that which is hidden deep within yourself.",
         "description": "The Martial Artist is an entry level monk for a character beginning their journey through the long and arduous path of becoming a master of hand to hand combat. This class provides the initial tools for fighting in close quarters with punches, kicks, grapples, and throws. Additionally, it acts as an introduction to the unique mechanics of monk classes as a whole: dU and combo chance. All monk passives, along with whatever the class's specific passive is, also provide a level of monk mastery. Each level of monk mastery augments a character's dU and their base combo chance. The designation dU refers to the damage dice of an unarmed strike; for a non-monk character, this is a d4, but every additional monk mastery passive increases dU by one dice level, to d6, d8, d10, d12, and finally d20. Additionally, each level of monk mastery augments a character's base combo chance. Combo chance is the percentage chance that after casting a major action ability that has the combo tag that you will be able to follow up with another combo ability that has yet to be used that turn. Base combo chance for a non-monk is 0%, and increases with each monk mastery passive to 10%, 20%, 30%, 35%, and finally 40%. Abilities themselves can temporarily improve one's combo chance; the Martial Artist class provides a branch dedicated to monk related utilities such as this; on top of its single and multi target physical attacks with unarmed strikes, which scale off dU rather than having set damage. With some luck to combo frequently and a dedication to the monk archetype, a character will find that their damage scales rapidly, and a monk can be a powerful physical DPS for a team.",
         "requirements": [
-            "Armor Mastery: Light or Armor Mastery: Cloth Rank A",
+            "Armor Mastery: Cloth Rank A or Armor Mastery: Light Rank A",
             "Weapon Mastery: Unarmed Rank A"
         ],
         "branches": {
@@ -1632,7 +1632,7 @@
         "preview": "A mage that uses mirrors made of light and ice to manipulate line AOE spells, reflecting their own attacks to strike at unique angles with greater power, or reflecting enemy attacks back. With an overall emphasis on defense, this class provides some much needed shielding for large groups.",
         "num_requirements": 3,
         "known_requirements": [
-        "Magic: Defensive A",
+            "Magic: Defensive Rank A",
             "Element Mastery: Ice Magic Rank A",
             "Element Mastery: Light Magic Rank A"
         ],
@@ -1640,7 +1640,7 @@
         "flavor_text": "Mirrors don't lie; they only show a part of the truth. A broken mirror can distort the proportions of the reflected image such that it's no longer an accurate representation of reality. Or, perhaps more accurately put, it has the potential to show a nearly infinite number of new points of view. Thus, what you see is just a fraction of what could be.",
         "description": "The Mirror Mage is an advanced mage that uses mirrors made of a combination of ice and light magic to reflect attacks and spells. This class is a natural step for the ice or light mage that sees the potential of line AOE spells or projectiles that are fired in a straight line to be improved upon. Mirrors provide the caster with new angles of attack, helping their spells avoid obstacles and helping the caster achieve line of sight of a target that might be hiding behind cover. As a class that utilizes defensive magic, there's also a host of use cases for these mirrors to protect the caster and their allies by providing reflective barriers, breaking line of sight, and sending enemy attacks right back. Playing this class requires some setup; the Mirror Mage will likely find themselves drawing lines and angles to set up mirrors so that they can fire off projectiles and line AOE spells without having to put themselves in harm's way. With good geometrical sense, the Mirror Mage can hammer enemies from anywhere on the battlefield, regardless of the barriers between.",
         "requirements": [
-            "Magic: Defensive A",
+            "Magic: Defensive Rank A",
             "Element Mastery: Ice Magic Rank A",
             "Element Mastery: Light Magic Rank A"
         ],
@@ -1743,7 +1743,7 @@
         "known_requirements": [
             "Stealth: Sneak Rank A",
             "Weapon Mastery: Shortblades Rank A",
-            "Magic: Conjuration or Magic: Destruction Rank A"
+            "Magic: Conjuration Rank A or Magic: Destruction Rank A"
         ],
         "all_reqs_known": false
     },
@@ -1861,8 +1861,8 @@
         "flavor_text": "\"There may be a great fire in our hearts, yet no one ever comes to warm himself at it, and the passers-by see only a wisp of smoke\"",
         "description": "The Pyromancer is the entry level mage that specializes in the use of spells aspected to the aggressive element of Fire. Fire magic sees heavy use in mage cadres of armies as well as heavy personal use for mage adventurers. As the premiere damage dealing element, Pyromancers enjoy a variety of high damage spells to target single or multiple enemies. Additional damage over time in the form of the Burn condition helps maintain a high level of DPS for a Pyromancer even when they find themselves forced to reposition or focus on other objectives in combat. The passive of the class helps make sure that this class's damage spells are relevant even in fights against magic damage tanks. The class has access to some minor area control, creating fields of flames that deter enemies from staying in one spot too long, and as all the other elemental mages do, the Pyromancer has access to a counterspell, but the vast majority of spells in the class's repertoire involve dealing damage in a straightforward manner, making the class an excellent choice for players looking to play a less complex style that still utilizes the system's flexible and powerful magic system.",
         "requirements": [
-            "Element Mastery: Fire A",
-            "Armor Mastery: Cloth A"
+            "Element Mastery: Fire Rank A",
+            "Armor Mastery: Cloth Rank A"
         ],
         "branches": {
             "Incineration": "The Incineration branch gives options for dealing fire magic damage to single targets.",
@@ -1891,7 +1891,7 @@
         "num_requirements": 4,
         "known_requirements": [
             "Armor Mastery: Light Rank A",
-            "Weapon Mastery: Bullets Rank A or Crossbow Mastery A"
+            "Weapon Mastery: Bullets Rank A or Weapon Mastery: Crossbows Rank A"
         ],
         "all_reqs_known": false
     },
@@ -1901,7 +1901,7 @@
         "preview": "An archer that excels in the wilderness. Combining their impressive ability with ranged weapons with their superior ability to follow prey, this class can mark a target for death and follow it to the ends of the earth, before finishing it with arrows.",
         "num_requirements": 3,
         "known_requirements": [
-            "Weapon Mastery: Bows or Weapon Mastery: Crossbows Rank A",
+            "Weapon Mastery: Bows Rank A or Weapon Mastery: Crossbows Rank A",
             "Armor Mastery: Light Rank A"
         ],
         "all_reqs_known": false
@@ -2080,7 +2080,7 @@
         "description": "The Sniper delivers death from afar. Unlike archers who use shortbows and crossbows for medium range engagements, firing dozens of arrows to slay their target, the Sniper relies on single, extremely powerful and accurate shots from extreme ranges. The firing rate of the average longbow tends to be lower, but the range and damage output easily make up for it. The Sniper expands upon the longbow's strengths by preparing carefully for each shot. He spots his target, tracks their movement, the way they dodge, the weak points in their armor. And finally, when he is ready to take the shot, he has already stacked all the cards in his favor.",
         "requirements": [
             "Weapon Mastery: Bows Rank A",
-            "Armor Mastery: Light A"
+            "Armor Mastery: Light Rank A"
         ],
         "branches": {
             "Shooting": "The Shooting branch provides options for dealing damage at far ranges, both single and multi-target.",
@@ -2217,7 +2217,7 @@
         "description": "The Symbiote is a standard part of many mage cadres, as an intermediate level mage with a mastery of buff magic. Buff spells allow this class to assist their allies without having to attack their enemies and put themselves in harms way. As long as allies have enough composure to handle the strain of multiple buff spells, this class can turn the party into ruthless killing machines or steadfast and unbreakable defenders. As the entry level class for buff magic, this class contains a wide variety of buffing effects and the ability to maintain those effects for an extended period of time.",
         "requirements": [
             "Magic: Buffs Rank A",
-            "Armor Mastery: Cloth A"
+            "Armor Mastery: Cloth Rank A"
         ],
         "branches": {
             "Fiery Soul": "The Fiery Soul branch gives options for offensive buffs.",

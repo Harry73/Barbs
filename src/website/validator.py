@@ -61,17 +61,35 @@ def check_skill_attribute_links(skills, attributes):
 def check_class_skill_requirements(classes, skills, log):
     for clazz in classes:
         for skill_req in clazz['known_requirements']:
-            if skill_req == get_link_skill_req(skill_req, skills):
-                log('Warning: Failed to find corresponding skill for class "%s" hint requirement "%s"'
-                    % (clazz['name'], skill_req))
+            strings_to_check = skill_req.split(' or ')
+
+            for string_to_check in strings_to_check:
+                # We should get link text back for each skill req
+                if string_to_check == get_link_skill_req(string_to_check, skills):
+                    log('Warning: Failed to find corresponding skill for class "%s" hint requirement "%s"'
+                        % (clazz['name'], string_to_check))
+
+                # Each skill req should have an associated rank
+                if 'Rank' not in string_to_check:
+                    log('Warning: Missing keyword "Rank" in skill requirement "%s" for class "%s" hint'
+                        % (string_to_check, clazz['name']))
 
         if 'requirements' not in clazz:
             continue
 
         for skill_req in clazz['requirements']:
-            if skill_req == get_link_skill_req(skill_req, skills):
-                log('Warning: Failed to find corresponding skill for class "%s" full description requirement "%s"'
-                    % (clazz['name'], skill_req))
+            strings_to_check = skill_req.split(' or ')
+
+            for string_to_check in strings_to_check:
+                # We should get link text back for each skill req
+                if string_to_check == get_link_skill_req(string_to_check, skills):
+                    log('Warning: Failed to find corresponding skill for class "%s" full description requirement "%s"'
+                        % (clazz['name'], string_to_check))
+
+                # Each skill req should have an associated rank
+                if 'Rank' not in string_to_check:
+                    log('Warning: Missing keyword "Rank" in skill requirement "%s" for class "%s" full description'
+                        % (string_to_check, clazz['name']))
 
 
 def check_class_ability_links(classes, abilities):
