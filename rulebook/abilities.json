@@ -4431,7 +4431,11 @@
             "physical",
             "multi-target",
             ""
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4453,7 +4457,11 @@
             "single-target",
             "modal",
             "Lethal"
-        ]
+        ],
+        "api": {
+            "description": "You can optionally specify the number of spotting stacks you want to spend to increase the ability’s Lethality.",
+            "examples": ["stacks <number of stacks spent on Lethality>"]
+        }
     },
     {
         "type": "ability",
@@ -4475,7 +4483,11 @@
             "single-target",
             "conditional",
             "AOE"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4518,7 +4530,11 @@
             "conditional",
             "ranged",
             "bow"
-        ]
+        ],
+        "api": {
+            "description": "Nothing needs to be specified when casting this ability, but you must specify the “distance” parameter when you do your next attack. “Distance” should be followed by one or more space-separated distances, in feet, of enemies.",
+            "examples": ["distance <enemy 1 distance in ft> <enemy 2 distance in ft>"]
+        }
     },
     {
         "type": "ability",
@@ -4542,7 +4558,11 @@
             "no-miss",
             "no-react",
             "bow"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4565,7 +4585,11 @@
             "concentration",
             "repeatable",
             "bow"
-        ]
+        ],
+        "api": {
+            "description": "You must specify whether or not you are concentrating on this ability when you use it.",
+            "examples": ["concentration <true/false>"]
+        }
     },
     {
         "type": "ability",
@@ -4602,7 +4626,11 @@
             "Dash",
             "modal",
             "cleanse"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4624,7 +4652,11 @@
             "single-target",
             "condition",
             "Stun"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",

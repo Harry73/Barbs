@@ -5,16 +5,12 @@
         "preview": "A mage that specializes in the magical school of Defense. As a mid-tier practitioner, this class has various spells to defend himself and his allies from attacks, conditions, and AOE spells.",
         "num_requirements": 2,
         "requirements": [
-        "Magic: Defensive Rank A",
+            "Magic: Defensive Rank A",
             "Armor Mastery: Cloth Rank A"
         ],
         "all_reqs_known": false,
         "flavor_text": "The 41st Mage Corps' first training objective is usually to learn how to form a proper defensive line. Unlike regular infantry, a defense line for a horde of mage soldiers involves a complex layering of defensive magical fields, floating magical shields, reflecting panels, and a host of other defensive spells. The result is a nearly unbreakable line with enough redundancy to cover the loss of up to half the squad.",
         "description": "The Abjurer is a mid-level magical practitioner who has specialized in the magical school of Defense. As the name suggests, Defense magic protects the caster and their allies from enemy attacks. The school contains spells such as shields, temporary health, counterspells, buffs that boost defensive stats, and a variety of other methods to defend a person or group. The class contains no offensive abilities whatsoever, so such a mage is usually included as part of a party or regularly seen with other defensive mages within a section of an army. The class plays especially well with other members of the party who play the tank role, further augmenting their ability to protect the backline. Being an effective Abjurer requires excellent concentration.",
-        "requirements": [
-            "Magic: Defensive Rank A",
-            "Armor Mastery: Cloth Rank A"
-        ],
         "branches": {
             "Secure": "The Secure branch gives options for immediate and brief protection in response to enemy attacks.",
             "Contain": "The Contain branch gives options for using defensive magic to neutralize threats for a short  time.",
@@ -41,10 +37,6 @@
         "all_reqs_known": true,
         "flavor_text": "\"When I quit the Academy to become an adventurer, they told me I'd be successful as long as I remembered to go where the wind blows. But then the wind kept blowing me straight towards trouble, so I figured I'd take the wheel; now, the wind blows where I go.\"",
         "description": "The Aeromancer is one of 8 offensive elemental mages. Harnessing the whimsical aspect of air, the Aeromancer values speed, creativity, and taking the initiative. Unlike other mages who plant themselves in the backlines, the Aeromancer uses its high mobility to literally fly across the battlefield, controlling wind to speed allies and slow enemies while inflicting damage through wind blasts and tornados. An adept Aeromancer never stays in one spot, abusing its speed and range to maximum effect to kite and whittle down even the staunchest foes.",
-        "requirements": [
-            "Element Mastery: Air Rank A",
-            "Magic: Destruction Rank A or Armor Mastery: Cloth Rank A"
-        ],
         "branches": {
             "Gale": "The Gale branch provides options for dealing damage to single and multiple targets",
             "Gust": "The Gust branch provides options for battlefield control, pushing and pulling entities with wind and providing speed and mobility.",
@@ -80,10 +72,6 @@
         "all_reqs_known": true,
         "flavor_text": "\"I used to think I was the best. I could hit a goblin off its warg from 300 feet away. I used to split my first arrow with my second at the shooting range at school. But I had a rude awakening when I met her. She could shoot dragons out of the sky against the winds created by their beating wings. Her arrows whistled like mystical birdsong. I shot for sport; she created art.\"",
         "description": "The Air Duelist is one of many spellblade variants that focuses on one element and one weapon. This class wields a bow as well as powerful air magic. By interlacing shots from her bow with precise wind strikes, the Air Duelist maximizes its action economy. Her individual spells are weaker than a dedicated air mage's, but her weapon provides increased flexibility and effectiveness at longer ranges, and his offensive output can surpass a regular duelist's with efficient usage of physical and magical arts. Her spells are primarily buffing and damaging in nature, with all the additional support and utility that air magic tends to provide, and there is a heavy emphasis on forced movement and mobility.",
-        "requirements": [
-            "Weapon Mastery: Bows Rank A",
-            "Element Mastery: Air Rank A"
-        ],
         "branches": {
             "Dueling": "The Dueling branch gives options for attacks with the bow, focusing on medium range attacks with minor utility.",
             "Casting": "The Casting branch gives options for various air magic spells, with a focus on dealing damage to single and multiple targets.",
@@ -1949,7 +1937,11 @@
             "Swift Shot",
             "Bola Shot",
             "Evasive Maneuvers"
-        ]
+        ],
+        "api": {
+            "description": "The API will not track stacks of Spotting. When you consume stacks of Spotting during an attack, specify \"spotting\" as an option.",
+            "examples": ["spotting <number of stacks to consume>"]
+        }
     },
     {
         "type": "class",

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://html5-templates.com/" />
+    <title>Barbs Rulebook</title>
+    <meta name="description" content="Barbs Rulebook">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="logo-container">
+    <div id="logo">
+        <img src="https://i.imgur.com/9u8XLg7.png" alt="logo">
+    </div>
+</div>
+
+<div class="grid-container">
+    <div id="sidebar" class="sidenav">
+        <a href="#Foreword">Foreword</a>
+        <a href="#Character Sheet">Character Sheet</a>
+        <a href="#General">General</a>
+        <div class="sidenav-subsection">
+            <a href="#Identification">Identification</a>
+            <a href="#Ability Parameters">Ability Parameters</a>
+            <a href="#Persistent Effects">Persistent Effects</a>
+            <a href="#Crit Rolls">Crit Rolls</a>
+        </div>
+        <a href="#Items">Items</a>
+        <a href="#Class Abilities">Class Abilities</a>
+        <div class="sidenav-subsection">
+            {classes_nav}
+        </div>
+        <a href="#Extra">Extra</a>
+    </div>
+</div>
+
+<div id="main">
+    <section id="pageContent">
+        <article>
+            <a id="Foreword">
+                <h2>Foreword</h2>
+            </a>
+            <p>The entirety of the Barbs API is stored <a href="https://github.com/Harry73/Barbs">externally here</a>. If you change something on the “API Scripts for Barbs” page on Roll20, you should let me know, or else I will inevitably overwrite your change.</p><br>
+            <p>There is a ton of hard-coded information in the Barbs API. This means that every item must be manually created and added to a master list of items. Every ability must be manually implemented for the API to handle it properly. If you want to add something yourself, you may, but see the note above. If you want a particular item or ability added and don’t want to do it yourself, talk to me.</p>
+        </article>
+
+        <article>
+            <a id="Character Sheet">
+                <h2>Character Sheet</h2>
+            </a>
+            <p>As in a standard DnD 5e campaign, there is a “Character Sheet” tab on your character’s page on Roll20. You should fill out:</p>
+            <ul>
+                <li class="spaced"><b>Attributes</b> – These are 1-1 with column D on your Google Sheets character sheet.</li>
+                <li class="spaced"><b>Skills</b> – Specify the proper name of each skill and the number of AP you have put into each ability. The sheet will update the rank and bonus for each skill when you add points. If it does not update, you likely have the skill name wrong.</li>
+                <li class="spaced"><b>Class Abilities</b> – The class name and ability name are required for each ability. Additionally include the tier level (0-4) if you want your level on the Characteristics page to be accurate.</li>
+                <li class="spaced"><b>Equipment</b> – Use the real, full name of the item. The parameter lines can be left blank.</li>
+            </ul>
+            <p>The “Stats” page shows your stats based solely on your attributes. If you roll one of these stats, however, your equipped items will be factored into the roll. Effects from class abilities do not factor in currently - they will eventually.</p>
+        </article>
+
+        <article>
+            <a id="General"><h2>General</h2></a>
+
+            <a id="Identification"><h3>Identification</h3></a>
+            <p>The API generally identifies you by who you are speaking as in Roll20 chat. If Roll20 profile name or character name changes, the API may no longer work for you.</p><br>
+
+            <a id="Ability Parameters"><h3>Ability Parameters</h3></a>
+            <p>Many abilities require “parameters,” extra information that you must specify for the ability to work correctly. Parameters for an ability are specified in the line below the ability on your character sheet. Multiple parameters for one ability can be specified, and are separated by semicolons. Parameters usually take the form “keyword value(s)”. An example set of parameters may look like:</p>
+            <p class="monospace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;distance 100; spotting 8</p><br>
+
+            <a id="Persistent Effects"><h3>Persistent Effects</h3></a>
+            <p>Persistent effects, like a damage multiplying buff that lasts 1 minute, will be included in rolls automatically. The effect will be removed automatically when the turn order progresses through the required number of rounds. Other effects, like empowers, will be removed after they are applied to an attack. If you want to manually end a persistent effect, use the following command.</p>
+            <ul>
+                <li class="spaced monospace">!barbs remove_effect &lt;character name&gt;;&lt;effect name&gt;</li>
+            </ul>
+            <p>Note the semicolon. A character’s first name is sufficient. The effect name is usually the name of the ability that generated the effect. The API will send a message if it found and removed the effect.</p><br>
+
+            <a id="Crit Rolls"><h3>Crit Rolls</h3></a>
+            <p>Crit rolls appear a little oddly. A negative crit roll is failure. Zero and above is a success. If a crit roll is a success, the entire crit roll section in chat will be outlined in green. If you hover over the crit roll, the calculation is “what you rolled” minus “the threshold you needed to meet for this to be a crit”. The crit threshold is adjusted based on your attributes, items, and abilities’ effects.</p>
+
+        </article>
+
+        <article>
+            <a id="Items">
+                <h2>Items</h2>
+            </a>
+            <p>The Barbs API scripts contain a big list of items. If you have item X equipped and it is not in this list, its effects will not be applied to any roll. Theoretically, eventually, I will make some kind of form that makes it relatively easy to input an item’s characteristics and output a new entry for this list. Such a form does not exist yet though. If you want to look at other items in the list as examples and then make your own, that would be a massive help. Again, let me know if you add something though, or I will overwrite it sooner or later.</p><br>
+            <p>You can do an auto-attack with an item by clicking the roll button on the “Equipment” tab of your character sheet. If other abilities you have used require you to specify parameters, you can do so in the boxes below the main hand and offhand slots. Parameters here behave the same as parameters for classes.</p>
+        </article>
+
+        <article>
+            <a id="Class Abilities">
+                <h2>Class Abilities</h2>
+            </a>
+            <p>This section documents how to use each class ability via the character sheet.</p>
+            <br>
+            <p>Classes and abilities that are “not implemented” will be eventually. For now if you try to use one of these abilities, the API will say it is unknown. If there are no notes for an ability, the API does as the ability describes. There are, however, many abilities that do things the API will not handle. Action economy, for example, is not tracked by the API. For abilities like this, the API will just print the ability’s description. It is on the players to deal with whatever the ability does in these cases.</p>
+            <br>
+            {classes}
+        </article>
+
+        <article>
+            <a id="Extra">
+                <h2>Extra</h2>
+            </a>
+            <p>Nothing is ever perfect. If there is some damage or multiplier that you need to include when using an ability that isn’t handled by the API, you can use the “misc” parameters.</p>
+            <ul>
+                <li><span class="monospace">misc_multiplier &lt;multiplier value&gt; &lt;damage type&gt; &lt;source&gt;</span>
+                    <ul>
+                        <li>Multiplier values should be specified as decimal (0.2) rather than percentage (20%). You do not need to add 1 - a 20% increase is a 0.2 multiplier.</li>
+                        <li>Damage types here are: <span class="monospace">physical, fire, water, earth, air, ice, lightning, light, dark, healing, all_magic, all</span></li>
+                        <li>The source is the origin of the multiplier. Items, for example, use source “self”. If the source is another character, use their character’s full name.</li>
+                        <li>If you want 20% increased air damage, for example, you could add <span class="monospace">"misc_multiplier 0.2 air self"</span>.</li>
+                    </ul>
+                </li>
+                <li><span class="monospace">misc_damage &lt;damage dice&gt; &lt;damage type&gt;</span>
+                    <ul>
+                        <li>The damage dice should be something like “5d8”. You can also put a constant.</li>
+                        <li>Damage types here are: <span class="monospace">physical, fire, water, earth, air, ice, lightning, light, dark, healing</span></li>
+                    </ul>
+                </li>
+            </ul>
+        </article>
+    </section>
+</div>
+</body>
+</html>

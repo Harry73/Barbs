@@ -32,21 +32,96 @@ def check_for_branch_duplicates(classes, log):
 
 
 def check_class_fields(classes):
-    base_fields = ['type', 'preview', 'num_requirements', 'requirements', 'all_reqs_known']
-    full_fields = ['description', 'branches', 'passive', 'abilities']
+    base_fields = {
+        'type': str,
+        'preview': str,
+        'num_requirements': int,
+        'requirements': list,
+        'all_reqs_known': bool,
+    }
+    full_fields = {
+        'description': str,
+        'branches': dict,
+        'passive': dict,
+        'abilities': list,
+    }
+    api_fields = {
+        'description': str,
+        'examples': list,
+    }
 
     for clazz in classes:
         if 'name' not in clazz:
             raise Exception('Missing "name" field in class, class=%s' % clazz)
 
-        for field in base_fields:
+        for field, json_type in base_fields.items():
             if field not in clazz:
                 raise Exception('Expected field "%s" to be present in class "%s"' % (field, clazz['name']))
+            if not isinstance(clazz[field], json_type):
+                raise Exception('Expected field "%s" to be type "%s" in class "%s"'
+                                % (field, str(json_type), clazz['name']))
 
         if 'flavor_text' in clazz:
-            for field in full_fields:
+            for field, json_type in full_fields.items():
                 if field not in clazz:
                     raise Exception('Expected field "%s" to be present in full class "%s"' % (field, clazz['name']))
+                if not isinstance(clazz[field], json_type):
+                    raise Exception('Expected field "%s" to be type "%s" in full class "%s"'
+                                    % (field, str(json_type), clazz['name']))
+
+        if 'api' in clazz:
+            if not isinstance(clazz['api'], dict):
+                raise Exception('Expected field "api" to be type "dict" in class "%s"' % clazz['name'])
+
+            for field, json_type in api_fields.items():
+                if field not in clazz['api']:
+                    raise Exception('Expected field "api[%s]" to be present in class "%s" api'
+                                    % (field, clazz['name']))
+                if not isinstance(clazz['api'][field], json_type):
+                    raise Exception('Expected field "api[%s]" to be type "%s" in class "%s"'
+                                    % (field, str(json_type), clazz['name']))
+
+
+def check_ability_fields(abilities):
+    base_fields = {
+        'type': str,
+        'class': str,
+        'branch': str,
+        'tier': int,
+        'action': str,
+        'cost': str,
+        'range': str,
+        'duration': str,
+        'description': list,
+        'tags': list,
+    }
+    api_fields = {
+        'description': str,
+        'examples': list,
+    }
+
+    for ability in abilities:
+        if 'name' not in ability:
+            raise Exception('Missing "name" field in ability, ability=%s' % ability)
+
+        for field, json_type in base_fields.items():
+            if field not in ability:
+                raise Exception('Expected field "%s" to be present in ability "%s"' % (field, ability['name']))
+            if not isinstance(ability[field], json_type):
+                raise Exception('Expected field "%s" to be type "%s" in ability "%s"'
+                                % (field, str(json_type), ability['name']))
+
+        if 'api' in ability:
+            if not isinstance(ability['api'], dict):
+                raise Exception('Expected field "api" to be type "dict" in ability "%s"' % ability['name'])
+
+            for field, json_type in api_fields.items():
+                if field not in ability['api']:
+                    raise Exception('Expected field "api[%s]" to be present in ability "%s" api'
+                                    % (field, ability['name']))
+                if not isinstance(ability['api'][field], json_type):
+                    raise Exception('Expected field "api[%s]" to be type "%s" in ability "%s"'
+                                    % (field, str(json_type), ability['name']))
 
 
 def check_skill_attribute_links(skills, attributes):
@@ -142,6 +217,7 @@ def validate(log):
     check_for_duplicates(abilities + attributes + buffs + classes + conditions + races + skills, log)
     check_for_branch_duplicates(classes, log)
     check_class_fields(classes)
+    check_ability_fields(abilities)
     check_skill_attribute_links(skills, attributes)
     check_class_skill_requirements(classes, skills, log)
     check_class_ability_links(classes, abilities)

@@ -1,3 +1,4 @@
+import html
 import os
 import shutil
 
@@ -18,12 +19,12 @@ def _debug(term, component):
     print('Debug: working on %s %s' % (term, component['name']))
 
 
-def build_skills_nav(skill_categories):
+def _build_skills_nav(skill_categories):
     nav_htmls = [href('skills_%s' % category, category) for category in skill_categories]
     return '\n'.join(nav_htmls)
 
 
-def build_classes_nav(classes):
+def _build_classes_nav(classes):
     nav_htmls = []
     for clazz in classes:
         if 'flavor_text' not in clazz:
@@ -34,7 +35,7 @@ def build_classes_nav(classes):
     return '\n'.join(nav_htmls)
 
 
-def build_attributes(attributes):
+def _build_attributes(attributes):
     with open(os.path.join(HTML_TEMPLATES, 'attribute.html'), encoding='utf8') as f:
         attribute_template = f.read().strip()
 
@@ -51,7 +52,7 @@ def build_attributes(attributes):
     return BR_JOIN(attribute_htmls)
 
 
-def build_races(races):
+def _build_races(races):
     with open(os.path.join(HTML_TEMPLATES, 'race.html'), encoding='utf8') as f:
         race_template = f.read().strip()
     with open(os.path.join(HTML_TEMPLATES, 'racial_trait.html'), encoding='utf8') as f:
@@ -78,7 +79,7 @@ def build_races(races):
     return BR_JOIN(race_htmls)
 
 
-def build_buffs(buffs):
+def _build_buffs(buffs):
     with open(os.path.join(HTML_TEMPLATES, 'buff_or_condition.html'), encoding='utf8') as f:
         buff_template = f.read().strip()
 
@@ -91,7 +92,7 @@ def build_buffs(buffs):
     return '\n'.join(buff_htmls)
 
 
-def build_conditions(conditions):
+def _build_conditions(conditions):
     with open(os.path.join(HTML_TEMPLATES, 'buff_or_condition.html'), encoding='utf8') as f:
         condition_template = f.read().strip()
 
@@ -104,7 +105,7 @@ def build_conditions(conditions):
     return '\n'.join(condition_htmls)
 
 
-def build_skills(skill_categories, skills):
+def _build_skills(skill_categories, skills):
     with open(os.path.join(HTML_TEMPLATES, 'skill.html'), encoding='utf8') as f:
         skill_template = f.read().strip()
     with open(os.path.join(HTML_TEMPLATES, 'skills_section.html'), encoding='utf8') as f:
@@ -144,7 +145,7 @@ def build_skills(skill_categories, skills):
     return BR_JOIN(skills_section_htmls)
 
 
-def build_class_hint_unlocks(classes, skills):
+def _build_class_hint_unlocks(classes, skills):
     with open(os.path.join(HTML_TEMPLATES, 'class_hint.html'), encoding='utf8') as f:
         class_hint_template = f.read().strip()
     with open(os.path.join(HTML_TEMPLATES, 'class_hints_section.html'), encoding='utf8') as f:
@@ -238,7 +239,7 @@ def _build_branches_html(clazz, abilities):
     return BR_JOIN(branches_htmls)
 
 
-def build_classes(abilities, classes, skills):
+def _build_classes(abilities, classes, skills):
     with open(os.path.join(HTML_TEMPLATES, 'class.html'), encoding='utf8') as f:
         class_template = f.read().strip()
     with open(os.path.join(HTML_TEMPLATES, 'list_item.html'), encoding='utf8') as f:
@@ -291,12 +292,91 @@ def build_classes(abilities, classes, skills):
     return BR_JOIN(class_htmls)
 
 
-def generate_html(log):
-    log('Generating HTML rulebook')
-    rulebook_path = os.path.join(CURRENT_PATH, 'rulebook')
+def _build_abilities_api(clazz, abilities):
+    if 'api' not in clazz:
+        return '<p>Not implemented</p>'
 
-    if not os.path.exists(HTML_GENERATED):
-        os.makedirs(HTML_GENERATED)
+    with open(os.path.join(HTML_TEMPLATES, 'api_ability.html'), encoding='utf8') as f:
+        api_ability_template = f.read().strip()
+    with open(os.path.join(HTML_TEMPLATES, 'list_item.html'), encoding='utf8') as f:
+        list_item_template = f.read().strip()
+
+    def _build_examples_html(examples):
+        if not examples:
+            return ''
+
+        examples_htmls = ['<ul>']
+        for example in examples:
+            text = '<span class="monospace">%s</span>' % html.escape(example)
+            examples_htmls.append(list_item_template.format(text=text))
+        examples_htmls.append('</ul>')
+
+        return '\n'.join(examples_htmls)
+
+    abilities_htmls = []
+
+    # Add the passive first
+    passive_name = next(iter(clazz['passive']))
+    passive_examples_html = _build_examples_html(clazz['api']['examples'])
+    passive_ability_html = api_ability_template.format(
+        name=passive_name,
+        description=clazz['api']['description'],
+        examples=passive_examples_html,
+    )
+    abilities_htmls.append(passive_ability_html)
+    abilities_htmls.append('<br>')
+
+    for branch_name, branch_description in clazz['branches'].items():
+        branch_abilities = []
+        for ability in abilities:
+            if ability['class'] == clazz['name'] and ability['branch'] == branch_name:
+                branch_abilities.append(ability)
+        branch_abilities.sort(key=lambda a: a['tier'])
+
+        for ability in branch_abilities:
+            if 'api' in ability:
+                description = ability['api']['description']
+                examples_html = _build_examples_html(ability['api']['examples'])
+            else:
+                description = 'Not implemented'
+                examples_html = ''
+
+            api_ability_html = api_ability_template.format(
+                name=ability['name'].replace('"', '&quot'),
+                description=description,
+                examples=examples_html,
+            )
+            abilities_htmls.append(api_ability_html)
+
+        abilities_htmls.append('<br>')
+
+    return '\n'.join(abilities_htmls)
+
+
+def _build_classes_api(abilities, classes):
+    with open(os.path.join(HTML_TEMPLATES, 'api_class.html'), encoding='utf8') as f:
+        class_template = f.read().strip()
+
+    class_htmls = []
+    for clazz in classes:
+        # Skip over classes that haven't been unlocked yet. We'll use the flavor_text field to deduce this.
+        if 'flavor_text' not in clazz:
+            continue
+
+        _debug('api class', clazz)
+
+        class_html = class_template.format(
+            name=clazz['name'],
+            abilities=_build_abilities_api(clazz, abilities),
+        )
+        class_htmls.append(class_html)
+
+    return BR_JOIN(class_htmls)
+
+
+def _generate_rulebook_html(log):
+    log('Generating rulebook HTML')
+    rulebook_path = os.path.join(CURRENT_PATH, 'rulebook')
 
     with open(os.path.join(HTML_TEMPLATES, 'index.html'), encoding='utf8') as f:
         index_template = f.read().strip()
@@ -313,21 +393,50 @@ def generate_html(log):
     skill_categories = sorted(list(set(skill['category'] for skill in skills)))
 
     format_args = {
-        'skills_nav': build_skills_nav(skill_categories),
-        'classes_nav': build_classes_nav(classes),
-        'attributes': build_attributes(attributes),
-        'races': build_races(races),
-        'buffs': build_buffs(buffs),
-        'conditions': build_conditions(conditions),
-        'skills': build_skills(skill_categories, skills),
-        'class_hint_unlocks': build_class_hint_unlocks(classes, skills),
-        'classes': build_classes(abilities, classes, skills),
+        'skills_nav': _build_skills_nav(skill_categories),
+        'classes_nav': _build_classes_nav(classes),
+        'attributes': _build_attributes(attributes),
+        'races': _build_races(races),
+        'buffs': _build_buffs(buffs),
+        'conditions': _build_conditions(conditions),
+        'skills': _build_skills(skill_categories, skills),
+        'class_hint_unlocks': _build_class_hint_unlocks(classes, skills),
+        'classes': _build_classes(abilities, classes, skills),
     }
     index_html = index_template.format(**format_args)
 
     with open(os.path.join(HTML_GENERATED, 'index.html'), 'w', encoding='utf8') as f:
         f.write(index_html)
 
-    shutil.copyfile(os.path.join(HTML_TEMPLATES, 'style.css'), os.path.join(HTML_GENERATED, 'style.css'))
-    log('Generated HTML rulebook')
+    log('Generated rulebook HTML')
 
+
+def _generate_api_html(log):
+    log('Generating API HTML')
+    rulebook_path = os.path.join(CURRENT_PATH, 'rulebook')
+
+    with open(os.path.join(HTML_TEMPLATES, 'api.html'), encoding='utf8') as f:
+        api_template = f.read().strip()
+
+    abilities = read_json_file(os.path.join(rulebook_path, 'abilities.json'))
+    classes = read_json_file(os.path.join(rulebook_path, 'classes.json'))
+
+    format_args = {
+        'classes_nav': _build_classes_nav(classes),
+        'classes': _build_classes_api(abilities, classes),
+    }
+    api_html = api_template.format(**format_args)
+
+    with open(os.path.join(HTML_GENERATED, 'api.html'), 'w', encoding='utf8') as f:
+        f.write(api_html)
+
+    log('Generated API HTML')
+
+
+def generate_html(log):
+    if not os.path.exists(HTML_GENERATED):
+        os.makedirs(HTML_GENERATED)
+
+    _generate_rulebook_html(log)
+    _generate_api_html(log)
+    shutil.copyfile(os.path.join(HTML_TEMPLATES, 'style.css'), os.path.join(HTML_GENERATED, 'style.css'))
