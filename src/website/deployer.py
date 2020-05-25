@@ -7,6 +7,7 @@ import scp
 CURRENT_PATH = os.getcwd()
 GENERATED_HTML_PATH = os.path.join(CURRENT_PATH, 'html', 'generated')
 GENERATED_INDEX_PATH = os.path.join(GENERATED_HTML_PATH, 'index.html')
+GENERATED_API_PATH = os.path.join(GENERATED_HTML_PATH, 'api.html')
 GENERATED_STYLE_PATH = os.path.join(GENERATED_HTML_PATH, 'style.css')
 
 LOCAL_STYLE_SHEET = 'style.css'
@@ -32,16 +33,23 @@ def find_ssh_key_path():
                             'in a ".ssh" folder under your username' % KEY_FILE)
 
 
+def swap(file_path, text_to_replace, replacement_text):
+    with open(file_path, 'r', encoding='utf8') as f:
+        html = f.read()
+
+    html = html.replace(text_to_replace, replacement_text)
+
+    with open(file_path, 'w+', encoding='utf8') as f:
+        f.write(html)
+
+
 def deploy(log):
     log('Updating web rulebook')
     ssh_key_path = find_ssh_key_path()
 
     # Swap out the style sheet inclusion with one that flask will understand
-    with open(GENERATED_INDEX_PATH, 'r', encoding='utf8') as f:
-        index_html = f.read()
-    index_html = index_html.replace(LOCAL_STYLE_SHEET, REMOTE_STYLE_SHEET)
-    with open(GENERATED_INDEX_PATH, 'w+', encoding='utf8') as f:
-        f.write(index_html)
+    swap(GENERATED_INDEX_PATH, LOCAL_STYLE_SHEET, REMOTE_STYLE_SHEET)
+    swap(GENERATED_API_PATH, LOCAL_STYLE_SHEET, REMOTE_STYLE_SHEET)
 
     ssh_client = None
     scp_client = None
@@ -53,6 +61,7 @@ def deploy(log):
 
         scp_client = scp.SCPClient(ssh_client.get_transport(), socket_timeout=TIMEOUT_SEC)
         scp_client.put(GENERATED_INDEX_PATH, remote_path='/home/ubuntu/barbs/templates/index.html')
+        scp_client.put(GENERATED_API_PATH, remote_path='/home/ubuntu/barbs/templates/api.html')
         scp_client.put(GENERATED_STYLE_PATH, remote_path='/home/ubuntu/barbs/static/style.css')
 
         ssh_client.exec_command('pm2 restart barbs')
@@ -70,8 +79,5 @@ def deploy(log):
             ssh_client.close()
 
         # Revert style file
-        with open(GENERATED_INDEX_PATH, 'r', encoding='utf8') as f:
-            index_html = f.read()
-        index_html = index_html.replace(REMOTE_STYLE_SHEET, LOCAL_STYLE_SHEET)
-        with open(GENERATED_INDEX_PATH, 'w+', encoding='utf8') as f:
-            f.write(index_html)
+        swap(GENERATED_INDEX_PATH, REMOTE_STYLE_SHEET, LOCAL_STYLE_SHEET)
+        swap(GENERATED_API_PATH, REMOTE_STYLE_SHEET, LOCAL_STYLE_SHEET)
