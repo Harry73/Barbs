@@ -20,7 +20,7 @@ def _debug(term, component):
 
 
 def _build_skills_nav(skill_categories):
-    nav_htmls = [href('skills_%s' % category, category) for category in skill_categories]
+    nav_htmls = [href('#skills_%s' % category, category) for category in skill_categories]
     return '\n'.join(nav_htmls)
 
 
@@ -30,7 +30,7 @@ def _build_classes_nav(classes):
         if 'flavor_text' not in clazz:
             continue
 
-        nav_htmls.append(href('class_%s' % clazz['name'], clazz['name']))
+        nav_htmls.append(href('#class_%s' % clazz['name'], clazz['name']))
 
     return '\n'.join(nav_htmls)
 
@@ -169,7 +169,7 @@ def _build_class_hint_unlocks(classes, skills):
             # We'll link to the full class if it is unlocked.
             name_or_linked_name = clazz['name']
             if 'flavor_text' in clazz:
-                name_or_linked_name = href('class_%s' % clazz['name'], clazz['name'])
+                name_or_linked_name = href('#class_%s' % clazz['name'], clazz['name'])
 
             class_hint_html = class_hint_template.format(
                 color='#99747A' if clazz['all_reqs_known'] else 'transparent',
@@ -214,7 +214,7 @@ def _build_branches_html(clazz, abilities):
                     description.append('<p>%s</p>' % line)
 
             for i in range(len(description)):
-                link = href('%s_%s' % (clazz['name'], passive_name), passive_name)
+                link = href('#%s_%s' % (clazz['name'], passive_name), passive_name)
                 description[i] = description[i].replace(passive_name, '<i>%s</i>' % link)
 
             ability_html = ability_template.format(
@@ -260,7 +260,7 @@ def _build_classes(abilities, classes, skills):
 
         branch_description_htmls = []
         for branch_name, branch_description in clazz['branches'].items():
-            branch_anchor = 'class_%s_branch_%s' % (clazz['name'], branch_name)
+            branch_anchor = '#class_%s_branch_%s' % (clazz['name'], branch_name)
             linked_branch_description = branch_description.replace(branch_name, href(branch_anchor, branch_name))
             branch_description_html = list_item_template.format(text=linked_branch_description)
             branch_description_htmls.append(branch_description_html)
@@ -319,7 +319,7 @@ def _build_abilities_api(clazz, abilities):
     passive_name = next(iter(clazz['passive']))
     passive_examples_html = _build_examples_html(clazz['api']['examples'])
     passive_ability_html = api_ability_template.format(
-        name=passive_name,
+        name=href('/#%s_%s' % (clazz['name'], passive_name), passive_name),
         description=clazz['api']['description'],
         examples=passive_examples_html,
     )
@@ -342,7 +342,7 @@ def _build_abilities_api(clazz, abilities):
                 examples_html = ''
 
             api_ability_html = api_ability_template.format(
-                name=ability['name'].replace('"', '&quot'),
+                name=href('/#class_%s_ability_%s' % (clazz['name'], ability['name']), html.escape(ability['name'])),
                 description=description,
                 examples=examples_html,
             )

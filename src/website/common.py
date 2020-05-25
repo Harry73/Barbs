@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 
 def href(anchor, text):
-    return '<a href="#{anchor}">{text}</a>'.format(anchor=anchor, text=text)
+    return '<a href="{anchor}">{text}</a>'.format(anchor=anchor, text=text)
 
 
 def read_json_file(file_path, sort=True):
@@ -38,11 +38,11 @@ def get_link_skill_req(skill_req, skills):
 
     if longest_match is not None:
         skill_req = skill_req.replace(longest_match['name'],
-                                      href('skill_%s' % longest_match['name'], longest_match['name']))
+                                      href('#skill_%s' % longest_match['name'], longest_match['name']))
         return skill_req
 
     for skill in skills:
         if 'any' in skill_req.lower() and skill['category'] in skill_req:
-            return skill_req.replace(skill['category'], href('skills_%s' % skill['category'], skill['category']))
+            return skill_req.replace(skill['category'], href('#skills_%s' % skill['category'], skill['category']))
 
     return skill_req
