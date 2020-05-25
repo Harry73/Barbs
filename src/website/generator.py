@@ -319,7 +319,7 @@ def _build_abilities_api(clazz, abilities):
     passive_name = next(iter(clazz['passive']))
     passive_examples_html = _build_examples_html(clazz['api']['examples'])
     passive_ability_html = api_ability_template.format(
-        name=href('/#%s_%s' % (clazz['name'], passive_name), passive_name),
+        name=href('/#%s_%s' % (clazz['name'], passive_name), passive_name, title='Rulebook'),
         description=clazz['api']['description'],
         examples=passive_examples_html,
     )
@@ -342,7 +342,8 @@ def _build_abilities_api(clazz, abilities):
                 examples_html = ''
 
             api_ability_html = api_ability_template.format(
-                name=href('/#class_%s_ability_%s' % (clazz['name'], ability['name']), html.escape(ability['name'])),
+                name=href('/#class_%s_ability_%s' % (clazz['name'], ability['name']), html.escape(ability['name']),
+                          title='Rulebook'),
                 description=description,
                 examples=examples_html,
             )

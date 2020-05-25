@@ -3,8 +3,11 @@ import json
 from collections import OrderedDict
 
 
-def href(anchor, text):
-    return '<a href="{anchor}">{text}</a>'.format(anchor=anchor, text=text)
+def href(anchor, text, title=None):
+    if title:
+        return '<a href="{anchor}" title="{title}">{text}</a>'.format(anchor=anchor, text=text, title=title)
+    else:
+        return '<a href="{anchor}">{text}</a>'.format(anchor=anchor, text=text)
 
 
 def read_json_file(file_path, sort=True):
