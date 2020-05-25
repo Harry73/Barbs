@@ -15,5 +15,6 @@ def api():
 
 
 if __name__ == '__main__':
-    # $ sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000
+    # Use iptables to route traffic from port 80 to port 3000
+    # sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000
     server.run(host='0.0.0.0', port=3000)
