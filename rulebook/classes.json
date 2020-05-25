@@ -90,7 +90,11 @@
             "Mistral Bow",
             "Arc of Air",
             "Bow of Hurricanes"
-        ]
+        ],
+        "api":  {
+            "description": "The API will not track whirlwind arrows for you.",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -163,7 +167,11 @@
             "Rain of Wellness",
             "Draught of Vigor",
             "Fountain of Purity"
-        ]
+        ],
+        "api":  {
+            "description": "When you use any ability, you can specify the active Aquamancer tide with the “tide” parameter to get the API to include this passive’s effects. This mostly works, but Ebb Tide will not cause buffs to grant 20% general MR.",
+            "examples": ["tide <Flood Tide/Ebb Tide>"]
+        }
     },
     {
         "type": "class",
@@ -268,7 +276,11 @@
             "Pounce",
             "Skyfall",
             "Massacre"
-        ]
+        ],
+        "api": {
+            "description": "The API will not do the damage-doubling that this passive can cause for you.",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -535,7 +547,11 @@
             "Throat Slitter",
             "Parry and Draw",
             "Weapon Juggling"
-        ]
+        ],
+        "api": {
+            "description": "TODO",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -661,7 +677,11 @@
             "Extinguish",
             "Ice Block",
             "Frozen  Arena"
-        ]
+        ],
+        "api": {
+            "description": "The API will not track stacks of Frostbite. When you consume stacks of Frostbite during an attack by specifying “frostbite” as an option.",
+            "examples": ["frostbite <number of stacks to consume>"]
+        }
     },
     {
         "type": "class",
@@ -694,7 +714,11 @@
             "Hidden Blade",
             "Invisibility",
             "Rogue's Anlace"
-        ]
+        ],
+        "api": {
+            "description": "If your next attack is empowered, you must specify the “empowered” parameter along with the amount of mana spent for the empower. The API will halve it appropriately. The “empowered” parameter will also affect other abilities in this class, where applicable.",
+            "examples": ["empowered <spent mana>"]
+        }
     },
     {
         "type": "class",
@@ -848,7 +872,11 @@
             "Demolish",
             "Challenge",
             "Flatten"
-        ]
+        ],
+        "api": {
+            "description": "Not implemented",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -936,7 +964,11 @@
             "Lightning Rod",
             "Energize",
             "Frazzle"
-        ]
+        ],
+        "api": {
+            "description": "Not implemented. And tbh, it may never be. Re-rolls like this are very difficult.",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -992,7 +1024,11 @@
             "Mint Coinage",
             "Enhance Vehicle",
             "Empower Ammo"
-        ]
+        ],
+        "api": {
+            "description": "Not implemented.",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -1287,7 +1323,11 @@
             "Blood For Power",
             "Tachycardia",
             "Blood For Vigor"
-        ]
+        ],
+        "api": {
+            "description": "For this to apply to an ability, you must specify the “juggernaut” parameter, along with your current and max health. This can be included when using any ability.",
+            "examples": ["juggernaut 5/100"]
+        }
     },
     {
         "type": "class",
@@ -1386,7 +1426,11 @@
             "Sword of Lightning",
             "Plasma Saber",
             "Lightning Coil Cuirass"
-        ]
+        ],
+        "api": {
+            "description": "Not implemented.",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -1733,7 +1777,11 @@
             "Burn Trail",
             "Pyroblast",
             "Inflame"
-        ]
+        ],
+        "api": {
+            "description": "The extra effects are listed with pyromancer abilities that deal fire damage.",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -1976,7 +2024,11 @@
             "Double Time",
             "Tactical Withdrawal",
             "Vigor of Battle"
-        ]
+        ],
+        "api": {
+            "description": "The API will not track your action economy.",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -2066,7 +2118,11 @@
             "Power Spike",
             "Bolster Speed",
             "Power Surge"
-        ]
+        ],
+        "api": {
+            "description": "If you are using this, just re-use whatever ability applied the original buff instead.",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -2311,7 +2367,11 @@
             "Weapon Swap: Roll",
             "Weapon Swap: Quaff",
             "Weapon Swap: Attack"
-        ]
+        ],
+        "api": {
+            "description": "Not implemented.",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -2382,7 +2442,11 @@
             "\"Fight me!\"",
             "\"Overcome!\"",
             "\"Kill them all!\""
-        ]
+        ],
+        "api": {
+            "description": "You should add this to your Class Abilities as if this were a proper ability. This is half-implemented. The damage increase on yourself will not be present. You can empower an ally by using the ability with the “target” parameter. The API currently just assumes you have a buff to sacrifice to do this.",
+            "examples": ["target <ally name>"]
+        }
     },
     {
         "type": "class",

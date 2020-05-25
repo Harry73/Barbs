@@ -468,7 +468,11 @@
             "square",
             "conjuration",
             "Knock Prone"
-        ]
+        ],
+        "api":  {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -516,7 +520,11 @@
             "on-hit",
             "bow",
             "push"
-        ]
+        ],
+        "api":  {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -539,7 +547,11 @@
             "on-hit",
             "bow",
             ""
-        ]
+        ],
+        "api":  {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -673,7 +685,11 @@
             "AOE",
             "cube",
             "field"
-        ]
+        ],
+        "api":  {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -851,7 +867,11 @@
             "random",
             "cleanse",
             "single-target"
-        ]
+        ],
+        "api":  {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -1089,7 +1109,11 @@
             "buff",
             "dash",
             "modal"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -1128,7 +1152,11 @@
             "reaction",
             "condition",
             "stackable"
-        ]
+        ],
+        "api": {
+            "description": "The API will not track the marks this ability generates. You can, however, specify that a target was “Pursued” when you use a damaging ability with the “pursued” parameter. Also specify the number of times the target was pursued.",
+            "examples": ["pursued <number of times the target was pursued>"]
+        }
     },
     {
         "type": "ability",
@@ -1167,7 +1195,11 @@
             "self-target",
             "buff",
             "improve critical strike chance"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -1186,7 +1218,11 @@
             "self-target",
             "buff",
             "improve damage dice"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -1206,7 +1242,11 @@
             "buff",
             "action gain",
             "delayed effect"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -1248,7 +1288,11 @@
             "conditional",
             "melee",
             "Hidden"
-        ]
+        ],
+        "api": {
+            "description": "You must specify whether or not you are hidden.",
+            "examples": ["hidden <true/false>"]
+        }
     },
     {
         "type": "ability",
@@ -1290,7 +1334,11 @@
             "melee",
             "aerial",
             "empowered"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -1313,7 +1361,11 @@
             "multi-target",
             "modal",
             "Lethal"
-        ]
+        ],
+        "api": {
+            "description": "You must specify how the 16 dice should be divided in a space-separated list of numbers. You can specify as few or as many numbers in this list as you like, but the total must add up to 16. For example:",
+            "examples": ["division 4 8 1 3"]
+        }
     },
     {
         "type": "ability",
@@ -1797,7 +1849,11 @@
             "damage",
             "single-target",
             "multi-target"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -1824,7 +1880,11 @@
             "Slow",
             "Frozen",
             "AOE"
-        ]
+        ],
+        "api": {
+            "description": "The attack will produce a roll for each of the three distances.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -1877,7 +1937,11 @@
             "continuous",
             "concentration",
             "gain mana"
-        ]
+        ],
+        "api": {
+            "description": "Specify the amount of mana you are spending for this attack. The API will do the division. You should account for the other effects of this ability.",
+            "examples": ["mana <amount of mana spent>"]
+        }
     },
     {
         "type": "ability",
@@ -1901,7 +1965,11 @@
             "Frozen",
             "Slow",
             "single target"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -1926,7 +1994,11 @@
             "Slow",
             "AOE",
             "cone"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -1952,7 +2024,11 @@
             "evasion loss",
             "single-target",
             "concentration"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -1979,7 +2055,11 @@
             "add evasion",
             "ally buff",
             "concentration"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -2001,7 +2081,11 @@
             "ice",
             "modal",
             "repeatable"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -2025,7 +2109,11 @@
             "control",
             "ice",
             "single-target"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -2072,7 +2160,11 @@
             "cube",
             "on-death",
             "concentration"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -2573,7 +2665,11 @@
             "on hit",
             "condition",
             "vulnerability"
-        ]
+        ],
+        "api": {
+            "description": "You will have to track Physical Vulnerability of targets.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -2685,7 +2781,11 @@
             "physical",
             "multi-target",
             "blunt weapon"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -2722,7 +2822,11 @@
             "Taunt",
             "gain AC",
             "gain MR"
-        ]
+        ],
+        "api": {
+            "description": "Specify the number of affected targets when you use this ability.",
+            "examples": ["targets <number of taunted targets>"]
+        }
     },
     {
         "type": "ability",
@@ -2770,7 +2874,11 @@
             "Paralysis",
             "Stun",
             "single-target"
-        ]
+        ],
+        "api": {
+            "description": "The percentage chances for additional effects are not handled by the API. They will be printed as effects of the ability though.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -2941,7 +3049,11 @@
             "enchantment",
             "modal",
             "concentration"
-        ]
+        ],
+        "api": {
+            "description": "There are two options with this ability. If you are boosting a weapon’s damage, specify the “choice first” parameter. If you are decreasing a weapon’s damage, specify “choice second”.",
+            "examples": ["choice <first/second>"]
+        }
     },
     {
         "type": "ability",
@@ -3020,7 +3132,11 @@
             "major ritual",
             "modal",
             "concentration"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -3265,7 +3381,11 @@
             "rapier",
             "multi-hit",
             "single-target."
-        ]
+        ],
+        "api": {
+            "description": "The API will do the d5+1 roll internally to determine how many strikes to do when you use this ability.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -3290,7 +3410,11 @@
             "reaction",
             "counter",
             "block"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -3334,7 +3458,11 @@
             "AOE",
             "line",
             "random"
-        ]
+        ],
+        "api": {
+            "description": "The additional 3d8 at the end of your turn will not occur automatically. Just use the ability again to calculate this extra damage.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -3402,9 +3530,12 @@
             "lightning",
             "single-target",
             "mark",
-            "random",
-            ""
-        ]
+            "random"
+        ],
+        "api": {
+            "description": "There are no special notes for the actual usage of this ability. The API does not track enemies, however, so you must specify when you strike a target marked with Arc Lightning. Add “arc_lightning” as a parameter to trigger the extra damages from this ability. No value is needed, just the keyword.",
+            "examples": ["arc_lightning"]
+        }
     },
     {
         "type": "ability",
@@ -3450,7 +3581,11 @@
             "self-target",
             "on-hit",
             "rapier"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4011,7 +4146,11 @@
             "conditional",
             "no block",
             "no counter"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4036,7 +4175,11 @@
             "conditional",
             "condition",
             "Burn"
-        ]
+        ],
+        "api": {
+            "description": "You will have to calculate Burn.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4127,7 +4270,11 @@
             "defensive",
             "counterspell",
             "single-target"
-        ]
+        ],
+        "api": {
+            "description": "The API will just print the ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4723,7 +4870,11 @@
             "longblade",
             "modal",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4747,7 +4898,11 @@
             "concentration",
             "repeatable",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "If you are concentrating on this ability, specify may optionally specify the number of consecutive hits this ability has done.",
+            "examples": ["hits <number of hits while concentrating>"]
+        }
     },
     {
         "type": "ability",
@@ -4770,7 +4925,11 @@
             "longblade",
             "modal",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "If you block damage while using this ability, specify it with the “blocked” parameter:",
+            "examples": ["blocked <total damage blocked>"]
+        }
     },
     {
         "type": "ability",
@@ -4816,7 +4975,11 @@
             "dash",
             "conditional",
             "shield"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4840,7 +5003,11 @@
             "conditional",
             "Stun",
             "condition"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5224,7 +5391,11 @@
             "Spell",
             "buff",
             "increase damage"
-        ]
+        ],
+        "api": {
+            "description": "Specify the target ally with the “target” parameter. The ally’s first name is sufficient.",
+            "examples": ["target <ally name>"]
+        }
     },
     {
         "type": "ability",
@@ -5243,7 +5414,11 @@
             "Spell",
             "buff",
             "modal"
-        ]
+        ],
+        "api": {
+            "description": "Specify the target ally with the “target” parameter. The ally’s first name is sufficient. You can optionally specify any additional mana you spend on this ability with the “mana” parameter.",
+            "examples": ["target <ally name>", "mana <extra mana spent>"]
+        }
     },
     {
         "type": "ability",
@@ -5384,7 +5559,11 @@
             "Spell",
             "buff",
             "skill boost"
-        ]
+        ],
+        "api": {
+            "description": "Specify the target ally with the “target” parameter. The ally’s first name is sufficient. The ability’s effect will show in skills rolled via the character sheet.",
+            "examples": ["target <ally name>"]
+        }
     },
     {
         "type": "ability",
@@ -5549,7 +5728,11 @@
             "single-target",
             "ranged",
             "forced movement"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5588,7 +5771,11 @@
         "tags": [
             "Modal",
             "dash"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5680,7 +5867,11 @@
             "Knock Back",
             "modal",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "There are three possibilities with this ability, each specified via the “choice” parameter. The cone option is “choice first”. The line option is “choice second”. If you are able to use both, use “choice both”.",
+            "examples": ["choice <first/second/both>"]
+        }
     },
     {
         "type": "ability",
@@ -5745,7 +5936,11 @@
             "damage reduction",
             "self-target",
             "ally-target"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5767,7 +5962,11 @@
             "increase AC",
             "increase Evasion",
             "increase MR"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5844,7 +6043,11 @@
             "self-target",
             "ally-target",
             "damage increase"
-        ]
+        ],
+        "api": {
+            "description": "The list of allies affected by this ability must be specified with the “targets” parameter in a space-separated list. You can just use the first name of each ally.",
+            "examples": ["targets <ally name> <ally name> ..."]
+        }
     },
     {
         "type": "ability",
@@ -5864,7 +6067,11 @@
             "Taunt",
             "multi-target",
             "break concentration"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability’s description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5937,7 +6144,14 @@
             "modal",
             "conditional",
             "reroll"
-        ]
+        ],
+        "api": {
+            "description": "If you are using an axe or sword, specify “keep_highest” as a parameter. The API will do 2d10d1 rolls to automatically reroll and take the highest. If you are using another weapon type, this ability requires two phases. First, run the ability without any “keep” parameter. It will send a 5d10 roll to chat. Hover over the roll to look at the individual rolls. Second, add the “keep” parameter along with a space-separated list of the rolls you would like to keep. The others will be re-rolled - e.g. if you specify 2 rolls to keep, the final roll will be those 2 plus 3d10.",
+            "examples": [
+                "keep_highest",
+                "keep <roll value to keep> <roll value to keep> ..."
+            ]
+        }
     },
     {
         "type": "ability",
@@ -5968,7 +6182,11 @@
             "Stun",
             "conditional",
             "multi-target"
-        ]
+        ],
+        "api": {
+            "description": "You should track your weapon type when using this ability, the API will not mention it.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5997,7 +6215,11 @@
             "shield",
             "heavy throwing weapon",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -6199,7 +6421,11 @@
             "conditional",
             "modal",
             "disarm"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -6281,7 +6507,11 @@
             "single-target",
             "dash",
             "shortblade"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -6393,7 +6623,11 @@
             "single-target",
             "mark",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "If you are attacking a target that is marked via this ability, add the “daggerspell_marked” parameter for the extra crit chance and conditional crit damage modifier.",
+            "examples": ["daggerspell_marked"]
+        }
     },
     {
         "type": "ability",
@@ -6414,7 +6648,11 @@
             "buff",
             "conditional",
             "Hidden"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -6668,7 +6906,11 @@
             "on hit",
             "lifesteal",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -6838,7 +7080,11 @@
             "concentration",
             "on hit",
             "lifesteal"
-        ]
+        ],
+        "api": {
+            "description": "If you are concentrating on this ability, include the “conc” parameter for the increased lifesteal. Otherwise, don’t include it.",
+            "examples": ["conc"]
+        }
     },
     {
         "type": "ability",
@@ -6880,7 +7126,11 @@
             "Buff",
             "concentration",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "For the increased physical damage to apply while this buff is active, you must include the “low_health” parameter when using that ability.",
+            "examples": ["low_health"]
+        }
     },
     {
         "type": "ability",
