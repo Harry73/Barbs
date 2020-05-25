@@ -27,13 +27,14 @@ section {
 }
 
 h1 {
-    font-size: 64px;
+    font-size: 72px;
     padding-bottom: 15px;
 }
 
 h2 {
-    font-size: 48px;
+    font-size: 54px;
     font-weight: normal;
+    text-align: center;
     padding-bottom: 15px;
 }
 
@@ -47,6 +48,17 @@ h4 {
     font-size: 20px;
     font-weight: bold;
     padding-bottom: 15px;
+}
+
+.row-full{
+    width: 100vw;
+    position: relative;
+    margin-left: -50vw;
+    height: 2px;
+    margin-top: 10px;
+    left: 50%;
+    color: #FFFFFF;
+    background-color: #FFFFFF;
 }
 
 #main {
