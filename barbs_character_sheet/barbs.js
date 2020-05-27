@@ -1020,7 +1020,7 @@ var Barbs = Barbs || (function () {
 
         const dummy_roll = new Roll(character, RollType.PHYSICAL);
         roll_crit(dummy_roll, parameters, function (crit_section) {
-            if (!add_extras(character, dummy_roll, RollTime.DEFAULT, parameters)) {
+            if (!add_extras(character, dummy_roll, RollTime.POST_CRIT, parameters)) {
                 return;
             }
 
@@ -1063,6 +1063,7 @@ var Barbs = Barbs || (function () {
     function assassin_skyfall(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('8d4', Damage.PHYSICAL);
+        log("skyfall");
         roll.add_crit_damage_mod(100);
         add_scale_damage(character, roll);
 
@@ -1232,6 +1233,7 @@ var Barbs = Barbs || (function () {
 
     }
 
+
     function daggerspell_hidden_blade(character, ability, parameters) {
         add_persistent_effect(character, ability, character, 6, Ordering(), RollTime.DEFAULT, false,
             function (char, roll, parameters) {
@@ -1348,7 +1350,8 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('5d10', Damage.PHYSICAL);
         add_scale_damage(character, roll);
-        roll.add_effect('30% lifesteal, or 60% if your health is below 30%');
+        roll.add_hidden_stat(HiddenStat.LIFESTEAL, 30);
+        roll.add_effect('+30% lifesteal if your health is below 30%');
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -1362,9 +1365,9 @@ var Barbs = Barbs || (function () {
         add_persistent_effect(character, ability, character, 6,  Ordering(), RollTime.DEFAULT, false,
             function (character, roll, parameters) {
                 if (concentration !== null) {
-                    roll.add_effect('25% lifesteal');
+                    roll.add_hidden_stat(HiddenStat.LIFESTEAL, 25);
                 } else {
-                    roll.add_effect('15% lifesteal');
+                    roll.add_hidden_stat(HiddenStat.LIFESTEAL, 15);
                 }
 
                 return true;
@@ -1458,6 +1461,16 @@ var Barbs = Barbs || (function () {
             });
 
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+    }
+
+
+    function martial_artist_choke_hold(character, ability, parameters) {
+
+    }
+
+
+    function martial_artist_flying_hold(character, ability, parameters) {
+
     }
 
 
@@ -1913,6 +1926,7 @@ var Barbs = Barbs || (function () {
         chat(character, ability_block_format.format(ability, 'Warleader', clazz.passive['Warleader']));
     }
 
+
     function evangelist_magia_erebia(character, ability, parameters) {
         const chosen_spell = get_parameter('spell', parameters);
         if (chosen_spell == null) {
@@ -1937,6 +1951,7 @@ var Barbs = Barbs || (function () {
             chat(character, 'Unrecognized spell "%s"'.format(chosen_spell));
         }
     }
+
 
     const abilities_processors = {
         'Air Duelist': {
@@ -2018,6 +2033,12 @@ var Barbs = Barbs || (function () {
             'Shock Tendrils': lightning_duelist_shock_tendrils,
             'Shocking Parry': lightning_duelist_shocking_parry,
             'Sword of Lightning': lightning_duelist_sword_of_lightning,
+        },
+        'Martial Artist': {
+            'Focus Energy': print_ability_description,
+            'Choke Hold': martial_artist_choke_hold,
+            'Flying Hold': martial_artist_flying_hold,
+
         },
         'Noxomancer': {
             'Darkbomb': noxomancer_darkbomb,

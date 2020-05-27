@@ -220,6 +220,7 @@ var BarbsComponents = BarbsComponents || (function () {
         CRIPPLE_CHANCE: '%s% cripple chance',
         FORCED_MOVEMENT: 'Forcibly move target %s ft',
         LETHALITY: '%s% lethality',
+        LIFESTEAL: '%s% lifesteal',
         PARALYZE: '%s% chance to paralyze',
         REACH: '+%s ft reach',
         UNBLOCKABLE_CHANCE: '%s% chance to be unblockable',
@@ -13622,7 +13623,7 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.MELEE,
             0, [], '',
             [
-                Effect.roll_effect('5% lifesteal', RollType.ALL),
+                Effect.hidden_stat(HiddenStat.LIFESTEAL, 5, RollType.ALL),
                 Effect.skill_effect(Skill.INTERACTION_LEADERSHIP, 20),
                 Effect.initiative_bonus(20),
                 // TODO: 50% fear resist
