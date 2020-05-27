@@ -231,7 +231,11 @@
             "Magic Ray",
             "Magic Primer",
             "Force Spike"
-        ]
+        ],
+        "api": {
+            "description": "Not implemented",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -1360,7 +1364,11 @@
             "Find Center",
             "Find Stability",
             "Find Solace"
-        ]
+        ],
+        "api": {
+            "description": "The API will calculate what dice to use for your monk-mastery-dependent attacks. It will not track Ki.",
+            "examples" : []
+        }
     },
     {
         "type": "class",
@@ -1519,7 +1527,11 @@
             "Open Palm Strike",
             "Backstep",
             "Arrow Catch"
-        ]
+        ],
+        "api": {
+            "description": "The API will calculate what dice to use for your monk-mastery-dependent attacks. It will not track action economy.",
+            "examples" : []
+        }
     },
     {
         "type": "class",

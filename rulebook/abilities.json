@@ -976,7 +976,11 @@
             "single-target",
             "multi-target",
             "modal"
-        ]
+        ],
+        "api": {
+            "description": "You must specify the \"damage_type\" parameter along with the damage types you wish to use for each bolt. If you only specify 1, all 3 bolts will use the same type. If you only specify 2, damage for only 2 bolts will be rolled. If you specify 3, each bolt will be one of those 3 types.",
+            "examples": ["damage_type ice", "damage_type ice fire", "damage_type ice fire air"]
+        }
     },
     {
         "type": "ability",
@@ -8919,7 +8923,11 @@
             "combo",
             "modal",
             "forced movement"
-        ]
+        ],
+        "api": {
+            "description": "The API does not track combo percents.",
+            "examples" : []
+        }
     },
     {
         "type": "ability",
@@ -8943,7 +8951,11 @@
             "conditional",
             "combo",
             "dash"
-        ]
+        ],
+        "api": {
+            "description": "The API does not track combo percents.",
+            "examples" : []
+        }
     },
     {
         "type": "ability",
@@ -9035,7 +9047,11 @@
             "Self-target",
             "buff",
             "combo"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples" : []
+        }
     },
     {
         "type": "ability",
@@ -9103,7 +9119,11 @@
             "psychic",
             "modal",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "If you spend Ki on this ability, add the \"ki\" parameter for the extra damage.",
+            "examples" : ["ki"]
+        }
     },
     {
         "type": "ability",
@@ -9130,7 +9150,11 @@
             "modal",
             "conditional",
             "heal"
-        ]
+        ],
+        "api": {
+            "description": "If you spend Ki on this ability, add the \"ki\" parameter for the extra damage.",
+            "examples" : ["ki"]
+        }
     },
     {
         "type": "ability",
@@ -9209,7 +9233,11 @@
             "modal",
             "conditional",
             "forced movement"
-        ]
+        ],
+        "api": {
+            "description": "If you spend Ki on this ability, add the \"ki\" parameter for the increased damage.",
+            "examples" : ["ki"]
+        }
     },
     {
         "type": "ability",
