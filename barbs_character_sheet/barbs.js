@@ -1461,14 +1461,35 @@ var Barbs = Barbs || (function () {
 
 
     function evangelist_magia_erebia(character, ability, parameters) {
+        const dispel = get_parameter('dispel', parameters);
+        //Allows you to dispel an active magia erebia
+        if (dispel === 'true' || dispel === 'True' || dispel === 'Yes' || dispel === 'yes'){
+            for (let i = 0; i < persistent_effects.length; i++) {
+                if (persistent_effects[i].name === 'Magia Erebia' && persistent_effects[i].target === character.name) {
+                    persistent_effects.splice(i, 1);
+                    i--;
+                    chat(character, 'Removed effect ' + 'Magia Erebia' + ' from ' + character.name);
+                }
+            }
+            return
+        }
         const chosen_spell = get_parameter('spell', parameters);
         if (chosen_spell == null) {
             chat(character, '"spell" parameter, the absorbed spell, is missing');
             return;
         }
-
-        // Duration is effectively infinite, the user has to dispel it
-        // TODO: add parameter to dispel ME
+        //checks if magia erebia is already applies
+        var active = 0
+        for (let i = 0; i < persistent_effects.length; i++) {
+                if (persistent_effects[i].name === 'Magia Erebia' && persistent_effects[i].target === character.name) {
+                    active += 1
+                }
+        }
+        if (active > 0){
+            chat(character, 'Magia Erebia is already applied');
+            return;
+        }
+        
         const duration = 5000;
 
         if (chosen_spell === 'KB') {
@@ -1477,6 +1498,10 @@ var Barbs = Barbs || (function () {
                     log('applying ME');
                     roll.add_damage('6d8', Damage.ICE);
                     roll.add_damage('6d8', Damage.DARK);
+                    roll.add_effect('Frozen');
+                    roll.add_effect('Slowed');
+                    roll.add_effect('Blinded');
+                    roll.add_effect('2 Curses');
                     return true;
                 }
             );
