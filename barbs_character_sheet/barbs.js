@@ -817,7 +817,7 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function lightning_duelist_arc_lightning_mark(roll, roll_time, parameter) {
+    function lightning_duelist_arc_lightning_mark(roll, roll_time, parameter, parameters) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
         }
@@ -832,6 +832,10 @@ var Barbs = Barbs || (function () {
 
             // Everything - items, persistent effects - should apply to the main and secondary roll here. I'm losing
             // the parameters for the secondary roll though, which might matter eventually. For now it's fine.
+            if (!add_extras(roll.character, roll, RollTime.DEFAULT, parameters)) {
+                return false;
+            }
+
             do_roll(side_roll.character, 'Arc Lightning (Random Target)', side_roll, /*parameters=*/[], '');
         }
 
@@ -994,6 +998,9 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.HEALING);
         roll.add_damage('6d6', Damage.HEALING);
         roll.add_effect('Cleanse a random condition on the target for every 6 you roll');
+        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1002,6 +1009,9 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('8d6', Damage.WATER);
         roll.add_effect('Leaves behind a field of shallow water that is difficult terrain for 1 hour');
+        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1026,6 +1036,10 @@ var Barbs = Barbs || (function () {
         }
 
         const dummy_roll = new Roll(character, RollType.MAGIC);
+        if (!add_extras(character, dummy_roll, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
+
         for (let i = 0; i < damage_types.length; i++) {
             const roll = new Roll(character, RollType.MAGIC);
             roll.add_damage('%sd12'.format(1), damage_types[i]);
@@ -1242,6 +1256,9 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('%sd8'.format(dice), Damage.ICE);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
+        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1249,19 +1266,28 @@ var Barbs = Barbs || (function () {
     function cryomancer_glacial_crash(character, ability, parameters) {
         const roll_1 = new Roll(character, RollType.MAGIC);
         roll_1.add_damage('8d8', Damage.ICE);
-        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
+        roll_1.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
         roll_1.add_effect('Frozen');
+        if (!add_extras(character, roll_1, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
         do_roll(character, '%s (5 ft)'.format(ability), roll_1, parameters, '', /*do_finalize=*/false);
 
         const roll_2 = new Roll(character, RollType.MAGIC);
         roll_2.add_damage('6d8', Damage.ICE);
-        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
+        roll_2.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
         roll_1.add_effect('Slowed');
+        if (!add_extras(character, roll_2, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
         do_roll(character, '%s (5 ft)'.format(ability), roll_2, parameters, '', /*do_finalize=*/false);
 
         const roll_3 = new Roll(character, RollType.MAGIC);
         roll_3.add_damage('4d8', Damage.ICE);
-        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
+        roll_3.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
+        if (!add_extras(character, roll_3, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
         do_roll(character, '%s (5 ft)'.format(ability), roll_3, parameters, '', /*do_finalize=*/true);
     }
 
@@ -1270,6 +1296,9 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('6d8', Damage.ICE);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
+        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1321,6 +1350,9 @@ var Barbs = Barbs || (function () {
         roll.add_effect('50% chance to deal an additional d12 lightning magic damage');
         roll.add_effect('30% to inflict Paralyze for 1 minute');
         roll.add_effect('20% to inflict Stunned until the beginning of your next turn');
+        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1406,6 +1438,33 @@ var Barbs = Barbs || (function () {
 
         const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+    }
+
+
+    function evangelist_magia_erebia(character, ability, parameters) {
+        const chosen_spell = get_parameter('spell', parameters);
+        if (chosen_spell == null) {
+            chat(character, '"spell" parameter, the absorbed spell, is missing');
+            return;
+        }
+
+        // Duration is effectively infinite, the user has to dispel it
+        // TODO: add parameter to dispel ME
+        const duration = 5000;
+
+        if (chosen_spell === 'KB') {
+            add_persistent_effect(character, ability, character, duration, Ordering(), RollTime.DEFAULT, false,
+                function (char, roll, parameters) {
+                    log('applying ME');
+                    roll.add_damage('6d8', Damage.ICE);
+                    roll.add_damage('6d8', Damage.DARK);
+                    return true;
+                }
+            );
+            chat(character,'KB absorbed');
+        } else {
+            chat(character, 'Unrecognized spell "%s"'.format(chosen_spell));
+        }
     }
 
 
@@ -1514,6 +1573,9 @@ var Barbs = Barbs || (function () {
             roll.add_effect('All hit targets are knocked back 20 ft');
         }
 
+        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1522,6 +1584,9 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('6d8', Damage.LIGHTNING);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.LIGHTNING);
+        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1550,6 +1615,9 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('3d8', Damage.LIGHTNING);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.LIGHTNING);
+        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1625,6 +1693,9 @@ var Barbs = Barbs || (function () {
             roll.add_effect('2 curses')
         }
 
+        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1636,6 +1707,9 @@ var Barbs = Barbs || (function () {
         roll.add_effect('Unblockable/uncounterable if this is your second fire spell this turn');
         roll.add_effect('-5% Fire MR');
         roll.add_effect('+5% Fire Vulnerability');
+        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -1647,6 +1721,9 @@ var Barbs = Barbs || (function () {
         roll.add_effect('Hit enemies 15 ft from you are inflicted with Burn X, where X is equal to the amount of damage rolled');
         roll.add_effect('-5% Fire MR');
         roll.add_effect('+5% Fire Vulnerability');
+        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
+            return false;
+        }
         do_roll(character, ability, roll, parameters, '');
     }
 
@@ -2057,32 +2134,6 @@ var Barbs = Barbs || (function () {
             });
 
         chat(character, ability_block_format.format(ability, 'Warleader', clazz.passive['Warleader']));
-    }
-
-
-    function evangelist_magia_erebia(character, ability, parameters) {
-        const chosen_spell = get_parameter('spell', parameters);
-        if (chosen_spell == null) {
-            chat(character, '"spell" parameter, the absorbed spell, is missing');
-            return;
-        }
-
-        // Duration is effectively infinite, the user has to dispel it
-        // TODO: add parameter to dispel ME
-        const duration = 5000;
-
-        if (chosen_spell === 'KB') {
-            add_persistent_effect(character, ability, character, duration, Ordering(), RollTime.DEFAULT, false,
-                function (char, roll, parameters) {
-                    roll.add_damage('6d8', Damage.ICE);
-                    roll.add_damage('6d8', Damage.DARK);
-                    return true;
-                }
-            );
-            chat(character,'KB absorbed');
-        } else {
-            chat(character, 'Unrecognized spell "%s"'.format(chosen_spell));
-        }
     }
 
 
