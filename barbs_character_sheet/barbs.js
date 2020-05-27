@@ -1498,10 +1498,10 @@ var Barbs = Barbs || (function () {
                     log('applying ME');
                     roll.add_damage('6d8', Damage.ICE);
                     roll.add_damage('6d8', Damage.DARK);
-                    roll.add_effect('Frozen');
-                    roll.add_effect('Slowed');
-                    roll.add_effect('Blinded');
-                    roll.add_effect('2 Curses');
+                    roll.add_effect('Frozen [[1d100]]');
+                    roll.add_effect('Slowed [[1d100]]');
+                    roll.add_effect('Blinded [[1d100]]');
+                    roll.add_effect('2 Curses [[1d100]] [[1d100]]');
                     return true;
                 }
             );
@@ -2010,6 +2010,38 @@ var Barbs = Barbs || (function () {
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
+    function symbiote_power_spike(character, ability, parameters){
+        const ability_info = get_ability_info(ability);
+        
+        const target_buff = get_parameter('buff', parameters);
+        if (target_buff === null) {
+            chat(character, '"buff" parameter is missing');
+            return;
+        }
+        const target_name = get_parameter('target', parameters);
+        if (target_name === null) {
+            chat(character, '"target" parameter is missing');
+            return;
+        }
+        const target_character = get_character_by_name(target_name);
+        if (target_character === null) {
+            return;
+        }
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].name === target_buff && persistent_effects[i].target === target_name) {
+                persistent_effects[i].duration = persistent_effects[i].duration/2
+                if (persistent_effects[i].duration === 1.5){
+                    persistent_effects[i].duration === 1;
+                }
+                //Todo: Figure out how to get the actual damage multiplier of a buff
+                //chat(character,String(persistent_effects[i].handler));
+                //persistent_effects[i].multipliers = persistent_effects[i].handler * 1.5;
+                //chat(character,String(persistent_effects[i].multipliers));
+                chat(character, 'Power Spiked ' + target_buff + ' on ' + target_name);
+                return
+            }
+        }
+    }
 
     function symbiote_strengthen_body(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
@@ -2309,6 +2341,7 @@ var Barbs = Barbs || (function () {
         },
         'Symbiote': {
             'Empower Soul': symbiote_empower_soul,
+			'Power Spike': symbiote_power_spike,
             'Strengthen Body': symbiote_strengthen_body,
             'Strengthen Mind': symbiote_strengthen_mind,
             'Strengthen Soul': symbiote_strengthen_soul,
