@@ -976,6 +976,33 @@ var Barbs = Barbs || (function () {
         chat(character, 'Not yet implemented');
     }
 
+    function arcanist_magic_dart(character, ability, parameters) {
+        const parameter = get_parameter('damage_type', parameters);
+        if (parameter === null) {
+            chat(character, '"damage_type" parameter is missing');
+            return;
+        } 
+        
+        var damage_types = parameter.split(' ')
+        if (damage_types.length === 1) {
+            damage_types.push(damage_types[0]);
+            damage_types.push(damage_types[0]);
+        }
+        
+        const dummy_roll = new Roll(character, RollType.MAGIC);
+        for (let i = 0; i < damage_types.length; i++) {
+            const roll = new Roll(character, RollType.MAGIC);
+            roll.add_damage('%sd12'.format(1), damage_types[i]);
+            roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), damage_types[i]);
+            roll.copy_damages(dummy_roll);
+            roll.copy_multipliers(dummy_roll);
+            const rolls_per_type = roll.roll();
+            format_and_send_roll(character, '%s (%sd12)'.format(ability, 1), roll,rolls_per_type, "");
+            }
+
+        finalize_roll(character, dummy_roll, parameters);
+    }
+
 
     function assassin_backstab(character, ability, parameters) {
         const parameter = get_parameter('hidden', parameters);
@@ -1963,6 +1990,9 @@ var Barbs = Barbs || (function () {
             'Baptise': aquamancer_baptise,
             'Tidal Wave': aquamancer_tidal_wave,
             'Draught of Vigor': aquamancer_draught_of_vigor,
+        },
+        'Arcanist': {
+            'Magic Dart': arcanist_magic_dart,
         },
         'Assassin': {
             'Backstab': assassin_backstab,
