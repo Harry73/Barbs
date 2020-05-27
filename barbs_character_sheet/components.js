@@ -52,8 +52,8 @@ var BarbsComponents = BarbsComponents || (function () {
             'Ian P.',
             '-LjmvO3KlA-S3iHQlRW3',
         ],
-        'Edwin Markov (Adric Vapeiros)': [
-            'Edwin Markov (Adric Vapeiros)',
+        'Ahasan (To be named)': [
+            'Ahasan (To be named)',
             'Edwin',
             'Adric',
             'Ahasan R.',
@@ -12074,6 +12074,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
     const Damage = {
         PHYSICAL: 'physical',
+        PSYCHIC: 'psychic',
         FIRE: 'fire',
         WATER: 'water',
         EARTH: 'earth',
@@ -12094,6 +12095,7 @@ var BarbsComponents = BarbsComponents || (function () {
     //
     const RollType = {
         PHYSICAL: 'roll_type_physical',
+        PSYCHIC: 'roll_type_psychic',
         MAGIC: 'roll_type_magic',
         HEALING: 'roll_type_healing',
         ALL: 'roll_type_all',
@@ -12257,7 +12259,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 });
             }
 
-            if (type !== Damage.PHYSICAL) {
+            if (type !== Damage.PHYSICAL && type !== Damage.PSYCHIC) {
                 if (Damage.ALL_MAGIC in self.multipliers) {
                     Object.keys(self.multipliers[Damage.ALL_MAGIC]).forEach(function (source) {
                         if (!(source in per_source_multipliers)) {

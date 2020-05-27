@@ -436,7 +436,7 @@ var Barbs = Barbs || (function () {
             }
         }
 
-        log('ERROR: ability ' + ability + ' not found');
+        log('ERROR: ability ' + ability_name + ' not found');
         return null;
     }
 
@@ -483,6 +483,41 @@ var Barbs = Barbs || (function () {
         if (main_hand_item !== null) {
             main_hand_item.damage_scaling(character, roll);
         }
+    }
+
+
+    function get_monk_mastery(character) {
+        const all_attributes = findObjs({
+            type: 'attribute',
+            characterid: character.id,
+        });
+
+        let ability_names = [];
+        for (let i = 0; i < all_attributes.length; i++) {
+            const attribute = all_attributes[i];
+
+            if (attribute.get('name').includes('repeating_abilities') && attribute.get('name').includes('ability_name')) {
+                ability_names.push(attribute.get('current'));
+            }
+        }
+
+        // See what abilities have the "combo" tag, and build a set of their parent classes. Monk mastery increases by 1
+        // for each class of this nature that the character has.
+        let classes_with_combo_abilities = new Set();
+        for (let i = 0; i < ability_names.length; i++) {
+            const ability = get_ability_info(ability_names[i]);
+            if (ability === null) {
+                continue;
+            }
+
+            if (ability['tags'].includes('combo')) {
+                classes_with_combo_abilities.add(ability['class']);
+            }
+        }
+
+        const mastery_levels = [4, 6, 8, 10, 12, 20];
+        const monk_classes = Math.min(classes_with_combo_abilities.size, mastery_levels.length - 1);
+        return mastery_levels[monk_classes];
     }
 
 
@@ -976,19 +1011,20 @@ var Barbs = Barbs || (function () {
         chat(character, 'Not yet implemented');
     }
 
+
     function arcanist_magic_dart(character, ability, parameters) {
         const parameter = get_parameter('damage_type', parameters);
         if (parameter === null) {
             chat(character, '"damage_type" parameter is missing');
             return;
-        } 
-        
-        var damage_types = parameter.split(' ')
+        }
+
+        let damage_types = parameter.split(' ');
         if (damage_types.length === 1) {
             damage_types.push(damage_types[0]);
             damage_types.push(damage_types[0]);
         }
-        
+
         const dummy_roll = new Roll(character, RollType.MAGIC);
         for (let i = 0; i < damage_types.length; i++) {
             const roll = new Roll(character, RollType.MAGIC);
@@ -997,8 +1033,8 @@ var Barbs = Barbs || (function () {
             roll.copy_damages(dummy_roll);
             roll.copy_multipliers(dummy_roll);
             const rolls_per_type = roll.roll();
-            format_and_send_roll(character, '%s (%sd12)'.format(ability, 1), roll,rolls_per_type, "");
-            }
+            format_and_send_roll(character, '%s (%sd12)'.format(ability, 1), roll,rolls_per_type, '');
+        }
 
         finalize_roll(character, dummy_roll, parameters);
     }
@@ -1428,6 +1464,60 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function ki_monk_spirit_punch(character, ability, parameters) {
+        const monk_mastery = get_monk_mastery(character);
+
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('4d%s'.format(monk_mastery), Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+        roll.add_effect('Gain Ki equal to rolled value');
+
+        const spent_ki = get_parameter('ki', parameters);
+        if (spent_ki !== null) {
+            roll.add_damage('4d%s'.format(monk_mastery), Damage.PSYCHIC);
+        }
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function ki_monk_drain_punch(character, ability, parameters) {
+        const monk_mastery = get_monk_mastery(character);
+
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d%s'.format(monk_mastery), Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+        roll.add_effect('Gain Ki equal to half the rolled value');
+
+        const spent_ki = get_parameter('ki', parameters);
+        if (spent_ki !== null) {
+            roll.add_damage('5d%s'.format(monk_mastery), Damage.PSYCHIC);
+        }
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function ki_monk_spirit_shotgun(character, ability, parameters) {
+        const monk_mastery = get_monk_mastery(character);
+
+        const roll = new Roll(character, RollType.PSYCHIC);
+        roll.add_damage('5d%s'.format(monk_mastery), Damage.PSYCHIC);
+
+        const spent_ki = get_parameter('ki', parameters);
+        if (spent_ki !== null) {
+            roll.add_multiplier(0.5, Damage.ALL, 'self');
+            roll.add_effect('All hit targets are knocked back 20 ft');
+        }
+
+        do_roll(character, ability, roll, parameters, '');
+    }
+
+
     function lightning_duelist_arc_lightning(character, ability, parameters) {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('6d8', Damage.LIGHTNING);
@@ -1492,12 +1582,28 @@ var Barbs = Barbs || (function () {
 
 
     function martial_artist_choke_hold(character, ability, parameters) {
+        const monk_mastery = get_monk_mastery(character);
 
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('4d%s'.format(monk_mastery), Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
-    function martial_artist_flying_hold(character, ability, parameters) {
+    function martial_artist_flying_kick(character, ability, parameters) {
+        const monk_mastery = get_monk_mastery(character);
 
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('6d%s'.format(monk_mastery), Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -2057,6 +2163,11 @@ var Barbs = Barbs || (function () {
             'Hostility': juggernaut_hostility,
             'Tachycardia': juggernaut_tachycardia,
         },
+        'Ki Monk': {
+            'Spirit Punch': ki_monk_spirit_punch,
+            'Drain Punch': ki_monk_drain_punch,
+            'Spirit Shotgun': ki_monk_spirit_shotgun,
+        },
         'Lightning Duelist': {
             'Arc Lightning': lightning_duelist_arc_lightning,
             'Blade Storm': lightning_duelist_blade_storm,
@@ -2067,8 +2178,7 @@ var Barbs = Barbs || (function () {
         'Martial Artist': {
             'Focus Energy': print_ability_description,
             'Choke Hold': martial_artist_choke_hold,
-            'Flying Hold': martial_artist_flying_hold,
-
+            'Flying Kick': martial_artist_flying_kick,
         },
         'Noxomancer': {
             'Darkbomb': noxomancer_darkbomb,

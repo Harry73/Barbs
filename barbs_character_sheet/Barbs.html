@@ -2587,7 +2587,7 @@
 Desired example
 
 &{template:Barbs} {{name=Piercing Shot}}
-{{physical=[[d100]]}} {{fire=[[d100]]}} {{water=[[d100]]}} {{earth=[[d100]]}} {{air=[[d100]]}} {{ice=[[d100]]}} {{lightning=[[d100]]}} {{light=[[d100]]}} {{dark=[[d100]]}} {{healing=[[d100]]}}
+{{physical=[[d100]]}} {{psychic=[[d100]]}} {{fire=[[d100]]}} {{water=[[d100]]}} {{earth=[[d100]]}} {{air=[[d100]]}} {{ice=[[d100]]}} {{lightning=[[d100]]}} {{light=[[d100]]}} {{dark=[[d100]]}} {{healing=[[d100]]}}
 {{crit_value=[[40]]}} {{crit_cutoff=[[50]]}}
 {{effects="something cool"}}
 -->
@@ -2615,6 +2615,13 @@ Desired example
             <td class="template_value">{{physical}}</td>
         </tr>
         {{/physical}}
+
+        {{#psychic}}
+        <tr style="background:#BAFFA5;">
+            <td class="template_label">Psychic:</td>
+            <td class="template_value">{{psychic}}</td>
+        </tr>
+        {{/psychic}}
 
         {{#fire}}
         <tr style="background:#FF8484;">
