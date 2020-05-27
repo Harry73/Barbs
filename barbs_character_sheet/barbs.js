@@ -692,6 +692,8 @@ var Barbs = Barbs || (function () {
         log('Roll: ' + msg);
         chat(character, msg);
     }
+
+
     function format_and_send_dummy_roll(character, ability, roll, rolls_per_type, crit_section) {
         assert_not_null(character, 'format_and_send_roll() character');
         assert_not_null(ability, 'format_and_send_roll() ability');
@@ -703,18 +705,8 @@ var Barbs = Barbs || (function () {
         Object.keys(rolls_per_type).forEach(function (type) {
             damage_section = damage_section + damage_section_format.format(type, rolls_per_type[type]);
         });
+
         return damage_section;
-        let effects = Array.from(roll.effects);
-        // TODO: only add specific-magic-type penetrations if that damage type is in the roll
-        Object.keys(roll.hidden_stats).forEach(function (hidden_stat_format) {
-            const formatted_hidden_stat = hidden_stat_format.format(roll.hidden_stats[hidden_stat_format]);
-            effects.push('<li>%s</li>'.format(formatted_hidden_stat));
-        });
-
-        const effects_section = effects_section_format.format(effects.join(''));
-        const msg = roll_format.format(ability, damage_section, crit_section, effects_section);
-
-        log('Roll: ' + msg);
     }
 
     function finalize_roll(character, roll, parameters) {
@@ -1484,9 +1476,9 @@ var Barbs = Barbs || (function () {
 
 
     function evangelist_magia_erebia(character, ability, parameters) {
+        // Allows you to dispel an active Magia Erebia
         const dispel = get_parameter('dispel', parameters);
-        //Allows you to dispel an active magia erebia
-        if (dispel === 'true' || dispel === 'True' || dispel === 'Yes' || dispel === 'yes'){
+        if (dispel !== null) {
             for (let i = 0; i < persistent_effects.length; i++) {
                 if (persistent_effects[i].name === 'Magia Erebia' && persistent_effects[i].target === character.name) {
                     persistent_effects.splice(i, 1);
@@ -1496,29 +1488,26 @@ var Barbs = Barbs || (function () {
             }
             return
         }
+
         const chosen_spell = get_parameter('spell', parameters);
         if (chosen_spell == null) {
             chat(character, '"spell" parameter, the absorbed spell, is missing');
             return;
         }
-        //checks if magia erebia is already applies
-        var active = 0
+
+        // Check if Magia Erebia is already applies
         for (let i = 0; i < persistent_effects.length; i++) {
-                if (persistent_effects[i].name === 'Magia Erebia' && persistent_effects[i].target === character.name) {
-                    active += 1
-                }
+            if (persistent_effects[i].name === 'Magia Erebia' && persistent_effects[i].target === character.name) {
+                chat(character, 'Magia Erebia is already applied');
+                return;
+            }
         }
-        if (active > 0){
-            chat(character, 'Magia Erebia is already applied');
-            return;
-        }
-        
+
         const duration = 5000;
 
         if (chosen_spell === 'KB') {
             add_persistent_effect(character, ability, character, duration, Ordering(), RollTime.DEFAULT, false,
                 function (char, roll, parameters) {
-                    log('applying ME');
                     roll.add_damage('6d8', Damage.ICE);
                     roll.add_damage('6d8', Damage.DARK);
                     roll.add_effect('Frozen [[1d100]]');
@@ -2032,49 +2021,49 @@ var Barbs = Barbs || (function () {
 
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
-    
+
     function symbiote_power_spike(character, ability, parameters){
-        const ability_info = get_ability_info(ability);
-        
         const target_buff = get_parameter('buff', parameters);
         if (target_buff === null) {
             chat(character, '"buff" parameter is missing');
             return;
         }
+
         const target_name = get_parameter('target', parameters);
         if (target_name === null) {
             chat(character, '"target" parameter is missing');
             return;
         }
+
         const target_character = get_character_by_name(target_name);
         if (target_character === null) {
             return;
         }
+
+        // Figure out the halved duration and remove the buff from persistent effects
+        let new_duration = 0;
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].name === target_buff && persistent_effects[i].target === target_character.name) {
+                new_duration = Math.floor(persistent_effects[i].duration / 2);
+                persistent_effects.splice(i, 1);
+                break;
+            }
+        }
+
+        // Figure out what damage this buff would have granted and add a new persistent effect with that damage multiplied.
+        const source = character.name;
         const roll = new Roll(target_character, RollType.MAGIC);
         roll.add_damage('100', Damage.ICE);
         if (!add_extras(target_character, roll, RollTime.DEFAULT, parameters)) {
             return false;
         }
-        const source = character.name
         const rolls_per_type = roll.roll();
         const damage1 = format_and_send_dummy_roll(target_character, ability, roll, rolls_per_type, '');
         const start1 = damage1.indexOf('=');
         const end1 = damage1.indexOf('}}');
-        const damage1_string = String(damage1.slice(start1+8,end1-2))
+        const damage1_string = String(damage1.slice(start1 + 8, end1 - 2));
         const damage1_true = eval(damage1_string);
-        var new_duration = 0;
-        for (let i = 0; i < persistent_effects.length; i++) {
-            if (persistent_effects[i].name === target_buff && persistent_effects[i].target === target_character.name) {
-                persistent_effects[i].duration = persistent_effects[i].duration/2
-                if (persistent_effects[i].duration === 1.5){
-                    persistent_effects[i].duration === 1;
-                }
-                new_duration = persistent_effects[i].duration;
-                persistent_effects.splice(i, 1);
-                i--;
-            }
-        }
-            
+
         const roll2 = new Roll(target_character, RollType.MAGIC);
         roll2.add_damage('100', Damage.ICE);
         if (!add_extras(target_character, roll2, RollTime.DEFAULT, parameters)) {
@@ -2084,18 +2073,18 @@ var Barbs = Barbs || (function () {
         const damage2 = format_and_send_dummy_roll(target_character, ability, roll2, rolls_per_type2, '');
         const start2 = damage2.indexOf('=');
         const end2 = damage2.indexOf('}}');
-        const damage2_string = String(damage2.slice(start2+8,end2-2))
+        const damage2_string = String(damage2.slice(start2 + 8, end2 - 2));
         const damage2_true = eval(damage2_string);
-        const difference = (damage1_true - damage2_true)/100*1.5;
+
+        const difference = (damage1_true - damage2_true) / 100 * 1.5;
         add_persistent_effect(character, target_buff, target_character, new_duration, Ordering(), RollTime.DEFAULT, false,
            function (char, roll, parameters) {
                 roll.add_multiplier(difference, Damage.ALL, source);
                 return true;
             });
-        chat(character, 'Power Spiked ' + target_buff + ' on ' + target_name);
+        chat(character, 'Power Spiked ' + target_buff + ' on ' + target_character.name);
     }
-    
-    
+
 
     function symbiote_strengthen_body(character, ability, parameters) {
         const ability_info = get_ability_info(ability);
