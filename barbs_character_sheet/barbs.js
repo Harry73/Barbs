@@ -486,6 +486,20 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function get_damage_type(type) {
+        const damage_types = Object.keys(Damage);
+        for (let i = 0; i < damage_types.length; i++) {
+            const damage_type = damage_types[i];
+            const damage_type_string = Damage[damage_type];
+            if (type === damage_type_string) {
+                return damage_type;
+            }
+        }
+
+        return null;
+    }
+
+
     function get_monk_mastery(character) {
         const all_attributes = findObjs({
             type: 'attribute',
@@ -1035,22 +1049,27 @@ var Barbs = Barbs || (function () {
             damage_types.push(damage_types[0]);
         }
 
-        const dummy_roll = new Roll(character, RollType.MAGIC);
-        if (!add_extras(character, dummy_roll, RollTime.DEFAULT, parameters)) {
-            return false;
+        // Check that we understand the given damage types
+        for (let i = 0; i < damage_types.length; i++) {
+            const damage_type = get_damage_type(damage_types[i]);
+            if (damage_type === null) {
+                chat(character, 'Unrecognized damage_type "%s"'.format(damage_types[i]));
+                return;
+            }
         }
 
         for (let i = 0; i < damage_types.length; i++) {
             const roll = new Roll(character, RollType.MAGIC);
             roll.add_damage('%sd12'.format(1), damage_types[i]);
             roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), damage_types[i]);
-            roll.copy_damages(dummy_roll);
-            roll.copy_multipliers(dummy_roll);
-            const rolls_per_type = roll.roll();
-            format_and_send_roll(character, '%s (%sd12)'.format(ability, 1), roll,rolls_per_type, '');
-        }
 
-        finalize_roll(character, dummy_roll, parameters);
+            if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
+                return false;
+            }
+
+            const do_finalize = (i === damage_types.length - 1);
+            do_roll(character, ability, roll, parameters, '', do_finalize);
+        }
     }
 
 
