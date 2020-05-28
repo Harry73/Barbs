@@ -383,6 +383,33 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function list_persistent_effects(msg) {
+        const pieces = msg.content.split(' ');
+        let character = null;
+        if (pieces.length > 2) {
+            const character_name = pieces.slice(2).join(' ');
+            character = get_character_by_name(character_name);
+
+        } else {
+            character = get_character(msg);
+        }
+
+        if (character === null) {
+            return;
+        }
+
+        let response = '';
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].target === character.name) {
+                response = response = '<li>%s</li>'.format(persistent_effects[i].name);
+            }
+        }
+
+        const format = '&{template:Barbs} {{name=Effects on %s}} {{effects=%s}}';
+        chat(character, format.format(character.name, response));
+    }
+
+
     function remove_persistent_effect(msg) {
         const pieces = msg.content.split(' ');
         const options = pieces.slice(2).join(' ');
@@ -2685,6 +2712,7 @@ var Barbs = Barbs || (function () {
         'initiative': roll_initiative,
         'concentration': roll_concentration,
         'ability': process_ability,
+        'list_effects': list_persistent_effects,
         'remove_effect': remove_persistent_effect,
     };
 
