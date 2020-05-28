@@ -84,12 +84,12 @@ article p {
 
 /* Image at the top */
 
-#logo-container {
+.img-container-l1 {
     display: inline-block;
     padding-left: 20%;  /* Same as the width of the sidenav */
 }
 
-#logo {
+.img-container-l2 {
     margin-left: 10%;
     margin-right: 10%;
     vertical-align: middle;
