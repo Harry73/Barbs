@@ -819,7 +819,34 @@ var Barbs = Barbs || (function () {
         return true;
     }
 
+    function captain_inspirational_speech(character, ability, parameters) {
+        const ability_info = get_ability_info(ability);
 
+        const parameter = get_parameter('targets', parameters);
+        if (parameter === null) {
+            chat(character, '"targets" parameter, the list of affected players, is missing');
+            return;
+        }
+
+        const target_names = parameter.split(',');
+        for (let i = 0; i < target_names.length; i++) {
+            const fake_msg = {'who': target_names[i], 'id': ''};
+            const target_character = get_character(fake_msg);
+            if (target_character === null) {
+                return;
+            }
+
+            const source = character.name;
+            add_persistent_effect(character, ability, target_character, 1, Ordering(), RollTime.DEFAULT, false,
+                function (char, roll, parameters) {
+                    roll.add_multiplier(1, Damage.ALL, source);
+                    return true;
+                });
+        }
+
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+    }
+    
     function cryomancer_frostbite(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
@@ -2336,6 +2363,9 @@ var Barbs = Barbs || (function () {
             'Sharpen': assassin_sharpen,
             'Skyfall': assassin_skyfall,
             'Vanish': print_ability_description,
+        },
+        'Captain': {
+            'Inspirational Speech': captain_inspirational_speech,
         },
         'Champion': {
             'Disarming Blow': champion_disarming_blow,
