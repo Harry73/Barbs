@@ -5585,7 +5585,11 @@
         "tags": [
             "Spell",
             "utility"
-        ]
+        ],
+        "api": {
+            "description": "Specify the buff you want to improve with the \"buff\" parameter. Specify the person being targeted with the \"target\" parameter. Using a character's first name is sufficient.",
+            "examples": ["buff: Strengthen Soul; target: Faust"]
+        }
     },
     {
         "type": "ability",

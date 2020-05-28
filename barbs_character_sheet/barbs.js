@@ -2111,6 +2111,7 @@ var Barbs = Barbs || (function () {
 
             return true;
         };
+
         chat(character, 'Power Spiked ' + target_buff + ' on ' + target_character.name);
     }
 
