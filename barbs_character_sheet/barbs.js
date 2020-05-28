@@ -2050,7 +2050,7 @@ var Barbs = Barbs || (function () {
         }
 
         if (index === -1) {
-            chat('Did not find buff with name "%s" and target "%s"'.format(target_buff, target_character.name));
+            chat(character, 'Did not find buff with name "%s" and target "%s"'.format(target_buff, target_character.name));
             return;
         }
         persistent_effects[index].duration = Math.floor(persistent_effects[index].duration / 2);
@@ -2061,13 +2061,45 @@ var Barbs = Barbs || (function () {
 
         // Edit the handler into something that grants the same damages and multipliers, but increased by 50%
         persistent_effects[index].handler = function (char, roll, parameters) {
+            // For added damages, increase the number of damage dice by 1.5
             const damage_types = Object.keys(fake_roll.damages);
             for (let i = 0; i < damage_types.length; i++) {
                 const damage_type = damage_types[i];
                 const base_damage = fake_roll.damages[damage_type];
-                roll.add_damage('(1.5*(%s))'.format(base_damage), damage_type);
+
+                const dmg_pieces = base_damage.split('+');
+                let revised_dmg = '';
+
+                const append = function (piece) {
+                    if (revised_dmg === '') {
+                        revised_dmg = piece;
+                    } else {
+                        revised_dmg = revised_dmg + '+' + piece;
+                    }
+                };
+
+                for (let j = 0; j < dmg_pieces.length; j++) {
+                    const dmg_piece = dmg_pieces[j];
+                    if (!dmg_piece.includes('d')) {
+                        append(dmg_piece);
+
+                    } else {
+                        let count = dmg_piece.split('d')[0];
+                        if (count === '') {
+                            count = 0;
+                        } else {
+                            count = parseInt(count);
+                        }
+                        const die = dmg_piece.split('d')[1];
+                        const revised_piece = '%sd%s'.format(Math.round(1.5 * count), die);
+                        append(revised_piece);
+                    }
+                }
+
+                roll.add_damage('(%s)'.format(revised_dmg), damage_type);
             }
 
+            // For added multipliers, multiply the multiplier by 1.5
             const multiplier_types = Object.keys(fake_roll.multipliers);
             for (let i = 0; i < multiplier_types.length; i++) {
                 const multiplier_type = multiplier_types[i];
