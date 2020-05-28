@@ -33,6 +33,26 @@ var Barbs = Barbs || (function () {
     }
 
 
+    const LogLevel = {
+        TRACE: 0,
+        DEBUG: 1,
+        INFO: 2,
+        WARN: 3,
+        ERROR: 4,
+    };
+    const LOG_LEVEL = LogLevel.INFO;
+
+
+    function _log(log_level, string) {
+        assert_not_null(log_level, '_log() log_level');
+        assert_not_null(string, '_log() string');
+
+        if (log_level >= LOG_LEVEL) {
+            log(string);
+        }
+    }
+
+
     const STATE_NAME = 'Barbs';
     const LAST_TURN_ID = 'last_turn_id';
 
@@ -97,11 +117,11 @@ var Barbs = Barbs || (function () {
         }
 
         if (characters.length === 0) {
-            log('Did not find a character for ' + msg.who);
+            _log(LogLevel.ERROR, 'Did not find a character for ' + msg.who);
             return null;
         } else if (characters.length > 1) {
             // warn, but pray we've got the right ones regardless
-            log('warning, found ' + characters.length + ' matching characters for ' + msg.who);
+            _log(LogLevel.WARN, 'Found ' + characters.length + ' matching characters for ' + msg.who);
         }
 
         return new BarbsComponents.Character(characters[0], msg.who);
@@ -168,7 +188,6 @@ var Barbs = Barbs || (function () {
     function roll_stat(msg) {
         const character = get_character(msg);
         if (character === null) {
-            log('error, unknown character for ' + msg.who);
             return;
         }
 
@@ -269,7 +288,6 @@ var Barbs = Barbs || (function () {
     function roll_skill(msg) {
         const character = get_character(msg);
         if (character === null) {
-            log('error, unknown character for ' + msg.who);
             return;
         }
 
@@ -281,7 +299,7 @@ var Barbs = Barbs || (function () {
         const skill_name = given_skill_name.replace(/:/g, '').replace(/ /g, '_').toUpperCase();
 
         if (!(skill_name in Skill)) {
-            log('error, skill "' + skill_to_roll + '" not in skill-to-attribute map');
+            chat(character, 'Error, skill "%s" not in skill-to-attribute map'.format(skill_name));
             return;
         }
 
@@ -304,7 +322,6 @@ var Barbs = Barbs || (function () {
     function roll_initiative(msg) {
         const character = get_character(msg);
         if (character === null) {
-            log('error, unknown character for ' + msg.who);
             return;
         }
 
@@ -318,7 +335,6 @@ var Barbs = Barbs || (function () {
     function roll_concentration(msg) {
         const character = get_character(msg);
         if (character === null) {
-            log('error, unknown character for ' + msg.who);
             return;
         }
 
@@ -372,13 +388,13 @@ var Barbs = Barbs || (function () {
         // priority effects last
         for (let i = 0; i < persistent_effects.length; i++) {
             if (persistent_effects[i].ordering.val > effect.ordering.val) {
-                log('Added persistent effect %s'.format(JSON.stringify(effect)));
+                _log(LogLevel.INFO, 'Added persistent effect %s'.format(JSON.stringify(effect)));
                 persistent_effects.splice(i, 0, effect);
                 return;
             }
         }
 
-        log('Added persistent effect %s'.format(JSON.stringify(effect)));
+        _log(LogLevel.INFO, 'Added persistent effect %s'.format(JSON.stringify(effect)));
         persistent_effects.push(effect);
     }
 
@@ -463,7 +479,7 @@ var Barbs = Barbs || (function () {
             }
         }
 
-        log('ERROR: ability ' + ability_name + ' not found');
+        _log(LogLevel.ERROR, 'Ability ' + ability_name + ' not found');
         return null;
     }
 
@@ -477,7 +493,7 @@ var Barbs = Barbs || (function () {
             }
         }
 
-        log('ERROR: Class with passive ' + passive + ' not found');
+        _log(LogLevel.ERROR, 'Class with passive ' + passive + ' not found');
         return null;
     }
 
@@ -586,11 +602,11 @@ var Barbs = Barbs || (function () {
 
         add_items_to_roll(character, roll, roll_time);
         if (!handle_arbitrary_parameters(roll, roll_time, parameters)) {
-            log('Problem handling arbitrary parameters at time ' + roll_time);
+            _log(LogLevel.WARN, 'Problem handling arbitrary parameters at time ' + roll_time);
             return false;
         }
         if (!add_persistent_effects_to_roll(character, roll, roll_time, parameters)) {
-            log('Problem adding persistent effects to roll at time ' + roll_time);
+            _log(LogLevel.WARN, 'Problem adding persistent effects to roll at time ' + roll_time);
             return false;
         }
 
@@ -716,25 +732,10 @@ var Barbs = Barbs || (function () {
         const effects_section = effects_section_format.format(effects.join(''));
         const msg = roll_format.format(ability, damage_section, crit_section, effects_section);
 
-        log('Roll: ' + msg);
+        _log(LogLevel.INFO, 'Roll: ' + msg);
         chat(character, msg);
     }
 
-
-    function format_and_send_dummy_roll(character, ability, roll, rolls_per_type, crit_section) {
-        assert_not_null(character, 'format_and_send_roll() character');
-        assert_not_null(ability, 'format_and_send_roll() ability');
-        assert_not_null(roll, 'format_and_send_roll() roll');
-        assert_not_null(rolls_per_type, 'format_and_send_roll() rolls_per_type');
-        assert_not_null(crit_section, 'format_and_send_roll() crit_section');
-
-        let damage_section = '';
-        Object.keys(rolls_per_type).forEach(function (type) {
-            damage_section = damage_section + damage_section_format.format(type, rolls_per_type[type]);
-        });
-
-        return damage_section;
-    }
 
     function finalize_roll(character, roll, parameters) {
         assert_not_null(character, 'finalize_roll() character');
@@ -958,7 +959,6 @@ var Barbs = Barbs || (function () {
     function roll_item(msg) {
         const character = get_character(msg);
         if (character === null) {
-            log('error, unknown character for ' + msg.who);
             return;
         }
 
@@ -1201,7 +1201,6 @@ var Barbs = Barbs || (function () {
     function assassin_skyfall(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('8d4', Damage.PHYSICAL);
-        log("skyfall");
         roll.add_crit_damage_mod(100);
         add_scale_damage(character, roll);
 
@@ -2490,11 +2489,11 @@ var Barbs = Barbs || (function () {
 
         // Double check that the class and ability names are correct based on the master components list
         if (!(clazz in BarbsComponents.classes)) {
-            log('WARNING: mismatched class %s'.format(clazz));
+            _log(LogLevel.WARN, 'Mismatched class %s'.format(clazz));
         }
         if (!(BarbsComponents.classes[clazz].abilities.includes(ability))
                 && Object.keys(BarbsComponents.classes[clazz].passive)[0] !== ability) {
-            log('WARNING: mismatched ability %s'.format(ability));
+            _log(LogLevel.WARN, 'Mismatched ability %s'.format(ability));
         }
 
         const processor = abilities_processors[clazz][ability];
@@ -2558,27 +2557,29 @@ var Barbs = Barbs || (function () {
     function get_name_from_token_id(id) {
         assert_not_null(id, 'get_name_from_token_id() id');
 
-        const current_token = getObj('graphic', id);
-        if (current_token === null) {
-            log('current_token is null');
+        _log(LogLevel.DEBUG, 'get name for ' + id);
+
+        const token = getObj('graphic', id);
+        if (token === null || token === undefined) {
+            _log(LogLevel.DEBUG, 'no token found for id ' + id);
             return null;
         }
 
-        const current_name = current_token.get('name');
-        if (current_name === null) {
-            log('current_name is null');
+        const token_name = token.get('name');
+        if (token_name === null) {
+            _log(LogLevel.DEBUG, 'token_name is null, token=' + token);
             return null;
         }
 
-        return current_name;
+        return token_name;
     }
 
 
     function do_turn_order_change() {
         const turn = get_current_turn();
-        log('turn order changed ' + turn.id);
+        _log(LogLevel.INFO, 'turn order changed ' + turn.id);
         if (turn.id === state[STATE_NAME][LAST_TURN_ID]) {
-            log('no real turn order change');
+            _log(LogLevel.DEBUG, 'no real turn order change');
             return;
         }
 
@@ -2594,7 +2595,7 @@ var Barbs = Barbs || (function () {
             setTimeout(function () {
                 wait_for_turn_order_change(do_turn_order_change);
             }, 100);
-            log('CombatTracker token ignored');
+            _log(LogLevel.DEBUG, 'CombatTracker token ignored');
             return;
         }
 
@@ -2618,7 +2619,8 @@ var Barbs = Barbs || (function () {
             }
 
             if (persistent_effects[i].duration === 0) {
-                log('Persistent effect %s on %s ended'.format(persistent_effects[i].name, persistent_effects[i].target));
+                _log(LogLevel.INFO, 'Persistent effect %s on %s ended'.format(persistent_effects[i].name,
+                                                                              persistent_effects[i].target));
                 persistent_effects.splice(i, 1);
                 i--;
             }
@@ -2648,7 +2650,8 @@ var Barbs = Barbs || (function () {
                 }
 
                 if (persistent_effects[i].duration === 0) {
-                    log('Persistent effect %s on %s ended'.format(persistent_effects[i].name, persistent_effects[i].target));
+                    _log(LogLevel.INFO, 'Persistent effect %s on %s ended'.format(persistent_effects[i].name,
+                                                                                  persistent_effects[i].target));
                     persistent_effects.splice(i, 1);
                     i--;
                 }
@@ -2744,7 +2747,7 @@ var Barbs = Barbs || (function () {
                 return;
             }
 
-            log('API call: who=' + msg.who + ', message="' + msg.content + '"');
+            _log(LogLevel.INFO, 'API call: who=%s, message="%s"'.format(msg.who, msg.content));
 
             const sub_command = pieces[1];
             if (!(sub_command in subcommand_handlers)) {
@@ -2772,7 +2775,7 @@ var Barbs = Barbs || (function () {
 
         on('chat:message', handle_input);
         on('change:campaign:turnorder', handle_turn_order_change);
-        log('Barbs API ready');
+        _log(LogLevel.INFO, 'Barbs API ready');
     };
 
 
