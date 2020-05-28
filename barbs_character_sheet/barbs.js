@@ -2040,48 +2040,45 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        // Figure out the halved duration and remove the buff from persistent effects
-        let new_duration = 0;
+        // Find the buff
+        let index = -1;
         for (let i = 0; i < persistent_effects.length; i++) {
             if (persistent_effects[i].name === target_buff && persistent_effects[i].target === target_character.name) {
-                new_duration = Math.floor(persistent_effects[i].duration / 2);
-                persistent_effects.splice(i, 1);
+                index = i;
                 break;
             }
         }
 
-        // Figure out what damage this buff would have granted and add a new persistent effect with that damage multiplied.
-        const source = character.name;
-        const roll = new Roll(target_character, RollType.MAGIC);
-        roll.add_damage('100', Damage.ICE);
-        if (!add_extras(target_character, roll, RollTime.DEFAULT, parameters)) {
-            return false;
+        if (index === -1) {
+            chat('Did not find buff with name "%s" and target "%s"'.format(target_buff, target_character.name));
+            return;
         }
-        const rolls_per_type = roll.roll();
-        const damage1 = format_and_send_dummy_roll(target_character, ability, roll, rolls_per_type, '');
-        const start1 = damage1.indexOf('=');
-        const end1 = damage1.indexOf('}}');
-        const damage1_string = String(damage1.slice(start1 + 8, end1 - 2));
-        const damage1_true = eval(damage1_string);
+        persistent_effects[index].duration = Math.floor(persistent_effects[index].duration / 2);
 
-        const roll2 = new Roll(target_character, RollType.MAGIC);
-        roll2.add_damage('100', Damage.ICE);
-        if (!add_extras(target_character, roll2, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        const rolls_per_type2 = roll2.roll();
-        const damage2 = format_and_send_dummy_roll(target_character, ability, roll2, rolls_per_type2, '');
-        const start2 = damage2.indexOf('=');
-        const end2 = damage2.indexOf('}}');
-        const damage2_string = String(damage2.slice(start2 + 8, end2 - 2));
-        const damage2_true = eval(damage2_string);
+        // Figure out what damage / multiplier this buff grants
+        const fake_roll = new Roll(target_character, RollType.ALL);
+        persistent_effects[index].handler(target_character, fake_roll, parameters);
 
-        const difference = (damage1_true - damage2_true) / 100 * 1.5;
-        add_persistent_effect(character, target_buff, target_character, new_duration, Ordering(), RollTime.DEFAULT, false,
-           function (char, roll, parameters) {
-                roll.add_multiplier(difference, Damage.ALL, source);
-                return true;
-            });
+        // Edit the handler into something that grants the same damages and multipliers, but increased by 50%
+        persistent_effects[index].handler = function (char, roll, parameters) {
+            const damage_types = Object.keys(fake_roll.damages);
+            for (let i = 0; i < damage_types.length; i++) {
+                const damage_type = damage_types[i];
+                const base_damage = fake_roll.damages[damage_type];
+                roll.add_damage('(1.5*(%s))'.format(base_damage), damage_type);
+            }
+
+            const multiplier_types = Object.keys(fake_roll.multipliers);
+            for (let i = 0; i < multiplier_types.length; i++) {
+                const multiplier_type = multiplier_types[i];
+                if (character.name in fake_roll.multipliers[multiplier_type]) {
+                    const base_multiplier = fake_roll.multipliers[multiplier_type][character.name];
+                    roll.add_multiplier('(1.5*(%s))'.format(base_multiplier), multiplier_type, character.name);
+                }
+            }
+
+            return true;
+        };
         chat(character, 'Power Spiked ' + target_buff + ' on ' + target_character.name);
     }
 
