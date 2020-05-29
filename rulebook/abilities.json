@@ -6762,7 +6762,6 @@
             "description": "Roll \"Summon Bronze Dragon\" to do the breath attacks of your summoned bronze dragons separately.",
             "examples": []
         }
-    }
     },
     {
         "type": "ability",
