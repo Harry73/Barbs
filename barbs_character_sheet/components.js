@@ -13937,7 +13937,9 @@ var BarbsComponents = BarbsComponents || (function () {
 
         csv_to_array(list) {
             const items = [];
-            list.split(',').forEach(i => items.push(i.trim()));
+            if (list !== undefined && list !== null) {
+                list.split(',').forEach(i => items.push(i.trim()));
+            }
             return items;
         }
 
@@ -13947,7 +13949,7 @@ var BarbsComponents = BarbsComponents || (function () {
             for (let i = 0; i < character_sheet_item_slots.length; i++) {
                 const slot = character_sheet_item_slots[i];
                 const item_name = getAttrByName(this.id, slot);
-                if (item_name !== '') {
+                if (item_name !== undefined && item_name !== null && item_name !== '') {
                     item_names.push(item_name);
                 }
             }

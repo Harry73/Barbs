@@ -853,6 +853,17 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function dragoncaller_draconic_pact(roll, roll_time, parameter) {
+        if (roll_time !== RollTime.DEFAULT) {
+            return true;
+        }
+
+        const pacts = parseInt(parameter.split(' ')[1]);
+        roll.add_multiplier(pacts, Damage.ALL, 'self');
+        return true;
+    }
+
+
     function daggerspell_ritual_dagger(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
@@ -936,6 +947,7 @@ var Barbs = Barbs || (function () {
         'misc_damage': arbitrary_damage,
         'pursued': assassin_pursue_mark,
         'daggerspell_marked': daggerspell_marked,
+        'draconic_pact': dragoncaller_draconic_pact,
         'empowered': daggerspell_ritual_dagger,
         'spotting': sniper_spotter,
         'tide': aquamancer_tide,
@@ -1462,6 +1474,7 @@ var Barbs = Barbs || (function () {
     function dynamancer_spark_bolt(character, ability, parameters) {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('4d12', Damage.LIGHTNING);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.LIGHTNING);
         roll.add_effect('50% chance to deal an additional d12 lightning magic damage');
         roll.add_effect('30% to inflict Paralyze for 1 minute');
         roll.add_effect('20% to inflict Stunned until the beginning of your next turn');
@@ -1513,6 +1526,61 @@ var Barbs = Barbs || (function () {
         });
     }
 
+
+    function dragoncaller_summon_bronze_dragon(character, ability, parameters) {
+        const major_action = get_parameter('major', parameters);
+        const minor_action = get_parameter('minor', parameters);
+
+        if (major_action !== null) {
+            // TODO: should the character for these rolls actually be `character`? Or should it be some fake character
+            //  for the summoned dragon? I imagine that the dragon shouldn't be getting whatever is applied to the
+            //  the caster, or whatever effects are granted by the caster's items. This currently doesn't work.
+            const dragon = new BarbsComponents.Character({'id': 'garbage'}, character.who);
+
+            if (major_action === 'breath') {
+                const roll = new Roll(dragon, RollType.MAGIC);
+                roll.add_damage('10d12', Damage.LIGHTNING);
+
+                roll_crit(roll, parameters, function (crit_section) {
+                    do_roll(dragon, ability, roll, parameters, crit_section);
+                });
+
+            } else if (major_action === 'claw') {
+                const roll = new Roll(dragon, RollType.PHYSICAL);
+                roll.add_damage('10d10', Damage.PHYSICAL);
+
+                roll_crit(roll, parameters, function (crit_section) {
+                    do_roll(dragon, ability, roll, parameters, crit_section);
+                });
+
+            } else {
+                chat(character, 'Unexpected option for parameter "major", expected {claw/breath}')
+            }
+        }
+
+        if (minor_action !== null) {
+            // TODO deal with this better. We're gonna need a list of allies for the buff, and it's not worth doing
+            // anything for the debuff.
+            if (minor_action === 'buff') {
+
+            } else if (minor_action === 'debuff') {
+
+            } else {
+                chat(character, 'Unexpected option for parameter "minor", expected {buff/debuff}')
+            }
+        }
+    }
+
+
+    function dragoncaller_bronze_dragon_breath(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('6d12', Damage.LIGHTNING);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.LIGHTNING);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
 
     function enchanter_modify_weapon(character, ability, parameters) {
         const target_name = get_parameter('target', parameters);
@@ -2419,6 +2487,10 @@ var Barbs = Barbs || (function () {
             'Challenge': destroyer_challenge,
             'Rampage': destroyer_rampage,
             'Slam': destroyer_slam,
+        },
+        'Dragoncaller': {
+            'Summon Bronze Dragon': dragoncaller_summon_bronze_dragon,
+            'Bronze Dragon Breath': dragoncaller_bronze_dragon_breath,
         },
         'Dynamancer': {
             'Spark Bolt': dynamancer_spark_bolt,
