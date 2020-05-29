@@ -1072,7 +1072,11 @@
             "destruction",
             "self-target",
             "damage increase"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",

@@ -702,6 +702,12 @@ var Barbs = Barbs || (function () {
             return;
         }
 
+        // If we shouldn't actually apply crit chance to this roll, empty out the crit section. Effects that are
+        // dependent on whether or not the roll was a crit should not have been applied.
+        if (!roll.should_apply_crit) {
+            crit_section = '';
+        }
+
         const rolls_per_type = roll.roll();
         format_and_send_roll(character, ability, roll, rolls_per_type, crit_section);
         if (do_finalize) {
@@ -820,34 +826,7 @@ var Barbs = Barbs || (function () {
         return true;
     }
 
-    function captain_inspirational_speech(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
 
-        const parameter = get_parameter('targets', parameters);
-        if (parameter === null) {
-            chat(character, '"targets" parameter, the list of affected players, is missing');
-            return;
-        }
-
-        const target_names = parameter.split(',');
-        for (let i = 0; i < target_names.length; i++) {
-            const fake_msg = {'who': target_names[i], 'id': ''};
-            const target_character = get_character(fake_msg);
-            if (target_character === null) {
-                return;
-            }
-
-            const source = character.name;
-            add_persistent_effect(character, ability, target_character, 1, Ordering(), RollTime.DEFAULT, false,
-                function (char, roll, parameters) {
-                    roll.add_multiplier(1, Damage.ALL, source);
-                    return true;
-                });
-        }
-
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
-    }
-    
     function cryomancer_frostbite(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
@@ -1038,8 +1017,6 @@ var Barbs = Barbs || (function () {
 
 
     function air_duelist_arc_of_air(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
         add_persistent_effect(character, ability, character, 6,  Ordering(), RollTime.DEFAULT, false,
             function (character, roll, parameters) {
                 if (roll.roll_type === RollType.PHYSICAL || roll.roll_type === RollType.ALL) {
@@ -1048,6 +1025,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
+        const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
@@ -1065,14 +1043,13 @@ var Barbs = Barbs || (function () {
 
 
     function air_duelist_mistral_bow(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
-        add_persistent_effect(character, ability, character, 6,  Ordering(), RollTime.DEFAULT, true,
+        add_persistent_effect(character, ability, character, 6,  Ordering(), RollTime.DEFAULT, false,
             function (character, roll, parameters) {
                 roll.add_effect('Bow attacks push target 5ft away');
                 return true;
             });
 
+        const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
@@ -1081,10 +1058,10 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.HEALING);
         roll.add_damage('6d6', Damage.HEALING);
         roll.add_effect('Cleanse a random condition on the target for every 6 you roll');
-        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        do_roll(character, ability, roll, parameters, '');
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -1092,10 +1069,10 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('8d6', Damage.WATER);
         roll.add_effect('Leaves behind a field of shallow water that is difficult terrain for 1 hour');
-        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        do_roll(character, ability, roll, parameters, '');
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -1127,18 +1104,46 @@ var Barbs = Barbs || (function () {
             }
         }
 
-        for (let i = 0; i < damage_types.length; i++) {
-            const roll = new Roll(character, RollType.MAGIC);
-            roll.add_damage('%sd12'.format(1), damage_types[i]);
-            roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), damage_types[i]);
+        // This is a bit more complicated that you might expect in case the spell has the ability to crit.
+        const dummy_roll = new Roll(character, RollType.MAGIC);
+        roll_crit(dummy_roll, parameters, function (crit_section) {
+            for (let i = 0; i < damage_types.length; i++) {
+                const roll = new Roll(character, RollType.MAGIC);
+                roll.add_damage('%sd12'.format(1), damage_types[i]);
+                roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), damage_types[i]);
 
-            if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
-                return false;
+                roll.copy_damages(dummy_roll);
+                roll.copy_multipliers(dummy_roll);
+
+                if (!add_extras(character, dummy_roll, RollTime.POST_CRIT, parameters)) {
+                    return;
+                }
+
+                if (!roll.should_apply_crit) {
+                    crit_section = '';
+                }
+
+                const rolls_per_type = roll.roll();
+                format_and_send_roll(character, '%s (%s)'.format(ability, damage_types[i]), roll, rolls_per_type,
+                                     crit_section);
             }
 
-            const do_finalize = (i === damage_types.length - 1);
-            do_roll(character, ability, roll, parameters, '', do_finalize);
-        }
+            finalize_roll(character, dummy_roll, parameters);
+        });
+    }
+
+
+    function arcanist_magic_primer(character, ability, parameters) {
+        // This should be applied before other effects that rely on knowing whether or not a roll was a crit
+        add_persistent_effect(character, ability, character, 1,  Ordering(10), RollTime.DEFAULT, true,
+            function (character, roll, parameters) {
+                roll.add_multiplier(0.3, Damage.ALL, 'self');
+                roll.should_apply_crit = true;
+                return true;
+            });
+
+        const ability_info = get_ability_info(ability);
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
@@ -1208,8 +1213,6 @@ var Barbs = Barbs || (function () {
 
 
     function assassin_sharpen(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
         add_persistent_effect(character, ability, character, 6,  Ordering(90), RollTime.POST_CRIT, false,
             function (character, roll, parameters) {
                 // We're going to inspect the damages accumulated in the roll and change any d4's to d6's. This relies
@@ -1221,6 +1224,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
+        const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
@@ -1238,14 +1242,41 @@ var Barbs = Barbs || (function () {
 
 
     function assassin_focus(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
-        add_persistent_effect(character, ability, character, ability_info.duration,  Ordering(), RollTime.DEFAULT, true,
+        add_persistent_effect(character, ability, character, 1,  Ordering(), RollTime.DEFAULT, true,
             function (character, roll, parameters) {
                 roll.add_crit_chance(30);
                 return true;
             });
 
+        const ability_info = get_ability_info(ability);
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+    }
+
+
+    function captain_inspirational_speech(character, ability, parameters) {
+        const parameter = get_parameter('targets', parameters);
+        if (parameter === null) {
+            chat(character, '"targets" parameter, the list of affected players, is missing');
+            return;
+        }
+
+        const target_names = parameter.split(',');
+        for (let i = 0; i < target_names.length; i++) {
+            const fake_msg = {'who': target_names[i], 'id': ''};
+            const target_character = get_character(fake_msg);
+            if (target_character === null) {
+                return;
+            }
+
+            const source = character.name;
+            add_persistent_effect(character, ability, target_character, 1, Ordering(), RollTime.DEFAULT, false,
+                function (char, roll, parameters) {
+                    roll.add_multiplier(1, Damage.ALL, source);
+                    return true;
+                });
+        }
+
+        const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
@@ -1262,6 +1293,7 @@ var Barbs = Barbs || (function () {
 
 
     function champion_master_of_arms(character, ability, parameters) {
+        // TODO
         chat(character, 'not yet implemented');
     }
 
@@ -1343,10 +1375,11 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('%sd8'.format(dice), Damage.ICE);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
-        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        do_roll(character, ability, roll, parameters, '');
+
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -1355,27 +1388,24 @@ var Barbs = Barbs || (function () {
         roll_1.add_damage('8d8', Damage.ICE);
         roll_1.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
         roll_1.add_effect('Frozen');
-        if (!add_extras(character, roll_1, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        do_roll(character, '%s (5 ft)'.format(ability), roll_1, parameters, '', /*do_finalize=*/false);
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, '%s (5 ft)'.format(ability), roll_1, parameters, crit_section, /*do_finalize=*/false);
+        });
 
         const roll_2 = new Roll(character, RollType.MAGIC);
         roll_2.add_damage('6d8', Damage.ICE);
         roll_2.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
         roll_1.add_effect('Slowed');
-        if (!add_extras(character, roll_2, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        do_roll(character, '%s (5 ft)'.format(ability), roll_2, parameters, '', /*do_finalize=*/false);
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, '%s (10 ft)'.format(ability), roll_2, parameters, crit_section, /*do_finalize=*/false);
+        });
 
         const roll_3 = new Roll(character, RollType.MAGIC);
         roll_3.add_damage('4d8', Damage.ICE);
         roll_3.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
-        if (!add_extras(character, roll_3, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        do_roll(character, '%s (5 ft)'.format(ability), roll_3, parameters, '', /*do_finalize=*/true);
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, '%s (15 ft)'.format(ability), roll_3, parameters, crit_section, /*do_finalize=*/true);
+        });
     }
 
 
@@ -1383,10 +1413,9 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('6d8', Damage.ICE);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
-        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        do_roll(character, ability, roll, parameters, '');
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -1409,7 +1438,6 @@ var Barbs = Barbs || (function () {
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
         });
-
     }
 
 
@@ -1437,10 +1465,9 @@ var Barbs = Barbs || (function () {
         roll.add_effect('50% chance to deal an additional d12 lightning magic damage');
         roll.add_effect('30% to inflict Paralyze for 1 minute');
         roll.add_effect('20% to inflict Stunned until the beginning of your next turn');
-        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        do_roll(character, ability, roll, parameters, '');
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -1682,10 +1709,9 @@ var Barbs = Barbs || (function () {
             roll.add_effect('All hit targets are knocked back 20 ft');
         }
 
-        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        do_roll(character, ability, roll, parameters, '');
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -1693,10 +1719,10 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('6d8', Damage.LIGHTNING);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.LIGHTNING);
-        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        do_roll(character, ability, roll, parameters, '');
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -1724,10 +1750,10 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('3d8', Damage.LIGHTNING);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.LIGHTNING);
-        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        do_roll(character, ability, roll, parameters, '');
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -1744,8 +1770,6 @@ var Barbs = Barbs || (function () {
 
 
     function lightning_duelist_sword_of_lightning(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
         add_persistent_effect(character, ability, character, 6,  Ordering(), RollTime.DEFAULT, false,
             function (character, roll, parameters) {
                 if (roll.roll_type === RollType.PHYSICAL || roll.roll_type === RollType.ALL) {
@@ -1754,6 +1778,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
+        const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
@@ -1785,8 +1810,8 @@ var Barbs = Barbs || (function () {
 
 
     function noxomancer_darkbomb(character, ability, parameters) {
-        const target_name = get_parameter('delay', parameters);
-        if (target_name === null) {
+        const delay = get_parameter('delay', parameters);
+        if (delay === null) {
             chat(character, '"delay {true/false}" parameter is missing');
             return;
         }
@@ -1794,18 +1819,19 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.DARK);
 
-        if (choice === 'false') {
+        if (delay === 'false') {
             roll.add_damage('3d10', Damage.DARK);
             roll.add_effect('1 curse')
-        } else if (choice === 'true') {
+        } else if (delay === 'true') {
             roll.add_damage('6d10', Damage.DARK);
             roll.add_effect('2 curses')
+        } else {
+            chat(character, 'Incorrect option for "delay" parameter, should be "delay {true/false}"')
         }
 
-        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        do_roll(character, ability, roll, parameters, '');
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -1816,10 +1842,10 @@ var Barbs = Barbs || (function () {
         roll.add_effect('Unblockable/uncounterable if this is your second fire spell this turn');
         roll.add_effect('-5% Fire MR');
         roll.add_effect('+5% Fire Vulnerability');
-        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        do_roll(character, ability, roll, parameters, '');
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -1830,10 +1856,10 @@ var Barbs = Barbs || (function () {
         roll.add_effect('Hit enemies 15 ft from you are inflicted with Burn X, where X is equal to the amount of damage rolled');
         roll.add_effect('-5% Fire MR');
         roll.add_effect('+5% Fire Vulnerability');
-        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
-            return false;
-        }
-        do_roll(character, ability, roll, parameters, '');
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -1855,8 +1881,6 @@ var Barbs = Barbs || (function () {
 
 
     function sniper_analytical_shooter(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
         const parameter = get_parameter('concentration', parameters);
         if (parameter === null) {
             chat(character, '"concentration {true/false}" parameter is required');
@@ -1864,14 +1888,14 @@ var Barbs = Barbs || (function () {
         }
 
         if (parameter === 'true') {
-            add_persistent_effect(character, ability, character, ability_info.duration,  Ordering(), RollTime.DEFAULT, true,
+            add_persistent_effect(character, ability, character, 1,  Ordering(), RollTime.DEFAULT, true,
                 function (character, roll, parameters) {
                     roll.add_crit_chance(10);
                     roll.add_crit_damage_mod(25);
                     return true;
                 });
         } else {
-            add_persistent_effect(character, ability, character, ability_info.duration,  Ordering(), RollTime.DEFAULT, true,
+            add_persistent_effect(character, ability, character, 1,  Ordering(), RollTime.DEFAULT, true,
                 function (character, roll, parameters) {
                     roll.add_crit_chance(20);
                     roll.add_crit_damage_mod(50);
@@ -1879,13 +1903,12 @@ var Barbs = Barbs || (function () {
                 });
         }
 
+        const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
     function sniper_distance_shooter(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
         add_persistent_effect(character, ability, character, 1,  Ordering(99), RollTime.POST_CRIT, true,
             function (character, roll, parameters) {
                 const parameter = get_parameter('distance', parameters);
@@ -1916,6 +1939,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
+        const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
@@ -1948,8 +1972,6 @@ var Barbs = Barbs || (function () {
 
 
     function sniper_precision_shooter(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
         add_persistent_effect(character, ability, character, 1, Ordering(), RollTime.DEFAULT, true,
             function (character, roll, parameters) {
                 roll.add_effect('Ignores AC');
@@ -1962,6 +1984,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
+        const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
@@ -2007,13 +2030,12 @@ var Barbs = Barbs || (function () {
 
 
     function soldier_double_time(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
         add_persistent_effect(character, ability, character, 6, Ordering(), RollTime.DEFAULT, false,
             function (char, roll, parameters) {
                 roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 20);
             });
 
+        const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
@@ -2046,8 +2068,6 @@ var Barbs = Barbs || (function () {
 
 
     function symbiote_empower_soul(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
         const target_name = get_parameter('target', parameters);
         if (target_name === null) {
             chat(character, '"target" parameter is missing');
@@ -2072,6 +2092,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
+        const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
@@ -2170,8 +2191,6 @@ var Barbs = Barbs || (function () {
 
 
     function symbiote_strengthen_body(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
         const target_name = get_parameter('target', parameters);
         if (target_name === null) {
             chat(character, '"target" parameter is missing');
@@ -2190,13 +2209,12 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
+        const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
     function symbiote_strengthen_mind(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
         const target_name = get_parameter('target', parameters);
         if (target_name === null) {
             chat(character, '"target" parameter is missing');
@@ -2214,13 +2232,12 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
+        const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
     function symbiote_strengthen_soul(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
         const target_name = get_parameter('target', parameters);
         if (target_name === null) {
             chat(character, '"target" parameter is missing');
@@ -2239,13 +2256,12 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
+        const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
 
     function warrior_charge(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-
         const parameter = get_parameter('targets', parameters);
         if (parameter === null) {
             chat(character, '"targets" parameter, the list of affected players, is missing');
@@ -2268,6 +2284,7 @@ var Barbs = Barbs || (function () {
                 });
         }
 
+        const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
@@ -2315,8 +2332,6 @@ var Barbs = Barbs || (function () {
 
     // TODO there is another half of this passive
     function warrior_warleader(character, ability, parameters) {
-        const clazz = get_passive_class(ability);
-
         const target_name = get_parameter('target', parameters);
         if (target_name === null) {
             chat(character, '"target" parameter, the affected player, is missing');
@@ -2335,6 +2350,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
+        const clazz = get_passive_class(ability);
         chat(character, ability_block_format.format(ability, 'Warleader', clazz.passive['Warleader']));
     }
 
@@ -2352,6 +2368,7 @@ var Barbs = Barbs || (function () {
         },
         'Arcanist': {
             'Magic Dart': arcanist_magic_dart,
+            'Magic Primer': arcanist_magic_primer,
         },
         'Assassin': {
             'Backstab': assassin_backstab,

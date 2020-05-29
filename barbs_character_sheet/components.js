@@ -12352,6 +12352,7 @@ var BarbsComponents = BarbsComponents || (function () {
             this.crit = false;
             this.crit_chance = 0;
             this.crit_damage_mod = 2;
+            this.should_apply_crit = (roll_type === RollType.PHYSICAL || roll_type === RollType.ALL);
 
             this.max_damage = false;
         }
@@ -12461,6 +12462,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
             this.crit = other_roll.crit;
             this.crit_damage_mod = other_roll.crit_damage_mod;
+            this.should_apply_crit = other_roll.should_apply_crit;
         }
 
         get_multiplier_string(type) {
@@ -12556,7 +12558,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
                 dmg_str = '%s*(%s)'.format(dmg_str, self.get_multiplier_string(type));
 
-                if (self.crit) {
+                if (self.should_apply_crit && self.crit) {
                     dmg_str = '(%s)*%s'.format(dmg_str, self.crit_damage_mod);
                 }
 
@@ -12684,12 +12686,27 @@ var BarbsComponents = BarbsComponents || (function () {
             return new Effect(RollTime.DEFAULT, RollType.ALL, function () {});
         }
 
-        static stat_effect(stat, mod) {
+        static stat_effect(stat, mod, applicable_roll_type) {
             assert_not_null(stat, 'stat_effect() stat');
             assert_not_null(mod, 'stat_effect() mod');
+            assert_not_null(applicable_roll_type, 'stat_effect() applicable_roll_type');
 
-            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
-                roll.add_stat_bonus(stat, mod);
+            return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
+                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                    roll.add_stat_bonus(stat, mod);
+                }
+            });
+        }
+
+        static hidden_stat(hidden_stat, value, applicable_roll_type) {
+            assert_not_null(value, 'hidden_stat() value');
+            assert_not_null(hidden_stat, 'hidden_stat() stat');
+            assert_not_null(applicable_roll_type, 'hidden_stat() applicable_roll_type');
+
+            return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
+                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                    roll.add_hidden_stat(hidden_stat, value);
+                }
             });
         }
 
@@ -12753,14 +12770,15 @@ var BarbsComponents = BarbsComponents || (function () {
             });
         }
 
-        static crit_effect(effect, applicable_roll_type) {
-            assert_not_null(effect, 'crit_effect() effect');
-            assert_not_null(applicable_roll_type, 'crit_effect() applicable_roll_type');
+        static crit_hidden_stat(hidden_stat, value, applicable_roll_type) {
+            assert_not_null(value, 'crit_hidden_stat() value');
+            assert_not_null(hidden_stat, 'crit_hidden_stat() stat');
+            assert_not_null(applicable_roll_type, 'crit_hidden_stat() applicable_roll_type');
 
             return new Effect(RollTime.POST_CRIT, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
-                    if (roll.crit) {
-                        roll.add_effect(effect);
+                    if (roll.should_apply_crit && roll.crit) {
+                        roll.add_hidden_stat(hidden_stat, value);
                     }
                 }
             });
@@ -12773,45 +12791,33 @@ var BarbsComponents = BarbsComponents || (function () {
 
             return new Effect(RollTime.POST_CRIT, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
-                    if (roll.crit) {
+                    if (roll.should_apply_crit && roll.crit) {
                         roll.add_damage(dmg, dmg_type);
                     }
                 }
             });
         }
 
-        static crit_damage_mod(amount) {
-            assert_not_null(amount, 'crit_damage_mod() amount');
-
-            return new Effect(RollTime.DEFAULT, RollType.PHYSICAL, function (roll) {
-                if (roll.roll_type === RollType.PHYSICAL) {
-                    roll.add_crit_damage_mod(amount);
-                }
-            });
-        }
-
-        static hidden_stat(hidden_stat, value, applicable_roll_type) {
-            assert_not_null(value, 'hidden_stat() value');
-            assert_not_null(hidden_stat, 'hidden_stat() stat');
-            assert_not_null(applicable_roll_type, 'hidden_stat() applicable_roll_type');
-
-            return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
-                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
-                    roll.add_hidden_stat(hidden_stat, value);
-                }
-            });
-        }
-
-        static crit_hidden_stat(hidden_stat, value, applicable_roll_type) {
-            assert_not_null(value, 'crit_hidden_stat() value');
-            assert_not_null(hidden_stat, 'crit_hidden_stat() stat');
-            assert_not_null(applicable_roll_type, 'crit_hidden_stat() applicable_roll_type');
+        static crit_effect(effect, applicable_roll_type) {
+            assert_not_null(effect, 'crit_effect() effect');
+            assert_not_null(applicable_roll_type, 'crit_effect() applicable_roll_type');
 
             return new Effect(RollTime.POST_CRIT, applicable_roll_type, function (roll) {
                 if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
-                    if (roll.crit) {
-                        roll.add_hidden_stat(hidden_stat, value);
+                    if (roll.should_apply_crit && roll.crit) {
+                        roll.add_effect(effect);
                     }
+                }
+            });
+        }
+
+        static crit_damage_mod(amount, applicable_roll_type) {
+            assert_not_null(amount, 'crit_damage_mod() amount');
+            assert_not_null(applicable_roll_type, 'crit_damage_mod() applicable_roll_type');
+
+            return new Effect(RollTime.DEFAULT, RollType.PHYSICAL, function (roll) {
+                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                    roll.add_crit_damage_mod(amount);
                 }
             });
         }
@@ -12870,8 +12876,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.EVASION, 5),
-                Effect.stat_effect(Stat.HEALTH_REGENERATION, 10),
+                Effect.stat_effect(Stat.EVASION, 5, RollType.ALL),
+                Effect.stat_effect(Stat.HEALTH_REGENERATION, 10, RollType.ALL),
             ]
         ),
 
@@ -12887,8 +12893,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.EVASION, 20),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.stat_effect(Stat.EVASION, 20, RollType.ALL),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
             ]
         ),
 
@@ -12904,8 +12910,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.EVASION, 15),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                Effect.stat_effect(Stat.EVASION, 15, RollType.ALL),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
             ]
         ),
 
@@ -12921,9 +12927,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.EVASION, 15),
-                Effect.stat_effect(Stat.STAMINA_REGENERATION, 10),
-                Effect.stat_effect(Stat.AC, -10),
+                Effect.stat_effect(Stat.EVASION, 15, RollType.ALL),
+                Effect.stat_effect(Stat.STAMINA_REGENERATION, 10, RollType.ALL),
+                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
             ]
         ),
 
@@ -12969,8 +12975,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.STAMINA, 30),
-                Effect.stat_effect(Stat.MANA, 40),
+                Effect.stat_effect(Stat.STAMINA, 30, RollType.ALL),
+                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
             ]
         ),
 
@@ -12986,8 +12992,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.STAMINA, 60),
-                Effect.stat_effect(Stat.STAMINA_REGENERATION, 15),
+                Effect.stat_effect(Stat.STAMINA, 60, RollType.ALL),
+                Effect.stat_effect(Stat.STAMINA_REGENERATION, 15, RollType.ALL),
             ]
         ),
 
@@ -13003,9 +13009,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.EVASION, 20),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
-                Effect.stat_effect(Stat.AC, -10),
+                Effect.stat_effect(Stat.EVASION, 20, RollType.ALL),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
             ]
         ),
 
@@ -13021,9 +13027,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.EVASION, 20),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
-                Effect.stat_effect(Stat.AC, -10),
+                Effect.stat_effect(Stat.EVASION, 20, RollType.ALL),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
             ]
         ),
 
@@ -13039,9 +13045,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.EVASION, 20),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
-                Effect.stat_effect(Stat.AC, -10),
+                Effect.stat_effect(Stat.EVASION, 20, RollType.ALL),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
             ]
         ),
 
@@ -13057,7 +13063,7 @@ var BarbsComponents = BarbsComponents || (function () {
             ['Expend 30 mana as a Major Action to clease 1 condition on yourself'],
             '',
             [
-                Effect.stat_effect(Stat.MANA, 40),
+                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
             ]
         ),
 
@@ -13087,8 +13093,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.HEALTH, 40),
-                Effect.stat_effect(Stat.STAMINA, 40),
+                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
+                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
             ]
         ),
 
@@ -13122,9 +13128,9 @@ var BarbsComponents = BarbsComponents || (function () {
             0, [],
             'You take no fall damage',
             [
-                Effect.stat_effect(Stat.EVASION, 20),
-                Effect.stat_effect(Stat.MOVEMENT_SPEED, 20),
-                Effect.stat_effect(Stat.AC, -10),
+                Effect.stat_effect(Stat.EVASION, 20, RollType.ALL),
+                Effect.stat_effect(Stat.MOVEMENT_SPEED, 20, RollType.ALL),
+                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
                 Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.ALL),
             ]
         ),
@@ -13174,7 +13180,7 @@ var BarbsComponents = BarbsComponents || (function () {
             0, [], '',
             [
                 Effect.roll_damage('2d8', Damage.LIGHTNING, RollType.ALL),
-                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 5),
+                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 5, RollType.ALL),
             ]
         ),
 
@@ -13188,7 +13194,7 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 20),
+                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 20, RollType.PHYSICAL),
                 Effect.crit_hidden_stat(HiddenStat.BUFF_STRIP, 1, RollType.PHYSICAL),
                 Effect.crit_hidden_stat(HiddenStat.REDUCE_EVASION, 10, RollType.PHYSICAL),
             ]
@@ -13204,8 +13210,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 10),
-                Effect.crit_damage_mod(100),
+                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 10, RollType.PHYSICAL),
+                Effect.crit_damage_mod(100, RollType.PHYSICAL),
                 Effect.crit_effect('Ignore blocks and shielding', RollType.PHYSICAL),
                 Effect.crit_damage('3d6', Damage.WATER, RollType.PHYSICAL),
             ]
@@ -13269,9 +13275,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 20),
-                Effect.stat_effect(Stat.AC, -20),
-                Effect.stat_effect(Stat.MANA, 40),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 20, RollType.ALL),
+                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
+                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
                 Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
                 Effect.concentration_bonus(30),
             ]
@@ -13287,11 +13293,11 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 20),
-                Effect.stat_effect(Stat.AC, -20),
-                Effect.stat_effect(Stat.MANA, 60),
-                Effect.stat_effect(Stat.MANA_REGENERATION, 20),
-                Effect.stat_effect(Stat.HEALTH, 60),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 20, RollType.ALL),
+                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
+                Effect.stat_effect(Stat.MANA, 60, RollType.ALL),
+                Effect.stat_effect(Stat.MANA_REGENERATION, 20, RollType.ALL),
+                Effect.stat_effect(Stat.HEALTH, 60, RollType.ALL),
                 Effect.roll_multiplier(0.3, Damage.HEALING, RollType.HEALING),
             ]
         ),
@@ -13306,8 +13312,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 20),
-                Effect.stat_effect(Stat.AC, -20),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 20, RollType.ALL),
+                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
                 Effect.hidden_stat(HiddenStat.UNBLOCKABLE_CHANCE, 20, RollType.ALL),
                 Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
                 Effect.hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 10, RollType.ALL),
@@ -13325,11 +13331,11 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 20),
-                Effect.stat_effect(Stat.AC, -20),
-                Effect.stat_effect(Stat.MANA, 40),
-                Effect.stat_effect(Stat.MANA_REGENERATION, 15),
-                Effect.stat_effect(Stat.MOVEMENT_SPEED, 20),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 20, RollType.ALL),
+                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
+                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
+                Effect.stat_effect(Stat.MANA_REGENERATION, 15, RollType.ALL),
+                Effect.stat_effect(Stat.MOVEMENT_SPEED, 20, RollType.ALL),
             ]
         ),
 
@@ -13343,7 +13349,7 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.MANA, 40),
+                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
                 Effect.concentration_bonus(20),
                 Effect.roll_multiplier(0.3, Damage.HEALING, RollType.HEALING),
             ]
@@ -13376,8 +13382,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.MANA, 40),
-                Effect.stat_effect(Stat.HEALTH, 50),
+                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
+                Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
                 // TODO poison specifically: Effect.stat_effect('condition resist', 50),
             ]
         ),
@@ -13392,7 +13398,7 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.crit_damage_mod(100),
+                Effect.crit_damage_mod(100, RollType.ALL),
             ]
         ),
 
@@ -13406,9 +13412,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.HEALTH, 40),
-                Effect.stat_effect(Stat.STAMINA, 40),
-                Effect.stat_effect(Stat.MANA, 40),
+                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
+                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
+                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
                 Effect.skill_effect(Skill.ATHLETICS_BALANCE, 30),
             ]
         ),
@@ -13423,8 +13429,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.STAMINA, 30),
-                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 5),
+                Effect.stat_effect(Stat.STAMINA, 30, RollType.ALL),
+                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 5, RollType.ALL),
             ]
         ),
 
@@ -13443,9 +13449,9 @@ var BarbsComponents = BarbsComponents || (function () {
             '',
             [
                 Effect.skill_effect(Skill.MAGIC_CONJURATION, 30),
-                Effect.stat_effect(Stat.HEALTH, 30),
-                Effect.stat_effect(Stat.STAMINA, 30),
-                Effect.stat_effect(Stat.MANA, 30),
+                Effect.stat_effect(Stat.HEALTH, 30, RollType.ALL),
+                Effect.stat_effect(Stat.STAMINA, 30, RollType.ALL),
+                Effect.stat_effect(Stat.MANA, 30, RollType.ALL),
             ]
         ),
 
@@ -13459,9 +13465,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.CONDITION_RESIST, 20),
-                Effect.stat_effect(Stat.AC, -20),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 15),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 20, RollType.ALL),
+                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 15, RollType.ALL),
                 // TODO 50% stun resist
                 // TODO 50% slow resist
             ]
@@ -13477,12 +13483,12 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.AC, -20),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 20),
-                Effect.stat_effect(Stat.STAMINA, 40),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
-                Effect.stat_effect(Stat.EVASION, 10),
+                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 20, RollType.ALL),
+                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.EVASION, 10, RollType.ALL),
             ]
         ),
 
@@ -13496,11 +13502,11 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.AC, -20),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 20),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 15),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 15),
-                Effect.stat_effect(Stat.HEALTH, 55),
+                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 20, RollType.ALL),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 15, RollType.ALL),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 15, RollType.ALL),
+                Effect.stat_effect(Stat.HEALTH, 55, RollType.ALL),
             ]
         ),
 
@@ -13514,8 +13520,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 10),
-                Effect.crit_damage_mod(100),
+                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 10, RollType.PHYSICAL),
+                Effect.crit_damage_mod(100, RollType.PHYSICAL),
                 Effect.crit_effect('Ignore 100% of target AC', RollType.PHYSICAL),
                 Effect.crit_effect('Strip 2 buffs from target', RollType.PHYSICAL),
                 Effect.crit_damage('7d10', Damage.PHYSICAL, RollType.PHYSICAL),
@@ -13532,9 +13538,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.EVASION, 20),
-                Effect.stat_effect(Stat.AC, -20),
-                Effect.stat_effect(Stat.STAMINA, 30),
+                Effect.stat_effect(Stat.EVASION, 20, RollType.ALL),
+                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
+                Effect.stat_effect(Stat.STAMINA, 30, RollType.ALL),
                 // TODO: 20% Lightning MR
                 // TODO: 20% Light MR
             ]
@@ -13550,11 +13556,11 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
-                Effect.stat_effect(Stat.AC, -10),
-                Effect.stat_effect(Stat.EVASION, 10),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 30),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
+                Effect.stat_effect(Stat.EVASION, 10, RollType.ALL),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 30, RollType.ALL),
             ]
         ),
 
@@ -13568,10 +13574,10 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
-                Effect.stat_effect(Stat.AC, 10),
-                Effect.stat_effect(Stat.EVASION, -10),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
+                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
                 Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
                 // TODO: 50% Stun CR
             ]
@@ -13587,12 +13593,12 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
-                Effect.stat_effect(Stat.AC, 10),
-                Effect.stat_effect(Stat.EVASION, -10),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
-                Effect.stat_effect(Stat.HEALTH, 50),
-                Effect.stat_effect(Stat.STAMINA, 50),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
+                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
+                Effect.stat_effect(Stat.STAMINA, 50, RollType.ALL),
             ]
         ),
 
@@ -13606,12 +13612,12 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
-                Effect.stat_effect(Stat.AC, 10),
-                Effect.stat_effect(Stat.EVASION, -10),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
-                Effect.stat_effect(Stat.HEALTH, 50),
-                Effect.stat_effect(Stat.STAMINA, 50),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
+                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
+                Effect.stat_effect(Stat.STAMINA, 50, RollType.ALL),
             ]
         ),
 
@@ -13625,10 +13631,10 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
-                Effect.stat_effect(Stat.AC, 10),
-                Effect.stat_effect(Stat.EVASION, -10),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
+                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
                 // TODO: 50% Stun Resist
                 // TODO: 15% Crit Strike Resist
             ]
@@ -13644,10 +13650,10 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
-                Effect.stat_effect(Stat.HEALTH, 50),
-                Effect.stat_effect(Stat.STAMINA, 50),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
+                Effect.stat_effect(Stat.STAMINA, 50, RollType.ALL),
             ]
         ),
 
@@ -13695,10 +13701,10 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.NONE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
-                Effect.stat_effect(Stat.HEALTH, 40),
-                Effect.stat_effect(Stat.STAMINA, 40),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
+                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
             ]
         ),
 
@@ -13733,8 +13739,8 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.MELEE,
             0, [], '',
             [
-                Effect.roll_multiplier(0.4, Damage.PHYSICAL, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10),
+                Effect.roll_multiplier(0.4, Damage.PHYSICAL, RollType.PHYSICAL),
+                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
                 // TODO: 70% Minion Lethality
                 // TODO: 15% Critical Strike Resist
             ]
@@ -13768,11 +13774,11 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.MELEE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.AC, 10),
-                Effect.stat_effect(Stat.EVASION, -10),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
-                Effect.stat_effect(Stat.STAMINA, 40),
-                Effect.stat_effect(Stat.HEALTH, 40),
+                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
+                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
+                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
                 // TODO: 50% stun resist
             ]
         ),
@@ -13787,11 +13793,11 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.MELEE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.AC, 10),
-                Effect.stat_effect(Stat.EVASION, -10),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
-                Effect.stat_effect(Stat.STAMINA, 50),
-                Effect.stat_effect(Stat.HEALTH, 50),
+                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
+                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.STAMINA, 50, RollType.ALL),
+                Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
                 // TODO: 50% slow resist
             ]
         ),
@@ -13806,9 +13812,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.MELEE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.AC, 10),
-                Effect.stat_effect(Stat.EVASION, -10),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
+                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
+                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
                 Effect.hidden_stat(HiddenStat.AC_PENETRATION, 20, RollType.PHYSICAL),
                 Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.PHYSICAL),
                 // TODO: 50% cripple resist
@@ -13825,11 +13831,11 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.MELEE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.AC, 10),
-                Effect.stat_effect(Stat.EVASION, -10),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10),
-                Effect.stat_effect(Stat.MOVEMENT_SPEED, 20),
-                Effect.stat_effect(Stat.HEALTH, 40),
+                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
+                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
+                Effect.stat_effect(Stat.MOVEMENT_SPEED, 20, RollType.ALL),
+                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
                 // TODO: 50% immobilize resist
             ]
         ),
@@ -13863,7 +13869,7 @@ var BarbsComponents = BarbsComponents || (function () {
             [
                 Effect.roll_multiplier(0.2, Damage.PHYSICAL, RollType.ALL),
                 Effect.hidden_stat(HiddenStat.AC_PENETRATION, 10, RollType.PHYSICAL),
-                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 5),
+                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 5, RollType.ALL),
                 Effect.roll_damage('3d10', Damage.PHYSICAL, RollType.PHYSICAL),
             ]
         ),
@@ -13878,9 +13884,9 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.MELEE,
             0, [], '',
             [
-                Effect.stat_effect(Stat.AC, 5),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 5),
-                Effect.stat_effect(Stat.HEALTH_REGENERATION, 10),
+                Effect.stat_effect(Stat.AC, 5, RollType.ALL),
+                Effect.stat_effect(Stat.MAGIC_RESIST, 5, RollType.ALL),
+                Effect.stat_effect(Stat.HEALTH_REGENERATION, 10, RollType.ALL),
                 // TODO: 50% paralysis resist
             ]
         ),
