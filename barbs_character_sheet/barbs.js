@@ -363,12 +363,13 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function add_persistent_effect(caster, ability, target_character, duration, order, roll_time, single_application, handler) {
+    function add_persistent_effect(caster, ability, target_character, duration, order, roll_type, roll_time, single_application, handler) {
         assert_not_null(caster, 'add_persistent_effect() caster');
         assert_not_null(ability, 'add_persistent_effect() ability');
         assert_not_null(target_character, 'add_persistent_effect() target_character');
         assert_not_null(duration, 'add_persistent_effect() duration');
         assert_not_null(order, 'add_persistent_effect() order');
+        assert_not_null(roll_type, 'add_persistent_effect() roll_type');
         assert_not_null(roll_time, 'add_persistent_effect() roll_time');
         assert_not_null(single_application, 'add_persistent_effect() single_application');
         assert_not_null(handler, 'add_persistent_effect() handler');
@@ -379,6 +380,7 @@ var Barbs = Barbs || (function () {
             'target': target_character.name,
             'duration': duration,
             'ordering': order,
+            'roll_type': roll_type,
             'roll_time': roll_time,
             'single_application': single_application,
             'handler': handler,
@@ -453,9 +455,9 @@ var Barbs = Barbs || (function () {
     // to the roll.
     function add_persistent_effects_to_roll(character, roll, roll_time, parameters) {
         for (let i = 0; i < persistent_effects.length; i++) {
-            if (persistent_effects[i].target === character.name
-                    && persistent_effects[i].roll_time === roll_time) {
-
+            const effect = persistent_effects[i];
+            if (effect.target === character.name && effect.roll_time === roll_time
+                    && (effect.roll_type === roll.roll_type || effect.roll_type === RollType.ALL)) {
                 if (!persistent_effects[i].handler(character, roll, parameters)) {
                     return false;
                 }
@@ -750,8 +752,12 @@ var Barbs = Barbs || (function () {
 
         // Some effects last exactly one attack. At this point, we've successfully applied everything and done the roll,
         // so the attack is done. Thus we can remove the single-use persistent effects from the master list.
+        _log(LogLevel.DEBUG, 'removing effects for roll of type ' + roll.roll_type);
         for (let i = 0; i < persistent_effects.length; i++) {
-            if (persistent_effects[i].single_application && persistent_effects[i].target === character.name) {
+            const effect = persistent_effects[i];
+            if (effect.single_application && effect.target === character.name
+                    && (effect.roll_type === roll.roll_type || effect.roll_type === RollType.ALL)) {
+                _log(LogLevel.DEBUG, 'removing effect = %s'.format(JSON.stringify(effect)));
                 persistent_effects.splice(i, 1);
                 i--;
             }
@@ -1029,7 +1035,7 @@ var Barbs = Barbs || (function () {
 
 
     function air_duelist_arc_of_air(character, ability, parameters) {
-        add_persistent_effect(character, ability, character, 6,  Ordering(), RollTime.DEFAULT, false,
+        add_persistent_effect(character, ability, character, 6,  Ordering(), RollType.PHYSICAL, RollTime.DEFAULT, false,
             function (character, roll, parameters) {
                 if (roll.roll_type === RollType.PHYSICAL || roll.roll_type === RollType.ALL) {
                     roll.add_damage('2d8', Damage.AIR);
@@ -1055,7 +1061,7 @@ var Barbs = Barbs || (function () {
 
 
     function air_duelist_mistral_bow(character, ability, parameters) {
-        add_persistent_effect(character, ability, character, 6,  Ordering(), RollTime.DEFAULT, false,
+        add_persistent_effect(character, ability, character, 6,  Ordering(), RollType.PHYSICAL, RollTime.DEFAULT, false,
             function (character, roll, parameters) {
                 roll.add_effect('Bow attacks push target 5ft away');
                 return true;
@@ -1147,7 +1153,7 @@ var Barbs = Barbs || (function () {
 
     function arcanist_magic_primer(character, ability, parameters) {
         // This should be applied before other effects that rely on knowing whether or not a roll was a crit
-        add_persistent_effect(character, ability, character, 1,  Ordering(10), RollTime.DEFAULT, true,
+        add_persistent_effect(character, ability, character, 1,  Ordering(10), RollType.MAGIC, RollTime.DEFAULT, true,
             function (character, roll, parameters) {
                 roll.add_multiplier(0.3, Damage.ALL, 'self');
                 roll.should_apply_crit = true;
@@ -1225,7 +1231,7 @@ var Barbs = Barbs || (function () {
 
 
     function assassin_sharpen(character, ability, parameters) {
-        add_persistent_effect(character, ability, character, 6,  Ordering(90), RollTime.POST_CRIT, false,
+        add_persistent_effect(character, ability, character, 6,  Ordering(90), RollType.ALL, RollTime.POST_CRIT, false,
             function (character, roll, parameters) {
                 // We're going to inspect the damages accumulated in the roll and change any d4's to d6's. This relies
                 // on the fact that persistent effects are added to rolls last and that "Ordering 90" will occur after
@@ -1254,7 +1260,7 @@ var Barbs = Barbs || (function () {
 
 
     function assassin_focus(character, ability, parameters) {
-        add_persistent_effect(character, ability, character, 1,  Ordering(), RollTime.DEFAULT, true,
+        add_persistent_effect(character, ability, character, 1,  Ordering(), RollType.ALL, RollTime.DEFAULT, true,
             function (character, roll, parameters) {
                 roll.add_crit_chance(30);
                 return true;
@@ -1281,7 +1287,7 @@ var Barbs = Barbs || (function () {
             }
 
             const source = character.name;
-            add_persistent_effect(character, ability, target_character, 1, Ordering(), RollTime.DEFAULT, false,
+            add_persistent_effect(character, ability, target_character, 1, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
                 function (char, roll, parameters) {
                     roll.add_multiplier(1, Damage.ALL, source);
                     return true;
@@ -1454,7 +1460,7 @@ var Barbs = Barbs || (function () {
 
 
     function daggerspell_hidden_blade(character, ability, parameters) {
-        add_persistent_effect(character, ability, character, 6, Ordering(), RollTime.DEFAULT, false,
+        add_persistent_effect(character, ability, character, 6, Ordering(), RollType.PHYSICAL, RollTime.DEFAULT, false,
             function (char, roll, parameters) {
                 roll.add_crit_chance(15);
 
@@ -1491,7 +1497,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        add_persistent_effect(character, ability, character, 6, Ordering(), RollTime.DEFAULT, false,
+        add_persistent_effect(character, ability, character, 6, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
             function (char, roll, parameters) {
                 roll.add_stat_multiplier(Stat.AC, 0.1 * parseInt(num_targets));
                 roll.add_stat_bonus(Stat.MAGIC_RESIST, 10 * parseInt(num_targets));
@@ -1601,14 +1607,14 @@ var Barbs = Barbs || (function () {
         }
 
         if (choice === 'first') {
-            add_persistent_effect(character, ability, target_character, 6,  Ordering(), RollTime.DEFAULT, true,
+            add_persistent_effect(character, ability, target_character, 6,  Ordering(), RollType.PHYSICAL, RollTime.DEFAULT, true,
                 function (character, roll, parameters) {
                     roll.add_damage('4d10', Damage.PHYSICAL);
                     return true;
                 });
 
         } else if (choice === 'second') {
-            add_persistent_effect(character, ability, target_character, 6,  Ordering(), RollTime.DEFAULT, true,
+            add_persistent_effect(character, ability, target_character, 6,  Ordering(), RollType.PHYSICAL, RollTime.DEFAULT, true,
                 function (character, roll, parameters) {
                     roll.add_multiplier(-0.5, Damage.PHYSICAL, 'self');
                     return true;
@@ -1654,7 +1660,7 @@ var Barbs = Barbs || (function () {
         const duration = 5000;
 
         if (chosen_spell === 'KB') {
-            add_persistent_effect(character, ability, character, duration, Ordering(), RollTime.DEFAULT, false,
+            add_persistent_effect(character, ability, character, duration, Ordering(), RollType.MAGIC, RollTime.DEFAULT, false,
                 function (char, roll, parameters) {
                     roll.add_damage('6d8', Damage.ICE);
                     roll.add_damage('6d8', Damage.DARK);
@@ -1688,7 +1694,7 @@ var Barbs = Barbs || (function () {
     function juggernaut_hostility(character, ability, parameters) {
         const concentration = get_parameter('conc', parameters);
 
-        add_persistent_effect(character, ability, character, 6,  Ordering(), RollTime.DEFAULT, false,
+        add_persistent_effect(character, ability, character, 6,  Ordering(), RollType.PHYSICAL, RollTime.DEFAULT, false,
             function (character, roll, parameters) {
                 if (concentration !== null) {
                     roll.add_hidden_stat(HiddenStat.LIFESTEAL, 25);
@@ -1705,7 +1711,7 @@ var Barbs = Barbs || (function () {
 
 
     function juggernaut_tachycardia(character, ability, parameters) {
-        add_persistent_effect(character, ability, character, 6,  Ordering(), RollTime.DEFAULT, false,
+        add_persistent_effect(character, ability, character, 6,  Ordering(), RollType.ALL, RollTime.DEFAULT, false,
             function (character, roll, parameters) {
                 roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 30);
 
@@ -1838,7 +1844,7 @@ var Barbs = Barbs || (function () {
 
 
     function lightning_duelist_sword_of_lightning(character, ability, parameters) {
-        add_persistent_effect(character, ability, character, 6,  Ordering(), RollTime.DEFAULT, false,
+        add_persistent_effect(character, ability, character, 6,  Ordering(), RollType.PHYSICAL, RollTime.DEFAULT, false,
             function (character, roll, parameters) {
                 if (roll.roll_type === RollType.PHYSICAL || roll.roll_type === RollType.ALL) {
                     roll.add_damage('2d8', Damage.LIGHTNING);
@@ -1956,14 +1962,14 @@ var Barbs = Barbs || (function () {
         }
 
         if (parameter === 'true') {
-            add_persistent_effect(character, ability, character, 1,  Ordering(), RollTime.DEFAULT, true,
+            add_persistent_effect(character, ability, character, 1,  Ordering(), RollType.PHYSICAL, RollTime.DEFAULT, true,
                 function (character, roll, parameters) {
                     roll.add_crit_chance(10);
                     roll.add_crit_damage_mod(25);
                     return true;
                 });
         } else {
-            add_persistent_effect(character, ability, character, 1,  Ordering(), RollTime.DEFAULT, true,
+            add_persistent_effect(character, ability, character, 1,  Ordering(), RollType.PHYSICAL, RollTime.DEFAULT, true,
                 function (character, roll, parameters) {
                     roll.add_crit_chance(20);
                     roll.add_crit_damage_mod(50);
@@ -1977,7 +1983,7 @@ var Barbs = Barbs || (function () {
 
 
     function sniper_distance_shooter(character, ability, parameters) {
-        add_persistent_effect(character, ability, character, 1,  Ordering(99), RollTime.POST_CRIT, true,
+        add_persistent_effect(character, ability, character, 1,  Ordering(99), RollType.PHYSICAL, RollTime.POST_CRIT, true,
             function (character, roll, parameters) {
                 const parameter = get_parameter('distance', parameters);
                 if (parameter === null) {
@@ -2040,7 +2046,7 @@ var Barbs = Barbs || (function () {
 
 
     function sniper_precision_shooter(character, ability, parameters) {
-        add_persistent_effect(character, ability, character, 1, Ordering(), RollTime.DEFAULT, true,
+        add_persistent_effect(character, ability, character, 1, Ordering(), RollType.PHYSICAL, RollTime.DEFAULT, true,
             function (character, roll, parameters) {
                 roll.add_effect('Ignores AC');
                 roll.add_effect('Ignores MR');
@@ -2098,7 +2104,7 @@ var Barbs = Barbs || (function () {
 
 
     function soldier_double_time(character, ability, parameters) {
-        add_persistent_effect(character, ability, character, 6, Ordering(), RollTime.DEFAULT, false,
+        add_persistent_effect(character, ability, character, 6, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
             function (char, roll, parameters) {
                 roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 20);
             });
@@ -2153,7 +2159,7 @@ var Barbs = Barbs || (function () {
             percentage += 2 * parseInt(extra_mana_spent);
         }
 
-        add_persistent_effect(character, ability, target_character, 6, Ordering(), RollTime.DEFAULT, false,
+        add_persistent_effect(character, ability, target_character, 6, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
             function (char, roll, parameters) {
                 roll.add_hidden_stat(HiddenStat.ACCURACY, percentage);
                 roll.add_hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, percentage);
@@ -2270,7 +2276,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        add_persistent_effect(character, ability, target_character, 6, Ordering(), RollTime.DEFAULT, false,
+        add_persistent_effect(character, ability, target_character, 6, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
             function (char, roll, parameters) {
                 roll.add_stat_bonus(Stat.EVASION, 40);
                 roll.add_stat_multiplier(Stat.AC, 0.4);
@@ -2294,7 +2300,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        add_persistent_effect(character, ability, target_character, 60, Ordering(), RollTime.DEFAULT, false,
+        add_persistent_effect(character, ability, target_character, 60, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
             function (char, roll, parameters) {
                 roll.add_skill_bonus(Skill.ALL, 30);
                 return true;
@@ -2318,7 +2324,7 @@ var Barbs = Barbs || (function () {
         }
 
         const source = character.name;
-        add_persistent_effect(character, ability, target_character, 6, Ordering(), RollTime.DEFAULT, false,
+        add_persistent_effect(character, ability, target_character, 6, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
             function (char, roll, parameters) {
                 roll.add_multiplier(0.5, Damage.ALL, source);
                 return true;
@@ -2345,7 +2351,7 @@ var Barbs = Barbs || (function () {
             }
 
             const source = character.name;
-            add_persistent_effect(character, ability, target_character, 1, Ordering(), RollTime.DEFAULT, false,
+            add_persistent_effect(character, ability, target_character, 1, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
                 function (char, roll, parameters) {
                     roll.add_multiplier(0.5, Damage.ALL, source);
                     return true;
@@ -2412,7 +2418,7 @@ var Barbs = Barbs || (function () {
         }
 
         const source = character.name;
-        add_persistent_effect(character, ability, target_character, 1, Ordering(), RollTime.DEFAULT, true,
+        add_persistent_effect(character, ability, target_character, 1, Ordering(), RollType.ALL, RollTime.DEFAULT, true,
             function (char, roll, parameters) {
                 roll.add_multiplier(0.25, Damage.ALL, source);
                 return true;
