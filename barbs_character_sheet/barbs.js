@@ -10,6 +10,11 @@ var Barbs = Barbs || (function () {
         return a;
     };
 
+
+    // ################################################################################################################
+    // Assertion helpers
+
+
     function assert(condition, message) {
         if (condition === null || condition === undefined) {
             throw 'assert() missing condition';
@@ -23,6 +28,7 @@ var Barbs = Barbs || (function () {
         }
     }
 
+
     function assert_not_null(parameter, message) {
         if (message === null || message === undefined) {
             throw 'assert_not_null() missing message';
@@ -31,6 +37,10 @@ var Barbs = Barbs || (function () {
         assert(parameter !== null, message);
         assert(parameter !== undefined, message);
     }
+
+
+    // ################################################################################################################
+    // Wrappers around log() and sendChat()
 
 
     const LogLevel = {
@@ -51,6 +61,64 @@ var Barbs = Barbs || (function () {
             log(string);
         }
     }
+
+
+    function chat(character, message, handler) {
+        assert_not_null(character, 'chat() character');
+        assert_not_null(message, 'chat() message');
+
+        sendChat(character.who, message, handler);
+    }
+
+
+    // ################################################################################################################
+    // Functional
+
+
+    // Always specifying a radix is safest, and we always want radix 10.
+    function parse_int(string) {
+        return parseInt(string, 10);
+    }
+
+
+    // Split a string by sep and keep sep as an element in the result
+    function split_string(string, sep) {
+        let array = string.split(sep);
+        let new_array = [];
+        for (let i = 0; i < array.length; i++) {
+            const item = array[i];
+            new_array.push(item);
+            if (i !== array.length - 1) {
+                new_array.push(sep);
+            }
+        }
+
+        return new_array;
+    }
+
+
+    // Split elements in an array using splitString
+    function split_array(array, sep) {
+        let new_array = [];
+        for (let index = 0; index < array.length; index++) {
+            const item = array[index];
+            if (item.includes(sep) && sep !== item) {
+                let temp_array = split_string(item, sep);
+                for (let j = 0; j < temp_array.length; j++) {
+                    new_array.push(temp_array[j]);
+                }
+            } else {
+                new_array.push(item);
+            }
+        }
+
+        return new_array;
+    }
+
+
+
+    // ################################################################################################################
+    // "Imports" and constants
 
 
     const STATE_NAME = 'Barbs';
@@ -80,12 +148,8 @@ var Barbs = Barbs || (function () {
     let persistent_effects = [];
 
 
-    function chat(character, message, handler) {
-        assert_not_null(character, 'chat() character');
-        assert_not_null(message, 'chat() message');
-
-        sendChat(character.who, message, handler);
-    }
+    // ################################################################################################################
+    // Character lookup
 
 
     function get_character_names(who, id) {
@@ -136,6 +200,10 @@ var Barbs = Barbs || (function () {
     }
 
 
+    // ################################################################################################################
+    // Non-attack rolls
+
+
     function get_roll_with_items_and_effects(character) {
         assert_not_null(character, 'get_roll_with_items_and_effects() character');
 
@@ -170,7 +238,7 @@ var Barbs = Barbs || (function () {
         assert_not_null(roll, 'generate_stat_roll_modifier_from_items() roll');
         assert_not_null(stat, 'generate_stat_roll_modifier_from_items() stat');
 
-        const attribute = parseInt(getAttrByName(character.id, stat.attr_tla));
+        const attribute = parse_int(getAttrByName(character.id, stat.attr_tla));
         let mod = '%s'.format(stat.value(attribute));
 
         if (stat.name in roll.stats) {
@@ -293,7 +361,7 @@ var Barbs = Barbs || (function () {
 
         const pieces = msg.content.split(' ');
 
-        const points_in_skill = parseInt(pieces[pieces.length - 1]);
+        const points_in_skill = parse_int(pieces[pieces.length - 1]);
         const bonus = 5 * points_in_skill;
         const given_skill_name = pieces.slice(2, pieces.length - 1).join(' ');
         const skill_name = given_skill_name.replace(/:/g, '').replace(/ /g, '_').toUpperCase();
@@ -314,6 +382,7 @@ var Barbs = Barbs || (function () {
         if (Skill.ALL.name in roll.skills) {
             roll_string += '+%s'.format(roll.skills[Skill.ALL.name]);
         }
+        roll_string = 'round(%s)'.format(roll_string);
 
         chat(msg, total_format.format(given_skill_name, 'Roll', roll_string));
     }
@@ -840,7 +909,7 @@ var Barbs = Barbs || (function () {
             return true;
         }
 
-        const stacks = parseInt(parameter.split(' ')[1]);
+        const stacks = parse_int(parameter.split(' ')[1]);
         roll.add_crit_damage_mod(stacks * 50);
         return true;
     }
@@ -851,7 +920,7 @@ var Barbs = Barbs || (function () {
             return true;
         }
 
-        const stacks = parseInt(parameter.split(' ')[1]);
+        const stacks = parse_int(parameter.split(' ')[1]);
         roll.add_multiplier(stacks * 0.5, Damage.ICE, 'self');
         return true;
     }
@@ -877,7 +946,7 @@ var Barbs = Barbs || (function () {
             return true;
         }
 
-        const pacts = parseInt(parameter.split(' ')[1]);
+        const pacts = parse_int(parameter.split(' ')[1]);
         roll.add_multiplier(pacts, Damage.ALL, 'self');
         return true;
     }
@@ -901,8 +970,8 @@ var Barbs = Barbs || (function () {
 
         const pieces = parameter.split(' ');
         const ratio = pieces[1];
-        const current_health = parseInt(ratio.split('/')[0]);
-        const total_health = parseInt(ratio.split('/')[1]);
+        const current_health = parse_int(ratio.split('/')[0]);
+        const total_health = parse_int(ratio.split('/')[1]);
         const missing_health = total_health - current_health;
 
         roll.add_multiplier(missing_health / total_health, Damage.PHYSICAL, 'self');
@@ -941,7 +1010,7 @@ var Barbs = Barbs || (function () {
             return true;
         }
 
-        const stacks = parseInt(parameter.split(' ')[1]);
+        const stacks = parse_int(parameter.split(' ')[1]);
         roll.add_multiplier(stacks * 0.25, Damage.ALL, 'self');
         return true;
     }
@@ -1211,7 +1280,7 @@ var Barbs = Barbs || (function () {
         // Check that the total adds up to 16
         let total_dice = 0;
         _.each(dice_divisions, function (dice_division) {
-            total_dice += parseInt(dice_division);
+            total_dice += parse_int(dice_division);
         });
 
         if (total_dice !== 16) {
@@ -1405,7 +1474,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const dice = parseInt(mana) / 5;
+        const dice = parse_int(mana) / 5;
 
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('%sd8'.format(dice), Damage.ICE);
@@ -1516,8 +1585,8 @@ var Barbs = Barbs || (function () {
 
         add_persistent_effect(character, ability, character, 6, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
             function (char, roll, parameters) {
-                roll.add_stat_multiplier(Stat.AC, 0.1 * parseInt(num_targets));
-                roll.add_stat_bonus(Stat.MAGIC_RESIST, 10 * parseInt(num_targets));
+                roll.add_stat_multiplier(Stat.AC, 0.1 * parse_int(num_targets));
+                roll.add_stat_bonus(Stat.MAGIC_RESIST, 10 * parse_int(num_targets));
                 return true;
             });
 
@@ -1741,7 +1810,7 @@ var Barbs = Barbs || (function () {
             function (character, roll, parameters) {
                 roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 30);
 
-                if (roll.roll_type === RollType.PHYSICAL) {
+                if (roll.roll_type === RollType.PHYSICAL || roll.roll_type === RollType.ALL) {
                     roll.add_hidden_stat(HiddenStat.REACH, 5);
                 }
                 roll.add_hidden_stat(HiddenStat.AC_PENETRATION, 50);
@@ -1988,6 +2057,7 @@ var Barbs = Barbs || (function () {
         }
 
         if (parameter === 'true') {
+            // TODO: this should really modify the existing effect rather than adding a new one
             add_persistent_effect(character, ability, character, 1,  Ordering(), RollType.PHYSICAL, RollTime.DEFAULT, true,
                 function (character, roll, parameters) {
                     roll.add_crit_chance(10);
@@ -2029,7 +2099,7 @@ var Barbs = Barbs || (function () {
                 // distance.
                 for (let i = 0; i < distances.length; i++) {
                     const distance_roll = new Roll(character, RollType.PHYSICAL);
-                    distance_roll.add_damage(2 * parseInt(distances[i]) / 5, Damage.PHYSICAL);
+                    distance_roll.add_damage(2 * parse_int(distances[i]) / 5, Damage.PHYSICAL);
                     distance_roll.copy_multipliers(roll);
                     const rolls_per_type = distance_roll.roll();
                     format_and_send_roll(character, '%s (%s ft)'.format(ability, distances[i]), distance_roll,
@@ -2051,7 +2121,7 @@ var Barbs = Barbs || (function () {
 
         const stacks_spent_for_lethality = get_parameter('stacks', parameters);
         if (stacks_spent_for_lethality !== null) {
-            roll.add_hidden_stat(HiddenStat.LETHALITY, 10 * parseInt(stacks_spent_for_lethality));
+            roll.add_hidden_stat(HiddenStat.LETHALITY, 10 * parse_int(stacks_spent_for_lethality));
         }
 
         roll_crit(roll, parameters, function (crit_section) {
@@ -2119,7 +2189,7 @@ var Barbs = Barbs || (function () {
 
         const blocked_damage = get_parameter('blocked', parameters);
         if (blocked_damage !== null) {
-            const half_blocked_damage = parseInt(blocked_damage) / 2;
+            const half_blocked_damage = parse_int(blocked_damage) / 2;
             roll.add_damage(half_blocked_damage.toString(), Damage.PHYSICAL);
         }
 
@@ -2198,7 +2268,7 @@ var Barbs = Barbs || (function () {
         let percentage = 20;
         const extra_mana_spent = get_parameter('mana', parameters);
         if (extra_mana_spent !== null) {
-            percentage += 2 * parseInt(extra_mana_spent);
+            percentage += 2 * parse_int(extra_mana_spent);
         }
 
         add_persistent_effect(character, ability, target_character, 6, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
@@ -2211,6 +2281,7 @@ var Barbs = Barbs || (function () {
         const ability_info = get_ability_info(ability);
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
+
 
     function symbiote_power_spike(character, ability, parameters){
         const target_buff = get_parameter('buff', parameters);
@@ -2251,52 +2322,94 @@ var Barbs = Barbs || (function () {
 
         // Edit the handler into something that grants the same damages and multipliers, but increased by 50%
         persistent_effects[index].handler = function (char, roll, parameters) {
-            // For added damages, increase the number of damage dice by 1.5
+            // Increase the number of damage dice for added damages by 1.5x
             const damage_types = Object.keys(fake_roll.damages);
             for (let i = 0; i < damage_types.length; i++) {
                 const damage_type = damage_types[i];
                 const base_damage = fake_roll.damages[damage_type];
 
-                const dmg_pieces = base_damage.split('+');
+                let dmg_pieces = split_string(base_damage, '+');
+                dmg_pieces = split_array(dmg_pieces, '-');
+                dmg_pieces = split_array(dmg_pieces, '*');
+                dmg_pieces = split_array(dmg_pieces, '/');
+                dmg_pieces = split_array(dmg_pieces, '^');
+                dmg_pieces = split_array(dmg_pieces, '(');
+                dmg_pieces = split_array(dmg_pieces, ')');
+
                 let revised_dmg = '';
-
-                const append = function (piece) {
-                    if (revised_dmg === '') {
-                        revised_dmg = piece;
-                    } else {
-                        revised_dmg = revised_dmg + '+' + piece;
-                    }
-                };
-
                 for (let j = 0; j < dmg_pieces.length; j++) {
-                    const dmg_piece = dmg_pieces[j];
+                    let dmg_piece = dmg_pieces[j];
                     if (!dmg_piece.includes('d')) {
-                        append(dmg_piece);
+                        revised_dmg += dmg_piece;
 
                     } else {
                         let count = dmg_piece.split('d')[0];
                         if (count === '') {
                             count = 0;
                         } else {
-                            count = parseInt(count);
+                            count = parse_int(count);
                         }
                         const die = dmg_piece.split('d')[1];
                         const revised_piece = '%sd%s'.format(Math.round(1.5 * count), die);
-                        append(revised_piece);
+                        revised_dmg += revised_piece;
                     }
                 }
 
                 roll.add_damage('(%s)'.format(revised_dmg), damage_type);
             }
 
-            // For added multipliers, multiply the multiplier by 1.5
+            // Increase damage multipliers by 1.5x
             const multiplier_types = Object.keys(fake_roll.multipliers);
             for (let i = 0; i < multiplier_types.length; i++) {
                 const multiplier_type = multiplier_types[i];
-                if (character.name in fake_roll.multipliers[multiplier_type]) {
-                    const base_multiplier = fake_roll.multipliers[multiplier_type][character.name];
-                    roll.add_multiplier('(1.5*(%s))'.format(base_multiplier), multiplier_type, character.name);
+
+                const sources = Object.keys(fake_roll.multipliers[multiplier_type]);
+                for (let j = 0; j < sources.length; j++) {
+                    const source = sources[j];
+                    const base_multiplier = fake_roll.multipliers[multiplier_type][source];
+                    roll.add_multiplier('(1.5*(%s))'.format(base_multiplier), multiplier_type, source);
                 }
+            }
+
+            // Increase crit chance, crit damage mod, concentration bonus, and initiative bonus by 1.5x
+            roll.add_crit_chance(1.5 * fake_roll.crit_chance);
+            roll.add_crit_damage_mod(1.5 * 100 * (fake_roll.crit_damage_mod - 2));
+            roll.add_concentration_bonus(1.5 * fake_roll.concentration_bonus);
+            roll.add_initiative_bonus(1.5 * fake_roll.initiative_bonus);
+
+            // If this changed, the new effect should do the same
+            roll.should_apply_crit = fake_roll.should_apply_crit;
+
+            // Increase stat bonuses by 1.5x
+            const stats = Object.keys(fake_roll.stats);
+            for (let i = 0; i < stats.length; i++) {
+                const stat = Stat[stats[i]];
+                const base_bonus = fake_roll.stats[stat.name];
+                roll.add_stat_bonus(stat, '(1.5*(%s))'.format(base_bonus));
+            }
+
+            // Increase stat multipliers by 1.5x
+            const stat_multipliers = Object.keys(fake_roll.stat_multipliers);
+            for (let i = 0; i < stat_multipliers.length; i++) {
+                const stat = Stat[stat_multipliers[i]];
+                const base_bonus = fake_roll.stat_multipliers[stat.name];
+                roll.add_stat_multiplier(stat, '(1.5*(%s))'.format(base_bonus));
+            }
+
+            // Increase hidden stats by 1.5x
+            const hidden_stats = Object.keys(fake_roll.hidden_stats);
+            for (let i = 0; i < hidden_stats.length; i++) {
+                const hidden_stat = hidden_stats[i];
+                const base_bonus = fake_roll.hidden_stats[hidden_stat];
+                roll.add_hidden_stat(hidden_stat, Math.round(1.5 * base_bonus));
+            }
+
+            // Increase skill bonus by 1.5x
+            const skills = Object.keys(fake_roll.skills);
+            for (let i = 0; i < skills.length; i++) {
+                const skill = Skill[skills[i].toUpperCase().replace(' ', '_').replace(':', '')];
+                const base_bonus = fake_roll.skills[skill.name];
+                roll.add_skill_bonus(skill, '(1.5*(%s))'.format(base_bonus));
             }
 
             return true;

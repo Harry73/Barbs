@@ -1,6 +1,11 @@
 var BarbsComponents = BarbsComponents || (function () {
     'use_strict';
 
+
+    // ################################################################################################################
+    // Assertion helpers
+
+
     function assert(condition, message) {
         if (condition === null || condition === undefined) {
             throw 'assert() missing condition';
@@ -14,6 +19,7 @@ var BarbsComponents = BarbsComponents || (function () {
         }
     }
 
+
     function assert_not_null(parameter, message) {
         if (message === null || message === undefined) {
             throw 'assert_not_null() missing message';
@@ -23,6 +29,9 @@ var BarbsComponents = BarbsComponents || (function () {
         assert(parameter !== undefined, message);
     }
 
+
+    // ################################################################################################################
+    // Wrappers around log()
 
     const LogLevel = {
         TRACE: 0,
@@ -44,7 +53,22 @@ var BarbsComponents = BarbsComponents || (function () {
     }
 
 
+    // ################################################################################################################
+    // Functional
 
+
+    // Always specifying a radix is safest, and we always want radix 10.
+    function parse_int(string) {
+        return parseInt(string, 10);
+    }
+
+
+
+    // ################################################################################################################
+    // Character -> potential names mapping
+
+
+    // This is how we identify what character should be used for a given caller.
     const characters_by_owner = {
         'Hoshiko Nightside': [
             'Hoshiko Nightside',
@@ -109,7 +133,9 @@ var BarbsComponents = BarbsComponents || (function () {
         ],
         'Jørgen Espensen': [
             'Jørgen Espensen',
+            'Jorgen Espensen',
             'Jørgen',
+            'Jorgen',
             'Steve K.',
             'Steve',
         ],
@@ -171,64 +197,64 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     const Stat = {
-        HEALTH: new StatObject('health', 'VIT', function (v) {
+        HEALTH: new StatObject('HEALTH', 'VIT', function (v) {
             return 100 + 10 * v;
         }),
-        STAMINA: new StatObject('stamina', 'END', function (v) {
+        STAMINA: new StatObject('STAMINA', 'END', function (v) {
             return 100 + 10 * v;
         }),
-        MANA: new StatObject('mana', 'SPT', function (v) {
+        MANA: new StatObject('MANA', 'SPT', function (v) {
             return 100 + 10 * v;
         }),
-        HEALTH_REGENERATION: new StatObject('health regeneration', 'RCV', function (v) {
+        HEALTH_REGENERATION: new StatObject('HEALTH_REGENERATION', 'RCV', function (v) {
             return 10 + v;
         }),
-        STAMINA_REGENERATION: new StatObject('stamina regeneration', 'PER', function (v) {
+        STAMINA_REGENERATION: new StatObject('STAMINA_REGENERATION', 'PER', function (v) {
             return 10 + v;
         }),
-        MANA_REGENERATION: new StatObject('mana regeneration', 'SAN', function (v) {
+        MANA_REGENERATION: new StatObject('MANA_REGENERATION', 'SAN', function (v) {
             return 10 + v;
         }),
-        MOVEMENT_SPEED: new StatObject('movement speed', 'AGI', function (v) {
+        MOVEMENT_SPEED: new StatObject('MOVEMENT_SPEED', 'AGI', function (v) {
             return 30 + 5 * Math.floor(v / 2);
         }),
-        AC: new StatObject('ac', 'TGH', function (v) {
+        AC: new StatObject('AC', 'TGH', function (v) {
             return 10 + v;
         }),
-        EVASION: new StatObject('evasion', 'REF', function (v) {
+        EVASION: new StatObject('EVASION', 'REF', function (v) {
             return 10 + v;
         }),
-        MAGIC_RESIST: new StatObject('magic resist', 'RES', function (v) {
+        MAGIC_RESIST: new StatObject('MAGIC_RESIST', 'RES', function (v) {
             return 10 + v;
         }),
-        CONDITION_RESIST: new StatObject('condition resist', 'FRT', function (v) {
+        CONDITION_RESIST: new StatObject('CONDITION_RESIST', 'FRT', function (v) {
             return 10 + v;
         }),
-        MELEE_DAMAGE: new StatObject('melee damage', 'STR', function (v) {
+        MELEE_DAMAGE: new StatObject('MELEE_DAMAGE', 'STR', function (v) {
             return v;
         }),
-        RANGED_FINE_DAMAGE: new StatObject('ranged fine damage', 'DEX', function (v) {
+        RANGED_FINE_DAMAGE: new StatObject('RANGED_FINE_DAMAGE', 'DEX', function (v) {
             return v;
         }),
-        MAGIC_DAMAGE: new StatObject('magic damage', 'ATN', function (v) {
+        MAGIC_DAMAGE: new StatObject('MAGIC_DAMAGE', 'ATN', function (v) {
             return v;
         }),
-        CRITICAL_HIT_CHANCE: new StatObject('critical hit chance', 'PRE', function (v) {
+        CRITICAL_HIT_CHANCE: new StatObject('CRITICAL_HIT_CHANCE', 'PRE', function (v) {
             return 10 + v;
         }),
-        COMMANDS: new StatObject('commands', 'APL', function (v) {
+        COMMANDS: new StatObject('COMMANDS', 'APL', function (v) {
             return Math.floor((v + 10) / 10) + 1;
         }),
-        LANGUAGES: new StatObject('languages', 'INT', function (v) {
+        LANGUAGES: new StatObject('LANGUAGES', 'INT', function (v) {
             return Math.floor((v + 10) / 3) + 1;
         }),
-        ITEM_EFFICIENCY: new StatObject('item efficiency', 'WIS', function (v) {
+        ITEM_EFFICIENCY: new StatObject('ITEM_EFFICIENCY', 'WIS', function (v) {
             return (v + 10) * 5;
         }),
-        BUFF_LIMIT: new StatObject('buff limit', 'COM', function (v) {
+        BUFF_LIMIT: new StatObject('BUFF_LIMIT', 'COM', function (v) {
             return Math.floor((v + 10) / 2);
         }),
-        CONCENTRATION_LIMIT: new StatObject('concentration limit', 'FCS', function (v) {
+        CONCENTRATION_LIMIT: new StatObject('CONCENTRATION_LIMIT', 'FCS', function (v) {
             return Math.floor((v + 10) / 2);
         }),
     };
@@ -398,6 +424,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
     // ################################################################################################################
     // Abilities and classes from the rulebook files
+
 
     const all_classes = [
         {
@@ -2888,6 +2915,7 @@ var BarbsComponents = BarbsComponents || (function () {
             "all_reqs_known": false
         }
     ];
+
 
     const all_abilities = [
         {
@@ -12288,7 +12316,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     // ################################################################################################################
-    // Roll
+    // Rolls
 
 
     const Damage = {
@@ -12388,7 +12416,7 @@ var BarbsComponents = BarbsComponents || (function () {
             if (!(stat.name in this.stats)) {
                 this.stats[stat.name] = '%s'.format(bonus);
             } else {
-                this.stats[stat.name] = this.stats[stat.name] + '+%s'.format(bonus);
+                this.stats[stat.name] = '%s+%s'.format(this.stats[stat.name], bonus);
             }
         }
 
@@ -12415,7 +12443,7 @@ var BarbsComponents = BarbsComponents || (function () {
             if (!(skill.name in this.skills)) {
                 this.skills[skill.name] = '%s'.format(bonus);
             } else {
-                this.skills[skill.name] = this.skills[skill.name] + '+%s'.format(bonus);
+                this.skills[skill.name] = '%s+%s'.format(this.skills[skill.name], bonus);
             }
         }
 
@@ -12528,7 +12556,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         }
 
                     } else {
-                        const count = parseInt(dmg_piece.split('d')[0]);
+                        const count = parse_int(dmg_piece.split('d')[0]);
                         const die = dmg_piece.split('d')[1];
 
                         for (let k = 0; k < count; k++) {
@@ -13893,7 +13921,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     // ################################################################################################################
-    // Character
+    // Characters
 
 
     const character_sheet_item_slots = [
@@ -13980,7 +14008,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 return this.attributes[attr_tla];
             }
 
-            const attr_value = parseInt(getAttrByName(this.id, attr_tla));
+            const attr_value = parse_int(getAttrByName(this.id, attr_tla));
             this.stats[attr_tla] = attr_value;
             return attr_value;
         }
