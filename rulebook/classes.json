@@ -596,7 +596,11 @@
             "Self Defense Turret",
             "Force Wall",
             "Mansion"
-        ]
+        ],
+        "api": {
+            "description": "The API does not do anything for this passive.",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -919,7 +923,7 @@
             "Dragonfear"
         ],
         "api": {
-            "description": "For a summoned creature's attack ability, add the \"draconic_pact\" parameter with the number of pacts you have. The API will add in the increased damage based on this.",
+            "description": "For a summoned creature's attack ability, add the 'draconic_pact' parameter with the number of pacts you have. The API will add in the increased damage based on this.",
             "examples": ["draconic_pact: 2"]
         }
     },
@@ -2103,7 +2107,11 @@
             "Summon Estian Wayfinder",
             "Summon Xat'hul Charmspirit",
             "Summon Watcher"
-        ]
+        ],
+        "api": {
+            "description": "The API does not handle anything for the passive. For what it's worth, most abilities in this class do not have effects that require work in the API.",
+            "examples": []
+        }
     },
     {
         "type": "class",

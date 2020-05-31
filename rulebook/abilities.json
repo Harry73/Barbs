@@ -1655,7 +1655,11 @@
             "attack",
             "condition",
             "Immobilize"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5150,7 +5154,11 @@
             "physical",
             "condition",
             "Poison"
-        ]
+        ],
+        "api": {
+            "description": "If you use this ability, it will perform the summon's attack.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5277,7 +5285,11 @@
             "minion",
             "defense",
             "counterspell"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description. The summon's aura will have to be factored in manually.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5323,7 +5335,11 @@
             "Spell",
             "summoning",
             "minion"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5342,7 +5358,11 @@
             "Spell",
             "summoning",
             "minion"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description. The summon's aura will have to be factored in manually.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5380,7 +5400,11 @@
             "Spell",
             "summoning",
             "minion"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description. The summon's aura will have to be factored in manually.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -6734,7 +6758,16 @@
             "lightning",
             "buff",
             "condition"
-        ]
+        ],
+        "api": {
+            "description": "Using this ability replicates the summoned dragon's Major and Minor actions. There are two parameters for this ability, \"major\" and \"minor\", both of which are optional. If neither are included, the ability does nothing. The \"major\" parameter, if included, requires the type of attack you want the summon to perform, either \"claw\" or \"breath\". The \"minor\" parameter, if included, takes a comma-separated list of allies and applies the buff effect. The debuff minor is not supported, as the API does not track enemies. Both the \"major\" and \"minor\" parameters can be included to do both actions at once.",
+            "examples": [
+                "major: claw",
+                "major: breath",
+                "minor: Faust, Ren, Orpheus",
+                "major: claw; minor: Faust, Ren"
+            ]
+        }
     },
     {
         "type": "ability",

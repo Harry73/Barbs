@@ -12579,16 +12579,14 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         get_crit_chance() {
-            const self = this;
-
-            let final_crit_chance = self.character.get_stat(Stat.CRITICAL_HIT_CHANCE);
+            let final_crit_chance = this.character.get_stat(Stat.CRITICAL_HIT_CHANCE);
 
             // Crit chance may be upped by abilities. Add in that amount.
-            final_crit_chance += self.crit_chance;
+            final_crit_chance += this.crit_chance;
 
             // Crit chance may be upped by items. Add in that amount.
-            if (Stat.CRITICAL_HIT_CHANCE.name in self.stats) {
-                final_crit_chance += eval(self.stats[Stat.CRITICAL_HIT_CHANCE.name]);
+            if (Stat.CRITICAL_HIT_CHANCE.name in this.stats) {
+                final_crit_chance += eval(this.stats[Stat.CRITICAL_HIT_CHANCE.name]);
             }
 
             // Crit chance can't go over 100%, which we'll interpret as 101 because of the crit chance math.

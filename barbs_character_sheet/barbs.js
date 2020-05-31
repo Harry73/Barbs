@@ -396,8 +396,8 @@ var Barbs = Barbs || (function () {
             }
         }
 
-        _log(LogLevel.INFO, 'Added persistent effect %s'.format(JSON.stringify(effect)));
         persistent_effects.push(effect);
+        _log(LogLevel.INFO, 'Added persistent effect %s'.format(JSON.stringify(effect)));
     }
 
 
@@ -440,14 +440,22 @@ var Barbs = Barbs || (function () {
             return;
         }
 
+        const msg_sender = get_character(msg);
+        if (msg_sender === null) {
+            return;
+        }
+
         for (let i = 0; i < persistent_effects.length; i++) {
             if (persistent_effects[i].name === effect_name && persistent_effects[i].target === character.name) {
                 persistent_effects.splice(i, 1);
                 i--;
 
-                chat(get_character(msg), 'Removed effect ' + effect_name + ' from ' + character.name);
+                chat(msg_sender, 'Removed effect %s from %s'.format(effect_name, character.name));
+                return;
             }
         }
+
+        chat(msg_sender, 'Did not find effect %s on %s'.format(effect_name, character.name));
     }
 
 
@@ -456,8 +464,11 @@ var Barbs = Barbs || (function () {
     function add_persistent_effects_to_roll(character, roll, roll_time, parameters) {
         for (let i = 0; i < persistent_effects.length; i++) {
             const effect = persistent_effects[i];
-            if (effect.target === character.name && effect.roll_time === roll_time
-                    && (effect.roll_type === roll.roll_type || effect.roll_type === RollType.ALL)) {
+
+            const right_target = effect.target === character.name;
+            const right_time = effect.roll_time === roll_time;
+            const right_type = (effect.roll_type === roll.roll_type || effect.roll_type === RollType.ALL);
+            if (right_target && right_time && right_type) {
                 if (!persistent_effects[i].handler(character, roll, parameters)) {
                     return false;
                 }
@@ -755,8 +766,10 @@ var Barbs = Barbs || (function () {
         _log(LogLevel.DEBUG, 'removing effects for roll of type ' + roll.roll_type);
         for (let i = 0; i < persistent_effects.length; i++) {
             const effect = persistent_effects[i];
-            if (effect.single_application && effect.target === character.name
-                    && (effect.roll_type === roll.roll_type || effect.roll_type === RollType.ALL)) {
+
+            const right_target = effect.target === character.name;
+            const right_type = (effect.roll_type === roll.roll_type || effect.roll_type === RollType.ALL);
+            if (effect.single_application && right_target && right_type) {
                 _log(LogLevel.DEBUG, 'removing effect = %s'.format(JSON.stringify(effect)));
                 persistent_effects.splice(i, 1);
                 i--;
@@ -1279,14 +1292,18 @@ var Barbs = Barbs || (function () {
         }
 
         const target_names = parameter.split(',');
+        const target_characters = [];
         for (let i = 0; i < target_names.length; i++) {
-            const fake_msg = {'who': target_names[i], 'id': ''};
-            const target_character = get_character(fake_msg);
+            const target_character = get_character_by_name(target_names[i].trim());
             if (target_character === null) {
                 return;
             }
+            target_characters.push(target_character);
+        }
 
-            const source = character.name;
+        const source = character.name;
+        for (let i = 0; i < target_characters.length; i++) {
+            const target_character = target_characters[i];
             add_persistent_effect(character, ability, target_character, 1, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
                 function (char, roll, parameters) {
                     roll.add_multiplier(1, Damage.ALL, source);
@@ -1535,13 +1552,11 @@ var Barbs = Barbs || (function () {
 
     function dragoncaller_summon_bronze_dragon(character, ability, parameters) {
         const major_action = get_parameter('major', parameters);
-        const minor_action = get_parameter('minor', parameters);
-
         if (major_action !== null) {
-            // TODO: should the character for these rolls actually be `character`? Or should it be some fake character
-            //  for the summoned dragon? I imagine that the dragon shouldn't be getting whatever is applied to the
-            //  the caster, or whatever effects are granted by the caster's items. This currently doesn't work.
-            const dragon = new BarbsComponents.Character({'id': 'garbage'}, character.who);
+            // The summon acts as a separate character, so we make a fake one to be able to do rolls with. The critical
+            // hit chance stat must at least be set for this to work properly.
+            const dragon = new BarbsComponents.Character({'id': 'bronze_dragon'}, character.who);
+            dragon.stats[Stat.CRITICAL_HIT_CHANCE.name] = 0;
 
             if (major_action === 'breath') {
                 const roll = new Roll(dragon, RollType.MAGIC);
@@ -1564,15 +1579,26 @@ var Barbs = Barbs || (function () {
             }
         }
 
+        const minor_action = get_parameter('minor', parameters);
         if (minor_action !== null) {
-            // TODO deal with this better. We're gonna need a list of allies for the buff, and it's not worth doing
-            // anything for the debuff.
-            if (minor_action === 'buff') {
+            const target_names = minor_action.split(',');
+            const target_characters = [];
+            for (let i = 0; i < target_names.length; i++) {
+                const target_character = get_character_by_name(target_names[i].trim());
+                if (target_character === null) {
+                    return;
+                }
+                target_characters.push(target_character);
+            }
 
-            } else if (minor_action === 'debuff') {
-
-            } else {
-                chat(character, 'Unexpected option for parameter "minor", expected {buff/debuff}')
+            for (let i = 0; i < target_characters.length; i++) {
+                const target_character = target_characters[i];
+                add_persistent_effect(character, ability, target_character, 6, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
+                    function (char, roll, parameters) {
+                        roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 10);
+                        roll.add_hidden_stat(HiddenStat.AC_PENETRATION, 10);
+                        return true;
+                    });
             }
         }
     }
@@ -2141,6 +2167,22 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function summoner_summon_ascarion_beast(character, ability, parameters) {
+        // The summon acts as a separate character, so we make a fake one to be able to do rolls with. The critical
+        // hit chance stat must at least be set for this to work properly.
+        const summon = new BarbsComponents.Character({'id': 'ascarion_beast'}, character.who);
+        summon.stats[Stat.CRITICAL_HIT_CHANCE.name] = 0;
+
+        const roll = new Roll(summon, RollType.PHYSICAL);
+        roll.add_damage('4d6', Damage.PHYSICAL);
+        roll.add_effect('Poison [[2d6]]');
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(summon, ability, roll, parameters, crit_section);
+        });
+    }
+
+
     function symbiote_empower_soul(character, ability, parameters) {
         const target_name = get_parameter('target', parameters);
         if (target_name === null) {
@@ -2343,14 +2385,18 @@ var Barbs = Barbs || (function () {
         }
 
         const target_names = parameter.split(',');
+        const target_characters = [];
         for (let i = 0; i < target_names.length; i++) {
-            const fake_msg = {'who': target_names[i], 'id': ''};
-            const target_character = get_character(fake_msg);
+            const target_character = get_character_by_name(target_names[i].trim());
             if (target_character === null) {
                 return;
             }
+            target_characters.push(target_character);
+        }
 
-            const source = character.name;
+        const source = character.name;
+        for (let i = 0; i < target_characters.length; i++) {
+            const target_character = target_characters[i];
             add_persistent_effect(character, ability, target_character, 1, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
                 function (char, roll, parameters) {
                     roll.add_multiplier(0.5, Damage.ALL, source);
@@ -2464,6 +2510,9 @@ var Barbs = Barbs || (function () {
             'Skull Bash': champion_skull_bash,
             'Slice and Dice': champion_slice_and_dice,
         },
+        'Conjurer': {
+            'Web': print_ability_description,
+        },
         'Cryomancer': {
             'Aurora Beam': cryomancer_aurora_beam,
             'Extinguish': print_ability_description,
@@ -2483,11 +2532,7 @@ var Barbs = Barbs || (function () {
         },
         'Demon Hunter': {
             // TODO May want a "marked" parameter for Essence Scatter
-            // 'Demonbane Blast': demon_hunter_demonbane_blast,
-            // 'Banishing Bolt': demon_hunter_banishing_bolt,
-            // "Hunter's Guile": demon_hunter_hunters_guile,
             'Essence Scatter': print_ability_description,
-            // 'Lifesteal Elegy': demon_hunter_lifesteal_elegy,
         },
         'Destroyer': {
             'Challenge': destroyer_challenge,
@@ -2562,6 +2607,13 @@ var Barbs = Barbs || (function () {
             'Fleetfoot Blade': soldier_fleetfoot_blade,
             'Intercept': print_ability_description,
             'Steadfast Strikes': soldier_steadfast_strikes,
+        },
+        'Summoner': {
+            'Summon Ascarion Beast': summoner_summon_ascarion_beast,
+            'Summon Unseen Servant': print_ability_description,
+            'Summon Estian Wayfinder': print_ability_description,
+            'Summon Vilyrian Spellmaster': print_ability_description,
+            'Summon Watcher': print_ability_description,
         },
         'Symbiote': {
             'Empower Soul': symbiote_empower_soul,
