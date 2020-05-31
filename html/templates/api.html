@@ -109,7 +109,7 @@
                 <li><span class="monospace">multiplier &lt;multiplier&gt; &lt;damage_type&gt; &lt;source&gt;</span>
                     <ul>
                         <li><span class="monospace">multiplier</span> is the percentage increase. You do not need to add 1; use 20% for 20% increased damage.</li>
-                        <li><span class="monospace">damage_type</span> must be one of the following: <span class="monospace">physical, fire, water, earth, air, ice, lightning, light, dark, psionic, healing</span></li>
+                        <li><span class="monospace">damage_type</span> must be one of the following: <span class="monospace">physical, psychic, fire, water, earth, air, ice, lightning, light, dark, healing, all_magic, all</span></li>
                         <li>The source is the origin of the multiplier. Items, for example, use source “self”. If the source is another character, use their character’s full name.</li>
                         <li>For example - <span class="monospace">"multiplier 20% air self"</span> - will add 20% increased air damage.</li>
                     </ul>
@@ -118,7 +118,7 @@
                 <li><span class="monospace">damage &lt;damage_dice&gt; &lt;damage_type&gt;</span>
                     <ul>
                         <li><span class="monospace">damage_dice</span> can be any valid Roll20 roll expression, like "5d8" or "10+2d6".</li>
-                        <li><span class="monospace">damage_type</span> must be one of the following: <span class="monospace">physical, fire, water, earth, air, ice, lightning, light, dark, psionic, healing</span></li>
+                        <li><span class="monospace">damage_type</span> must be one of the following: <span class="monospace">physical, psychic, fire, water, earth, air, ice, lightning, light, dark, healing, all_magic, all</span></li>
                         <li>For example - <span class="monospace">"damage 5d8 air"</span> - will add 5d8 air damage to your attack.</li>
                     </ul>
                 </li>
