@@ -566,6 +566,11 @@ var Barbs = Barbs || (function () {
             }
 
             const multiplier = 1 + parse_int(efficiency) / 100;
+            if (Number.isNaN(multiplier)) {
+                chat(caster, 'Non-numeric efficieny "%s"'.format(efficiency));
+                return;
+            }
+
             handler = make_handler_efficient(target_character, handler, parameters, multiplier);
         }
 
@@ -991,7 +996,7 @@ var Barbs = Barbs || (function () {
             return false;
         }
 
-        roll.add_damage(damage, type);
+        roll.add_damage(damage, Damage[type]);
         return true;
     }
 
@@ -1010,6 +1015,7 @@ var Barbs = Barbs || (function () {
         const multiplier = parse_int(multiplier_percent) / 100;
         if (Number.isNaN(multiplier)) {
             chat(roll.character, 'Non-numeric multiplier "%s"'.format(pieces[1]));
+            return false;
         }
 
         const type = get_damage_type(pieces[2]);
@@ -1020,7 +1026,7 @@ var Barbs = Barbs || (function () {
 
         const source = pieces.splice(3).join(' ');
 
-        roll.add_multiplier(multiplier, type, source);
+        roll.add_multiplier(multiplier, Damage[type], source);
         return true;
     }
 
@@ -1037,7 +1043,8 @@ var Barbs = Barbs || (function () {
 
         const multiplier = parse_int(efficiency_percent) / 100;
         if (Number.isNaN(multiplier)) {
-            chat(roll.character, 'Non-numeric multiplier "%s"'.format(pieces[1]));
+            chat(roll.character, 'Non-numeric efficiency "%s"'.format(efficiency_percent));
+            return false;
         }
 
         roll.add_multiplier(multiplier, Damage.ALL, 'efficiency');
@@ -1214,13 +1221,17 @@ var Barbs = Barbs || (function () {
 
     function handle_arbitrary_parameters(roll, roll_time, parameters) {
         for (let i = 0; i < parameters.length; i++) {
-            Object.keys(arbitrary_parameters).forEach(function (keyword) {
+            const keywords = Object.keys(arbitrary_parameters);
+            for (let j = 0; j < keywords.length; j++) {
+                const keyword = keywords[j];
+                const func = arbitrary_parameters[keyword];
+
                 if (parameters[i].includes(keyword)) {
-                    if (!arbitrary_parameters[keyword](roll, roll_time, parameters[i], parameters)) {
+                    if (!func(roll, roll_time, parameters[i], parameters)) {
                         return false;
                     }
                 }
-            });
+            }
         }
 
         return true;

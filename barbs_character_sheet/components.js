@@ -12595,7 +12595,7 @@ var BarbsComponents = BarbsComponents || (function () {
             }
 
             // Crit chance can't go over 100%, which we'll interpret as 101 because of the crit chance math.
-            return Math.min(101, final_crit_chance);
+            return Math.min(101, Math.round(final_crit_chance));
         }
 
         roll() {
