@@ -978,8 +978,8 @@
             "modal"
         ],
         "api": {
-            "description": "You must specify the \"damage_type\" parameter along with the damage types you wish to use for each bolt. If you only specify 1, all 3 bolts will use the same type. If you only specify 2, damage for only 2 bolts will be rolled. If you specify 3, each bolt will be one of those 3 types.",
-            "examples": ["damage_type ice", "damage_type ice fire", "damage_type ice fire air"]
+            "description": "You must specify the \"damage_types\" parameter along with the damage types you wish to use for each bolt. If you only specify 1, all 3 bolts will use the same type. If you only specify 2, damage for only 2 bolts will be rolled. If you specify 3, each bolt will be one of those 3 types.",
+            "examples": ["damage_types ice", "damage_types ice fire", "damage_types ice fire air"]
         }
     },
     {

@@ -12340,13 +12340,33 @@ var BarbsComponents = BarbsComponents || (function () {
     // An spell attack results in a "magic" roll. Certain effects should only be applied to certain rolls. For example,
     // bonus damage on a melee weapon should not be applied to magic-type rolls.
     //
-    const RollType = {
-        PHYSICAL: 'roll_type_physical',
-        PSYCHIC: 'roll_type_psychic',
-        MAGIC: 'roll_type_magic',
-        HEALING: 'roll_type_healing',
-        ALL: 'roll_type_all',
-    };
+    class RollType {
+        static is_type(roll_type, expected_type) {
+            return roll_type === expected_type || roll_type === RollType.ALL;
+        }
+
+        static is_physical(roll_type) {
+            return this.is_type(roll_type, RollType.PHYSICAL);
+        }
+
+        static is_pyschic(roll_type) {
+            return this.is_type(roll_type, RollType.PSYCHIC);
+        }
+
+        static is_magic(roll_type) {
+            return this.is_type(roll_type, RollType.MAGIC);
+        }
+
+        static is_healing(roll_type) {
+            return this.is_type(roll_type, RollType.HEALING);
+        }
+    }
+
+    RollType.PHYSICAL = 'roll_type_physical';
+    RollType.PSYCHIC = 'roll_type_psychic';
+    RollType.MAGIC = 'roll_type_magic';
+    RollType.HEALING = 'roll_type_healing';
+    RollType.ALL = 'roll_type_all';
 
 
     // Roll time as a concept exists because of crits. Some effects only apply if a roll is a crit, but we need to

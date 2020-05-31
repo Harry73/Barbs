@@ -539,7 +539,6 @@ var Barbs = Barbs || (function () {
                 roll.effects.push(effect);
             }
 
-
             return true;
         };
 
@@ -667,7 +666,7 @@ var Barbs = Barbs || (function () {
 
             const right_target = effect.target === character.name;
             const right_time = effect.roll_time === roll_time;
-            const right_type = (effect.roll_type === roll.roll_type || effect.roll_type === RollType.ALL);
+            const right_type = RollType.is_type(effect.roll_type, roll.roll_type);
             if (right_target && right_time && right_type) {
                 if (!persistent_effects[i].handler(character, roll, parameters)) {
                     return false;
@@ -731,7 +730,7 @@ var Barbs = Barbs || (function () {
         assert_not_null(character, 'add_scale_damage() character');
         assert_not_null(roll, 'add_scale_damage() roll');
 
-        if (roll.roll_type !== RollType.PHYSICAL) {
+        if (!RollType.is_physical(roll.roll_type)) {
             chat(character, 'Unexpected roll type %s while adding weapon scaling damage'.format(roll.roll_type));
         }
 
@@ -968,7 +967,7 @@ var Barbs = Barbs || (function () {
             const effect = persistent_effects[i];
 
             const right_target = effect.target === character.name;
-            const right_type = (effect.roll_type === roll.roll_type || effect.roll_type === RollType.ALL);
+            const right_type = RollType.is_type(effect.roll_type, roll.roll_type);
             if (effect.single_application && right_target && right_type) {
                 _log(LogLevel.DEBUG, 'removing effect = %s'.format(JSON.stringify(effect)));
                 persistent_effects.splice(i, 1);
@@ -1158,7 +1157,7 @@ var Barbs = Barbs || (function () {
             return true;
         }
 
-        if (roll.roll_type === RollType.PHYSICAL || roll.roll_type === RollType.ALL) {
+        if (RollType.is_physical(roll.roll_type)) {
             roll.add_damage('6d8', Damage.LIGHTNING);
 
             // Triggering this also hits another random target
@@ -1221,13 +1220,16 @@ var Barbs = Barbs || (function () {
 
     function handle_arbitrary_parameters(roll, roll_time, parameters) {
         for (let i = 0; i < parameters.length; i++) {
+            const parameter = parameters[i];
+            const parameter_keyword = parameter.split(' ')[0].split(':')[0];
+
             const keywords = Object.keys(arbitrary_parameters);
             for (let j = 0; j < keywords.length; j++) {
                 const keyword = keywords[j];
                 const func = arbitrary_parameters[keyword];
 
-                if (parameters[i].includes(keyword)) {
-                    if (!func(roll, roll_time, parameters[i], parameters)) {
+                if (parameter_keyword === keyword) {
+                    if (!func(roll, roll_time, parameter, parameters)) {
                         return false;
                     }
                 }
@@ -1299,9 +1301,7 @@ var Barbs = Barbs || (function () {
     function air_duelist_arc_of_air(character, ability, parameters) {
         add_persistent_effect(character, ability, parameters, character, 6,  Ordering(), RollType.PHYSICAL, RollTime.DEFAULT, false,
             function (character, roll, parameters) {
-                if (roll.roll_type === RollType.PHYSICAL || roll.roll_type === RollType.ALL) {
-                    roll.add_damage('2d8', Damage.AIR);
-                }
+                roll.add_damage('2d8', Damage.AIR);
                 return true;
             });
 
@@ -1363,9 +1363,9 @@ var Barbs = Barbs || (function () {
 
 
     function arcanist_magic_dart(character, ability, parameters) {
-        const parameter = get_parameter('damage_type', parameters);
+        const parameter = get_parameter('damage_types', parameters);
         if (parameter === null) {
-            chat(character, '"damage_type" parameter is missing');
+            chat(character, '"damage_types" parameter is missing');
             return;
         }
 
@@ -1389,7 +1389,7 @@ var Barbs = Barbs || (function () {
         roll_crit(dummy_roll, parameters, function (crit_section) {
             for (let i = 0; i < damage_types.length; i++) {
                 const roll = new Roll(character, RollType.MAGIC);
-                roll.add_damage('%sd12'.format(1), damage_types[i]);
+                roll.add_damage('1d12', damage_types[i]);
                 roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), damage_types[i]);
 
                 roll.copy_damages(dummy_roll);
@@ -1991,7 +1991,7 @@ var Barbs = Barbs || (function () {
             function (character, roll, parameters) {
                 roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 30);
 
-                if (roll.roll_type === RollType.PHYSICAL || roll.roll_type === RollType.ALL) {
+                if (RollType.is_physical(roll.roll_type)) {
                     roll.add_hidden_stat(HiddenStat.REACH, 5);
                 }
                 roll.add_hidden_stat(HiddenStat.AC_PENETRATION, 50);
@@ -2122,7 +2122,7 @@ var Barbs = Barbs || (function () {
     function lightning_duelist_sword_of_lightning(character, ability, parameters) {
         add_persistent_effect(character, ability, parameters, character, 6,  Ordering(), RollType.PHYSICAL, RollTime.DEFAULT, false,
             function (character, roll, parameters) {
-                if (roll.roll_type === RollType.PHYSICAL || roll.roll_type === RollType.ALL) {
+                if (RollType.is_physical(roll.roll_type)) {
                     roll.add_damage('2d8', Damage.LIGHTNING);
                 }
                 return true;
