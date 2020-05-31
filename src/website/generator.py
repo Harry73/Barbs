@@ -2,7 +2,7 @@ import html
 import os
 import shutil
 
-from src.website.common import get_component, read_json_file, href, get_link_skill_req
+from src.website.common import read_json_file, href, get_link_skill_req
 
 
 CURRENT_PATH = os.getcwd()
@@ -218,7 +218,7 @@ def _build_branches_html(clazz, abilities):
                 description[i] = description[i].replace(passive_name, '<i>%s</i>' % link)
 
             ability_html = ability_template.format(
-                name=ability['name'].replace('"', '&quot'),
+                name=html.escape(ability['name']),
                 clazz=ability['class'],
                 action=ability['action'],
                 cost=ability['cost'],
@@ -341,9 +341,10 @@ def _build_abilities_api(clazz, abilities):
                 description = 'Not implemented'
                 examples_html = ''
 
+            ability_name = html.escape(ability['name'])
+
             api_ability_html = api_ability_template.format(
-                name=href('/#class_%s_ability_%s' % (clazz['name'], ability['name']), html.escape(ability['name']),
-                          title='Rulebook'),
+                name=href('/#class_%s_ability_%s' % (clazz['name'], ability_name), ability_name, title='Rulebook'),
                 description=description,
                 examples=examples_html,
             )

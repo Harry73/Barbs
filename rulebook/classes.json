@@ -233,8 +233,8 @@
             "Force Spike"
         ],
         "api": {
-            "description": "Not implemented",
-            "examples": []
+            "description": "When casting a damagin spell, use the \"efficiency\" parameter to alter the damage. Use \"-25%\" for decreased efficiency and \"25%\" for increased efficiency. In practice, this will add a multiplier on all damages the spell deals.",
+            "examples": ["efficiency -25%", "efficiency 25%"]
         }
     },
     {

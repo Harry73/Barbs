@@ -32,9 +32,9 @@
         <a href="#Items">Items</a>
         <a href="#Class Abilities">Class Abilities</a>
         <div class="sidenav-subsection">
+            <a href="#Extra">Extra</a>
             {classes_nav}
         </div>
-        <a href="#Extra">Extra</a>
     </div>
 </div>
 
@@ -100,30 +100,43 @@
             <br>
             <p>Classes and abilities that are “not implemented” will be eventually. For now if you try to use one of these abilities, the API will say it is unknown. If there are no notes for an ability, the API does as the ability describes. There are, however, many abilities that do things the API will not handle. Action economy, for example, is not tracked by the API. For abilities like this, the API will just print the ability’s description. It is on the players to deal with whatever the ability does in these cases.</p>
             <br>
-            {classes}
-        </article>
 
-        <article>
             <a id="Extra">
-                <h2>Extra</h2>
+                <h3>Extra</h3>
             </a>
-            <p>Nothing is ever perfect. If there is some damage or multiplier that you need to include when using an ability that isn’t handled by the API, you can use the “misc” parameters.</p>
+            <p>Nothing is ever perfect. If there is some damage or multiplier that you need to include when using an ability that isn’t handled by the API, you can use these parameters.</p>
             <ul>
-                <li><span class="monospace">misc_multiplier &lt;multiplier value&gt; &lt;damage type&gt; &lt;source&gt;</span>
+                <li><span class="monospace">multiplier &lt;multiplier&gt; &lt;damage_type&gt; &lt;source&gt;</span>
                     <ul>
-                        <li>Multiplier values should be specified as decimal (0.2) rather than percentage (20%). You do not need to add 1 - a 20% increase is a 0.2 multiplier.</li>
-                        <li>Damage types here are: <span class="monospace">physical, fire, water, earth, air, ice, lightning, light, dark, healing, all_magic, all</span></li>
+                        <li><span class="monospace">multiplier</span> is the percentage increase. You do not need to add 1; use 20% for 20% increased damage.</li>
+                        <li><span class="monospace">damage_type</span> must be one of the following: <span class="monospace">physical, fire, water, earth, air, ice, lightning, light, dark, psionic, healing</span></li>
                         <li>The source is the origin of the multiplier. Items, for example, use source “self”. If the source is another character, use their character’s full name.</li>
-                        <li>If you want 20% increased air damage, for example, you could add <span class="monospace">"misc_multiplier 0.2 air self"</span>.</li>
+                        <li>For example - <span class="monospace">"multiplier 20% air self"</span> - will add 20% increased air damage.</li>
                     </ul>
                 </li>
-                <li><span class="monospace">misc_damage &lt;damage dice&gt; &lt;damage type&gt;</span>
+
+                <li><span class="monospace">damage &lt;damage_dice&gt; &lt;damage_type&gt;</span>
                     <ul>
-                        <li>The damage dice should be something like “5d8”. You can also put a constant.</li>
-                        <li>Damage types here are: <span class="monospace">physical, fire, water, earth, air, ice, lightning, light, dark, healing</span></li>
+                        <li><span class="monospace">damage_dice</span> can be any valid Roll20 roll expression, like "5d8" or "10+2d6".</li>
+                        <li><span class="monospace">damage_type</span> must be one of the following: <span class="monospace">physical, fire, water, earth, air, ice, lightning, light, dark, psionic, healing</span></li>
+                        <li>For example - <span class="monospace">"damage 5d8 air"</span> - will add 5d8 air damage to your attack.</li>
+                    </ul>
+                </li>
+
+                <li><span class="monospace">efficiency &lt;efficiency&gt;</span>
+                    <ul>
+                        <li><span class="monospace">efficiency</span> is the percentage increase. You do not need to add 1; use 50% for 50% buff efficiency.</li>
+                        <li>For an attack ability, including the "efficiency" parameter will increase the damage by the specified percentage.</li>
+                        <li>For a buffing ability, including the "efficiency" parameter will increase the effect that the buff applies. Damage granted by the buff will have increased damage dice. Multipliers granted by the buff will be increased. Crit chance or crit damage mod granted by the buff will be increased. Stat and skill bonuses granted by the buff will be increased.</li>
+                        <li>For <i>decreased</i> ability efficiency, you can specify a negative efficiency, e.g. "-25%".</li>
+                        <li>For example - <span class="monospace">"efficiency 50%"</span> - will perform attacks with 50% increased damage and grant buffs with 50% increased effects.</li>
                     </ul>
                 </li>
             </ul>
+
+            <div class="row-full"></div>
+
+            {classes}
         </article>
     </section>
 </div>

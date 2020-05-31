@@ -5511,7 +5511,11 @@
             "increase AC",
             "increase Evasion",
             "modal"
-        ]
+        ],
+        "api":  {
+            "description": "Specify the target ally with the “target” parameter. The ally’s first name is sufficient. The ability’s effect will show in stats rolled via the character sheet.",
+            "examples": ["target <ally name>"]
+        }
     },
     {
         "type": "ability",

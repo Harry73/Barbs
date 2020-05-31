@@ -12439,6 +12439,14 @@ var BarbsComponents = BarbsComponents || (function () {
             }
         }
 
+        add_concentration_bonus(bonus) {
+            this.concentration_bonus += bonus;
+        }
+
+        add_initiative_bonus(bonus) {
+            this.initiative_bonus += bonus;
+        }
+
         add_skill_bonus(skill, bonus) {
             if (!(skill.name in this.skills)) {
                 this.skills[skill.name] = '%s'.format(bonus);
@@ -12447,12 +12455,14 @@ var BarbsComponents = BarbsComponents || (function () {
             }
         }
 
-        add_concentration_bonus(bonus) {
-            this.concentration_bonus += bonus;
+        // "amount" should be passed in as a regular number, e.g. pass "10" for a 10% increase
+        add_crit_chance(amount) {
+            this.crit_chance += amount;
         }
 
-        add_initiative_bonus(bonus) {
-            this.initiative_bonus += bonus;
+        // "amount" should be passed in as a regular number, e.g. pass "10" for a 10% increase
+        add_crit_damage_mod(amount) {
+            this.crit_damage_mod += amount / 100;
         }
 
         dump_multipliers() {
@@ -12573,6 +12583,21 @@ var BarbsComponents = BarbsComponents || (function () {
             }
         }
 
+        get_crit_chance() {
+            let final_crit_chance = this.character.get_stat(Stat.CRITICAL_HIT_CHANCE);
+
+            // Crit chance may be upped by abilities. Add in that amount.
+            final_crit_chance += this.crit_chance;
+
+            // Crit chance may be upped by items. Add in that amount.
+            if (Stat.CRITICAL_HIT_CHANCE.name in this.stats) {
+                final_crit_chance += eval(this.stats[Stat.CRITICAL_HIT_CHANCE.name]);
+            }
+
+            // Crit chance can't go over 100%, which we'll interpret as 101 because of the crit chance math.
+            return Math.min(101, final_crit_chance);
+        }
+
         roll() {
             const self = this;
             const rolls = {};
@@ -12594,31 +12619,6 @@ var BarbsComponents = BarbsComponents || (function () {
             });
 
             return rolls;
-        }
-
-        // "amount" should be passed in as a regular number, e.g. pass "10" for a 10% increase
-        add_crit_chance(amount) {
-            this.crit_chance += amount;
-        }
-
-        // "amount" should be passed in as a regular number, e.g. pass "10" for a 10% increase
-        add_crit_damage_mod(amount) {
-            this.crit_damage_mod += amount / 100;
-        }
-
-        get_crit_chance() {
-            let final_crit_chance = this.character.get_stat(Stat.CRITICAL_HIT_CHANCE);
-
-            // Crit chance may be upped by abilities. Add in that amount.
-            final_crit_chance += this.crit_chance;
-
-            // Crit chance may be upped by items. Add in that amount.
-            if (Stat.CRITICAL_HIT_CHANCE.name in this.stats) {
-                final_crit_chance += eval(this.stats[Stat.CRITICAL_HIT_CHANCE.name]);
-            }
-
-            // Crit chance can't go over 100%, which we'll interpret as 101 because of the crit chance math.
-            return Math.min(101, final_crit_chance);
         }
     }
 
