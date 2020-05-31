@@ -481,7 +481,7 @@
             "Gambits": "The Gambits branch gives options for taking risks and preparing for unique opportunities."
         },
         "passive": {
-            "Follow The Leader": "At the beginning of each round of combat, all allies take a free action based on Orders given by Captain abilities. You can only have one set of standing Orders at a time; casting an ability that sets standing Orders changes your standing Orders. If there are no standing Orders, all allies instead get +10 to Initiative, once per combat."
+            "Follow The Leader": "When initiative is rolled, all allies choose to opt-in to your Orders. At the beginning of each round of combat, all allies who have done so take a free action based on Orders given by Captain abilities. You can only have one set of standing Orders at a time; casting an ability that sets standing Orders changes your standing Orders. If there are no standing Orders, all allies (including those who haven't opted in to Orders) instead get +10 to Initiative, once per combat."
         },
         "abilities": [
             "Blitzkrieg",
@@ -1601,9 +1601,25 @@
         "num_requirements": 3,
         "requirements": [
             "Element Mastery: Ice Magic Rank A",
-            "Armor Mastery: Heavy Rank A"
+            "Armor Mastery: Heavy Rank A",
+			"Magic: Defensive Rank A"
         ],
-        "all_reqs_known": true
+        "all_reqs_known": true,
+		"flavor_text": "\"Beware the mists, child. They hide horrors beyond those in your most terrifying nightmares, and I will not be around forever to keep you safe.\"",
+		"description": "The Mistguard is one of the only classes that uses both heavy armor and spells to act as a magic tank. Ice is one of the most defensive elements available to mages; unlike the more direct defenses provided by earth, ice mages prefer to impede the offensive capabilities of enemies through the use of slows, freezes, and other conditions. All of the attacks provided by this class additionally inflict conditions, and these conditions stack up Weaken effects via the class's passive. The rest of the class is focused on personal tanking as well as protecting allies via physical and magical means. The class has access to the typical tank suite of taunts, defensive stat boosts, and blocks, and additionally has access to magical defenses like counterspells and magical surpression fields. The class somewhat uniquely is useful in fights with multiple enemies rather than one, expending large amounts of resources to be able to tank against large groups, whereas other classes might be more mana and stamina efficient to deal with smaller groups. Overall, this class should provide mages with easy access to the front line of their party.",
+		"branches": {
+			"Vapor": "The Vapor branch gives options for multi-target ice attacks focused on impeding enemy approaches and attacks.",
+			"Murk": "The Murk branch gives options for personal defenses and tanking.",
+			"Haze": "The Haze branch gives options for protecting a large group of allies."
+		},
+		"passive": {
+			"Eerie Mists": "Conditions you apply also apply an irresistable, non-stacking Weaken equal to 10% times the number of conditions on the target."
+		},
+		"abilities": [
+			"Deep Snow",
+			"Silver Armor",
+			"Morning Frost"
+		]
     },
     {
         "type": "class",

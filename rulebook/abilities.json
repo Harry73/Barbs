@@ -9422,5 +9422,71 @@
         "tags": [
             "Buff"
         ]
+    },
+	{
+        "type": "ability",
+        "name": "Deep Snow",
+        "class": "Mistguard",
+        "branch": "Vapor",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "25 mana",
+        "range": "20 ft",
+        "duration": "Instant",
+        "description": [
+            "You slam enemies with snow. Deal 7d8 ice magic damage to all enemies in range; the affected spaces are then covered in deep snow, a field which acts as difficult terrain and prevents dashing through the field's spaces."
+        ],
+        "tags": [
+            "Spell",
+			"ice",
+			"destruction",
+			"defensive",
+			"attack",
+			"multi-target",
+			"field"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Silver Armor",
+        "class": "Mistguard",
+        "branch": "Murk",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "25 mana",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You harden your armor by freezing it. Buff yourself for +40 AC and +40% MR which cannot be penetrated. Also, gain +60% critical strike resistance if you have none."
+        ],
+        "tags": [
+            "Spell",
+			"ice",
+			"defensive",
+			"buff",
+			"gain AC",
+			"gain MR",
+			"conditional"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Morning Frost",
+        "class": "Mistguard",
+        "branch": "Haze",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "25 mana",
+        "range": "20 ft",
+        "duration": "Instant",
+        "description": [
+            "You shield everyone in protective frost. All allies in range gain 30 shielding. You may spend an additional 10 mana to cast this ability when Initiative is rolled."
+        ],
+        "tags": [
+            "Spell",
+			"ice",
+			"defensive",
+			"modal"
+        ]
     }
 ]
