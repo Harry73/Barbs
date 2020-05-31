@@ -2596,7 +2596,7 @@ var Barbs = Barbs || (function () {
         const source = character.name;
         for (let i = 0; i < target_characters.length; i++) {
             const target_character = target_characters[i];
-            add_persistent_effect(character, ability, parameters, target_character, 1, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
+            add_persistent_effect(character, ability, parameters, target_character, 1.5, Ordering(), RollType.ALL, RollTime.DEFAULT, false,
                 function (char, roll, parameters) {
                     roll.add_multiplier(0.5, Damage.ALL, source);
                     return true;
@@ -2983,9 +2983,8 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        // End effects cast by the character who is currently up
+        // Decrement durations for effects cast by the character who is currently up, and end any at zero.
         for (let i = 0; i < persistent_effects.length; i++) {
-            // TODO: why is this necessary?
             if (persistent_effects[i].caster !== current_character.name) {
                 continue;
             }
@@ -2994,17 +2993,17 @@ var Barbs = Barbs || (function () {
                 continue;
             }
 
+            persistent_effects[i].duration -= 1;
+
             if (persistent_effects[i].duration === 0) {
                 _log(LogLevel.INFO, 'Persistent effect %s on %s ended'.format(persistent_effects[i].name,
                                                                               persistent_effects[i].target));
                 persistent_effects.splice(i, 1);
                 i--;
             }
-
-            persistent_effects[i].duration -= 1;
         }
 
-        // End effects when a character's turn ends. No decrement here, just get rid of ones with 0 duration.
+        // End effects when a character's turn ends. No decrement here, but get rid of ones with duration < 1.
         if (last_turn_id !== '') {
             const previous_name = get_name_from_token_id(last_turn_id);
             if (previous_name === null) {
@@ -3025,7 +3024,7 @@ var Barbs = Barbs || (function () {
                     continue;
                 }
 
-                if (persistent_effects[i].duration === 0) {
+                if (persistent_effects[i].duration < 1) {
                     _log(LogLevel.INFO, 'Persistent effect %s on %s ended'.format(persistent_effects[i].name,
                                                                                   persistent_effects[i].target));
                     persistent_effects.splice(i, 1);
