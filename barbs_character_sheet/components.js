@@ -33,6 +33,7 @@ var BarbsComponents = BarbsComponents || (function () {
     // ################################################################################################################
     // Wrappers around log()
 
+
     const LogLevel = {
         TRACE: 0,
         DEBUG: 1,
@@ -40,17 +41,39 @@ var BarbsComponents = BarbsComponents || (function () {
         WARN: 3,
         ERROR: 4,
     };
-    const LOG_LEVEL = LogLevel.INFO;
 
 
-    function _log(log_level, string) {
-        assert_not_null(log_level, '_log() log_level');
-        assert_not_null(string, '_log() string');
+    class LOG {
+        static _log(log_level, string) {
+            assert_not_null(log_level, '_log() log_level');
+            assert_not_null(string, '_log() string');
 
-        if (log_level >= LOG_LEVEL) {
-            log(string);
+            if (log_level >= this.level) {
+                log(string);
+            }
+        }
+
+        static trace(string) {
+            this._log(LogLevel.TRACE, string);
+        }
+
+        static debug(string) {
+            this._log(LogLevel.DEBUG, string);
+        }
+
+        static info(string) {
+            this._log(LogLevel.INFO, string);
+        }
+
+        static warn(string) {
+            this._log(LogLevel.WARN, string);
+        }
+
+        static error(string) {
+            this._log(LogLevel.ERROR, string);
         }
     }
+    LOG.level = LogLevel.INFO;
 
 
     // ################################################################################################################
@@ -12492,7 +12515,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 const keys_2 = Object.keys(this.multipliers[type]);
                 for (let j = 0; j < keys_2.length; j++) {
                     const source = keys_2[j];
-                    _log(LogLevel.INFO, 'Multiplier[type=%s, source=%s, string=%s]'.format(type, source, this.multipliers[type][source]));
+                    LOG.info('Multiplier[type=%s, source=%s, string=%s]'.format(type, source, this.multipliers[type][source]));
                 }
             }
         }
@@ -14017,7 +14040,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     }
                 }
 
-                _log(LogLevel.ERROR, 'Could not find item with name ' + item_name);
+                LOG.error('Could not find item with name ' + item_name);
             });
 
             return character_items;
