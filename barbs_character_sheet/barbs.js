@@ -650,19 +650,18 @@ var Barbs = Barbs || (function () {
         assert_starts_with(roll_time, 'roll_time', 'add_persistent_effect() roll_time');
         assert_not_null(handler, 'add_persistent_effect() handler');
 
-        let efficiency = get_parameter('efficiency', parameters);
-        if (efficiency !== null) {
-            if (efficiency.endsWith('%')) {
-                efficiency = efficiency.substring(0, efficiency.length - 1);
+        let efficiency = 1;
+        let efficiency_string = get_parameter('efficiency', parameters);
+        if (efficiency_string !== null) {
+            if (efficiency_string.endsWith('%')) {
+                efficiency_string = efficiency_string.substring(0, efficiency_string.length - 1);
             }
 
-            const multiplier = 1 + parse_int(efficiency) / 100;
-            if (Number.isNaN(multiplier)) {
-                chat(caster, 'Non-numeric efficieny "%s"'.format(efficiency));
+            efficiency = 1 + parse_int(efficiency_string) / 100;
+            if (Number.isNaN(efficiency)) {
+                chat(caster, 'Non-numeric efficiency "%s"'.format(efficiency_string));
                 return;
             }
-
-            handler = make_handler_efficient(target_character, handler, parameters, multiplier);
         }
 
         const effect = {
@@ -673,6 +672,7 @@ var Barbs = Barbs || (function () {
             'ordering': order,
             'roll_type': roll_type,
             'roll_time': roll_time,
+            'efficiency': efficiency,
             'handler': handler,
         };
 
@@ -759,7 +759,16 @@ var Barbs = Barbs || (function () {
             const right_time = effect.roll_time === roll_time;
             const right_type = RollType.is_type(effect.roll_type, roll.roll_type);
             if (right_target && right_time && right_type) {
-                if (!persistent_effects[i].handler(character, roll, parameters)) {
+
+                // Modify the handler here if it has an efficiency other than 1. We do this here because this is on
+                // the path for an attack roll, which is when the effect's efficiency actually matters. This also lets
+                // us pass along the actual parameters that are used for the attack when deducing buff efficiency.
+                let handler = persistent_effects[i].handler;
+                if (persistent_effects[i].efficiency !== 1) {
+                    handler = make_handler_efficient(character, handler, parameters, persistent_effects[i].efficiency);
+                }
+
+                if (!handler(character, roll, parameters)) {
                     return false;
                 }
             }
@@ -1121,27 +1130,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function arbitrary_efficiency(roll, roll_time, parameter) {
-        if (roll_time !== RollTime.DEFAULT) {
-            return true;
-        }
-
-        let efficiency_percent = parameter.split(' ')[1];
-        if (efficiency_percent.endsWith('%')) {
-            efficiency_percent = efficiency_percent.substring(0, efficiency_percent.length - 1);
-        }
-
-        const multiplier = parse_int(efficiency_percent) / 100;
-        if (Number.isNaN(multiplier)) {
-            chat(roll.character, 'Non-numeric efficiency "%s"'.format(efficiency_percent));
-            return false;
-        }
-
-        roll.add_multiplier(multiplier, Damage.ALL, 'efficiency');
-        return true;
-    }
-
-
     function aquamancer_tide(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
@@ -1294,7 +1282,6 @@ var Barbs = Barbs || (function () {
     const arbitrary_parameters = {
         'damage': arbitrary_damage,
         'multiplier': arbitrary_multiplier,
-        'efficiency': arbitrary_efficiency,
 
         'arc_lightning': lightning_duelist_arc_lightning_mark,
         'frostbite': cryomancer_frostbite,
@@ -2553,7 +2540,7 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function symbiote_power_spike(character, ability, parameters){
+    function symbiote_power_spike(character, ability, parameters) {
         const target_buff = get_parameter('buff', parameters);
         if (target_buff === null) {
             chat(character, '"buff" parameter is missing');
@@ -2584,11 +2571,10 @@ var Barbs = Barbs || (function () {
             chat(character, 'Did not find buff with name "%s" and target "%s"'.format(target_buff, target_character.name));
             return;
         }
-        persistent_effects[index].duration = Math.floor(persistent_effects[index].duration / 2);
 
-        // Edit the handler into something that grants the same damages and multipliers, but increased by 50%
-        persistent_effects[index].handler = make_handler_efficient(target_character, persistent_effects[index].handler,
-                                                                   parameters, 1.5);
+        // Modify the effect's duration and efficiency
+        persistent_effects[index].duration.length = Math.floor(persistent_effects[index].duration.length / 2);
+        persistent_effects[index].efficiency = 1.5 * persistent_effects[index].efficiency;
 
         chat(character, 'Power Spiked ' + target_buff + ' on ' + target_character.name);
     }
