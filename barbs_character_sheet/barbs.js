@@ -38,6 +38,24 @@ var Barbs = Barbs || (function () {
         assert(parameter !== undefined, message);
     }
 
+    function assert_type(object, type, message) {
+        assert_not_null(object, 'assert_type() object');
+        assert_not_null(type, 'assert_type() type');
+        assert_not_null(message, 'assert_type() message');
+
+        assert('_type' in object, '%s, no _type member in object %s'.format(message, JSON.stringify(object)));
+        assert(type === object._type, '%s, wrong object type, expected=%s, actual=%s'.format(message, type, object._type));
+    }
+
+
+    function assert_starts_with(string, prefix, message) {
+        assert_not_null(string, 'assert_starts_with() string');
+        assert_not_null(prefix, 'assert_starts_with() prefix');
+        assert_not_null(message, 'assert_starts_with() message');
+
+        assert(string.startsWith(prefix), '%s, expected string "%s" to start with "%s"'.format(message, string, prefix));
+    }
+
 
     // ################################################################################################################
     // Wrappers around log() and sendChat()
@@ -445,6 +463,7 @@ var Barbs = Barbs || (function () {
     //
     class Order {
         constructor(val) {
+            this._type = 'Order';
             this.val = val;
         }
     }
@@ -464,6 +483,7 @@ var Barbs = Barbs || (function () {
 
     class Duration {
         constructor(duration_type, length) {
+            this._type = 'Duration';
             this.duration_type = duration_type;
             this.length = length;
         }
@@ -620,14 +640,14 @@ var Barbs = Barbs || (function () {
 
 
     function add_persistent_effect(caster, ability, parameters, target_character, duration, order, roll_type, roll_time, handler) {
-        assert_not_null(caster, 'add_persistent_effect() caster');
+        assert_type(caster, 'Character', 'add_persistent_effect() caster');
         assert_not_null(ability, 'add_persistent_effect() ability');
         assert_not_null(parameters, 'add_persistent_effect() parameters');
-        assert_not_null(target_character, 'add_persistent_effect() target_character');
-        assert_not_null(duration, 'add_persistent_effect() duration');
-        assert_not_null(order, 'add_persistent_effect() order');
-        assert_not_null(roll_type, 'add_persistent_effect() roll_type');
-        assert_not_null(roll_time, 'add_persistent_effect() roll_time');
+        assert_type(target_character, 'Character', 'add_persistent_effect() target_character');
+        assert_type(duration, 'Duration', 'add_persistent_effect() duration');
+        assert_type(order, 'Order', 'add_persistent_effect() order');
+        assert_starts_with(roll_type, 'roll_type', 'add_persistent_effect() roll_type');
+        assert_starts_with(roll_time, 'roll_time', 'add_persistent_effect() roll_time');
         assert_not_null(handler, 'add_persistent_effect() handler');
 
         let efficiency = get_parameter('efficiency', parameters);
@@ -3055,6 +3075,8 @@ var Barbs = Barbs || (function () {
 
         // Decrement durations for effects cast by the character who is currently up, and end any at zero.
         for (let i = 0; i < persistent_effects.length; i++) {
+            assert_type(persistent_effects[i].duration, 'Duration', 'do_turn_order_change() start duration');
+
             if (persistent_effects[i].caster !== current_character.name) {
                 continue;
             }
@@ -3086,6 +3108,8 @@ var Barbs = Barbs || (function () {
             }
 
             for (let i = 0; i < persistent_effects.length; i++) {
+                assert_type(persistent_effects[i].duration, 'Duration', 'do_turn_order_change() end duration');
+
                 if (persistent_effects[i].caster !== previous_character.name) {
                     continue;
                 }

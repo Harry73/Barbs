@@ -12406,6 +12406,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
     class Roll {
         constructor(character, roll_type) {
+            this._type = 'Roll';
             this.character = character;
             this.roll_type = roll_type;
             this.damages = {};
@@ -12729,6 +12730,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
     class Item {
         constructor(name, type, rarity, slot, equip_conditions, base_damage, damage_scaling, range, cantrips, notes, effects) {
+            this._type = 'Item';
             this.name = name;
             this.type = type;
             this.rarity = rarity;
@@ -12746,6 +12748,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
     class Effect {
         constructor(roll_time, roll_type, effect) {
+            this._type = 'Effect';
             this.roll_time = roll_time;
             this.roll_type = roll_type;
             this.apply = effect;
@@ -13983,6 +13986,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
     class Character {
         constructor(game_object, who) {
+            this._type = 'Character';
             this.id = game_object.id;  // roll20 id for the character
             this.who = who;            // who an API call originated from, used to respond under their name
 
