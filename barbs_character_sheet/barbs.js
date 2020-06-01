@@ -526,14 +526,14 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function make_handler_efficient(target_character, handler, parameters, efficiency) {
+    function make_handler_effective(target_character, handler, parameters, effectiveness) {
         // Figure out what damage / multiplier this handler grants
         const fake_roll = new Roll(target_character, RollType.ALL);
         handler(target_character, fake_roll, parameters);
 
         // Edit the handler into something that grants the same damages and multipliers, but increased by 50%
         return function (char, roll, params) {
-            // Increase the number of damage dice for added damages by efficiency
+            // Increase the number of damage dice for added damages by effectiveness
             const damage_types = Object.keys(fake_roll.damages);
             for (let i = 0; i < damage_types.length; i++) {
                 const damage_type = damage_types[i];
@@ -561,7 +561,7 @@ var Barbs = Barbs || (function () {
                             count = parse_int(count);
                         }
                         const die = dmg_piece.split('d')[1];
-                        const revised_piece = '%sd%s'.format(Math.round(efficiency * count), die);
+                        const revised_piece = '%sd%s'.format(Math.round(effectiveness * count), die);
                         revised_dmg += revised_piece;
                     }
                 }
@@ -569,7 +569,7 @@ var Barbs = Barbs || (function () {
                 roll.add_damage('(%s)'.format(revised_dmg), damage_type);
             }
 
-            // Increase damage multipliers by efficiency
+            // Increase damage multipliers by effectiveness
             const multiplier_types = Object.keys(fake_roll.multipliers);
             for (let i = 0; i < multiplier_types.length; i++) {
                 const multiplier_type = multiplier_types[i];
@@ -578,51 +578,51 @@ var Barbs = Barbs || (function () {
                 for (let j = 0; j < sources.length; j++) {
                     const source = sources[j];
                     const base_multiplier = fake_roll.multipliers[multiplier_type][source];
-                    roll.add_multiplier('(%s*(%s))'.format(efficiency, base_multiplier), multiplier_type, source);
+                    roll.add_multiplier('(%s*(%s))'.format(effectiveness, base_multiplier), multiplier_type, source);
                 }
             }
 
-            // Increase crit chance, crit damage mod, concentration bonus, and initiative bonus by efficiency
-            roll.add_crit_chance(efficiency * fake_roll.crit_chance);
-            roll.add_crit_damage_mod(efficiency * 100 * (fake_roll.crit_damage_mod - 2));
-            roll.add_concentration_bonus(efficiency * fake_roll.concentration_bonus);
-            roll.add_initiative_bonus(efficiency * fake_roll.initiative_bonus);
+            // Increase crit chance, crit damage mod, concentration bonus, and initiative bonus by effectiveness
+            roll.add_crit_chance(effectiveness * fake_roll.crit_chance);
+            roll.add_crit_damage_mod(effectiveness * 100 * (fake_roll.crit_damage_mod - 2));
+            roll.add_concentration_bonus(effectiveness * fake_roll.concentration_bonus);
+            roll.add_initiative_bonus(effectiveness * fake_roll.initiative_bonus);
 
             // If the old effect changed these, the new effect should do the same
             roll.crit = fake_roll.crit;
             roll.should_apply_crit = fake_roll.should_apply_crit;
             roll.max_damage = fake_roll.max_damage;
 
-            // Increase stat bonuses by efficiency
+            // Increase stat bonuses by effectiveness
             const stats = Object.keys(fake_roll.stats);
             for (let i = 0; i < stats.length; i++) {
                 const stat = Stat[stats[i]];
                 const base_bonus = fake_roll.stats[stat.name];
-                roll.add_stat_bonus(stat, '(%s*(%s))'.format(efficiency, base_bonus));
+                roll.add_stat_bonus(stat, '(%s*(%s))'.format(effectiveness, base_bonus));
             }
 
-            // Increase stat multipliers by efficiency
+            // Increase stat multipliers by effectiveness
             const stat_multipliers = Object.keys(fake_roll.stat_multipliers);
             for (let i = 0; i < stat_multipliers.length; i++) {
                 const stat = Stat[stat_multipliers[i]];
                 const base_bonus = fake_roll.stat_multipliers[stat.name];
-                roll.add_stat_multiplier(stat, '(%s*(%s))'.format(efficiency, base_bonus));
+                roll.add_stat_multiplier(stat, '(%s*(%s))'.format(effectiveness, base_bonus));
             }
 
-            // Increase hidden stats by efficiency
+            // Increase hidden stats by effectiveness
             const hidden_stats = Object.keys(fake_roll.hidden_stats);
             for (let i = 0; i < hidden_stats.length; i++) {
                 const hidden_stat = hidden_stats[i];
                 const base_bonus = fake_roll.hidden_stats[hidden_stat];
-                roll.add_hidden_stat(hidden_stat, Math.round(efficiency * base_bonus));
+                roll.add_hidden_stat(hidden_stat, Math.round(effectiveness * base_bonus));
             }
 
-            // Increase skill bonus by efficiency
+            // Increase skill bonus by effectiveness
             const skills = Object.keys(fake_roll.skills);
             for (let i = 0; i < skills.length; i++) {
                 const skill = Skill[skills[i].toUpperCase().replace(' ', '_').replace(':', '')];
                 const base_bonus = fake_roll.skills[skill.name];
-                roll.add_skill_bonus(skill, '(%s*(%s))'.format(efficiency, base_bonus));
+                roll.add_skill_bonus(skill, '(%s*(%s))'.format(effectiveness, base_bonus));
             }
 
             // Copy over effects
@@ -650,16 +650,16 @@ var Barbs = Barbs || (function () {
         assert_starts_with(roll_time, 'roll_time', 'add_persistent_effect() roll_time');
         assert_not_null(handler, 'add_persistent_effect() handler');
 
-        let efficiency = 1;
-        let efficiency_string = get_parameter('efficiency', parameters);
-        if (efficiency_string !== null) {
-            if (efficiency_string.endsWith('%')) {
-                efficiency_string = efficiency_string.substring(0, efficiency_string.length - 1);
+        let effectiveness = 1;
+        let effectiveness_string = get_parameter('effectiveness', parameters);
+        if (effectiveness_string !== null) {
+            if (effectiveness_string.endsWith('%')) {
+                effectiveness_string = effectiveness_string.substring(0, effectiveness_string.length - 1);
             }
 
-            efficiency = 1 + parse_int(efficiency_string) / 100;
-            if (Number.isNaN(efficiency)) {
-                chat(caster, 'Non-numeric efficiency "%s"'.format(efficiency_string));
+            effectiveness = 1 + parse_int(effectiveness_string) / 100;
+            if (Number.isNaN(effectiveness)) {
+                chat(caster, 'Non-numeric effectiveness "%s"'.format(effectiveness_string));
                 return;
             }
         }
@@ -672,7 +672,7 @@ var Barbs = Barbs || (function () {
             'ordering': order,
             'roll_type': roll_type,
             'roll_time': roll_time,
-            'efficiency': efficiency,
+            'effectiveness': effectiveness,
             'handler': handler,
         };
 
@@ -760,12 +760,14 @@ var Barbs = Barbs || (function () {
             const right_type = RollType.is_type(effect.roll_type, roll.roll_type);
             if (right_target && right_time && right_type) {
 
-                // Modify the handler here if it has an efficiency other than 1. We do this here because this is on
-                // the path for an attack roll, which is when the effect's efficiency actually matters. This also lets
-                // us pass along the actual parameters that are used for the attack when deducing buff efficiency.
+                // Modify the handler here if it has an effectiveness other than 1. We do this here because this is on
+                // the path for an attack roll, which is when the effect's effectiveness actually matters. This also
+                // lets us pass along the actual parameters that are used for the attack when deducing buff
+                // effectiveness.
                 let handler = persistent_effects[i].handler;
-                if (persistent_effects[i].efficiency !== 1) {
-                    handler = make_handler_efficient(character, handler, parameters, persistent_effects[i].efficiency);
+                if (persistent_effects[i].effectiveness !== 1) {
+                    handler = make_handler_effective(character, handler, parameters,
+                                                     persistent_effects[i].effectiveness);
                 }
 
                 if (!handler(character, roll, parameters)) {
@@ -2572,9 +2574,9 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        // Modify the effect's duration and efficiency
+        // Modify the effect's duration and effectiveness
         persistent_effects[index].duration.length = Math.floor(persistent_effects[index].duration.length / 2);
-        persistent_effects[index].efficiency = 1.5 * persistent_effects[index].efficiency;
+        persistent_effects[index].effectiveness = 1.5 * persistent_effects[index].effectiveness;
 
         chat(character, 'Power Spiked ' + target_buff + ' on ' + target_character.name);
     }
