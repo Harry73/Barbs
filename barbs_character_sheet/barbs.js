@@ -1950,14 +1950,14 @@ var Barbs = Barbs || (function () {
 
 
     function evangelist_magia_erebea(character, ability, parameters) {
-        // Allows you to dispel an active Magia Erebia
+        // Allows you to dispel an active Magia Erebea
         const dispel = get_parameter('dispel', parameters);
         if (dispel !== null) {
             for (let i = 0; i < persistent_effects.length; i++) {
-                if (persistent_effects[i].name === 'Magia Erebia' && persistent_effects[i].target === character.name) {
+                if (persistent_effects[i].name === 'Magia Erebea' && persistent_effects[i].target === character.name) {
                     persistent_effects.splice(i, 1);
                     i--;
-                    chat(character, 'Removed effect ' + 'Magia Erebia' + ' from ' + character.name);
+                    chat(character, 'Removed effect "Magia Erebea" from %s'.format(character.name));
                 }
             }
             return
@@ -1969,10 +1969,10 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        // Check if Magia Erebia is already applies
+        // Check if Magia Erebea is already applies
         for (let i = 0; i < persistent_effects.length; i++) {
-            if (persistent_effects[i].name === 'Magia Erebia' && persistent_effects[i].target === character.name) {
-                chat(character, 'Magia Erebia is already applied');
+            if (persistent_effects[i].name === 'Magia Erebea' && persistent_effects[i].target === character.name) {
+                chat(character, 'Magia Erebea is already applied');
                 return;
             }
         }
