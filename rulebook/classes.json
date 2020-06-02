@@ -2255,7 +2255,11 @@
             "Dodge the Law",
             "Smokescreen",
             "Phantom Thief"
-        ]
+        ],
+        "api": {
+            "description": "Specify hit stance to gain the On Hit: Drain 10",
+            "examples": ["hit_stance"]
+        }
     },
     {
         "type": "class",

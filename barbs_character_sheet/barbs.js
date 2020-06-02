@@ -1267,6 +1267,13 @@ var Barbs = Barbs || (function () {
         return true;
     }
 
+    function thief_stance(roll, roll_time, parameter) {
+        if (roll_time !== RollTime.POST_CRIT) {
+            return true;
+        }
+        roll.add_effect('Drain: 10 Health');
+        return true;
+    }
 
     function warper_opportunistic_predator(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
@@ -1292,6 +1299,7 @@ var Barbs = Barbs || (function () {
 		'redirected': mirror_mage_alter_course,
         'empowered': daggerspell_ritual_dagger,
         'spotting': sniper_spotter,
+        'hit_stance': thief_stance,
         'tide': aquamancer_tide,
         'warper_cc': warper_opportunistic_predator,
     };
@@ -2684,6 +2692,28 @@ var Barbs = Barbs || (function () {
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
+    function thief_cloak_and_dagger(character, ability, parameters) {
+        const hit = get_parameter('hit_stance', parameters);
+        const run = get_parameter('run_stance', parameters);
+        if ((hit == null && run == null) || (hit !== null && run !== null)){
+            chat(character, 'Specify a stance');
+            return;
+        }
+        
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d4', Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+        
+        if (run !== null){
+            roll.add_crit_chance(20);
+        } else if (hit !== null){
+            roll.add_crit_damage_mod(100);
+        }
+        
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
 
     function warrior_charge(character, ability, parameters) {
         const parameter = get_parameter('targets', parameters);
@@ -2932,6 +2962,9 @@ var Barbs = Barbs || (function () {
             'Strengthen Body': symbiote_strengthen_body,
             'Strengthen Mind': symbiote_strengthen_mind,
             'Strengthen Soul': symbiote_strengthen_soul,
+        },
+        'Thief': {
+            'Cloak and Dagger': thief_cloak_and_dagger,
         },
         'Warlord': {
             'Hookshot': warlord_hookshot,

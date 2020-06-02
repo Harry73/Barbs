@@ -7653,7 +7653,11 @@
             "conditional",
             "stance",
             "single-target"
-        ]
+        ],
+        "api": {
+            "description": "Specify what stance you are in",
+            "examples" : ["hit_stance","run_stance"]
+        }
     },
     {
         "type": "ability",
