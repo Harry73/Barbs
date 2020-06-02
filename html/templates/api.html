@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="en" class="no-js" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -25,7 +25,7 @@
         <a href="#General">General</a>
         <div class="sidenav-subsection">
             <a href="#Identification">Identification</a>
-            <a href="#Ability Parameters">Ability Parameters</a>
+            <a href="#Parameters">Ability/Item Parameters</a>
             <a href="#Persistent Effects">Persistent Effects</a>
             <a href="#Crit Rolls">Crit Rolls</a>
         </div>
@@ -52,36 +52,90 @@
             <a id="Character Sheet">
                 <h2>Character Sheet</h2>
             </a>
-            <p>As in a standard DnD 5e campaign, there is a “Character Sheet” tab on your character’s page on Roll20. You should fill out:</p>
+            <p>As in a standard DnD 5e campaign, there is a “Character Sheet” tab on your character’s page on Roll20.</p><br>
+
+            <h3>Characteristics Tab</h3>
+            <p>This tab contains a variety of miscellaneous things.</p>
+            <ul>
+                <li>The top section contains fields for the general description of your character.</li>
+                <li>On the left are your base Health, Stamina, Mana, and Speed. These are based <b>solely</b> on your attribute values; they do not include boosts from your items.</li>
+                <li>The middle right has four buttons for rolls that don't fall into any other category.
+                    <ul>
+                        <li class="padt">Initiative - An initiative roll is a d100 plus Agility, plus any bonuses from items. This button performs this roll.</li>
+                        <li>List Effects = This button will print a list of current effects on your character that the API is aware of. These effects normally come from using class abilities.</li>
+                        <li>Concentration = A concentration check is a d100 plus any bonuses from items. This button performs this roll.</li>
+                        <li>Death Save = This rolls a plain d100. When you are down, you have 100 "downed health". Each time you roll a death save, the result is subtracted from this 100 downed health. If you reach 0 downed health, you die.</li>
+                    </ul>
+                </li>
+                <li>The bottom right shows your current level, based on points placed in attributes, skills, and class abilities. There is a place to track combat EXP, which is earned as you fight and kill monsters. Every 100 points of combat EXP grants 1 AP to be spent on attributes.</li>
+            </ul><br>
+
+            <h3>Attributes Tab</h3>
+            <p>Barbs has 20 basic attributes, which provide the basis for statistics, skills, and abilities. Each of the 20 attributes is listed on this tab. Each attribute can range from -10 to +20. Each of these attributes can be rolled by clicking the dice button next to the attribute. This rolls a d100 plus the attribute's value.</p><br>
+
+            <h3>Stats Tab</h3>
+            <p>The "Stats" page shows your stats based <b>solely</b> on your Attribute values. These are updated automatically as your Attributes update. Each of these stats can be rolled by clicking the dice button next to the stat. Rolling a stat will account for equipped items and class abilities. Rolling a stat like Health or Buff Limit will print your boosted value for this stat. Rolling a stat like Critical Hit Chance will perform a d100; a value greater than or equal to <span class="monospace">100 - Critical Hit Chance + 1</span> would be a critical hit. Rolling a regeneration stat will show how much Health/Stamina/Mana you regenerate on a short rest.</p><br>
+
+            <h3>Skills Tab</h3>
+            <p>This tab lets you create a list of Skills your character has. To add a new skill, use the "+Add" button in the bottom left. To remove or re-order skills, use the "Modify" button in the bottom right. To add a skill, fill out two things: the skill name and the number of AP you have put into the skill. The skill name must match the name in the rulebook exactly. The "Rank" and "Base Bonus" fields will update automatically as the "Points" field is updated. If they do not update, you likely have the skill name wrong.</p>
+            <p>If you have items that modify a skill, they will <b>not</b> be reflected in the "Base Bonus" field. When you roll the skill, however, by clicking the dice button next to the skill, bonuses from items will be included.</p><br>
+
+            <h3>Class Abilities Tab</h3>
+            <p>This tab lets you create a list Class Abilities your character has. To add a new ability, use the "+Add" button in the bottom left. To remove or re-order abilities, use the "Modify" button int he bottom right. To add an ability, fill out three things: the class the ability is from, the ability name, and the tier of the ability (1-4). The class and ability name must match the rulebook exactly. Each ability has a "parameters" text box below. This box's usage is discussed in the <a href="#Parameters">Parameters Section</a>.</p><br>
+
+            <h3>Equipment Tab</h3>
+            <p>A character has 10 equipment slots. The text boxes on this tab are meant to hold the names of the items you have equipped in each slot.</p><br>
+
+            <h3>Inventory Tab</h3>
+            <p>The inventory tab on Barbs character sheets is a direct rip from the D&D 5E character sheet. This tab has no bearing on the API. Use it as you see fit.</p><br>
+
+            <h3>Filling out your character sheet</h3>
+            <p>You should fill out the following:</p>
             <ul>
                 <li class="spaced"><b>Attributes</b> – These are 1-1 with column D on your Google Sheets character sheet.</li>
                 <li class="spaced"><b>Skills</b> – Specify the proper name of each skill and the number of AP you have put into each ability. The sheet will update the rank and bonus for each skill when you add points. If it does not update, you likely have the skill name wrong.</li>
-                <li class="spaced"><b>Class Abilities</b> – The class name and ability name are required for each ability. Additionally include the tier level (0-4) if you want your level on the Characteristics page to be accurate.</li>
-                <li class="spaced"><b>Equipment</b> – Use the real, full name of the item. The parameter lines can be left blank.</li>
+                <li class="spaced"><b>Class Abilities</b> – The class name and ability name are required for each ability. Additionally include the tier level (0-4) if you want your level on the Characteristics page to be accurate. The parameter lines can be left blank for now. They are discussed in the <a href="#Parameters">Parameters section</a>.</li>
+                <li class="spaced"><b>Equipment</b> – Use the real, full name of the item. The parameter lines can be left blank for now. They are discussed in the <a href="#Parameters">Parameters section</a>.</li>
             </ul>
-            <p>The “Stats” page shows your stats based solely on your attributes. If you roll one of these stats, however, your equipped items will be factored into the roll. Effects from class abilities do not factor in currently - they will eventually.</p>
         </article>
 
         <article>
             <a id="General"><h2>General</h2></a>
 
             <a id="Identification"><h3>Identification</h3></a>
-            <p>The API generally identifies you by who you are speaking as in Roll20 chat. If Roll20 profile name or character name changes, the API may no longer work for you.</p><br>
+            <p>The API identifies you by who you are speaking as in Roll20 chat. If you need to specify a character for an ability, you can use their first name or their full name. A complete list of how each character can be identified <a href="https://github.com/Harry73/Barbs/blob/master/barbs_character_sheet/components.js#L95">can be found here</a>.</p><br>
 
-            <a id="Ability Parameters"><h3>Ability Parameters</h3></a>
-            <p>Many abilities require “parameters,” extra information that you must specify for the ability to work correctly. Parameters for an ability are specified in the line below the ability on your character sheet. Multiple parameters for one ability can be specified, and are separated by semicolons. Parameters usually take the form “keyword value(s)”. An example set of parameters may look like:</p>
-            <p class="monospace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;distance 100; spotting 8</p><br>
+            <a id="Parameters"><h3>Ability/Item Parameters</h3></a>
+            <p>Many abilities require "parameters", extra information that you must specify for the ability to work correctly. Parameters for an ability are specified in the line below the ability on your character sheet. Multiple parameters for one ability can be specified, and are separated by <b>semicolons</b>. Parameters usually take the form "keyword value(s)". You can optionally include a colon between the keyword and subsequent values. The parameters that each class ability may require are listed in the <a href="#Class Abilities">Class Abilities section</a>. An example set of parameters for an ability may look like this:</p>
+            <ul>
+                <li><span class="monospace">distance 100; spotting 8</span></li>
+            </ul><br>
 
             <a id="Persistent Effects"><h3>Persistent Effects</h3></a>
-            <p>Persistent effects, like a damage multiplying buff that lasts 1 minute, will be included in rolls automatically. The effect will be removed automatically when the turn order progresses through the required number of rounds. Other effects, like empowers, will be removed after they are applied to an attack. If you want to manually end a persistent effect, use the following command.</p>
+            <p>Persistent effects, like a damage multiplying buff that lasts 1 minute, will be included in rolls automatically. The effect will be removed automatically when the turn order progresses through the required number of rounds. Other effects, like empowers, will be removed after they are applied to an attack. If you want to manually end a persistent effect, use the following command:</p>
             <ul>
                 <li class="spaced monospace">!barbs remove_effect &lt;character name&gt;;&lt;effect name&gt;</li>
             </ul>
             <p>Note the semicolon. A character’s first name is sufficient. The effect name is usually the name of the ability that generated the effect. The API will send a message if it found and removed the effect.</p><br>
 
             <a id="Crit Rolls"><h3>Crit Rolls</h3></a>
-            <p>Crit rolls appear a little oddly. A negative crit roll is failure. Zero and above is a success. If a crit roll is a success, the entire crit roll section in chat will be outlined in green. If you hover over the crit roll, the calculation is “what you rolled” minus “the threshold you needed to meet for this to be a crit”. The crit threshold is adjusted based on your attributes, items, and abilities’ effects.</p>
+            <p>Crit rolls appear a little oddly. A negative crit roll is failure. Zero and above is a success. If a crit roll is a success, the entire crit roll section in chat will be outlined in green. If you hover over the crit roll, the calculation is "what you rolled" minus "the threshold you needed to meet for this to be a crit". The crit threshold is adjusted based on your attributes, items, and abilities’ effects. If you crit, your crit damage modifier is factored into the roll's damage automatically.</p>
 
+            <a id="Effectiveness"><h3>Effectiveness</h3></a>
+            <p>Barbs has concepts called "buff effectiveness" and "enchant effectiveness". These improve the strength of a buff or enchantment. For example, if you have 50% buff efficiency, a buff that normally grants 60% increased damage should instead grant 90% increased damage.</p>
+            <p>The API can handle buff and enchant effectiveness, but it currently requires the user to input effectiveness as an ability or item parameter.. For either buff or enchant effectiveness, specify the "effectiveness" parameter, followed by your buff or enchant effectiveness as a percentage.</p>
+            <ul>
+                <li><span class="monospace">effectiveness 50%</span> - Indicates that the buffing/enchanting ability should be cast with 50% <b>increased</b> buff/enchant effectiveness.</li>
+                <li><span class="monospace">effectiveness -25%</span> - Indicates that the buffing/enchanting ability should be cast with 25% <b>decreased</b> buff/enchant effectiveness.</li>
+            </ul>
+            <p>A more effective buff or enchant has the following properties:</p>
+            <ul>
+                <li>Damage granted by the buff will have increased damage dice.</li>
+                <li>Multipliers granted by the buff will be increased.</li>
+                <li>Crit chance or crit damage mod granted by the buff will be increased.</li>
+                <li>Stat and skill bonuses granted by the buff will be increased.</li>
+                <li>Initiative and concentration bonuses granted by the buff will be increased.</li>
+            </ul>
         </article>
 
         <article>
@@ -89,7 +143,7 @@
                 <h2>Items</h2>
             </a>
             <p>The Barbs API scripts contain a big list of items. If you have item X equipped and it is not in this list, its effects will not be applied to any roll. Theoretically, eventually, I will make some kind of form that makes it relatively easy to input an item’s characteristics and output a new entry for this list. Such a form does not exist yet though. If you want to look at other items in the list as examples and then make your own, that would be a massive help. Again, let me know if you add something though, or I will overwrite it sooner or later.</p><br>
-            <p>You can do an auto-attack with an item by clicking the roll button on the “Equipment” tab of your character sheet. If other abilities you have used require you to specify parameters, you can do so in the boxes below the main hand and offhand slots. Parameters here behave the same as parameters for classes.</p>
+            <p>You can perform an auto-attack with an item by clicking the roll button on the “Equipment” tab of your character sheet. If other abilities you have used require you to specify parameters, you can do so in the boxes below the main hand and offhand slots. Parameters here behave the same as parameters for classes.</p>
         </article>
 
         <article>
@@ -108,7 +162,7 @@
             <ul>
                 <li><span class="monospace">multiplier &lt;multiplier&gt; &lt;damage_type&gt; &lt;source&gt;</span>
                     <ul>
-                        <li><span class="monospace">multiplier</span> is the percentage increase. You do not need to add 1; use 20% for 20% increased damage.</li>
+                        <li class="padt"><span class="monospace">multiplier</span> is the percentage increase. You do not need to add 1; use 20% for 20% increased damage.</li>
                         <li><span class="monospace">damage_type</span> must be one of the following: <span class="monospace">physical, psychic, fire, water, earth, air, ice, lightning, light, dark, healing, all_magic, all</span></li>
                         <li>The source is the origin of the multiplier. Items, for example, use source “self”. If the source is another character, use their character’s full name.</li>
                         <li>For example - <span class="monospace">"multiplier 20% air self"</span> - will add 20% increased air damage.</li>
@@ -117,20 +171,12 @@
 
                 <li><span class="monospace">damage &lt;damage_dice&gt; &lt;damage_type&gt;</span>
                     <ul>
-                        <li><span class="monospace">damage_dice</span> can be any valid Roll20 roll expression, like "5d8" or "10+2d6".</li>
+                        <li class="padt"><span class="monospace">damage_dice</span> can be any valid Roll20 roll expression, like "5d8" or "10+2d6".</li>
                         <li><span class="monospace">damage_type</span> must be one of the following: <span class="monospace">physical, psychic, fire, water, earth, air, ice, lightning, light, dark, healing</span></li>
                         <li>For example - <span class="monospace">"damage 5d8 air"</span> - will add 5d8 air damage to your attack.</li>
                     </ul>
                 </li>
 
-                <li><span class="monospace">effectiveness &lt;effectiveness&gt;</span>
-                    <ul>
-                        <li><span class="monospace">effectiveness</span> is the percentage increase. You do not need to add 1; use 50% for 50% buff effectiveness.</li>
-                        <li>For a buffing ability, including the "effectiveness" parameter will increase the effect that the buff applies. Damage granted by the buff will have increased damage dice. Multipliers granted by the buff will be increased. Crit chance or crit damage mod granted by the buff will be increased. Stat and skill bonuses granted by the buff will be increased.</li>
-                        <li>For <i>decreased</i> buff effectiveness, you can specify a negative effectiveness, e.g. "-25%".</li>
-                        <li>For example - <span class="monospace">"effectiveness 50%"</span> - will grant a buff that has 50% increased effectiveness.</li>
-                    </ul>
-                </li>
             </ul>
 
             <div class="row-full"></div>
