@@ -2030,8 +2030,15 @@ var Barbs = Barbs || (function () {
                 function (char, roll, parameters) {
                     roll.add_damage('6d8', Damage.ICE);
                     roll.add_damage('6d8', Damage.DARK);
-                    roll.add_effect(conditions[0]+': [[1d100]]');
-                    roll.add_effect(conditions[1]+': [[1d100]]');
+                    for (let i = 0; i < 2; i++){
+                        if (conditions[i] === 'curse' || conditions[i] === 'curses'|| conditions[i] === 'Curses'|| conditions[i] === 'Curse'){
+                            roll.add_effect(conditions[i]+': [[1d100]] [[1d100]]');
+                        } else {
+                            roll.add_effect(conditions[i]+': [[1d100]]');
+                        }
+                    }
+                   
+                    
                     return true;
                 }
             );
