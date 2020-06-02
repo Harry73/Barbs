@@ -2714,6 +2714,16 @@ var Barbs = Barbs || (function () {
             do_roll(character, ability, roll, parameters, crit_section);
         });
     }
+	
+    function thief_snatch_and_grab(character, ability, parameters) {
+        const hit = get_parameter('hit_stance', parameters);
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_effect('Steal: [[1d100]]');
+        if (hit !== null){
+            roll.add_effect('Steal 2: [[1d100]]');
+        }
+        do_roll(character, ability, roll, parameters, '');
+    }
 
     function warrior_charge(character, ability, parameters) {
         const parameter = get_parameter('targets', parameters);
@@ -2965,6 +2975,7 @@ var Barbs = Barbs || (function () {
         },
         'Thief': {
             'Cloak and Dagger': thief_cloak_and_dagger,
+			'Snatch and Grab': thief_snatch_and_grab,
         },
         'Warlord': {
             'Hookshot': warlord_hookshot,

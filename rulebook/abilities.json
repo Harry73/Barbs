@@ -7752,7 +7752,11 @@
             "physical",
             "dagger",
             "stance"
-        ]
+        ],
+        "api": {
+            "description": "Specify if you are in hit stance",
+            "examples" : ["hit_stance","run_stance"]
+        }
     },
     {
         "type": "ability",
