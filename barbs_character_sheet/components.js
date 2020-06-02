@@ -12564,6 +12564,15 @@ var BarbsComponents = BarbsComponents || (function () {
             this.should_apply_crit = other_roll.should_apply_crit;
         }
 
+        copy_effects(other_roll) {
+            for (let i = 0; i < other_roll.effects.length; i++) {
+                const effect = other_roll.effects[i];
+                // Using direct access because roll.add_effect() turns the effect into an HTML list item, which we
+                // don't want to do twice.
+                this.effects.push(effect);
+            }
+        }
+
         get_multiplier_string(type) {
             const self = this;
             let multiplier_string = '1';
@@ -14354,7 +14363,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 }
             }),
 
-            ItemScaler.NONE,
+            ItemScaler.RANGED_FINE,
             0, [], '',
             [
                 // TODO 5% combo chance
@@ -14476,7 +14485,7 @@ var BarbsComponents = BarbsComponents || (function () {
             0, [], '',
             [
                 Effect.roll_multiplier(0.2, Damage.PHYSICAL, RollType.ALL),
-                Effect.roll_damage('3d10', Damage.PHYSICAL, RollType.ALL),
+                Effect.roll_damage('3d10', Damage.PHYSICAL, RollType.PHYSICAL),
                 Effect.roll_multiplier(0.1, Damage.PSYCHIC, RollType.ALL),
                 Effect.initiative_bonus(10),
             ]

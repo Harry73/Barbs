@@ -1004,7 +1004,8 @@ var Barbs = Barbs || (function () {
 
             let formatted_hidden_stat = hidden_stat_format.format(hidden_stat_value);
             if (formatted_hidden_stat.includes('chance')) {
-                formatted_hidden_stat = formatted_hidden_stat + ' [[d100cs>%s]]'.format(hidden_stat_value);
+
+                formatted_hidden_stat = formatted_hidden_stat + ' [[d100cs>[[100-(%s)+1]]]]'.format(hidden_stat_value);
             }
             effects.push('<li>%s</li>'.format(formatted_hidden_stat));
         }
@@ -1434,6 +1435,7 @@ var Barbs = Barbs || (function () {
 
                 roll.copy_damages(dummy_roll);
                 roll.copy_multipliers(dummy_roll);
+                roll.copy_effects(dummy_roll);
 
                 if (!add_extras(character, dummy_roll, RollTime.POST_CRIT, parameters)) {
                     return;
@@ -1522,6 +1524,8 @@ var Barbs = Barbs || (function () {
 
                 roll.copy_damages(dummy_roll);
                 roll.copy_multipliers(dummy_roll);
+                roll.copy_effects(dummy_roll);
+
                 const rolls_per_type = roll.roll();
                 format_and_send_roll(character, '%s (%sd4)'.format(ability, dice_divisions[i]), roll,
                     rolls_per_type, crit_section);
@@ -1945,7 +1949,7 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function evangelist_magia_erebia(character, ability, parameters) {
+    function evangelist_magia_erebea(character, ability, parameters) {
         // Allows you to dispel an active Magia Erebia
         const dispel = get_parameter('dispel', parameters);
         if (dispel !== null) {
@@ -2788,7 +2792,7 @@ var Barbs = Barbs || (function () {
             'Reconstruct Barrier': print_ability_description,
         },
         'Evangelist': {
-            'Magia Erebia': evangelist_magia_erebia,
+            'Magia Erebea': evangelist_magia_erebea,
         },
         'Juggernaut': {
             'Wild Swing': juggernaut_wild_swing,

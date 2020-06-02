@@ -1076,7 +1076,7 @@
             "Armis Cantamen"
         ],
         "api": {
-            "description": "Use the \"spell\" parameter to specify what spell you are absorbing with ME. Only KB is supported currently. Use the \"dispel\" paramter to end ME.",
+            "description": "Use the \"spell\" parameter to specify what spell you are absorbing with ME. Only KB is supported currently. Use the \"dispel\" parameter to end ME.",
             "examples": ["spell: KB", "dispel"]
         }
     },
