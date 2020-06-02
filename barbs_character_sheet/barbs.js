@@ -1219,6 +1219,15 @@ var Barbs = Barbs || (function () {
         return true;
     }
 
+    function mirror_mage_alter_course(roll, roll_time, parameter) {
+        if (roll_time !== RollTime.DEFAULT) {
+            return true;
+        }
+
+        const redirected = parameter.split(' ')[1];
+        roll.add_multiplier(redirected * 0.5, Damage.ALL, 'self');
+        return true;
+    }
 
     function sniper_spotter(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
@@ -1252,6 +1261,7 @@ var Barbs = Barbs || (function () {
         'pursued': assassin_pursue_mark,
         'daggerspell_marked': daggerspell_marked,
         'draconic_pact': dragoncaller_draconic_pact,
+		'redirected': mirror_mage_alter_course,
         'empowered': daggerspell_ritual_dagger,
         'spotting': sniper_spotter,
         'tide': aquamancer_tide,
