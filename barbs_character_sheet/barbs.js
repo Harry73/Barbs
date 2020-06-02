@@ -172,6 +172,7 @@ var Barbs = Barbs || (function () {
     const RollTime = BarbsComponents.RollTime;
     const Roll = BarbsComponents.Roll;
     const ITEMS = BarbsComponents.ITEMS;
+    const get_ability_info = BarbsComponents.get_ability_info;
 
     const initiative_format = '&{template:5eDefault} {{title=Initiative}} {{subheader=%s}} {{rollname=Initiative}} {{roll=[[d100+%s+%s]]}}';
     const total_format = '&{template:default} {{name=%s}} {{%s=[[%s]]}}';
@@ -784,20 +785,6 @@ var Barbs = Barbs || (function () {
     // Class abilities helpers
 
 
-    function get_ability_info(ability_name) {
-        const ability_names = Object.keys(BarbsComponents.abilities);
-        for (let i = 0; i < ability_names.length; i++) {
-            const ability = BarbsComponents.abilities[ability_names[i]];
-            if (ability.name === ability_name) {
-                return ability;
-            }
-        }
-
-        LOG.error('Ability ' + ability_name + ' not found');
-        return null;
-    }
-
-
     function get_passive_class(passive) {
         const class_names = Object.keys(BarbsComponents.classes);
         for (let i = 0; i < class_names.length; i++) {
@@ -854,41 +841,6 @@ var Barbs = Barbs || (function () {
         }
 
         return null;
-    }
-
-
-    function get_monk_mastery(character) {
-        const all_attributes = findObjs({
-            type: 'attribute',
-            characterid: character.id,
-        });
-
-        let ability_names = [];
-        for (let i = 0; i < all_attributes.length; i++) {
-            const attribute = all_attributes[i];
-
-            if (attribute.get('name').includes('repeating_abilities') && attribute.get('name').includes('ability_name')) {
-                ability_names.push(attribute.get('current'));
-            }
-        }
-
-        // See what abilities have the "combo" tag, and build a set of their parent classes. Monk mastery increases by 1
-        // for each class of this nature that the character has.
-        let classes_with_combo_abilities = new Set();
-        for (let i = 0; i < ability_names.length; i++) {
-            const ability = get_ability_info(ability_names[i]);
-            if (ability === null) {
-                continue;
-            }
-
-            if (ability['tags'].includes('combo')) {
-                classes_with_combo_abilities.add(ability['class']);
-            }
-        }
-
-        const mastery_levels = [4, 6, 8, 10, 12, 20];
-        const monk_classes = Math.min(classes_with_combo_abilities.size, mastery_levels.length - 1);
-        return mastery_levels[monk_classes];
     }
 
 
@@ -1043,11 +995,19 @@ var Barbs = Barbs || (function () {
         });
 
         let effects = Array.from(roll.effects);
+
         // TODO: only add specific-magic-type penetrations if that damage type is in the roll
-        Object.keys(roll.hidden_stats).forEach(function (hidden_stat_format) {
-            const formatted_hidden_stat = hidden_stat_format.format(roll.hidden_stats[hidden_stat_format]);
+        const hidden_stat_formats = Object.keys(roll.hidden_stats);
+        for (let i = 0; i < hidden_stat_formats.length; i++) {
+            const hidden_stat_format = hidden_stat_formats[i];
+            const hidden_stat_value = roll.hidden_stats[hidden_stat_format];
+
+            let formatted_hidden_stat = hidden_stat_format.format(hidden_stat_value);
+            if (formatted_hidden_stat.includes('chance')) {
+                formatted_hidden_stat = formatted_hidden_stat + ' [[d100cs>%s]]'.format(hidden_stat_value);
+            }
             effects.push('<li>%s</li>'.format(formatted_hidden_stat));
-        });
+        }
 
         const effects_section = effects_section_format.format(effects.join(''));
         const msg = roll_format.format(ability, damage_section, crit_section, effects_section);
@@ -1414,7 +1374,7 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function aquamancer_baptise(character, ability, parameters) {
+    function aquamancer_baptize(character, ability, parameters) {
         const roll = new Roll(character, RollType.HEALING);
         roll.add_damage('6d6', Damage.HEALING);
         roll.add_effect('Cleanse a random condition on the target for every 6 you roll');
@@ -2088,7 +2048,7 @@ var Barbs = Barbs || (function () {
 
 
     function ki_monk_spirit_punch(character, ability, parameters) {
-        const monk_mastery = get_monk_mastery(character);
+        const monk_mastery = character.get_monk_mastery();
 
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('4d%s'.format(monk_mastery), Damage.PHYSICAL);
@@ -2107,7 +2067,7 @@ var Barbs = Barbs || (function () {
 
 
     function ki_monk_drain_punch(character, ability, parameters) {
-        const monk_mastery = get_monk_mastery(character);
+        const monk_mastery = character.get_monk_mastery();
 
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('5d%s'.format(monk_mastery), Damage.PHYSICAL);
@@ -2126,7 +2086,7 @@ var Barbs = Barbs || (function () {
 
 
     function ki_monk_spirit_shotgun(character, ability, parameters) {
-        const monk_mastery = get_monk_mastery(character);
+        const monk_mastery = character.get_monk_mastery();
 
         const roll = new Roll(character, RollType.PSYCHIC);
         roll.add_damage('5d%s'.format(monk_mastery), Damage.PSYCHIC);
@@ -2212,7 +2172,7 @@ var Barbs = Barbs || (function () {
 
 
     function martial_artist_choke_hold(character, ability, parameters) {
-        const monk_mastery = get_monk_mastery(character);
+        const monk_mastery = character.get_monk_mastery();
 
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('4d%s'.format(monk_mastery), Damage.PHYSICAL);
@@ -2225,7 +2185,7 @@ var Barbs = Barbs || (function () {
 
 
     function martial_artist_flying_kick(character, ability, parameters) {
-        const monk_mastery = get_monk_mastery(character);
+        const monk_mastery = character.get_monk_mastery();
 
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('6d%s'.format(monk_mastery), Damage.PHYSICAL);
@@ -2758,7 +2718,7 @@ var Barbs = Barbs || (function () {
             'Mistral Bow': air_duelist_mistral_bow,
         },
         'Aquamancer': {
-            'Baptise': aquamancer_baptise,
+            'Baptize': aquamancer_baptize,
             'Tidal Wave': aquamancer_tidal_wave,
             'Draught of Vigor': aquamancer_draught_of_vigor,
         },
