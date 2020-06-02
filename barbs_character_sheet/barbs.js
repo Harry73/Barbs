@@ -2174,6 +2174,21 @@ var Barbs = Barbs || (function () {
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
+    function luxomancer_light_touch(character, ability, parameters) {
+        const touch = get_parameter('touch', parameters);
+        var healing = ''
+        if (touch === 'yes') {
+            healing = '6d10';
+        } else{
+            healing = '4d10';
+        }
+        const roll = new Roll(character, RollType.HEALING);
+        roll.add_damage(healing, Damage.HEALING);
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
 
     function martial_artist_choke_hold(character, ability, parameters) {
         const monk_mastery = character.get_monk_mastery();
@@ -2810,6 +2825,9 @@ var Barbs = Barbs || (function () {
             'Shock Tendrils': lightning_duelist_shock_tendrils,
             'Shocking Parry': lightning_duelist_shocking_parry,
             'Sword of Lightning': lightning_duelist_sword_of_lightning,
+        },
+        'Luxomancer': {
+            'Light Touch': luxomancer_light_touch,
         },
         'Martial Artist': {
             'Focus Energy': print_ability_description,
