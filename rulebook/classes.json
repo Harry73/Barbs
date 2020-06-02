@@ -1486,7 +1486,11 @@
             "Lightbolt",
             "Light Touch",
             "Dancing Lights"
-        ]
+        ],
+        "api": {
+            "description": "Not implemented.",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -1592,7 +1596,11 @@
             "Glass Shot",
             "Plane Mirror",
             "Reflective Barrier"
-        ]
+        ],
+        "api": {
+            "description": "The API will calculate the damage increase for each redirection. It will apply the same damage roll to each redirected attack",
+            "examples": ["redirected <max amount of redirections>"]
+        }
     },
     {
         "type": "class",

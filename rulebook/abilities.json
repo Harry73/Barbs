@@ -3686,7 +3686,11 @@
             "light",
             "restoration",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "If you are casting the ability at touch range, set the <touch> parameter to yes. Otherwise set it to no.",
+            "examples": ["touch: yes"]
+        }
     },
     {
         "type": "ability",
