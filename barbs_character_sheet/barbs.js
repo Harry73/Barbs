@@ -1998,7 +1998,7 @@ var Barbs = Barbs || (function () {
                     chat(character, 'Removed effect "Magia Erebea" from %s'.format(character.name));
                 }
             }
-            return
+            return;
         }
 
         const chosen_spell = get_parameter('spell', parameters);
@@ -2016,14 +2016,22 @@ var Barbs = Barbs || (function () {
         }
 
         if (chosen_spell === 'KB') {
+            const conditions_list = get_parameter('conditions', parameters);
+            if (conditions_list == null) {
+                chat(character, '"condition" parameter is missing');
+            }
+            let conditions = conditions_list.split(' ');
+            if (conditions.length !== 2) {
+                chat(character, 'Select 2 conditions');
+                return;
+            }
+            
             add_persistent_effect(character, ability, parameters, character, Duration.INFINITE(), Ordering(), RollType.MAGIC, RollTime.DEFAULT,
                 function (char, roll, parameters) {
                     roll.add_damage('6d8', Damage.ICE);
                     roll.add_damage('6d8', Damage.DARK);
-                    roll.add_effect('Frozen [[1d100]]');
-                    roll.add_effect('Slowed [[1d100]]');
-                    roll.add_effect('Blinded [[1d100]]');
-                    roll.add_effect('2 Curses [[1d100]] [[1d100]]');
+                    roll.add_effect(conditions[0]+': [[1d100]]');
+                    roll.add_effect(conditions[1]+': [[1d100]]');
                     return true;
                 }
             );
