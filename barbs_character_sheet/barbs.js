@@ -1219,13 +1219,25 @@ var Barbs = Barbs || (function () {
         return true;
     }
 
-    function mirror_mage_alter_course(roll, roll_time, parameter) {
+    function mirror_mage_alter_course(roll, roll_time, parameter, parameters) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
         }
-
         const redirected = parameter.split(' ')[1];
-        roll.add_multiplier(redirected * 0.5, Damage.ALL, 'self');
+        var directs = [];
+        const character = roll.character
+        for (let i = 1; i <= redirected; i++) {
+            directs[i] = new Roll(character, RollType.MAGIC);
+            directs[i].copy_damages(roll);
+            directs[i].copy_multipliers(roll);
+            directs[i].copy_effects(roll);
+            directs[i].add_multiplier(i * 0.5, Damage.ALL, 'self');
+            if (!add_extras(character, directs[i], RollTime.POST_CRIT, parameters)) {
+                return;
+            }
+            const rolls_per_type = directs[i].roll();
+            format_and_send_roll(character, 'Redirect: '+ i, directs[i], rolls_per_type, '');
+        }
         return true;
     }
 
