@@ -1223,18 +1223,38 @@ var Barbs = Barbs || (function () {
         if (roll_time !== RollTime.POST_CRIT) {
             return true;
         }
-        const redirected = parameter.split(' ')[1];
         const character = roll.character
-        for (let i = 1; i <= redirected; i++) {
-            let roll_redirect = new Roll(character, RollType.MAGIC);
-            roll_redirect.copy_damages(roll);
-            roll_redirect.copy_multipliers(roll);
-            roll_redirect.copy_effects(roll);
-            roll_redirect.add_multiplier(i * 0.5, Damage.ALL, 'self');
-            const rolls_per_type = roll_redirect.roll();
-            format_and_send_roll(character, 'Redirect: '+ i, roll_redirect, rolls_per_type, '');
+        const redirected = parameter.split(' ')[1];
+        const damage = roll.damages;
+        const damage_types = Object.keys(damage);
+        let rolled_damage = [];
+        let rolled_damage_type = [];
+        let fake = "";
+        for (let i = 0; i < damage_types.length;i++){
+            fake = fake + '[['+damage[damage_types[i]] + ']]';
         }
-        return true;
+        log(fake);
+        chat(character, fake,  function (results) {
+            for (let j = 0; j < damage_types.length; j++){
+                let rolls = results[0].inlinerolls;
+                rolled_damage[j] = String(rolls[j].results.total);
+                rolled_damage_type[j] = damage_types[j]
+                log(rolled_damage);
+            }
+            for (let i = 0; i <= redirected; i++) {
+                let roll_redirect = new Roll(character, RollType.MAGIC);
+                for (let j = 0; j < damage_types.length; j++){
+                    roll_redirect.add_damage(rolled_damage[j], rolled_damage_type[j]);
+                }
+                roll_redirect.copy_multipliers(roll);
+                roll_redirect.copy_effects(roll);
+                roll_redirect.add_multiplier(i * 0.5, Damage.ALL, 'self');
+                const rolls_per_type = roll_redirect.roll();
+                format_and_send_roll(character, 'Redirect: '+ i, roll_redirect, rolls_per_type, '');
+            }
+        });
+
+        return;
     }
 
     function sniper_spotter(roll, roll_time, parameter) {
