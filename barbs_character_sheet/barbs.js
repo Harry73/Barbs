@@ -1,6 +1,55 @@
 var Barbs = Barbs || (function () {
     'use strict';
 
+
+    // ################################################################################################################
+    // Constants
+
+
+    const assert_not_null = BarbsComponents.assert_not_null;
+    const assert_type = BarbsComponents.assert_type;
+    const assert_starts_with = BarbsComponents.assert_starts_with;
+    const parse_int = BarbsComponents.parse_int;
+    const LOG = BarbsComponents.LOG;
+    const characters_by_owner = BarbsComponents.characters_by_owner;
+    const Stat = BarbsComponents.Stat;
+    const HiddenStat = BarbsComponents.HiddenStat;
+    const Skill = BarbsComponents.Skill;
+    const classes = BarbsComponents.classes;
+    const Damage = BarbsComponents.Damage;
+    const RollType = BarbsComponents.RollType;
+    const RollTime = BarbsComponents.RollTime;
+    const Roll = BarbsComponents.Roll;
+    const ITEMS = BarbsComponents.ITEMS;
+    const Character = BarbsComponents.Character;
+
+
+    // ################################################################################################################
+    // Constants
+
+
+    const STATE_NAME = 'Barbs';
+    const LAST_TURN_ID = 'last_turn_id';
+
+    const initiative_format = '&{template:5eDefault} {{title=Initiative}} {{subheader=%s}} {{rollname=Initiative}} {{roll=[[d100+%s+%s]]}}';
+    const total_format = '&{template:default} {{name=%s}} {{%s=[[%s]]}}';
+    const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
+    const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s)+1]]]]}}';
+
+    const roll_format = '&{template:Barbs} {{name=%s}} %s %s %s';
+    const damage_section_format = '{{%s=[[%s]]}}';
+    const crit_section_format = '{{crit_value=[[%s]]}} {{crit_cutoff=[[%s]]}} {{modified_crit=[[%s-%s]]}}';
+    const effects_section_format = '{{effects=%s}}';
+
+    const ability_block_format = '&{template:5eDefault} {{spell=1}} {{title=%s}} {{subheader=%s}} 0 {{spellshowdesc=1}} {{spelldescription=%s }} 0 0 0 0 0 0 0';
+
+    let persistent_effects = [];
+
+
+    // ################################################################################################################
+    // Functional
+
+
     // Basic python-like string formatting
     String.prototype.format = function () {
         let a = this;
@@ -11,113 +60,11 @@ var Barbs = Barbs || (function () {
     };
 
 
-    // ################################################################################################################
-    // Assertion helpers
-
-
-    function assert(condition, message) {
-        if (condition === null || condition === undefined) {
-            throw 'assert() missing condition';
-        }
-        if (message === null || message === undefined) {
-            throw 'assert() missing message';
-        }
-
-        if (!condition) {
-            throw 'AssertionError: ' + message;
-        }
-    }
-
-
-    function assert_not_null(parameter, message) {
-        if (message === null || message === undefined) {
-            throw 'assert_not_null() missing message';
-        }
-
-        assert(parameter !== null, message);
-        assert(parameter !== undefined, message);
-    }
-
-    function assert_type(object, type, message) {
-        assert_not_null(object, 'assert_type() object');
-        assert_not_null(type, 'assert_type() type');
-        assert_not_null(message, 'assert_type() message');
-
-        assert('_type' in object, '%s, no _type member in object %s'.format(message, JSON.stringify(object)));
-        assert(type === object._type, '%s, wrong object type, expected=%s, actual=%s'.format(message, type, object._type));
-    }
-
-
-    function assert_starts_with(string, prefix, message) {
-        assert_not_null(string, 'assert_starts_with() string');
-        assert_not_null(prefix, 'assert_starts_with() prefix');
-        assert_not_null(message, 'assert_starts_with() message');
-
-        assert(string.startsWith(prefix), '%s, expected string "%s" to start with "%s"'.format(message, string, prefix));
-    }
-
-
-    // ################################################################################################################
-    // Wrappers around log() and sendChat()
-
-
-    const LogLevel = {
-        TRACE: 0,
-        DEBUG: 1,
-        INFO: 2,
-        WARN: 3,
-        ERROR: 4,
-    };
-
-
-    class LOG {
-        static _log(log_level, string) {
-            assert_not_null(log_level, '_log() log_level');
-            assert_not_null(string, '_log() string');
-
-            if (log_level >= this.level) {
-                log(string);
-            }
-        }
-
-        static trace(string) {
-            this._log(LogLevel.TRACE, string);
-        }
-
-        static debug(string) {
-            this._log(LogLevel.DEBUG, string);
-        }
-
-        static info(string) {
-            this._log(LogLevel.INFO, string);
-        }
-
-        static warn(string) {
-            this._log(LogLevel.WARN, string);
-        }
-
-        static error(string) {
-            this._log(LogLevel.ERROR, string);
-        }
-    }
-    LOG.level = LogLevel.INFO;
-
-
     function chat(character, message, handler) {
         assert_not_null(character, 'chat() character');
         assert_not_null(message, 'chat() message');
 
         sendChat(character.who, message, handler);
-    }
-
-
-    // ################################################################################################################
-    // Functional
-
-
-    // Always specifying a radix is safest, and we always want radix 10.
-    function parse_int(string) {
-        return parseInt(string, 10);
     }
 
 
@@ -158,45 +105,13 @@ var Barbs = Barbs || (function () {
 
 
     // ################################################################################################################
-    // "Imports" and constants
-
-
-    const STATE_NAME = 'Barbs';
-    const LAST_TURN_ID = 'last_turn_id';
-
-    const Stat = BarbsComponents.Stat;
-    const HiddenStat = BarbsComponents.HiddenStat;
-    const Skill = BarbsComponents.Skill;
-    const Damage = BarbsComponents.Damage;
-    const RollType = BarbsComponents.RollType;
-    const RollTime = BarbsComponents.RollTime;
-    const Roll = BarbsComponents.Roll;
-    const ITEMS = BarbsComponents.ITEMS;
-    const get_ability_info = BarbsComponents.get_ability_info;
-
-    const initiative_format = '&{template:5eDefault} {{title=Initiative}} {{subheader=%s}} {{rollname=Initiative}} {{roll=[[d100+%s+%s]]}}';
-    const total_format = '&{template:default} {{name=%s}} {{%s=[[%s]]}}';
-    const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
-    const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s)+1]]]]}}';
-
-    const roll_format = '&{template:Barbs} {{name=%s}} %s %s %s';
-    const damage_section_format = '{{%s=[[%s]]}}';
-    const crit_section_format = '{{crit_value=[[%s]]}} {{crit_cutoff=[[%s]]}} {{modified_crit=[[%s-%s]]}}';
-    const effects_section_format = '{{effects=%s}}';
-
-    const ability_block_format = '&{template:5eDefault} {{spell=1}} {{title=%s}} {{subheader=%s}} 0 {{spellshowdesc=1}} {{spelldescription=%s }} 0 0 0 0 0 0 0';
-
-    let persistent_effects = [];
-
-
-    // ################################################################################################################
     // Character lookup
 
 
     function get_character_names(who, id) {
         const found_characters = [];
-        Object.keys(BarbsComponents.characters_by_owner).forEach(function (character_name) {
-            const owner_names = BarbsComponents.characters_by_owner[character_name];
+        Object.keys(characters_by_owner).forEach(function (character_name) {
+            const owner_names = characters_by_owner[character_name];
             for (let i = 0; i < owner_names.length; i++) {
                 if (owner_names[i] === who || owner_names[i] === id) {
                     found_characters.push(character_name);
@@ -229,7 +144,7 @@ var Barbs = Barbs || (function () {
             LOG.warn('Found ' + characters.length + ' matching characters for ' + msg.who);
         }
 
-        return new BarbsComponents.Character(characters[0], msg.who);
+        return new Character(characters[0], msg.who);
     }
 
 
@@ -667,7 +582,7 @@ var Barbs = Barbs || (function () {
 
         const effect = {
             'caster': caster.name,
-            'name': ability,
+            'name': ability['name'],
             'target': target_character.name,
             'duration': duration,
             'ordering': order,
@@ -783,20 +698,6 @@ var Barbs = Barbs || (function () {
 
     // ################################################################################################################
     // Class abilities helpers
-
-
-    function get_passive_class(passive) {
-        const class_names = Object.keys(BarbsComponents.classes);
-        for (let i = 0; i < class_names.length; i++) {
-            const clazz = BarbsComponents.classes[class_names[i]];
-            if ('passive' in clazz && passive === Object.keys(clazz.passive)[0]) {
-                return clazz;
-            }
-        }
-
-        LOG.error('Class with passive ' + passive + ' not found');
-        return null;
-    }
 
 
     function get_parameter(parameter, parameters) {
@@ -1019,7 +920,7 @@ var Barbs = Barbs || (function () {
         }
 
         const effects_section = effects_section_format.format(effects.join(''));
-        const msg = roll_format.format(ability, damage_section, crit_section, effects_section);
+        const msg = roll_format.format(ability['name'], damage_section, crit_section, effects_section);
 
         LOG.info('Roll: ' + msg);
         chat(character, msg);
@@ -1481,9 +1382,9 @@ var Barbs = Barbs || (function () {
 
     // There are some abilities that don't make any real changes to combat. Simply print the description for
     // these abilities.
-    function print_ability_description(character, ability, parameters) {
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+    function print_ability_description(character, ability) {
+        chat(character, ability_block_format.format(ability['name'], ability['class'],
+                                                    ability['description'].join('\n')));
     }
 
 
@@ -1494,8 +1395,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        chat(character, ability_block_format.format(ability['name'], ability['class'], ability.description.join('\n')));
     }
 
 
@@ -1518,8 +1418,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -1612,8 +1511,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -1696,8 +1594,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -1720,8 +1617,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -1752,8 +1648,7 @@ var Barbs = Barbs || (function () {
                 });
         }
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -1930,8 +1825,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -1962,8 +1856,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -1996,7 +1889,7 @@ var Barbs = Barbs || (function () {
         if (major_action !== null) {
             // The summon acts as a separate character, so we make a fake one to be able to do rolls with. The critical
             // hit chance stat must at least be set for this to work properly.
-            const dragon = new BarbsComponents.Character({'id': 'bronze_dragon'}, character.who);
+            const dragon = new Character({'id': 'bronze_dragon'}, character.who);
             dragon.stats[Stat.CRITICAL_HIT_CHANCE.name] = 0;
 
             if (major_action === 'breath') {
@@ -2092,8 +1985,7 @@ var Barbs = Barbs || (function () {
             chat(character, 'Unknown value for "choice" parameter "%s"'.format(choice));
         }
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -2190,8 +2082,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -2213,8 +2104,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -2337,8 +2227,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -2494,8 +2383,7 @@ var Barbs = Barbs || (function () {
                 });
         }
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -2530,8 +2418,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -2575,8 +2462,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -2626,8 +2512,7 @@ var Barbs = Barbs || (function () {
                 roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 20);
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -2661,7 +2546,7 @@ var Barbs = Barbs || (function () {
     function summoner_summon_ascarion_beast(character, ability, parameters) {
         // The summon acts as a separate character, so we make a fake one to be able to do rolls with. The critical
         // hit chance stat must at least be set for this to work properly.
-        const summon = new BarbsComponents.Character({'id': 'ascarion_beast'}, character.who);
+        const summon = new Character({'id': 'ascarion_beast'}, character.who);
         summon.stats[Stat.CRITICAL_HIT_CHANCE.name] = 0;
 
         const roll = new Roll(summon, RollType.PHYSICAL);
@@ -2699,8 +2584,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -2763,8 +2647,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -2786,8 +2669,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -2810,8 +2692,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -2847,8 +2728,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
 
     }
 
@@ -2894,8 +2774,7 @@ var Barbs = Barbs || (function () {
                 });
         }
 
-        const ability_info = get_ability_info(ability);
-        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+        print_ability_description(character, ability);
     }
 
 
@@ -2950,25 +2829,29 @@ var Barbs = Barbs || (function () {
             chat(character, '"stat" parameter is missing');
             return;
         }
+
         const buffs = sacrifices.split(', ');
         for (let i = 0; i < persistent_effects.length; i++) {
             if (buffs.includes(persistent_effects[i].name) && persistent_effects[i].target === character.name) {
-                chat(character, 'Removed effect ' + persistent_effects[i].name + ' from %s'.format(character.name));
+                chat(character, 'Removed effect %s from %s'.format(persistent_effects[i].name, character.name));
                 persistent_effects.splice(i, 1);
-            } 
+            }
         }
+
         add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(), RollType.ALL, RollTime.DEFAULT,
             function (char, roll, parameters) {
-                if (stat === 'AC'){
-                    roll.add_stat_multiplier(Stat.AC, 0.25 * buffs.length);                
-                } else if (stat === 'MR'){
+                if (stat.toLowerCase() === 'ac'){
+                    roll.add_stat_multiplier(Stat.AC, 0.25 * buffs.length);
+                } else if (stat.toLowerCase() === 'mr'){
                     roll.add_stat_multiplier(Stat.MAGIC_RESIST, 0.25 * buffs.length);
-                } else if (stat === 'evasion' || stat === 'Evasion'){
+                } else if (stat.toLowerCase() === 'evasion'){
                     roll.add_stat_multiplier(Stat.EVASION, 0.25 * buffs.length);
                 }
+
                 return true;
             });
 
+        print_ability_description(character, ability);
     }
 
     // TODO there is another half of this passive
@@ -2991,8 +2874,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        const clazz = get_passive_class(ability);
-        chat(character, ability_block_format.format(ability, 'Warleader', clazz.passive['Warleader']));
+        print_ability_description(character, ability);
     }
 
 
@@ -3176,41 +3058,60 @@ var Barbs = Barbs || (function () {
     function process_ability(msg) {
         const character = get_character(msg);
         if (character === null) {
-            sendChat(msg.who, 'error, unknown character for ' + msg.who);
+            chat(msg, 'error, unknown character for ' + msg.who);
             return;
         }
 
         const pieces = msg.content.split(' ');
         const options = pieces.slice(2).join(' ');
         const option_pieces = options.split(';');
-        const clazz = option_pieces[0];
-        const ability = option_pieces[1];
+        const class_name = option_pieces[0];
+        const ability_name = option_pieces[1];
         const parameters = option_pieces.slice(2);
         parameters.forEach(function (parameter, index, self) {
             self[index] = parameter.trim();
         });
 
-        // Verify that we know how to handle this class + ability combo
-        if (!(clazz in abilities_processors)) {
-            chat(msg, 'unknown class %s'.format(clazz));
-            return;
-        }
-        if (!(ability in abilities_processors[clazz])) {
-            chat(msg, 'unknown ability %s'.format(ability));
+        // Verify that we have a processor for this class + ability combo
+        if (!(class_name in abilities_processors)) {
+            chat(msg, 'Unknown class %s'.format(class_name));
             return;
         }
 
-        // Double check that the class and ability names are correct based on the master components list
-        if (!(clazz in BarbsComponents.classes)) {
-            LOG.warn('Mismatched class %s'.format(clazz));
-        }
-        if (!(BarbsComponents.classes[clazz].abilities.includes(ability))
-                && Object.keys(BarbsComponents.classes[clazz].passive)[0] !== ability) {
-            LOG.warn('Mismatched ability %s'.format(ability));
+        if (!(ability_name in abilities_processors[class_name])) {
+            chat(msg, 'Unknown ability %s'.format(ability_name));
+            return;
         }
 
-        const processor = abilities_processors[clazz][ability];
-        processor(character, ability, parameters);
+        const processor = abilities_processors[class_name][ability_name];
+
+        // Get the ability or passive info from master class list
+        if (!(class_name in classes)) {
+            chat(msg, 'Mismatched class %s, wrong spelling?'.format(class_name));
+            return;
+        }
+
+        const clazz = classes[class_name];
+        const class_abilities = clazz['abilities'];
+        const class_passive_name = Object.keys(clazz.passive)[0];
+
+        if (ability_name in class_abilities) {
+            processor(character, class_abilities[ability_name], parameters);
+            return;
+        }
+
+        if (ability_name === class_passive_name) {
+            const ability = {
+                'name': class_passive_name,
+                'description': [clazz['passive'][class_passive_name]],
+                'class': clazz['name'],
+            };
+
+            processor(character, ability, parameters);
+            return;
+        }
+
+        chat(msg, 'Mismatched ability %s, wrong spelling?'.format(ability_name));
     }
 
 

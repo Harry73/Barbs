@@ -3,7 +3,6 @@
 import os
 import json
 
-from src.parsing.parser import parse_data
 from src.website.common import read_json_file, get_component
 
 CURRENT_PATH = os.getcwd()
@@ -81,3 +80,37 @@ def process_data_file():
             f.write(string)
 
         f.write("ALL: new SkillObject('All', ''),\n")
+
+    # Merge classes and abilities lists
+    ability_keys_to_remove = ['type', 'branch', 'tier', 'action', 'cost', 'range', 'duration', 'api']
+    class_keys_to_remove = [
+        'preview', 'num_requirements', 'requirements', 'all_reqs_known', 'flavor_text', 'branches', 'api',
+    ]
+
+    revised_classes = {}
+    for clazz in classes:
+        skip = False
+        if 'flavor_text' not in clazz:
+            skip = True
+
+        for key in class_keys_to_remove:
+            clazz.pop(key, None)
+
+        ability_names = clazz.get('abilities', [])
+        clazz['abilities'] = {}
+
+        if skip:
+            continue
+
+        # Get each ability for the class, remove keys we don't care about, and save the ability in the class
+        for ability_name in ability_names:
+            ability = get_component(ability_name, abilities, lambda a: a['class'] == clazz['name'])
+            for key in ability_keys_to_remove:
+                ability.pop(key, None)
+
+            clazz['abilities'][ability['name']] = ability
+
+        revised_classes[clazz['name']] = clazz
+
+    with open(os.path.join(DATA_PATH, 'classes.json'), 'w') as f:
+        json.dump(revised_classes, f, indent=4)
