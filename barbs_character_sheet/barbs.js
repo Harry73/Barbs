@@ -860,19 +860,27 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function add_extras(character, roll, roll_time, parameters) {
+    function add_extras(character, roll, roll_time, parameters, crit_section) {
         assert_not_null(character, 'add_extras() character');
         assert_not_null(roll, 'add_extras() roll');
         assert_not_null(roll_time, 'add_extras() roll_time');
         assert_not_null(parameters, 'add_extras() parameters');
 
         add_items_to_roll(character, roll, roll_time);
-        if (!handle_arbitrary_parameters(roll, roll_time, parameters)) {
+
+        if (!handle_normal_arbitrary_parameters(roll, roll_time, parameters)) {
             LOG.warn('Problem handling arbitrary parameters at time ' + roll_time);
             return false;
         }
+
         if (!add_persistent_effects_to_roll(character, roll, roll_time, parameters)) {
             LOG.warn('Problem adding persistent effects to roll at time ' + roll_time);
+            return false;
+        }
+
+        // Try these special arbitrary parameters last. They will effectively "take over" handling the rest of the roll,
+        // so we will fail here and let the arbitrary parameter do it's thing.
+        if (handle_takeover_arbitrary_parameters(roll, roll_time, parameters, crit_section)) {
             return false;
         }
 
@@ -932,7 +940,7 @@ var Barbs = Barbs || (function () {
 
         // Most effects can be applied whether or not we know if the result is a crit. These effects should have
         // RollTime.DEFAULT and are applied here.
-        if (!add_extras(character, roll, RollTime.DEFAULT, parameters)) {
+        if (!add_extras(character, roll, RollTime.DEFAULT, parameters, '')) {
             return;
         }
 
@@ -964,7 +972,7 @@ var Barbs = Barbs || (function () {
 
         // Any effect that needs to know whether or not a roll is a crit is applied here. These effects should have
         // RollTime.POST_CRIT.
-        if (!add_extras(character, roll, RollTime.POST_CRIT, parameters)) {
+        if (!add_extras(character, roll, RollTime.POST_CRIT, parameters, crit_section)) {
             return;
         }
 
@@ -1219,43 +1227,67 @@ var Barbs = Barbs || (function () {
         return true;
     }
 
-    function mirror_mage_alter_course(roll, roll_time, parameter) {
-        if (roll_time !== RollTime.POST_CRIT) {
-            return true;
-        }
-        const character = roll.character
-        const redirected = parameter.split(' ')[1];
-        const damage = roll.damages;
-        const damage_types = Object.keys(damage);
-        let rolled_damage = [];
-        let rolled_damage_type = [];
-        let fake = "";
+
+    // Note that this is a "takeover arbitrary parameter", so it behaves differently from other arbitrary
+    // parameter handlers. The occurs strictly after we've determined if the roll is a crit, in case that matters.
+    function mirror_mage_alter_course(roll, parameter, parameters, crit_section) {
+        const character = roll.character;
+        const redirects = parse_int(parameter.split(' ')[1]);
+
+        // Extract damages from the original roll and send them to chat to actually do the roll.
+        let fake = '';
+        const damage_types = Object.keys(roll.damages);
         for (let i = 0; i < damage_types.length;i++){
-            fake = fake + '[['+damage[damage_types[i]] + ']]';
+            fake = fake + '[[%s]]'.format(roll.damages[damage_types[i]]);
         }
-        log(fake);
+        LOG.info('Alter course, fake roll: ' + fake);
+
         chat(character, fake,  function (results) {
-            for (let j = 0; j < damage_types.length; j++){
-                let rolls = results[0].inlinerolls;
-                rolled_damage[j] = String(rolls[j].results.total);
-                rolled_damage_type[j] = damage_types[j]
-                log(rolled_damage);
-            }
-            for (let i = 0; i <= redirected; i++) {
-                let roll_redirect = new Roll(character, RollType.MAGIC);
-                for (let j = 0; j < damage_types.length; j++){
-                    roll_redirect.add_damage(rolled_damage[j], rolled_damage_type[j]);
+            const rolls = results[0].inlinerolls;
+            LOG.info('Alter course, fake roll result: ' + JSON.stringify(rolls));
+
+            for (let redirect_num = 0; redirect_num <= redirects; redirect_num++) {
+                const redirected_roll = new Roll(character, RollType.MAGIC);
+
+                // Steal the multipliers from the original roll.
+                redirected_roll.copy_multipliers(roll);
+
+                // Copy damages from what we got back from sending the damages to chat to be rolled.
+                for (let i = 0; i < damage_types.length; i++){
+                    const damage = rolls[i].results.total.toString();
+                    redirected_roll.add_damage(damage, damage_types[i]);
                 }
-                roll_redirect.copy_multipliers(roll);
-                roll_redirect.copy_effects(roll);
-                roll_redirect.add_multiplier(i * 0.5, Damage.ALL, 'self');
-                const rolls_per_type = roll_redirect.roll();
-                format_and_send_roll(character, 'Redirect: '+ i, roll_redirect, rolls_per_type, '');
+
+                // Copy crit status
+                redirected_roll.crit = roll.crit;
+                redirected_roll.crit_damage_mod = roll.crit_damage_mod;
+                redirected_roll.should_apply_crit = roll.should_apply_crit;
+
+                if (!redirected_roll.should_apply_crit) {
+                    crit_section = '';
+                }
+
+                // Only include the hidden stats and effects in the first roll, for cleanliness. We shouldn't care
+                // about anything else in the roll for this passive.
+                if (redirect_num === 0) {
+                    redirected_roll.hidden_stats = roll.hidden_stats;
+                    redirected_roll.copy_effects(roll);
+                }
+
+                // Add the multiplier for the redirect number
+                redirected_roll.add_multiplier(redirect_num * 0.5, Damage.ALL, 'self');
+
+                const rolls_per_type = redirected_roll.roll();
+                // TODO: plumb the ability name here somehow, so we can put it in the title
+                format_and_send_roll(character, 'Redirect: ' + redirect_num, redirected_roll, rolls_per_type, crit_section);
             }
+
+            finalize_roll(character, roll, parameters);
         });
 
-        return;
+        return true;
     }
+
 
     function sniper_spotter(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
@@ -1268,10 +1300,27 @@ var Barbs = Barbs || (function () {
     }
 
     function thief_stance(roll, roll_time, parameter) {
-        if (roll_time !== RollTime.POST_CRIT) {
+        if (roll_time !== RollTime.DEFAULT) {
             return true;
         }
-        roll.add_effect('Drain: 10 Health');
+
+        const pieces = parameter.split(' ');
+        if (pieces.length < 2) {
+            chat('Missing option for parameter "stance", expected "hit" or "run"');
+            return true;
+        }
+
+        const stance = pieces[1];
+
+        if (stance === 'hit') {
+            roll.add_effect('Drain: 10 Health');
+        } else if (stance === 'run') {
+            roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 20);
+        } else {
+            chat('Unrecognized option for "stance" parameter, should be either "run" or "hit"');
+            return;
+        }
+
         return true;
     }
 
@@ -1296,16 +1345,25 @@ var Barbs = Barbs || (function () {
         'pursued': assassin_pursue_mark,
         'daggerspell_marked': daggerspell_marked,
         'draconic_pact': dragoncaller_draconic_pact,
-		'redirected': mirror_mage_alter_course,
         'empowered': daggerspell_ritual_dagger,
         'spotting': sniper_spotter,
-        'hit_stance': thief_stance,
+        'stance': thief_stance,
         'tide': aquamancer_tide,
         'warper_cc': warper_opportunistic_predator,
     };
 
 
-    function handle_arbitrary_parameters(roll, roll_time, parameters) {
+    const takeover_arbitrary_parameters = {
+        'redirected': mirror_mage_alter_course,
+    };
+
+
+    function handle_normal_arbitrary_parameters(roll, roll_time, parameters) {
+        assert_type(roll, 'Roll', 'handle_normal_arbitrary_parameters() roll');
+        assert_starts_with(roll_time, 'roll_time', 'handle_normal_arbitrary_parameters() roll_time');
+        assert_not_null(parameters, 'handle_normal_arbitrary_parameters() parameters');
+
+        // Apply arbitrary parameter handlers, and return false if one fails
         for (let i = 0; i < parameters.length; i++) {
             const parameter = parameters[i];
             const parameter_keyword = parameter.split(' ')[0].split(':')[0];
@@ -1316,7 +1374,7 @@ var Barbs = Barbs || (function () {
                 const func = arbitrary_parameters[keyword];
 
                 if (parameter_keyword === keyword) {
-                    if (!func(roll, roll_time, parameter, parameters)) {
+                    if (!func(roll, roll_time, parameter, parameters, /*crit_section=*/'')) {
                         return false;
                     }
                 }
@@ -1324,6 +1382,39 @@ var Barbs = Barbs || (function () {
         }
 
         return true;
+    }
+
+
+    function handle_takeover_arbitrary_parameters(roll, roll_time, parameters, crit_section) {
+        assert_type(roll, 'Roll', 'handle_takeover_arbitrary_parameters() roll');
+        assert_starts_with(roll_time, 'roll_time', 'handle_takeover_arbitrary_parameters() roll_time');
+        assert_not_null(parameters, 'handle_takeover_arbitrary_parameters() parameters');
+        assert_not_null(crit_section, 'handle_takeover_arbitrary_parameters() crit_section');
+
+        // These should only be applied at the end of all things, which must be post-crit
+        if (roll_time !== RollTime.POST_CRIT) {
+            return false;
+        }
+
+        // Apply takeover arbitrary parameter handlers, and return true if one actually does something
+        for (let i = 0; i < parameters.length; i++) {
+            const parameter = parameters[i];
+            const parameter_keyword = parameter.split(' ')[0].split(':')[0];
+
+            const keywords = Object.keys(takeover_arbitrary_parameters);
+            for (let j = 0; j < keywords.length; j++) {
+                const keyword = keywords[j];
+                const func = takeover_arbitrary_parameters[keyword];
+
+                if (parameter_keyword === keyword) {
+                    if (func(roll, parameter, parameters, crit_section)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
 
@@ -2002,10 +2093,12 @@ var Barbs = Barbs || (function () {
             for (let i = 0; i < persistent_effects.length; i++) {
                 if (persistent_effects[i].name === 'Magia Erebea' && persistent_effects[i].target === character.name) {
                     persistent_effects.splice(i, 1);
-                    i--;
                     chat(character, 'Removed effect "Magia Erebea" from %s'.format(character.name));
+                    return;
                 }
             }
+
+            chat(character, 'Did not find existing Magia Erebea effect to remove');
             return;
         }
 
@@ -2015,7 +2108,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        // Check if Magia Erebea is already applies
+        // Check if Magia Erebea is already applied
         for (let i = 0; i < persistent_effects.length; i++) {
             if (persistent_effects[i].name === 'Magia Erebea' && persistent_effects[i].target === character.name) {
                 chat(character, 'Magia Erebea is already applied');
@@ -2025,32 +2118,34 @@ var Barbs = Barbs || (function () {
 
         if (chosen_spell === 'KB') {
             const conditions_list = get_parameter('conditions', parameters);
-            if (conditions_list == null) {
-                chat(character, '"condition" parameter is missing');
+            if (conditions_list === null) {
+                chat(character, '"conditions" parameter is missing');
             }
-            let conditions = conditions_list.split(' ');
+
+            const conditions = conditions_list.split(',');
             if (conditions.length !== 2) {
                 chat(character, 'Select 2 conditions');
                 return;
             }
-            
+
             add_persistent_effect(character, ability, parameters, character, Duration.INFINITE(), Ordering(), RollType.MAGIC, RollTime.DEFAULT,
                 function (char, roll, parameters) {
                     roll.add_damage('6d8', Damage.ICE);
                     roll.add_damage('6d8', Damage.DARK);
-                    for (let i = 0; i < 2; i++){
-                        if (conditions[i] === 'curse' || conditions[i] === 'curses'|| conditions[i] === 'Curses'|| conditions[i] === 'Curse'){
-                            roll.add_effect(conditions[i]+': [[1d100]] [[1d100]]');
+
+                    for (let i = 0; i < 2; i++) {
+                        if (conditions[i].toLowerCase().includes('curse')){
+                            roll.add_effect(conditions[i].trim() + ': [[1d100]] [[1d100]]');
                         } else {
-                            roll.add_effect(conditions[i]+': [[1d100]]');
+                            roll.add_effect(conditions[i].trim() + ': [[1d100]]');
                         }
                     }
-                   
-                    
+
                     return true;
                 }
             );
             chat(character,'KB absorbed');
+
         } else {
             chat(character, 'Unrecognized spell "%s"'.format(chosen_spell));
         }
@@ -2235,16 +2330,21 @@ var Barbs = Barbs || (function () {
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
+
     function luxomancer_light_touch(character, ability, parameters) {
         const touch = get_parameter('touch', parameters);
-        var healing = ''
-        if (touch === 'yes') {
-            healing = '6d10';
-        } else{
-            healing = '4d10';
+        if (touch === null) {
+            chat(character, 'Missing required parameter "touch"');
+            return;
         }
+
         const roll = new Roll(character, RollType.HEALING);
-        roll.add_damage(healing, Damage.HEALING);
+        if (touch === 'yes') {
+            roll.add_damage('6d10', Damage.HEALING);
+        } else {
+            roll.add_damage('4d10', Damage.HEALING);
+        }
+
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
         });
@@ -2692,36 +2792,42 @@ var Barbs = Barbs || (function () {
         chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
     }
 
+
     function thief_cloak_and_dagger(character, ability, parameters) {
-        const hit = get_parameter('hit_stance', parameters);
-        const run = get_parameter('run_stance', parameters);
-        if ((hit == null && run == null) || (hit !== null && run !== null)){
-            chat(character, 'Specify a stance');
+        const stance = get_parameter('stance', parameters);
+        if (stance === null) {
+            chat(character, 'The "stance" parameter is required to specify if you are in hit or run stance');
             return;
         }
-        
+
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('5d4', Damage.PHYSICAL);
         add_scale_damage(character, roll);
-        
-        if (run !== null){
+
+        if (stance === 'run'){
             roll.add_crit_chance(20);
-        } else if (hit !== null){
+        } else if (stance === 'hit'){
             roll.add_crit_damage_mod(100);
+        } else {
+            chat('Unrecognized option for "stance" parameter, should be either "run" or "hit"');
         }
-        
+
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
         });
     }
-	
+
+
     function thief_snatch_and_grab(character, ability, parameters) {
-        const hit = get_parameter('hit_stance', parameters);
         const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_effect('Steal: [[1d100]]');
-        if (hit !== null){
-            roll.add_effect('Steal 2: [[1d100]]');
+
+        const stance = get_parameter('stance', parameters);
+        if (stance !== null && stance === 'hit'){
+            roll.add_effect('Steal: [[d100]] [[d100]]');
+        } else {
+            roll.add_effect('Steal: [[d100]]');
         }
+
         do_roll(character, ability, roll, parameters, '');
     }
 

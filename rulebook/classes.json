@@ -1076,8 +1076,8 @@
             "Armis Cantamen"
         ],
         "api": {
-            "description": "Use the \"spell\" parameter to specify what spell you are absorbing with ME. Only KB is supported currently. Use the \"conditions\" parameter to specify which conditions you are applying via KB. Use the \"dispel\" parameter to end ME.",
-            "examples": ["spell: KB", "dispel", "conditions: Freeze, Slow"]
+            "description": "Use the \"spell\" parameter to specify what spell you are absorbing with ME. The absorbed spell's effects will be applied to future rolls accordingly. Only KB is supported currently. Use the \"conditions\" parameter, followed by a comma-separated list, to specify which conditions you are applying via KB. The API will roll a d100 for each condition, or two d100s for the \"curse\" condition. Use the \"dispel\" parameter to end ME.",
+            "examples": ["spell: KB; conditions: Freeze, Slow", "spell: KB; conditions: Curse, Blind", "dispel"]
         }
     },
     {
@@ -1488,7 +1488,7 @@
             "Dancing Lights"
         ],
         "api": {
-            "description": "Not implemented.",
+            "description": "This passive will not be supported by the API. Track Healing Mana by hand.",
             "examples": []
         }
     },
@@ -1598,8 +1598,8 @@
             "Reflective Barrier"
         ],
         "api": {
-            "description": "The API will calculate the damage increase for each redirection. It will apply the same damage roll to each redirected attack",
-            "examples": ["redirected <max amount of redirections>"]
+            "description": "When you use a line AOE ability, you can add the \"redirected\" parameter. IF you do, the API will calculate the damage increase for each redirection, using the same damage roll for redirection. Doing this does hide the outcome of your original damage rolls, showing only the final summation per damage type.",
+            "examples": ["redirected <total number of redirections>"]
         }
     },
     {
@@ -2257,8 +2257,8 @@
             "Phantom Thief"
         ],
         "api": {
-            "description": "Specify hit stance to gain the On Hit: Drain 10",
-            "examples": ["hit_stance"]
+            "description": "To get the API to apply the effect of your current stance, specify the \"stance\" parameter with either \"run\" or \"hit\". When run stance is specified, movement speed rolls will have the +20 bonus. When hit stance is specified, attacks will have Drain 10.",
+            "examples": ["stance: hit", "stance: run"]
         }
     },
     {

@@ -7655,8 +7655,8 @@
             "single-target"
         ],
         "api": {
-            "description": "Specify what stance you are in",
-            "examples" : ["hit_stance","run_stance"]
+            "description": "Use the \"stance\" parameter to specify you current stance.",
+            "examples": ["stance: hit", "stance: run"]
         }
     },
     {
@@ -7754,8 +7754,8 @@
             "stance"
         ],
         "api": {
-            "description": "Specify if you are in hit stance",
-            "examples" : ["hit_stance","run_stance"]
+            "description": "Use the \"stance\" parameter to specify if you are currently in hit stance for the extra steal attempt. The API will roll a d100 for each steal attempt.",
+            "examples" : ["stance: hit"]
         }
     },
     {
