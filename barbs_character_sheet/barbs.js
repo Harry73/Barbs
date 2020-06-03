@@ -2939,6 +2939,37 @@ var Barbs = Barbs || (function () {
         });
     }
 
+    function warrior_reinforce_armor(character, ability, parameters) {
+        const sacrifices = get_parameter('buffs', parameters);
+        const stat = get_parameter('defense', parameters);
+        if (sacrifices === null) {
+            chat(character, '"buffs" parameter is missing');
+            return;
+        }
+        if (stat === null) {
+            chat(character, '"stat" parameter is missing');
+            return;
+        }
+        const buffs = sacrifices.split(', ');
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (buffs.includes(persistent_effects[i].name) && persistent_effects[i].target === character.name) {
+                chat(character, 'Removed effect ' + persistent_effects[i].name + ' from %s'.format(character.name));
+                persistent_effects.splice(i, 1);
+            } 
+        }
+        add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(), RollType.ALL, RollTime.DEFAULT,
+            function (char, roll, parameters) {
+                if (stat === 'AC'){
+                    roll.add_stat_multiplier(Stat.AC, 0.25 * buffs.length);                
+                } else if (stat === 'MR'){
+                    roll.add_stat_multiplier(Stat.MAGIC_RESIST, 0.25 * buffs.length);
+                } else if (stat === 'evasion' || stat === 'Evasion'){
+                    roll.add_stat_multiplier(Stat.EVASION, 0.25 * buffs.length);
+                }
+                return true;
+            });
+
+    }
 
     // TODO there is another half of this passive
     function warrior_warleader(character, ability, parameters) {
@@ -3135,7 +3166,7 @@ var Barbs = Barbs || (function () {
             '"Charge!"': warrior_charge,
             'Cut Down': warrior_cut_down,
             '"Fight Me!"': print_ability_description,  // TODO this maybe could do more
-            'Reinforce Armor': print_ability_description,  // TODO this could do more
+            'Reinforce Armor': warrior_reinforce_armor,  // TODO this could do more
             'Shields Up': print_ability_description,
             'Warleader': warrior_warleader,
         }

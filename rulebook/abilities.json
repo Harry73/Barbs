@@ -6608,8 +6608,8 @@
             "increase MR"
         ],
         "api": {
-            "description": "The API will only print this ability's description.",
-            "examples": []
+            "description": "Specify the list of buffs being sacrificed, and which stat being boosted",
+            "examples": ["buffs <list of buffs>", "defense <AC, MR, or evasion>"]
         }
     },
     {
