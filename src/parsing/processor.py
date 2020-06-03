@@ -50,14 +50,10 @@ def process_data_file():
         'skills': skills,
     }
 
-    # Dump raw components to files
-    components = []
-    for name, l in lists.items():
-        for item in l:
-            components.append(fix_quotes(item))
-
-    with open(os.path.join(DATA_PATH, 'components.json'), 'w') as f:
-        json.dump(components, f, indent=4)
+    # Dump what we read back to their files to fix formatting
+    for file_name, items in lists.items():
+        with open(os.path.join(DATA_PATH, '%s.json' % file_name), 'w') as f:
+            json.dump(items, f, indent=4)
 
     # Create a map of skills to their attribute acronyms
     skill_to_attr = {}

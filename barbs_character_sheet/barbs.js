@@ -1127,6 +1127,16 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function assassin_assassinate(roll, roll_time, parameter) {
+        if (roll_time !== RollTime.DEFAULT) {
+            return true;
+        }
+
+        roll.add_multiplier(1, Damage.ALL, 'self');
+        return true;
+    }
+
+
     function assassin_pursue_mark(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
@@ -1339,6 +1349,7 @@ var Barbs = Barbs || (function () {
         'damage': arbitrary_damage,
         'multiplier': arbitrary_multiplier,
 
+        'assassinate': assassin_assassinate,
         'arc_lightning': lightning_duelist_arc_lightning_mark,
         'frostbite': cryomancer_frostbite,
         'juggernaut': juggernaut_what_doesnt_kill_you,
@@ -2818,6 +2829,19 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function thief_phantom_thief(character, ability, parameters) {
+        add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(), RollType.ALL, RollTime.DEFAULT,
+            function (char, roll, parameters) {
+                roll.add_stat_bonus(Stat.EVASION, 100);
+                return true;
+            });
+
+        const ability_info = get_ability_info(ability);
+        chat(character, ability_block_format.format(ability, ability_info['class'], ability_info.description.join('\n')));
+
+    }
+
+
     function thief_snatch_and_grab(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
 
@@ -2830,6 +2854,7 @@ var Barbs = Barbs || (function () {
 
         do_roll(character, ability, roll, parameters, '');
     }
+
 
     function warrior_charge(character, ability, parameters) {
         const parameter = get_parameter('targets', parameters);
@@ -3080,7 +3105,11 @@ var Barbs = Barbs || (function () {
             'Strengthen Soul': symbiote_strengthen_soul,
         },
         'Thief': {
+            'Charm and Disarm': print_ability_description,
             'Cloak and Dagger': thief_cloak_and_dagger,
+            'Infiltrate': print_ability_description,
+            'Phantom Thief': thief_phantom_thief,
+            'Purloin Powers': print_ability_description,
 			'Snatch and Grab': thief_snatch_and_grab,
         },
         'Warlord': {

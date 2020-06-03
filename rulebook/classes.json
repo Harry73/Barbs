@@ -282,8 +282,8 @@
             "Massacre"
         ],
         "api": {
-            "description": "The API will not do the damage-doubling that this passive can cause for you.",
-            "examples": []
+            "description": "If you are attacking an unarmed enemy, add the \"assassinate\" parameter for your ability. The API will double the resulting damage.",
+            "examples": ["assassinate"]
         }
     },
     {

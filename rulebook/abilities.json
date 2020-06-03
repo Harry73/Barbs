@@ -7778,7 +7778,11 @@
             "attack",
             "condition",
             "Confuse"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7804,7 +7808,11 @@
             "conditional",
             "stance",
             "counterspell"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7844,7 +7852,11 @@
             "conditional",
             "modal",
             "stance"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7908,7 +7920,11 @@
             "gain actions",
             "gain evasion",
             "gain CR"
-        ]
+        ],
+        "api": {
+            "description": "Using this ability with the API will give you the 100% Evasion. It will not handle any other effects from this ability.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
