@@ -13,12 +13,6 @@
     },
     {
         "type": "condition",
-        "name": "Cursed",
-        "duration": "Varies",
-        "description": "When you have at least 3 curses, you instantly take Xd20 dark magic damage, where X is the number of curses you have"
-    },
-    {
-        "type": "condition",
         "name": "Charmed",
         "duration": "Varies",
         "description": "You consider the entity that charmed you as a friend."
@@ -34,6 +28,12 @@
         "name": "Crippled",
         "duration": "Until cleansed",
         "description": "Your movement speed is halved and you cannot jump, climb, or take flight through physical means."
+    },
+    {
+        "type": "condition",
+        "name": "Cursed",
+        "duration": "Varies",
+        "description": "When you have at least 3 curses, you instantly take Xd20 dark magic damage, where X is the number of curses you have"
     },
     {
         "type": "condition",

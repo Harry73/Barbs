@@ -373,13 +373,13 @@
     },
     {
         "type": "skill",
-        "name": "Crafting: Leatherworking",
+        "name": "Crafting: Heavy Weapons",
         "category": "Crafting",
-        "description": "Leatherworking involves the creation of light armor, as well as various other leather objects. With this skill you can make burnished leather armor or boots, as well as more exotic designs",
-        "attribute": "Reflex",
+        "description": "Heavy Weapon Crafting involves the creation of any weapons which have Strength scaling for their damage. You can make things like axes, longblades, or spears, as well as more exotic designs",
+        "attribute": "Toughness",
         "rank_notes": {
-            "Untrained": "You cannot craft light armor",
-            "Rank F": "You can craft light armor up to magic rarity"
+            "Untrained": "You cannot craft heavy weapons",
+            "Rank F": "You can craft heavy weapons up to magic rarity"
         }
     },
     {
@@ -395,13 +395,13 @@
     },
     {
         "type": "skill",
-        "name": "Crafting: Heavy Weapons",
+        "name": "Crafting: Leatherworking",
         "category": "Crafting",
-        "description": "Heavy Weapon Crafting involves the creation of any weapons which have Strength scaling for their damage. You can make things like axes, longblades, or spears, as well as more exotic designs",
-        "attribute": "Toughness",
+        "description": "Leatherworking involves the creation of light armor, as well as various other leather objects. With this skill you can make burnished leather armor or boots, as well as more exotic designs",
+        "attribute": "Reflex",
         "rank_notes": {
-            "Untrained": "You cannot craft heavy weapons",
-            "Rank F": "You can craft heavy weapons up to magic rarity"
+            "Untrained": "You cannot craft light armor",
+            "Rank F": "You can craft light armor up to magic rarity"
         }
     },
     {
@@ -1219,17 +1219,6 @@
     },
     {
         "type": "skill",
-        "name": "Weapon Mastery: Improvised Weapons",
-        "category": "Weapon Mastery",
-        "description": "Improvised Weapon Mastery involves the effective use of any random items as weapons. If you're looking to maximize the damage and flexibility of a chair, a broken bottle, or really any other object that isn't strictly speaking a weapon, you want to put points in Improvised Weapon Mastery",
-        "attribute": "Wisdom",
-        "rank_notes": {
-            "Untrained": "You cannot use improvised weapons",
-            "Rank F": "You can use improvised weapons"
-        }
-    },
-    {
-        "type": "skill",
         "name": "Weapon Mastery: Heavy Thrown Weapons",
         "category": "Weapon Mastery",
         "description": "Heavy Throwing Mastery involves the effective use of javelins, nets, throwing axes, and even boulders as weapons. Heavy throwing weapons involve the use of your raw strength instead of any fancy technique, and are a good ranged option for warriors",
@@ -1238,6 +1227,17 @@
             "Untrained": "You deal half damage with heavy thrown weapons",
             "Rank F": "You deal regular damage with heavy thrown weapons",
             "Rank A": "You can perform improvised physical arts with heavy thrown weapons"
+        }
+    },
+    {
+        "type": "skill",
+        "name": "Weapon Mastery: Improvised Weapons",
+        "category": "Weapon Mastery",
+        "description": "Improvised Weapon Mastery involves the effective use of any random items as weapons. If you're looking to maximize the damage and flexibility of a chair, a broken bottle, or really any other object that isn't strictly speaking a weapon, you want to put points in Improvised Weapon Mastery",
+        "attribute": "Wisdom",
+        "rank_notes": {
+            "Untrained": "You cannot use improvised weapons",
+            "Rank F": "You can use improvised weapons"
         }
     },
     {

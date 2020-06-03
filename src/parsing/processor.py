@@ -52,7 +52,7 @@ def process_data_file():
 
     # Dump what we read back to their files to fix formatting
     for file_name, items in lists.items():
-        with open(os.path.join(DATA_PATH, '%s.json' % file_name), 'w') as f:
+        with open(os.path.join(RULEBOOK_PATH, '%s.json' % file_name), 'w') as f:
             json.dump(items, f, indent=4)
 
     # Create a map of skills to their attribute acronyms

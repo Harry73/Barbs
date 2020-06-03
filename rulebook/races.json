@@ -10,20 +10,11 @@
     },
     {
         "type": "race",
-        "name": "Merfolk",
-        "description": "The merfolk are a race of half humanoid, half fish beings that live deep within the oceans. They can freely transform their lower half from that of a fish to human legs. They always smell like the ocean. Women far outnumber men, and are known for their beautiful songs that lure fishermen into the ocean, although this tends to be for the purpose of theft or play rather than any other more evil scheme.",
+        "name": "Arrist",
+        "description": "The arrists are humans who, through the use of magic tattoos through many generations, have infused their skin with arcane runes. Their magic seeps down to their very genome; arrist children are born with unique tattoos providing special effects related to family lineage. Their skin is usually beige or gray",
         "traits": {
-            "Fishtail": "The merfolk can freely transform its legs into a fish tail and can breathe underwater.",
-            "Song": "The merfolk can sing a melody that causes one intelligent character to be charmed for 1 minute, treating the merfolk as a friend for the duration. Song can be used once per day and has a chance of failure, and the charm breaks if the affected target takes any damage. Maintaining the charm takes concentration."
-        }
-    },
-    {
-        "type": "race",
-        "name": "Demonspawn",
-        "description": "The demonspawn are a race of humanity tainted by the seed of hellish demons. They tend to have red, purple, or black hair and various vestigial demon parts (horns, tail, small wings, claws, etc.). Demonspawn tend towards evil but some overcome the bestial nature of their own flesh to become heroes.",
-        "traits": {
-            "Summon": "The demonspawn can summon a small fiend familiar as a free action. It takes the shape of a flying eyeball. The demonspawn can see through the familiar's eye. The familiar can go invisible freely, but cannot interact with items or characters, and is barred by obstacles. Maintaining the familiar takes concentration.",
-            "Curse": "The demonspawn can curse a piece of equipment or an item as a major action so that it cannot be unequipped/dropped."
+            "Tattoo": "The arrist can, as a minor action, activate their tattoo.",
+            "Draw": "The arrist can, as a free action once per day, change their Tattoo effect to grant one of the following buffs: AC +10, Evasion +10%, MR (all types) +20%, Condition Resist +20%, Movement Speed +20 ft"
         }
     },
     {
@@ -37,74 +28,11 @@
     },
     {
         "type": "race",
-        "name": "Kajeem",
-        "description": "The kajeem are a race of underground dwelling, reptilian creatures. Instead of skin, they have flesh-like scales. They also have strong, muscular tails, forked-tongues, reptilian eyes, and bony spines protruding from their bodies. While they share the strong muscles of the reptile family, they are not cold-blooded, so they can live underground no problem. It is said they are descended from wingless dragons.",
+        "name": "Chrom",
+        "description": "The chroms are a race of humans infused with metal magics from birth. As a result, they have skin of soft metal and their bones and sometimes spines of metal sticking out of their bodies. Unfortunately, all this extra metal isn't much stronger than regular human bones and skin.",
         "traits": {
-            "Venom": "The kajeem can apply a potent poison with its bite, paralyzing a target for 1 hour (if the target has a circulation system). This paralysis reduces the target's movement speed to 5 feet. Venom can be used once per day.",
-            "Regeneration": "The kajeem can regenerate a lost limb over a three day healing period"
-        }
-    },
-    {
-        "type": "race",
-        "name": "Dryad",
-        "description": "The dryads are a group of intelligent plant humanoids. They have green, fibrous skin with a waxy protective covering, and they are hairless; instead, they have numerous leaves and branches all over their body",
-        "traits": {
-            "Roots": "The dryad is immune to knockups, knockdowns, pushes, and pulls.",
-            "Treeform": "The dryad can turn into a regular tree as a method of disguise. The appearance and height of the tree is up to the dryad. Treeform requires concentration."
-        }
-    },
-    {
-        "type": "race",
-        "name": "Overmind",
-        "description": "The overminds are a race of transcendent humans. Due to powerful psionic abilities morphing their genomes, they display a number of drastic physiological differences from their human progenitors, including blue skin and glowing blue eyes. They tend to live near the ocean, which further altered their abilities.",
-        "traits": {
-            "Telekinesis": "The overmind can pull any object to its location within 20 feet as a minor action, as long as the object's weight doesn't exceed 10 pounds.",
-            "Waterwalking": "The overmind can walk on the surface of water"
-        }
-    },
-    {
-        "type": "race",
-        "name": "Djinn",
-        "description": "The djinns are a race of fire spirits with the bodies of regular humans. They are a race shrouded in mystery and myth; in reality, they do not live in lamps or grant wishes. Instead, they are one of two races that dwell in the deserts, and employ various types of magic to hide from travelers.",
-        "traits": {
-            "Mirage": "The djinn can, as a major action, create a visual illusion no larger than a 5 foot cube. The illusion makes no sound, smell, and physical interaction with it reveals it to be an illusion.",
-            "Pyrokinesis": "The djinn can, as a minor action, set fire to an object within 30 feet that it can see. The object cannot be one that is worn or held by another creature, and must be flammable to begin with."
-        }
-    },
-    {
-        "type": "race",
-        "name": "Shade",
-        "description": "The shades are a line of humans tainted by spirits of darkness. Just like these spirits, the shades are at best, mistrusted, and at worst, feared. In reality, there are just as many kindly shades as there are evil ones. They mostly look like regular humans, but their pale gray skin gives them away, so they tend to hide from others.",
-        "traits": {
-            "Shadows": "The shade can go invisible when in darkness. Maintaining invisibility requires concentration, and counts as a buff.",
-            "Blind": "Once per day, the shade can inflict the Blind debuff as a minor action to up to six creatures in sight within 40 feet."
-        }
-    },
-    {
-        "type": "race",
-        "name": "Manti",
-        "description": "The manti are a race of half-insect, half-humans. Prominent features include large raptorial arms with inward-facing cartilage blades/spikes and thin, colorful, translucent wings. By day the manti are merciless hunters; by night they are ravenous lovers and merrymakers",
-        "traits": {
-            "Blades": "The manti has arms that can be effectively used like shortswords, and the bladed portion of their arms can be retracted and deployed freely.",
-            "Carapace": "The manti can use a reaction to thicken their skin and nullify incoming physical damage. Carapace can be used once per day."
-        }
-    },
-    {
-        "type": "race",
-        "name": "Vampire",
-        "description": "The vampires are an old race of nocturnal bloodsuckers. In the past, they used to blend in with human communities, creating devoted thralls through their bite and feeding upon humans with ease. Over time, the vampire race has weakened as a result of interracial breeding; modern vampires cannot create thralls even though they still require blood. On the flip side, many of their weaknesses have also been phased out of the genome.",
-        "traits": {
-            "Drain": "The vampire can drink blood as a major action from a living creature, which heals the Vampire for 20% of its maximum health. Can be used once daily.",
-            "Blood": "The vampire is immune to poison and disease"
-        }
-    },
-    {
-        "type": "race",
-        "name": "Elf",
-        "description": "The elves are a race that live in the desert, and are one of the few races that are not descended of ancient humanity, despite quite possibly being one of the few remaining races that could pass for humans. They are dark skinned with long ears, and hair color tends to be light (white, blond, etc). They've adapted heavily to life in the desert, and are fiercely loyal to friends and family.",
-        "traits": {
-            "Adapt": "The elf is immune to all effects caused by weather and is comfortable in extreme heat",
-            "Hawkeye": "The elf can see even small details from up to a mile away, and can see bodies of heat even through thin walls."
+            "Metalskin": "The chrom is immune to Bleed, Corrode, and Paralysis",
+            "Metaltouch": "The chrom can touch a single object as a minor action and turn it into metal. Maintaining the object's metallic form requires concentration."
         }
     },
     {
@@ -118,6 +46,33 @@
     },
     {
         "type": "race",
+        "name": "Demonspawn",
+        "description": "The demonspawn are a race of humanity tainted by the seed of hellish demons. They tend to have red, purple, or black hair and various vestigial demon parts (horns, tail, small wings, claws, etc.). Demonspawn tend towards evil but some overcome the bestial nature of their own flesh to become heroes.",
+        "traits": {
+            "Summon": "The demonspawn can summon a small fiend familiar as a free action. It takes the shape of a flying eyeball. The demonspawn can see through the familiar's eye. The familiar can go invisible freely, but cannot interact with items or characters, and is barred by obstacles. Maintaining the familiar takes concentration.",
+            "Curse": "The demonspawn can curse a piece of equipment or an item as a major action so that it cannot be unequipped/dropped."
+        }
+    },
+    {
+        "type": "race",
+        "name": "Djinn",
+        "description": "The djinns are a race of fire spirits with the bodies of regular humans. They are a race shrouded in mystery and myth; in reality, they do not live in lamps or grant wishes. Instead, they are one of two races that dwell in the deserts, and employ various types of magic to hide from travelers.",
+        "traits": {
+            "Mirage": "The djinn can, as a major action, create a visual illusion no larger than a 5 foot cube. The illusion makes no sound, smell, and physical interaction with it reveals it to be an illusion.",
+            "Pyrokinesis": "The djinn can, as a minor action, set fire to an object within 30 feet that it can see. The object cannot be one that is worn or held by another creature, and must be flammable to begin with."
+        }
+    },
+    {
+        "type": "race",
+        "name": "Dryad",
+        "description": "The dryads are a group of intelligent plant humanoids. They have green, fibrous skin with a waxy protective covering, and they are hairless; instead, they have numerous leaves and branches all over their body",
+        "traits": {
+            "Roots": "The dryad is immune to knockups, knockdowns, pushes, and pulls.",
+            "Treeform": "The dryad can turn into a regular tree as a method of disguise. The appearance and height of the tree is up to the dryad. Treeform requires concentration."
+        }
+    },
+    {
+        "type": "race",
         "name": "Dwarf",
         "description": "The dwarves are a race of short, stocky humanoids that live in extremely cold areas, carving their homes out of glaciers. They value tradition and show it through the intricate design of their ice buildings and sculptures. They've adapted to life in the snow and ice, and make their homes high in the snowy caps of mountains or in tundra near the poles.",
         "traits": {
@@ -127,38 +82,29 @@
     },
     {
         "type": "race",
-        "name": "Chrom",
-        "description": "The chroms are a race of humans infused with metal magics from birth. As a result, they have skin of soft metal and their bones and sometimes spines of metal sticking out of their bodies. Unfortunately, all this extra metal isn't much stronger than regular human bones and skin.",
+        "name": "Elf",
+        "description": "The elves are a race that live in the desert, and are one of the few races that are not descended of ancient humanity, despite quite possibly being one of the few remaining races that could pass for humans. They are dark skinned with long ears, and hair color tends to be light (white, blond, etc). They've adapted heavily to life in the desert, and are fiercely loyal to friends and family.",
         "traits": {
-            "Metalskin": "The chrom is immune to Bleed, Corrode, and Paralysis",
-            "Metaltouch": "The chrom can touch a single object as a minor action and turn it into metal. Maintaining the object's metallic form requires concentration."
+            "Adapt": "The elf is immune to all effects caused by weather and is comfortable in extreme heat",
+            "Hawkeye": "The elf can see even small details from up to a mile away, and can see bodies of heat even through thin walls."
         }
     },
     {
         "type": "race",
-        "name": "Arrist",
-        "description": "The arrists are humans who, through the use of magic tattoos through many generations, have infused their skin with arcane runes. Their magic seeps down to their very genome; arrist children are born with unique tattoos providing special effects related to family lineage. Their skin is usually beige or gray",
+        "name": "Human",
+        "description": "The most prolific race on the planet, humans have been around longer than any other race. It is said that all other races are descendant from ancient humans, which is extremely likely given the race's propensity to mate with anything that moves. The human race is the most balanced choice for players who don't like the demi-human races presented above.",
         "traits": {
-            "Tattoo": "The arrist can, as a minor action, activate their tattoo.",
-            "Draw": "The arrist can, as a free action once per day, change their Tattoo effect to grant one of the following buffs: AC +10, Evasion +10%, MR (all types) +20%, Condition Resist +20%, Movement Speed +20 ft"
+            "Scavenge": "The human has 20% better gather rates",
+            "Create": "The human has 20% better crafting rates"
         }
     },
     {
         "type": "race",
-        "name": "Zoltron",
-        "description": "The zoltrons are a race of humanoids whose natural electrical currents have evolved beyond that of any other race. They have no obvious traits except that they tend to have static running across their skin. They're generally dark skinned and make their homes in caves high up in the mountains, where they can harness energy from the frequent lightning storms",
+        "name": "Kajeem",
+        "description": "The kajeem are a race of underground dwelling, reptilian creatures. Instead of skin, they have flesh-like scales. They also have strong, muscular tails, forked-tongues, reptilian eyes, and bony spines protruding from their bodies. While they share the strong muscles of the reptile family, they are not cold-blooded, so they can live underground no problem. It is said they are descended from wingless dragons.",
         "traits": {
-            "Flash": "The zoltron can teleport 30 feet as a minor action three times per day",
-            "Sparks": "The zoltron can emit a flurry of non-damaging, multicolored sparks in a 15 foot cone"
-        }
-    },
-    {
-        "type": "race",
-        "name": "Shifter",
-        "description": "The shifters have no set physical form; they borrow features from all of the other races. They can freely change their appearance in order to suit needs such as espionage and crime avoidance. As a result, shifters are seen as untrustworthy by other races.",
-        "traits": {
-            "Shift": "The shifter can, as a major action, change its physical appearance, but cannot change height or weight significantly. Shifting consumes 20 stamina.",
-            "Mimic": "The shifter can imitate the voice of any person whose voice they've heard."
+            "Venom": "The kajeem can apply a potent poison with its bite, paralyzing a target for 1 hour (if the target has a circulation system). This paralysis reduces the target's movement speed to 5 feet. Venom can be used once per day.",
+            "Regeneration": "The kajeem can regenerate a lost limb over a three day healing period"
         }
     },
     {
@@ -172,11 +118,65 @@
     },
     {
         "type": "race",
-        "name": "Human",
-        "description": "The most prolific race on the planet, humans have been around longer than any other race. It is said that all other races are descendant from ancient humans, which is extremely likely given the race's propensity to mate with anything that moves. The human race is the most balanced choice for players who don't like the demi-human races presented above.",
+        "name": "Manti",
+        "description": "The manti are a race of half-insect, half-humans. Prominent features include large raptorial arms with inward-facing cartilage blades/spikes and thin, colorful, translucent wings. By day the manti are merciless hunters; by night they are ravenous lovers and merrymakers",
         "traits": {
-            "Scavenge": "The human has 20% better gather rates",
-            "Create": "The human has 20% better crafting rates"
+            "Blades": "The manti has arms that can be effectively used like shortswords, and the bladed portion of their arms can be retracted and deployed freely.",
+            "Carapace": "The manti can use a reaction to thicken their skin and nullify incoming physical damage. Carapace can be used once per day."
+        }
+    },
+    {
+        "type": "race",
+        "name": "Merfolk",
+        "description": "The merfolk are a race of half humanoid, half fish beings that live deep within the oceans. They can freely transform their lower half from that of a fish to human legs. They always smell like the ocean. Women far outnumber men, and are known for their beautiful songs that lure fishermen into the ocean, although this tends to be for the purpose of theft or play rather than any other more evil scheme.",
+        "traits": {
+            "Fishtail": "The merfolk can freely transform its legs into a fish tail and can breathe underwater.",
+            "Song": "The merfolk can sing a melody that causes one intelligent character to be charmed for 1 minute, treating the merfolk as a friend for the duration. Song can be used once per day and has a chance of failure, and the charm breaks if the affected target takes any damage. Maintaining the charm takes concentration."
+        }
+    },
+    {
+        "type": "race",
+        "name": "Overmind",
+        "description": "The overminds are a race of transcendent humans. Due to powerful psionic abilities morphing their genomes, they display a number of drastic physiological differences from their human progenitors, including blue skin and glowing blue eyes. They tend to live near the ocean, which further altered their abilities.",
+        "traits": {
+            "Telekinesis": "The overmind can pull any object to its location within 20 feet as a minor action, as long as the object's weight doesn't exceed 10 pounds.",
+            "Waterwalking": "The overmind can walk on the surface of water"
+        }
+    },
+    {
+        "type": "race",
+        "name": "Shade",
+        "description": "The shades are a line of humans tainted by spirits of darkness. Just like these spirits, the shades are at best, mistrusted, and at worst, feared. In reality, there are just as many kindly shades as there are evil ones. They mostly look like regular humans, but their pale gray skin gives them away, so they tend to hide from others.",
+        "traits": {
+            "Shadows": "The shade can go invisible when in darkness. Maintaining invisibility requires concentration, and counts as a buff.",
+            "Blind": "Once per day, the shade can inflict the Blind debuff as a minor action to up to six creatures in sight within 40 feet."
+        }
+    },
+    {
+        "type": "race",
+        "name": "Shifter",
+        "description": "The shifters have no set physical form; they borrow features from all of the other races. They can freely change their appearance in order to suit needs such as espionage and crime avoidance. As a result, shifters are seen as untrustworthy by other races.",
+        "traits": {
+            "Shift": "The shifter can, as a major action, change its physical appearance, but cannot change height or weight significantly. Shifting consumes 20 stamina.",
+            "Mimic": "The shifter can imitate the voice of any person whose voice they've heard."
+        }
+    },
+    {
+        "type": "race",
+        "name": "Vampire",
+        "description": "The vampires are an old race of nocturnal bloodsuckers. In the past, they used to blend in with human communities, creating devoted thralls through their bite and feeding upon humans with ease. Over time, the vampire race has weakened as a result of interracial breeding; modern vampires cannot create thralls even though they still require blood. On the flip side, many of their weaknesses have also been phased out of the genome.",
+        "traits": {
+            "Drain": "The vampire can drink blood as a major action from a living creature, which heals the Vampire for 20% of its maximum health. Can be used once daily.",
+            "Blood": "The vampire is immune to poison and disease"
+        }
+    },
+    {
+        "type": "race",
+        "name": "Zoltron",
+        "description": "The zoltrons are a race of humanoids whose natural electrical currents have evolved beyond that of any other race. They have no obvious traits except that they tend to have static running across their skin. They're generally dark skinned and make their homes in caves high up in the mountains, where they can harness energy from the frequent lightning storms",
+        "traits": {
+            "Flash": "The zoltron can teleport 30 feet as a minor action three times per day",
+            "Sparks": "The zoltron can emit a flurry of non-damaging, multicolored sparks in a 15 foot cone"
         }
     }
 ]

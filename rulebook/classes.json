@@ -91,7 +91,7 @@
             "Arc of Air",
             "Bow of Hurricanes"
         ],
-        "api":  {
+        "api": {
             "description": "The API will not track whirlwind arrows for you.",
             "examples": []
         }
@@ -168,9 +168,11 @@
             "Draught of Vigor",
             "Fountain of Purity"
         ],
-        "api":  {
-            "description": "When you use any ability, you can specify the active Aquamancer tide with the “tide” parameter to get the API to include this passive’s effects. This mostly works, but Ebb Tide will not cause buffs to grant 20% general MR.",
-            "examples": ["tide <Flood Tide/Ebb Tide>"]
+        "api": {
+            "description": "When you use any ability, you can specify the active Aquamancer tide with the \u201ctide\u201d parameter to get the API to include this passive\u2019s effects. This mostly works, but Ebb Tide will not cause buffs to grant 20% general MR.",
+            "examples": [
+                "tide <Flood Tide/Ebb Tide>"
+            ]
         }
     },
     {
@@ -234,7 +236,10 @@
         ],
         "api": {
             "description": "When casting a damaging spell, use the \"multiplier\" parameter to alter the damage. Use \"-25%\" for decreased effectiveness and \"25%\" for increased effectiveness. This will add a multiplier on all damages the spell deals.",
-            "examples": ["multiplier -25% all self", "multiplier 25% all self"]
+            "examples": [
+                "multiplier -25% all self",
+                "multiplier 25% all self"
+            ]
         }
     },
     {
@@ -283,7 +288,9 @@
         ],
         "api": {
             "description": "If you are attacking an unarmed enemy, add the \"assassinate\" parameter for your ability. The API will double the resulting damage.",
-            "examples": ["assassinate"]
+            "examples": [
+                "assassinate"
+            ]
         }
     },
     {
@@ -687,8 +694,10 @@
             "Frozen  Arena"
         ],
         "api": {
-            "description": "The API will not track stacks of Frostbite. When you consume stacks of Frostbite during an attack by specifying “frostbite” as an option.",
-            "examples": ["frostbite <number of stacks to consume>"]
+            "description": "The API will not track stacks of Frostbite. When you consume stacks of Frostbite during an attack by specifying \u201cfrostbite\u201d as an option.",
+            "examples": [
+                "frostbite <number of stacks to consume>"
+            ]
         }
     },
     {
@@ -699,7 +708,7 @@
         "requirements": [
             "Weapon Mastery: Shortblades Rank A",
             "Magic: Destruction Rank A",
-        "Magic: Utility Rank A"
+            "Magic: Utility Rank A"
         ],
         "all_reqs_known": true,
         "flavor_text": "The difference between controlling magic and letting it control you is paper thin. By taking hold of this power, you accept that you shall spend the rest of your days walking a knife's edge, lest you fall prey to magic's perils.",
@@ -724,8 +733,10 @@
             "Rogue's Anlace"
         ],
         "api": {
-            "description": "If your next attack is empowered, you must specify the “empowered” parameter along with the amount of mana spent for the empower. The API will halve it appropriately. The “empowered” parameter will also affect other abilities in this class, where applicable.",
-            "examples": ["empowered <spent mana>"]
+            "description": "If your next attack is empowered, you must specify the \u201cempowered\u201d parameter along with the amount of mana spent for the empower. The API will halve it appropriately. The \u201cempowered\u201d parameter will also affect other abilities in this class, where applicable.",
+            "examples": [
+                "empowered <spent mana>"
+            ]
         }
     },
     {
@@ -924,7 +935,9 @@
         ],
         "api": {
             "description": "For a summoned creature's attack ability, add the 'draconic_pact' parameter with the number of pacts you have. The API will add in the increased damage based on this.",
-            "examples": ["draconic_pact: 2"]
+            "examples": [
+                "draconic_pact: 2"
+            ]
         }
     },
     {
@@ -1077,7 +1090,11 @@
         ],
         "api": {
             "description": "Use the \"spell\" parameter to specify what spell you are absorbing with ME. The absorbed spell's effects will be applied to future rolls accordingly. Only KB is supported currently. Use the \"conditions\" parameter, followed by a comma-separated list, to specify which conditions you are applying via KB. The API will roll a d100 for each condition, or two d100s for the \"curse\" condition. Use the \"dispel\" parameter to end ME.",
-            "examples": ["spell: KB; conditions: Freeze, Slow", "spell: KB; conditions: Curse, Blind", "dispel"]
+            "examples": [
+                "spell: KB; conditions: Freeze, Slow",
+                "spell: KB; conditions: Curse, Blind",
+                "dispel"
+            ]
         }
     },
     {
@@ -1341,8 +1358,10 @@
             "Blood For Vigor"
         ],
         "api": {
-            "description": "For this to apply to an ability, you must specify the “juggernaut” parameter, along with your current and max health. This can be included when using any ability.",
-            "examples": ["juggernaut 5/100"]
+            "description": "For this to apply to an ability, you must specify the \u201cjuggernaut\u201d parameter, along with your current and max health. This can be included when using any ability.",
+            "examples": [
+                "juggernaut 5/100"
+            ]
         }
     },
     {
@@ -1379,7 +1398,7 @@
         ],
         "api": {
             "description": "The API will calculate what dice to use for your monk-mastery-dependent attacks. It will not track Ki.",
-            "examples" : []
+            "examples": []
         }
     },
     {
@@ -1546,7 +1565,7 @@
         ],
         "api": {
             "description": "The API will calculate what dice to use for your monk-mastery-dependent attacks. It will not track action economy.",
-            "examples" : []
+            "examples": []
         }
     },
     {
@@ -1599,7 +1618,9 @@
         ],
         "api": {
             "description": "When you use a line AOE ability, you can add the \"redirected\" parameter. IF you do, the API will calculate the damage increase for each redirection, using the same damage roll for redirection. Doing this does hide the outcome of your original damage rolls, showing only the final summation per damage type.",
-            "examples": ["redirected <total number of redirections>"]
+            "examples": [
+                "redirected <total number of redirections>"
+            ]
         }
     },
     {
@@ -1610,24 +1631,24 @@
         "requirements": [
             "Element Mastery: Ice Magic Rank A",
             "Armor Mastery: Heavy Rank A",
-			"Magic: Defensive Rank A"
+            "Magic: Defensive Rank A"
         ],
         "all_reqs_known": true,
-		"flavor_text": "\"Beware the mists, child. They hide horrors beyond those in your most terrifying nightmares, and I will not be around forever to keep you safe.\"",
-		"description": "The Mistguard is one of the only classes that uses both heavy armor and spells to act as a magic tank. Ice is one of the most defensive elements available to mages; unlike the more direct defenses provided by earth, ice mages prefer to impede the offensive capabilities of enemies through the use of slows, freezes, and other conditions. All of the attacks provided by this class additionally inflict conditions, and these conditions stack up Weaken effects via the class's passive. The rest of the class is focused on personal tanking as well as protecting allies via physical and magical means. The class has access to the typical tank suite of taunts, defensive stat boosts, and blocks, and additionally has access to magical defenses like counterspells and magical surpression fields. The class somewhat uniquely is useful in fights with multiple enemies rather than one, expending large amounts of resources to be able to tank against large groups, whereas other classes might be more mana and stamina efficient to deal with smaller groups. Overall, this class should provide mages with easy access to the front line of their party.",
-		"branches": {
-			"Vapor": "The Vapor branch gives options for multi-target ice attacks focused on impeding enemy approaches and attacks.",
-			"Murk": "The Murk branch gives options for personal defenses and tanking.",
-			"Haze": "The Haze branch gives options for protecting a large group of allies."
-		},
-		"passive": {
-			"Eerie Mists": "Conditions you apply also apply an irresistable, non-stacking Weaken equal to 10% times the number of conditions on the target."
-		},
-		"abilities": [
-			"Deep Snow",
-			"Silver Armor",
-			"Morning Frost"
-		]
+        "flavor_text": "\"Beware the mists, child. They hide horrors beyond those in your most terrifying nightmares, and I will not be around forever to keep you safe.\"",
+        "description": "The Mistguard is one of the only classes that uses both heavy armor and spells to act as a magic tank. Ice is one of the most defensive elements available to mages; unlike the more direct defenses provided by earth, ice mages prefer to impede the offensive capabilities of enemies through the use of slows, freezes, and other conditions. All of the attacks provided by this class additionally inflict conditions, and these conditions stack up Weaken effects via the class's passive. The rest of the class is focused on personal tanking as well as protecting allies via physical and magical means. The class has access to the typical tank suite of taunts, defensive stat boosts, and blocks, and additionally has access to magical defenses like counterspells and magical surpression fields. The class somewhat uniquely is useful in fights with multiple enemies rather than one, expending large amounts of resources to be able to tank against large groups, whereas other classes might be more mana and stamina efficient to deal with smaller groups. Overall, this class should provide mages with easy access to the front line of their party.",
+        "branches": {
+            "Vapor": "The Vapor branch gives options for multi-target ice attacks focused on impeding enemy approaches and attacks.",
+            "Murk": "The Murk branch gives options for personal defenses and tanking.",
+            "Haze": "The Haze branch gives options for protecting a large group of allies."
+        },
+        "passive": {
+            "Eerie Mists": "Conditions you apply also apply an irresistable, non-stacking Weaken equal to 10% times the number of conditions on the target."
+        },
+        "abilities": [
+            "Deep Snow",
+            "Silver Armor",
+            "Morning Frost"
+        ]
     },
     {
         "type": "class",
@@ -2036,7 +2057,9 @@
         ],
         "api": {
             "description": "The API will not track stacks of Spotting. When you consume stacks of Spotting during an attack, specify \"spotting\" as an option.",
-            "examples": ["spotting <number of stacks to consume>"]
+            "examples": [
+                "spotting <number of stacks to consume>"
+            ]
         }
     },
     {
@@ -2258,7 +2281,10 @@
         ],
         "api": {
             "description": "To get the API to apply the effect of your current stance, specify the \"stance\" parameter with either \"run\" or \"hit\". When run stance is specified, movement speed rolls will have the +20 bonus. When hit stance is specified, attacks will have Drain 10.",
-            "examples": ["stance: hit", "stance: run"]
+            "examples": [
+                "stance: hit",
+                "stance: run"
+            ]
         }
     },
     {
@@ -2500,8 +2526,10 @@
             "\"Kill them all!\""
         ],
         "api": {
-            "description": "You should add this to your Class Abilities as if this were a proper ability. This is half-implemented. The damage increase on yourself will not be present. You can empower an ally by using the ability with the “target” parameter. The API currently just assumes you have a buff to sacrifice to do this.",
-            "examples": ["target <ally name>"]
+            "description": "You should add this to your Class Abilities as if this were a proper ability. This is half-implemented. The damage increase on yourself will not be present. You can empower an ally by using the ability with the \u201ctarget\u201d parameter. The API currently just assumes you have a buff to sacrifice to do this.",
+            "examples": [
+                "target <ally name>"
+            ]
         }
     },
     {
