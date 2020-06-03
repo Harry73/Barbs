@@ -2388,6 +2388,17 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function mistguard_deep_snow(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('7d8', Damage.ICE);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
     function noxomancer_darkbomb(character, ability, parameters) {
         const delay = get_parameter('delay', parameters);
         if (delay === null) {
@@ -3058,10 +3069,14 @@ var Barbs = Barbs || (function () {
             'Choke Hold': martial_artist_choke_hold,
             'Flying Kick': martial_artist_flying_kick,
         },
+        'Mistguard': {
+            'Deep Snow': mistguard_deep_snow,
+            'Morning Frost': print_ability_description,
+        },
         'Noxomancer': {
             'Darkbomb': noxomancer_darkbomb,
             'Defile': print_ability_description,  // TODO this maybe could do more
-            'Siphon Soul': print_ability_description,  // TODO this maybe could do more
+            'Siphon Soul': print_ability_description,
         },
         'Pyromancer': {
             'Banefire': pyromancer_banefire,

@@ -169,7 +169,7 @@
             "Fountain of Purity"
         ],
         "api": {
-            "description": "When you use any ability, you can specify the active Aquamancer tide with the \u201ctide\u201d parameter to get the API to include this passive\u2019s effects. This mostly works, but Ebb Tide will not cause buffs to grant 20% general MR.",
+            "description": "When you use any ability, you can specify the active Aquamancer tide with the \"tide\" parameter to get the API to include this passive's effects. This mostly works, but Ebb Tide will not cause buffs to grant 20% general MR.",
             "examples": [
                 "tide <Flood Tide/Ebb Tide>"
             ]
@@ -694,7 +694,7 @@
             "Frozen  Arena"
         ],
         "api": {
-            "description": "The API will not track stacks of Frostbite. When you consume stacks of Frostbite during an attack by specifying \u201cfrostbite\u201d as an option.",
+            "description": "The API will not track stacks of Frostbite. When you consume stacks of Frostbite during an attack by specifying \"frostbite\" as an option.",
             "examples": [
                 "frostbite <number of stacks to consume>"
             ]
@@ -733,7 +733,7 @@
             "Rogue's Anlace"
         ],
         "api": {
-            "description": "If your next attack is empowered, you must specify the \u201cempowered\u201d parameter along with the amount of mana spent for the empower. The API will halve it appropriately. The \u201cempowered\u201d parameter will also affect other abilities in this class, where applicable.",
+            "description": "If your next attack is empowered, you must specify the \"empowered\" parameter along with the amount of mana spent for the empower. The API will halve it appropriately. The \"empowered\" parameter will also affect other abilities in this class, where applicable.",
             "examples": [
                 "empowered <spent mana>"
             ]
@@ -1358,7 +1358,7 @@
             "Blood For Vigor"
         ],
         "api": {
-            "description": "For this to apply to an ability, you must specify the \u201cjuggernaut\u201d parameter, along with your current and max health. This can be included when using any ability.",
+            "description": "For this to apply to an ability, you must specify the \"juggernaut\" parameter, along with your current and max health. This can be included when using any ability.",
             "examples": [
                 "juggernaut 5/100"
             ]
@@ -1648,7 +1648,11 @@
             "Deep Snow",
             "Silver Armor",
             "Morning Frost"
-        ]
+        ],
+        "api": {
+            "description": "The API will not do anything for this passive. You should track it by hand.",
+            "examples": []
+        }
     },
     {
         "type": "class",
@@ -2526,7 +2530,7 @@
             "\"Kill them all!\""
         ],
         "api": {
-            "description": "You should add this to your Class Abilities as if this were a proper ability. This is half-implemented. The damage increase on yourself will not be present. You can empower an ally by using the ability with the \u201ctarget\u201d parameter. The API currently just assumes you have a buff to sacrifice to do this.",
+            "description": "You should add this to your Class Abilities as if this were a proper ability. This is half-implemented. The damage increase on yourself will not be present. You can empower an ally by using the ability with the \"target\" parameter. The API currently just assumes you have a buff to sacrifice to do this.",
             "examples": [
                 "target <ally name>"
             ]

@@ -20,7 +20,7 @@
             "damage increase"
         ],
         "api": {
-            "description": "The list of allies affected by this ability must be specified with the \u201ctargets\u201d parameter in a space-separated list. You can just use the first name of each ally.",
+            "description": "The list of allies affected by this ability must be specified with the \"targets\" parameter in a space-separated list. You can just use the first name of each ally.",
             "examples": [
                 "targets <ally name> <ally name> ..."
             ]
@@ -46,7 +46,7 @@
             "break concentration"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -549,7 +549,7 @@
             "random"
         ],
         "api": {
-            "description": "There are no special notes for the actual usage of this ability. The API does not track enemies, however, so you must specify when you strike a target marked with Arc Lightning. Add \u201carc_lightning\u201d as a parameter to trigger the extra damages from this ability. No value is needed, just the keyword.",
+            "description": "There are no special notes for the actual usage of this ability. The API does not track enemies, however, so you must specify when you strike a target marked with Arc Lightning. Add \"arc_lightning\" as a parameter to trigger the extra damages from this ability. No value is needed, just the keyword.",
             "examples": [
                 "arc_lightning"
             ]
@@ -1101,7 +1101,7 @@
             "conditional"
         ],
         "api": {
-            "description": "If you block damage while using this ability, specify it with the \u201cblocked\u201d parameter:",
+            "description": "If you block damage while using this ability, specify it with the \"blocked\" parameter:",
             "examples": [
                 "blocked <total damage blocked>"
             ]
@@ -2178,7 +2178,7 @@
             "conditional"
         ],
         "api": {
-            "description": "There are three possibilities with this ability, each specified via the \u201cchoice\u201d parameter. The cone option is \u201cchoice first\u201d. The line option is \u201cchoice second\u201d. If you are able to use both, use \u201cchoice both\u201d.",
+            "description": "There are three possibilities with this ability, each specified via the \"choice\" parameter. The cone option is \"choice first\". The line option is \"choice second\". If you are able to use both, use \"choice both\".",
             "examples": [
                 "choice <first/second/both>"
             ]
@@ -2514,7 +2514,7 @@
             "bow"
         ],
         "api": {
-            "description": "Nothing needs to be specified when casting this ability, but you must specify the \u201cdistance\u201d parameter when you do your next attack. \u201cDistance\u201d should be followed by one or more space-separated distances, in feet, of enemies.",
+            "description": "Nothing needs to be specified when casting this ability, but you must specify the \"distance\" parameter when you do your next attack. \"Distance\" should be followed by one or more space-separated distances, in feet, of enemies.",
             "examples": [
                 "distance <enemy 1 distance in ft> <enemy 2 distance in ft>"
             ]
@@ -2816,7 +2816,7 @@
             "modal"
         ],
         "api": {
-            "description": "Specify the target ally with the \u201ctarget\u201d parameter. The ally\u2019s first name is sufficient. You can optionally specify any additional mana you spend on this ability with the \u201cmana\u201d parameter.",
+            "description": "Specify the target ally with the \"target\" parameter. The ally's first name is sufficient. You can optionally specify any additional mana you spend on this ability with the \"mana\" parameter.",
             "examples": [
                 "target <ally name>",
                 "mana <extra mana spent>"
@@ -3082,7 +3082,7 @@
             "conditional"
         ],
         "api": {
-            "description": "If you are attacking a target that is marked via this ability, add the \u201cdaggerspell_marked\u201d parameter for the extra crit chance and conditional crit damage modifier.",
+            "description": "If you are attacking a target that is marked via this ability, add the \"daggerspell_marked\" parameter for the extra crit chance and conditional crit damage modifier.",
             "examples": [
                 "daggerspell_marked"
             ]
@@ -3112,7 +3112,7 @@
             "single-target"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -3337,7 +3337,7 @@
             "single target"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -3695,7 +3695,7 @@
             "cone"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -3801,7 +3801,7 @@
             "concentration"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -4110,7 +4110,7 @@
             "delayed effect"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -4141,7 +4141,7 @@
             "concentration"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -4288,7 +4288,7 @@
             "lifesteal"
         ],
         "api": {
-            "description": "If you are concentrating on this ability, include the \u201cconc\u201d parameter for the increased lifesteal. Otherwise, don\u2019t include it.",
+            "description": "If you are concentrating on this ability, include the \"conc\" parameter for the increased lifesteal. Otherwise, don't include it.",
             "examples": [
                 "conc"
             ]
@@ -4436,7 +4436,7 @@
             "concentration"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -4525,7 +4525,7 @@
             "repeatable"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -4718,7 +4718,7 @@
             "shield"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -4811,7 +4811,7 @@
             "Lethal"
         ],
         "api": {
-            "description": "You can optionally specify the number of spotting stacks you want to spend to increase the ability\u2019s Lethality.",
+            "description": "You can optionally specify the number of spotting stacks you want to spend to increase the ability's Lethality.",
             "examples": [
                 "stacks <number of stacks spent on Lethality>"
             ]
@@ -5487,7 +5487,7 @@
             "concentration"
         ],
         "api": {
-            "description": "There are two options with this ability. If you are boosting a weapon\u2019s damage, specify the \u201cchoice first\u201d parameter. If you are decreasing a weapon\u2019s damage, specify \u201cchoice second\u201d.",
+            "description": "There are two options with this ability. If you are boosting a weapon's damage, specify the \"choice first\" parameter. If you are decreasing a weapon's damage, specify \"choice second\".",
             "examples": [
                 "choice <first/second>"
             ]
@@ -6257,7 +6257,7 @@
             "stackable"
         ],
         "api": {
-            "description": "The API will not track the marks this ability generates. You can, however, specify that a target was \u201cPursued\u201d when you use a damaging ability with the \u201cpursued\u201d parameter. Also specify the number of times the target was pursued.",
+            "description": "The API will not track the marks this ability generates. You can, however, specify that a target was \"Pursued\" when you use a damaging ability with the \"pursued\" parameter. Also specify the number of times the target was pursued.",
             "examples": [
                 "pursued <number of times the target was pursued>"
             ]
@@ -6285,7 +6285,7 @@
             "single-target"
         ],
         "api": {
-            "description": "The API will just print the ability\u2019s description.",
+            "description": "The API will just print the ability's description.",
             "examples": []
         }
     },
@@ -6497,7 +6497,7 @@
             "concentration"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -6608,7 +6608,7 @@
             "increase MR"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -7139,7 +7139,7 @@
             "ally-target"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -7445,7 +7445,7 @@
             "reroll"
         ],
         "api": {
-            "description": "If you are using an axe or sword, specify \u201ckeep_highest\u201d as a parameter. The API will do 2d10d1 rolls to automatically reroll and take the highest. If you are using another weapon type, this ability requires two phases. First, run the ability without any \u201ckeep\u201d parameter. It will send a 5d10 roll to chat. Hover over the roll to look at the individual rolls. Second, add the \u201ckeep\u201d parameter along with a space-separated list of the rolls you would like to keep. The others will be re-rolled - e.g. if you specify 2 rolls to keep, the final roll will be those 2 plus 3d10.",
+            "description": "If you are using an axe or sword, specify \"keep_highest\" as a parameter. The API will do 2d10d1 rolls to automatically reroll and take the highest. If you are using another weapon type, this ability requires two phases. First, run the ability without any \"keep\" parameter. It will send a 5d10 roll to chat. Hover over the roll to look at the individual rolls. Second, add the \"keep\" parameter along with a space-separated list of the rolls you would like to keep. The others will be re-rolled - e.g. if you specify 2 rolls to keep, the final roll will be those 2 plus 3d10.",
             "examples": [
                 "keep_highest",
                 "keep <roll value to keep> <roll value to keep> ..."
@@ -7935,7 +7935,7 @@
             "modal"
         ],
         "api": {
-            "description": "Specify the target ally with the \u201ctarget\u201d parameter. The ally\u2019s first name is sufficient. The ability\u2019s effect will show in stats rolled via the character sheet.",
+            "description": "Specify the target ally with the \"target\", parameter. The ally's first name is sufficient. The ability's effect will show in stats rolled via the character sheet.",
             "examples": [
                 "target <ally name>"
             ]
@@ -7960,7 +7960,7 @@
             "skill boost"
         ],
         "api": {
-            "description": "Specify the target ally with the \u201ctarget\u201d parameter. The ally\u2019s first name is sufficient. The ability\u2019s effect will show in skills rolled via the character sheet.",
+            "description": "Specify the target ally with the \"target\" parameter. The ally's first name is sufficient. The ability's effect will show in skills rolled via the character sheet.",
             "examples": [
                 "target <ally name>"
             ]
@@ -7985,7 +7985,7 @@
             "increase damage"
         ],
         "api": {
-            "description": "Specify the target ally with the \u201ctarget\u201d parameter. The ally\u2019s first name is sufficient.",
+            "description": "Specify the target ally with the \"target\" parameter. The ally's first name is sufficient.",
             "examples": [
                 "target <ally name>"
             ]
@@ -8499,7 +8499,7 @@
             "cleanse"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -8591,7 +8591,7 @@
             "conditional"
         ],
         "api": {
-            "description": "For the increased physical damage to apply while this buff is active, you must include the \u201clow_health\u201d parameter when using that ability.",
+            "description": "For the increased physical damage to apply while this buff is active, you must include the \"low_health\" parameter when using that ability.",
             "examples": [
                 "low_health"
             ]
@@ -9012,7 +9012,7 @@
             "modal"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
@@ -9349,7 +9349,7 @@
             "dash"
         ],
         "api": {
-            "description": "The API will only print this ability\u2019s description.",
+            "description": "The API will only print this ability's description.",
             "examples": []
         }
     },
