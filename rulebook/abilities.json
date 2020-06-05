@@ -28,7 +28,7 @@
     },
     {
         "type": "ability",
-        "name": "\"Fight me!\"",
+        "name": "\"Fight Me!\"",
         "class": "Warrior",
         "branch": "Warcry",
         "tier": 2,
@@ -6609,7 +6609,10 @@
         ],
         "api": {
             "description": "Specify the list of buffs being sacrificed, and which stat being boosted",
-            "examples": ["buffs <list of buffs>", "defense <AC, MR, or evasion>"]
+            "examples": [
+                "buffs <list of buffs>",
+                "defense <AC, MR, or evasion>"
+            ]
         }
     },
     {

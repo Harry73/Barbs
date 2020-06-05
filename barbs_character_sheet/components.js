@@ -7250,8 +7250,8 @@ var BarbsComponents = BarbsComponents || (function () {
                         "damage increase"
                     ]
                 },
-                "\"Fight me!\"": {
-                    "name": "\"Fight me!\"",
+                "\"Fight Me!\"": {
+                    "name": "\"Fight Me!\"",
                     "class": "Warrior",
                     "description": [
                         "You bellow a belligerent cry, igniting your enemies' fury. All enemies who can hear you are Taunted for 1 minute. An enemy Taunted by this ability previously is Immune to this ability's Taunt. When you cast this ability, all enemies who can hear you break concentration."
