@@ -332,6 +332,9 @@ def _build_calendar():
 
     month_days = _get_month_days()
 
+    holidays_path = os.path.join(CURRENT_PATH, 'rulebook', 'holidays.json')
+    holidays_per_month = read_json_file(holidays_path, sort=False)
+
     def _month_set(index):
         month_header = empty_row + empty_th
         for i in range(index, index + 3):
@@ -365,13 +368,22 @@ def _build_calendar():
                     row += '<th colspan="8">&nbsp;</th>'
                     break
 
-                m = MONTHS[index + j]
+                month_season = MONTHS[index + j]
+                month = month_season.split(' ')[0]
+
                 for k in range(7):  # 7 days in a week
-                    month_day = month_days[m][i][k]
+                    month_day = month_days[month_season][i][k]
                     if month_day == 0:
                         row += empty_th
                     else:
-                        row += th % month_day
+                        if str(month_day) in holidays_per_month[month]:
+                            kwargs = {}
+                            if 'birthday' in holidays_per_month[month][str(month_day)].lower():
+                                kwargs['fancy'] = 'class="green-link"'
+                            row += th % href('/calendar?month=%s' % month, month_day, **kwargs)
+
+                        else:
+                            row += th % month_day
 
                 row += empty_th
 

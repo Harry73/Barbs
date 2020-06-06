@@ -15,11 +15,12 @@ MONTHS = [
 ]
 
 
-def href(anchor, text, title=None):
+def href(anchor, text, title=None, fancy=''):
     if title:
-        return '<a href="{anchor}" title="{title}">{text}</a>'.format(anchor=anchor, text=text, title=title)
+        return '<a href="{anchor}" title="{title}" {fancy}>{text}</a>'.format(anchor=anchor, text=text,
+                                                                              title=title, fancy=fancy)
     else:
-        return '<a href="{anchor}">{text}</a>'.format(anchor=anchor, text=text)
+        return '<a href="{anchor}" {fancy}>{text}</a>'.format(anchor=anchor, text=text, fancy=fancy)
 
 
 def read_json_file(file_path, sort=True):
