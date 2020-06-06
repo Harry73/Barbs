@@ -23,11 +23,6 @@ buttons. Their usages are described below:
    actual server.
 4. "Update website" - Copies the generated rulebook HTML to the server running the website and restarts the server.
 
-### Generate `website.exe`
-
-So that less programming-minded people can run the `website.pyw` tool and manage the website, I compile the code into
-a `.exe`. Run `bash make_exe.sh` to generate the `.exe`.
-
 ### Original rulebook parsing
 
 The Barbs rulebook was originally a large, hand-typed document. Since this wasn't conducive to a programmatic system,
