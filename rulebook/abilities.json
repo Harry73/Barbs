@@ -9581,5 +9581,71 @@
             "multi-target",
             "multi-hit"
         ]
+    },
+	{
+        "type": "ability",
+        "name": "Veil of Darkness",
+        "class": "Voidwalker",
+        "branch": "Nothingness",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "20 mana",
+        "range": "60 ft",
+        "duration": "Instant",
+        "description": [
+            "You cover allies in darkness. All allies in range become Hidden; while Hidden in this way, allies ignore traps and difficult terrain, and their attacks have, \"On Hit: Inflict Blind\". Additionally, allies in Touch range cleanse 1 condition of their choice."
+        ],
+        "tags": [
+            "Spell",
+			"dark",
+			"buff",
+			"Hidden",
+			"condition",
+			"Blind",
+			"conditional",
+			"cleanse"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Dimension Door",
+        "class": "Voidwalker",
+        "branch": "Abyss",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "30 mana",
+        "range": "Touch",
+        "duration": "Instant",
+        "description": [
+            "You teleport a short distance with friends in tow. You and any number of allies and objects in range teleport to adjacent, empty spaces within 200 ft that you can see. Allies in range can extend the range of this ability by also being in touch range of other targets."
+        ],
+        "tags": [
+            "Spell",
+			"dark",
+			"conjuration",
+			"teleport"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Blacklands",
+        "class": "Voidwalker",
+        "branch": "Hollow",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "25 mana",
+        "range": "60 ft",
+        "duration": "Instant",
+        "description": [
+            "You envelop the ground with the magic of the void. Up to 30 target spaces within range that you can see turn black, each becoming a field which blocks AOE effects and treats allied movement within them as dashes. Additionally, any allies standing in black spaces are considered to be in touch range."
+        ],
+        "tags": [
+            "Spell",
+			"dark",
+			"conjuration",
+			"defensive",
+			"field",
+			"block"
+        ]
     }
 ]
