@@ -1,0 +1,48 @@
+{
+    "Icemoon": {
+        "1": "New Year's Day",
+        "17": "Night of Sorrows",
+        "39": "Hoshiko's Birthday",
+        "40": "Feast of the Forgotten"
+    },
+    "Waterfall": {
+        "1": "Spring Equinox",
+        "9": "Cordelia's Birthday",
+        "10": "Coronation Day (Vastwood)",
+        "22": "Feast of Kefanas",
+        "25": "Admirer's Day"
+    },
+    "Earthdust": {
+        "15": "Feast of Nox",
+        "37": "Suro N'Gamma's Birthday"
+    },
+    "Lightstar": {
+        "1": "Summer Solstice",
+        "11": "Russ' Birthday",
+        "12": "Feast of Adol",
+        "30": "Laborer's Day"
+    },
+    "Firesun": {
+        "1": "International Adventurer's Day",
+        "4": "Feast of Dren",
+        "30": "Champion of Fire Tourney Begins"
+    },
+    "Thundersky": {
+        "1": "Autumn Equinox",
+        "10": "Givings Day",
+        "20": "Feast of Davas",
+        "30": "Harvest Festival"
+    },
+    "Windring": {
+        "7": "Feast of Aloys",
+        "11": "The Unspoken Oath",
+        "23": "Kalitas' Birthday"
+    },
+    "Darknight": {
+        "1": "Winter Solstice",
+        "3": "Feast of Phaxet",
+        "25": "Singularity Anniversary",
+        "35": "Hallow's Day",
+        "40": "New Year's Eve"
+    }
+}

@@ -1,17 +1,27 @@
-from flask import Flask
-from flask import render_template
+import os
+
+from flask import Flask, render_template, request
 
 server = Flask(__name__)
 
 
 @server.route('/')
 def hello():
-    return render_template('index.html')
+    return render_template('rulebook.html')
 
 
 @server.route('/api')
 def api():
     return render_template('api.html')
+
+
+@server.route('/calendar')
+def calendar():
+    month = request.args.get('month')
+    if os.path.exists(os.path.join(os.getcwd(), 'templates', '%s.html' % month)):
+        return render_template('%s.html' % month)
+    else:
+        return 'bad month you fool'
 
 
 if __name__ == '__main__':

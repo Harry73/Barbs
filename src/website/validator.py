@@ -1,7 +1,21 @@
 import json
 import os
 
-from src.website.common import get_component, read_json_file, get_link_skill_req
+from src.website.common import get_component, read_json_file, get_link_skill_req, MONTHS
+
+
+def check_holidays(holidays_per_month):
+    short_months = [month.split(' ')[0] for month in MONTHS]
+
+    for month, holidays in holidays_per_month.items():
+        if month not in short_months:
+            raise Exception('Month %s in holidays.json file not in master list, %s' % (month, short_months))
+
+        for day, holiday in holidays.items():
+            try:
+                int(day)
+            except ValueError:
+                raise Exception('Invalid day %s in month %s, expected an integer' % (day, month))
 
 
 def check_for_duplicates(components, log):
@@ -214,6 +228,12 @@ def validate(log):
     except json.JSONDecodeError as e:
         raise Exception('Failed to parse skills.json file, %s' % str(e))
 
+    try:
+        holidays_per_month = read_json_file(os.path.join(rulebook_path, 'holidays.json'), sort=False)
+    except json.JSONDecodeError as e:
+        raise Exception('Failed to parse holidays.json file, %s' % str(e))
+
+    check_holidays(holidays_per_month)
     check_for_duplicates(abilities + attributes + buffs + classes + conditions + races + skills, log)
     check_for_branch_duplicates(classes, log)
     check_class_fields(classes)

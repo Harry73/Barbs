@@ -3,6 +3,18 @@ import json
 from collections import OrderedDict
 
 
+MONTHS = [
+    'Icemoon (Winter)',
+    'Waterfall (Spring)',
+    'Earthdust (Spring)',
+    'Lightstar (Summer)',
+    'Firesun (Summer)',
+    'Thundersky (Autumn)',
+    'Windring (Autumn)',
+    'Darknight (Winter)',
+]
+
+
 def href(anchor, text, title=None):
     if title:
         return '<a href="{anchor}" title="{title}">{text}</a>'.format(anchor=anchor, text=text, title=title)

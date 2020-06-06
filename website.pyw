@@ -12,7 +12,7 @@ HEIGHT = 600
 
 
 def open_local(log):
-    path = os.path.join(os.getcwd(), 'html', 'generated', 'index.html')
+    path = os.path.join(os.getcwd(), 'html', 'generated', 'rulebook.html')
     if not os.path.exists(path):
         log('File not found, generate it first')
         return

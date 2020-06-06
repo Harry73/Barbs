@@ -50,6 +50,10 @@ h4 {
     padding-bottom: 15px;
 }
 
+.small {
+    font-size: 15px;
+}
+
 .row-full{
     width: 100vw;
     position: relative;
@@ -121,10 +125,6 @@ ul li ul li {
 
 /* tables */
 
-table, th, td {
-    border: 1px solid black;
-}
-
 table {
     table-layout: fixed;
     width: 100%;
@@ -132,20 +132,76 @@ table {
     border-spacing: 0;
 }
 
-.padded {
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-
 th, td {
     padding: 5px;
-    vertical-align: middle;
 }
 
 td {
+    width: 25%;
+}
+
+.right {
+    text-align: right;
+}
+
+.left {
+    text-align: left;
+}
+
+.center {
     text-align: center;
     vertical-align: middle;
-    width: 25%;
+}
+
+.top-right {
+    text-align: right;
+    vertical-align: top;
+}
+
+.bottom-left {
+    text-align: left;
+    word-wrap: normal;
+    width: 80%;
+    font-weight: normal;
+}
+
+.bordered {
+    border: 1px solid black;
+}
+
+.thin-bordered {
+    border: 1px solid #484848;
+}
+
+.bottom-bordered {
+    border-bottom: 1px solid #002691;
+    color: #002691;
+}
+
+.table-title {
+    background-color: #002691;
+    color: #FFFFFF;
+    font-size: 40px;
+    font-weight: bold;
+    padding-top: 30px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+.table-header {
+    color: #002691;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.large-cell {
+    width: 14.28%;
+    height: 75px;
+}
+
+.padded {
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 /* sidebar */

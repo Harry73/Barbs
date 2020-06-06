@@ -2,17 +2,21 @@ import html
 import os
 import shutil
 
-from src.website.common import read_json_file, href, get_link_skill_req
+from src.website.common import read_json_file, href, get_link_skill_req, MONTHS
 
 
 CURRENT_PATH = os.getcwd()
 HTML_PATH = os.path.join(CURRENT_PATH, 'html')
 HTML_GENERATED = os.path.join(HTML_PATH, 'generated')
+CALENDAR_GENERATED = os.path.join(HTML_GENERATED, 'calendar')
 HTML_TEMPLATES = os.path.join(HTML_PATH, 'templates')
-HOME_PAGE = os.path.join(HTML_GENERATED, 'index.html')
+HOME_PAGE = os.path.join(HTML_GENERATED, 'rulebook.html')
 
 BR_JOIN = '<br>'.join
 HTML_TAGS = ['<ul>', '</ul>', '<li>', '</li>', '<br>']
+
+DAYS_OF_THE_WEEK = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY']
+CALENDAR_START_INDEX = 0
 
 
 def _debug(term, component):
@@ -292,6 +296,189 @@ def _build_classes(abilities, classes, skills):
     return BR_JOIN(class_htmls)
 
 
+def _get_month_days():
+    month_start_indices = [CALENDAR_START_INDEX]
+    start_index = CALENDAR_START_INDEX
+    for month in MONTHS:
+        if month == MONTHS[0]:
+            continue
+
+        start_index = (start_index + 40) % 7
+        month_start_indices.append(start_index)
+
+    month_days = {}
+    for i, month in enumerate(MONTHS):
+        days = [[0 for x in range(7)] for y in range(7)]
+
+        week = 0
+        day_index = month_start_indices[i]
+        for day in range(1, 41):
+            days[week][day_index] = day
+            day_index += 1
+            if day_index == 7:
+                week += 1
+                day_index = 0
+
+        month_days[month] = days
+
+    return month_days
+
+
+def _build_calendar():
+    tr = '<tr>%s</tr>'
+    empty_th = '<th>&nbsp;</th>'
+    th = '<th>%s</th>'
+    empty_row = tr % '<th colspan="25">&nbsp;</th>'
+
+    month_days = _get_month_days()
+
+    def _month_set(index):
+        month_header = empty_row + empty_th
+        for i in range(index, index + 3):
+            if i >= len(MONTHS):
+                month_header += '<th colspan="8">&nbsp;</th>'
+                break
+
+            month_anchor = href('/calendar?month=%s' % MONTHS[i].split(' ')[0], MONTHS[i])
+            month_header += '<th colspan="7" class="table-header right">%s</th>' % month_anchor
+            month_header += empty_th
+
+        days_header = empty_th
+        for i in range(3):
+            if index + i >= len(MONTHS):
+                days_header += '<th colspan="8">&nbsp;</th>'
+                break
+
+            for day_of_the_week in DAYS_OF_THE_WEEK:
+                days_header += '<th class="bottom-bordered">%s</th>' % day_of_the_week[0]
+            days_header += empty_th
+
+        return (tr % month_header) + (tr % days_header)
+
+    def _days_set(index):
+        rows = ''
+        for i in range(7):  # 7 rows in a month
+            row = empty_th
+
+            for j in range(3):  # 3 months in a row
+                if index + j >= len(MONTHS):
+                    row += '<th colspan="8">&nbsp;</th>'
+                    break
+
+                m = MONTHS[index + j]
+                for k in range(7):  # 7 days in a week
+                    month_day = month_days[m][i][k]
+                    if month_day == 0:
+                        row += empty_th
+                    else:
+                        row += th % month_day
+
+                row += empty_th
+
+            rows += tr % row
+
+        return rows
+
+    calendar_html = tr % '<th colspan="25" class="table-title right">Lemurian Calendar - Year 2018 AS</th>'
+    calendar_html += _month_set(0)
+    calendar_html += _days_set(0)
+    calendar_html += _month_set(3)
+    calendar_html += _days_set(3)
+    calendar_html += _month_set(6)
+    calendar_html += _days_set(6)
+    if any(month_days['Windring (Autumn)'][6][i] != 0 or month_days['Darknight (Winter)'][6][i] != 0 for i in range(7)):
+        calendar_html += empty_row
+
+    return '<table class="padded bordered">%s</table>' % calendar_html
+
+
+def _generate_rulebook_html(log):
+    log('Generating rulebook HTML')
+    rulebook_path = os.path.join(CURRENT_PATH, 'rulebook')
+
+    with open(os.path.join(HTML_TEMPLATES, 'rulebook.html'), encoding='utf8') as f:
+        rulebook_template = f.read().strip()
+
+    abilities = read_json_file(os.path.join(rulebook_path, 'abilities.json'))
+    attributes = read_json_file(os.path.join(rulebook_path, 'attributes.json'), sort=False)
+    buffs = read_json_file(os.path.join(rulebook_path, 'buffs.json'))
+    classes = read_json_file(os.path.join(rulebook_path, 'classes.json'))
+    conditions = read_json_file(os.path.join(rulebook_path, 'conditions.json'))
+    races = read_json_file(os.path.join(rulebook_path, 'races.json'))
+    skills = read_json_file(os.path.join(rulebook_path, 'skills.json'))
+
+    # The rulebook organizes skills into sections by category
+    skill_categories = sorted(list(set(skill['category'] for skill in skills)))
+
+    format_args = {
+        'calendar': _build_calendar(),
+        'skills_nav': _build_skills_nav(skill_categories),
+        'classes_nav': _build_classes_nav(classes),
+        'attributes': _build_attributes(attributes),
+        'races': _build_races(races),
+        'buffs': _build_buffs(buffs),
+        'conditions': _build_conditions(conditions),
+        'skills': _build_skills(skill_categories, skills),
+        'class_hint_unlocks': _build_class_hint_unlocks(classes, skills),
+        'classes': _build_classes(abilities, classes, skills),
+    }
+    rulebook_html = rulebook_template.format(**format_args)
+
+    with open(os.path.join(HTML_GENERATED, 'rulebook.html'), 'w', encoding='utf8') as f:
+        f.write(rulebook_html)
+
+    log('Generated rulebook HTML')
+
+
+def _generate_calendar_months_html(log):
+    tr = '<tr class="thin-bordered">%s</tr>'
+    empty_th = '<th class="thin-bordered">&nbsp;</th>'
+
+    month_days = _get_month_days()
+
+    with open(os.path.join(HTML_TEMPLATES, 'calendar_month.html'), encoding='utf8') as f:
+        calendar_month_template = f.read().strip()
+
+    holidays_path = os.path.join(CURRENT_PATH, 'rulebook', 'holidays.json')
+    holidays_per_month = read_json_file(holidays_path, sort=False)
+
+    for month_season in MONTHS:
+        month = month_season.split(' ')[0]
+        holidays = holidays_per_month[month]
+
+        table = tr % '<th colspan="7" class="table-title left">%s Lemurian Calendar - Year 2018 AS</th>' % month_season
+        table += tr % '<th colspan="7">&nbsp;</th>'
+
+        row = ''
+        for day_of_week in DAYS_OF_THE_WEEK:
+            row += '<th class="table-header thin-bordered">%s</th>' % day_of_week
+        table += tr % row
+
+        for week in range(7):  # 7 rows in a month
+            if all(month_days[month_season][week][i] == 0 for i in range(7)):
+                break
+
+            row = ''
+            for i in range(7):  # 7 days in a week
+                month_day = month_days[month_season][week][i]
+                if month_day == 0:
+                    row += empty_th
+                else:
+                    text = '<div class="top-right">%s</div>' % month_day
+                    if str(month_day) in holidays:
+                        text += '<br><div class="bottom-left small">%s</div>' % holidays[str(month_day)]
+
+                    row += '<th class="large-cell thin-bordered">%s</th>' % text
+
+            table += tr % row
+
+        month_html = '<table class="padded thin-bordered">%s</table>' % table
+        calendar_month_html = calendar_month_template.format(month=month_html)
+
+        with open(os.path.join(CALENDAR_GENERATED, '%s.html' % month), 'w') as f:
+            f.write(calendar_month_html)
+
+
 def _build_abilities_api(clazz, abilities):
     if 'api' not in clazz:
         return '<p>Not implemented</p>'
@@ -376,43 +563,6 @@ def _build_classes_api(abilities, classes):
     return BR_JOIN(class_htmls)
 
 
-def _generate_rulebook_html(log):
-    log('Generating rulebook HTML')
-    rulebook_path = os.path.join(CURRENT_PATH, 'rulebook')
-
-    with open(os.path.join(HTML_TEMPLATES, 'index.html'), encoding='utf8') as f:
-        index_template = f.read().strip()
-
-    abilities = read_json_file(os.path.join(rulebook_path, 'abilities.json'))
-    attributes = read_json_file(os.path.join(rulebook_path, 'attributes.json'), sort=False)
-    buffs = read_json_file(os.path.join(rulebook_path, 'buffs.json'))
-    classes = read_json_file(os.path.join(rulebook_path, 'classes.json'))
-    conditions = read_json_file(os.path.join(rulebook_path, 'conditions.json'))
-    races = read_json_file(os.path.join(rulebook_path, 'races.json'))
-    skills = read_json_file(os.path.join(rulebook_path, 'skills.json'))
-
-    # The rulebook organizes skills into sections by category
-    skill_categories = sorted(list(set(skill['category'] for skill in skills)))
-
-    format_args = {
-        'skills_nav': _build_skills_nav(skill_categories),
-        'classes_nav': _build_classes_nav(classes),
-        'attributes': _build_attributes(attributes),
-        'races': _build_races(races),
-        'buffs': _build_buffs(buffs),
-        'conditions': _build_conditions(conditions),
-        'skills': _build_skills(skill_categories, skills),
-        'class_hint_unlocks': _build_class_hint_unlocks(classes, skills),
-        'classes': _build_classes(abilities, classes, skills),
-    }
-    index_html = index_template.format(**format_args)
-
-    with open(os.path.join(HTML_GENERATED, 'index.html'), 'w', encoding='utf8') as f:
-        f.write(index_html)
-
-    log('Generated rulebook HTML')
-
-
 def _generate_api_html(log):
     log('Generating API HTML')
     rulebook_path = os.path.join(CURRENT_PATH, 'rulebook')
@@ -438,7 +588,10 @@ def _generate_api_html(log):
 def generate_html(log):
     if not os.path.exists(HTML_GENERATED):
         os.makedirs(HTML_GENERATED)
+    if not os.path.exists(CALENDAR_GENERATED):
+        os.makedirs(CALENDAR_GENERATED)
 
     _generate_rulebook_html(log)
+    _generate_calendar_months_html(log)
     _generate_api_html(log)
     shutil.copyfile(os.path.join(HTML_TEMPLATES, 'style.css'), os.path.join(HTML_GENERATED, 'style.css'))
