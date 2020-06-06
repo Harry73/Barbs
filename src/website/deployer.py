@@ -78,20 +78,18 @@ def deploy(log):
         log('Restarting server')
         ssh_client.exec_command('pm2 restart barbs')
 
-    except scp.SCPException:
-        log('Failed to upload files')
-    except paramiko.SSHException:
-        log('Failed to restart the web server')
+    except Exception:
+        raise Exception('Failed uploading files, likely a network error. Regenerate files before re-uploading.')
     else:
-        log('Updated web rulebook')
+        log('Updated website')
     finally:
-        if scp_client:
-            scp_client.close()
-        if ssh_client:
-            ssh_client.close()
-
         # Revert style file
         swap(GENERATED_RULEBOOK_PATH, REMOTE_STYLE_SHEET, LOCAL_STYLE_SHEET)
         swap(GENERATED_API_PATH, REMOTE_STYLE_SHEET, LOCAL_STYLE_SHEET)
         for month_file in os.listdir(GENERATED_CALENDAR_PATH):
             swap(os.path.join(GENERATED_CALENDAR_PATH, month_file), REMOTE_STYLE_SHEET, CALENDAR_LOCAL_STYLE_SHEET)
+
+        if scp_client:
+            scp_client.close()
+        if ssh_client:
+            ssh_client.close()
