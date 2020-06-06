@@ -2409,25 +2409,9 @@
         "requirements": [
             "Stealth: Sneak Rank A",
             "Element Mastery: Dark Rank A",
-            "Magic: Conjuration Rank A",
-			"Magic: Defensive Rank A"
+            "Magic: Conjuration Rank A"
         ],
-        "all_reqs_known": true,
-		"flavor_text": "\"Whoever fights monsters should see to it that in the process he does not become a monster. And if you gaze long enough into an abyss, the abyss will gaze back into you.\"",
-		"description": "The Voidwalker is a rogue that has adapted magic heavily into its suite of tools in order to assist small groups in exercising stealth and safety during travel and site execution. The spell list of the Voidwalker looks a lot like the ability list of the Thief, but is adapted to function for the entire party, providing multiple people with access to Hidden, breaking line of sight, avoiding capture, and evading enemy attacks. An additional layer of defenses is provided by a suite of powerful group defensive spells, covering multiple angles that enemies might attack from. More uniquely, this class provides a heavy amount of mobility in the form of group teleportation, even over very long distances, and is effective at protecting groups during movement by providing access to an ethereal realm where enemies cannot freely interact with them. Ultimately this class's goal is to provide a group with options to avoid combat while infiltrating an enemy fortress or options to cover long distances without needing to walk or use mounts.",
-		"branches": {
-			"Nothingness" :"The Nothingness branch gives options for stealthy movement and avoiding enemies.",
-			"Abyss": "The Abyss branch gives options for teleportation over short and long distances.",
-			"Hollow": "The Hollow branch gives options for defensive spells with a focus on entering the ethereal realm."
-		},
-		"passive": {
-			"Embrace the Void": "Before initiative is rolled, choose two:<ul><li>All allies become Hidden</li><li>All allies get +20 Initiative</li><li>All allies teleport up to 20 ft to empty spaces of their choosing</li><li>All enemies teleport up to 20 ft to empty spaces in random directions</li><ul>"
-		},
-		"abilities": [
-			"Veil of Darkness",
-			"Dimension Door",
-			"Blacklands"
-		]
+        "all_reqs_known": false
     },
     {
         "type": "class",
