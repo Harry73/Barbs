@@ -229,7 +229,7 @@ def validate(log):
         raise Exception('Failed to parse skills.json file, %s' % str(e))
 
     try:
-        holidays_per_month = read_json_file(os.path.join(rulebook_path, 'holidays.json'))
+        holidays_per_month = read_json_file(os.path.join(rulebook_path, 'holidays.json'), sort=False)
     except json.JSONDecodeError as e:
         raise Exception('Failed to parse holidays.json file, %s' % str(e))
 

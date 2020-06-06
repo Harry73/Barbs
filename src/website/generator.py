@@ -2,7 +2,7 @@ import html
 import os
 import shutil
 
-from src.website.common import get_component, read_json_file, href, get_link_skill_req, MONTHS
+from src.website.common import read_json_file, href, get_link_skill_req, MONTHS
 
 
 CURRENT_PATH = os.getcwd()
@@ -333,7 +333,7 @@ def _build_calendar():
     month_days = _get_month_days()
 
     holidays_path = os.path.join(CURRENT_PATH, 'rulebook', 'holidays.json')
-    holidays_per_month = read_json_file(holidays_path)
+    holidays_per_month = read_json_file(holidays_path, sort=False)
 
     def _month_set(index):
         month_header = empty_row + empty_th
@@ -412,7 +412,7 @@ def _generate_rulebook_html(log):
         rulebook_template = f.read().strip()
 
     abilities = read_json_file(os.path.join(rulebook_path, 'abilities.json'))
-    attributes = read_json_file(os.path.join(rulebook_path, 'attributes.json'))
+    attributes = read_json_file(os.path.join(rulebook_path, 'attributes.json'), sort=False)
     buffs = read_json_file(os.path.join(rulebook_path, 'buffs.json'))
     classes = read_json_file(os.path.join(rulebook_path, 'classes.json'))
     conditions = read_json_file(os.path.join(rulebook_path, 'conditions.json'))
@@ -452,7 +452,7 @@ def _generate_calendar_months_html(log):
         calendar_month_template = f.read().strip()
 
     holidays_path = os.path.join(CURRENT_PATH, 'rulebook', 'holidays.json')
-    holidays_per_month = read_json_file(holidays_path)
+    holidays_per_month = read_json_file(holidays_path, sort=False)
 
     for month_season in MONTHS:
         month = month_season.split(' ')[0]

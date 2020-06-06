@@ -3,7 +3,7 @@
 import os
 import json
 
-from src.website.common import ATTRIBUTES_ORDER, get_component, read_json_file
+from src.website.common import read_json_file, get_component
 
 CURRENT_PATH = os.getcwd()
 DATA_PATH = os.path.join(CURRENT_PATH, 'data')
@@ -38,9 +38,6 @@ def process_data_file():
     conditions = read_json_file(os.path.join(RULEBOOK_PATH, 'conditions.json'))
     races = read_json_file(os.path.join(RULEBOOK_PATH, 'races.json'))
     skills = read_json_file(os.path.join(RULEBOOK_PATH, 'skills.json'))
-
-    # Organize abilities by class, branch, and tier
-    abilities.sort(key=lambda a: (a['class'], a['branch'], a['tier']))
 
     lists = {
         'abilities': abilities,

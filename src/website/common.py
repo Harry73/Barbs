@@ -3,12 +3,6 @@ import json
 from collections import OrderedDict
 
 
-ATTRIBUTES_ORDER = [
-    'Vitality', 'Endurance', 'Spirit', 'Recovery', 'Perseverance', 'Sanity', 'Agility', 'Toughness', 'Reflex',
-    'Resistance', 'Fortitude', 'Strength', 'Dexterity', 'Attunement', 'Precision', 'Appeal', 'Intelligence', 'Wisdom',
-    'Composure', 'Focus'
-]
-
 MONTHS = [
     'Icemoon (Winter)',
     'Waterfall (Spring)',
@@ -29,16 +23,11 @@ def href(anchor, text, title=None, fancy=''):
         return '<a href="{anchor}" {fancy}>{text}</a>'.format(anchor=anchor, text=text, fancy=fancy)
 
 
-def read_json_file(file_path):
+def read_json_file(file_path, sort=True):
     with open(file_path, 'r', encoding='utf8') as f:
         components = json.load(f, object_pairs_hook=OrderedDict)
 
-    # Order attributes by pre-defined order
-    if 'attributes' in file_path:
-        return [get_component(attr, components) for attr in ATTRIBUTES_ORDER]
-
-    # If components is a list, sort it by name
-    if isinstance(components, list):
+    if sort:
         return sorted(components, key=lambda item: item['name'])
     else:
         return components
