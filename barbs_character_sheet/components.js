@@ -303,7 +303,7 @@ var BarbsComponents = BarbsComponents || (function () {
         AC_PENETRATION: '%s% armor penetration',
         BUFF_STRIP: 'Strip %s buff(s) from the target',
         BURN_CHANCE: '%s% chance to inflict Burn 20',
-        CRIPPLE_CHANCE: '%s% chance to Cripple [[d100cs>%s]]',
+        CRIPPLE_CHANCE: '%s% chance to Cripple',
         FORCED_MOVEMENT: 'Forcibly move target %s ft',
         LETHALITY: '%s% lethality',
         LIFESTEAL: '%s% lifesteal',
