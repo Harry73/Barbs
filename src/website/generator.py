@@ -6,7 +6,7 @@ import sys
 from src.website.common import get_component, read_json_file, href, get_link_skill_req, MONTHS
 
 
-CURRENT_PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+CURRENT_PATH = os.path.dirname(os.path.realpath(sys.argv[0]))
 HTML_PATH = os.path.join(CURRENT_PATH, 'html')
 HTML_GENERATED = os.path.join(HTML_PATH, 'generated')
 CALENDAR_GENERATED = os.path.join(HTML_GENERATED, 'calendar')

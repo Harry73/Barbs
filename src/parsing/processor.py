@@ -7,7 +7,7 @@ import sys
 from src.website.common import get_component, read_json_file
 
 
-CURRENT_PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+CURRENT_PATH = os.path.dirname(os.path.realpath(sys.argv[0]))
 DATA_PATH = os.path.join(CURRENT_PATH, 'data')
 RULEBOOK_PATH = os.path.join(CURRENT_PATH, 'rulebook')
 DATA_TXT = os.path.join(DATA_PATH, 'data.txt')

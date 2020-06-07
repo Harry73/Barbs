@@ -5,7 +5,7 @@ import sys
 from src.website.common import get_component, read_json_file, get_link_skill_req, MONTHS
 
 
-CURRENT_PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+CURRENT_PATH = os.path.dirname(os.path.realpath(sys.argv[0]))
 
 
 def check_holidays(holidays_per_month):

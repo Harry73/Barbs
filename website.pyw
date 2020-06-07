@@ -11,7 +11,7 @@ from src.website.deployer import deploy
 WIDTH = 1000
 HEIGHT = 600
 
-CURRENT_PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+CURRENT_PATH = os.path.dirname(os.path.realpath(sys.argv[0]))
 
 
 def open_local(log):
