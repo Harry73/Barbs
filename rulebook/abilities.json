@@ -8841,7 +8841,7 @@
         "action": "1 Major Action",
         "cost": "25 mana",
         "range": "60 ft",
-        "duration": "Instant",
+        "duration": "1 minute",
         "description": [
             "You envelop the ground with the magic of the void. Up to 30 target spaces within range that you can see turn black, each becoming a field which blocks AOE effects and treats allied movement within them as dashes. Additionally, any allies standing in black spaces are considered to be in touch range."
         ],
