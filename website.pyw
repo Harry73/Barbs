@@ -1,4 +1,5 @@
 import os
+import sys
 import tkinter as tk
 import traceback
 
@@ -10,9 +11,11 @@ from src.website.deployer import deploy
 WIDTH = 1000
 HEIGHT = 600
 
+CURRENT_PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+
 
 def open_local(log):
-    path = os.path.join(os.getcwd(), 'html', 'generated', 'rulebook.html')
+    path = os.path.join(CURRENT_PATH, 'html', 'generated', 'rulebook.html')
     if not os.path.exists(path):
         log('File not found, generate it first')
         return

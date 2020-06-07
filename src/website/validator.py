@@ -1,7 +1,11 @@
 import json
 import os
+import sys
 
 from src.website.common import get_component, read_json_file, get_link_skill_req, MONTHS
+
+
+CURRENT_PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
 
 
 def check_holidays(holidays_per_month):
@@ -190,8 +194,7 @@ def check_class_ability_links(classes, abilities):
 
 def validate(log):
     log('Validating rulebook files')
-    current_path = os.getcwd()
-    rulebook_path = os.path.join(current_path, 'rulebook')
+    rulebook_path = os.path.join(CURRENT_PATH, 'rulebook')
 
     try:
         abilities = read_json_file(os.path.join(rulebook_path, 'abilities.json'))

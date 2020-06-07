@@ -2,9 +2,10 @@ import getpass
 import os
 import paramiko
 import scp
+import sys
 
 
-CURRENT_PATH = os.getcwd()
+CURRENT_PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
 GENERATED_HTML_PATH = os.path.join(CURRENT_PATH, 'html', 'generated')
 GENERATED_RULEBOOK_PATH = os.path.join(GENERATED_HTML_PATH, 'rulebook.html')
 GENERATED_API_PATH = os.path.join(GENERATED_HTML_PATH, 'api.html')
