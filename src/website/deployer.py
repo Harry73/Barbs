@@ -25,7 +25,7 @@ TIMEOUT_SEC = 10
 def find_ssh_key_path():
     paths_to_try = [
         os.path.join('C:', 'Users', getpass.getuser(), '.ssh', KEY_FILE),
-        os.path.join(os.getcwd(), KEY_FILE),
+        os.path.join(CURRENT_PATH, KEY_FILE),
     ]
 
     for path in paths_to_try:
