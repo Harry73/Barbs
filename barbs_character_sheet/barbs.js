@@ -1724,29 +1724,42 @@ var Barbs = Barbs || (function () {
         if (rolls_to_keep === null) {
             // If not using a sword or axe, the caller has to select what they want to re-roll. Send out the initial
             // roll first so that the caller can select what to re-roll.
-            const message = '&{template:Barbs} {{name=%s}} {{physical=%s}} {{button=%s}}'
-
+            let message = '&{template:Barbs} {{name=%s}} {{physical=%s}} {{button=%s}}'
             let rolls = '[[d10]][[d10]][[d10]][[d10]][[d10]]';
+
             let button_section = '<a href="!barbs ability %s;%s;%s;keep ?{Rolls to keep:}">Pick Rolls to Keep</a>';
-            button_section = button_section.format(ability['class'], ability.name, parameters.join(';'));
+            // Colons don't play well in the href for buttons in chat, for some reason. We don't really need them for
+            // parameters, though, so just take them out.
+            const parameters_string = parameters.join(';').replace(/:/g, '');
+            button_section = button_section.format(ability['class'], ability.name, parameters_string);
 
-            chat(character, message.format(ability.name, rolls, button_section));
+            message = message.format(ability.name, rolls, button_section);
+            LOG.info('Roll: ' + message);
+            chat(character, message);
+            return;
+        }
 
-        } else {
-            const roll = new Roll(character, RollType.PHYSICAL);
+        const roll = new Roll(character, RollType.PHYSICAL);
 
-            const values = rolls_to_keep.split(/[\s,]+/);
+        let values = [];
+        if (rolls_to_keep !== '') {
+            values = rolls_to_keep.split(/[\s,]+/);
             values.forEach(function (value) {
                 roll.add_damage(value, Damage.PHYSICAL);
             });
-
-            roll.add_damage('%sd10'.format(5 - values.length), Damage.PHYSICAL);
-            add_scale_damage(character, roll);
-
-            roll_crit(roll, parameters, function(crit_section) {
-                do_roll(character, ability, roll, parameters, crit_section);
-            });
         }
+
+        if (values.length > 5) {
+            chat(character, 'Too many values to keep given');
+            return;
+        }
+
+        roll.add_damage('%sd10'.format(5 - values.length), Damage.PHYSICAL);
+        add_scale_damage(character, roll);
+
+        roll_crit(roll, parameters, function(crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
