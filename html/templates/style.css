@@ -83,7 +83,8 @@ article {
 }
 
 article p {
-    margin-bottom: 8px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 a.green-link:link {
@@ -114,6 +115,11 @@ img {
 
 /* lists */
 
+ul {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
 ul li {
     margin-left: 20px;
     padding-bottom: 5px;
@@ -128,7 +134,8 @@ ul li ul li {
 }
 
 .spaced {
-    padding-bottom: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 /* tables */

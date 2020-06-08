@@ -112,11 +112,16 @@
             </ul><br>
 
             <a id="Persistent Effects"><h3>Persistent Effects</h3></a>
-            <p>Persistent effects, like a damage multiplying buff that lasts 1 minute, will be included in rolls automatically. The effect will be removed automatically when the turn order progresses through the required number of rounds. Other effects, like empowers, will be removed after they are applied to an attack. If you want to manually end a persistent effect, use the following command:</p>
+            <p>Persistent effects from abilities, like a damage multiplying buff that lasts 1 minute, will be included in rolls automatically. The effect will be removed automatically when the turn order progresses through the required number of rounds. Effects like empowers, which only apply to the "next attack" will be removed after they are applied to an attack once.</p>
+            <p>You can see a list of effects currently on your character using the "List Effects" button on the Characteristics tab of your character sheet. The API will print effects currently on your character, along with a button to let you select one to remove. If you need to remove an effect, use this button and select the effect you want to remove. The API will send a message if the effect was successfully removed.</p>
+            <p>If you have a need to list effects on a character or remove an effect <i>without</i> using the "List Effects" button, the API command syntaxes are as follows:</p>
             <ul>
-                <li class="spaced monospace">!barbs remove_effect &lt;character name&gt;;&lt;effect name&gt;</li>
+                <li>List effects on the character who you are speaking as in chat: <span class="monospace">!barbs list_effects</span></li>
+                <li>List effects on a specific character: <span class="monospace">!barbs list_effects &lt;character name&gt;</span></li>
+                <li>Remove an effect on the character who you are speaking as in chat: <span class="monospace">!barbs remove_effect &lt;effect name&gt;</span></li>
+                <li>Remove an effect on a specific character: <span class="monospace">!barbs remove_effect &lt;character name&gt;;&lt;effect name&gt;</span></li>
             </ul>
-            <p>Note the semicolon. A character’s first name is sufficient. The effect name is usually the name of the ability that generated the effect. The API will send a message if it found and removed the effect.</p><br>
+            <p>Note the semicolon in the last one. A character’s first name is sufficient. The effect name is usually the name of the ability that generated the effect. For the <span class="monospace">remove_effect</span> calls, the API will send a message if it found and removed the effect.</p><br>
 
             <a id="Crit Rolls"><h3>Crit Rolls</h3></a>
             <p>Crit rolls appear a little oddly. A negative crit roll is failure. Zero and above is a success. If a crit roll is a success, the entire crit roll section in chat will be outlined in green. If you hover over the crit roll, the calculation is "what you rolled" minus "the threshold you needed to meet for this to be a crit". The crit threshold is adjusted based on your attributes, items, and abilities’ effects. If you crit, your crit damage modifier is factored into the roll's damage automatically.</p><br>
