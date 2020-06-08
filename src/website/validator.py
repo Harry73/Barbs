@@ -2,10 +2,11 @@ import json
 import os
 import sys
 
-from src.website.common import get_component, read_json_file, get_link_skill_req, MONTHS
+from src.website.common import get_component, get_link_skill_req, MONTHS, read_json_file
 
 
 CURRENT_PATH = os.path.dirname(os.path.realpath(sys.argv[0]))
+RULEBOOK_PATH = os.path.join(CURRENT_PATH, 'rulebook')
 
 
 def check_holidays(holidays_per_month):
@@ -194,45 +195,44 @@ def check_class_ability_links(classes, abilities):
 
 def validate(log):
     log('Validating rulebook files')
-    rulebook_path = os.path.join(CURRENT_PATH, 'rulebook')
 
     try:
-        abilities = read_json_file(os.path.join(rulebook_path, 'abilities.json'))
+        abilities = read_json_file(os.path.join(RULEBOOK_PATH, 'abilities.json'))
     except json.JSONDecodeError as e:
         raise Exception('Failed to parse abilities.json file, %s' % str(e))
 
     try:
-        attributes = read_json_file(os.path.join(rulebook_path, 'attributes.json'))
+        attributes = read_json_file(os.path.join(RULEBOOK_PATH, 'attributes.json'))
     except json.JSONDecodeError as e:
         raise Exception('Failed to parse attributes.json file, %s' % str(e))
 
     try:
-        buffs = read_json_file(os.path.join(rulebook_path, 'buffs.json'))
+        buffs = read_json_file(os.path.join(RULEBOOK_PATH, 'buffs.json'))
     except json.JSONDecodeError as e:
         raise Exception('Failed to parse buffs.json file, %s' % str(e))
 
     try:
-        classes = read_json_file(os.path.join(rulebook_path, 'classes.json'))
+        classes = read_json_file(os.path.join(RULEBOOK_PATH, 'classes.json'))
     except json.JSONDecodeError as e:
         raise Exception('Failed to parse classes.json file, %s' % str(e))
 
     try:
-        conditions = read_json_file(os.path.join(rulebook_path, 'conditions.json'))
+        conditions = read_json_file(os.path.join(RULEBOOK_PATH, 'conditions.json'))
     except json.JSONDecodeError as e:
         raise Exception('Failed to parse conditions.json file, %s' % str(e))
 
     try:
-        races = read_json_file(os.path.join(rulebook_path, 'races.json'))
+        races = read_json_file(os.path.join(RULEBOOK_PATH, 'races.json'))
     except json.JSONDecodeError as e:
         raise Exception('Failed to parse races.json file, %s' % str(e))
 
     try:
-        skills = read_json_file(os.path.join(rulebook_path, 'skills.json'))
+        skills = read_json_file(os.path.join(RULEBOOK_PATH, 'skills.json'))
     except json.JSONDecodeError as e:
         raise Exception('Failed to parse skills.json file, %s' % str(e))
 
     try:
-        holidays_per_month = read_json_file(os.path.join(rulebook_path, 'holidays.json'))
+        holidays_per_month = read_json_file(os.path.join(RULEBOOK_PATH, 'holidays.json'))
     except json.JSONDecodeError as e:
         raise Exception('Failed to parse holidays.json file, %s' % str(e))
 

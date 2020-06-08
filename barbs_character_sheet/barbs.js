@@ -137,7 +137,7 @@ var Barbs = Barbs || (function () {
         }
 
         if (characters.length === 0) {
-            LOG.error('Did not find a character for ' + msg.who);
+            chat(msg, 'Error, did not find a character for ' + msg.who);
             return null;
         } else if (characters.length > 1) {
             // warn, but pray we've got the right ones regardless
@@ -613,7 +613,6 @@ var Barbs = Barbs || (function () {
         if (pieces.length > 2) {
             const character_name = pieces.slice(2).join(' ');
             character = get_character_by_name(character_name);
-
         } else {
             character = get_character(msg);
         }
@@ -622,15 +621,24 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        let response = '';
+        let effects = '';
+        let callback_options = [];
         for (let i = 0; i < persistent_effects.length; i++) {
             if (persistent_effects[i].target === character.name) {
-                response = response = '<li>%s</li>'.format(persistent_effects[i].name);
+                effects = effects + '<li>%s</li>'.format(persistent_effects[i].name);
+                callback_options.push(persistent_effects[i].name);
             }
         }
 
-        const format = '&{template:Barbs} {{name=Effects on %s}} {{effects=%s}}';
-        chat(character, format.format(character.name, response));
+        let format = '&{template:Barbs} {{name=Effects on %s}} {{effects=%s}}';
+        if (callback_options.length > 0) {
+            callback_options = callback_options.join('|').replace(/\'/g, '&#39;');
+
+            format += " {{button=<a href='!barbs remove_effect %s;?{Remove which effect?|%s}'>Remove Effect</a>}}";
+            chat(character, format.format(character.name, effects, character.name, callback_options));
+        } else {
+            chat(character, format.format(character.name, '<li>None</li>'));
+        }
     }
 
 
@@ -638,16 +646,21 @@ var Barbs = Barbs || (function () {
         const pieces = msg.content.split(' ');
         const options = pieces.slice(2).join(' ');
         const option_pieces = options.split(';');
-        const character_name = option_pieces[0];
-        const effect_name = option_pieces[1];
 
-        const character = get_character_by_name(character_name);
-        if (character === null) {
-            return;
+        let character = null;
+        let effect_name = '';
+        if (option_pieces.length > 1) {
+            // both character and effect were specified
+            const character_name = option_pieces[0];
+            effect_name = option_pieces[1];
+            character = get_character_by_name(character_name);
+        } else {
+            // only effect was specified
+            effect_name = option_pieces[0];
+            character = get_character(msg);
         }
 
-        const msg_sender = get_character(msg);
-        if (msg_sender === null) {
+        if (character === null) {
             return;
         }
 
@@ -656,12 +669,12 @@ var Barbs = Barbs || (function () {
                 persistent_effects.splice(i, 1);
                 i--;
 
-                chat(msg_sender, 'Removed effect %s from %s'.format(effect_name, character.name));
+                chat(msg, 'Removed effect %s from %s'.format(effect_name, character.name));
                 return;
             }
         }
 
-        chat(msg_sender, 'Did not find effect %s on %s'.format(effect_name, character.name));
+        chat(msg, 'Did not find effect %s on %s'.format(effect_name, character.name));
     }
 
 
@@ -2411,7 +2424,7 @@ var Barbs = Barbs || (function () {
                     distance_roll.add_damage(2 * parse_int(distances[i]) / 5, Damage.PHYSICAL);
                     distance_roll.copy_multipliers(roll);
                     const rolls_per_type = distance_roll.roll();
-                    format_and_send_roll(character, '%s (%s ft)'.format(ability, distances[i]), distance_roll,
+                    format_and_send_roll(character, '%s (%s ft)'.format(ability.name, distances[i]), distance_roll,
                         rolls_per_type, '');
                 }
 
@@ -3058,7 +3071,6 @@ var Barbs = Barbs || (function () {
     function process_ability(msg) {
         const character = get_character(msg);
         if (character === null) {
-            chat(msg, 'error, unknown character for ' + msg.who);
             return;
         }
 
