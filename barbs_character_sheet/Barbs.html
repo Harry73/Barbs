@@ -2691,14 +2691,14 @@ Desired example
         {{#modified_crit}}
         {{#rollLess() crit_value crit_cutoff}}
         <tr style="background:#702082; color:#FFFFFF">
-            <td class="template_label">Crit Roll:</td>
+            <td class="template_label">Crit ({{crit_chance}}%):</td>
             <td class="template_value">{{modified_crit}}</td>
         </tr>
         {{/rollLess() crit_value crit_cutoff}}
 
         {{#^rollLess() crit_value crit_cutoff}}
         <tr style="background:#702082; color:#FFFFFF; border: 3px solid #3FB315;">
-            <td class="template_label">Crit Roll:</td>
+            <td class="template_label">Crit ({{crit_chance}}%):</td>
             <td class="template_value">{{modified_crit}}</td>
         </tr>
         {{/^rollLess() crit_value crit_cutoff}}

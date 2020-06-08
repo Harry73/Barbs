@@ -1727,10 +1727,9 @@
             "reroll"
         ],
         "api": {
-            "description": "If you are using an axe or sword, specify \"keep_highest\" as a parameter. The API will do 2d10d1 rolls to automatically reroll and take the highest. If you are using another weapon type, this ability requires two phases. First, run the ability without any \"keep\" parameter. It will send a 5d10 roll to chat. Hover over the roll to look at the individual rolls. Second, add the \"keep\" parameter along with a space-separated list of the rolls you would like to keep. The others will be re-rolled - e.g. if you specify 2 rolls to keep, the final roll will be those 2 plus 3d10.",
+            "description": "If you are using an axe or sword, specify \"keep_highest\" as a parameter. The API will do 2d10d1 rolls to automatically reroll and take the highest. If you are using another weapon type, give any other parameters you want for the ability, then use the ability. This will print out 5 d10 rolls, along with a button. Hit the button and provide a space- or comma-separated list of the roll values you want to keep. The API will then perform the full ability, keeping the rolls you specified and re-rolling others, using whatever parameters you initially specified.",
             "examples": [
-                "keep_highest",
-                "keep <roll value to keep> <roll value to keep> ..."
+                "keep_highest"
             ]
         }
     },

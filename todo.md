@@ -1,12 +1,5 @@
 Ian's TODO list
 
-* Check that hidden stats that we roll a d100 for won't try to use a negative cs
-* Un-over-engineer crits. Just do a d100, and put the crit chance in the text output, i.e.:
-    Crit (40% chance): <d100 result>
-* Put an optional button in rolls. This can open the door for some cool things
-    * button in list effects response, that lets you select one from the list and remove it
-    * button on that ability where you have to select which rolls to keep
-
 * Item handling
     * Make decent classifications for item affixes
         Damage, damage multiplier, stat bonus, initiative bonus, concentration bonus, skill bonus

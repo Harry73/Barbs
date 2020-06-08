@@ -36,9 +36,9 @@ var Barbs = Barbs || (function () {
     const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
     const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s)+1]]]]}}';
 
-    const roll_format = '&{template:Barbs} {{name=%s}} %s %s %s';
+    const roll_format = '&{template:Barbs} {{name=%s}} %s %s %s %s';
     const damage_section_format = '{{%s=[[%s]]}}';
-    const crit_section_format = '{{crit_value=[[%s]]}} {{crit_cutoff=[[%s]]}} {{modified_crit=[[%s-%s]]}}';
+    const crit_section_format = '{{crit_value=[[%s]]}} {{crit_cutoff=[[%s]]}} {{crit_chance=%s}} {{modified_crit=[[%s-%s]]}}';
     const effects_section_format = '{{effects=%s}}';
 
     const ability_block_format = '&{template:5eDefault} {{spell=1}} {{title=%s}} {{subheader=%s}} 0 {{spellshowdesc=1}} {{spelldescription=%s }} 0 0 0 0 0 0 0';
@@ -859,14 +859,14 @@ var Barbs = Barbs || (function () {
         }
 
         const crit_chance = roll.get_crit_chance();
+        const crit_compare_value = 100 - crit_chance + 1;
 
-        chat(roll.character, percent_format.format('Critical Hit Chance', 'Crit', crit_chance), function (results) {
+        chat(roll.character, '[[d100]]', function (results) {
             const rolls = results[0].inlinerolls;
-            const crit_compare_value = rolls[0].results.total;
-            const rolled_value_for_crit = rolls[1].results.total;
+            const rolled_value_for_crit = rolls[0].results.total;
             roll.crit = (rolled_value_for_crit >= crit_compare_value);
 
-            const crit_section = crit_section_format.format(rolled_value_for_crit, crit_compare_value,
+            const crit_section = crit_section_format.format(rolled_value_for_crit, crit_compare_value, crit_chance,
                                                             rolled_value_for_crit, crit_compare_value);
             handler(crit_section);
         });
@@ -897,16 +897,16 @@ var Barbs = Barbs || (function () {
         }
 
         const rolls_per_type = roll.roll();
-        format_and_send_roll(character, ability, roll, rolls_per_type, crit_section);
+        format_and_send_roll(character, ability.name, roll, rolls_per_type, crit_section);
         if (do_finalize) {
             finalize_roll(character, roll, parameters);
         }
     }
 
 
-    function format_and_send_roll(character, ability, roll, rolls_per_type, crit_section) {
+    function format_and_send_roll(character, roll_title, roll, rolls_per_type, crit_section) {
         assert_not_null(character, 'format_and_send_roll() character');
-        assert_not_null(ability, 'format_and_send_roll() ability');
+        assert_not_null(roll_title, 'format_and_send_roll() roll_title');
         assert_not_null(roll, 'format_and_send_roll() roll');
         assert_not_null(rolls_per_type, 'format_and_send_roll() rolls_per_type');
         assert_not_null(crit_section, 'format_and_send_roll() crit_section');
@@ -926,14 +926,14 @@ var Barbs = Barbs || (function () {
 
             let formatted_hidden_stat = hidden_stat_format.format(hidden_stat_value);
             if (formatted_hidden_stat.includes('chance')) {
-
-                formatted_hidden_stat = formatted_hidden_stat + ' [[d100cs>[[100-(%s)+1]]]]'.format(hidden_stat_value);
+                const value = Math.min(101, hidden_stat_value);
+                formatted_hidden_stat = formatted_hidden_stat + ' [[d100cs>[[100-(%s)+1]]]]'.format(value);
             }
             effects.push('<li>%s</li>'.format(formatted_hidden_stat));
         }
 
         const effects_section = effects_section_format.format(effects.join(''));
-        const msg = roll_format.format(ability['name'], damage_section, crit_section, effects_section);
+        const msg = roll_format.format(roll_title, damage_section, crit_section, effects_section);
 
         LOG.info('Roll: ' + msg);
         chat(character, msg);
@@ -1141,7 +1141,7 @@ var Barbs = Barbs || (function () {
 
             // Everything - items, persistent effects - should apply to the main and secondary roll here. I'm losing
             // the parameters for the secondary roll though, which might matter eventually. For now it's fine.
-            if (!add_extras(roll.character, roll, RollTime.DEFAULT, parameters)) {
+            if (!add_extras(roll.character, roll, RollTime.DEFAULT, parameters, '')) {
                 return false;
             }
 
@@ -1408,7 +1408,7 @@ var Barbs = Barbs || (function () {
                 return true;
             });
 
-        chat(character, ability_block_format.format(ability['name'], ability['class'], ability.description.join('\n')));
+        chat(character, ability_block_format.format(ability['name'], ability['class'], ability['description'].join('\n')));
     }
 
 
@@ -1497,7 +1497,7 @@ var Barbs = Barbs || (function () {
                 roll.copy_multipliers(dummy_roll);
                 roll.copy_effects(dummy_roll);
 
-                if (!add_extras(character, dummy_roll, RollTime.POST_CRIT, parameters)) {
+                if (!add_extras(character, dummy_roll, RollTime.POST_CRIT, parameters, crit_section)) {
                     return;
                 }
 
@@ -1506,7 +1506,7 @@ var Barbs = Barbs || (function () {
                 }
 
                 const rolls_per_type = roll.roll();
-                format_and_send_roll(character, '%s (%s)'.format(ability, damage_types[i]), roll, rolls_per_type,
+                format_and_send_roll(character, '%s (%s)'.format(ability.name, damage_types[i]), roll, rolls_per_type,
                                      crit_section);
             }
 
@@ -1571,7 +1571,7 @@ var Barbs = Barbs || (function () {
 
         const dummy_roll = new Roll(character, RollType.PHYSICAL);
         roll_crit(dummy_roll, parameters, function (crit_section) {
-            if (!add_extras(character, dummy_roll, RollTime.POST_CRIT, parameters)) {
+            if (!add_extras(character, dummy_roll, RollTime.POST_CRIT, parameters, crit_section)) {
                 return;
             }
 
@@ -1586,8 +1586,8 @@ var Barbs = Barbs || (function () {
                 roll.copy_effects(dummy_roll);
 
                 const rolls_per_type = roll.roll();
-                format_and_send_roll(character, '%s (%sd4)'.format(ability, dice_divisions[i]), roll,
-                    rolls_per_type, crit_section);
+                format_and_send_roll(character, '%s (%sd4)'.format(ability.name, dice_divisions[i]), roll,
+                                     rolls_per_type, crit_section);
             }
 
             finalize_roll(character, dummy_roll, parameters);
@@ -1723,16 +1723,19 @@ var Barbs = Barbs || (function () {
         const rolls_to_keep = get_parameter('keep', parameters);
         if (rolls_to_keep === null) {
             // If not using a sword or axe, the caller has to select what they want to re-roll. Send out the initial
-            // roll first so that they can select what to re-roll.
-            const roll = new Roll(character, RollType.PHYSICAL);
-            roll.add_damage('5d10', Damage.PHYSICAL);
-            const rolls_per_type = roll.roll();
-            format_and_send_roll(character, ability, roll, rolls_per_type, '');
+            // roll first so that the caller can select what to re-roll.
+            const message = '&{template:Barbs} {{name=%s}} {{physical=%s}} {{button=%s}}'
+
+            let rolls = '[[d10]][[d10]][[d10]][[d10]][[d10]]';
+            let button_section = '<a href="!barbs ability %s;%s;%s;keep ?{Rolls to keep:}">Pick Rolls to Keep</a>';
+            button_section = button_section.format(ability['class'], ability.name, parameters.join(';'));
+
+            chat(character, message.format(ability.name, rolls, button_section));
 
         } else {
             const roll = new Roll(character, RollType.PHYSICAL);
 
-            const values = rolls_to_keep.split(' ');
+            const values = rolls_to_keep.split(/[\s,]+/);
             values.forEach(function (value) {
                 roll.add_damage(value, Damage.PHYSICAL);
             });
@@ -1773,7 +1776,7 @@ var Barbs = Barbs || (function () {
         roll_1.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
         roll_1.add_effect('Frozen');
         roll_crit(roll, parameters, function (crit_section) {
-            do_roll(character, '%s (5 ft)'.format(ability), roll_1, parameters, crit_section, /*do_finalize=*/false);
+            do_roll(character, '%s (5 ft)'.format(ability.name), roll_1, parameters, crit_section, /*do_finalize=*/false);
         });
 
         const roll_2 = new Roll(character, RollType.MAGIC);
@@ -1781,14 +1784,14 @@ var Barbs = Barbs || (function () {
         roll_2.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
         roll_1.add_effect('Slowed');
         roll_crit(roll, parameters, function (crit_section) {
-            do_roll(character, '%s (10 ft)'.format(ability), roll_2, parameters, crit_section, /*do_finalize=*/false);
+            do_roll(character, '%s (10 ft)'.format(ability.name), roll_2, parameters, crit_section, /*do_finalize=*/false);
         });
 
         const roll_3 = new Roll(character, RollType.MAGIC);
         roll_3.add_damage('4d8', Damage.ICE);
         roll_3.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
         roll_crit(roll, parameters, function (crit_section) {
-            do_roll(character, '%s (15 ft)'.format(ability), roll_3, parameters, crit_section, /*do_finalize=*/true);
+            do_roll(character, '%s (15 ft)'.format(ability.name), roll_3, parameters, crit_section, /*do_finalize=*/true);
         });
     }
 

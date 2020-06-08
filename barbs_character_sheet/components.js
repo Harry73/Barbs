@@ -305,7 +305,7 @@ var BarbsComponents = BarbsComponents || (function () {
         BURN_CHANCE: '%s% chance to inflict Burn 20',
         CRIPPLE_CHANCE: '%s% chance to Cripple',
         FORCED_MOVEMENT: 'Forcibly move target %s ft',
-        LETHALITY: '%s% lethality',
+        LETHALITY: '%s% lethality chance',
         LIFESTEAL: '%s% lifesteal',
         PARALYZE: '%s% chance to Paralyze',
         REACH: '+%s ft reach',
