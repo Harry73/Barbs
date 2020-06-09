@@ -10,6 +10,7 @@ var Barbs = Barbs || (function () {
     const assert_type = BarbsComponents.assert_type;
     const assert_starts_with = BarbsComponents.assert_starts_with;
     const parse_int = BarbsComponents.parse_int;
+    const trim_percent = BarbsComponents.trim_percent;
     const LOG = BarbsComponents.LOG;
     const characters_by_owner = BarbsComponents.characters_by_owner;
     const Stat = BarbsComponents.Stat;
@@ -17,10 +18,11 @@ var Barbs = Barbs || (function () {
     const Skill = BarbsComponents.Skill;
     const classes = BarbsComponents.classes;
     const Damage = BarbsComponents.Damage;
+    const get_damage_from_type = BarbsComponents.get_damage_from_type;
     const RollType = BarbsComponents.RollType;
     const RollTime = BarbsComponents.RollTime;
     const Roll = BarbsComponents.Roll;
-    const ITEMS = BarbsComponents.ITEMS;
+    const Item = BarbsComponents.Item;
     const Character = BarbsComponents.Character;
 
 
@@ -499,7 +501,9 @@ var Barbs = Barbs || (function () {
             }
 
             // Increase crit chance, crit damage mod, concentration bonus, and initiative bonus by effectiveness
-            roll.add_crit_chance(effectiveness * fake_roll.crit_chance);
+            if (Stat.CRITICAL_HIT_CHANCE.name in roll.stats) {
+                roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, effectiveness * fake_roll.stats[Stat.CRITICAL_HIT_CHANCE.name]);
+            }
             roll.add_crit_damage_mod(effectiveness * 100 * (fake_roll.crit_damage_mod - 2));
             roll.add_concentration_bonus(effectiveness * fake_roll.concentration_bonus);
             roll.add_initiative_bonus(effectiveness * fake_roll.initiative_bonus);
@@ -569,10 +573,7 @@ var Barbs = Barbs || (function () {
         let effectiveness = 1;
         let effectiveness_string = get_parameter('effectiveness', parameters);
         if (effectiveness_string !== null) {
-            if (effectiveness_string.endsWith('%')) {
-                effectiveness_string = effectiveness_string.substring(0, effectiveness_string.length - 1);
-            }
-
+            effectiveness_string = trim_percent(effectiveness_string);
             effectiveness = 1 + parse_int(effectiveness_string) / 100;
             if (Number.isNaN(effectiveness)) {
                 chat(caster, 'Non-numeric effectiveness "%s"'.format(effectiveness_string));
@@ -744,20 +745,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function get_damage_type(type) {
-        const damage_types = Object.keys(Damage);
-        for (let i = 0; i < damage_types.length; i++) {
-            const damage_type = damage_types[i];
-            const damage_type_string = Damage[damage_type];
-            if (type === damage_type_string) {
-                return damage_type;
-            }
-        }
-
-        return null;
-    }
-
-
     // Iterate through the character's items and add any damage bonuses or multipliers to the roll
     function add_items_to_roll(character, roll, roll_time) {
         assert_not_null(character, 'add_items_to_roll() character');
@@ -765,8 +752,10 @@ var Barbs = Barbs || (function () {
         assert_not_null(roll_time, 'add_items_to_roll() roll_time');
 
         _.each(character.items, function (item) {
+            LOG.trace('Applying item "%s"'.format(item.name));
             for (let i = 0; i < item.effects.length; i++) {
                 if (item.effects[i].roll_time === roll_time) {
+                    LOG.trace('Applying effect %s from item "%s"'.format(i, item.name));
                     item.effects[i].apply(roll);
                 }
             }
@@ -974,7 +963,7 @@ var Barbs = Barbs || (function () {
         const pieces = parameter.split(' ');
         const damage = pieces[1];
 
-        const type = get_damage_type(pieces[2]);
+        const type = get_damage_from_type(pieces[2]);
         if (type === null) {
             chat(roll.character, 'Unrecognized damage type "%s"'.format(pieces[2]));
             return false;
@@ -1002,7 +991,7 @@ var Barbs = Barbs || (function () {
             return false;
         }
 
-        const type = get_damage_type(pieces[2]);
+        const type = get_damage_from_type(pieces[2]);
         if (type === null) {
             chat(roll.character, 'Unrecognized damage type "%s"'.format(pieces[2]));
             return false;
@@ -1078,7 +1067,7 @@ var Barbs = Barbs || (function () {
             return true;
         }
 
-        roll.add_crit_chance(10);
+        roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, 10);
 
         const empowered = get_parameter('empowered', parameters);
         if (empowered !== null) {
@@ -1156,7 +1145,12 @@ var Barbs = Barbs || (function () {
     // parameter handlers. The occurs strictly after we've determined if the roll is a crit, in case that matters.
     function mirror_mage_alter_course(roll, parameter, parameters, crit_section) {
         const character = roll.character;
-        const redirects = parse_int(parameter.split(' ')[1]);
+        const parameter_pieces = parameter.split(' ');
+        const redirects = parse_int(parameter_pieces[1]);
+        let source = 'self';
+        if (parameter_pieces.length > 2) {
+            source = parameter_pieces[2];
+        }
 
         // Extract damages from the original roll and send them to chat to actually do the roll.
         let fake = '';
@@ -1199,7 +1193,7 @@ var Barbs = Barbs || (function () {
                 }
 
                 // Add the multiplier for the redirect number
-                redirected_roll.add_multiplier(redirect_num * 0.5, Damage.ALL, 'self');
+                redirected_roll.add_multiplier(redirect_num * 0.5, Damage.ALL, source);
 
                 const rolls_per_type = redirected_roll.roll();
                 // TODO: plumb the ability name here somehow, so we can put it in the title
@@ -1254,7 +1248,7 @@ var Barbs = Barbs || (function () {
         }
 
         // If the parameter is present, we always add the bonus crit chance
-        roll.add_crit_chance(50);
+        roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, 50);
         return true;
     }
 
@@ -1354,23 +1348,17 @@ var Barbs = Barbs || (function () {
         }
 
         const pieces = msg.content.split(' ');
-        const options = pieces.slice(2).join(' ');
-        const option_pieces = options.split(';');
+        const item_slot = pieces[2];
+        const options = pieces.slice(3).join(' ');
+        const option_pieces = options.split('|');
         const item_name = option_pieces[0];
-        const parameters = option_pieces.slice(1);
+        const parameters = option_pieces[1].split(';');
         parameters.forEach(function (parameter, index, self) {
             self[index] = parameter.trim();
         });
 
         // Find the item object for the name
-        let item = null;
-        for (let i = 0; i < ITEMS.length; i++) {
-            if (item_name === ITEMS[i].name) {
-                item = ITEMS[i];
-                break;
-            }
-        }
-
+        const item = Item.get_item(item_name, item_slot);
         if (item === null) {
             chat(character, 'Error, could not find item with name ' + item_name);
             return;
@@ -1384,7 +1372,7 @@ var Barbs = Barbs || (function () {
         item.damage_scaling(character, roll);
 
         roll_crit(roll, parameters, function (crit_section) {
-            do_roll(character, item_name, roll, parameters, crit_section);
+            do_roll(character, item, roll, parameters, crit_section);
         });
     }
 
@@ -1478,7 +1466,7 @@ var Barbs = Barbs || (function () {
 
         // Check that we understand the given damage types
         for (let i = 0; i < damage_types.length; i++) {
-            const damage_type = get_damage_type(damage_types[i]);
+            const damage_type = get_damage_from_type(damage_types[i]);
             if (damage_type === null) {
                 chat(character, 'Unrecognized damage_type "%s"'.format(damage_types[i]));
                 return;
@@ -1626,7 +1614,7 @@ var Barbs = Barbs || (function () {
     function assassin_focus(character, ability, parameters) {
         add_persistent_effect(character, ability, parameters, character, Duration.SINGLE_USE(), Ordering(), RollType.ALL, RollTime.DEFAULT,
             function (character, roll, parameters) {
-                roll.add_crit_chance(30);
+                roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, 30);
                 return true;
             });
 
@@ -1844,7 +1832,7 @@ var Barbs = Barbs || (function () {
     function daggerspell_hidden_blade(character, ability, parameters) {
         add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(), RollType.PHYSICAL, RollTime.DEFAULT,
             function (char, roll, parameters) {
-                roll.add_crit_chance(15);
+                roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, 15);
 
                 const empowered = get_parameter('empowered', parameters);
                 if (empowered !== null) {
@@ -2399,14 +2387,14 @@ var Barbs = Barbs || (function () {
             // TODO: this should really modify the existing effect rather than adding a new one
             add_persistent_effect(character, ability, parameters, character, Duration.SINGLE_USE(), Ordering(), RollType.PHYSICAL, RollTime.DEFAULT,
                 function (character, roll, parameters) {
-                    roll.add_crit_chance(10);
+                    roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, 10);
                     roll.add_crit_damage_mod(25);
                     return true;
                 });
         } else {
             add_persistent_effect(character, ability, parameters, character, Duration.SINGLE_USE(), Ordering(), RollType.PHYSICAL, RollTime.DEFAULT,
                 function (character, roll, parameters) {
-                    roll.add_crit_chance(20);
+                    roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, 20);
                     roll.add_crit_damage_mod(50);
                     return true;
                 });
@@ -2737,7 +2725,7 @@ var Barbs = Barbs || (function () {
         add_scale_damage(character, roll);
 
         if (stance === 'run'){
-            roll.add_crit_chance(20);
+            roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, 20);
         } else if (stance === 'hit'){
             roll.add_crit_damage_mod(100);
         } else {

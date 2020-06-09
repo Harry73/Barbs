@@ -59,6 +59,15 @@ var BarbsComponents = BarbsComponents || (function () {
     }
 
 
+    function trim_percent(string) {
+        string = string.trim();
+        if (string.endsWith('%')) {
+            return string.substring(0, string.length - 1);
+        } else {
+            return string;
+        }
+    }
+
     const LogLevel = {
         TRACE: 0,
         DEBUG: 1,
@@ -298,6 +307,29 @@ var BarbsComponents = BarbsComponents || (function () {
     };
 
 
+    // Used when constructing items
+    const STAT_ACROS = {
+        'cr:': Stat.CONDITION_RESIST,
+        'mr:': Stat.MAGIC_RESIST,
+        'ev:': Stat.EVASION,
+        'mv:': Stat.MOVEMENT_SPEED,
+    };
+
+
+    function get_stat_for_attribute(attr_tla) {
+        const keys = Object.keys(Stat);
+        for (let i = 0; i < keys.length; i++) {
+            const stat = keys[i];
+            const stat_object = Stat[stat];
+            if (stat_object.attr_tla.toLowerCase() === attr_tla.toLowerCase()) {
+                return stat_object;
+            }
+        }
+
+        return null;
+    }
+
+
     const HiddenStat = {
         ACCURACY: '%s% accuracy',
         AC_PENETRATION: '%s% armor penetration',
@@ -324,6 +356,36 @@ var BarbsComponents = BarbsComponents || (function () {
         LIGHTNING_MAGIC_PENETRATION: 's% lightning magic penetration',
         LIGHT_MAGIC_PENETRATION: '%s% light magic penetration',
         DARK_MAGIC_PENETRATION: '%s% dark magic penetration',
+    };
+
+
+    // Used when constructing items
+    const HIDDEN_STAT_ACROS = {
+        'accuracy:': HiddenStat.ACCURACY,
+        'ac pen:': HiddenStat.AC_PENETRATION,
+        'buff strip:': HiddenStat.BUFF_STRIP,
+        'burn chance:': HiddenStat.BURN_CHANCE,
+        'cripple chance:': HiddenStat.CRIPPLE_CHANCE,
+        'forced movement:': HiddenStat.FORCED_MOVEMENT,
+        'lethality:': HiddenStat.LETHALITY,
+        'lifesteal:': HiddenStat.LIFESTEAL,
+        'paralyze chance:': HiddenStat.PARALYZE,
+        'reach:': HiddenStat.REACH,
+        'unblockable chance:': HiddenStat.UNBLOCKABLE_CHANCE,
+
+        'reduce evasion:': HiddenStat.REDUCE_EVASION,
+        'reduce cr:': HiddenStat.REDUCE_CR,
+        'reduce ac:': HiddenStat.REDUCE_AC,
+
+        'general magic pen:': HiddenStat.GENERAL_MAGIC_PENETRATION,
+        'fire magic pen:': HiddenStat.FIRE_MAGIC_PENETRATION,
+        'water magic pen:': HiddenStat.WATER_MAGIC_PENETRATION,
+        'earth magic pen:': HiddenStat.EARTH_MAGIC_PENETRATION,
+        'air magic pen:': HiddenStat.AIR_MAGIC_PENETRATION,
+        'ice magic pen:': HiddenStat.ICE_MAGIC_PENETRATION,
+        'lightning magic pen:': HiddenStat.LIGHTNING_MAGIC_PENETRATION,
+        'light magic pen:': HiddenStat.LIGHT_MAGIC_PENETRATION,
+        'dark magic pen:': HiddenStat.DARK_MAGIC_PENETRATION,
     };
 
 
@@ -7337,6 +7399,20 @@ var BarbsComponents = BarbsComponents || (function () {
     };
 
 
+    function get_damage_from_type(type) {
+        const damage_types = Object.keys(Damage);
+        for (let i = 0; i < damage_types.length; i++) {
+            const damage_type = damage_types[i];
+            const damage_type_string = Damage[damage_type];
+            if (type === damage_type_string) {
+                return damage_type_string;
+            }
+        }
+
+        return null;
+    }
+
+
     // Type of a roll can vary. For example, an attack made with a melee weapon will result in a "physical" roll.
     // An spell attack results in a "magic" roll. Certain effects should only be applied to certain rolls. For example,
     // bonus damage on a melee weapon should not be applied to magic-type rolls.
@@ -7370,6 +7446,33 @@ var BarbsComponents = BarbsComponents || (function () {
     RollType.ALL = 'roll_type_all';
 
 
+    function get_roll_type(type) {
+        switch (type.toLowerCase()) {
+            case 'physical': return RollType.PHYSICAL;
+            case 'psychic': return RollType.PSYCHIC;
+            case 'magic': return RollType.MAGIC;
+            case 'healing': return RollType.HEALING;
+            case 'all': return RollType.ALL;
+            default: return null;
+        }
+    }
+
+
+    function guess_applicable_roll_type_from_damage(damage_type) {
+        if (damage_type === Damage.PHYSICAL) {
+            return RollType.PHYSICAL;
+        } else if (damage_type === Damage.PSYCHIC) {
+            return RollType.PSYCHIC;
+        } else if (damage_type === Damage.HEALING) {
+            return RollType.HEALING;
+        } else if (damage_type === Damage.ALL || damage_type === Damage.ALL_MAGIC) {
+            return null;
+        } else {
+            return RollType.MAGIC;
+        }
+    }
+
+
     // Roll time as a concept exists because of crits. Some effects only apply if a roll is a crit, but we need to
     // actually do the crit roll first to figure that out. Some effects modify the crit chance, so they need to be
     // applied before we do the crit roll.
@@ -7400,7 +7503,6 @@ var BarbsComponents = BarbsComponents || (function () {
             this.initiative_bonus = 0;
 
             this.crit = false;
-            this.crit_chance = 0;
             this.crit_damage_mod = 2;
             this.should_apply_crit = (roll_type === RollType.PHYSICAL || roll_type === RollType.ALL);
 
@@ -7475,11 +7577,6 @@ var BarbsComponents = BarbsComponents || (function () {
             } else {
                 this.skills[skill.name] = '%s+%s'.format(this.skills[skill.name], bonus);
             }
-        }
-
-        // "amount" should be passed in as a regular number, e.g. pass "10" for a 10% increase
-        add_crit_chance(amount) {
-            this.crit_chance += amount;
         }
 
         // "amount" should be passed in as a regular number, e.g. pass "10" for a 10% increase
@@ -7617,9 +7714,6 @@ var BarbsComponents = BarbsComponents || (function () {
         get_crit_chance() {
             let final_crit_chance = this.character.get_stat(Stat.CRITICAL_HIT_CHANCE);
 
-            // Crit chance may be upped by abilities. Add in that amount.
-            final_crit_chance += this.crit_chance;
-
             // Crit chance may be upped by items. Add in that amount.
             if (Stat.CRITICAL_HIT_CHANCE.name in this.stats) {
                 final_crit_chance += eval(this.stats[Stat.CRITICAL_HIT_CHANCE.name]);
@@ -7695,42 +7789,31 @@ var BarbsComponents = BarbsComponents || (function () {
 
     const ItemScaler = {
         MELEE: function (character, roll) {
+            assert_not_null(character, 'ItemScaler::MELEE character');
+            assert_not_null(roll, 'ItemScaler::MELEE roll');
+
             roll.add_damage(character.get_stat(Stat.MELEE_DAMAGE), Damage.PHYSICAL);
         },
 
         RANGED_FINE: function (character, roll) {
+            assert_not_null(character, 'ItemScaler::RANGED_FINE character');
+            assert_not_null(roll, 'ItemScaler::RANGED_FINE roll');
+
             roll.add_damage(character.get_stat(Stat.RANGED_FINE_DAMAGE), Damage.PHYSICAL);
         },
 
         // This one has to be called with a parameter to create the function
-        OTHER: function (stat) {
+        OTHER: function (stat, damage_type) {
+            assert_not_null(stat, 'ItemScaler::Other stat');
+            assert_not_null(damage_type, 'ItemScaler::Other damage_type');
+
             return function (character, roll) {
-                roll.add_damage(character.get_stat(stat), Damage.PHYSICAL);
+                roll.add_damage(character.get_stat(stat), damage_type);
             }
         },
 
         NONE: function () {},
     };
-
-
-    class Item {
-        constructor(name, type, slot, base_damage, damage_scaling, effects) {
-            assert_not_null(name, 'Item::new() name');
-            assert_not_null(type, 'Item::new() type ' + name);
-            assert_not_null(slot, 'Item::new() slot ' + name);
-            assert_not_null(base_damage, 'Item::new() base_damage ' + name);
-            assert_not_null(damage_scaling, 'Item::new() damage_scaling ' + name);
-            assert_not_null(effects, 'Item::new() effects ' + name);
-
-            this._type = 'Item';
-            this.name = name;
-            this.type = type;
-            this.slot = slot;
-            this.base_damage = base_damage;
-            this.damage_scaling = damage_scaling;
-            this.effects = effects;
-        }
-    }
 
 
     class Effect {
@@ -7751,7 +7834,7 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(applicable_roll_type, 'stat_effect() applicable_roll_type');
 
             return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
-                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     roll.add_stat_bonus(stat, mod);
                 }
             });
@@ -7763,7 +7846,7 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(applicable_roll_type, 'hidden_stat() applicable_roll_type');
 
             return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
-                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     roll.add_hidden_stat(hidden_stat, value);
                 }
             });
@@ -7800,21 +7883,13 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(applicable_roll_type, 'roll_damage(), applicable_roll_type');
 
             return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
-                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
+                    if (dmg.includes('U')) {
+                        const monk_mastery = roll.character.get_monk_mastery();
+                        dmg = dmg.replace(/U/g, monk_mastery);
+                    }
+
                     roll.add_damage(dmg, dmg_type);
-                }
-            });
-        }
-
-        static monk_damage(dmg, dmg_type, applicable_roll_type) {
-            assert_not_null(dmg, 'monk_damage(), dmg');
-            assert_not_null(dmg_type, 'monk_damage(), dmg_type');
-            assert_not_null(applicable_roll_type, 'monk_damage(), applicable_roll_type');
-
-            return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
-                if (RollType.is_type(roll.roll_type, applicable_roll_type)) {
-                    const monk_mastery = roll.character.get_monk_mastery();
-                    roll.add_damage(dmg.replace(/U/g, monk_mastery), dmg_type);
                 }
             });
         }
@@ -7825,7 +7900,7 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(applicable_roll_type, 'roll_multiplier() applicable_roll_type');
 
             return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
-                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     roll.add_multiplier(value, dmg_type, 'self');
                 }
             });
@@ -7836,7 +7911,7 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(applicable_roll_type, 'roll_effect() applicable_roll_type');
 
             return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
-                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     roll.add_effect(effect);
                 }
             });
@@ -7848,7 +7923,7 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(applicable_roll_type, 'crit_hidden_stat() applicable_roll_type');
 
             return new Effect(RollTime.POST_CRIT, applicable_roll_type, function (roll) {
-                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     if (roll.should_apply_crit && roll.crit) {
                         roll.add_hidden_stat(hidden_stat, value);
                     }
@@ -7862,9 +7937,23 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(applicable_roll_type, 'crit_damage() applicable_roll_type');
 
             return new Effect(RollTime.POST_CRIT, applicable_roll_type, function (roll) {
-                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     if (roll.should_apply_crit && roll.crit) {
                         roll.add_damage(dmg, dmg_type);
+                    }
+                }
+            });
+        }
+
+        static crit_multiplier(value, dmg_type, applicable_roll_type) {
+            assert_not_null(value, 'crit_multiplier() value');
+            assert_not_null(dmg_type, 'crit_multiplier() dmg_type');
+            assert_not_null(applicable_roll_type, 'crit_multiplier() applicable_roll_type');
+
+            return new Effect(RollTime.POST_CRIT, applicable_roll_type, function (roll) {
+                if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
+                    if (roll.should_apply_crit && roll.crit) {
+                        roll.add_multiplier(value, dmg_type, 'self');
                     }
                 }
             });
@@ -7875,7 +7964,7 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(applicable_roll_type, 'crit_effect() applicable_roll_type');
 
             return new Effect(RollTime.POST_CRIT, applicable_roll_type, function (roll) {
-                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     if (roll.should_apply_crit && roll.crit) {
                         roll.add_effect(effect);
                     }
@@ -7888,10 +7977,428 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(applicable_roll_type, 'crit_damage_mod() applicable_roll_type');
 
             return new Effect(RollTime.DEFAULT, RollType.PHYSICAL, function (roll) {
-                if (applicable_roll_type === RollType.ALL || applicable_roll_type === roll.roll_type) {
+                if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     roll.add_crit_damage_mod(amount);
                 }
             });
+        }
+    }
+
+
+    class Item {
+        constructor(name, type, slot, base_damage, damage_scaling, effects) {
+            assert_not_null(name, 'Item::new() name');
+            assert_not_null(type, 'Item::new() type ' + name);
+            assert_not_null(slot, 'Item::new() slot ' + name);
+            assert_not_null(base_damage, 'Item::new() base_damage ' + name);
+            assert_not_null(damage_scaling, 'Item::new() damage_scaling ' + name);
+            assert_not_null(effects, 'Item::new() effects ' + name);
+
+            this._type = 'Item';
+            this.name = name;
+            this.type = type;
+            this.slot = slot;
+            this.base_damage = base_damage;
+            this.damage_scaling = damage_scaling;
+            this.effects = effects;
+        }
+
+        static get_item(item_string, slot) {
+            if (item_string.startsWith('construct')) {
+                return Item.construct_item(item_string, slot);
+            }
+
+            for (let i = 0; i < ITEMS.length; i++) {
+                if (ITEMS[i].name === item_string) {
+                    return ITEMS[i];
+                }
+            }
+
+            return null;
+        }
+
+        static construct_item(item_string, slot) {
+            const parts = item_string.split(';').slice(1);
+            const item_name = parts[0];
+
+            parts.forEach(function (part, index, self) {
+                self[index] = part.trim().toLowerCase();
+            });
+
+            let base_damage = Effect.no_op_roll_effect();
+            let scaler = ItemScaler.NONE;
+            let effects = [];
+
+            for (let i = 0; i < parts.length; i++) {
+                let handled_part = false;
+                const part = parts[i];
+                LOG.debug('construct_item(), handling part ' + part);
+
+                // Check for base damage definition
+                if (part.startsWith('base')) {
+                    const pieces = part.split(' ');
+                    const damage = pieces[1];
+                    const damage_type = get_damage_from_type(pieces[2]);
+                    if (damage_type === null) {
+                        LOG.error('Unrecognized damage type ' + pieces[2]);
+                        continue;
+                    }
+
+                    const scaling_stat = get_stat_for_attribute(pieces[3]);
+                    if (scaling_stat === null) {
+                        LOG.error('Unrecognized attribute acronym "%s"'.format(pieces[3]));
+                        continue;
+                    }
+
+                    const roll_type = guess_applicable_roll_type_from_damage(damage_type);
+                    if (roll_type === null) {
+                        LOG.error('Failed to guess what rolls base damage type "%s" should apply to'.format(damage_type));
+                        continue;
+                    }
+
+                    base_damage = Effect.roll_damage(damage, damage_type, roll_type);
+                    scaler = ItemScaler.OTHER(scaling_stat, damage_type);
+                    LOG.trace('construct_item(), handled base damage part');
+                    continue;
+                }
+
+                // Check for an initiative bonus
+                if (part.startsWith('initiative')) {
+                    const pieces = part.split(':');
+                    if (pieces.length !== 2) {
+                        LOG.error('Expected exactly one colon in initiative bonus "%s"'.format(part));
+                        continue;
+                    }
+
+                    const bonus = parse_int(pieces[1].trim());
+                    if (Number.isNaN(bonus)) {
+                        LOG.error('Initiative bonus value %s is not a number'.format(pieces[1].trim()));
+                        continue;
+                    }
+
+                    effects.push(Effect.initiative_bonus(bonus));
+                    LOG.debug('construct_item(), handled initiative bonus part');
+                }
+
+                // Check for a concentration bonus
+                if (part.startsWith('concentration')) {
+                    const pieces = part.split(':');
+                    if (pieces.length !== 2) {
+                        LOG.error('Expected exactly one colon in concentration bonus "%s"'.format(part));
+                        continue;
+                    }
+
+                    const bonus = parse_int(pieces[1].trim());
+                    if (Number.isNaN(bonus)) {
+                        LOG.error('Concentration bonus value %s is not a number'.format(pieces[1].trim()));
+                        continue;
+                    }
+
+                    effects.push(Effect.concentration_bonus(bonus));
+                    LOG.trace('construct_item(), handled concentration bonus part');
+                }
+
+                // Check for generic damage
+                if (part.startsWith('damage')) {
+                    const effect = this.get_damage_from_part(part, Effect.roll_damage);
+                    if (effect !== null) {
+                        effects.push(effect);
+                    }
+                    LOG.trace('construct_item(), handled damage part');
+                    continue;
+                }
+
+                // Check for generic multiplier
+                if (part.startsWith('multiplier')) {
+                    const effect = this.get_multiplier_from_part(part, Effect.roll_multiplier);
+                    if (effect !== null) {
+                        effects.push(effect);
+                        LOG.trace('construct_item(), handled multiplier part');
+                    }
+                    continue;
+                }
+
+                // Check for crit damage
+                if (part.startsWith('crit damage')) {
+                    const effect = this.get_damage_from_part(part, Effect.crit_damage);
+                    if (effect !== null) {
+                        effects.push(effect);
+                        LOG.trace('construct_item(), handled crit damage part');
+                    }
+                    continue;
+                }
+
+                // Check for crit damage multiplier
+                if (part.startsWith('crit multiplier')) {
+                    const effect = this.get_multiplier_from_part(part, Effect.crit_multiplier);
+                    if (effect !== null) {
+                        effects.push(effect);
+                        LOG.trace('construct_item(), handled crit multiplier part');
+                    }
+                    continue;
+                }
+
+                // Check for crit damage mod
+                if (part.startsWith('crit damage mod')) {
+                    let pieces = part.split(':');
+                    if (pieces.length !== 2) {
+                        LOG.error('Expected exactly one colon in crit damage mod "%s"'.format(part));
+                        continue;
+                    }
+
+                    pieces = pieces[1].trim().split(' ');
+                    if (pieces.length !== 2) {
+                        LOG.error('Expected exactly two space-separated pieces after colon in crit damage mod, found "%s"'.format(pieces.join(' ')));
+                        continue;
+                    }
+
+                    let value = parse_int(trim_percent(pieces[0]));
+                    if (Number.isNaN(value)) {
+                        LOG.error('Crit damage mod value %s is not a number ' + pieces[0]);
+                        continue;
+                    }
+
+                    const roll_type = get_roll_type(pieces[1]);
+                    if (roll_type === null) {
+                        LOG.error('Unrecognized roll type %s in crit damage mod'.format(pieces[1]));
+                        continue;
+                    }
+
+                    effects.push(Effect.crit_damage_mod(value, roll_type));
+                    LOG.trace('construct_item(), handled crit damage mod part');
+                    continue;
+                }
+
+                // Check for a stat bonus definition
+                const stat_keys = Object.keys(Stat);
+                for (let i = 0; i < stat_keys.length; i++) {
+                    const stat = Stat[stat_keys[i]];
+                    if (part.startsWith(stat.name.toLowerCase().replace(/_/g, ' ') + ':')) {
+                        const effect = this.get_stat_effect_from_part(part, stat, Effect.stat_effect);
+                        if (effect !== null) {
+                            effects.push(effect);
+                            LOG.trace('construct_item(), handled stat bonus part');
+                        }
+                        handled_part = true;
+                        break;
+                    }
+                }
+                if (handled_part) {
+                    continue;
+                }
+
+                // Check for stat acronyms
+                const acro_keys = Object.keys(STAT_ACROS);
+                for (let i = 0; i < acro_keys.length; i++) {
+                    const acro = acro_keys[i];
+                    if (part.startsWith(acro)) {
+                        const effect = this.get_stat_effect_from_part(part, STAT_ACROS[acro], Effect.stat_effect);
+                        if (effect !== null) {
+                            effects.push(effect);
+                            LOG.trace('construct_item(), handled acro-stat bonus part');
+                        }
+                        handled_part = true;
+                        break;
+                    }
+                }
+
+                // Check for hidden stats and crit hidden stats
+                const hidden_stat_acro_keys = Object.keys(HIDDEN_STAT_ACROS);
+                for (let i = 0; i < hidden_stat_acro_keys.length; i++) {
+                    const acro = hidden_stat_acro_keys[i];
+                    if (part.startsWith(acro)) {
+                        const effect = this.get_stat_effect_from_part(part, HIDDEN_STAT_ACROS[acro], Effect.hidden_stat);
+                        if (effect !== null) {
+                            effects.push(effect);
+                            LOG.trace('construct_item(), handled hidden stat bonus part');
+                        }
+                        handled_part = true;
+                        break;
+
+                    } else if (part.startsWith('crit ' + acro)) {
+                        const effect = this.get_stat_effect_from_part(part, HIDDEN_STAT_ACROS[acro], Effect.crit_hidden_stat);
+                        if (effect !== null) {
+                            effects.push(effect);
+                            LOG.trace('construct_item(), handled crit hidden stat bonus part');
+                        }
+                        handled_part = true;
+                        break;
+                    }
+                }
+
+                // Check for a skill bonus definition
+                const skill_keys = Object.keys(Skill);
+                for (let i = 0; i < skill_keys.length; i++) {
+                    const skill = Skill[skill_keys[i]];
+                    if (part.startsWith(skill.name.toLowerCase())) {
+                        const pieces = part.split(':');
+                        if (pieces.length !== 3) {
+                            LOG.error('Expected exactly two colons in skill bonus "%s"'.format(part));
+                            break;
+                        }
+
+                        const bonus = pieces.slice(-1)[0];
+                        effects.push(Effect.skill_effect(skill, bonus));
+                        handled_part = true;
+                        LOG.trace('construct_item(), handled skill bonus part');
+                        break;
+                    }
+                }
+                if (handled_part) {
+                    continue;
+                }
+
+                // Check for miscellaneous effects
+                if (part.startsWith('effect')) {
+                    let pieces = part.split(':');
+                    if (pieces.length !== 2) {
+                        LOG.error('Expected exactly one colon in effect "%s"'.format(part));
+                        continue;
+                    }
+
+                    pieces = pieces[1].trim().split(' ');
+                    const effect_text = pieces.slice(0, pieces.length - 1).join(' ');
+                    const roll_type = get_roll_type(pieces.slice(-1)[0]);
+                    if (roll_type === null) {
+                        LOG.error('Unrecognized roll type %s in effect'.format(pieces[1]));
+                        continue;
+                    }
+
+                    effects.push(Effect.roll_effect(effect_text, roll_type));
+                    LOG.trace('construct_item(), handled effect part');
+                    continue;
+                }
+
+                // Check for miscellaneous crit effects
+                if (part.startsWith('crit effect')) {
+                    let pieces = part.split(':');
+                    if (pieces.length !== 2) {
+                        LOG.error('Expected exactly one colon in crit effect "%s"'.format(part));
+                        continue;
+                    }
+
+                    pieces = pieces[1].trim().split(' ');
+                    const effect_text = pieces.slice(0, pieces.length - 1).join(' ');
+                    const roll_type = get_roll_type(pieces.slice(-1)[0]);
+                    if (roll_type === null) {
+                        LOG.error('Unrecognized roll type %s in effect'.format(pieces[1]));
+                        continue;
+                    }
+
+                    effects.push(Effect.crit_effect(effect_text, roll_type));
+                    LOG.trace('construct_item(), handled crit effect part');
+                    continue;
+                }
+            }
+
+            // TODO: get the type from somewhere or stop caring about it. Current character.is_using() looks at it, and
+            //  that method is used for exactly one item.
+            const item = new Item(
+                item_name, ItemType.ACCESSORY, slot,
+                base_damage, scaler,
+                effects
+            );
+
+            item.type = null;
+            LOG.info('Constructed item with name "%s"'.format(item.name));
+            return item;
+        }
+
+        static get_damage_from_part(part, create_effect) {
+            assert_not_null(part, 'get_damage_from_part() part');
+            assert_not_null(create_effect, 'get_damage_from_part() create_effect');
+
+            let pieces = part.split(':');
+            if (pieces.length !== 2) {
+                LOG.error('Expected exactly one colon in damage "%s"'.format(part));
+                return null;
+            }
+
+            pieces = pieces[1].trim().split(' ');
+            if (pieces.length !== 3) {
+                LOG.error('Expected exactly three space-separated pieces after colon in damage, found "%s"'.format(pieces.join(' ')));
+                return null;
+            }
+
+            const damage = pieces[0];
+            const damage_type = get_damage_from_type(pieces[1]);
+            if (damage_type === null) {
+                LOG.error('Unrecognized damage type ' + pieces[1]);
+                return null;
+            }
+
+            const roll_type = get_roll_type(pieces[2]);
+            if (roll_type === null) {
+                LOG.error('Unrecognized roll type ' + pieces[2]);
+                return null;
+            }
+
+            return create_effect(damage, damage_type, roll_type);
+        }
+
+        static get_multiplier_from_part(part, create_effect) {
+            assert_not_null(part, 'get_multiplier_from_part() part');
+            assert_not_null(create_effect, 'get_multiplier_from_part() create_effect');
+
+            let pieces = part.split(':');
+            if (pieces.length !== 2) {
+                LOG.error('Expected exactly one colon in multiplier "%s"'.format(part));
+                return null;
+            }
+
+            pieces = pieces[1].trim().split(' ');
+            if (pieces.length !== 3) {
+                LOG.error('Expected exactly three space-separated pieces after colon in multiplier, found "%s"'.format(pieces.join(' ')));
+                return null;
+            }
+
+            const value = parse_int(trim_percent(pieces[0])) / 100;
+            if (Number.isNaN(value)) {
+                LOG.error('Multiplier value %s is not a number '.format(pieces[0]));
+                return null;
+            }
+
+            const damage_type = get_damage_from_type(pieces[1]);
+            if (damage_type === null) {
+                LOG.error('Unrecognized multiplier damage type ' + pieces[1]);
+                return null;
+            }
+
+            const roll_type = get_roll_type(pieces[2]);
+            if (roll_type === null) {
+                LOG.error('Unrecognized roll type ' + pieces[2]);
+                return null;
+            }
+
+            return create_effect(value, damage_type, roll_type);
+        }
+
+        static get_stat_effect_from_part(part, stat, create_effect) {
+            let pieces = part.split(':');
+            if (pieces.length !== 2) {
+                LOG.error('Expected exactly one colon in stat bonus "%s"'.format(part));
+                return null;
+            }
+
+            pieces = pieces[1].trim().split(' ');
+            if (pieces.length !== 2) {
+                LOG.error('Expected exactly three space-separated pieces after colon in stat, found "%s"'.format(pieces.join(' ')));
+                return null;
+            }
+
+            const bonus = parse_int(trim_percent(pieces[0]));
+            if (Number.isNaN(bonus)) {
+                LOG.error('Stat bonus value %s is not a number ' + pieces[0]);
+                return null;
+            }
+
+            const roll_type = get_roll_type(pieces[1]);
+            if (roll_type === null) {
+                LOG.error('Unrecognized roll type %s in stat'.format(pieces[1]));
+                return null;
+            }
+
+            return create_effect(stat, bonus, roll_type);
         }
     }
 
@@ -7978,21 +8485,6 @@ var BarbsComponents = BarbsComponents || (function () {
         ),
 
         new Item(
-            'Ring of Archery',
-            ItemType.ACCESSORY,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                new Effect(RollTime.DEFAULT, RollType.PHYSICAL, function (roll) {
-                    if (roll.character.is_using('longbow') || roll.character.is_using('crossbow')) {
-                        roll.add_multiplier(0.5, Damage.PHYSICAL, 'self');
-                    }
-                })
-            ]
-        ),
-
-        new Item(
             'Energetic Ring of the Mind',
             ItemType.ACCESSORY,
             ItemSlot.RING,
@@ -8013,105 +8505,6 @@ var BarbsComponents = BarbsComponents || (function () {
             [
                 Effect.stat_effect(Stat.STAMINA, 60, RollType.ALL),
                 Effect.stat_effect(Stat.STAMINA_REGENERATION, 15, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            'Resistant Hat of Dodging',
-            ItemType.ARMOR,
-            ItemSlot.HEAD,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.EVASION, 20, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Viper's Vest of Dodging",
-            ItemType.ARMOR,
-            ItemSlot.BODY,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.EVASION, 20, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Viper's Gloves of Evasion",
-            ItemType.ARMOR,
-            ItemSlot.HANDS,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.EVASION, 20, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Mage’s Amulet of Cleansing",
-            ItemType.ACCESSORY,
-            ItemSlot.NECK,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            'Ring of Slaying',
-            ItemType.ACCESSORY,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.ALL)
-            ]
-        ),
-
-        new Item(
-            "Beast’s Belt of the Worker",
-            ItemType.ACCESSORY,
-            ItemSlot.BELT,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Angel’s Longbow of Accuracy",
-            ItemType.LONGBOW,
-            ItemSlot.MAIN_HAND,
-            Effect.roll_damage('d10', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.RANGED_FINE,
-            [
-                Effect.roll_damage('4d10', Damage.LIGHT, RollType.PHYSICAL),
-                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.PHYSICAL),
-            ]
-        ),
-
-        new Item(
-            "Slaying Featherfall Sneakers of Speedy Evasion",
-            ItemType.ARMOR,
-            ItemSlot.FEET,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.EVASION, 20, RollType.ALL),
-                Effect.stat_effect(Stat.MOVEMENT_SPEED, 20, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
-                Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.ALL),
             ]
         ),
 
@@ -8770,7 +9163,6 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.AC, 15, RollType.ALL),
                 Effect.concentration_bonus(20),
                 Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-
             ]
         ),
 
@@ -9030,12 +9422,12 @@ var BarbsComponents = BarbsComponents || (function () {
             "Penetrating Striking Knuckles of Accurate Power",
             ItemType.UNARMED,
             ItemSlot.TWO_HAND,
-            Effect.monk_damage('2dU', Damage.PHYSICAL, RollType.PHYSICAL),
+            Effect.roll_damage('2dU', Damage.PHYSICAL, RollType.PHYSICAL),
             ItemScaler.RANGED_FINE,
             [
                 // TODO 5% combo chance
                 Effect.hidden_stat(HiddenStat.AC_PENETRATION, 20, RollType.ALL),
-                Effect.monk_damage('4dU', Damage.PHYSICAL, RollType.PHYSICAL),
+                Effect.roll_damage('4dU', Damage.PHYSICAL, RollType.PHYSICAL),
                 Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
                 Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.PHYSICAL),
             ]
@@ -9154,7 +9546,7 @@ var BarbsComponents = BarbsComponents || (function () {
     // Characters
 
 
-    const character_sheet_item_slots = [
+    const CHARACTER_SHEET_ITEM_SLOTS = [
         ItemSlot.MAIN_HAND,
         ItemSlot.OFFHAND,
         ItemSlot.HEAD,
@@ -9200,36 +9592,23 @@ var BarbsComponents = BarbsComponents || (function () {
             return items;
         }
 
-        get_item_names() {
-            const item_names = [];
-
-            for (let i = 0; i < character_sheet_item_slots.length; i++) {
-                const slot = character_sheet_item_slots[i];
-                const item_name = getAttrByName(this.id, slot);
-                if (item_name !== undefined && item_name !== null && item_name !== '') {
-                    item_names.push(item_name);
-                }
-            }
-
-            return item_names;
-        }
-
         get_items() {
-            const item_names = this.get_item_names();
-
-            // find the actual item for each given name
             const character_items = [];
 
-            _.each(item_names, function (item_name) {
-                for (let i = 0; i < ITEMS.length; i++) {
-                    if (ITEMS[i].name === item_name) {
-                        character_items.push(ITEMS[i]);
-                        return;
-                    }
-                }
+            for (let i = 0; i < CHARACTER_SHEET_ITEM_SLOTS.length; i++) {
+                const slot = CHARACTER_SHEET_ITEM_SLOTS[i];
+                const item_name = getAttrByName(this.id, slot);
 
-                LOG.error('Could not find item with name ' + item_name);
-            });
+                if (item_name !== undefined && item_name !== null && item_name !== '') {
+                    const item = Item.get_item(item_name, slot);
+                    if (item === null) {
+                        LOG.error('Could not get item for name "%s" and slot %s'.format(item_name, slot));
+                        continue;
+                    }
+
+                    character_items.push(item);
+                }
+            }
 
             return character_items;
         }
@@ -9338,15 +9717,15 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     return {
-        assert_not_null, assert_type, assert_starts_with, parse_int,
+        assert_not_null, assert_type, assert_starts_with, parse_int, trim_percent,
         LOG,
         characters_by_owner,
         Stat, HiddenStat, Skill, classes,
-        Damage,
+        Damage, get_damage_from_type,
         RollType,
         RollTime,
         Roll,
-        ITEMS,
+        Item,
         Character,
     };
 
