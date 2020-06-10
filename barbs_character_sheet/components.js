@@ -336,6 +336,7 @@ var BarbsComponents = BarbsComponents || (function () {
         BUFF_STRIP: 'Strip %s buff(s) from the target',
         BURN_CHANCE: '%s% chance to inflict Burn 20',
         CRIPPLE_CHANCE: '%s% chance to Cripple',
+        FEAR_CHANCE: '%s% chance to Fear',
         FORCED_MOVEMENT: 'Forcibly move target %s ft',
         LETHALITY: '%s% lethality chance',
         LIFESTEAL: '%s% lifesteal',
@@ -366,6 +367,7 @@ var BarbsComponents = BarbsComponents || (function () {
         'buff strip:': HiddenStat.BUFF_STRIP,
         'burn chance:': HiddenStat.BURN_CHANCE,
         'cripple chance:': HiddenStat.CRIPPLE_CHANCE,
+        'fear chance': HiddenStat.FEAR_CHANCE,
         'forced movement:': HiddenStat.FORCED_MOVEMENT,
         'lethality:': HiddenStat.LETHALITY,
         'lifesteal:': HiddenStat.LIFESTEAL,
@@ -8036,17 +8038,22 @@ var BarbsComponents = BarbsComponents || (function () {
 
                 // Check for base damage definition
                 if (part.startsWith('base')) {
-                    const pieces = part.split(' ');
-                    const damage = pieces[1];
-                    const damage_type = get_damage_from_type(pieces[2]);
-                    if (damage_type === null) {
-                        LOG.error('Unrecognized damage type ' + pieces[2]);
+                    let pieces = part.split(':');
+                    if (pieces.length !== 2) {
+                        LOG.error('Expected exactly one colon in concentration bonus "%s"'.format(part));
                         continue;
                     }
 
-                    const scaling_stat = get_stat_for_attribute(pieces[3]);
-                    if (scaling_stat === null) {
-                        LOG.error('Unrecognized attribute acronym "%s"'.format(pieces[3]));
+                    pieces = pieces[1].trim().split(' ');
+                    if (pieces.length !== 3) {
+                        LOG.error('Expected exactly three space-separated pieces after colon in crit damage mod, found "%s"'.format(pieces.join(' ')));
+                        continue;
+                    }
+
+                    const damage = pieces[0];
+                    const damage_type = get_damage_from_type(pieces[1]);
+                    if (damage_type === null) {
+                        LOG.error('Unrecognized damage type ' + pieces[1]);
                         continue;
                     }
 
@@ -8057,7 +8064,18 @@ var BarbsComponents = BarbsComponents || (function () {
                     }
 
                     base_damage = Effect.roll_damage(damage, damage_type, roll_type);
-                    scaler = ItemScaler.OTHER(scaling_stat, damage_type);
+
+                    if (pieces[2] === 'none') {
+                        scaler = ItemScaler.NONE;
+                    } else {
+                        const scaling_stat = get_stat_for_attribute(pieces[3]);
+                        if (scaling_stat === null) {
+                            LOG.error('Unrecognized attribute acronym "%s"'.format(pieces[2]));
+                            continue;
+                        }
+
+                        scaler = ItemScaler.OTHER(scaling_stat, damage_type);
+                    }
                     LOG.trace('construct_item(), handled base damage part');
                     continue;
                 }
@@ -8098,47 +8116,29 @@ var BarbsComponents = BarbsComponents || (function () {
                     LOG.trace('construct_item(), handled concentration bonus part');
                 }
 
-                // Check for generic damage
-                if (part.startsWith('damage')) {
-                    const effect = this.get_damage_from_part(part, Effect.roll_damage);
-                    if (effect !== null) {
-                        effects.push(effect);
+                // Check for a skill bonus definition
+                const skill_keys = Object.keys(Skill);
+                for (let i = 0; i < skill_keys.length; i++) {
+                    const skill = Skill[skill_keys[i]];
+                    if (part.startsWith(skill.name.toLowerCase())) {
+                        const pieces = part.split(':');
+                        if (pieces.length !== 3) {
+                            LOG.error('Expected exactly two colons in skill bonus "%s"'.format(part));
+                            break;
+                        }
+
+                        const bonus = pieces.slice(-1)[0];
+                        effects.push(Effect.skill_effect(skill, bonus));
+                        handled_part = true;
+                        LOG.trace('construct_item(), handled skill bonus part');
+                        break;
                     }
-                    LOG.trace('construct_item(), handled damage part');
+                }
+                if (handled_part) {
                     continue;
                 }
 
-                // Check for generic multiplier
-                if (part.startsWith('multiplier')) {
-                    const effect = this.get_multiplier_from_part(part, Effect.roll_multiplier);
-                    if (effect !== null) {
-                        effects.push(effect);
-                        LOG.trace('construct_item(), handled multiplier part');
-                    }
-                    continue;
-                }
-
-                // Check for crit damage
-                if (part.startsWith('crit damage')) {
-                    const effect = this.get_damage_from_part(part, Effect.crit_damage);
-                    if (effect !== null) {
-                        effects.push(effect);
-                        LOG.trace('construct_item(), handled crit damage part');
-                    }
-                    continue;
-                }
-
-                // Check for crit damage multiplier
-                if (part.startsWith('crit multiplier')) {
-                    const effect = this.get_multiplier_from_part(part, Effect.crit_multiplier);
-                    if (effect !== null) {
-                        effects.push(effect);
-                        LOG.trace('construct_item(), handled crit multiplier part');
-                    }
-                    continue;
-                }
-
-                // Check for crit damage mod
+                // Check for crit damage mod (order matters, check longer matches first)
                 if (part.startsWith('crit damage mod')) {
                     let pieces = part.split(':');
                     if (pieces.length !== 2) {
@@ -8167,6 +8167,70 @@ var BarbsComponents = BarbsComponents || (function () {
                     effects.push(Effect.crit_damage_mod(value, roll_type));
                     LOG.trace('construct_item(), handled crit damage mod part');
                     continue;
+                }
+
+                // Check for crit damage multiplier
+                if (part.startsWith('crit multiplier')) {
+                    const effect = this.get_multiplier_from_part(part, Effect.crit_multiplier);
+                    if (effect !== null) {
+                        effects.push(effect);
+                        LOG.trace('construct_item(), handled crit multiplier part');
+                    }
+                    continue;
+                }
+
+                // Check for crit damage
+                if (part.startsWith('crit damage')) {
+                    const effect = this.get_damage_from_part(part, Effect.crit_damage);
+                    if (effect !== null) {
+                        effects.push(effect);
+                        LOG.trace('construct_item(), handled crit damage part');
+                    }
+                    continue;
+                }
+
+                // Check for generic damage
+                if (part.startsWith('damage')) {
+                    const effect = this.get_damage_from_part(part, Effect.roll_damage);
+                    if (effect !== null) {
+                        effects.push(effect);
+                    }
+                    LOG.trace('construct_item(), handled damage part');
+                    continue;
+                }
+
+                // Check for generic multiplier
+                if (part.startsWith('multiplier')) {
+                    const effect = this.get_multiplier_from_part(part, Effect.roll_multiplier);
+                    if (effect !== null) {
+                        effects.push(effect);
+                        LOG.trace('construct_item(), handled multiplier part');
+                    }
+                    continue;
+                }
+
+                // Check for hidden stats and crit hidden stats
+                const hidden_stat_acro_keys = Object.keys(HIDDEN_STAT_ACROS);
+                for (let i = 0; i < hidden_stat_acro_keys.length; i++) {
+                    const acro = hidden_stat_acro_keys[i];
+                    if (part.startsWith(acro)) {
+                        const effect = this.get_stat_effect_from_part(part, HIDDEN_STAT_ACROS[acro], Effect.hidden_stat);
+                        if (effect !== null) {
+                            effects.push(effect);
+                            LOG.trace('construct_item(), handled hidden stat bonus part');
+                        }
+                        handled_part = true;
+                        break;
+
+                    } else if (part.startsWith('crit ' + acro)) {
+                        const effect = this.get_stat_effect_from_part(part, HIDDEN_STAT_ACROS[acro], Effect.crit_hidden_stat);
+                        if (effect !== null) {
+                            effects.push(effect);
+                            LOG.trace('construct_item(), handled crit hidden stat bonus part');
+                        }
+                        handled_part = true;
+                        break;
+                    }
                 }
 
                 // Check for a stat bonus definition
@@ -8200,52 +8264,6 @@ var BarbsComponents = BarbsComponents || (function () {
                         handled_part = true;
                         break;
                     }
-                }
-
-                // Check for hidden stats and crit hidden stats
-                const hidden_stat_acro_keys = Object.keys(HIDDEN_STAT_ACROS);
-                for (let i = 0; i < hidden_stat_acro_keys.length; i++) {
-                    const acro = hidden_stat_acro_keys[i];
-                    if (part.startsWith(acro)) {
-                        const effect = this.get_stat_effect_from_part(part, HIDDEN_STAT_ACROS[acro], Effect.hidden_stat);
-                        if (effect !== null) {
-                            effects.push(effect);
-                            LOG.trace('construct_item(), handled hidden stat bonus part');
-                        }
-                        handled_part = true;
-                        break;
-
-                    } else if (part.startsWith('crit ' + acro)) {
-                        const effect = this.get_stat_effect_from_part(part, HIDDEN_STAT_ACROS[acro], Effect.crit_hidden_stat);
-                        if (effect !== null) {
-                            effects.push(effect);
-                            LOG.trace('construct_item(), handled crit hidden stat bonus part');
-                        }
-                        handled_part = true;
-                        break;
-                    }
-                }
-
-                // Check for a skill bonus definition
-                const skill_keys = Object.keys(Skill);
-                for (let i = 0; i < skill_keys.length; i++) {
-                    const skill = Skill[skill_keys[i]];
-                    if (part.startsWith(skill.name.toLowerCase())) {
-                        const pieces = part.split(':');
-                        if (pieces.length !== 3) {
-                            LOG.error('Expected exactly two colons in skill bonus "%s"'.format(part));
-                            break;
-                        }
-
-                        const bonus = pieces.slice(-1)[0];
-                        effects.push(Effect.skill_effect(skill, bonus));
-                        handled_part = true;
-                        LOG.trace('construct_item(), handled skill bonus part');
-                        break;
-                    }
-                }
-                if (handled_part) {
-                    continue;
                 }
 
                 // Check for miscellaneous effects
