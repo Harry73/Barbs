@@ -11,6 +11,8 @@ var Barbs = Barbs || (function () {
     const assert_starts_with = BarbsComponents.assert_starts_with;
     const parse_int = BarbsComponents.parse_int;
     const trim_percent = BarbsComponents.trim_percent;
+    const trim_all = BarbsComponents.trim_all;
+    const remove_empty = BarbsComponents.remove_empty;
     const LOG = BarbsComponents.LOG;
     const characters_by_owner = BarbsComponents.characters_by_owner;
     const Stat = BarbsComponents.Stat;
@@ -1353,10 +1355,9 @@ var Barbs = Barbs || (function () {
         const options = pieces.slice(3).join(' ');
         const option_pieces = options.split('|');
         const item_name = option_pieces[0];
-        const parameters = option_pieces[1].split(';');
-        parameters.forEach(function (parameter, index, self) {
-            self[index] = parameter.trim();
-        });
+        let parameters = option_pieces[1].split(';');
+        parameters = trim_all(parameters);
+        parameters = remove_empty(parameters);
 
         // Find the item object for the name
         const item = Item.get_item(item_name, item_slot);
@@ -3130,10 +3131,9 @@ var Barbs = Barbs || (function () {
         const option_pieces = options.split(';');
         const class_name = option_pieces[0];
         const ability_name = option_pieces[1];
-        const parameters = option_pieces.slice(2);
-        parameters.forEach(function (parameter, index, self) {
-            self[index] = parameter.trim();
-        });
+        let parameters = option_pieces.slice(2);
+        parameters = trim_all(parameters);
+        parameters = remove_empty(parameters);
 
         // Verify that we have a processor for this class + ability combo
         if (!(class_name in abilities_processors)) {

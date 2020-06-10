@@ -9769,7 +9769,8 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     return {
-        assert_not_null, assert_type, assert_starts_with, parse_int, trim_percent,
+        assert_not_null, assert_type, assert_starts_with,
+        parse_int, trim_percent, trim_all, remove_empty,
         LOG,
         characters_by_owner,
         Stat, HiddenStat, Skill, classes,
