@@ -5929,7 +5929,7 @@
         "range": "100 ft",
         "duration": "Instant",
         "description": [
-            "You glassify an enemy's mana while it's vulnerable. As a reaction to a target in range casting a spell, you may counter that spell. The mana spent on the enemy spell becomes your mana and you can either release it or use it to cast any spell from the Reflection branch of Mirror Mage as a free reaction."
+            "You glassify an enemy's mana while it's vulnerable. As a reaction to a target in range casting a spell, you may counter that spell. The mana spent on the enemy spell becomes your mana and you can either release it or use it to cast any spell from the Refraction branch of Mirror Mage as a free reaction."
         ],
         "tags": [
             "Spell",
