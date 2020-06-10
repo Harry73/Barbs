@@ -55,11 +55,15 @@ var BarbsComponents = BarbsComponents || (function () {
 
     // Always specifying a radix is safest, and we always want radix 10.
     function parse_int(string) {
+        assert_not_null(string, 'parse_int() string');
+
         return parseInt(string, 10);
     }
 
 
     function trim_percent(string) {
+        assert_not_null(string, 'trim_percent() string');
+
         string = string.trim();
         if (string.endsWith('%')) {
             return string.substring(0, string.length - 1);
@@ -67,6 +71,31 @@ var BarbsComponents = BarbsComponents || (function () {
             return string;
         }
     }
+
+
+    function trim_all(array) {
+        assert_not_null(array, 'trim_all() array');
+
+        const trimmed = [];
+        for (let i = 0; i < array.length; i++) {
+            trimmed.push(array[i].trim());
+        }
+        return trimmed;
+    }
+
+
+    function remove_empty(array) {
+        assert_not_null(array, 'remove_empty() array');
+
+        const cleaned = [];
+        for (let i = 0; i < array.length; i++) {
+            if (array[i] !== '') {
+                cleaned.push(array[i].trim());
+            }
+        }
+        return cleaned;
+    }
+
 
     const LogLevel = {
         TRACE: 0,
@@ -231,7 +260,11 @@ var BarbsComponents = BarbsComponents || (function () {
 
     class StatObject {
         constructor(name, attr_tla, formula) {
-            this.type = 'stat';
+            assert_not_null(name, 'StatObject::new() name');
+            assert_not_null(attr_tla, 'StatObject::new() attr_tla');
+            assert_not_null(formula, 'StatObject::new() formula');
+
+            this._type = 'stat';
             this.name = name;
             this.attr_tla = attr_tla;
             this.formula = formula;
@@ -317,6 +350,8 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     function get_stat_for_attribute(attr_tla) {
+        assert_not_null(attr_tla, 'get_stat_for_attribute() attr_tla');
+
         const keys = Object.keys(Stat);
         for (let i = 0; i < keys.length; i++) {
             const stat = keys[i];
@@ -8020,12 +8055,11 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         static construct_item(item_string, slot) {
-            const parts = item_string.split(';').slice(1);
-            const item_name = parts[0];
+            let parts = item_string.split(';').slice(1);
+            parts = trim_all(parts);
+            parts = remove_empty(parts);
 
-            parts.forEach(function (part, index, self) {
-                self[index] = part.trim().toLowerCase();
-            });
+            const item_name = parts[0];
 
             let base_damage = Effect.no_op_roll_effect();
             let scaler = ItemScaler.NONE;
@@ -8068,7 +8102,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     if (pieces[2] === 'none') {
                         scaler = ItemScaler.NONE;
                     } else {
-                        const scaling_stat = get_stat_for_attribute(pieces[3]);
+                        const scaling_stat = get_stat_for_attribute(pieces[2]);
                         if (scaling_stat === null) {
                             LOG.error('Unrecognized attribute acronym "%s"'.format(pieces[2]));
                             continue;
