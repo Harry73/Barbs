@@ -7837,33 +7837,44 @@ var BarbsComponents = BarbsComponents || (function () {
     };
 
 
-    const ItemScaler = {
-        MELEE: function (character, roll) {
-            assert_not_null(character, 'ItemScaler::MELEE character');
-            assert_not_null(roll, 'ItemScaler::MELEE roll');
+    class ItemScaler {
+        constructor(stat, handler) {
+            assert_not_null(handler, 'ItemScaler::new() handler');
 
-            roll.add_damage(character.get_stat(Stat.MELEE_DAMAGE), Damage.PHYSICAL);
-        },
+            this._type = 'ItemScaler';
+            this.stat = stat;
+            this.handler = handler;
+        }
+    }
 
-        RANGED_FINE: function (character, roll) {
-            assert_not_null(character, 'ItemScaler::RANGED_FINE character');
-            assert_not_null(roll, 'ItemScaler::RANGED_FINE roll');
+    ItemScaler.MELEE = new ItemScaler(Stat.MELEE_DAMAGE, function (character, roll) {
+        assert_not_null(character, 'ItemScaler::MELEE character');
+        assert_not_null(roll, 'ItemScaler::MELEE roll');
 
-            roll.add_damage(character.get_stat(Stat.RANGED_FINE_DAMAGE), Damage.PHYSICAL);
-        },
+        roll.add_damage(character.get_stat(Stat.MELEE_DAMAGE), Damage.PHYSICAL);
+    });
 
-        // This one has to be called with a parameter to create the function
-        OTHER: function (stat, damage_type) {
-            assert_not_null(stat, 'ItemScaler::Other stat');
-            assert_not_null(damage_type, 'ItemScaler::Other damage_type');
+    ItemScaler.RANGED_FINE = new ItemScaler(Stat.RANGED_FINE_DAMAGE, function (character, roll) {
+        assert_not_null(character, 'ItemScaler::RANGED_FINE character');
+        assert_not_null(roll, 'ItemScaler::RANGED_FINE roll');
 
-            return function (character, roll) {
-                roll.add_damage(character.get_stat(stat), damage_type);
-            }
-        },
+        roll.add_damage(character.get_stat(Stat.RANGED_FINE_DAMAGE), Damage.PHYSICAL);
+    });
 
-        NONE: function () {},
+    // This one has to be called with a parameter to create the function
+    ItemScaler.OTHER = function(stat, damage_type) {
+        assert_not_null(stat, 'ItemScaler::OTHER stat');
+        assert_not_null(damage_type, 'ItemScaler::OTHER damage_type');
+
+        return new ItemScaler(stat, function (character, roll) {
+            assert_not_null(character, 'ItemScaler::OTHER character');
+            assert_not_null(roll, 'ItemScaler::OTHER roll');
+
+            roll.add_damage(character.get_stat(stat), damage_type);
+        });
     };
+
+    ItemScaler.NONE = new ItemScaler(null, function() {});
 
 
     class Effect {
@@ -9620,8 +9631,6 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     const CHARACTER_SHEET_ITEM_SLOTS = [
-        ItemSlot.MAIN_HAND,
-        ItemSlot.OFFHAND,
         ItemSlot.HEAD,
         ItemSlot.BODY,
         ItemSlot.HANDS,
@@ -9650,6 +9659,9 @@ var BarbsComponents = BarbsComponents || (function () {
             this.alignment = getAttrByName(this.id, 'alignment');
             this.race = getAttrByName(this.id, 'race');
             this.languages = this.csv_to_array(getAttrByName(this.id, 'languages'));
+
+            this.main_hand = this.get_item(ItemSlot.MAIN_HAND);
+            this.offhand = this.get_item(ItemSlot.OFFHAND);
             this.items = this.get_items();
 
             // Fetched lazily, aka when requested
@@ -9670,20 +9682,28 @@ var BarbsComponents = BarbsComponents || (function () {
 
             for (let i = 0; i < CHARACTER_SHEET_ITEM_SLOTS.length; i++) {
                 const slot = CHARACTER_SHEET_ITEM_SLOTS[i];
-                const item_name = getAttrByName(this.id, slot);
-
-                if (item_name !== undefined && item_name !== null && item_name !== '') {
-                    const item = Item.get_item(item_name, slot);
-                    if (item === null) {
-                        LOG.error('Could not get item for name "%s" and slot %s'.format(item_name, slot));
-                        continue;
-                    }
-
+                const item = this.get_item(slot);
+                if (item !== null) {
                     character_items.push(item);
                 }
             }
 
             return character_items;
+        }
+
+        get_item(slot) {
+            const item_name = getAttrByName(this.id, slot);
+
+            if (item_name !== undefined && item_name !== null && item_name !== '') {
+                const item = Item.get_item(item_name, slot);
+                if (item === null) {
+                    LOG.error('Could not get item for name "%s" and slot %s'.format(item_name, slot));
+                } else {
+                    return item;
+                }
+            }
+
+            return null;
         }
 
         get_attribute(attr_tla) {
@@ -9708,10 +9728,6 @@ var BarbsComponents = BarbsComponents || (function () {
             return stat_value;
         }
 
-        has_skill_req(skill, rank) {
-            return true;
-        }
-
         is_using(weapon_type) {
             for (let i = 0; i < this.items.length; i++) {
                 const item = this.items[i];
@@ -9721,17 +9737,6 @@ var BarbsComponents = BarbsComponents || (function () {
             }
 
             return false;
-        }
-
-        get_main_weapon() {
-            for (let i = 0; i < this.items.length; i++) {
-                const item = this.items[i];
-                if (item.slot === ItemSlot.MAIN_HAND || item.slot === ItemSlot.TWO_HAND) {
-                    return item;
-                }
-            }
-
-            return null;
         }
 
         get_monk_mastery() {
