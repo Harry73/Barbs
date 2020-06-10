@@ -3791,7 +3791,7 @@
         "range": "40 ft",
         "duration": "1 minute",
         "description": [
-            "You summon a juvenile bronze dragon, bringer of lightning. Summon a Bronze Dragon with 200 health, large size, 20 AC, 80% EV, 20% MR, 30% CR, and 80 ft flying Move Speed. The Dragon obeys your Commands; otherwise, it uses its Move Action to fly to positions above enemies, its Major Action to either swipe with its claws for 10d10 physical damage on a single target in melee range or use its breath attack for 10d12 lightning magic damage in a 200 ft line AOE, and its Minor Action to either buff all allies with +10 Move Speed and +10% Armor Penetration, stacking, or inflict all enemies with -10 Move Speed and +10% Physical Vulnerability, stacking. The Bronze Dragon is a superior predator and hunter; if supplied with a magical signature, it can hunt down any individual anywhere on a plane regardless of distance, unless they are magically hidden."
+            "You summon a juvenile bronze dragon, bringer of lightning. Summon a Bronze Dragon with 200 health, large size, 20 AC, 80% EV, 20% MR, 30% CR, and 80 ft flying Move Speed. The Dragon obeys your Commands; otherwise, it uses its Move Action to fly to positions above enemies, its Major Action to either swipe with its claws for 10d10 physical damage on a single target in melee range or use its breath attack for 10d12 lightning magic damage in a 200 ft line AOE, and its Minor Action to either buff all allies with +10 Move Speed and +10% Armor Penetration for 1 minute, stacking and refreshing, or inflict all enemies with -10 Move Speed and +10% Physical Vulnerability for 1 minute, stacking and refreshing. The Bronze Dragon is a superior predator and hunter; if supplied with a magical signature, it can hunt down any individual anywhere on a plane regardless of distance, unless they are magically hidden."
         ],
         "tags": [
             "Spell",
@@ -5825,7 +5825,7 @@
         "range": "60 ft",
         "duration": "Instant",
         "description": [
-            "You fire a beam of mana that vacillates between light and ice. Deal 9d8 ice or light magic damage to all enemies in a 60 ft line AOE. When this spell is redirected, it converts its damage to the other choice between ice and light magic damage. Ice magic damage dealt by this spell has a 20% chance to inflict Frozen, and light magic damage dealt by this spell has a 20% chance to inflict Stun; the chance of either of these occuring increases by 20% for each time this spell has been redirected."
+            "You fire a beam of mana that vacillates between light and ice. Deal 9d8 ice or light magic damage to all enemies in a 60 ft line AOE. When this spell is redirected, it converts its damage to the other choice between ice and light magic damage. Ice magic damage dealt by this spell has a 20% chance to inflict Frozen, and light magic damage dealt by this spell has a 20% chance to inflict Stun until the end of the target's turn; the chance of either of these occuring increases by 20% for each time this spell has been redirected."
         ],
         "tags": [
             "Spell",
@@ -5877,7 +5877,7 @@
         "range": "60 ft",
         "duration": "Instant",
         "description": [
-            "You launch streams of magic at enemies. Deal 15d8 magic damage to all enemies in a 15 ft wide 60 ft long line AOE; the center line is your choice of either ice or light, and the edge lines are the opposite choice. Ice magic dealt by this spell inflicts Slow and Frozen and light magic dealt by this spell inflicts -20% EV and Stun. When this spell is redirected, it gains 10 ft of width, alternating the element of the newly added lines to maintain the spells element pattern. Enemies whose size is larger than normal are damaged separately by each line that hits them."
+            "You launch streams of magic at enemies. Deal 15d8 magic damage to all enemies in a 15 ft wide 60 ft long line AOE; the center line is your choice of either ice or light, and the edge lines are the opposite choice. Ice magic dealt by this spell inflicts Slow and Frozen and light magic dealt by this spell inflicts -20% EV and Stun until the end of the target's turn. When this spell is redirected, it gains 10 ft of width, alternating the element of the newly added lines to maintain the spells element pattern. Enemies whose size is larger than normal are damaged separately by each line that hits them."
         ],
         "tags": [
             "Spell",
