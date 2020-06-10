@@ -2,6 +2,16 @@ var BarbsComponents = BarbsComponents || (function () {
     'use_strict';
 
 
+    // Basic python-like string formatting
+    String.prototype.format = function () {
+        let a = this;
+        for (let i = 0; i < arguments.length; i++) {
+            a = a.replace('%s', arguments[i]);
+        }
+        return a;
+    };
+
+
     // ################################################################################################################
     // Assertions
 
@@ -36,7 +46,8 @@ var BarbsComponents = BarbsComponents || (function () {
         assert_not_null(message, 'assert_type() message');
 
         assert('_type' in object, '%s, no _type member in object %s'.format(message, JSON.stringify(object)));
-        assert(type === object._type, '%s, wrong object type, expected=%s, actual=%s'.format(message, type, object._type));
+        assert(type === object._type,
+               '%s, wrong object type, expected=%s, actual=%s'.format(message, type, object._type));
     }
 
 
@@ -45,7 +56,8 @@ var BarbsComponents = BarbsComponents || (function () {
         assert_not_null(prefix, 'assert_starts_with() prefix');
         assert_not_null(message, 'assert_starts_with() message');
 
-        assert(string.startsWith(prefix), '%s, expected string "%s" to start with "%s"'.format(message, string, prefix));
+        assert(string.startsWith(prefix),
+               '%s, expected string "%s" to start with "%s"'.format(message, string, prefix));
     }
 
 
@@ -7567,7 +7579,7 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         add_effect(effect) {
-            this.effects.push('<li>%s</li>'.format(effect));
+            this.effects.push('%s'.format(effect));
         }
 
         add_stat_bonus(stat, bonus) {
@@ -7628,7 +7640,8 @@ var BarbsComponents = BarbsComponents || (function () {
                 const keys_2 = Object.keys(this.multipliers[type]);
                 for (let j = 0; j < keys_2.length; j++) {
                     const source = keys_2[j];
-                    LOG.info('Multiplier[type=%s, source=%s, string=%s]'.format(type, source, this.multipliers[type][source]));
+                    LOG.info('Multiplier[type=%s, source=%s, string=%s]'.format(type, source,
+                                                                                this.multipliers[type][source]));
                 }
             }
         }
@@ -8080,7 +8093,8 @@ var BarbsComponents = BarbsComponents || (function () {
 
                     pieces = pieces[1].trim().split(' ');
                     if (pieces.length !== 3) {
-                        LOG.error('Expected exactly three space-separated pieces after colon in crit damage mod, found "%s"'.format(pieces.join(' ')));
+                        LOG.error('Expected exactly three space-separated pieces after colon in crit ' +
+                                      'damage mod, found "%s"'.format(pieces.join(' ')));
                         continue;
                     }
 
@@ -8093,7 +8107,8 @@ var BarbsComponents = BarbsComponents || (function () {
 
                     const roll_type = guess_applicable_roll_type_from_damage(damage_type);
                     if (roll_type === null) {
-                        LOG.error('Failed to guess what rolls base damage type "%s" should apply to'.format(damage_type));
+                        LOG.error('Failed to guess what rolls base damage type "%s" ' +
+                                      'should apply to'.format(damage_type));
                         continue;
                     }
 
@@ -8182,7 +8197,8 @@ var BarbsComponents = BarbsComponents || (function () {
 
                     pieces = pieces[1].trim().split(' ');
                     if (pieces.length !== 2) {
-                        LOG.error('Expected exactly two space-separated pieces after colon in crit damage mod, found "%s"'.format(pieces.join(' ')));
+                        LOG.error('Expected exactly two space-separated pieces after colon in crit damage mod, ' +
+                                      'found "%s"'.format(pieces.join(' ')));
                         continue;
                     }
 
@@ -8248,7 +8264,8 @@ var BarbsComponents = BarbsComponents || (function () {
                 for (let i = 0; i < hidden_stat_acro_keys.length; i++) {
                     const acro = hidden_stat_acro_keys[i];
                     if (part.startsWith(acro)) {
-                        const effect = this.get_stat_effect_from_part(part, HIDDEN_STAT_ACROS[acro], Effect.hidden_stat);
+                        const effect = this.get_stat_effect_from_part(part, HIDDEN_STAT_ACROS[acro],
+                                                                      Effect.hidden_stat);
                         if (effect !== null) {
                             effects.push(effect);
                             LOG.trace('construct_item(), handled hidden stat bonus part');
@@ -8257,7 +8274,8 @@ var BarbsComponents = BarbsComponents || (function () {
                         break;
 
                     } else if (part.startsWith('crit ' + acro)) {
-                        const effect = this.get_stat_effect_from_part(part, HIDDEN_STAT_ACROS[acro], Effect.crit_hidden_stat);
+                        const effect = this.get_stat_effect_from_part(part, HIDDEN_STAT_ACROS[acro],
+                                                                      Effect.crit_hidden_stat);
                         if (effect !== null) {
                             effects.push(effect);
                             LOG.trace('construct_item(), handled crit hidden stat bonus part');
@@ -8368,7 +8386,8 @@ var BarbsComponents = BarbsComponents || (function () {
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 3) {
-                LOG.error('Expected exactly three space-separated pieces after colon in damage, found "%s"'.format(pieces.join(' ')));
+                LOG.error('Expected exactly three space-separated pieces after colon in damage, ' +
+                              'found "%s"'.format(pieces.join(' ')));
                 return null;
             }
 
@@ -8400,7 +8419,8 @@ var BarbsComponents = BarbsComponents || (function () {
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 3) {
-                LOG.error('Expected exactly three space-separated pieces after colon in multiplier, found "%s"'.format(pieces.join(' ')));
+                LOG.error('Expected exactly three space-separated pieces after colon in multiplier, ' +
+                              'found "%s"'.format(pieces.join(' ')));
                 return null;
             }
 
@@ -8434,7 +8454,8 @@ var BarbsComponents = BarbsComponents || (function () {
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 2) {
-                LOG.error('Expected exactly three space-separated pieces after colon in stat, found "%s"'.format(pieces.join(' ')));
+                LOG.error('Expected exactly three space-separated pieces after colon in stat, ' +
+                              'found "%s"'.format(pieces.join(' ')));
                 return null;
             }
 
@@ -9744,8 +9765,8 @@ var BarbsComponents = BarbsComponents || (function () {
                 }
             }
 
-            // See what abilities have the "combo" tag, and build a set of their parent classes. Monk mastery increases by 1
-            // for each class of this nature that the character has.
+            // See what abilities have the "combo" tag, and build a set of their parent classes. Monk mastery
+            // increases by 1 for each class of this nature that the character has.
             let classes_with_combo_abilities = new Set();
             const keys = Object.keys(class_abilities);
             for (let i = 0; i < keys.length; i++) {
