@@ -2345,6 +2345,16 @@ var Barbs = Barbs || (function () {
         });
     }
 
+    function mirror_mage_scatter_shards(character, ability, parameters) {
+        for (let i = 0; i < 3; i++) {
+            let roll = new Roll(character, RollType.MAGIC);
+            roll.add_damage('5d8', Damage.ICE);
+            roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
+            roll_crit(roll, parameters, function (crit_section) {
+                do_roll(character, ability, roll, parameters, crit_section);
+            });
+        }
+    }
 
     function noxomancer_darkbomb(character, ability, parameters) {
         const delay = get_parameter('delay', parameters);
@@ -3040,6 +3050,9 @@ var Barbs = Barbs || (function () {
             'Focus Energy': print_ability_description,
             'Choke Hold': martial_artist_choke_hold,
             'Flying Kick': martial_artist_flying_kick,
+        },
+        'Mirror Mage': {
+            'Scatter Shards': mirror_mage_scatter_shards,
         },
         'Mistguard': {
             'Deep Snow': mistguard_deep_snow,

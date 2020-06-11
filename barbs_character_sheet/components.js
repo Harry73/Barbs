@@ -4782,6 +4782,23 @@ var BarbsComponents = BarbsComponents || (function () {
                         "lose EV"
                     ]
                 },
+                "Scatter Shards": {
+                    "name": "Scatter Shards",
+                    "class": "Mirror Mage",
+                    "description": [
+                        "You spray out multiple shots of ice and light. Deal 5d8 ice or light magic damage to a target in range, and repeat this attack twice (you may choose new targets). These attacks reflect upon hitting an enemy, being redirected in directions of your choosing, but can only be redirected in this manner once per attack."
+                    ],
+                    "tags": [
+                        "Spell",
+                        "attack",
+                        "multi-target",
+                        "destruction",
+                        "ice",
+                        "light",
+                        "conditional",
+                        "modal"
+                    ]
+                },
                 "Plane Mirror": {
                     "name": "Plane Mirror",
                     "class": "Mirror Mage",
