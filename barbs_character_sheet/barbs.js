@@ -989,8 +989,8 @@ var Barbs = Barbs || (function () {
 
             let formatted_hidden_stat = hidden_stat_format.format(hidden_stat_value);
             if (formatted_hidden_stat.includes('chance')) {
-                const value = Math.min(101, hidden_stat_value);
-                formatted_hidden_stat = formatted_hidden_stat + ' [[d100cs>[[100-(%s)+1]]]]'.format(value);
+                const value = 100 - Math.min(101, hidden_stat_value) + 1;
+                formatted_hidden_stat = formatted_hidden_stat + ' [[d100cs>%s]]'.format(value);
             }
             effects.push('<li>%s</li>'.format(formatted_hidden_stat));
         }
@@ -1215,7 +1215,7 @@ var Barbs = Barbs || (function () {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
         }
-        
+
         roll.add_hidden_stat(HiddenStat.ACCURACY, 50);
         roll.add_hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 50);
         roll.max_damage = true;
@@ -1235,8 +1235,11 @@ var Barbs = Barbs || (function () {
 
         // Extract damages from the original roll and send them to chat to actually do the roll.
         let fake = '';
+        if (roll.max_damage) {
+            roll.convert_to_max_damages();
+        }
         const damage_types = Object.keys(roll.damages);
-        for (let i = 0; i < damage_types.length;i++){
+        for (let i = 0; i < damage_types.length; i++) {
             fake = fake + '[[%s]]'.format(roll.damages[damage_types[i]]);
         }
         LOG.info('Alter course, fake roll: ' + fake);
@@ -1252,7 +1255,7 @@ var Barbs = Barbs || (function () {
                 redirected_roll.copy_multipliers(roll);
 
                 // Copy damages from what we got back from sending the damages to chat to be rolled.
-                for (let i = 0; i < damage_types.length; i++){
+                for (let i = 0; i < damage_types.length; i++) {
                     const damage = rolls[i].results.total.toString();
                     redirected_roll.add_damage(damage, damage_types[i]);
                 }
@@ -2426,9 +2429,143 @@ var Barbs = Barbs || (function () {
         });
     }
 
+
+    function mirror_mage_helix_beam(character, ability, parameters) {
+        // Add this in to get the arbitrary takeover handler to get called
+        parameters.push('helix_beam');
+
+        const p = get_parameter('element', parameters);
+        if (p === null) {
+            chat(character, 'Starting "element" parameter is required');
+            return;
+        }
+
+        let element = get_damage_from_type(p);
+        if (element === null) {
+            chat(character, 'Unrecognized starting element ' + p);
+            return;
+        }
+
+        if (element !== Damage.ICE && element !== Damage.LIGHT) {
+            chat(character, 'Starting element must be ice or light');
+            return;
+        }
+
+        // If this attack isn't being redirected
+        const redirects_param = get_parameter('redirected', parameters);
+        if (redirects_param === null) {
+            const roll = new Roll(character, RollType.MAGIC);
+            roll.add_damage('9d8', element);
+            roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), element);
+
+            if (element === Damage.ICE) {
+                roll.add_hidden_stat(HiddenStat.FROZEN_CHANCE, 20);
+            } else if (element === Damage.LIGHT) {
+                roll.add_hidden_stat(HiddenStat.STUN_CHANCE, 20);
+            }
+
+            roll_crit(roll, parameters, function (crit_section) {
+                do_roll(character, ability, roll, parameters, crit_section);
+            });
+            return;
+        }
+
+        const redirects = parse_int(redirects_param);
+        if (Number.isNaN(redirects)) {
+            chat(character, 'Non-numeric redirects "%s"'.format(redirects_param));
+            return;
+        }
+
+        // If the attack is being redirected
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('9d8', Damage.ICE);
+        roll.add_damage('9d8', Damage.LIGHT);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            // Don't use do_roll(), because we don't actually want to send this roll to chat. Don't use add_extras()
+            // because we're handling redirects ourselves and don't want to run takeover parameters.
+            add_items_to_roll(character, roll, RollTime.POST_CRIT, parameters);
+            if (!handle_normal_arbitrary_parameters(roll, RollTime.POST_CRIT, parameters)) {
+                LOG.warn('Problem handling arbitrary parameters at time ' + RollTime.POST_CRIT);
+                return false;
+            }
+            if (!add_persistent_effects_to_roll(character, roll, RollTime.POST_CRIT, parameters)) {
+                LOG.warn('Problem adding persistent effects to roll at time ' + RollTime.POST_CRIT);
+                return false;
+            }
+
+            // Extract damages from the original roll and send them to chat to actually do the roll.
+            let fake = '';
+            const damage_types = Object.keys(roll.damages);
+            for (let i = 0; i < damage_types.length;i++) {
+                if (!roll.max_damage) {
+                    fake = fake + '[[%s]]'.format(roll.damages[damage_types[i]]);
+                } else {
+                    fake = fake + '[[9*8]]'.format(roll.damages[damage_types[i]]);
+                }
+            }
+            LOG.info('Alter course, fake roll: ' + fake);
+
+            chat(character, fake,  function (results) {
+                const rolls = results[0].inlinerolls;
+                LOG.info('Alter course, fake roll result: ' + JSON.stringify(rolls));
+
+                for (let redirect_num = 0; redirect_num <= redirects; redirect_num++) {
+                    const redirected_roll = new Roll(character, RollType.MAGIC);
+
+                    // Steal the multipliers from the original roll.
+                    redirected_roll.copy_multipliers(roll);
+
+                    // Copy damages from what we got back from sending the damages to chat to be rolled.
+                    for (let i = 0; i < damage_types.length; i++) {
+                        if (damage_types[i] === element) {
+                            const damage = rolls[i].results.total.toString();
+                            redirected_roll.add_damage(damage, damage_types[i]);
+
+                            if (damage_types[i] === Damage.ICE) {
+                                redirected_roll.add_hidden_stat(HiddenStat.FROZEN_CHANCE, 20);
+                                element = Damage.LIGHT;
+                            } else if (damage_types[i] === Damage.LIGHT) {
+                                redirected_roll.add_hidden_stat(HiddenStat.STUN_CHANCE, 20);
+                                element = Damage.ICE;
+                            }
+                            break;
+                        }
+                    }
+
+                    // Copy crit status
+                    redirected_roll.crit = roll.crit;
+                    redirected_roll.crit_damage_mod = roll.crit_damage_mod;
+                    redirected_roll.should_apply_crit = roll.should_apply_crit;
+
+                    if (!redirected_roll.should_apply_crit) {
+                        crit_section = '';
+                    }
+
+                    // Only include the hidden stats and effects in the first roll, for cleanliness. We shouldn't care
+                    // about anything else in the roll for this passive.
+                    if (redirect_num === 0) {
+                        redirected_roll.hidden_stats = roll.hidden_stats;
+                        redirected_roll.copy_effects(roll);
+                    }
+
+                    // Add the multiplier for the redirect number
+                    redirected_roll.add_multiplier(redirect_num * 0.5, Damage.ALL, 'self');
+
+                    const rolls_per_type = redirected_roll.roll();
+                    format_and_send_roll(character, 'Helix Beam (Redirect: %s)'.format(redirect_num), redirected_roll,
+                                         rolls_per_type, crit_section);
+                }
+
+                finalize_roll(character, roll, parameters);
+            });
+        });
+    }
+
+
     function mirror_mage_scatter_shards(character, ability, parameters) {
         for (let i = 0; i < 3; i++) {
-            let roll = new Roll(character, RollType.MAGIC);
+            const roll = new Roll(character, RollType.MAGIC);
             roll.add_damage('5d8', Damage.ICE);
             roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
             roll_crit(roll, parameters, function (crit_section) {
@@ -2436,6 +2573,7 @@ var Barbs = Barbs || (function () {
             });
         }
     }
+
 
     function noxomancer_darkbomb(character, ability, parameters) {
         const delay = get_parameter('delay', parameters);
@@ -3135,6 +3273,7 @@ var Barbs = Barbs || (function () {
             'Flying Kick': martial_artist_flying_kick,
         },
         'Mirror Mage': {
+            'Helix Beam': mirror_mage_helix_beam,
             'Scatter Shards': mirror_mage_scatter_shards,
         },
         'Mistguard': {

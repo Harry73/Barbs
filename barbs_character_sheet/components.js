@@ -385,10 +385,12 @@ var BarbsComponents = BarbsComponents || (function () {
         CRIPPLE_CHANCE: '%s% chance to Cripple',
         FEAR_CHANCE: '%s% chance to Fear',
         FORCED_MOVEMENT: 'Forcibly move target %s ft',
+        FROZEN_CHANCE: '%s% chance to inflict Frozen',
         LETHALITY: '%s% lethality chance',
         LIFESTEAL: '%s% lifesteal',
         PARALYZE: '%s% chance to Paralyze',
         REACH: '+%s ft reach',
+        STUN_CHANCE: '%s% chance to Stun',
         UNBLOCKABLE_CHANCE: '%s% chance to be unblockable',
 
         REDUCE_EVASION: 'Target loses %s% evasion for 1 minute',
@@ -7627,7 +7629,6 @@ var BarbsComponents = BarbsComponents || (function () {
 
         return classes[class_name]['abilities'][ability_name];
     }
-
 
 
     // ################################################################################################################
