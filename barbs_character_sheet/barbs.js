@@ -178,6 +178,10 @@ var Barbs = Barbs || (function () {
         character.items.push(character.offhand);
         for (let i = 0; i < character.items.length; i++) {
             const item = character.items[i];
+            if (item === null) {
+                continue;
+            }
+
             for (let j = 0; j < item.effects.length; j++) {
                 if (item.effects[j].roll_time === roll_time) {
                     item.effects[j].apply(roll);
