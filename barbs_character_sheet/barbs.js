@@ -1211,6 +1211,16 @@ var Barbs = Barbs || (function () {
         return true;
     }
 
+    function mirror_mage_concave_mirror(roll, roll_time, parameter, parameters) {
+        if (roll_time !== RollTime.DEFAULT) {
+            return true;
+        }
+        
+        roll.add_hidden_stat(HiddenStat.ACCURACY, 50);
+        roll.add_hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 50);
+        roll.max_damage = true;
+        return true;
+    }
 
     // Note that this is a "takeover arbitrary parameter", so it behaves differently from other arbitrary
     // parameter handlers. The occurs strictly after we've determined if the roll is a crit, in case that matters.
@@ -1339,6 +1349,7 @@ var Barbs = Barbs || (function () {
         'daggerspell_marked': daggerspell_marked,
         'draconic_pact': dragoncaller_draconic_pact,
         'empowered': daggerspell_ritual_dagger,
+		'concave': mirror_mage_concave_mirror,
         'spotting': sniper_spotter,
         'stance': thief_stance,
         'tide': aquamancer_tide,
