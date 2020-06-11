@@ -1795,7 +1795,7 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('6d10', Damage.PHYSICAL);
         add_scale_damage(character, roll, parameters);
-        roll.add_effect('Stun target until end of their next turn');
+        roll.add_effect('Stun target until end of their next turn CR:[[1d100]]');
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -1885,7 +1885,7 @@ var Barbs = Barbs || (function () {
         const roll_1 = new Roll(character, RollType.MAGIC);
         roll_1.add_damage('8d8', Damage.ICE);
         roll_1.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
-        roll_1.add_effect('Frozen');
+        roll_1.add_effect('Frozen CR:[[1d100]]');
         roll_crit(roll_1, parameters, function (crit_section) {
             do_roll(character, '%s (5 ft)'.format(ability.name), roll_1, parameters, crit_section, /*do_finalize=*/false);
         });
@@ -1893,7 +1893,7 @@ var Barbs = Barbs || (function () {
         const roll_2 = new Roll(character, RollType.MAGIC);
         roll_2.add_damage('6d8', Damage.ICE);
         roll_2.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
-        roll_2.add_effect('Slowed');
+        roll_2.add_effect('Slowed CR:[[1d100]]');
         roll_crit(roll_2, parameters, function (crit_section) {
             do_roll(character, '%s (10 ft)'.format(ability.name), roll_2, parameters, crit_section, /*do_finalize=*/false);
         });
@@ -1960,9 +1960,9 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('4d12', Damage.LIGHTNING);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.LIGHTNING);
-        roll.add_effect('50% chance to deal an additional d12 lightning magic damage');
-        roll.add_effect('30% to inflict Paralyze for 1 minute');
-        roll.add_effect('20% to inflict Stunned until the beginning of your next turn');
+        roll.add_effect('50% chance to deal an additional d12 lightning magic damage Chance: [[1d100]]');
+        roll.add_effect('30% to inflict Paralyze for 1 minute Chance:[[1d100]] CR:[[1d100]]');
+        roll.add_effect('20% to inflict Stunned until the beginning of your next turn Chance: [[1d100]] CR:[[1d100]]');
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
         });
@@ -2003,7 +2003,7 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('4d10', Damage.PHYSICAL);
         add_scale_damage(character, roll, parameters);
-        roll.add_effect('Inflict Physical Vulnerability equal to 10% + X%, where X is the target\'s current Physical Vulnerability');
+        roll.add_effect('Inflict Physical Vulnerability equal to 10% + X%, where X is the target\'s current Physical Vulnerability CR:[[1d100]]');
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -2587,10 +2587,10 @@ var Barbs = Barbs || (function () {
 
         if (delay === 'false') {
             roll.add_damage('3d10', Damage.DARK);
-            roll.add_effect('1 curse')
+            roll.add_effect('1 curse CR:[[1d100]]')
         } else if (delay === 'true') {
             roll.add_damage('6d10', Damage.DARK);
-            roll.add_effect('2 curses')
+            roll.add_effect('2 curses CR:[[d100]][[1d100]]')
         } else {
             chat(character, 'Incorrect option for "delay" parameter, should be "delay {true/false}"')
         }
@@ -2606,8 +2606,8 @@ var Barbs = Barbs || (function () {
         roll.add_damage('6d12', Damage.FIRE);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.FIRE);
         roll.add_effect('Unblockable/uncounterable if this is your second fire spell this turn');
-        roll.add_effect('-5% Fire MR');
-        roll.add_effect('+5% Fire Vulnerability');
+        roll.add_effect('-5% Fire MR CR:[[1d100]]');
+        roll.add_effect('+5% Fire Vulnerability CR:[[1d100]]');
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -2619,9 +2619,9 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('4d12', Damage.FIRE);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.FIRE);
-        roll.add_effect('Hit enemies 15 ft from you are inflicted with Burn X, where X is equal to the amount of damage rolled');
-        roll.add_effect('-5% Fire MR');
-        roll.add_effect('+5% Fire Vulnerability');
+        roll.add_effect('Hit enemies 15 ft from you are inflicted with Burn X, where X is equal to the amount of damage rolled CR:[[1d100]]');
+        roll.add_effect('-5% Fire MR CR:[[1d100]]');
+        roll.add_effect('+5% Fire Vulnerability CR:[[1d100]]');
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -2769,7 +2769,7 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('3d8', Damage.PHYSICAL);
         add_scale_damage(character, roll, parameters);
-        roll.add_effect('Stun until end of turn');
+        roll.add_effect('Stun until end of turn CR:[[1d100]]');
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -2839,7 +2839,7 @@ var Barbs = Barbs || (function () {
 
         const roll = new Roll(summon, RollType.PHYSICAL);
         roll.add_damage('4d6', Damage.PHYSICAL);
-        roll.add_effect('Poison [[2d6]]');
+        roll.add_effect('Poison [[2d6]] CR:[[1d100]]');
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(summon, ability, roll, parameters, crit_section);
