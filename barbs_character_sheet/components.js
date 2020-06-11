@@ -406,6 +406,26 @@ var BarbsComponents = BarbsComponents || (function () {
         LIGHTNING_MAGIC_PENETRATION: 's% lightning magic penetration',
         LIGHT_MAGIC_PENETRATION: '%s% light magic penetration',
         DARK_MAGIC_PENETRATION: '%s% dark magic penetration',
+        
+        FIRE_MAGIC_MR: '%s% fire magic resist',
+        WATER_MAGIC_MR: '%s% water magic resist',
+        EARTH_MAGIC_MR: '%s% earth magic resist',
+        AIR_MAGIC_MR: '%s% air magic resist',
+        ICE_MAGIC_MR: '%s% ice magic resist',
+        LIGHTNING_MAGIC_MR: '%s% lightning magic resist',
+        LIGHT_MAGIC_MR: '%s% light magic resist',
+        DARK_MAGIC_MR: '%s% dark magic resist',
+        
+        BURN_CR: '%s% burn resist',
+        CRIPPLE_CR: '%s% cripple resist',
+        CURSE_CR: '%s% curse resist',
+        FEAR_CR: '%s% fear resist'
+        IMMOBILIZE_CR: '%s% immobilize resist',
+        PARALYZE_CR: '%s% paralyze resist',
+        POISON_CR: '%s% poison resist',
+        SLOW_CR: '%s% slow resist',
+        STUN_CR: '%s% stun resist',
+        TAUNT_CR: '%s% taunt resist',
     };
 
 
@@ -437,6 +457,26 @@ var BarbsComponents = BarbsComponents || (function () {
         'lightning magic pen:': HiddenStat.LIGHTNING_MAGIC_PENETRATION,
         'light magic pen:': HiddenStat.LIGHT_MAGIC_PENETRATION,
         'dark magic pen:': HiddenStat.DARK_MAGIC_PENETRATION,
+        
+        'fire mr:': HiddenStat.FIRE_MAGIC_MR,
+        'water mr:': HiddenStat.WATER_MAGIC_MR,
+        'earth mr:': HiddenStat.EARTH_MAGIC_MR,
+        'air mr:': HiddenStat.AIR_MAGIC_MR,
+        'ice mr:': HiddenStat.ICE_MAGIC_MR,
+        'lightning mr:': HiddenStat.LIGHTNING_MAGIC_MR,
+        'light mr:': HiddenStat.LIGHT_MAGIC_MR,
+        'dark mr:': HiddenStat.DARK_MAGIC_MR,
+        
+        'burn cr:': HiddenStat.BURN_CR,
+        'cripple cr:': HiddenStat.CRIPPLE_CR,
+        'curse cr:': HiddenStat.CURSE_CR,
+        'fear cr:': HiddenStat.FEAR_CR,
+        'immobilize cr:': HiddenStat.IMMOBILIZE_CR,
+        'paralyze cr:': HiddenStat.PARALYZE_CR,
+        'poison cr:': HiddenStat.POISON_CR,
+        'slow cr:': HiddenStat.SLOW_CR,
+        'stun cr:': HiddenStat.STUN_CR,
+        'taunt cr:': HiddenStat.TAUNT_CR,
     };
 
 
