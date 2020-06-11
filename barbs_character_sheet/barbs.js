@@ -174,8 +174,14 @@ var Barbs = Barbs || (function () {
         const roll_time = RollTime.DEFAULT;
 
         // Apply effects from items that have the proper roll time
+        character.items.push(character.main_hand);
+        character.items.push(character.offhand);
         for (let i = 0; i < character.items.length; i++) {
             const item = character.items[i];
+            if (item === null) {
+                continue;
+            }
+
             for (let j = 0; j < item.effects.length; j++) {
                 if (item.effects[j].roll_time === roll_time) {
                     item.effects[j].apply(roll);
@@ -734,38 +740,96 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function get_applying_weapons(character, roll, parameters) {
+        const applying_weapons = [];
+
+        // This special override parameter can be added to parameters to forcibly skip adding items here.
+        // This is really for roll_item(), so that we don't apply main/offhand weapons twice.
+        if (get_parameter('skip_applying_weapons', parameters) !== null) {
+            return applying_weapons;
+        }
+
+        if (roll.roll_type === RollType.PHYSICAL) {
+            if (get_parameter('offhand', parameters) !== null) {
+                applying_weapons.push(character.offhand);
+            } else if (get_parameter('dual_wield', parameters) !== null) {
+                applying_weapons.push(character.main_hand);
+                applying_weapons.push(character.offhand);
+            } else {
+                applying_weapons.push(character.main_hand);
+            }
+        } else {
+            applying_weapons.push(character.main_hand);
+            applying_weapons.push(character.offhand);
+        }
+
+        return applying_weapons;
+    }
+
+
     // For classes abilities specifically. We assume that the ability uses the character's equipped item with type
     // MAIN_HAND or TWO_HAND.
-    function add_scale_damage(character, roll) {
+    function add_scale_damage(character, roll, parameters) {
         assert_not_null(character, 'add_scale_damage() character');
         assert_not_null(roll, 'add_scale_damage() roll');
+        assert_not_null(parameters, 'add_scale_damage() parameters');
 
         if (!RollType.is_physical(roll.roll_type)) {
             chat(character, 'Unexpected roll type %s while adding weapon scaling damage'.format(roll.roll_type));
+            return;
         }
 
-        let main_hand_item = character.get_main_weapon();
-        if (main_hand_item !== null) {
-            main_hand_item.damage_scaling(character, roll);
+        const attack_weapons = get_applying_weapons(character, roll, parameters);
+        let max_damage_scaling = null;
+
+        for (let i = 0; i < attack_weapons.length; i++) {
+            const damage_scaling = attack_weapons[i].damage_scaling;
+            if (damage_scaling.stat === null) {
+                continue;
+            }
+
+            if (max_damage_scaling === null || character.get_stat(damage_scaling.stat) > character.get_stat(max_damage_scaling.stat)) {
+                max_damage_scaling = damage_scaling;
+            }
+        }
+
+        if (max_damage_scaling !== null) {
+            max_damage_scaling.handler(character, roll);
+        }
+    }
+
+
+    function add_item_to_roll(item, roll, roll_time) {
+        LOG.trace('Applying item "%s"'.format(item.name));
+        for (let i = 0; i < item.effects.length; i++) {
+            if (item.effects[i].roll_time === roll_time) {
+                LOG.trace('Applying effect %s from item "%s"'.format(i, item.name));
+                item.effects[i].apply(roll);
+            }
         }
     }
 
 
     // Iterate through the character's items and add any damage bonuses or multipliers to the roll
-    function add_items_to_roll(character, roll, roll_time) {
+    function add_items_to_roll(character, roll, roll_time, parameters) {
         assert_not_null(character, 'add_items_to_roll() character');
         assert_not_null(roll, 'add_items_to_roll() roll');
         assert_not_null(roll_time, 'add_items_to_roll() roll_time');
+        assert_not_null(parameters, 'add_items_to_roll() parameters');
 
         for (let i = 0; i < character.items.length; i++) {
             const item = character.items[i];
-            LOG.trace('Applying item "%s"'.format(item.name));
-            for (let j = 0; j < item.effects.length; j++) {
-                if (item.effects[j].roll_time === roll_time) {
-                    LOG.trace('Applying effect %s from item "%s"'.format(j, item.name));
-                    item.effects[j].apply(roll);
-                }
+            add_item_to_roll(item, roll, roll_time);
+        }
+
+        const attack_weapons = get_applying_weapons(character, roll, parameters);
+        for (let i = 0; i < attack_weapons.length; i++) {
+            const attack_weapon = attack_weapons[i];
+            if (attack_weapon === null) {
+                continue;
             }
+
+            add_item_to_roll(attack_weapon, roll, roll_time);
         }
     }
 
@@ -776,7 +840,7 @@ var Barbs = Barbs || (function () {
         assert_not_null(roll_time, 'add_extras() roll_time');
         assert_not_null(parameters, 'add_extras() parameters');
 
-        add_items_to_roll(character, roll, roll_time);
+        add_items_to_roll(character, roll, roll_time, parameters);
 
         if (!handle_normal_arbitrary_parameters(roll, roll_time, parameters)) {
             LOG.warn('Problem handling arbitrary parameters at time ' + roll_time);
@@ -1225,6 +1289,7 @@ var Barbs = Barbs || (function () {
         return true;
     }
 
+
     function thief_stance(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
@@ -1249,6 +1314,7 @@ var Barbs = Barbs || (function () {
 
         return true;
     }
+
 
     function warper_opportunistic_predator(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
@@ -1355,7 +1421,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const pieces = msg.content.split(' ');
+        const pieces = remove_empty(msg.content.split(' '));
         const item_slot = pieces[2];
         const options = pieces.slice(3).join(' ');
         const option_pieces = options.split('|');
@@ -1376,9 +1442,13 @@ var Barbs = Barbs || (function () {
         item.base_damage.apply(roll);
 
         // We know the item being used explicitly, so don't use add_scale_damage(), which guesses
-        item.damage_scaling(character, roll);
+        item.damage_scaling.handler(character, roll);
+
+        parameters.push('skip_applying_weapons');
+        add_item_to_roll(item, roll, RollTime.DEFAULT);
 
         roll_crit(roll, parameters, function (crit_section) {
+            add_item_to_roll(item, roll, RollTime.POST_CRIT);
             do_roll(character, item, roll, parameters, crit_section);
         });
     }
@@ -1531,7 +1601,7 @@ var Barbs = Barbs || (function () {
 
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('3d4', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         roll_crit(roll, parameters, function (crit_section) {
             let hidden_effect = false;
@@ -1580,7 +1650,7 @@ var Barbs = Barbs || (function () {
             for (let i = 0; i < dice_divisions.length; i++) {
                 const roll = new Roll(character, RollType.PHYSICAL);
                 roll.add_damage('%sd4'.format(dice_divisions[i]), Damage.PHYSICAL);
-                add_scale_damage(character, roll);
+                add_scale_damage(character, roll, parameters);
                 roll.add_hidden_stat(HiddenStat.LETHALITY, 5 * dice_divisions[i]);
 
                 roll.copy_damages(dummy_roll);
@@ -1617,7 +1687,7 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('8d4', Damage.PHYSICAL);
         roll.add_crit_damage_mod(100);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -1682,7 +1752,7 @@ var Barbs = Barbs || (function () {
     function champion_disarming_blow(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('5d6', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -1699,7 +1769,7 @@ var Barbs = Barbs || (function () {
     function champion_piercing_blow(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('7d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -1710,7 +1780,7 @@ var Barbs = Barbs || (function () {
     function champion_skull_bash(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('6d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
         roll.add_effect('Stun target until end of their next turn');
 
         roll_crit(roll, parameters, function (crit_section) {
@@ -1726,7 +1796,7 @@ var Barbs = Barbs || (function () {
             // always take the highest.
             const roll = new Roll(character, RollType.PHYSICAL);
             roll.add_damage('2d10d1+2d10d1+2d10d1+2d10d1+2d10d1', Damage.PHYSICAL);
-            add_scale_damage(character, roll);
+            add_scale_damage(character, roll, parameters);
 
             roll_crit(roll, parameters, function (crit_section) {
                 do_roll(character, ability, roll, parameters, crit_section);
@@ -1769,7 +1839,7 @@ var Barbs = Barbs || (function () {
         }
 
         roll.add_damage('%sd10'.format(5 - values.length), Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         roll_crit(roll, parameters, function(crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -1836,7 +1906,7 @@ var Barbs = Barbs || (function () {
     function daggerspell_fadeaway_slice(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('4d4', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -1847,7 +1917,7 @@ var Barbs = Barbs || (function () {
     function daggerspell_exposing_tear(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('8d4', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -1906,7 +1976,7 @@ var Barbs = Barbs || (function () {
     function destroyer_rampage(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('6d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
         roll.add_effect('Knock targets prone');
 
         roll_crit(roll, parameters, function (crit_section) {
@@ -1918,7 +1988,7 @@ var Barbs = Barbs || (function () {
     function destroyer_slam(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('4d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
         roll.add_effect('Inflict Physical Vulnerability equal to 10% + X%, where X is the target\'s current Physical Vulnerability');
 
         roll_crit(roll, parameters, function (crit_section) {
@@ -2116,7 +2186,7 @@ var Barbs = Barbs || (function () {
     function juggernaut_wild_swing(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('5d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
         roll.add_hidden_stat(HiddenStat.LIFESTEAL, 30);
         roll.add_effect('+30% lifesteal if your health is below 30%');
 
@@ -2171,7 +2241,7 @@ var Barbs = Barbs || (function () {
 
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('4d%s'.format(monk_mastery), Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
         roll.add_effect('Gain Ki equal to rolled value');
 
         const spent_ki = get_parameter('ki', parameters);
@@ -2190,7 +2260,7 @@ var Barbs = Barbs || (function () {
 
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('5d%s'.format(monk_mastery), Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
         roll.add_effect('Gain Ki equal to half the rolled value');
 
         const spent_ki = get_parameter('ki', parameters);
@@ -2243,7 +2313,7 @@ var Barbs = Barbs || (function () {
             for (let i = 0; i < repetitions; i++) {
                 const roll = new Roll(character, RollType.PHYSICAL);
                 roll.add_damage('d8', Damage.PHYSICAL);
-                add_scale_damage(character, roll);
+                add_scale_damage(character, roll, parameters);
 
                 roll_crit(roll, parameters, function (crit_section) {
                     do_roll(character, ability, roll, parameters, crit_section);
@@ -2267,7 +2337,7 @@ var Barbs = Barbs || (function () {
     function lightning_duelist_shocking_parry(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('5d8', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
         roll.add_effect('On hit, you have a 50% chance of recovering half the stamina cost');
 
         roll_crit(roll, parameters, function (crit_section) {
@@ -2314,7 +2384,7 @@ var Barbs = Barbs || (function () {
 
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('4d%s'.format(monk_mastery), Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -2327,7 +2397,7 @@ var Barbs = Barbs || (function () {
 
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('6d%s'.format(monk_mastery), Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -2413,7 +2483,7 @@ var Barbs = Barbs || (function () {
     function sentinel_crossguard_guillotine(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('4d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         const stacks = get_parameter(parameters, 'stacks');
         if (stacks !== null) {
@@ -2494,7 +2564,7 @@ var Barbs = Barbs || (function () {
     function sniper_kill_shot(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('7d8', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         const stacks_spent_for_lethality = get_parameter('stacks', parameters);
         if (stacks_spent_for_lethality !== null) {
@@ -2510,7 +2580,7 @@ var Barbs = Barbs || (function () {
     function sniper_piercing_shot(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('5d8', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -2538,7 +2608,7 @@ var Barbs = Barbs || (function () {
     function sniper_shrapnel_shot(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('6d8', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -2549,7 +2619,7 @@ var Barbs = Barbs || (function () {
     function sniper_swift_shot(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('3d8', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
         roll.add_effect('Stun until end of turn');
 
         roll_crit(roll, parameters, function (crit_section) {
@@ -2561,7 +2631,7 @@ var Barbs = Barbs || (function () {
     function soldier_biding_blade(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('5d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         const blocked_damage = get_parameter('blocked', parameters);
         if (blocked_damage !== null) {
@@ -2588,7 +2658,7 @@ var Barbs = Barbs || (function () {
     function soldier_fleetfoot_blade(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('4d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -2599,7 +2669,7 @@ var Barbs = Barbs || (function () {
     function soldier_steadfast_strikes(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('2d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         const hits = get_parameter('hits', parameters);
         if (hits !== null) {
@@ -2774,7 +2844,7 @@ var Barbs = Barbs || (function () {
 
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('5d4', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
 
         if (stance === 'run'){
             roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, 20);
@@ -2857,7 +2927,7 @@ var Barbs = Barbs || (function () {
         if (choice === 'first' || choice === 'both') {
             const roll = new Roll(character, RollType.PHYSICAL);
             roll.add_damage('3d10', Damage.PHYSICAL);
-            add_scale_damage(character, roll);
+            add_scale_damage(character, roll, parameters);
 
             roll_crit(roll, parameters, function (crit_section) {
                 do_roll(character, ability, roll, parameters, crit_section);
@@ -2867,7 +2937,7 @@ var Barbs = Barbs || (function () {
         if (choice === 'second' || choice === 'both') {
             const roll = new Roll(character, RollType.PHYSICAL);
             roll.add_damage('3d10', Damage.PHYSICAL);
-            add_scale_damage(character, roll);
+            add_scale_damage(character, roll, parameters);
 
             roll_crit(roll, parameters, function (crit_section) {
                 do_roll(character, ability, roll, parameters, crit_section);
@@ -2879,7 +2949,7 @@ var Barbs = Barbs || (function () {
     function warlord_hookshot(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('5d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll);
+        add_scale_damage(character, roll, parameters);
         roll.add_effect('Pull target 20 ft towards you');
 
         roll_crit(roll, parameters, function (crit_section) {
