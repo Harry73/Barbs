@@ -8052,7 +8052,7 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(type, 'Item::new() type ' + name);
             assert_not_null(slot, 'Item::new() slot ' + name);
             assert_not_null(base_damage, 'Item::new() base_damage ' + name);
-            assert_not_null(damage_scaling, 'Item::new() damage_scaling ' + name);
+            assert_type(damage_scaling, 'ItemScaler', 'Item::new() damage_scaling ' + name);
             assert_not_null(effects, 'Item::new() effects ' + name);
 
             this._type = 'Item';
@@ -8381,7 +8381,7 @@ var BarbsComponents = BarbsComponents || (function () {
             );
 
             item.type = null;
-            LOG.info('Constructed item with name "%s"'.format(item.name));
+            LOG.debug('Constructed item with name "%s"'.format(item.name));
             return item;
         }
 

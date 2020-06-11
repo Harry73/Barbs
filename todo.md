@@ -1,7 +1,5 @@
 Ian's TODO list
 
-* Don't add offhand weapon mods to auto-attacks with main hand, and vice versa
-* Don't add offhand weapon to normal abilities, unless the "offhand" parameter is specified (or something of that nature)
 * Condition resist rolls against specific conditions
 
 * Item handling
