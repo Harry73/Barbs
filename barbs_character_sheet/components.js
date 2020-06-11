@@ -3290,7 +3290,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "name": "Summon Bronze Dragon",
                     "class": "Dragoncaller",
                     "description": [
-                        "You summon a juvenile bronze dragon, bringer of lightning. Summon a Bronze Dragon with 200 health, large size, 20 AC, 80% EV, 20% MR, 30% CR, and 80 ft flying Move Speed. The Dragon obeys your Commands; otherwise, it uses its Move Action to fly to positions above enemies, its Major Action to either swipe with its claws for 10d10 physical damage on a single target in melee range or use its breath attack for 10d12 lightning magic damage in a 200 ft line AOE, and its Minor Action to either buff all allies with +10 Move Speed and +10% Armor Penetration, stacking, or inflict all enemies with -10 Move Speed and +10% Physical Vulnerability, stacking. The Bronze Dragon is a superior predator and hunter; if supplied with a magical signature, it can hunt down any individual anywhere on a plane regardless of distance, unless they are magically hidden."
+                        "You summon a juvenile bronze dragon, bringer of lightning. Summon a Bronze Dragon with 200 health, large size, 20 AC, 80% EV, 20% MR, 30% CR, and 80 ft flying Move Speed. The Dragon obeys your Commands; otherwise, it uses its Move Action to fly to positions above enemies, its Major Action to either swipe with its claws for 10d10 physical damage on a single target in melee range or use its breath attack for 10d12 lightning magic damage in a 200 ft line AOE, and its Minor Action to either buff all allies with +10 Move Speed and +10% Armor Penetration for 1 minute, stacking and refreshing, or inflict all enemies with -10 Move Speed and +10% Physical Vulnerability for 1 minute, stacking and refreshing. The Bronze Dragon is a superior predator and hunter; if supplied with a magical signature, it can hunt down any individual anywhere on a plane regardless of distance, unless they are magically hidden."
                     ],
                     "tags": [
                         "Spell",
@@ -4782,28 +4782,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "lose EV"
                     ]
                 },
-                "Scatter Shards": {
-                    "name": "Scatter Shards",
-                    "class": "Mirror Mage",
-                    "description": [
-                        "You spray out multiple shots of ice and light. Deal 5d8 ice or light magic damage to a target in range, and repeat this attack twice (you may choose new targets). These attacks reflect upon hitting an enemy, being redirected in directions of your choosing, but can only be redirected in this manner once per attack."
-                    ],
-                    "tags": [
-                        "Spell",
-                        "attack",
-                        "multi-target",
-                        "destruction",
-                        "ice",
-                        "light",
-                        "conditional",
-                        "modal"
-                    ]
-                },
                 "Plane Mirror": {
                     "name": "Plane Mirror",
                     "class": "Mirror Mage",
                     "description": [
-                        "You create a mirror of ice and light. Create a Plane Mirror in an empty space in range for the duration, choosing its orientation to be either orthogonal or diagonal direction; it is immune to damage and conditions, cannot be forcibly moved or teleported, but can be dispelled. The Mirror reflects what it sees, providing an additional line of sight for you and allies alone; it acts as an opaque barrier otherwise. When you hit the mirror with a line AOE or straight moving single-target projectile spell, it redirects the attack based on the angle, resetting the attack's range and granting the attack +20% Accuracy. If the mirror is hit by a spell that has been redirected this way twice already, it is dispelled."
+                        "You create a mirror of ice and light. Create a Plane Mirror in an empty space in range for the duration, choosing its orientation; it is immune to damage and conditions, cannot be forcibly moved or teleported, but can be dispelled. The Mirror reflects what it sees, providing an additional line of sight for you and allies alone; it acts as an opaque barrier otherwise. When you hit the mirror with a line AOE or straight moving projectile spell, it redirects the attack based on the angle, resetting the attack's range and granting the attack +20% Accuracy. If the mirror is hit by a spell that has been redirected twice already, it is dispelled."
                     ],
                     "tags": [
                         "Spell",
@@ -4830,6 +4813,154 @@ var BarbsComponents = BarbsComponents || (function () {
                         "ice",
                         "light",
                         "conditional"
+                    ]
+                },
+                "Helix Beam": {
+                    "name": "Helix Beam",
+                    "class": "Mirror Mage",
+                    "description": [
+                        "You fire a beam of mana that vacillates between light and ice. Deal 9d8 ice or light magic damage to all enemies in a 60 ft line AOE. When this spell is redirected, it converts its damage to the other choice between ice and light magic damage. Ice magic damage dealt by this spell has a 20% chance to inflict Frozen, and light magic damage dealt by this spell has a 20% chance to inflict Stun until the end of the target's turn; the chance of either of these occuring increases by 20% for each time this spell has been redirected."
+                    ],
+                    "tags": [
+                        "Spell",
+                        "attack",
+                        "destruction",
+                        "AOE",
+                        "line",
+                        "ice",
+                        "light",
+                        "conditional",
+                        "condition",
+                        "Frozen",
+                        "Stun",
+                        "modal"
+                    ]
+                },
+                "Scatter Shards": {
+                    "name": "Scatter Shards",
+                    "class": "Mirror Mage",
+                    "description": [
+                        "You spray out multiple shots of ice and light. Deal 5d8 ice or light magic damage to a target in range, and repeat this attack twice (you may choose new targets). These attacks reflect upon hitting an enemy, being redirected in directions of your choosing, but can only be redirected in this manner once per attack."
+                    ],
+                    "tags": [
+                        "Spell",
+                        "attack",
+                        "multi-target",
+                        "destruction",
+                        "ice",
+                        "light",
+                        "conditional",
+                        "modal"
+                    ]
+                },
+                "Beam of Brilliance": {
+                    "name": "Beam of Brilliance",
+                    "class": "Mirror Mage",
+                    "description": [
+                        "You launch streams of magic at enemies. Deal 15d8 magic damage to all enemies in a 15 ft wide 60 ft long line AOE; the center line is your choice of either ice or light, and the edge lines are the opposite choice. Ice magic dealt by this spell inflicts Slow and Frozen and light magic dealt by this spell inflicts -20% EV and Stun until the end of the target's turn. When this spell is redirected, it gains 10 ft of width, alternating the element of the newly added lines to maintain the spells element pattern. Enemies whose size is larger than normal are damaged separately by each line that hits them."
+                    ],
+                    "tags": [
+                        "Spell",
+                        "attack",
+                        "AOE",
+                        "line",
+                        "destruction",
+                        "ice",
+                        "light",
+                        "modal",
+                        "conditional",
+                        "condition",
+                        "Slow",
+                        "lose EV",
+                        "Frozen",
+                        "Stun"
+                    ]
+                },
+                "Remand": {
+                    "name": "Remand",
+                    "class": "Mirror Mage",
+                    "description": [
+                        "You glassify an enemy's mana while it's vulnerable. As a reaction to a target in range casting a spell, you may counter that spell. The mana spent on the enemy spell becomes your mana and you can either release it or use it to cast any spell from the Refraction branch of Mirror Mage as a free reaction."
+                    ],
+                    "tags": [
+                        "Spell",
+                        "defensive",
+                        "counterspell",
+                        "modal"
+                    ]
+                },
+                "Mirror's Curse": {
+                    "name": "Mirror's Curse",
+                    "class": "Mirror Mage",
+                    "description": [
+                        "You curse an enemy's magical circuits. A target in range gains the following condition: when they cast spells, there is a 50% chance that the spell's target is redirected to the caster (if the spell is an AOE, it is centered on the caster instead)."
+                    ],
+                    "tags": [
+                        "Spell",
+                        "defensive",
+                        "single-target",
+                        "condition"
+                    ]
+                },
+                "Glass Armor": {
+                    "name": "Glass Armor",
+                    "class": "Mirror Mage",
+                    "description": [
+                        "You cover an ally in plates of mirrored scales. A target in range gains the following buff: All ranged projectile attacks and line AOEs they are hit by are instead redirected at attackers; melee attackers that hit them are pushed back 30 ft; +50% MR; +50% Light MR; +50% Ice MR. This buff has a 50% chance to resist being stripped; if it does so successfully, it instead loses 10 seconds of its duration."
+                    ],
+                    "tags": [
+                        "Spell",
+                        "defensive",
+                        "buff",
+                        "gain MR"
+                    ]
+                },
+                "Move Mirrors": {
+                    "name": "Move Mirrors",
+                    "class": "Mirror Mage",
+                    "description": [
+                        "You reposition all mirrors. Any number of mirror totems you have created in range move to new positions of your choosing within 30 ft of their previous positions, and you may change their orientations as well. Also, all mirrors have their durations refreshed."
+                    ],
+                    "tags": [
+                        "Spell",
+                        "utility",
+                        "modal"
+                    ]
+                },
+                "Concave Mirror": {
+                    "name": "Concave Mirror",
+                    "class": "Mirror Mage",
+                    "description": [
+                        "You create a mirror of ice and light, curved inwards. Create a Concave Mirror in an empty space in range for the duration, choosing its orientation; it is immune to damage and conditions, cannot be forcibly moved or teleported, but can be dispelled. The Mirror reflects what it sees, providing an additional line of sight for you an allies alone; it acts as an opaque barrier otherwise. When the back of the mirror is hit with a line AOE or straight moving projectile spell, it briefly stores the spell until the end of the turn before redirecting all stored spells in an orthagonal direction out the front of the mirror. The damage and effects of all spells stored this way are combined into a single attack, preferring the largest AOE type amongst stored spells, and the new attack has its damage dice maximized, +50% Accuracy, and +50% Magic Penetration. If the mirror is hit by a spell that has been redirected twice already, or if it combines more than 2 spells in one turn, it is dispelled."
+                    ],
+                    "tags": [
+                        "Spell",
+                        "ice",
+                        "light",
+                        "defensive",
+                        "conjuration",
+                        "utility",
+                        "conditional",
+                        "modal",
+                        "totem"
+                    ]
+                },
+                "Convex Mirror": {
+                    "name": "Convex Mirror",
+                    "class": "Mirror Mage",
+                    "description": [
+                        "You create a mirror of ice and light, curved outwards. Create a Convex Mirror in an empty space in range for the duration, choosing its orientation; it is immune to damage and conditions, cannot be forcibly moved or teleported, but can be dispelled. The Mirror reflects what it sees, providing an additional line of sight for you an allies alone; it acts as an opaque barrier otherwise. When the back of the mirror is hit with a line AOE or straight moving projectile spell, it redirects and duplicates the attack out the front side of the mirror at approximately 45 degree angles, resetting the attack's range and granting the attack +20% Accuracy. If the mirror is hit by a spell that has been redirected twice already, it is dispelled."
+                    ],
+                    "tags": [
+                        "Spell",
+                        "ice",
+                        "light",
+                        "defensive",
+                        "conjuration",
+                        "utility",
+                        "conditional",
+                        "modal",
+                        "totem"
                     ]
                 }
             }
@@ -6884,6 +7015,61 @@ var BarbsComponents = BarbsComponents || (function () {
                         "organics",
                         "augmentation",
                         "minion"
+                    ]
+                }
+            }
+        },
+        "Voidwalker": {
+            "type": "class",
+            "name": "Voidwalker",
+            "description": "The Voidwalker is a rogue that has adapted magic heavily into its suite of tools in order to assist small groups in exercising stealth and safety during travel and site execution. The spell list of the Voidwalker looks a lot like the ability list of the Thief, but is adapted to function for the entire party, providing multiple people with access to Hidden, breaking line of sight, avoiding capture, and evading enemy attacks. An additional layer of defenses is provided by a suite of powerful group defensive spells, covering multiple angles that enemies might attack from. More uniquely, this class provides a heavy amount of mobility in the form of group teleportation, even over very long distances, and is effective at protecting groups during movement by providing access to an ethereal realm where enemies cannot freely interact with them. Ultimately this class's goal is to provide a group with options to avoid combat while infiltrating an enemy fortress or options to cover long distances without needing to walk or use mounts.",
+            "passive": {
+                "Embrace the Void": "Before initiative is rolled, choose two:<ul><li>All allies become Hidden</li><li>All allies get +20 Initiative</li><li>All allies teleport up to 20 ft to empty spaces of their choosing</li><li>All enemies teleport up to 20 ft to empty spaces in random directions</li><ul>"
+            },
+            "abilities": {
+                "Veil of Darkness": {
+                    "name": "Veil of Darkness",
+                    "class": "Voidwalker",
+                    "description": [
+                        "You cover allies in darkness. All allies in range become Hidden; while Hidden in this way, allies ignore traps and difficult terrain, and their attacks have, \"On Hit: Inflict Blind\". Additionally, allies in Touch range cleanse 1 condition of their choice."
+                    ],
+                    "tags": [
+                        "Spell",
+                        "dark",
+                        "buff",
+                        "Hidden",
+                        "condition",
+                        "Blind",
+                        "conditional",
+                        "cleanse"
+                    ]
+                },
+                "Dimension Door": {
+                    "name": "Dimension Door",
+                    "class": "Voidwalker",
+                    "description": [
+                        "You teleport a short distance with friends in tow. You and any number of allies and objects in range teleport to adjacent, empty spaces within 200 ft that you can see. Allies in range can extend the range of this ability by also being in touch range of other targets."
+                    ],
+                    "tags": [
+                        "Spell",
+                        "dark",
+                        "conjuration",
+                        "teleport"
+                    ]
+                },
+                "Blacklands": {
+                    "name": "Blacklands",
+                    "class": "Voidwalker",
+                    "description": [
+                        "You envelop the ground with the magic of the void. Up to 30 target spaces within range that you can see turn black, each becoming a field which blocks AOE effects and treats allied movement within them as dashes. Additionally, any allies standing in black spaces are considered to be in touch range."
+                    ],
+                    "tags": [
+                        "Spell",
+                        "dark",
+                        "conjuration",
+                        "defensive",
+                        "field",
+                        "block"
                     ]
                 }
             }

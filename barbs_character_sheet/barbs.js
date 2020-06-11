@@ -127,7 +127,7 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function get_character(msg) {
+    function get_character(msg, ignore_failure = false) {
         const character_names = get_character_names(msg.who, msg.id);
 
         let characters = [];
@@ -140,7 +140,7 @@ var Barbs = Barbs || (function () {
             characters = characters.concat(objects);
         }
 
-        if (characters.length === 0) {
+        if (characters.length === 0 && !ignore_failure) {
             chat(msg, 'Error, did not find a character for ' + msg.who);
             return null;
         } else if (characters.length > 1) {
@@ -152,11 +152,11 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function get_character_by_name(name) {
+    function get_character_by_name(name, ignore_failure = false) {
         assert_not_null(name, 'get_character_by_name() name');
 
         const fake_msg = {'who': name, 'id': ''};
-        return get_character(fake_msg);
+        return get_character(fake_msg, ignore_failure);
     }
 
 
@@ -2957,6 +2957,7 @@ var Barbs = Barbs || (function () {
         });
     }
 
+
     function warrior_reinforce_armor(character, ability, parameters) {
         const sacrifices = get_parameter('buffs', parameters);
         const stat = get_parameter('defense', parameters);
@@ -2992,6 +2993,7 @@ var Barbs = Barbs || (function () {
 
         print_ability_description(character, ability);
     }
+
 
     // TODO there is another half of this passive
     function warrior_warleader(character, ability, parameters) {
@@ -3182,6 +3184,10 @@ var Barbs = Barbs || (function () {
             'Purloin Powers': print_ability_description,
             'Snatch and Grab': thief_snatch_and_grab,
         },
+        'Voidwalker': {
+            'Dimension Door': print_ability_description,
+            'Blacklands': print_ability_description,
+        },
         'Warlord': {
             'Hookshot': warlord_hookshot,
             'Weapon Swap: Roll': print_ability_description,
@@ -3357,7 +3363,7 @@ var Barbs = Barbs || (function () {
         const last_turn_id = state[STATE_NAME][LAST_TURN_ID];
         state[STATE_NAME][LAST_TURN_ID] = turn.id;
 
-        const current_character = get_character_by_name(current_name);
+        const current_character = get_character_by_name(current_name, /*ignore_failure=*/true);
         if (current_character === null) {
             return;
         }
@@ -3391,7 +3397,7 @@ var Barbs = Barbs || (function () {
                 return;
             }
 
-            const previous_character = get_character_by_name(previous_name);
+            const previous_character = get_character_by_name(previous_name, /*ignore_failure=*/true);
             if (previous_character === null) {
                 return;
             }

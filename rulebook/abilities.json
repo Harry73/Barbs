@@ -5814,7 +5814,7 @@
             "lose EV"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Helix Beam",
         "class": "Mirror Mage",
@@ -5830,19 +5830,19 @@
         "tags": [
             "Spell",
             "attack",
-			"destruction",
+            "destruction",
             "AOE",
-			"line",
-			"ice",
-			"light",
-			"conditional",
-			"condition",
-			"Frozen",
-			"Stun",
-			"modal"
+            "line",
+            "ice",
+            "light",
+            "conditional",
+            "condition",
+            "Frozen",
+            "Stun",
+            "modal"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Scatter Shards",
         "class": "Mirror Mage",
@@ -5863,10 +5863,10 @@
             "ice",
             "light",
             "conditional",
-			"modal"
+            "modal"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Beam of Brilliance",
         "class": "Mirror Mage",
@@ -5883,17 +5883,17 @@
             "Spell",
             "attack",
             "AOE",
-			"line",
+            "line",
             "destruction",
             "ice",
             "light",
-			"modal",
+            "modal",
             "conditional",
             "condition",
             "Slow",
             "lose EV",
-			"Frozen",
-			"Stun"
+            "Frozen",
+            "Stun"
         ]
     },
     {
@@ -5918,7 +5918,7 @@
             "conditional"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Remand",
         "class": "Mirror Mage",
@@ -5935,10 +5935,10 @@
             "Spell",
             "defensive",
             "counterspell",
-			"modal"
+            "modal"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Mirror's Curse",
         "class": "Mirror Mage",
@@ -5955,10 +5955,10 @@
             "Spell",
             "defensive",
             "single-target",
-			"condition"
+            "condition"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Glass Armor",
         "class": "Mirror Mage",
@@ -5975,7 +5975,7 @@
             "Spell",
             "defensive",
             "buff",
-			"gain MR"
+            "gain MR"
         ]
     },
     {
@@ -6003,7 +6003,7 @@
             "totem"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Move Mirrors",
         "class": "Mirror Mage",
@@ -6022,7 +6022,7 @@
             "modal"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Convex Mirror",
         "class": "Mirror Mage",
@@ -6047,7 +6047,7 @@
             "totem"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Concave Mirror",
         "class": "Mirror Mage",
