@@ -1,6 +1,7 @@
 Ian's TODO list
 
-* Condition resist rolls against specific conditions
+* Poisoned is not an official condition, it should be.
+* Magic resist rolls?
 
 * Item handling
     * Document constructing items in the api webpage

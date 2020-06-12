@@ -59,7 +59,7 @@ def process_data_file():
         with open(os.path.join(RULEBOOK_PATH, '%s.json' % file_name), 'w') as f:
             json.dump(items, f, indent=4)
 
-    # Create a map of skills to their attribute acronyms
+    # Create a map of skills to their attribute acronyms for the character sheet
     skill_to_attr = {}
     for skill in skills:
         if 'attribute' not in skill:
@@ -74,7 +74,7 @@ def process_data_file():
     with open(os.path.join(DATA_PATH, 'skills_to_attributes.json'), 'w') as f:
         json.dump(skill_to_attr, f)
 
-    # Create js for SkillObjects in the API scripts
+    # Create js for SkillObjects in the API
     with open(os.path.join(DATA_PATH, 'skills.txt'), 'w') as f:
         for skill_name, attr_tla in skill_to_attr.items():
             string = "%s: new SkillObject('%s', '%s'),\n" % (
@@ -86,7 +86,7 @@ def process_data_file():
 
         f.write("ALL: new SkillObject('All', ''),\n")
 
-    # Merge classes and abilities lists
+    # Merge classes and abilities lists and dump to a file for the API
     ability_keys_to_remove = ['type', 'branch', 'tier', 'action', 'cost', 'range', 'duration', 'api']
     class_keys_to_remove = [
         'preview', 'num_requirements', 'requirements', 'all_reqs_known', 'flavor_text', 'branches', 'api',
@@ -119,3 +119,12 @@ def process_data_file():
 
     with open(os.path.join(DATA_PATH, 'classes.json'), 'w') as f:
         json.dump(revised_classes, f, indent=4)
+
+    # Dump conditions to file as json list for the API
+    revised_conditions = [condition['name'] for condition in conditions]
+    with open(os.path.join(DATA_PATH, 'conditions_api.json'), 'w') as f:
+        json.dump(revised_conditions, f, indent=4)
+
+    # Dump conditions as |-separated list for the character sheet
+    with open(os.path.join(DATA_PATH, 'conditions_sheet.json'), 'w') as f:
+        f.write('|'.join(revised_conditions))

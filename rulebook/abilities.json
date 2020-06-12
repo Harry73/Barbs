@@ -6214,6 +6214,62 @@
     },
     {
         "type": "ability",
+        "name": "Quickstep",
+        "class": "Night Lord",
+        "branch": "Breach",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "20 stamina",
+        "range": "Self",
+        "duration": "Instant",
+        "description": [
+            "You move quickly and quietly. Dash up to 40 ft in any direction. Until the end of your next turn, your Move Speed is doubled, your movement ignores all field effects and traps, and your movement cannot be reacted to."
+        ],
+        "tags": [
+            "Dash",
+            "buff"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Burglary",
+        "class": "Night Lord",
+        "branch": "Loot",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "20 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You take what you want. Steal 3 random items or up to 100 gp at a time from the inventory of a target in range. You may specify what you want to steal if you know certain items are in the target inventory and if you are Hidden."
+        ],
+        "tags": [
+            "Attack",
+            "single-target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Flashbang",
+        "class": "Night Lord",
+        "branch": "Perplex",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "25 stamina",
+        "range": "40 ft",
+        "duration": "Instant",
+        "description": [
+            "You use a special thief tool to blind pursuers. All enemies in range become Blinded and are knocked prone. An enemy that has not been Blinded by this ability previously has -30% CR for the Blind."
+        ],
+        "tags": [
+            "Condition",
+            "Blind",
+            "Knock Prone",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Defile",
         "class": "Noxomancer",
         "branch": "Affliction",
@@ -9856,62 +9912,6 @@
             "vulnerability",
             "buff stripping",
             "buff"
-        ]
-    },
-	{
-        "type": "ability",
-        "name": "Quickstep",
-        "class": "Night Lord",
-        "branch": "Breach",
-        "tier": 1,
-        "action": "1 Minor Action",
-        "cost": "20 stamina",
-        "range": "Self",
-        "duration": "Instant",
-        "description": [
-            "You move quickly and quietly. Dash up to 40 ft in any direction. Until the end of your next turn, your Move Speed is doubled, your movement ignores all field effects and traps, and your movement cannot be reacted to."
-        ],
-        "tags": [
-            "Dash",
-			"buff"
-        ]
-    },
-	{
-        "type": "ability",
-        "name": "Flashbang",
-        "class": "Night Lord",
-        "branch": "Perplex",
-        "tier": 1,
-        "action": "1 Minor Action",
-        "cost": "25 stamina",
-        "range": "40 ft",
-        "duration": "Instant",
-        "description": [
-            "You use a special thief tool to blind pursuers. All enemies in range become Blinded and are knocked prone. An enemy that has not been Blinded by this ability previously has -30% CR for the Blind."
-        ],
-        "tags": [
-            "Condition",
-			"Blind",
-			"Knock Prone",
-			"conditional"
-        ]
-    },
-	{
-        "type": "ability",
-        "name": "Burglary",
-        "class": "Night Lord",
-        "branch": "Loot",
-        "tier": 1,
-        "action": "1 Minor Action",
-        "cost": "20 stamina",
-        "range": "Melee",
-        "duration": "Instant",
-        "description": [
-            "You take what you want. Steal 3 random items or up to 100 gp at a time from the inventory of a target in range. You may specify what you want to steal if you know certain items are in the target inventory and if you are Hidden."
-        ],
-        "tags": [
-            "Attack",
-			"single-target"
         ]
     }
 ]

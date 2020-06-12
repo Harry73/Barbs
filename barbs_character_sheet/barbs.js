@@ -18,6 +18,7 @@ var Barbs = Barbs || (function () {
     const Stat = BarbsComponents.Stat;
     const HiddenStat = BarbsComponents.HiddenStat;
     const Skill = BarbsComponents.Skill;
+    const conditions = BarbsComponents.conditions;
     const classes = BarbsComponents.classes;
     const Damage = BarbsComponents.Damage;
     const get_damage_from_type = BarbsComponents.get_damage_from_type;
@@ -275,7 +276,13 @@ var Barbs = Barbs || (function () {
                 break;
 
             case Stat.CONDITION_RESIST.name:
-                chat(character, percent_format.format('Condition Resist', 'CR', modifier));
+                const msg_format = '&{template:Barbs} {{name=Condition Resist}} ' +
+                    '{{effects=<li>General CR: [[1d100cs>[[100-(%s)+1]]]]</li>}} {{button=%s}}';
+
+                const options = conditions.join('|');
+                let button_section = '<a href="!barbs cr ?{Condition|%s}">Specific Condition CR</a>'.format(options);
+
+                chat(character, msg_format.format(modifier, button_section));
                 break;
 
             case Stat.MELEE_DAMAGE.name:
@@ -317,6 +324,25 @@ var Barbs = Barbs || (function () {
             default:
                 chat(character, 'Error, unknown stat ' + stat.name);
         }
+    }
+
+
+    function roll_condition_resist(msg) {
+        const character = get_character(msg);
+        if (character === null) {
+            return;
+        }
+
+        const roll = get_roll_with_items_and_effects(character);
+        let total_mr = eval(get_stat_roll_modifier(character, roll, Stat.CONDITION_RESIST));
+
+        const condition = msg.content.split(' ').slice(2).join(' ');
+        if (condition !== 'general' && condition.toLowerCase().replace(/[()]/g, '') in roll.condition_resists) {
+            total_mr += roll.condition_resists[condition.toLowerCase().replace(/[()]/g, '')];
+        }
+
+        total_mr = Math.min(101, total_mr);
+        chat(character, percent_format.format(condition + ' Resist', 'CR', total_mr));
     }
 
 
@@ -990,7 +1016,7 @@ var Barbs = Barbs || (function () {
             let formatted_hidden_stat = hidden_stat_format.format(hidden_stat_value);
             if (formatted_hidden_stat.includes('chance')) {
                 const value = 100 - Math.min(101, hidden_stat_value) + 1;
-                formatted_hidden_stat = formatted_hidden_stat + ' [[d100cs>%s]]'.format(value);
+                formatted_hidden_stat = formatted_hidden_stat + ', chance: [[d100cs>%s]]'.format(value);
             }
             effects.push('<li>%s</li>'.format(formatted_hidden_stat));
         }
@@ -2163,13 +2189,13 @@ var Barbs = Barbs || (function () {
         }
 
         if (chosen_spell === 'KB') {
-            const conditions_list = get_parameter('conditions', parameters);
-            if (conditions_list === null) {
+            const conditions_paramater = get_parameter('conditions', parameters);
+            if (conditions_paramater === null) {
                 chat(character, '"conditions" parameter is missing');
             }
 
-            const conditions = conditions_list.split(',');
-            if (conditions.length !== 2) {
+            const conditions_list = conditions_paramater.split(',');
+            if (conditions_list.length !== 2) {
                 chat(character, 'Select 2 conditions');
                 return;
             }
@@ -2180,10 +2206,10 @@ var Barbs = Barbs || (function () {
                 roll.add_damage('6d8', Damage.DARK);
 
                 for (let i = 0; i < 2; i++) {
-                    if (conditions[i].toLowerCase().includes('curse')){
-                        roll.add_effect(conditions[i].trim() + ': [[1d100]] [[1d100]]');
+                    if (conditions_list[i].toLowerCase().includes('curse')){
+                        roll.add_effect(conditions_list[i].trim() + ': [[1d100]] [[1d100]]');
                     } else {
-                        roll.add_effect(conditions[i].trim() + ': [[1d100]]');
+                        roll.add_effect(conditions_list[i].trim() + ': [[1d100]]');
                     }
                 }
 
@@ -3625,6 +3651,7 @@ var Barbs = Barbs || (function () {
     const subcommand_handlers = {
         'item': roll_item,
         'stat': roll_stat,
+        'cr': roll_condition_resist,
         'skill': roll_skill,
         'initiative': roll_initiative,
         'concentration': roll_concentration,

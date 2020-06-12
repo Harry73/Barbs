@@ -1722,25 +1722,25 @@
         "requirements": [
             "Stealth: Sneak Rank A",
             "Stealth: Steal Rank A",
-			"Stealth: Lockpicking Rank A",
-			"Stealth: Sleight of Hand Rank A"
+            "Stealth: Lockpicking Rank A",
+            "Stealth: Sleight of Hand Rank A"
         ],
         "all_reqs_known": true,
-		"flavor_text": "He commands an unfathomable number of street thugs and trained assassins, has a seemingly imposible number of crimes to his name, and has dozens of nobles and city officials underneath his thumb. Not a single person who has ever crossed him has lived to tell the tale. A scarce few individuals have ever spoken to him face to face. And no one walks alone at night without feeling his eyes on their back.",
-		"description": "The Night Lord is the ultimate class for rogues. Having mastered multiple aspects of the rogue's kit, this class prides itself on a wide variety of stealth based utilities. These abilities are split into moves allowing the Night Lord to infiltrate or pursue, moves for executing on a site, and finally, moves for escape or grand thievery. Many of the abilities in this class exist in other classes with worse stamina efficiency or action efficiency; the Night Lord makes heavy use of minor actions and exploits enemy blindspots with superior speed and initiative. Alternatively, the passive of the class provides a reliable way to escape combat to focus on side objectives or return to exploration and stealth.",
-		"branches": {
-			"Breach": "The Breach branch provides options for infiltrating an area quickly with a combination of sneaking and picking locks.",
-			"Perplex": "The Perplex branch provides options for distracting observers with a combination of sneaking and sleight of hand.",
-			"Loot": "The Loot branch provides options for taking what you want with a combination of sneaking and stealing."
-		},
-		"passive": {
-			"A Step Ahead": "Making a Stealth: Sneak check to hide is a minor action for you. At the end of each of your turns, if you are Hidden, you get +20 Initiative. If your Initiative is higher than every enemy in combat, you may leave combat when you hide."
-		},
-		"abilities": [
-			"Quickstep",
-			"Flashbang",
-			"Burglary"
-		]
+        "flavor_text": "He commands an unfathomable number of street thugs and trained assassins, has a seemingly imposible number of crimes to his name, and has dozens of nobles and city officials underneath his thumb. Not a single person who has ever crossed him has lived to tell the tale. A scarce few individuals have ever spoken to him face to face. And no one walks alone at night without feeling his eyes on their back.",
+        "description": "The Night Lord is the ultimate class for rogues. Having mastered multiple aspects of the rogue's kit, this class prides itself on a wide variety of stealth based utilities. These abilities are split into moves allowing the Night Lord to infiltrate or pursue, moves for executing on a site, and finally, moves for escape or grand thievery. Many of the abilities in this class exist in other classes with worse stamina efficiency or action efficiency; the Night Lord makes heavy use of minor actions and exploits enemy blindspots with superior speed and initiative. Alternatively, the passive of the class provides a reliable way to escape combat to focus on side objectives or return to exploration and stealth.",
+        "branches": {
+            "Breach": "The Breach branch provides options for infiltrating an area quickly with a combination of sneaking and picking locks.",
+            "Perplex": "The Perplex branch provides options for distracting observers with a combination of sneaking and sleight of hand.",
+            "Loot": "The Loot branch provides options for taking what you want with a combination of sneaking and stealing."
+        },
+        "passive": {
+            "A Step Ahead": "Making a Stealth: Sneak check to hide is a minor action for you. At the end of each of your turns, if you are Hidden, you get +20 Initiative. If your Initiative is higher than every enemy in combat, you may leave combat when you hide."
+        },
+        "abilities": [
+            "Quickstep",
+            "Flashbang",
+            "Burglary"
+        ]
     },
     {
         "type": "class",

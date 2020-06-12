@@ -267,6 +267,65 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     // ################################################################################################################
+    // Damage types
+
+
+    const ElementalDamage = {
+        FIRE: 'fire',
+        WATER: 'water',
+        EARTH: 'earth',
+        AIR: 'air',
+        ICE: 'ice',
+        LIGHTNING: 'lightning',
+        LIGHT: 'light',
+        DARK: 'dark',
+    };
+
+
+    const Damage = {
+        PHYSICAL: 'physical',
+        PSYCHIC: 'psychic',
+        HEALING: 'healing',
+        ALL_MAGIC: 'all_magic',
+        ALL: 'all',
+    };
+
+
+    const ekeys = Object.keys(ElementalDamage);
+    for (let i = 0; i < ekeys.length; i++) {
+        const key = ekeys[i];
+        Damage[key] = ElementalDamage[key];
+    }
+
+
+    function is_magic_damage_type(type) {
+        const keys = Object.keys(ElementalDamage);
+        for (let i = 0; i < keys.length; i++) {
+            const key = keys[i];
+            if (type === ElementalDamage[key]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    function get_damage_from_type(type) {
+        const damage_types = Object.keys(Damage);
+        for (let i = 0; i < damage_types.length; i++) {
+            const damage_type = damage_types[i];
+            const damage_type_string = Damage[damage_type];
+            if (type === damage_type_string) {
+                return damage_type_string;
+            }
+        }
+
+        return null;
+    }
+
+
+    // ################################################################################################################
     // Stats
 
 
@@ -381,21 +440,22 @@ var BarbsComponents = BarbsComponents || (function () {
         ACCURACY: '%s% accuracy',
         AC_PENETRATION: '%s% armor penetration',
         BUFF_STRIP: 'Strip %s buff(s) from the target',
-        BURN_CHANCE: '%s% chance to inflict Burn 20 CR:[[1d100]]',
-        CRIPPLE_CHANCE: '%s% chance to Cripple CR:[[1d100]]',
-        FEAR_CHANCE: '%s% chance to Fear CR:[[1d100]]',
         FORCED_MOVEMENT: 'Forcibly move target %s ft',
-        FROZEN_CHANCE: '%s% chance to inflict Frozen CR:[[1d100]]',
         LETHALITY: '%s% lethality chance',
         LIFESTEAL: '%s% lifesteal',
-        PARALYZE: '%s% chance to Paralyze CR:[[1d100]]',
+        MINION_LETHALITY: '%s% minion lethality chance',
         REACH: '+%s ft reach',
-        STUN_CHANCE: '%s% chance to Stun CR:[[1d100]]',
         UNBLOCKABLE_CHANCE: '%s% chance to be unblockable',
 
-        REDUCE_EVASION: 'Target loses %s% evasion for 1 minute CR:[[1d100]]',
-        REDUCE_CR: 'Target loses %s% CR CR:[[1d100]]',
-        REDUCE_AC: 'Target loses %s AC CR:[[1d100]]',
+        BURN_CHANCE: '%s% chance to inflict Burn 20, CR: [[1d100]]',
+        CRIPPLE_CHANCE: '%s% chance to Cripple, CR: [[1d100]]',
+        FEAR_CHANCE: '%s% chance to Fear, CR: [[1d100]]',
+        FROZEN_CHANCE: '%s% chance to inflict Frozen, CR: [[1d100]]',
+        PARALYZE: '%s% chance to Paralyze, CR: [[1d100]]',
+        REDUCE_EVASION: 'Target loses %s% evasion for 1 minute, CR: [[1d100]]',
+        REDUCE_CR: 'Target loses %s% CR, CR: [[1d100]]',
+        REDUCE_AC: 'Target loses %s AC, CR: [[1d100]]',
+        STUN_CHANCE: '%s% chance to Stun, CR: [[1d100]]',
 
         GENERAL_MAGIC_PENETRATION: '%s% magic penetration',
         FIRE_MAGIC_PENETRATION: '%s% fire magic penetration',
@@ -406,26 +466,6 @@ var BarbsComponents = BarbsComponents || (function () {
         LIGHTNING_MAGIC_PENETRATION: 's% lightning magic penetration',
         LIGHT_MAGIC_PENETRATION: '%s% light magic penetration',
         DARK_MAGIC_PENETRATION: '%s% dark magic penetration',
-        
-        FIRE_MAGIC_MR: '%s% fire magic resist',
-        WATER_MAGIC_MR: '%s% water magic resist',
-        EARTH_MAGIC_MR: '%s% earth magic resist',
-        AIR_MAGIC_MR: '%s% air magic resist',
-        ICE_MAGIC_MR: '%s% ice magic resist',
-        LIGHTNING_MAGIC_MR: '%s% lightning magic resist',
-        LIGHT_MAGIC_MR: '%s% light magic resist',
-        DARK_MAGIC_MR: '%s% dark magic resist',
-        
-        BURN_CR: '%s% burn resist',
-        CRIPPLE_CR: '%s% cripple resist',
-        CURSE_CR: '%s% curse resist',
-        FEAR_CR: '%s% fear resist'
-        IMMOBILIZE_CR: '%s% immobilize resist',
-        PARALYZE_CR: '%s% paralyze resist',
-        POISON_CR: '%s% poison resist',
-        SLOW_CR: '%s% slow resist',
-        STUN_CR: '%s% stun resist',
-        TAUNT_CR: '%s% taunt resist',
     };
 
 
@@ -457,26 +497,6 @@ var BarbsComponents = BarbsComponents || (function () {
         'lightning magic pen:': HiddenStat.LIGHTNING_MAGIC_PENETRATION,
         'light magic pen:': HiddenStat.LIGHT_MAGIC_PENETRATION,
         'dark magic pen:': HiddenStat.DARK_MAGIC_PENETRATION,
-        
-        'fire mr:': HiddenStat.FIRE_MAGIC_MR,
-        'water mr:': HiddenStat.WATER_MAGIC_MR,
-        'earth mr:': HiddenStat.EARTH_MAGIC_MR,
-        'air mr:': HiddenStat.AIR_MAGIC_MR,
-        'ice mr:': HiddenStat.ICE_MAGIC_MR,
-        'lightning mr:': HiddenStat.LIGHTNING_MAGIC_MR,
-        'light mr:': HiddenStat.LIGHT_MAGIC_MR,
-        'dark mr:': HiddenStat.DARK_MAGIC_MR,
-        
-        'burn cr:': HiddenStat.BURN_CR,
-        'cripple cr:': HiddenStat.CRIPPLE_CR,
-        'curse cr:': HiddenStat.CURSE_CR,
-        'fear cr:': HiddenStat.FEAR_CR,
-        'immobilize cr:': HiddenStat.IMMOBILIZE_CR,
-        'paralyze cr:': HiddenStat.PARALYZE_CR,
-        'poison cr:': HiddenStat.POISON_CR,
-        'slow cr:': HiddenStat.SLOW_CR,
-        'stun cr:': HiddenStat.STUN_CR,
-        'taunt cr:': HiddenStat.TAUNT_CR,
     };
 
 
@@ -615,7 +635,33 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     // ################################################################################################################
-    // Abilities and classes from the rulebook files
+    // Conditions and classes from the rulebook files
+
+
+    const conditions = [
+        "Bleeding",
+        "Blinded",
+        "Charmed",
+        "Confused",
+        "Crippled",
+        "Cursed",
+        "Decreased Stats",
+        "Fear",
+        "Frozen",
+        "Helpless",
+        "Immobilized",
+        "Knocked Down (Prone)",
+        "Knocked Up (Airborne)",
+        "Paralyzed",
+        "Petrified",
+        "Poisoned",
+        "Silenced",
+        "Sleeping",
+        "Slowed",
+        "Stunned",
+        "Taunted",
+        "Weakened"
+    ];
 
 
     const classes = {
@@ -7675,37 +7721,6 @@ var BarbsComponents = BarbsComponents || (function () {
     // Rolls
 
 
-    const Damage = {
-        PHYSICAL: 'physical',
-        PSYCHIC: 'psychic',
-        FIRE: 'fire',
-        WATER: 'water',
-        EARTH: 'earth',
-        AIR: 'air',
-        ICE: 'ice',
-        LIGHTNING: 'lightning',
-        LIGHT: 'light',
-        DARK: 'dark',
-        HEALING: 'healing',
-        ALL_MAGIC: 'all_magic',
-        ALL: 'all',
-    };
-
-
-    function get_damage_from_type(type) {
-        const damage_types = Object.keys(Damage);
-        for (let i = 0; i < damage_types.length; i++) {
-            const damage_type = damage_types[i];
-            const damage_type_string = Damage[damage_type];
-            if (type === damage_type_string) {
-                return damage_type_string;
-            }
-        }
-
-        return null;
-    }
-
-
     // Type of a roll can vary. For example, an attack made with a melee weapon will result in a "physical" roll.
     // An spell attack results in a "magic" roll. Certain effects should only be applied to certain rolls. For example,
     // bonus damage on a melee weapon should not be applied to magic-type rolls.
@@ -7791,6 +7806,8 @@ var BarbsComponents = BarbsComponents || (function () {
             this.stat_multipliers = {};
 
             this.hidden_stats = {};
+            this.condition_resists = {};
+            this.magic_resists = {};
             this.skills = {};
             this.concentration_bonus = 0;
             this.initiative_bonus = 0;
@@ -7853,6 +7870,28 @@ var BarbsComponents = BarbsComponents || (function () {
                 this.hidden_stats[hidden_stat] = value;
             } else {
                 this.hidden_stats[hidden_stat] += value;
+            }
+        }
+
+        add_condition_resist(condition, value) {
+            assert_not_null(condition, 'add_condition_resist() condition');
+            assert_not_null(value, 'add_condition_resist() value');
+
+            if (!(condition in this.condition_resists)) {
+                this.condition_resists[condition] = value;
+            } else {
+                this.condition_resists[condition] += value;
+            }
+        }
+
+        add_magic_resist(type, value) {
+            assert_not_null(type, 'add_magic_resist() type');
+            assert_not_null(value, 'add_magic_resist() value');
+
+            if (!(type in this.magic_resists)) {
+                this.magic_resists[type] = value;
+            } else {
+                this.magic_resists[type] += value;
             }
         }
 
@@ -7940,16 +7979,14 @@ var BarbsComponents = BarbsComponents || (function () {
                 });
             }
 
-            if (type !== Damage.PHYSICAL && type !== Damage.PSYCHIC) {
-                if (Damage.ALL_MAGIC in self.multipliers) {
-                    Object.keys(self.multipliers[Damage.ALL_MAGIC]).forEach(function (source) {
-                        if (!(source in per_source_multipliers)) {
-                            per_source_multipliers[source] = [];
-                        }
+            if (is_magic_damage_type(type) && Damage.ALL_MAGIC in self.multipliers) {
+                Object.keys(self.multipliers[Damage.ALL_MAGIC]).forEach(function (source) {
+                    if (!(source in per_source_multipliers)) {
+                        per_source_multipliers[source] = [];
+                    }
 
-                        per_source_multipliers[source].push(self.multipliers[Damage.ALL_MAGIC][source]);
-                    });
-                }
+                    per_source_multipliers[source].push(self.multipliers[Damage.ALL_MAGIC][source]);
+                });
             }
 
             if (Damage.ALL in self.multipliers) {
@@ -8157,6 +8194,24 @@ var BarbsComponents = BarbsComponents || (function () {
             });
         }
 
+        static condition_resist(condition, value) {
+            assert_not_null(condition, 'condition_resist() condition');
+            assert_not_null(value, 'condition_resist() value');
+
+            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+                roll.add_condition_resist(condition.toLowerCase().replace(/[()]/g, ''), value);
+            });
+        }
+
+        static magic_resist(type, value) {
+            assert_not_null(type, 'magic_resist() type');
+            assert_not_null(value, 'magic_resist() value');
+
+            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+                roll.add_magic_resist(type, value);
+            });
+        }
+
         static skill_effect(skill, mod) {
             assert_not_null(skill, 'skill_effect() skill');
             assert_not_null(mod, 'skill_effect() mod');
@@ -8335,7 +8390,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
             for (let i = 0; i < parts.length; i++) {
                 let handled_part = false;
-                const part = parts[i];
+                const part = parts[i].toLowerCase();
                 LOG.debug('construct_item(), handling part ' + part);
 
                 // Check for base damage definition
@@ -8612,6 +8667,57 @@ var BarbsComponents = BarbsComponents || (function () {
 
                     effects.push(Effect.crit_effect(effect_text, roll_type));
                     LOG.trace('construct_item(), handled crit effect part');
+                    continue;
+                }
+
+                // Check for element-specific mr
+                const element_keys = Object.keys(ElementalDamage);
+                for (let i = 0; i < element_keys.length; i++) {
+                    const type = ElementalDamage[element_keys[i]];
+                    if (part.startsWith(type + ' mr') || part.startsWith(type + ' magic resist')) {
+                        let pieces = part.split(':');
+                        if (pieces.length !== 2) {
+                            LOG.error('Expected exactly one colon in magic resist "%s"'.format(part));
+                            break;
+                        }
+
+                        const value = parse_int(trim_percent(pieces[1]));
+                        if (Number.isNaN(value)) {
+                            LOG.error('Magic resist bonus %s is not a number ' + pieces[1]);
+                            break;
+                        }
+
+                        effects.push(Effect.magic_resist(type, value));
+                        handled_part = true;
+                        break;
+                    }
+                }
+                if (handled_part) {
+                    continue;
+                }
+
+                for (let i = 0; i < conditions.length; i++) {
+                    const revised_part = part.replace(/[()]/g, '');
+                    const condition = conditions[i].toLowerCase().replace(/[()]/g, '');
+                    if (revised_part.startsWith(condition + ' cr') || revised_part.startsWith(condition + ' condition resist')) {
+                        let pieces = revised_part.split(':');
+                        if (pieces.length !== 2) {
+                            LOG.error('Expected exactly one colon in specific CR "%s"'.format(revised_part));
+                            break;
+                        }
+
+                        const value = parse_int(trim_percent(pieces[1]));
+                        if (Number.isNaN(value)) {
+                            LOG.error('Specific CR bonus %s is not a number ' + pieces[1]);
+                            break;
+                        }
+
+                        effects.push(Effect.condition_resist(condition, value));
+                        handled_part = true;
+                        break;
+                    }
+                }
+                if (handled_part) {
                     continue;
                 }
             }
@@ -9036,7 +9142,7 @@ var BarbsComponents = BarbsComponents || (function () {
             [
                 Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
                 Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
-                // TODO poison specifically: Effect.stat_effect('condition resist', 50),
+                Effect.condition_resist('Poisoned', 50),
             ]
         ),
 
@@ -9101,8 +9207,8 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.CONDITION_RESIST, 20, RollType.ALL),
                 Effect.stat_effect(Stat.AC, -20, RollType.ALL),
                 Effect.stat_effect(Stat.MAGIC_RESIST, 15, RollType.ALL),
-                // TODO 50% stun resist
-                // TODO 50% slow resist
+                Effect.condition_resist('Stunned', 50),
+                Effect.condition_resist('Slowed', 50),
             ]
         ),
 
@@ -9162,8 +9268,8 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.EVASION, 20, RollType.ALL),
                 Effect.stat_effect(Stat.AC, -20, RollType.ALL),
                 Effect.stat_effect(Stat.STAMINA, 30, RollType.ALL),
-                // TODO: 20% Lightning MR
-                // TODO: 20% Light MR
+                Effect.magic_resist(Damage.LIGHTNING, 20),
+                Effect.magic_resist(Damage.LIGHT, 20),
             ]
         ),
 
@@ -9194,7 +9300,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
                 Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
                 Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
-                // TODO: 50% Stun CR
+                Effect.condition_resist('Stunned', 50),
             ]
         ),
 
@@ -9241,7 +9347,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.AC, 10, RollType.ALL),
                 Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
                 Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                // TODO: 50% Stun Resist
+                Effect.condition_resist('Stunned', 50),
                 // TODO: 15% Crit Strike Resist
             ]
         ),
@@ -9270,7 +9376,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
                 Effect.roll_damage('3d10', Damage.PHYSICAL, RollType.ALL),
                 Effect.roll_multiplier(0.2, Damage.PHYSICAL, RollType.ALL),
-                //TODO: 20% Minion Lethality
+                Effect.hidden_stat(HiddenStat.MINION_LETHALITY, 20, RollType.ALL),
             ]
         ),
 
@@ -9284,7 +9390,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.hidden_stat(HiddenStat.ACCURACY, 25, RollType.ALL),
                 Effect.roll_damage('4d10', Damage.PHYSICAL, RollType.ALL),
                 Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.ALL),
-                // TODO: 20% Minion Lethality
+                Effect.hidden_stat(HiddenStat.MINION_LETHALITY, 20, RollType.ALL),
             ]
         ),
 
@@ -9312,7 +9418,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.roll_damage('4d10', Damage.PHYSICAL, RollType.PHYSICAL),
                 Effect.roll_multiplier(0.2, Damage.PHYSICAL, RollType.ALL),
                 Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
-                // TODO: 50% Minion Lethality
+                Effect.hidden_stat(HiddenStat.MINION_LETHALITY, 50, RollType.ALL),
             ]
         ),
 
@@ -9325,7 +9431,7 @@ var BarbsComponents = BarbsComponents || (function () {
             [
                 Effect.roll_multiplier(0.4, Damage.PHYSICAL, RollType.PHYSICAL),
                 Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                // TODO: 70% Minion Lethality
+                Effect.hidden_stat(HiddenStat.MINION_LETHALITY, 70, RollType.ALL),
                 // TODO: 15% Critical Strike Resist
             ]
         ),
@@ -9357,7 +9463,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
                 Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
                 Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
-                // TODO: 50% stun resist
+                Effect.condition_resist('Stunned', 50),
             ]
         ),
 
@@ -9373,7 +9479,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
                 Effect.stat_effect(Stat.STAMINA, 50, RollType.ALL),
                 Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
-                // TODO: 50% slow resist
+                Effect.condition_resist('Slowed', 50),
             ]
         ),
 
@@ -9389,7 +9495,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
                 Effect.hidden_stat(HiddenStat.AC_PENETRATION, 20, RollType.PHYSICAL),
                 Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.PHYSICAL),
-                // TODO: 50% cripple resist
+                Effect.condition_resist('Crippled', 50),
             ]
         ),
 
@@ -9405,7 +9511,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
                 Effect.stat_effect(Stat.MOVEMENT_SPEED, 20, RollType.ALL),
                 Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
-                // TODO: 50% immobilize resist
+                Effect.condition_resist('Immobilized', 50),
             ]
         ),
 
@@ -9419,7 +9525,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.hidden_stat(HiddenStat.LIFESTEAL, 5, RollType.ALL),
                 Effect.skill_effect(Skill.INTERACTION_LEADERSHIP, 20),
                 Effect.initiative_bonus(20),
-                // TODO: 50% fear resist
+                Effect.condition_resist('Fear', 50),
             ]
         ),
 
@@ -9447,7 +9553,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.AC, 5, RollType.ALL),
                 Effect.stat_effect(Stat.MAGIC_RESIST, 5, RollType.ALL),
                 Effect.stat_effect(Stat.HEALTH_REGENERATION, 10, RollType.ALL),
-                // TODO: 50% paralysis resist
+                Effect.condition_resist('Paralyzed', 50),
             ]
         ),
 
@@ -9506,7 +9612,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.AC, 10, RollType.ALL),
                 Effect.stat_effect(Stat.MANA, 50, RollType.ALL),
                 Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
-                // TODO: 25% light magic resist
+                Effect.magic_resist(Damage.LIGHT, 25),
             ]
         ),
 
@@ -9538,7 +9644,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.AC, 10, RollType.ALL),
                 Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
                 Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
-                // TODO 25% dark magic resist
+                Effect.magic_resist(Damage.DARK, 25),
             ]
         ),
 
@@ -9742,7 +9848,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.EVASION, 10, RollType.ALL),
                 Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
                 Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                // TODO: 50% stun resist
+                Effect.condition_resist('Stunned', 50),
             ]
         ),
 
@@ -9834,7 +9940,7 @@ var BarbsComponents = BarbsComponents || (function () {
             [
                 Effect.hidden_stat(HiddenStat.AC_PENETRATION, 10, RollType.ALL),
                 Effect.roll_multiplier(0.1, Damage.PSYCHIC, RollType.ALL),
-                // TODO 20% stun resist
+                Effect.condition_resist('Stunned', 20),
                 Effect.initiative_bonus(20),
             ]
         ),
@@ -10043,7 +10149,7 @@ var BarbsComponents = BarbsComponents || (function () {
         parse_int, trim_percent, trim_all, remove_empty,
         LOG,
         characters_by_owner,
-        Stat, HiddenStat, Skill, classes,
+        Stat, HiddenStat, Skill, conditions, classes,
         Damage, get_damage_from_type,
         RollType,
         RollTime,
