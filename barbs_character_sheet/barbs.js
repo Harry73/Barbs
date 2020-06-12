@@ -1584,10 +1584,10 @@ var Barbs = Barbs || (function () {
 
         // Check that we understand the given damage types
         const damage_types = []
-        for (let i = 0; i < damage_types.length; i++) {
-            const damage_type = get_damage_from_type(damage_types[i]);
+        for (let i = 0; i < damage_type_strings.length; i++) {
+            const damage_type = get_damage_from_type(damage_type_strings[i]);
             if (damage_type === null) {
-                chat(character, 'Unrecognized damage type "%s"'.format(damage_types[i]));
+                chat(character, 'Unrecognized damage type "%s"'.format(damage_type_strings[i]));
                 return;
             }
             damage_types.push(damage_type);
