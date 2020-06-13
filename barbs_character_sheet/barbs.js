@@ -221,6 +221,19 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function roll_initiative(msg) {
+        const character = get_character(msg);
+        if (character === null) {
+            return;
+        }
+
+        const roll = get_roll_with_items_and_effects(character);
+        chat(msg, initiative_format.format(character.name, roll.initiative_bonus, character.get_attribute('AGI')));
+        // TODO: add the character to the tracker, if possible. Trying to add the '&{tracker}' tag to the roll sent
+        //  by the API causes an error. I guess we would edit the turn order manually.
+    }
+
+
     function roll_stat(msg) {
         const character = get_character(msg);
         if (character === null) {
@@ -334,15 +347,124 @@ var Barbs = Barbs || (function () {
         }
 
         const roll = get_roll_with_items_and_effects(character);
-        let total_mr = eval(get_stat_roll_modifier(character, roll, Stat.CONDITION_RESIST));
+        let total_cr = eval(get_stat_roll_modifier(character, roll, Stat.CONDITION_RESIST));
 
         const condition = msg.content.split(' ').slice(2).join(' ');
         if (condition !== 'general' && condition.toLowerCase().replace(/[()]/g, '') in roll.condition_resists) {
-            total_mr += roll.condition_resists[condition.toLowerCase().replace(/[()]/g, '')];
+            total_cr += roll.condition_resists[condition.toLowerCase().replace(/[()]/g, '')];
         }
 
-        total_mr = Math.min(101, total_mr);
-        chat(character, percent_format.format(condition + ' Resist', 'CR', total_mr));
+        total_cr = Math.min(101, total_mr);
+        chat(character, percent_format.format(condition + ' Resist', 'CR', total_cr));
+    }
+
+
+    function damage_reduction(msg) {
+        const character = get_character(msg);
+        if (character === null) {
+            return;
+        }
+
+        const damage_types = [
+            Damage.PHYSICAL, Damage.PSYCHIC, Damage.FIRE, Damage.WATER, Damage.EARTH, Damage.AIR, Damage.ICE,
+            Damage.LIGHTNING, Damage.LIGHT, Damage.DARK
+        ];
+
+        let damages_taken = msg.content.split(' ');
+        if (damages_taken.length !== damage_types.length + 2) {
+            chat(character, 'Wrong number of parameters for "!barbs dmg" command, ' +
+                'expected %s, got %s'.format(damage_types.length + 2, damages_taken.length));
+            return;
+        }
+        damages_taken = damages_taken.slice(2);
+
+        const penetrations = [];
+        damages_taken.forEach(function(damage_string, index, self) {
+            if (damage_string.includes('|')) {
+                const parts = trim_all(damage_string.split('|'));
+                damages_taken[index] = parts[0];
+                penetrations.push(parts[1]);
+            } else {
+                penetrations.push(0);
+            }
+        });
+
+        for (let i = 0; i < damages_taken.length; i++) {
+            const given_value = damages_taken[i];
+            if (Number.isNaN(eval(given_value))) {
+                chat(character, 'Non-numeric value "%s" for %s damage type'.format(given_value, damage_types[i]));
+                return;
+            }
+
+            const penetration = penetrations[i];
+            if (Number.isNaN(eval(penetration))) {
+                chat(character, 'Non-numeric penetration value "%s" for %s damage type'.format(penetration,
+                                                                                               damage_types[i]));
+                return;
+            }
+        }
+
+        const roll = get_roll_with_items_and_effects(character);
+        let total_ac = eval(get_stat_roll_modifier(character, roll, Stat.AC));
+        const base_mr = eval(get_stat_roll_modifier(character, roll, Stat.MAGIC_RESIST));
+
+        const reduced_damages = {};
+        for (let i = 0; i < damages_taken.length; i++) {
+            const damage_value = damages_taken[i];
+            const damage_type = damage_types[i];
+
+            if (eval(damage_value) <= 0) {
+                continue;
+            }
+
+            if (damage_type === Damage.PHYSICAL) {
+                total_ac = Math.max(0, total_ac - eval(penetrations[i]));
+                let damage_taken = '((%s)-%s)'.format(damage_value, total_ac);
+                if (eval(damage_taken) < 0) {
+                    damage_taken = '0';
+                }
+                reduced_damages[Damage.PHYSICAL] = damage_taken;
+            } else if (damage_type === Damage.PSYCHIC) {
+                // TODO: psychic resistance / damage reduction is possible, handle it when we have classes that do this
+                reduced_damages[Damage.PSYCHIC] = damage_value;
+            } else {
+                let total_mr = base_mr;
+                if (damage_type in roll.magic_resists) {
+                    total_mr += roll.magic_resists[damage_type];
+                }
+                total_mr -= eval(penetrations[i]);
+                total_mr = Math.max(0, total_mr);
+                total_mr = Math.min(100, total_mr);
+
+                reduced_damages[damage_type] = '((%s)*%s)'.format(damage_value, Math.max(0, 1 - total_mr / 100));
+            }
+        }
+
+        let result = '&{template:Barbs} {{name=Damage Reduction}} '
+        let total = 0;
+        const reduced_keys = Object.keys(reduced_damages);
+        for (let i = 0; i < reduced_keys.length; i++) {
+            const damage_type = reduced_keys[i];
+            const damage_value = reduced_damages[damage_type];
+            result = result + '{{%s=[[round(%s)]]}}'.format(damage_type, damage_value);
+            total = total + Math.max(0, Math.round(eval(damage_value)));
+        }
+        result = result + '{{total=[[%s]]}}'.format(total);
+
+        chat(character, result);
+    }
+
+
+    function roll_concentration(msg) {
+        const character = get_character(msg);
+        if (character === null) {
+            return;
+        }
+
+        const roll = get_roll_with_items_and_effects(character);
+        const roll_string = 'd100+%s'.format(roll.concentration_bonus);
+        chat(msg, total_format.format('Concentration Check', 'Roll', roll_string));
+
     }
 
 
@@ -378,32 +500,6 @@ var Barbs = Barbs || (function () {
         roll_string = 'round(%s)'.format(roll_string);
 
         chat(msg, total_format.format(given_skill_name, 'Roll', roll_string));
-    }
-
-
-    function roll_initiative(msg) {
-        const character = get_character(msg);
-        if (character === null) {
-            return;
-        }
-
-        const roll = get_roll_with_items_and_effects(character);
-        chat(msg, initiative_format.format(character.name, roll.initiative_bonus, character.get_attribute('AGI')));
-        // TODO: add the character to the tracker, if possible. Trying to add the '&{tracker}' tag to the roll sent
-        //  by the API causes an error. I guess we would edit the turn order manually.
-    }
-
-
-    function roll_concentration(msg) {
-        const character = get_character(msg);
-        if (character === null) {
-            return;
-        }
-
-        const roll = get_roll_with_items_and_effects(character);
-        const roll_string = 'd100+%s'.format(roll.concentration_bonus);
-        chat(msg, total_format.format('Concentration Check', 'Roll', roll_string));
-
     }
 
 
@@ -3650,11 +3746,12 @@ var Barbs = Barbs || (function () {
 
     const subcommand_handlers = {
         'item': roll_item,
-        'stat': roll_stat,
-        'cr': roll_condition_resist,
-        'skill': roll_skill,
         'initiative': roll_initiative,
+        'stat': roll_stat,
+        'dmg': damage_reduction,
+        'cr': roll_condition_resist,
         'concentration': roll_concentration,
+        'skill': roll_skill,
         'ability': process_ability,
         'list_effects': list_persistent_effects,
         'remove_effect': remove_persistent_effect,
