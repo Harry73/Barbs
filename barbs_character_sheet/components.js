@@ -438,7 +438,6 @@ var BarbsComponents = BarbsComponents || (function () {
 
     const HiddenStat = {
         ACCURACY: '%s% accuracy',
-        AC_PENETRATION: '%s% armor penetration',
         BUFF_STRIP: 'Strip %s buff(s) from the target',
         FORCED_MOVEMENT: 'Forcibly move target %s ft',
         LETHALITY: '%s% lethality chance, chance: [[d100cs>%s]]',
@@ -447,16 +446,23 @@ var BarbsComponents = BarbsComponents || (function () {
         REACH: '+%s ft reach',
         UNBLOCKABLE_CHANCE: '%s% chance to be unblockable, chance: [[d100cs>%s]]',
 
+        BLINDED_CHANCE: '%s% chance to Blind, chance: [[d100cs>%s]], CR: [[1d100]]',
         BURN_CHANCE: '%s% chance to inflict Burn 20, chance: [[d100cs>%s]], CR: [[1d100]]',
-        CRIPPLE_CHANCE: '%s% chance to Cripple, chance: [[d100cs>%s]], CR: [[1d100]]',
+        CONFUSED_CHANCE: '%s% chance to Confuse, chance: [[d100cs>%s]], CR: [[1d100]]',
+        CRIPPLED_CHANCE: '%s% chance to Crippled, chance: [[d100cs>%s]], CR: [[1d100]]',
         FEAR_CHANCE: '%s% chance to Fear, chance: [[d100cs>%s]], CR: [[1d100]]',
-        FROZEN_CHANCE: '%s% chance to inflict Frozen, chance: [[d100cs>%s]], CR: [[1d100]]',
-        PARALYZE: '%s% chance to Paralyze, chance: [[d100cs>%s]], CR: [[1d100]]',
+        FROZEN_CHANCE: '%s% chance to Freeze, chance: [[d100cs>%s]], CR: [[1d100]]',
+        IMMOBILIZE_CHANCE: '%s% chance to Immobilize, chance: [[d100cs>%s]], CR: [[1d100]]',
+        PARALYZED_CHANCE: '%s% chance to Paralyze, chance: [[d100cs>%s]], CR: [[1d100]]',
+        PETRIFIED_CHANCE: '%s% chance to Petrify, chance: [[d100cs>%s]], CR: [[1d100]]',
         REDUCE_EVASION: 'Target loses %s% evasion for 1 minute, chance: [[d100cs>%s]], CR: [[1d100]]',
         REDUCE_CR: 'Target loses %s% CR, CR: [[1d100]]',
         REDUCE_AC: 'Target loses %s AC, CR: [[1d100]]',
-        STUN_CHANCE: '%s% chance to Stun, chance: [[d100cs>%s]], CR: [[1d100]]',
+        SILENCED_CHANCE: '%s% chance to Silence, chance: [[d100cs>%s]], CR: [[1d100]]',
+        SLOWED_CHANCE: '%s% chance to Slow, chance: [[d100cs>%s]], CR: [[1d100]]',
+        STUNNED_CHANCE: '%s% chance to Stun, chance: [[d100cs>%s]], CR: [[1d100]]',
 
+        AC_PENETRATION: '%s% armor penetration',
         GENERAL_MAGIC_PENETRATION: '%s% magic penetration',
         FIRE_MAGIC_PENETRATION: '%s% fire magic penetration',
         WATER_MAGIC_PENETRATION: '%s% water magic penetration',
@@ -472,22 +478,31 @@ var BarbsComponents = BarbsComponents || (function () {
     // Used when constructing items
     const HIDDEN_STAT_ACROS = {
         'accuracy:': HiddenStat.ACCURACY,
-        'ac pen:': HiddenStat.AC_PENETRATION,
         'buff strip:': HiddenStat.BUFF_STRIP,
-        'burn chance:': HiddenStat.BURN_CHANCE,
-        'cripple chance:': HiddenStat.CRIPPLE_CHANCE,
-        'fear chance': HiddenStat.FEAR_CHANCE,
         'forced movement:': HiddenStat.FORCED_MOVEMENT,
         'lethality:': HiddenStat.LETHALITY,
         'lifesteal:': HiddenStat.LIFESTEAL,
-        'paralyze chance:': HiddenStat.PARALYZE,
+        'minion lethality': HiddenStat.MINION_LETHALITY,
         'reach:': HiddenStat.REACH,
         'unblockable chance:': HiddenStat.UNBLOCKABLE_CHANCE,
 
+        'blinded chance': HiddenStat.BLINDED_CHANCE,
+        'burn chance:': HiddenStat.BURN_CHANCE,
+        'confused chance': HiddenStat.CONFUSED_CHANCE,
+        'crippled chance:': HiddenStat.CRIPPLED_CHANCE,
+        'fear chance': HiddenStat.FEAR_CHANCE,
+        'frozen chance': HiddenStat.FROZEN_CHANCE,
+        'immobilized chance': HiddenStat.IMMOBILIZE_CHANCE,
+        'paralyzed chance:': HiddenStat.PARALYZED_CHANCE,
+        'petrified chance': HiddenStat.PETRIFIED_CHANCE,
         'reduce evasion:': HiddenStat.REDUCE_EVASION,
         'reduce cr:': HiddenStat.REDUCE_CR,
         'reduce ac:': HiddenStat.REDUCE_AC,
+        'silenced chance': HiddenStat.SILENCED_CHANCE,
+        'slowed chance': HiddenStat.SLOWED_CHANCE,
+        'stunned chance': HiddenStat.STUNNED_CHANCE,
 
+        'ac pen:': HiddenStat.AC_PENETRATION,
         'general magic pen:': HiddenStat.GENERAL_MAGIC_PENETRATION,
         'fire magic pen:': HiddenStat.FIRE_MAGIC_PENETRATION,
         'water magic pen:': HiddenStat.WATER_MAGIC_PENETRATION,
@@ -8957,7 +8972,7 @@ var BarbsComponents = BarbsComponents || (function () {
             ItemScaler.MELEE,
             [
                 Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.PHYSICAL),
-                Effect.hidden_stat(HiddenStat.PARALYZE, 30, RollType.PHYSICAL),
+                Effect.hidden_stat(HiddenStat.PARALYZED_CHANCE, 30, RollType.PHYSICAL),
             ]
         ),
 
@@ -9438,11 +9453,11 @@ var BarbsComponents = BarbsComponents || (function () {
             Effect.roll_damage('2d12', Damage.PHYSICAL, RollType.PHYSICAL),
             ItemScaler.MELEE,
             [
-                Effect.hidden_stat(HiddenStat.CRIPPLE_CHANCE, 20, RollType.PHYSICAL),
+                Effect.hidden_stat(HiddenStat.CRIPPLED_CHANCE, 20, RollType.PHYSICAL),
                 Effect.roll_damage('6d10', Damage.PHYSICAL, RollType.PHYSICAL),
                 Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.PHYSICAL),
                 Effect.hidden_stat(HiddenStat.AC_PENETRATION, 30, RollType.PHYSICAL),
-                Effect.hidden_stat(HiddenStat.CRIPPLE_CHANCE, 20, RollType.PHYSICAL),
+                Effect.hidden_stat(HiddenStat.CRIPPLED_CHANCE, 20, RollType.PHYSICAL),
             ]
         ),
 

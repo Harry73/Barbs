@@ -189,9 +189,250 @@
             <a id="Items">
                 <h2>Items</h2>
             </a>
-            <p>The Barbs API scripts contain a big list of items. If you have item X equipped and it is not in this list, its effects will not be applied to any roll. Theoretically, eventually, I will make some kind of form that makes it relatively easy to input an item’s characteristics and output a new entry for this list. Such a form does not exist yet though. If you want to look at other items in the list as examples and then make your own, that would be a massive help. Again, let me know if you add something though, or I will overwrite it sooner or later.</p>
+
+            <h3>What is applied when</h3>
+            <p>Regardless of the type of attack you are doing, your head, body, hands, feet, rings, and belt will all be applied. When the main hand and offhand weapons are applied varies.</p>
+            <ul>
+                <li>If you are doing an auto-attack with your main hand weapon, only your main hand weapon's affixes will be included in the attack. Your offhand weapon will not be included.</li>
+                <li>If you are doing an auto-attack with your offhand weapon, only your offhand weapon's affixes will be included in the attack. Your main hand weapon will not be included.</li>
+                <li>If you are using a physical class ability, only your main hand weapon will be applied to the attack by default. If you want to instead perform the attack with your offhand weapon, add the "offhand" parameter to the ability, and only your offhand weapon will be applied. If the ability is explicitly a dual-wielding ability, add the "dual_wield" parameter to the ability, and both weapons will be applied.</li>
+                <li>If you are using a magic, psychic, or healing class ability, both main hand and offhand weapons will be applied.</li>
+            </ul>
             <br>
+
+            <h3>Auto-attacks</h3>
             <p>You can perform an auto-attack with an item by clicking the roll button on the “Equipment” tab of your character sheet. If other abilities you have used require you to specify parameters, you can do so in the boxes below the main hand and offhand slots. Parameters here behave the same as parameters for classes.</p>
+            <br>
+
+            <h3>Defining an Item</h3>
+            <p>Originally, on the Items tab of your character sheet, you would only put the name of the item in each text box. The Barbs API scripts contain a big list of items, and looked through this list for an item with a name matching what you entered. This requires hardcoding every item into the API scripts. While existing items using this paradigm will continue to work, the methodology for defining items is <b>deprecated</b>. Do not hardcode any more items into API scripts.</p>
+            <p>For any new items, you should define all affixes for the item in the corresponding text box on your character sheet. The API will then "construct" the item based on what you include in the text box for the item. This way, you can easily see and change what effects your items should have, and it's on players, rather than me, to define their items.</p>
+            <br>
+            <p>To tell the API to build your item from what you enter, your item should start with "construct;". Follow that with the item name, and then another semicolon. The item name can be whatever you want.</p>
+            <ul>
+                <li><span class="monospace">construct; My New Item;</span></li>
+            </ul>
+            <p>Following this, you specify each affix on the item, implicit and explicit, separated by semicolons. Each affix is identified by some keyword, and then the keyword is followed by values. How you should define each kind of affix is described below. Any field in &lt;angled brackets&gt; is a placeholder that should be replaced with some real value.</p>
+            <ul>
+                <li>Initiative bonus - <span class="monospace">initiative: &lt;bonus&gt;</span>
+                    <ul>
+                        <li>"bonus" must be an integer</li>
+                    </ul>
+                </li>
+
+                <li>Concentration bonus - <span class="monospace">concentration: &lt;bonus&gt;</span>
+                    <ul>
+                        <li>"bonus" must be an integer</li>
+                    </ul>
+                </li>
+
+                <li>Buff effectiveness - <span class="monospace">buff effectiveness: &lt;bonus&gt;</span>
+                    <ul>
+                        <li>"bonus" must be an integer</li>
+                    </ul>
+                </li>
+
+                <li>Enchant effectiveness - <span class="monospace">enchant effectiveness: &lt;bonus&gt;</span>
+                    <ul>
+                        <li>"bonus" must be an integer</li>
+                    </ul>
+                </li>
+
+                <li>On hit damage - <span class="monospace">damage: &lt;dice&gt; &lt;damage type&gt; &lt;applicable attack types&gt;</span>
+                    <ul>
+                        <li>"dice" can be any Roll20 dice expression, e.g. "4d10"</li>
+                        <li>"damage type" must be one of the following: physical, psychic, healing, fire, water, earth, air, ice, lightning, light, dark</li>
+                        <li>"applicable attack type" must be one of the following: physical, psychic, magic, healing, all. The applicable attack type is often based on the item type itself. Damage from a longsword should only be applied to physical attacks. Damage from an orb should only be applied to magic attacks. Damage from armor may apply to all attacks (though "all" is almost never the case).</li>
+                    </ul>
+                </li>
+
+                <li>Damage multiplier - <span class="monospace">multiplier: &lt;multiplier percent&gt; &lt;damage type&gt; &lt;applicable attack types&gt;</span>
+                    <ul>
+                        <li>"multiplier percent" is the percentage increase on damage, e.g. 50%. The percent sign is optional.</li>
+                        <li>"damage type" must be one of the following: physical, psychic, healing, fire, water, earth, air, ice, lightning, light, dark, all_magic, all</li>
+                        <li>"applicable attack type" must be one of the following: physical, psychic, magic, healing, all. The applicable attack type is often based on the item type itself. Damage from a longsword should only be applied to physical attacks. Damage from an orb should only be applied to magic attacks. Damage from armor may apply to all attacks (though "all" is almost never the case).</li>
+                    </ul>
+                </li>
+
+                <li>On crit damage - <span class="monospace">crit damage: &lt;dice&gt; &lt;damage type&gt; &lt;applicable attack types&gt;</span>
+                    <ul>
+                        <li>"dice" can be any Roll20 dice expression, e.g. "4d10"</li>
+                        <li>"damage type" must be one of the following: physical, psychic, healing, fire, water, earth, air, ice, lightning, light, dark</li>
+                        <li>"applicable attack type" must be one of the following: physical, psychic, magic, healing, all. The applicable attack type is often based on the item type itself. Damage from a longsword should only be applied to physical attacks. Damage from an orb should only be applied to magic attacks. Damage from armor may apply to all attacks (though "all" is almost never the case).</li>
+                    </ul>
+                </li>
+
+                <li>On crit damage multiplier - <span class="monospace">crit multiplier: &lt;multiplier percent&gt; &lt;damage type&gt; &lt;applicable attack types&gt;</span>
+                    <ul>
+                        <li>"multiplier percent" is the percentage increase on damage, e.g. 50%. The percent sign is optional.</li>
+                        <li>"damage type" must be one of the following: physical, psychic, healing, fire, water, earth, air, ice, lightning, light, dark, all_magic, all</li>
+                        <li>"applicable attack type" must be one of the following: physical, psychic, magic, healing, all. The applicable attack type is often based on the item type itself. Damage from a longsword should only be applied to physical attacks. Damage from an orb should only be applied to magic attacks. Damage from armor may apply to all attacks (though "all" is almost never the case).</li>
+                    </ul>
+                </li>
+
+                <li>Crit damage mod - <span class="monospace">crit damage mod: &lt;crit damage percent&gt; &lt;applicable attack types&gt;</span>
+                    <ul>
+                        <li>"crit damage percent" is the percentage increase on crit damage, e.g. 50%. The percent sign is optional.</li>
+                        <li>"applicable attack type" must be one of the following: physical, psychic, magic, healing, all. The applicable attack type is often based on the item type itself. Damage from a longsword should only be applied to physical attacks. Damage from an orb should only be applied to magic attacks. Damage from armor may apply to all attacks (though "all" is almost never the case).</li>
+                    </ul>
+                </li>
+
+                <li>Stat bonuses - <span class="monospace">&lt;stat name&gt;: &lt;bonus&gt; &lt;applicable roll type&gt;</span>
+                    <ul>
+                        <li>"stat name" is one of the stats as they appear on the character sheet or in the rulebook</li>
+                        <li>"bonus" is the increase on the stat, either a percentage or a normal number</li>
+                        <li>"applicable roll type" must be one of the following: physical, psychic, magic, healing, all. For stats, this should almost always be "all". Critical Hit Chance is the only stat where it may vary.</li>
+                    </ul>
+                    <br>
+                    <ul>
+                        <li><span class="monospace">health: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">stamina: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">mana: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">health regeneration: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">stamina regeneration: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">mana regeneration: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">movement speed: &lt;bonus&gt; all</span> - "movement speed" can be abbreviated as "mv".</li>
+                        <li><span class="monospace">ac: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">evasion: &lt;bonus&gt; all</span> - "evasion" can be abbreviated as "ev".</li>
+                        <li><span class="monospace">magic resist: &lt;bonus&gt; all</span> - This is for <b>general</b> magic resist. See below for element-specific MR. "magic resist" can be abbreviated as "mr".</li>
+                        <li><span class="monospace">condition resist: &lt;bonus&gt; all</span> - This is for <b>general</b> condition resist. See below for condition-specific CR. "condition resist" can be abbreviated as "cr".</li>
+                        <li><span class="monospace">melee damage: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">ranged fine damage: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">magic damage: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">critical hit chance: &lt;bonus&gt;  &lt;applicable roll type&gt;</span> - Unlike all other stats, applicable roll type is <i>very rarely</i> "all" here. It is normally "physical" or "magic".</li>
+                        <li><span class="monospace">commands: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">languages: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">item efficient: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">buff limit: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">concentration limit: &lt;bonus&gt; all</span></li>
+                    </ul>
+                </li>
+
+                <li>Element-specific MR - <span class="monospace">&lt;element&gt; mr: &lt;bonus&gt;</span>
+                    <ul>
+                        <li>"element" is one of the eight elements - fire, water, earth, air, ice, lightning, light, dark</li>
+                        <li>"mr" can be expanded to "magic resist", if you prefer</li>
+                        <li>"bonus" is the percent MR the item gives, e.g. 50%</li>
+                    </ul>
+                    <br>
+                    <ul>
+                        <li><span class="monospace">fire mr: &lt;bonus&gt;</span></li>
+                        <li><span class="monospace">water mr: &lt;bonus&gt;</span></li>
+                        <li><span class="monospace">earth mr: &lt;bonus&gt;</span></li>
+                        <li><span class="monospace">air mr: &lt;bonus&gt;</span></li>
+                        <li><span class="monospace">ice mr: &lt;bonus&gt;</span></li>
+                        <li><span class="monospace">lightning mr: &lt;bonus&gt;</span></li>
+                        <li><span class="monospace">light mr: &lt;bonus&gt;</span></li>
+                        <li><span class="monospace">dark mr: &lt;bonus&gt;</span></li>
+                    </ul>
+                </li>
+
+                <li>Condition-specific Resistance - <span class="monospace">&lt;condition&gt; cr: &lt;bonus&gt;</span>
+                    <ul>
+                        <li>"condition" is one of the <a href="/#Conditions">conditions</a> listed in the rulebook. Capitalization does not matter. Parenthesis in the condition name do not matter.</li>
+                        <li>"cr" can be expanded to "condition resist", if you prefer</li>
+                        <li>"bonus" is the bonus you get to CR rolls against this condition, e.g. 20</li>
+                    </ul>
+                    <br>
+                    <ul>
+                        <li><span class="monospace">bleeding cr: &lt;bonus&gt;</span></li>
+                        <li><span class="monospace">knocked down prone cr: &lt;bonus&gt;</span></li>
+                        <li><span class="monospace">petrified cr: &lt;bonus&gt;</span></li>
+                        <li><span class="monospace">...</span></li>
+                    </ul>
+                </li>
+
+                <li>Hidden Stats
+                    <ul>
+                        <li>There are some stat-like things that items can grant, but they aren't listed as normal stats. This includes things like chance to inflict conditions, accuracy, AC pen, MR pen, and lethality. I call these "hidden stats". The pattern for all of these is generally the same. All supported "hidden stats" are listed below.</li>
+                        <li>For all of these, an applicable roll type is required. This must be one of the following: physical, psychic, magic, healing, all. The applicable attack type is often based on the item type itself. Accuracy from a longsword should only be applied to physical attacks. MR pen from an orb should only be applied to magic attacks. Lethality from armor may apply to all attacks.</li>
+                        <li>Every single one of these can additionally be prefixed with "crit ", to indicate that the affix should only be applied on crit.</li>
+                    </ul>
+                    <br>
+                    <ul>
+                        <li>Accuracy - <span class="monospace">accuracy: &lt;percentage&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Buff strip - <span class="monospace">ac pen: &lt;number of buffs stripped&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Forced movement - <span class="monospace">forced movement: &lt;number of ft of movement&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Lethality - <span class="monospace">lethality: &lt;percentage&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Lifesteal - <span class="monospace">lifesteal: &lt;percentage&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Minion lethality - <span class="monospace">minion lethality: &lt;percentage&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Weapon reach - <span class="monospace">reach: &lt;number of ft of increased reach&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Chance to be unblockable - <span class="monospace">unblockable chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
+                    </ul>
+                    <br>
+                    <ul>
+                        <li>Chance to inflict Blinded - <span class="monospace">blinded chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Chance to inflict Burn 20 - <span class="monospace">burn chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span> - If you need a value other than "20" for Burn, talk to Ian.</li>
+                        <li>Chance to inflict Confused - <span class="monospace">confused chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Chance to inflict Crippled - <span class="monospace">crippled chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Chance to inflict Fear - <span class="monospace">fear chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Chance to inflict Frozen - <span class="monospace">frozen chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Chance to inflict Immobilized - <span class="monospace">immobilized chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Chance to inflict Paralyzed - <span class="monospace">paralyzed chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Chance to inflict Petrified - <span class="monospace">petrified chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Chance to inflict Silenced - <span class="monospace">silenced chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Chance to inflict Slowed - <span class="monospace">slowed chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Chance to inflict Stunned - <span class="monospace">stunned chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Reduce AC - <span class="monospace">reduce ac: &lt;ac reduction&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Reduce CR - <span class="monospace">reduce cr: &lt;cr reduction&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Reduce evasion - <span class="monospace">reduce evasion: &lt;evasion reduction&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Other - If the condition you need isn't listed here, talk to Ian.</li>
+                    </ul>
+                    <br>
+                    <ul>
+                        <li>AC penetration - <span class="monospace">ac pen: &lt;amount of AC pen&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>General magic penetration - <span class="monospace">general magic pen: &lt;amount of MR pen&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Fire magic penetration - <span class="monospace">fire magic pen: &lt;amount of MR pen&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Water magic penetration - <span class="monospace">water magic pen: &lt;amount of MR pen&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Earth magic penetration - <span class="monospace">earth magic pen: &lt;amount of MR pen&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Air magic penetration - <span class="monospace">air magic pen: &lt;amount of MR pen&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Ice magic penetration - <span class="monospace">ice magic pen: &lt;amount of MR pen&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Lightning magic penetration - <span class="monospace">lightning magic pen: &lt;amount of MR pen&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Light magic penetration - <span class="monospace">light magic pen: &lt;amount of MR pen&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Dark magic penetration - <span class="monospace">dark magic pen: &lt;amount of MR pen&gt; &lt;applicable roll type&gt;</span></li>
+                    </ul>
+                </li>
+
+                <li>Skill bonuses - <span class="monospace">&lt;skill name&gt;: &lt;bonus&gt;</span>
+                    <ul>
+                        <li>"skill name" is one of the <a href="/#Skills">skills</a> listed in the rulebook. Capitalization does not matter, but punctuation (namely the colon in skill names) should stay the same.</li>
+                        <li>"bonus" is the bonus you get to this skill, e.g. 20</li>
+                    </ul>
+                    <br>
+                    <ul>
+                        <li><span class="monospace">Athletics: Balance: &lt;bonus&gt;</span></li>
+                        <li><span class="monospace">item use: first aid: &lt;bonus&gt;</span></li>
+                        <li><span class="monospace">Weapon mastery: bows: &lt;bonus&gt;</span></li>
+                        <li><span class="monospace">...</span></li>
+                    </ul>
+                </li>
+
+                <li>Miscellaneous on hit effect - <span class="monospace">effect: &lt;effect text&gt; &lt;applicable attack type&gt;</span>
+                    <ul>
+                        <li>"effect text" can be literally text, including spaces or not. Use this if the affix does not fall into any other category.</li>
+                        <li>"applicable attack type" must be one of the following: physical, psychic, magic, healing, all. The applicable attack type is often based on the item type itself. Damage from a longsword should only be applied to physical attacks. Damage from an orb should only be applied to magic attacks. Damage from armor may apply to all attacks (though "all" is almost never the case).</li>
+                    </ul>
+                </li>
+
+                <li>Miscellaneous on crit effect - <span class="monospace">crit effect: &lt;effect text&gt; &lt;applicable attack type&gt;</span>
+                    <ul>
+                        <li>"effect text" can be literally text, including spaces or not. Use this if the on-crit affix does not fall into any other category.</li>
+                        <li>"applicable attack type" must be one of the following: physical, psychic, magic, healing, all. The applicable attack type is often based on the item type itself. Damage from a longsword should only be applied to physical attacks. Damage from an orb should only be applied to magic attacks. Damage from armor may apply to all attacks (though "all" is almost never the case).</li>
+                    </ul>
+                </li>
+            </ul>
+            <br>
+
+            <p>Some examples of items:</p>
+            <ul class="monospace">
+                <li class="spaced">construct; Angel's Longbow of Accuracy; base: d10 physical DEX; damage: 4d10 light physical; accuracy: 20% physical</li>
+                <li class="spaced">construct; Resistant Hat of Dodging; evasion: 10% all; ac: -10% all; evasion: 10% all; mr: 10% all</li>
+                <li class="spaced">construct; Name does not matter; crit damage mod: 100% physical; critical hit chance: 50% physical; effect: makes pretty lights</li>
+                <li class="spaced">construct; Item Name; crit accuracy: 20% physical; multiplier: 25% ice magic; buff effectiveness: 25%; concentration: 20;</li>
+                <li class="spaced">construct; The Item; general magic pen: 20% physical; Athletics: Balance: 20; silenced chance: 35% all; crit lifesteal: 20% all;</li>
+            </ul>
+            <br>
+
         </article>
 
         <article>

@@ -2699,7 +2699,7 @@ var Barbs = Barbs || (function () {
                                 redirected_roll.add_hidden_stat(HiddenStat.FROZEN_CHANCE, 20);
                                 element = Damage.LIGHT;
                             } else if (damage_types[i] === Damage.LIGHT) {
-                                redirected_roll.add_hidden_stat(HiddenStat.STUN_CHANCE, 20);
+                                redirected_roll.add_hidden_stat(HiddenStat.STUNNED_CHANCE, 20);
                                 element = Damage.ICE;
                             }
                             break;
