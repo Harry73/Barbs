@@ -75,6 +75,9 @@ var Barbs = Barbs || (function () {
 
     // Split a string by sep and keep sep as an element in the result
     function split_string(string, sep) {
+        assert_not_null(string, 'split_string() string');
+        assert_not_null(sep, 'split_string() sep');
+
         let array = string.split(sep);
         let new_array = [];
         for (let i = 0; i < array.length; i++) {
@@ -91,6 +94,9 @@ var Barbs = Barbs || (function () {
 
     // Split elements in an array using splitString
     function split_array(array, sep) {
+        assert_not_null(array, 'split_array() array');
+        assert_not_null(sep, 'split_array() sep');
+
         let new_array = [];
         for (let index = 0; index < array.length; index++) {
             const item = array[index];
@@ -105,6 +111,31 @@ var Barbs = Barbs || (function () {
         }
 
         return new_array;
+    }
+
+
+    function occurrences(string, pattern) {
+        assert_not_null(string, 'occurrences() string');
+        assert_not_null(pattern, 'occurrences() pattern');
+
+        if (pattern.length <= 0) {
+            return string.length + 1;
+        }
+
+        let count = 0;
+        let position = 0;
+        const step = pattern.length;
+
+        while (true) {
+            position = string.indexOf(pattern, position);
+            if (position < 0) {
+                break;
+            }
+
+            count++;
+            position += step;
+        }
+        return count;
     }
 
 
@@ -354,7 +385,7 @@ var Barbs = Barbs || (function () {
             total_cr += roll.condition_resists[condition.toLowerCase().replace(/[()]/g, '')];
         }
 
-        total_cr = Math.min(101, total_mr);
+        total_cr = Math.min(101, total_cr);
         chat(character, percent_format.format(condition + ' Resist', 'CR', total_cr));
     }
 
@@ -703,11 +734,28 @@ var Barbs = Barbs || (function () {
         assert_starts_with(roll_time, 'roll_time', 'add_persistent_effect() roll_time');
         assert_not_null(handler, 'add_persistent_effect() handler');
 
+        // Figure out the caster's buff or enchant effectiveness
+        const roll = new Roll(caster, RollType.ALL);
+        if (!add_extras(caster, roll, RollTime.DEFAULT, parameters, '')) {
+            chat(caster, 'Error calculating buff/enchant effectiveness for ability %s'.format(ability.name));
+            return;
+        }
+
         let effectiveness = 1;
+        if ('tags' in ability) {
+            if (ability.tags.includes('buff')) {
+                effectiveness = roll.buff_effectiveness;
+            } else if (ability.tags.includes('enchant')) {
+                effectiveness = roll.enchant_effectiveness;
+            }
+        }
+
+        // Continue to allow effectiveness to be specified as a parameter
+        // TODO: stop supporting this?
         let effectiveness_string = get_parameter('effectiveness', parameters);
         if (effectiveness_string !== null) {
             effectiveness_string = trim_percent(effectiveness_string);
-            effectiveness = 1 + parse_int(effectiveness_string) / 100;
+            effectiveness += parse_int(effectiveness_string) / 100;
             if (Number.isNaN(effectiveness)) {
                 chat(caster, 'Non-numeric effectiveness "%s"'.format(effectiveness_string));
                 return;
@@ -1107,12 +1155,15 @@ var Barbs = Barbs || (function () {
         const hidden_stat_formats = Object.keys(roll.hidden_stats);
         for (let i = 0; i < hidden_stat_formats.length; i++) {
             const hidden_stat_format = hidden_stat_formats[i];
-            const hidden_stat_value = roll.hidden_stats[hidden_stat_format];
+            const value = roll.hidden_stats[hidden_stat_format];
 
-            let formatted_hidden_stat = hidden_stat_format.format(hidden_stat_value);
-            if (formatted_hidden_stat.includes('chance')) {
-                const value = 100 - Math.min(101, hidden_stat_value) + 1;
-                formatted_hidden_stat = formatted_hidden_stat + ', chance: [[d100cs>%s]]'.format(value);
+            const format_args = occurrences(hidden_stat_format, '%s');
+            let formatted_hidden_stat;
+            if (format_args === 1) {
+                formatted_hidden_stat = hidden_stat_format.format(value);
+            } else if (format_args === 2) {
+                const threshold = 100 - Math.min(101, value) + 1;
+                formatted_hidden_stat = hidden_stat_format.format(value, threshold);
             }
             effects.push('<li>%s</li>'.format(formatted_hidden_stat));
         }

@@ -113,6 +113,7 @@ def process_data_file():
             for key in ability_keys_to_remove:
                 ability.pop(key, None)
 
+            ability['tags'] = [tag.lower() for tag in ability['tags']]
             clazz['abilities'][ability['name']] = ability
 
         revised_classes[clazz['name']] = clazz

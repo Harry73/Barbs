@@ -8,9 +8,5 @@ Ian's TODO list
     * Describe pure api somewhere, how you would use "!barbs <command>"
     * Constructing items
 
-* Figure out buff effectiveness from items automatically
+* Make persistent effects survive an API restart, since it's actually decently easy to see and remove them now.
 * Do rolls for combo chance automatically
-
-* Maybe put all handlers for item construction into one giant dictionary and then process them by longest keys 
-  first. It could help prevent accidental duplicate keys.
-

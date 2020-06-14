@@ -441,21 +441,21 @@ var BarbsComponents = BarbsComponents || (function () {
         AC_PENETRATION: '%s% armor penetration',
         BUFF_STRIP: 'Strip %s buff(s) from the target',
         FORCED_MOVEMENT: 'Forcibly move target %s ft',
-        LETHALITY: '%s% lethality chance',
+        LETHALITY: '%s% lethality chance, chance: [[d100cs>%s]]',
         LIFESTEAL: '%s% lifesteal',
-        MINION_LETHALITY: '%s% minion lethality chance',
+        MINION_LETHALITY: '%s% minion lethality chance, chance: [[d100cs>%s]]',
         REACH: '+%s ft reach',
-        UNBLOCKABLE_CHANCE: '%s% chance to be unblockable',
+        UNBLOCKABLE_CHANCE: '%s% chance to be unblockable, chance: [[d100cs>%s]]',
 
-        BURN_CHANCE: '%s% chance to inflict Burn 20, CR: [[1d100]]',
-        CRIPPLE_CHANCE: '%s% chance to Cripple, CR: [[1d100]]',
-        FEAR_CHANCE: '%s% chance to Fear, CR: [[1d100]]',
-        FROZEN_CHANCE: '%s% chance to inflict Frozen, CR: [[1d100]]',
-        PARALYZE: '%s% chance to Paralyze, CR: [[1d100]]',
-        REDUCE_EVASION: 'Target loses %s% evasion for 1 minute, CR: [[1d100]]',
+        BURN_CHANCE: '%s% chance to inflict Burn 20, chance: [[d100cs>%s]], CR: [[1d100]]',
+        CRIPPLE_CHANCE: '%s% chance to Cripple, chance: [[d100cs>%s]], CR: [[1d100]]',
+        FEAR_CHANCE: '%s% chance to Fear, chance: [[d100cs>%s]], CR: [[1d100]]',
+        FROZEN_CHANCE: '%s% chance to inflict Frozen, chance: [[d100cs>%s]], CR: [[1d100]]',
+        PARALYZE: '%s% chance to Paralyze, chance: [[d100cs>%s]], CR: [[1d100]]',
+        REDUCE_EVASION: 'Target loses %s% evasion for 1 minute, chance: [[d100cs>%s]], CR: [[1d100]]',
         REDUCE_CR: 'Target loses %s% CR, CR: [[1d100]]',
         REDUCE_AC: 'Target loses %s AC, CR: [[1d100]]',
-        STUN_CHANCE: '%s% chance to Stun, CR: [[1d100]]',
+        STUN_CHANCE: '%s% chance to Stun, chance: [[d100cs>%s]], CR: [[1d100]]',
 
         GENERAL_MAGIC_PENETRATION: '%s% magic penetration',
         FIRE_MAGIC_PENETRATION: '%s% fire magic penetration',
@@ -680,10 +680,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You protect an ally with a brief yet powerful shield. Block one attack on yourself or an ally in range. Until the beginning of the target's next turn, they have +10 AC and +10% MR"
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "defensive",
-                        "gain AC",
-                        "gain MR"
+                        "gain ac",
+                        "gain mr"
                     ]
                 },
                 "Weak": {
@@ -693,10 +693,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You dampen an enemy's aggression with magic. A target in range gains a 20% Weaken if they aren't already weakened; otherwise, they gain a 10% Weaken."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "defensive",
                         "condition",
-                        "Weaken",
+                        "weaken",
                         "single-target"
                     ]
                 },
@@ -707,11 +707,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You boost the natural armor of your allies. Up to 5 targets in range have their AC and MR increased by 30%. You may spend 1 minute to cast this spell as a minor ritual; if you do, its duration is extended to 1 hour. You may spend 10 minutes to cast this spell as a major ritual; if you do, its duration is extended to 6 hours."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "defensive",
                         "buff",
-                        "gain AC",
-                        "gain MR",
+                        "gain ac",
+                        "gain mr",
                         "modal",
                         "minor ritual",
                         "major ritual"
@@ -734,7 +734,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a fast moving blade of air. Deal 6d8 air magic damage to a target in range and up to 2 enemies adjacent to your target. This attack cannot miss, cannot be blocked, and bypasses barriers and walls."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ranged",
                         "air",
@@ -752,7 +752,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You release an upwards draft of air. Deal 8d8 air magic damage to a target in range. The target is then Knocked Up and inflicted with 50% air vulnerability until this condition ends."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ranged",
                         "air",
@@ -771,12 +771,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You conjure a violent twister that buffets your foes with slashing winds. Create a 15 foot square Cyclone centered on a space in range. It reaches up 100 ft as well. When it initially appears it deals 6d8 air magic damage to all enemies in its AOE. If an enemy begins its turn in the AOE, they take 4d8 air magic damage, and if they are Knocked Up, they remain Airborne. When you cast this spell, you may increase the AOE size by 5 ft for every additional 20 mana you expend."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "air",
                         "destruction",
                         "conjuration",
-                        "AOE",
+                        "aoe",
                         "square",
                         "conditional",
                         "knock up",
@@ -791,15 +791,15 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You conjure a violent hurricane that persistently damages and knocks up enemies. At the end of each of your turns, deal 10d8 air magic damage to all enemies in range and they are all Knocked Up. While you concentrate on this spell, your air spells ignore all MR and you can cast any air spell you know as a reaction."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "air",
                         "destruction",
                         "conjuration",
-                        "AOE",
+                        "aoe",
                         "square",
                         "knock up",
-                        "ignore MR",
+                        "ignore mr",
                         "concentration"
                     ]
                 },
@@ -810,7 +810,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You release a powerful blast of air that sends people flying. Push a target in range 20 ft in a direction of your choice. When you cast this spell, you may choose to expend 4 stacks of Winds of War to additionally knock the target prone."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ranged",
                         "air",
@@ -829,7 +829,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a gust of air behind you to quickly reposition yourself. Dash up to 50 ft in any direction including upwards and downwards"
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "air",
                         "utility",
                         "conjuration",
@@ -843,7 +843,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You maintain powerful winds to impede foes and assist allies. While you concentrate on this spell, powerful winds decrease enemy movement speed by 20 and increase ally movement speed by 20. Additionally, while you concentrate on this spell, you may spend 5 mana to push any target 10 ft in any direction as a Minor Action."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "air",
                         "control",
                         "conjuration",
@@ -858,7 +858,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You provide yourself or an ally the ability to fly without restrictions. Target willing entity in range gains a buff that converts all of their movement speed into flying speed, grants 20% evasion, and increases the range of their attacks by 50%."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "air",
                         "buff",
                         "gain evasion",
@@ -873,7 +873,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You provide an aiding tailwind to increase an ally's speed. Target willing entity in range gains the following buff: Gain +20 movement speed; can end this buff as a reaction to dash 20 ft in any direction."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "air",
                         "utility",
                         "conjuration",
@@ -888,7 +888,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You counter a spell and muddle the caster's senses. As a reaction to a target in range casting a spell, you may counter that spell. Until the end of the target's next turn, their non-melee abilities have their range halved."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "air",
                         "defensive",
                         "counterspell",
@@ -905,11 +905,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You rotate the air surrounding you quickly, knocking down incoming projectiles. All non-melee, non-AOE attacks that target or affect a space within range are blocked."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "air",
                         "defensive",
                         "conditional",
-                        "AOE",
+                        "aoe",
                         "block"
                     ]
                 },
@@ -920,7 +920,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon a wyvern borne of the skies. Summon a Wyvern with 100 HP, 50 flying speed, 20 AC, 50% evasion, 50% general MR, and an innate 100% vulnerability to attacks from bows and crossbows. It obeys your Commands; otherwise, it uses its Move Action to fly towards enemies and its Major Action to do a melee claw attack for 5d10 physical damage or a 30 ft cone breath attack for 10d8 air magic damage (33% recharge rate)."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "air",
                         "summoning",
                         "minion"
@@ -943,7 +943,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire at an enemy while making evasive maneuvers. Deal 4d8 physical damage to a target in range, then dash 10 ft in any direction"
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "ranged",
                         "physical",
                         "bow",
@@ -958,7 +958,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a series of several arrows at the enemy. Deal d8 physical damage to a target in range. This attack repeats 5 times, and you may change targets with each hit."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "ranged",
                         "physical",
                         "bow",
@@ -974,17 +974,17 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a rain of arrows from the skies. Deal 6d8 physical damage to all enemies in a 25 ft square centered on a space in range, Crippling them for 1 minute. Flying enemies take 100% increased damage from this ability, cannot evade this attack, and are additionally Knocked Prone."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "ranged",
                         "physical",
                         "bow",
-                        "AOE",
+                        "aoe",
                         "square",
                         "condition",
-                        "Cripple",
+                        "cripple",
                         "conditional",
                         "no-miss",
-                        "Knock Prone"
+                        "knock prone"
                     ]
                 },
                 "Wind Strike": {
@@ -994,7 +994,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a powerful gust of air to blow enemies away. Deal 5d8 air magic damage to a target in range, pushing them 10 ft away from you."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ranged",
                         "air",
@@ -1013,15 +1013,15 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You conjure winds as sharp as blades to damage and knock down enemies. Deal 6d8 air magic damage to all entities in a 25 ft square centered on a space in range, knocking them all Prone."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ranged",
                         "air",
                         "destruction",
-                        "AOE",
+                        "aoe",
                         "square",
                         "conjuration",
-                        "Knock Prone"
+                        "knock prone"
                     ]
                 },
                 "Harassing Whirlwind": {
@@ -1031,7 +1031,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create a whirlwind around a target that constantly damages and pushes them. Deal 4d8 air magic damage to a target in range. While concentrating on this spell, for the spell's duration, the target takes 4d8 air magic damage and is pushed 20 ft in a direction of your choice at the beginning of each turn."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ranged",
                         "air",
@@ -1049,7 +1049,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You use air magic to provide your bow with extra stopping power. For the spell's duration, when you hit a target with a bow attack, push the target 5 ft away from you as an on-hit effect."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "air",
                         "buff",
                         "self-target",
@@ -1065,7 +1065,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You envelop your bow in air magic energy. For the spell's duration, when you hit a target with a bow attack, deal an additional 2d8 air magic damage on hit."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "air",
                         "buff",
                         "self-target",
@@ -1081,7 +1081,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "Your bow becomes a thick arc of air magic. For the spell's duration, all damage that you would deal with bow attacks have their damage converted to air magic damage. While this buff is active, your bow attacks using special ammunition have 50% increased range."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "air",
                         "buff",
                         "self-target",
@@ -1124,7 +1124,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "tags": [
                         "alchemy",
                         "augmentation",
-                        "increase max HP",
+                        "increase max hp",
                         "gain action"
                     ]
                 },
@@ -1158,12 +1158,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a stream of powerfully moving water. Deal 6d6 water magic damage to all enemies in a 60 foot line starting from your position in any direction. The last enemy in the line is pushed 10 ft away from you."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "water",
                         "destruction",
                         "damage",
-                        "AOE",
+                        "aoe",
                         "line",
                         "forced movement"
                     ]
@@ -1175,13 +1175,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You conjure a large wave of water that crashes into your foes. Deal 8d6 water magic damage to all enemies in a 30 ft cube, centered on a space in range, leaving behind a field of shallow water in the spaces affected that act as difficult terrain for 1 hour."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "water",
                         "destruction",
                         "control",
                         "conjuration",
-                        "AOE",
+                        "aoe",
                         "cube",
                         "field"
                     ]
@@ -1193,7 +1193,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create a thin whip of liquid that lacerates enemies. Deal 9d6 water magic damage to a target in range. This attack cannot be blocked and cannot miss, and it is affected by your critical strike chance and critical damage modifier. If this attack does not fail, you may pull the target towards you by 10 ft."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ranged",
                         "water",
@@ -1214,14 +1214,14 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create a swirling pool of dangerous waters. Create a 35 ft square whirlpool centered on a space in range. At the beginning of each enemy's turn that is within the whirlpool, they become Immobilized, take 10d6 water magic damage, and are pulled to the center of the whirlpool (or as far as available space will allow), skirting around any other entities or blockages during their forced movement (but not blockages that completely encircle the center of the whirlpool). If they are within the center 15 ft square of the whirlpool when their turn begins, they instead take 15d6 water magic damage, are Immobilized, and begin drowning. Drowning entities have a 25% chance of instantly dying at the end of their turn. You may use a Major Action to move the whirlpool up to 20 ft in any direction at no mana cost."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ranged",
                         "water",
                         "destruction",
                         "conjuration",
                         "condition",
-                        "Immobilize",
+                        "immobilize",
                         "conditional",
                         "modal",
                         "forced movement",
@@ -1241,7 +1241,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "Targets cannot occupy the same space, and so they will bump into each other and stop their forced movement as needed to accommodate. All forced movement occurs simultaneously."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "water",
                         "control",
                         "multi-target",
@@ -1256,7 +1256,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You turn a mage's mana into nourishing water. As a reaction to a target in range casting a spell, you may counter that spell. You heal equal to the amount of mana spent on the countered spell."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "water",
                         "defensive",
                         "counterspell",
@@ -1272,7 +1272,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create orbs of water to protect allies. Create 3 orbs of water which surround yourself or a target ally in range (you may divide the 3 orbs amongst multiple targets). The first orb grants a +20 AC buff. The second orb grants a +30% MR buff. The third orb grants a +25% Evasion buff. An orb will automatically block 1 attack targeting the entity it is surrounding before dissipating if the entity would otherwise take damage."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "water",
                         "defensive",
                         "conjuration",
@@ -1289,7 +1289,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon a creature made of magically enhanced water. Summon a Weird with large size, 100 health, 50% evasion, 50% MR, 100% CR, water element affinity, and immunity to physical damage. It follows your Commands; otherwise, it uses its Move Action to approach nearby enemies, its Major Action to either swipe at all adjacent enemies for 10d6 physical damage, pushing them back 20 ft, or fire a blast of water that deals 12d6 water magic damage in a 15 ft square centered on a space within 60 ft, inflicting 20% water vulnerability which stacks, and its reaction to block an attack targeting an adjacent ally."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "water",
                         "summoning",
                         "minion",
@@ -1305,7 +1305,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You spray an ally with a soothing mist. Heal 6d6 to a target in range. For every 6 you roll, cleanse a random condition on the target."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "water",
                         "restoration",
                         "heal",
@@ -1322,12 +1322,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You conjure a healing rain to restore multiple allies. All allies in a 30 ft cube centered on a space in range are cleansed of a condition of their choice. This rain persists, granting allies inside of it +20% general condition resist until the beginning of your next turn, at which point it cleanses all allies of a condition of their choice before dissipating."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "water",
                         "restoration",
                         "buff field",
                         "cleanse",
-                        "AOE",
+                        "aoe",
                         "cube"
                     ]
                 },
@@ -1350,7 +1350,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You may expend an additional 20 mana to bottle the effects you choose into a potion which will expire in 1 hour."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "water",
                         "restoration",
                         "buffing",
@@ -1366,7 +1366,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create nourishing fountains. Create 2 large fountains in empty spaces within range. When the fountains initially appear, allies within 10 ft heal for 30 health and cleanse 1 condition of their choice. Allies standing next to a fountain gain 30% CR and 30% evasion. While the fountains persist, allies may use a minor action to drink from an adjacent fountain, healing for 30 health and cleansing for 1 condition of their choice. When you cast this spell, you may create additional fountains for 30 additional mana each."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "water",
                         "restoration",
                         "conjuration",
@@ -1394,7 +1394,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire bolts of pure magic at one or more enemies. Create 3 magic darts of any elements and divide them as you choose amongst 1, 2, or 3 enemies. Each dart deals d12 magic damage of its chosen element."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "destruction",
                         "single-target",
@@ -1409,7 +1409,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You douse an enemy in destructive mana. Deal 3d12 magic damage of a chosen element to a target in range. The target takes d12 magic damage of the same type at the beginning of each of its turns."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "destruction",
                         "single-target",
@@ -1427,10 +1427,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "destruction",
-                        "AOE",
+                        "aoe",
                         "square",
                         "cross",
                         "modal"
@@ -1443,13 +1443,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire rays of destructive mana. Deal 4d12 magic damage of a chosen element type to all enemies in a 70 ft cone, inflicting a 10% Magic Vulnerability to all targets."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "destruction",
-                        "AOE",
+                        "aoe",
                         "cone",
                         "condition",
-                        "Vulnerability"
+                        "vulnerability"
                     ]
                 },
                 "Magic Primer": {
@@ -1459,7 +1459,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You charge mana to augment your next spell with raw power. Your next spell attack's damage increases by 30% and will be affected by your critical strike chance and critical damage modifier."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "empower",
                         "destruction",
                         "self-target",
@@ -1473,7 +1473,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You turn a mage's mana against them. As a reaction to a spell being cast within range, counter that spell. The caster of the countered spell loses health equal to the amount of mana spent on the countered spell."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "destruction",
                         "defensive",
                         "counterspell"
@@ -1497,7 +1497,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     ],
                     "tags": [
                         "self-target",
-                        "Hidden",
+                        "hidden",
                         "buff",
                         "dash",
                         "modal"
@@ -1510,7 +1510,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You move quickly and can ascend sheer walls. Dash up to 40 ft. During your dash, you can also scale walls up to 40 ft."
                     ],
                     "tags": [
-                        "Dash",
+                        "dash",
                         "modal"
                     ]
                 },
@@ -1521,7 +1521,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You follow quickly after a fleeing enemy. As a reaction to a target in range moving, you may move an equal distance towards the target. You then mark the target, increasing your critical damage modifier by 50% on the marked target. This mark can stack multiple times."
                     ],
                     "tags": [
-                        "Dash",
+                        "dash",
                         "conditional",
                         "reaction",
                         "condition",
@@ -1535,9 +1535,9 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You move quickly from shadow to shadow. Become Hidden. Then, while hidden, you may use this ability to dash up to 60 ft. At the end of your dash, if you make a successful Sneak check, you may repeat this ability at no cost."
                     ],
                     "tags": [
-                        "Dash",
+                        "dash",
                         "conditional",
-                        "Sneak",
+                        "sneak",
                         "continuous"
                     ]
                 },
@@ -1599,11 +1599,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You attack from your enemy's blind spot. Deal 3d4 physical damage to a target in range. If you are Hidden, you roll max damage on all damage dice automatically."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "conditional",
                         "melee",
-                        "Hidden"
+                        "hidden"
                     ]
                 },
                 "Pounce": {
@@ -1613,7 +1613,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You quickly close in on your target before dealing the killing blow. Dash up to 15 ft towards a target, then deal 4d4 physical damage to a target in range."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "dash"
@@ -1626,7 +1626,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You bring death from above. You may cast this ability while falling on a target from at least 10 ft above it. Deal 8d4 physical damage to the target, with a 100% increased critical damage modifier."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "conditional",
                         "melee",
@@ -1641,13 +1641,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You strike as a blur, killing many. Deal 16d4 physical damage, dividing your damage dice amongst any number of adjacent targets as you choose. For every damage die a target is hit by, that attack gains 5% Lethality. You roll for critical strike chance only once, for all dice."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "single-target",
                         "multi-target",
                         "modal",
-                        "Lethal"
+                        "lethal"
                     ]
                 }
             }
@@ -1700,10 +1700,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "organics",
                         "minion",
                         "single-target",
-                        "AC loss",
-                        "MR loss",
+                        "ac loss",
+                        "mr loss",
                         "condition",
-                        "Immobilize"
+                        "immobilize"
                     ]
                 },
                 "Amalgam Bomber": {
@@ -1716,7 +1716,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "alchemy",
                         "organics",
                         "minion",
-                        "AOE",
+                        "aoe",
                         "physical",
                         "magic",
                         ""
@@ -1814,7 +1814,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "command",
                         "minion",
                         "condition",
-                        "Incapacitate"
+                        "incapacitate"
                     ]
                 },
                 "Adoption": {
@@ -1829,7 +1829,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "command",
                         "minion",
                         "condition",
-                        "Incapacitate"
+                        "incapacitate"
                     ]
                 }
             }
@@ -1849,7 +1849,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You lead your forces into swift battle. Deal 5d10 physical damage to a target in range. Then, an ally within 50 ft gains a free reaction to dash to a space adjacent to you. They may then use their normal reaction to cast a non-spell, melee, attack ability. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a non-spell, melee, attack ability."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "single-target",
                         "melee",
                         "physical",
@@ -1863,7 +1863,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You call for a tactical retreat to regroup. All allies in range gain a free reaction to dash up to their Move Speed away from enemies, then any number of allies may use their normal reaction to cast any heal ability. This ability, nor the heal abilities cast by allies due to this ability, cannot be reacted to. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a heal ability."
                     ],
                     "tags": [
-                        "Dash",
+                        "dash",
                         "no-react"
                     ]
                 },
@@ -1874,7 +1874,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You give a rousing speech to the troops. All allies in range gain +100% increased damage until the beginning of your next turn. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a buff ability."
                     ],
                     "tags": [
-                        "Buff"
+                        "buff"
                     ]
                 }
             }
@@ -1894,7 +1894,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You hack at an enemy with your weapon. Deal 5d10 physical damage to a target in range. You may reroll any damage dice rolled with this attack, taking the second result. If this attack is made with an axe or sword, take the higher result instead."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -1917,7 +1917,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You bash an enemy's head in with your weapon. Deal 6d10 physical damage to a target in range and Stun them until the end of their next turn. If this attack is made with a blunt weapon or shield, it also hits enemies adjacent to your target."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -1929,7 +1929,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "shield",
                         "heavy throwing weapon",
                         "condition",
-                        "Stun",
+                        "stun",
                         "conditional",
                         "multi-target"
                     ]
@@ -1941,7 +1941,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You skewer your enemy. Deal 7d10 physical damage to a target in range. This attack pierces your target to hit an enemy behind them that is within 15 ft of the initial target for half damage. If this attack is made with a polearm or heavy throwing weapon, the second hit deals full damage instead."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "multi-target",
@@ -1972,7 +1972,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "Then, you may concentrate on this ability. If you do, you may repeat it as a free action at no cost once per turn, choosing a new selection from the list above. Concentration ends when you exhaust the list."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -1987,8 +1987,8 @@ var BarbsComponents = BarbsComponents || (function () {
                         "modal",
                         "concentration",
                         "condition",
-                        "Bleed",
-                        "Vulnerability"
+                        "bleed",
+                        "vulnerability"
                     ]
                 },
                 "Precision Strike": {
@@ -1998,7 +1998,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You carefully strike for a precise point to pass through an enemy's armor. Deal 5d8 physical damage to a target in range. This attack cannot miss, cannot be blocked, ignores AC, and ignores magical defenses. If this attack is made with a fine weapon or unarmed combat, you may dash up to 20 ft before or after the attack."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -2021,7 +2021,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire multiple attacks quickly at a single target. Deal 2d8 physical damage to a target in range, then repeat this for 3 more hits against the same target. This attack cannot be reacted to. If this attack is made with a crossbow or bullet weapon, this ability gains, \"On Hit: Push target 10 ft.\""
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -2044,7 +2044,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You attack an enemy's weak points, dealing immense pain. Deal 6d8 physical damage to a target in range and inflict them with a 2d8 Bleed. If this attack is made with a bow or light throwing weapon, inflict the target with 50% physical vulnerability as well."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -2056,8 +2056,8 @@ var BarbsComponents = BarbsComponents || (function () {
                         "unarmed",
                         "light throwing weapon",
                         "conditional",
-                        "Bleed",
-                        "Vulnerability",
+                        "bleed",
+                        "vulnerability",
                         "condition"
                     ]
                 },
@@ -2077,7 +2077,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "Then, you may concentrate on this ability. If you do, you may repeat it as a free action at no cost once per turn, choosing a new selection from the list above. Concentration ends when you exhaust the list."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -2093,7 +2093,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "combo",
                         "dash",
                         "condition",
-                        "Stun",
+                        "stun",
                         "forced movement",
                         "concentration"
                     ]
@@ -2105,7 +2105,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You slam your weapon home while also disarming your opponent. Deal 5d6 physical damage to a target in range. That target is disarmed and you may choose to kick the dropped item 30 ft in any direction. If this attack is made with an improvised weapon, you may pick up whatever the target dropped instead and make an autoattack with it if it is a weapon."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -2123,7 +2123,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You aim for an enemy's weak points. Deal 6d6 physical damage to a target in range. This attack has your choice of either 15% critical strike chance or 150% critical damage modifier. If this attack is made with a shortblade, you may choose both."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -2140,7 +2140,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You ward off attacks as you switch weapons. As a reaction to an attack, block the attack fully with your currently equipped weapon or shield. Then, you may swap weapons in both hands."
                     ],
                     "tags": [
-                        "Block",
+                        "block",
                         "modal"
                     ]
                 },
@@ -2151,7 +2151,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You've mastered the art of swapping weapons seamlessly while attacking with them. Concentrate on this ability; while you do, the weapon swap action is a free action, and Master of Arms can trigger up to twice per turn instead of once per turn. If you would swap to a weapon which would trigger a \"draw weapon\" trigger, ignore the trigger while concentrating on this ability."
                     ],
                     "tags": [
-                        "Concentration"
+                        "concentration"
                     ]
                 }
             }
@@ -2175,12 +2175,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "conjuration",
                         "modal",
                         "attack",
                         "condition",
-                        "Immobilize"
+                        "immobilize"
                     ]
                 },
                 "Fog": {
@@ -2190,12 +2190,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You cast out mana as a cloud. Create a Fog field in a 35 ft square centered on a point in range. You and your allies can see through the Fog; other entities have obscured vision (Blinded) within the field. The field lasts until the end of your next turn. If this spell would end, you may recast this spell as a free reaction instead."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "conjuration",
                         "field",
                         "condition",
-                        "Blind",
-                        "AOE",
+                        "blind",
+                        "aoe",
                         "square"
                     ]
                 },
@@ -2206,7 +2206,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create a weapon or piece of armor for temporary use. Create a mundane weapon or piece of armor of your choosing and equip it to a target in range. This spell fails if the equipment slot being affected is already filled."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "conjuration",
                         "modal",
                         "conditional"
@@ -2219,7 +2219,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create a specialized defense totem. Create an SDF totem in an empty space within range, with 100 HP. When the totem takes damage, it deals twice as much damage of the same type back at the attacker. While the SDF totem is active and within 50 ft of you, you may use your reaction to redirect an attack targeting you or an ally to the totem."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "conjuration",
                         "modal",
                         "conditional",
@@ -2237,7 +2237,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "conjuration",
                         "modal"
                     ]
@@ -2249,10 +2249,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create a large building for a group to rest in. Create a Mansion that occupies an empty 105 ft square centered on a point in range (you may optionally decrease the size of the Mansion to fit smaller spaces, down to a lower limit of 35 ft square). You freely control who can enter the Mansion, and occupants of the Mansion can freely control the interior's furnishings. The Mansion protects occupants from the elements as well as from intruders."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "conjuration",
                         "modal",
-                        "AOE",
+                        "aoe",
                         "square"
                     ]
                 }
@@ -2273,12 +2273,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You bind an enemy with magic. A target in range becomes Stunned until the end of your next turn. You may recast this spell while concentrating on it for 10 mana; if you do, the duration is extended for an additional round."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "single-target",
                         "control",
                         "condition",
-                        "Stun",
+                        "stun",
                         "conditional",
                         "modal",
                         "concentration"
@@ -2291,12 +2291,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You cast out many skeins of mana to impede opponents. Up to 4 targets in range become Slowed for the duration. For every additional 15 mana you spend when you cast this spell, you may choose 4 additional targets."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "multi-target",
                         "control",
                         "condition",
-                        "Slow",
+                        "slow",
                         "modal",
                         "concentration"
                     ]
@@ -2308,7 +2308,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You curse an enemy with bad luck. A target in range gains a mark which gives -20 to all skill checks for the duration. You may spend 1 minute casting this spell as a minor ritual; if you do, its duration is 6 hours. You may spend 10 minutes casting this spell as a major ritual; if you do, its duration is 24 hours."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "control",
                         "modal",
                         "minor ritual",
@@ -2332,7 +2332,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You form a spear of ice and fire it at a nearby target. Deal 6d8 ice magic damage to a target in range. The ice spear passes through any enemies along its path, dealing half damage."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ranged",
                         "ice",
@@ -2349,7 +2349,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You cause spears of ice to erupt around you. Enemies within 5 ft of you take 8d8 ice magic damage and are Frozen. Enemies within 10 ft of you take 6d8 ice magic damage and are Slowed. Enemies within 15 ft of you take 4d8 damage."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ice",
                         "destruction",
@@ -2357,9 +2357,9 @@ var BarbsComponents = BarbsComponents || (function () {
                         "self-target",
                         "condition",
                         "control",
-                        "Slow",
-                        "Frozen",
-                        "AOE"
+                        "slow",
+                        "frozen",
+                        "aoe"
                     ]
                 },
                 "Shatter": {
@@ -2369,15 +2369,15 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You shatter an enemy encased in ice. Deal 10d8 ice magic damage to a target within range who is Frozen. Their Frozen condition ends, and they are Slowed. Then, this spell's effect repeat for an adjacent Frozen target. A target cannot be damaged by this spell more than once per cast."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ice",
                         "destruction",
                         "damage",
                         "single-target",
                         "conditional",
-                        "Frozen",
-                        "Slow",
+                        "frozen",
+                        "slow",
                         "repeatable"
                     ]
                 },
@@ -2388,12 +2388,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You emit a powerful beam of ice. Deal Xd8 ice magic damage to all targets in a line, where X is the amount of mana expended on this spell divided by 5. You may choose to concentrate on this spell further, and if you do, you may use a major action to repeat this spell for no mana cost, at half its previous damage. If this spell consumes at least 5 stacks of Frostbite, refund half of the mana cost. If this attack consumes at least 10 stacks of Frostbite, refund the full mana cost."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ice",
                         "destruction",
                         "damage",
-                        "AOE",
+                        "aoe",
                         "line",
                         "modal",
                         "continuous",
@@ -2408,13 +2408,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You freeze a target solid. Apply Frozen to a target in range, and apply Slow to any enemies adjacent to your target. Applies a stack of your passive on cast, even if resisted."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ice",
                         "condition",
                         "control",
-                        "Frozen",
-                        "Slow",
+                        "frozen",
+                        "slow",
                         "single target"
                     ]
                 },
@@ -2425,14 +2425,14 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You conjure a cone of icy wind. Enemies in a 60 ft cone in front of you are Slowed. If an enemy is hit by this spell, and already is Slowed or has a stack of your passive on them, they are Frozen instead."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ice",
                         "conjuration",
                         "control",
-                        "Frozen",
-                        "Slow",
-                        "AOE",
+                        "frozen",
+                        "slow",
+                        "aoe",
                         "cone"
                     ]
                 },
@@ -2443,12 +2443,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You drop a target's body temperature, slowing their metabolism. A target within range becomes Slowed, loses its Major action, Minor action, and reaction, and loses all Evasion. This spell requires concentration."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ice",
                         "condition",
                         "control",
-                        "Slow",
+                        "slow",
                         "action loss",
                         "evasion loss",
                         "single-target",
@@ -2462,12 +2462,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You drape yourself in an icy aura. For the duration of this spell, enemies who move into a space within 30 feet of you become Slowed. Adjacent enemies who attack you become Frozen. Attacks from enemies more than 30 ft away grant you 40% evasion for that attack. Allies who are adjacent to you have all types of damage they deal converted to ice magic damage, and inflict Frostbite on-hit (limited to once per turn). You may use your reaction to cast any ice spell while this buff is active."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "ice",
                         "buff",
                         "condition",
-                        "Slow",
-                        "Frozen",
+                        "slow",
+                        "frozen",
                         "self-target",
                         "on-hit",
                         "add evasion",
@@ -2482,7 +2482,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create sheets of ice and snow. Cover the ground in a target space in your choice of either ice or snow. Ice spaces force creatures to make Balance checks or fall prone. Snow spaces count as difficult terrain. When you cast this spell, you can repeat it for as many spaces within range as desired, expending 5 more mana for every additional space. You can also create a pillar of ice or snow, with a height of up to 10 ft, in any space for an additional 5 mana."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "smite-target",
                         "conjuration",
                         "ice",
@@ -2497,11 +2497,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You take advantage of a mage casting a spell, freezing his mana. As a reaction to a target in range casting a spell, you may counter that spell. That target becomes Silenced until the end of their next turn."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "counterspell",
                         "condition",
                         "defensive",
-                        "Silence",
+                        "silence",
                         "control",
                         "ice",
                         "single-target"
@@ -2514,11 +2514,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You surround yourself in an icy armor, and manipulate a shield of ice. Increase your AC by 20, and increase your general MR by 30% until the beginning of your next turn. While you have this buff, you may use your reaction to completely block one attack on you or an ally within 30 ft, for no additional mana."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "defensive",
                         "buff",
-                        "AC increase",
-                        "MR increase",
+                        "ac increase",
+                        "mr increase",
                         "block",
                         "self-target",
                         "single-target"
@@ -2531,9 +2531,9 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create an arena surrounded in ice. Create a 200 ft cube zone centered on a point within range. Within this zone, all enemies have the following: they are revealed; they cannot leave the zone unless you allow them as a free reaction; if they have at least 1 stack of Frostbite, they have their Frostbite doubled at the beginning of each turn. Any entity that dies with at least 1 stack of Frostbite has its Frostbite stacks transferred to another entity of your choice within the zone."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "ice",
-                        "AOE",
+                        "aoe",
                         "zone",
                         "cube",
                         "on-death",
@@ -2557,7 +2557,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You slash at an enemy while retreating. Deal 4d4 physical damage to a target in range, then dash up 10 ft in any direction. If this attack was made with an empowered shortblade, dash up to 20 ft instead."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "conditional",
                         "melee",
@@ -2573,7 +2573,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You stab repeatedly with your favored knife. Deal d4 physical damage to a target in range, repeating this attack twice more. If the initial hit was made with an empowered shortblade, the subsequent two hits are empowered in the same manner."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "conditional",
                         "melee",
@@ -2589,13 +2589,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You slash at magical weavings. Deal 6d4 physical damage to a target in range. This attack cannot be blocked by spells or magical effects and inflicts the target with -20% MR, non-stacking. If this attack was made with an empowered shortblade, inflict -40% MR instead."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "shortblade",
                         "single-target",
                         "condition",
-                        "lose MR",
+                        "lose mr",
                         "no block",
                         "conditional"
                     ]
@@ -2607,7 +2607,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire an opening salvo of magic before approaching. Deal 5d8 magic damage of a chosen type to a target in range, then dash up to 20 ft towards the target. This spell triggers your Ritual Dagger passive for twice as much empowerment damage."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "destruction",
                         "attack",
                         "single-target",
@@ -2621,7 +2621,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a repeating chain of spells. Deal 6d8 magic damage of a chosen type to a target in range, then concentrate on this spell. While you are concentrating on this spell, you may cast it as a major action for no mana cost (treat this as having spent 30 mana for the purposes of your Ritual Dagger passive)."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "destruction",
                         "attack",
                         "single-target",
@@ -2635,7 +2635,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You slash at an enemy with blades of mana. Deal 8d8 magic damage of a chosen type to a target in range and mark the target. A target marked this way grants attacks against the marked target +10% Critical Strike Chance, and additionally grants attacks with an empowered weapon +100% Critical Damage Modifier."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "destruction",
                         "attack",
                         "single-target",
@@ -2650,11 +2650,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You prepare yourself to engage with your knife. You gain +15% Critical Strike Chance, and your attacks with empowered shortblades grant you Hidden."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "utility",
                         "buff",
                         "conditional",
-                        "Hidden"
+                        "hidden"
                     ]
                 },
                 "Invisibility": {
@@ -2669,11 +2669,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "When you cast this spell, you may spend an additional 20 mana to recast it on a new target, and you may do this any number of times."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "utility",
                         "buff",
                         "modal",
-                        "Hidden"
+                        "hidden"
                     ]
                 },
                 "Rogue's Anlace": {
@@ -2683,7 +2683,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You enchant your dagger with a variety of utility effects. Enchant a target shortblade in range with the following effects: this weapon acts as a magical key, able to unlock mundanely locked doors and chests with ease; this weapon dowses for mundane traps and can disarm them with ease; this weapon warns of enemies within 30 ft, but doesn't provide any other info; when balanced by its hilt on a finger, this weapon falls in the direction of a safe exit path to a building or dungeon one is currently in."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "destruction",
                         "attack",
                         "single-target",
@@ -2707,13 +2707,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You charm attackers with your sensual touch and dull their strikes. Inflict a 10% Weaken to a target in range for the duration. This Weaken can stack up to 4 times. This ability costs 10 less stamina if your last Move Action included a Step 3 dance ability."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "condition",
-                        "Weaken",
+                        "weaken",
                         "stacking",
                         "conditional",
                         "dance",
-                        "Step 1"
+                        "step 1"
                     ]
                 },
                 "Swing": {
@@ -2723,11 +2723,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You force enemies to join you in dance. Push a target in range 20 ft in any direction. If the target hits other entities during its forced movement, it pushes them as well. This ability costs 15 less stamina if your last Move Action included a Step 1 dance ability."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "push",
                         "conditional",
                         "dance",
-                        "Step 2"
+                        "step 2"
                     ]
                 },
                 "Jive": {
@@ -2737,12 +2737,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You confound enemies with swirling limb and step. Inflict Confusion on an enemy in range. While an enemy is Confused in this manner, you may choose a specific direction when they move or attack, and the chosen direction becomes 3 times as likely to be selected when they roll. This ability costs 20 less stamina if your last Move Action included a Step 2 dance ability."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "condition",
-                        "Confuse",
+                        "confuse",
                         "modal",
                         "dance",
-                        "Step 3"
+                        "step 3"
                     ]
                 },
                 "Tango": {
@@ -2752,11 +2752,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You join up with a partner, giving them time to recover while you guide their step. Cleanse 1 condition on yourself or cleanse 1 condition on an ally in range and push them 5 ft in any direction. This ability costs 10 less stamina if your last Move Action included a Step 1 dance ability."
                     ],
                     "tags": [
-                        "Cleanse",
+                        "cleanse",
                         "push",
                         "conditional",
                         "dance",
-                        "Step 2"
+                        "step 2"
                     ]
                 },
                 "Waltz": {
@@ -2766,11 +2766,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You reinvigorate an ally with your beautiful dance moves. Heal 3d10 for a target in range and cleanse Poison, Bleed, and Burn. This ability costs 15 less stamina if your last Move Action included a Step 2 ability."
                     ],
                     "tags": [
-                        "Cleanse",
+                        "cleanse",
                         "heal",
                         "conditional",
                         "dance",
-                        "Step 3"
+                        "step 3"
                     ]
                 },
                 "Boogie": {
@@ -2780,10 +2780,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You dance with an ally, energizing them. Dash up to your move speed, moving an ally in range with you (if you cast this ability as a Move Action, your movement becomes a dash instead). That ally gains an additional Major Action during their next turn. This ability costs 20 less stamina if your last Move Action included a Step 3 ability."
                     ],
                     "tags": [
-                        "Dash",
+                        "dash",
                         "conditional",
                         "dance",
-                        "Step 1"
+                        "step 1"
                     ]
                 },
                 "Foxtrot": {
@@ -2793,11 +2793,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You quickly step and weave across the dance hall. Gain 10% evasion and 10% general MR for the duration. This buff can stack up to 4 times. This ability costs 10 less stamina if your last Move Action included a Step 2 dance ability."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "gain evasion",
-                        "gain MR",
+                        "gain mr",
                         "dance",
-                        "Step 3"
+                        "step 3"
                     ]
                 },
                 "Moonwalk": {
@@ -2807,11 +2807,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You slide across the dance hall. Gain 10 movement speed. This buff can stack up to 4 times. This ability costs 15 less stamina if your last Move Action included a Step 3 dance ability."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "gain move speed",
                         "conditional",
                         "dance",
-                        "Step 1"
+                        "step 1"
                     ]
                 },
                 "Ballet": {
@@ -2821,11 +2821,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "Your mystical dance seems graceful on the outside, yet requires incredible athletics. Gain +10% general CR and +10% CR of a type of your choice. This buff can stack up to 2 times. This ability costs 20 less stamina if your last Move Action included a Step 1 dance ability."
                     ],
                     "tags": [
-                        "Buff",
-                        "gain CR",
+                        "buff",
+                        "gain cr",
                         "conditional",
                         "dance",
-                        "Step 2"
+                        "step 2"
                     ]
                 }
             }
@@ -2845,12 +2845,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You slash with your blade, which thirsts for cursed flesh. Deal 3d12 + Xd12 physical damage to a target in range, where X is the number of Curses on the target."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "greatsword",
                         "conditional",
-                        "Curse"
+                        "curse"
                     ]
                 },
                 "Void Slash": {
@@ -2860,12 +2860,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You strike from afar as your blade seeks cursed flesh. Deal 4d12 physical damage to a target you can see within range. If your target is Cursed, this attack can hit through barriers and walls, ignores shields and blocks, and bypasses AC."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "ranged",
                         "physical",
                         "greatsword",
                         "conditional",
-                        "Curse",
+                        "curse",
                         "armor penetration",
                         "phase wall",
                         "phase block"
@@ -2882,12 +2882,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "greatsword",
                         "conditional",
-                        "Curse",
+                        "curse",
                         "modal",
                         "heal",
                         "empower"
@@ -2900,12 +2900,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "Your blade expands, empowered by dark magic, and you raze entire groups in one swing. Deal 8d12 physical damage to all targets in range. During the turn you use this ability, Scars of Darkness is changed such that consumed Scars grant you a bonus Major Action rather than refreshing your Major Action."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "greatsword",
                         "passive alter",
-                        "AOE"
+                        "aoe"
                     ]
                 },
                 "Dark Pulse": {
@@ -2915,13 +2915,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a wave of dark, cursed energy. Deal 3d12 dark magic damage and apply a stack of Curse to all enemies in a 20 ft cone in front of you."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "dark",
-                        "AOE",
+                        "aoe",
                         "cone",
                         "condition",
-                        "Curse"
+                        "curse"
                     ]
                 },
                 "Shadow Missiles": {
@@ -2931,15 +2931,15 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a series of dark missiles. Deal 3d12 dark magic damage and apply a stack of Curse to up to 3 targets in range. If the target is Cursed, this spell cannot miss and ignores MR."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "dark",
                         "multi-target",
                         "condition",
-                        "Curse",
+                        "curse",
                         "conditional",
                         "no-miss",
-                        "MR penetration"
+                        "mr penetration"
                     ]
                 },
                 "Shadow Grasp": {
@@ -2949,13 +2949,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You wrap a target in dark energy. Deal 3d12 dark magic damage to a target in range and inflict Immobilize. While a target is Immobilized by this ability, it takes d12 dark magic damage at the beginning of each of its turns, gains a stack of Curse, and cannot have its Curse stacks expunged, except by your abilities or by a free action you can take at any time."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "dark",
                         "single-target",
                         "condition",
-                        "Immobilize",
-                        "Curse",
+                        "immobilize",
+                        "curse",
                         "conditional"
                     ]
                 },
@@ -2966,7 +2966,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon your shadow to fight by your side. Create a Shadow in range. The shadow has 1 HP and is Immune to physical damage, magic damage, and all conditions. At the beginning of your turn, the Shadow teleports to and attacks an enemy of your choice within 80 ft, dealing damage as if you had autoattacked that enemy, and inflicting any on-hit effects, including a Scar. Instead of using an autoattack, you may have the Shadow use one of your greatsword abilities or one of your dark spells instead, but you must make any stamina or mana expenditures if you do so."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "dark",
                         "concentration",
@@ -2980,12 +2980,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You infuse your sword with a terrible curse. For the spell's duration, when you hit a target with a greatsword attack, inflict a Curse on the target."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "buff",
                         "self-target",
                         "condition",
-                        "Curse",
+                        "curse",
                         "on-hit",
                         "greatsword"
                     ]
@@ -2997,7 +2997,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You infuse your sword with dark magic energy. For the spell's duration, when you hit a target with a greatsword attack, deal an additional 2d12 dark magic damage on hit."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "buff",
                         "self-target",
@@ -3012,7 +3012,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "Your blade becomes a thin sheet of dark magic. All damage that you would deal with greatsword attacks have their damage converted to dark magic damage. While this buff is active, dark magic damage you deal with melee sword attacks creates Scars, and consuming Scars additionally refreshes your Minor Action and regenerates 10 stamina."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "buff",
                         "self-target",
@@ -3028,13 +3028,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You don magically conjured dark armor. Whenever a cursed enemy targets you with an attack, they take 2d12 dark magic damage for each curse on them, gain a 25% chance to miss with their attack (even for attacks that cannot be evaded) for each curse on them, and are dragged 10 ft towards you for each curse on them. For each curse you inflict that is expunged while this ability is active, you gain a stack of Darkness. Each stack of darkness increases your physical and dark magic damage by 25%, up to a limit of 20 stacks."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "buff",
                         "conjuration",
                         "self-target",
                         "condition",
-                        "Curse",
+                        "curse",
                         "stacking buff",
                         "concentration",
                         "pull"
@@ -3057,7 +3057,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire projectiles primed with a blessing to exploit a demon's magical circuit and otherworldly energy. Deal 10d8 physical damage to a target in range; that target then loses 10% of their mana and stamina and loses health equal to the amount of mana and stamina they lost (or would lose if they do not have the stamina or mana to lose). If this attack is made against an entity of demonic origin, it deals double damage and the target loses twice as much health after their mana and stamina loss. You may cast this ability as a free action if you expend 2 Hunter stacks; if you do, this attack ignores AC, cannot be blocked, and bypasses magical barriers."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "bow",
@@ -3075,12 +3075,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You dive into danger and fire wildly in a circle, forcing hordes of demons back and to their knees. Dash up to 40 ft in any direction, then deal 8d8 physical damage to all targets in range, pushing them back until they are outside the range, then inflicting Crippled and a 30% Weaken. This attack has 20% increased damage for every enemy within range. Each enemy of demonic origin adds 40% increased damage instead, and is inflicted with a 50% Weaken instead. You may cast this ability as a free action if you expend 2 Hunter stacks; if you do, this attack ignores AC, cannot be blocked, and bypasses magical barriers."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "multi-target",
                         "condition",
-                        "Cripple",
-                        "Weaken",
+                        "cripple",
+                        "weaken",
                         "conditional",
                         "modal",
                         "no-block",
@@ -3096,11 +3096,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire penetrating bullets into ranks of demons. Deal 12d8 physical damage to all enemies in a 30 ft line. For every entity of demonic origin this attack targets, its range is increased by 10 ft, and its damage increases by 50%. Enemies damaged by this ability are afflicted with a 20% Light and Lightning Vulnerability, increased to 40% for entities of demonic origin. You may cast this ability as a free action if you expend 2 Hunter stacks; if you do, this attack ignores AC, cannot be blocked, and bypasses magical barriers."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "multi-target",
                         "condition",
-                        "Vulnerability",
+                        "vulnerability",
                         "conditional",
                         "modal",
                         "no-block",
@@ -3116,17 +3116,17 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a bolt of magical energy that tears away a demon's hold on the physical realm. Deal 6d8 lightning magic damage and 5d10 light magic damage to all enemies in a 35 ft square, centered on a space in range; this attack deals double damage and has 30% Lethality against entities of demonic origin. Allies, including yourself, that are caught in the blast will gain the lightning damage rolled as on-hit damage for their next attack and heal for the light damage rolled. This attack leaves behind a field of banishment; within this field, attacks against entities of demonic origin have 30% Lethality and all enemies have -20% MR and CR. The field lasts for 1 minute, but you may expend it as a free action, cleansing 1 condition on every ally, including yourself, that was within the field. You may cast this ability as a free action if you expend 2 Hunter stacks; if you do, this attack ignores MR, cannot be blocked, and bypasses magical barriers."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "light",
                         "lightning",
                         "attack",
                         "heal",
                         "on-hit",
                         "cleanse",
-                        "decrease MR",
-                        "decrease CR",
+                        "decrease mr",
+                        "decrease cr",
                         "field",
-                        "Lethality",
+                        "lethality",
                         "destruction",
                         "restoration",
                         "conditional",
@@ -3147,15 +3147,15 @@ var BarbsComponents = BarbsComponents || (function () {
                         "Entities of demonic origin take double damage from this spell and count as 3 enemies each. You may cast this ability as a free action if you expend 2 Hunter stacks; if you do, this attack ignores MR, cannot be blocked, and bypasses magical barriers."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "light",
                         "lightning",
                         "attack",
-                        "AOE",
+                        "aoe",
                         "square",
                         "heal",
                         "condition",
-                        "Paralysis",
+                        "paralysis",
                         "destruction",
                         "restoration",
                         "cleanse",
@@ -3170,12 +3170,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You burn away demonic ichor with your light. Target in range is afflicted with a condition with the following effects: they take 4d8 light magic damage and 4d8 lightning magic damage at the beginning of each of their turns, which is doubled for entities of demonic origin; they are afflicted with a 20% physical damage vulnerability, increased to 40% for entities of demonic origin. You may cast this ability as a free action if you expend 2 Hunter stacks; if you do, this attack cannot be blocked and bypasses magical barriers."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "light",
                         "lightning",
                         "attack",
                         "condition",
-                        "Vulnerability",
+                        "vulnerability",
                         "modal",
                         "conditional",
                         "no-block"
@@ -3188,8 +3188,8 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You work tirelessly to defend others. As a reaction to an attack on you or an ally, dash up to 30 ft in any direction, blocking all incoming damage and effects in the spaces you travel through (including your original position and your destination) until the end of the turn. If this ability is used to block an attack from an entity of demonic origin, it redirects attacks with doubled damage back at the attacker instead of blocking. After casting this ability, your next attack gains 20% increased damage, which can stack up to 5 times. When you cast this ability, you may expend 1 Hunter stack; if you do, extend the range of the dash to 50 ft."
                     ],
                     "tags": [
-                        "Dash",
-                        "AOE block",
+                        "dash",
+                        "aoe block",
                         "conditional",
                         "modal",
                         "redirect",
@@ -3203,7 +3203,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You counter a demonic spell. As a reaction to a target in range casting a spell, you may counter that spell and mark that target until the end of your next turn. A target marked this way takes 50% increased damage from your damaging spells and has -20% CR against your condition-inflicting spells. If this spell is used to counter a spell that would summon a demon, your reaction refreshes. If this spell is used to counter a spell cast by an entity of demonic origin, you are refunded half this spell's mana cost."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "light",
                         "lightning",
                         "counterspell",
@@ -3219,7 +3219,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You rely on your finely honed senses to track down demons. You gain information about the position, levels, affinities, and numbers of groups of demons within range. After you detect a demon this way, you can track it regardless of distance for the next 24 hours if you concentrate, even across planes. Demons that are being tracked this way cannot surprise you or hide from you even if invisible, and you see through any illusions they cast. You may track multiple demons this way, but each individual demon requires separate concentration."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "divination",
                         "utility",
                         "defense",
@@ -3244,7 +3244,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You hit an enemy hard and expose their weakness. Deal 4d10 physical damage to a target in range, and inflict Physical Vulnerability equal to 10% + X%, where X is the target's current Physical Vulnerability."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "single-target",
@@ -3261,7 +3261,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You crush an enemy's armor. Deal 5d10 physical damage to a target in range. This attack destroys armor before damage calculation, reducing the target's armor by 25% on hit."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "single-target",
@@ -3277,7 +3277,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You finish off a weakened foe. Deal 6d10 physical damage to a target in range, with lethality equal to the target's missing health after damage calculation."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "single-target",
@@ -3292,7 +3292,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You swing at two enemies. Deal 4d10 physical damage to up to 2 different targets in range. If either target dies, deal 8d10 physical damage to the other target."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "single-target",
@@ -3309,7 +3309,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You swing in a wide arc. Deal 5d10 physical damage to all targets in range. Targets with full health take double damage."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "multi-target",
@@ -3324,7 +3324,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You slam your weapon down on a large group. Deal 6d10 physical damage to all targets in a 15 ft cone starting in range, knocking targets prone."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "multi-target",
@@ -3338,7 +3338,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You destroy buildings and constructs. Attack a construct, building, vehicle, or terrain object that is destructible, and destroy it. You may need to make a Blunt Weapons check for larger or armored targets, and some objects aren't destructible at all (such as hills or mountains)."
                     ],
                     "tags": [
-                        "Terrain destruction"
+                        "terrain destruction"
                     ]
                 },
                 "Challenge": {
@@ -3348,10 +3348,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You force enemies to turn their attention to you. Taunt all enemies within range for the duration. Gain 10% increased AC and MR for every enemy taunted this way for the duration"
                     ],
                     "tags": [
-                        "Condition",
-                        "Taunt",
-                        "gain AC",
-                        "gain MR"
+                        "condition",
+                        "taunt",
+                        "gain ac",
+                        "gain mr"
                     ]
                 },
                 "Flatten": {
@@ -3361,7 +3361,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You reduce parts of the ground to flat earth, or create a ditch. Create a shockwave centered on you that causes all spaces within range to be depressed downwards by 20 ft."
                     ],
                     "tags": [
-                        "Terrain destruction"
+                        "terrain destruction"
                     ]
                 }
             }
@@ -3381,7 +3381,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon a juvenile bronze dragon, bringer of lightning. Summon a Bronze Dragon with 200 health, large size, 20 AC, 80% EV, 20% MR, 30% CR, and 80 ft flying Move Speed. The Dragon obeys your Commands; otherwise, it uses its Move Action to fly to positions above enemies, its Major Action to either swipe with its claws for 10d10 physical damage on a single target in melee range or use its breath attack for 10d12 lightning magic damage in a 200 ft line AOE, and its Minor Action to either buff all allies with +10 Move Speed and +10% Armor Penetration for 1 minute, stacking and refreshing, or inflict all enemies with -10 Move Speed and +10% Physical Vulnerability for 1 minute, stacking and refreshing. The Bronze Dragon is a superior predator and hunter; if supplied with a magical signature, it can hunt down any individual anywhere on a plane regardless of distance, unless they are magically hidden."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "minion",
                         "physical",
@@ -3397,11 +3397,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You release the swift death of a bronze dragon's breath attack. Deal 6d12 lightning magic damage to all enemies in a 200 ft line AOE. All Bronze Dragons you control then use their reactions to use their breath attacks in directions of your choosing."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "destruction",
                         "lightning",
-                        "AOE",
+                        "aoe",
                         "line",
                         "conditional"
                     ]
@@ -3413,12 +3413,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You invoke the terrifying aspect of the dragon. Inflict all enemies in the battlefield with Fear and a +20% Weaken. Increase the Weaken by an additional +20% for every Dragon you control."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "control",
                         "condition",
                         "conditional",
-                        "Fear",
-                        "Weaken"
+                        "fear",
+                        "weaken"
                     ]
                 }
             }
@@ -3443,15 +3443,15 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "lightning",
                         "destruction",
                         "modal",
                         "random",
                         "condition",
-                        "Paralysis",
-                        "Stun",
+                        "paralysis",
+                        "stun",
                         "single-target"
                     ]
                 },
@@ -3467,14 +3467,14 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "lightning",
                         "destruction",
                         "modal",
                         "random",
                         "condition",
-                        "Vulnerability",
+                        "vulnerability",
                         "single-target",
                         "multi-target"
                     ]
@@ -3491,17 +3491,17 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "lightning",
                         "destruction",
                         "modal",
                         "random",
-                        "AOE",
+                        "aoe",
                         "line",
                         "condition",
-                        "Paralysis",
-                        "ignore MR"
+                        "paralysis",
+                        "ignore mr"
                     ]
                 },
                 "Lightning Rod": {
@@ -3511,12 +3511,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You erect a rod that attracts lightning. Deal 3d12 lightning magic damage to all enemies in a 25 ft square centered on a space in range, leaving behind a Lightning Rod totem. The totem activates and deals a random amount of lightning magic damage to all enemies within 25 ft whenever a lightning spell is cast within 100 ft, with the random damage varying between d12 and 3d12."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "lightning",
                         "destruction",
                         "random",
-                        "AOE",
+                        "aoe",
                         "square",
                         "conditional",
                         "totem"
@@ -3534,7 +3534,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Empower",
+                        "empower",
                         "modal",
                         "random",
                         "range increase",
@@ -3556,13 +3556,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "counterspell",
                         "lightning",
                         "defensive",
                         "condition",
-                        "Paralysis",
-                        "Stun",
+                        "paralysis",
+                        "stun",
                         "random",
                         "modal"
                     ]
@@ -3588,7 +3588,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "enchantment",
                         "modal",
                         "concentration"
@@ -3605,7 +3605,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "enchantment",
                         "modal",
                         "concentration"
@@ -3627,7 +3627,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You may spend an additional 20 mana to choose a second effect for a type of accessory not previously chosen. You may then spend another additional 10 mana to choose a third effect for the last accessory type not previously chosen."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "enchantment",
                         "modal",
                         "concentration"
@@ -3643,7 +3643,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "After choosing an effect, you may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "enchantment",
                         "utility",
                         "minor ritual",
@@ -3666,7 +3666,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "After choosing an effect, you may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "enchantment",
                         "utility",
                         "minor ritual",
@@ -3682,7 +3682,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You magically ward a building or some number of rooms in a building against enemy magic. Target building in range has any number of its rooms or the entire building gain the following effects: scrying and teleportation magic in or out of the warded area fails; you know if anyone casts a spell inside the warded area and what spell was cast; you know the positions and true magic signatures of all entities within the warded area. You may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "enchantment",
                         "utility",
                         "defense",
@@ -3708,7 +3708,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "When you cast this spell, you may choose to expend an additional 5 mana to choose a second effect for the coin's opposite face. An entity can only benefit from one coin made by this ability at a time."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "enchantment",
                         "modal"
                     ]
@@ -3725,7 +3725,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "When you cast this spell, you may choose to expend an additional 10 mana to affect another target Vehicle with a new choice, and you may do this any number of times. Concentration is held once for all instances of this spell within one cast."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "enchantment",
                         "utility",
                         "modal",
@@ -3739,7 +3739,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You bless any type of ammo with empowering runes. Target set of up to 10 pieces of ammunition becomes special ammo for the duration, gaining, \"Attacks with this ammo have 50% increased damage and inflict a random condition chosen from the following list: Slow, Immobilize, Cripple, Stun, Blind, Confuse, Sleep, Silence.\""
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "enchantment",
                         "utility",
                         "modal",
@@ -3772,15 +3772,15 @@ var BarbsComponents = BarbsComponents || (function () {
                         "If you absorb this spell with Magia Erebea, you may have it be cast when you release Magia Erebea as long as it was absorbed for at least 2 turns. If you do release the spell in this way, you may select 3 conditions from the above list, or have the spell deal an additional 6d8 magic damage of either ice or dark."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "destruction",
-                        "AOE",
+                        "aoe",
                         "square",
                         "condition",
-                        "Frozen",
-                        "Slowed",
-                        "Blinded",
+                        "frozen",
+                        "slowed",
+                        "blinded",
                         "curse",
                         "modal",
                         "conditional",
@@ -3804,19 +3804,19 @@ var BarbsComponents = BarbsComponents || (function () {
                         "If you absorb this spell with Magia Erebea, you may have it be cast when you release Magia Erebea as long as it was absorbed for at least 2 turns. If you do release the spell in this way, the cone's range extends to 120 ft, and the above list's effect ranges change to within 20 ft, 21 to 40, 41 to 80, 81 to 100, and 101 to 120 respectively."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "destruction",
                         "dark",
                         "ice",
-                        "AOE",
+                        "aoe",
                         "cone",
                         "conditional",
                         "condition",
-                        "Lethality",
-                        "Weaken",
-                        "Slow",
-                        "Frozen",
+                        "lethality",
+                        "weaken",
+                        "slow",
+                        "frozen",
                         "modal"
                     ]
                 },
@@ -3827,7 +3827,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You conjure a sword of ice and darkness to cut down enemies. When you cast this spell, create and equip a Sword of Conviction in your main hand. The Sword deals 6d8 ice magic damage and 6d8 dark magic damage to all enemies within 20 ft whenever you make an attack with it. Additionally, it has 50% Lethality against minions and ignores magical barriers. This spell can be absorbed via Magia Erebea as a free Major Action even after the Sword has been deployed as long as it still has at least 20 seconds of its Duration left. If you are under the effects of Magia Erebea, the sword gains your passive's on-hit effects. You may have up to 2 Swords active at a time, with the second Sword occupying your off hand, allowing you to make standard off hand weapon attacks with the same effects as the main hand Sword."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "conjuration",
                         "destruction",
                         "dark",
@@ -3851,13 +3851,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "If you cast this spell with Magia Erebea active, you may select all 4 options from the above list."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "ice",
                         "condition",
                         "control",
-                        "Curse",
-                        "AOE",
+                        "curse",
+                        "aoe",
                         "square",
                         "modal",
                         "conditional"
@@ -3877,17 +3877,17 @@ var BarbsComponents = BarbsComponents || (function () {
                         "If you cast this spell with Magia Erebea active, enemies within 1000 ft of the Flower will roll the d6 twice, taking the higher result each time."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "ice",
                         "condition",
                         "control",
-                        "Curse",
-                        "AOE",
+                        "curse",
+                        "aoe",
                         "field",
                         "totem",
                         "conditional",
-                        "Confused"
+                        "confused"
                     ]
                 },
                 "Aperantos Capulus": {
@@ -3903,14 +3903,14 @@ var BarbsComponents = BarbsComponents || (function () {
                         "Whenever an enemy casts a spell while inside the field, or whenever they cast a spell that affects a space or entity within the field, the field triggers once."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "field",
                         "concentration",
                         "conditional",
                         "condition",
-                        "Weaken",
-                        "Vulnerability",
-                        "Curse"
+                        "weaken",
+                        "vulnerability",
+                        "curse"
                     ]
                 },
                 "Actus Noctis Erebeae": {
@@ -3920,7 +3920,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You exploit your enhanced body's new affinity for magic to store spells for quicker casting. You may only cast this ability while under the effects of Magia Erebea. When you cast a spell, you may pay an additional X mana, where X is the spell's mana cost. If you do, you absorb the spell being cast instead of releasing it. While a spell is absorbed in this manner, you may cast it as a Minor Action or reaction at half its mana cost. You may have multiple spells absorbed simultaneously in this manner. When Magia Erebea is released, all absorbed spells are dispelled."
                     ],
                     "tags": [
-                        "Conditional",
+                        "conditional",
                         "modal"
                     ]
                 },
@@ -3937,7 +3937,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Conditional"
+                        "conditional"
                     ]
                 },
                 "Armis Cantamen": {
@@ -3947,7 +3947,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You convert mana into physical shielding. You may only cast this ability while under the effects of Magia Erebea. When you cast a damaging spell, you may pay an additional 20 mana. If you do, you absorb the spell being cast instead of releasing it. While a spell is absorbed in this manner, the next instance of damage you would take is negated (along with any negative effects associated with that damage), activating the absorbed spell in response and casting it on the damage's source, regardless of distance. When an absorbed spell is cast this way, it cannot be counterspelled. You may have multiple spells absorbed simultaneously in this manner; if you do, they activate one at a time per incoming damage instance, in an order of your choosing. When Magia Erebea is released, all absorbed spells are dispelled."
                     ],
                     "tags": [
-                        "Conditional",
+                        "conditional",
                         "modal",
                         "negate damage"
                     ]
@@ -4112,7 +4112,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You swing at an enemy and steal their ardor. Deal 5d10 physical damage to a target in range, and lifesteal for 30% of the damage dealt, increasing to 60% instead if your health is below 30%."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "single-target",
@@ -4130,7 +4130,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You hit multiple enemies to steal their health. Deal 6d10 physical damage to any number of targets in range. Heal 10 health for every enemy who takes damage from this ability."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "multi-target",
@@ -4147,7 +4147,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You focus on a single enemy to constantly drain their health. Deal 7d10 physical damage to a target in range, healing for the amount of damage rolled. Then you may begin concentrating on this ability. For as long as you maintain concentration, you may repeat this ability at half its cost as long as you continue attacking the same target."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "single-target",
@@ -4165,7 +4165,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You convert missing health into pure power. Deal X physical damage to a target in range, where X is your missing health. Until your next long rest, your current health becomes your new maximum health. If your maximum health is reduced by this effect, you are immune to other effects that reduce your maximum health (except casting this ability again)."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "single-target",
@@ -4180,7 +4180,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You increase your blood pressure and maximize your heartiness. Increase your maximum health by 100%; your current health changes by the same ratio. When this buff ends, your current health reverts using the same ratio."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "health increase",
                         "concentration"
                     ]
@@ -4192,10 +4192,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You stand at the front lines and dare enemies to come close. All enemies in range are Taunted for the duration. For every enemy Taunted this way, heal for 10% of your maximum health at the beginning of each of your turns for the duration."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "heal",
                         "condition",
-                        "Taunt",
+                        "taunt",
                         "multi-target"
                     ]
                 },
@@ -4206,9 +4206,9 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You shed off some health or stamina to shrug off conditions. Cleanse yourself of a condition of your choice; if you spend health for this ability, cleanse 2 conditions instead. Then gain a percentage general CR equal to your percentage missing health for the duration."
                     ],
                     "tags": [
-                        "Cleanse",
+                        "cleanse",
                         "conditional",
-                        "gain CR",
+                        "gain cr",
                         "buff",
                         "concentration"
                     ]
@@ -4230,7 +4230,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fuel your attacks with health draining power. Your weapon attacks gain, \"On Hit: 15% Lifesteal\" for the duration. If you choose to concentrate on this ability when you cast it, instead your weapon attacks gain, \"On Hit: 25% Lifesteal\"."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "modal",
                         "concentration",
                         "on hit",
@@ -4249,7 +4249,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Recover mana",
+                        "recover mana",
                         "recover stamina"
                     ]
                 },
@@ -4260,7 +4260,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You increase your heart rate and natural speed and power. Gain +30 Move Speed, +5 reach on melee weapons, and +50% Armor Penetration for the duration. Additionally, if you are under 30% health while this buff is active, you have 100% increased physical damage."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "concentration",
                         "conditional"
                     ]
@@ -4292,7 +4292,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a quick punch to energize your body. Deal 4dU physical damage to a target in range and gain Ki equal to the rolled value. When you cast this ability, you may spend 15 Ki to additionally inflict 4dU psychic damage to the target."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "single-target",
@@ -4311,7 +4311,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You drain the vital force of an enemy with a punch. Deal 5dU physical damage to a target in range and gain Ki equal to half the rolled value. When you cast this ability, you may spend 25 Ki to additionally inflict 5dU psychic damage to the target; if you do, you heal for an amount equal to the psychic damage rolled."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "single-target",
@@ -4331,7 +4331,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You use Ki to addle an enemy's senses. Deal 6dU physical damage to a target in range and gain dU ki. When you cast this ability, you may spend 40 Ki to additionally inflict 6dU psychic damage to the target; if you do, the target is Stunned until the end of their next turn."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "single-target",
@@ -4342,7 +4342,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "modal",
                         "conditional",
                         "condition",
-                        "Stun"
+                        "stun"
                     ]
                 },
                 "Spirit Gun": {
@@ -4352,7 +4352,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a bullet of concentrated ki. Deal 4dU psychic damage to a target in range. If ki is spent to cast this ability, it has +50% increased damage and the target's Psionics: Defense roll has -20."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "ranged",
                         "single-target",
                         "combo",
@@ -4370,7 +4370,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a spray of ki bullets at many enemies. Deal 5dU psychic damage to all enemies in a 60 ft cone. If ki is spent to cast this ability, it has +50% increased damage and all targets that are hit are knocked back 20 ft."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "ranged",
                         "multi-target",
                         "combo",
@@ -4389,7 +4389,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a wave of ki. Deal 6dU psychic damage to all enemies in a 120 ft line. If ki is spent to cast this ability, it has +50% increased damage and inflicts 30% Psychic Vulnerability to all targets."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "ranged",
                         "single-target",
                         "combo",
@@ -4399,7 +4399,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "modal",
                         "conditional",
                         "condition",
-                        "Vulnerability"
+                        "vulnerability"
                     ]
                 },
                 "Find Center": {
@@ -4409,7 +4409,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You take a moment to center yourself and find stability. Gain 3dU ki. This ability cannot be reacted to by enemies."
                     ],
                     "tags": [
-                        "No-react"
+                        "no-react"
                     ]
                 },
                 "Find Stability": {
@@ -4419,7 +4419,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You find stability while under fire. As a reaction to taking damage, gain ki equal to half the percentage of your maximum health that is lost. If your health is below 40%, gain twice as much ki."
                     ],
                     "tags": [
-                        "Conditional"
+                        "conditional"
                     ]
                 },
                 "Find Solace": {
@@ -4429,7 +4429,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You use ki to cleanse your body of impurities. Cleanse up to 2 conditions on yourself. If your health is below 40%, cleanse up to 4 conditions on yourself instead."
                     ],
                     "tags": [
-                        "Cleanse",
+                        "cleanse",
                         "conditional"
                     ]
                 }
@@ -4450,7 +4450,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You make a lunging strike at an enemy with your rapier. Dash up to 10 ft, then deal 4d8 physical damage to a target in range."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "rapier",
@@ -4465,7 +4465,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You stab rapidly and repeatedly at an enemy with your rapier. Deal d8 physical damage to a target in range. This attack repeats 2-6 times."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "rapier",
@@ -4480,7 +4480,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You parry an enemy's strike and counter. As a reaction to an enemy in range attacking you with a weapon, fully block the attack with your rapier and counterattack, dealing 5d8 physical damage to that enemy. When you hit an enemy with this ability, you have a 50% chance of recovering half the stamina cost."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "physical",
                         "rapier",
@@ -4498,7 +4498,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You move and strike in a blur of deadly speed. Deal 8d8 physical damage to all enemies adjacent to you. Then, dash up to 25 ft to an empty space in range, dealing 4d8 physical damage to all enemies in spaces you pass through. Finally, deal 8d8 physical damage to all enemies adjacent to your dash's final destination. An enemy cannot be hit more than once with this ability per cast (Battle Current's activation counts as a separate cast)."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "multi-target",
                         "physical",
@@ -4513,10 +4513,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You release tendril of energy in front of you. Deal 3d8 lightning magic damage to all enemy targets in a 20 ft line. Then at the end of your turn, this spell deals 3d8 damage to all targets in a 20 ft line with random direction."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "lightning",
-                        "AOE",
+                        "aoe",
                         "line",
                         "random"
                     ]
@@ -4528,10 +4528,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon a ball of energy that erratically flies around attacking enemies. Summon a Ball Lightning object in an empty space in range. When summoned, it deals 4d8 lightning magic damage to all adjacent enemies. At the beginning of each of your turns, it travels 20 ft in a random direction (stopping when it hits a space it can't enter), then discharges, dealing 2d8 lightning magic damage to all adjacent targets."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "lightning",
-                        "AOE",
+                        "aoe",
                         "summoning",
                         "destruction",
                         "random",
@@ -4545,10 +4545,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You call down a mighty bolt of thunder. Deal 8d8 lightning magic damage to all entities in a 20 ft square. Until the beginning of your next turn, random lightning strikes occur every turn in the target square, dealing 4d8 lightning magic damage to entities struck."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "lightning",
-                        "AOE",
+                        "aoe",
                         "ground-target",
                         "random"
                     ]
@@ -4560,7 +4560,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You release a powerful bolt of lightning that bounces between targets. Deal 6d8 lightning magic damage to a target in range, marking them until the end of your next turn. Dealing physical damage to the marked target with a rapier causes a lightning bolt to fire from their bodies, dealing 6d8 lightning magic damage to them and cleansing their mark, as well as dealing 6d8 lightning magic damage to another random enemy within 40 ft and marking them until the end of your next turn."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ranged",
                         "lightning",
@@ -4576,13 +4576,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You envelop your blade in an electric current. For the spell's duration, when you hit a target with a rapier attack, inflict a stack of Paralysis on the target."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "lightning",
                         "buff",
                         "self-target",
                         "on-hit",
                         "condition",
-                        "Paralysis",
+                        "paralysis",
                         "rapier"
                     ]
                 },
@@ -4593,7 +4593,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You envelop your blade in lightning magic energy. For the spell's duration, when you hit a target with a rapier attack, deal an additional 2d8 lightning magic damage on hit."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "lightning",
                         "buff",
                         "self-target",
@@ -4608,7 +4608,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "Your blade becomes a thin sheet of lightning magic. All damage that you would deal with rapier attacks have their damage converted to lightning magic damage. While this buff is active, Battle Current empowered attacks recover 5, 10, or 15 stamina randomly."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "lightning",
                         "buff",
                         "self-target",
@@ -4624,12 +4624,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You don magically conjured lightning armor. Whenever an adjacent enemy targets you with an attack, they are inflicted with a stack of Paralysis and take 2d8 lightning magic damage. Whenever you take damage, you may freely dash up to your speed in any direction. While this ability is active, you gain a stack of Lightning on every physical damage hit. You expend all stacks of Lightning when you cast a lightning spell attack, increasing lightning magic damage by 10% for each stack of Lightning expended this way, up to a limit of 20 stacks."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "lightning",
                         "buff",
                         "self-target",
                         "condition",
-                        "Paralysis",
+                        "paralysis",
                         "stacking buff",
                         "concentration",
                         "dash"
@@ -4652,7 +4652,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire photons at an enemy. Deal 4d10 light magic damage to a target in range. This spell banks 100% of its mana cost for your Guiding Light passive."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "light",
                         "destruction",
@@ -4666,7 +4666,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You pass light into an ally's wounds. Heal a target for 4d10 health. If you cast this spell at touch range, heal the target for 6d10 health instead."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "light",
                         "restoration",
                         "conditional"
@@ -4679,7 +4679,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create motes of floating light to see in the dark. Create up to 5 motes of light in spaces within range; they can be attached to visible surfaces or entities. They each cast light in a 50 ft radius. You may spend 1 minute to cast this spell as a minor ritual; if you do, its duration is extended to 1 hour. You may spend 10 minutes to cast this spell as a major ritual; if you do, its duration is extended to 6 hours."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "light",
                         "conjuration",
                         "utility",
@@ -4705,7 +4705,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You strike at an enemy with your fists. Deal 4dU physical damage to a target in range. Your next combo roll has +20% if this is the first move in the combo."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "single-target",
@@ -4721,7 +4721,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You kick with a wide stance at nearby enemies. Deal 4dU physical damage to all targets in range. Your next combo roll has +5% for every enemy this attack hits."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "multi-target",
@@ -4737,7 +4737,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You focus your energy into your attacks. Your next attack gains an additional +30% combo chance. This buff is consumed even if you fail to combo, if you miss, or your damage is blocked, and it does not stack with itself."
                     ],
                     "tags": [
-                        "Self-target",
+                        "self-target",
                         "buff",
                         "combo"
                     ]
@@ -4749,7 +4749,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You hold an enemy in place with a skilled hold. Deal 5dU physical damage to a target in range and grapple them. You have +15% combo chance for any ability targetting an enemy grappled in this manner. At the end of your combo, you may choose to throw the grappled target 20 ft in any direction."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "single-target",
@@ -4767,7 +4767,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fly at an enemy with a strong kick. Dash up to 20 ft, then deal 6dU physical damage to a target in range. This ability has +20% combo chance if your dash's total displacement is 20 ft."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "single-target",
@@ -4784,7 +4784,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You drop your heel on a group of enemies. Deal 5dU physical damage to all targets in a 10 ft cone; adjacent targets are stunned until the beginning of their next turn, and non-adjacent targets are pushed 15 ft from you. If you fail to deal damage to, stun, or push any targets, your next combo roll has +20%."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "multi-target",
@@ -4792,7 +4792,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "conditional",
                         "combo",
                         "condition",
-                        "Stun",
+                        "stun",
                         "forced movement"
                     ]
                 },
@@ -4803,7 +4803,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You dash forward, striking enemies with an open palm. Dash up to 20 ft in any direction, dealing 6dU physical damage to all enemies you dash through. If you dash through at least 3 enemies, or if you dash through an ally, your next combo roll has +20%"
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "multi-target",
@@ -4820,7 +4820,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You quickly evade enemy attacks before preparing for a counterattack. Dash up to 20 ft in any direction. If this dash is used to avoid damage, your next combo roll has +20%."
                     ],
                     "tags": [
-                        "Self-target",
+                        "self-target",
                         "dash",
                         "conditional",
                         "combo"
@@ -4833,7 +4833,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You catch arrows and send them back at archers. Block a ranged attack on you or an adjacent ally, then you may have your next combo roll have +15% or redirect the attack back at the attacker."
                     ],
                     "tags": [
-                        "Self-target",
+                        "self-target",
                         "block",
                         "modal",
                         "combo",
@@ -4858,7 +4858,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a bolt of mana that vacillates between light and ice. Deal 7d8 magic damage to a target in range; if this attack travels over an odd number of spaces, its magic damage type is ice and it inflicts Slow; if this attack travels over an even number of spaces its magic damage type is light and it inflicts -10% EV."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "single-target",
                         "destruction",
@@ -4866,8 +4866,8 @@ var BarbsComponents = BarbsComponents || (function () {
                         "light",
                         "conditional",
                         "condition",
-                        "Slow",
-                        "lose EV"
+                        "slow",
+                        "lose ev"
                     ]
                 },
                 "Plane Mirror": {
@@ -4877,7 +4877,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create a mirror of ice and light. Create a Plane Mirror in an empty space in range for the duration, choosing its orientation; it is immune to damage and conditions, cannot be forcibly moved or teleported, but can be dispelled. The Mirror reflects what it sees, providing an additional line of sight for you and allies alone; it acts as an opaque barrier otherwise. When you hit the mirror with a line AOE or straight moving projectile spell, it redirects the attack based on the angle, resetting the attack's range and granting the attack +20% Accuracy. If the mirror is hit by a spell that has been redirected twice already, it is dispelled."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "ice",
                         "light",
                         "defensive",
@@ -4895,7 +4895,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You protect an area with a mirror. As a reaction to a targeted projectile attack or line AOE attack that would hit you or an ally, create a 15 ft long barrier in empty spaces within range that lasts for the duration. This barrier redirects projectile attacks and line AOEs back at the attacker and also acts as an opaque barrier that blocks line of sight until the end of the turn."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "defensive",
                         "conjuration",
                         "ice",
@@ -4910,17 +4910,17 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a beam of mana that vacillates between light and ice. Deal 9d8 ice or light magic damage to all enemies in a 60 ft line AOE. When this spell is redirected, it converts its damage to the other choice between ice and light magic damage. Ice magic damage dealt by this spell has a 20% chance to inflict Frozen, and light magic damage dealt by this spell has a 20% chance to inflict Stun until the end of the target's turn; the chance of either of these occuring increases by 20% for each time this spell has been redirected."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "destruction",
-                        "AOE",
+                        "aoe",
                         "line",
                         "ice",
                         "light",
                         "conditional",
                         "condition",
-                        "Frozen",
-                        "Stun",
+                        "frozen",
+                        "stun",
                         "modal"
                     ]
                 },
@@ -4931,7 +4931,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You spray out multiple shots of ice and light. Deal 5d8 ice or light magic damage to a target in range, and repeat this attack twice (you may choose new targets). These attacks reflect upon hitting an enemy, being redirected in directions of your choosing, but can only be redirected in this manner once per attack."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "multi-target",
                         "destruction",
@@ -4948,9 +4948,9 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You launch streams of magic at enemies. Deal 15d8 magic damage to all enemies in a 15 ft wide 60 ft long line AOE; the center line is your choice of either ice or light, and the edge lines are the opposite choice. Ice magic dealt by this spell inflicts Slow and Frozen and light magic dealt by this spell inflicts -20% EV and Stun until the end of the target's turn. When this spell is redirected, it gains 10 ft of width, alternating the element of the newly added lines to maintain the spells element pattern. Enemies whose size is larger than normal are damaged separately by each line that hits them."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
-                        "AOE",
+                        "aoe",
                         "line",
                         "destruction",
                         "ice",
@@ -4958,10 +4958,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "modal",
                         "conditional",
                         "condition",
-                        "Slow",
-                        "lose EV",
-                        "Frozen",
-                        "Stun"
+                        "slow",
+                        "lose ev",
+                        "frozen",
+                        "stun"
                     ]
                 },
                 "Remand": {
@@ -4971,7 +4971,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You glassify an enemy's mana while it's vulnerable. As a reaction to a target in range casting a spell, you may counter that spell. The mana spent on the enemy spell becomes your mana and you can either release it or use it to cast any spell from the Refraction branch of Mirror Mage as a free reaction."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "defensive",
                         "counterspell",
                         "modal"
@@ -4984,7 +4984,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You curse an enemy's magical circuits. A target in range gains the following condition: when they cast spells, there is a 50% chance that the spell's target is redirected to the caster (if the spell is an AOE, it is centered on the caster instead)."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "defensive",
                         "single-target",
                         "condition"
@@ -4997,10 +4997,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You cover an ally in plates of mirrored scales. A target in range gains the following buff: All ranged projectile attacks and line AOEs they are hit by are instead redirected at attackers; melee attackers that hit them are pushed back 30 ft; +50% MR; +50% Light MR; +50% Ice MR. This buff has a 50% chance to resist being stripped; if it does so successfully, it instead loses 10 seconds of its duration."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "defensive",
                         "buff",
-                        "gain MR"
+                        "gain mr"
                     ]
                 },
                 "Move Mirrors": {
@@ -5010,7 +5010,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You reposition all mirrors. Any number of mirror totems you have created in range move to new positions of your choosing within 30 ft of their previous positions, and you may change their orientations as well. Also, all mirrors have their durations refreshed."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "utility",
                         "modal"
                     ]
@@ -5022,7 +5022,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create a mirror of ice and light, curved inwards. Create a Concave Mirror in an empty space in range for the duration, choosing its orientation; it is immune to damage and conditions, cannot be forcibly moved or teleported, but can be dispelled. The Mirror reflects what it sees, providing an additional line of sight for you an allies alone; it acts as an opaque barrier otherwise. When the back of the mirror is hit with a line AOE or straight moving projectile spell, it briefly stores the spell until the end of the turn before redirecting all stored spells in an orthagonal direction out the front of the mirror. The damage and effects of all spells stored this way are combined into a single attack, preferring the largest AOE type amongst stored spells, and the new attack has its damage dice maximized, +50% Accuracy, and +50% Magic Penetration. If the mirror is hit by a spell that has been redirected twice already, or if it combines more than 2 spells in one turn, it is dispelled."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "ice",
                         "light",
                         "defensive",
@@ -5040,7 +5040,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create a mirror of ice and light, curved outwards. Create a Convex Mirror in an empty space in range for the duration, choosing its orientation; it is immune to damage and conditions, cannot be forcibly moved or teleported, but can be dispelled. The Mirror reflects what it sees, providing an additional line of sight for you an allies alone; it acts as an opaque barrier otherwise. When the back of the mirror is hit with a line AOE or straight moving projectile spell, it redirects and duplicates the attack out the front side of the mirror at approximately 45 degree angles, resetting the attack's range and granting the attack +20% Accuracy. If the mirror is hit by a spell that has been redirected twice already, it is dispelled."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "ice",
                         "light",
                         "defensive",
@@ -5068,7 +5068,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You slam enemies with snow. Deal 7d8 ice magic damage to all enemies in range; the affected spaces are then covered in deep snow, a field which acts as difficult terrain and prevents dashing through the field's spaces."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "ice",
                         "destruction",
                         "defensive",
@@ -5084,12 +5084,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You harden your armor by freezing it. Buff yourself for +40 AC and +40% MR which cannot be penetrated. Also, gain +60% critical strike resistance if you have none."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "ice",
                         "defensive",
                         "buff",
-                        "gain AC",
-                        "gain MR",
+                        "gain ac",
+                        "gain mr",
                         "conditional"
                     ]
                 },
@@ -5100,7 +5100,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You shield everyone in protective frost. All allies in range gain 30 shielding. You may spend an additional 10 mana to cast this ability when Initiative is rolled."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "ice",
                         "defensive",
                         "modal"
@@ -5152,9 +5152,9 @@ var BarbsComponents = BarbsComponents || (function () {
                         "alchemy",
                         "augmentation",
                         "modal",
-                        "increase AC",
-                        "increase MR",
-                        "increase EV"
+                        "increase ac",
+                        "increase mr",
+                        "increase ev"
                     ]
                 },
                 "Voltron Heart": {
@@ -5166,7 +5166,52 @@ var BarbsComponents = BarbsComponents || (function () {
                     "tags": [
                         "alchemy",
                         "augmentation",
-                        "increase Health"
+                        "increase health"
+                    ]
+                }
+            }
+        },
+        "Night Lord": {
+            "type": "class",
+            "name": "Night Lord",
+            "description": "The Night Lord is the ultimate class for rogues. Having mastered multiple aspects of the rogue's kit, this class prides itself on a wide variety of stealth based utilities. These abilities are split into moves allowing the Night Lord to infiltrate or pursue, moves for executing on a site, and finally, moves for escape or grand thievery. Many of the abilities in this class exist in other classes with worse stamina efficiency or action efficiency; the Night Lord makes heavy use of minor actions and exploits enemy blindspots with superior speed and initiative. Alternatively, the passive of the class provides a reliable way to escape combat to focus on side objectives or return to exploration and stealth.",
+            "passive": {
+                "A Step Ahead": "Making a Stealth: Sneak check to hide is a minor action for you. At the end of each of your turns, if you are Hidden, you get +20 Initiative. If your Initiative is higher than every enemy in combat, you may leave combat when you hide."
+            },
+            "abilities": {
+                "Quickstep": {
+                    "name": "Quickstep",
+                    "class": "Night Lord",
+                    "description": [
+                        "You move quickly and quietly. Dash up to 40 ft in any direction. Until the end of your next turn, your Move Speed is doubled, your movement ignores all field effects and traps, and your movement cannot be reacted to."
+                    ],
+                    "tags": [
+                        "dash",
+                        "buff"
+                    ]
+                },
+                "Flashbang": {
+                    "name": "Flashbang",
+                    "class": "Night Lord",
+                    "description": [
+                        "You use a special thief tool to blind pursuers. All enemies in range become Blinded and are knocked prone. An enemy that has not been Blinded by this ability previously has -30% CR for the Blind."
+                    ],
+                    "tags": [
+                        "condition",
+                        "blind",
+                        "knock prone",
+                        "conditional"
+                    ]
+                },
+                "Burglary": {
+                    "name": "Burglary",
+                    "class": "Night Lord",
+                    "description": [
+                        "You take what you want. Steal 3 random items or up to 100 gp at a time from the inventory of a target in range. You may specify what you want to steal if you know certain items are in the target inventory and if you are Hidden."
+                    ],
+                    "tags": [
+                        "attack",
+                        "single-target"
                     ]
                 }
             }
@@ -5186,13 +5231,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You amass dark energy and toss it at an enemy. Deal 4d10 dark magic damage to a target in range, and inflict the target with a curse for every 15 dark magic damage dealt this way."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "ranged",
                         "dark",
                         "destruction",
                         "condition",
-                        "Curse",
+                        "curse",
                         "conditional",
                         "single target"
                     ]
@@ -5204,13 +5249,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You release an orb of dark magic, primed to explode. Create a Darkbomb in an unoccupied space in range. You may have it detonate immediately to deal 4d10 dark magic damage and inflict a curse on every entity within 20 ft of the bomb. Alternatively, you may delay the explosion until the beginning of your next turn; if you do, it will deal 8d10 dark magic damage and inflict 2 curses on every entity within 20 ft of the bomb."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "dark",
                         "destruction",
                         "condition",
-                        "Curse",
-                        "AOE",
+                        "curse",
+                        "aoe",
                         "modal"
                     ]
                 },
@@ -5221,13 +5266,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You corrupt an enemy's body with dark energy. Deal 5d10 dark magic damage to a target and inflict them with a condition that causes them to gain a Curse and take 3d10 dark magic damage at the beginning of each turn and prevents Curses from expunging until the condition ends."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "single-target",
                         "dark",
                         "destruction",
                         "condition",
-                        "Curse",
+                        "curse",
                         "concentration"
                     ]
                 },
@@ -5243,12 +5288,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "dark",
                         "condition",
-                        "Weakened",
-                        "Curse",
+                        "weakened",
+                        "curse",
                         "modal",
                         "single target"
                     ]
@@ -5260,15 +5305,15 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You release dark energy through your words, affecting the nervous system of nearby opponents. Enemies within 40 ft of you are Blinded and enemies within 20 ft of you are instead Feared."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "dark",
                         "condition",
                         "control",
-                        "Blind",
-                        "Fear",
+                        "blind",
+                        "fear",
                         "conditional",
-                        "AOE"
+                        "aoe"
                     ]
                 },
                 "Spreading Madness": {
@@ -5278,7 +5323,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You corrupt the mind of an enemy with infectious dark magic. Inflict a condition on a target in range that causes 50% of their targeted attacks to be redirected at one of their allies in range if possible. When an enemy with this condition deals damage to another enemy, they inflict the same condition on hit. When you break concentration on this ability, all copies of this condition end as well."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "single-target",
                         "multi-target",
@@ -5300,7 +5345,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You may choose to expend an additional 10 mana to use both options."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "modal",
                         "buff strip",
@@ -5316,15 +5361,15 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You cause a mage to lose control of a spell during its casting. As a reaction to a target in range casting a spell, you may counter that spell. The target then expends 20 mana to deal 3d10 dark magic damage and inflict a curse on all of its allies within 10 ft of them."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "single-target",
-                        "AOE",
+                        "aoe",
                         "destruction",
                         "defensive",
                         "counterspell",
                         "condition",
-                        "Curse"
+                        "curse"
                     ]
                 },
                 "Fiendish Circle": {
@@ -5334,7 +5379,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You call upon imps from a dark realm. Summon an Imp with 50 HP and 40 speed. Imps follow your Command Actions; otherwise, they use their Move Action to move towards enemies, their Major Action to make a melee attack that deals 4d10 dark magic damage, and their Minor Action to drink any potions they are carrying. When you cast this spell, you may choose to concentrate on this spell in order to spend an additional 20 mana to summon an extra Imp, and you may do this up to two more times to have a maximum of 4 Imps at one time."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "dark",
                         "minion",
@@ -5360,7 +5405,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You send waves of harmful energy directly into someone's mind. Deal 4d10 psychic damage to a target in range. When you cast this ability, you may expend an additional 10 of any resource aside from the type initially used; if you do, this attack deals 100% increased damage and your Offensive Psionics check gains +20."
                     ],
                     "tags": [
-                        "Psionic",
+                        "psionic",
                         "offensive",
                         "attack",
                         "psychic",
@@ -5376,7 +5421,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire waves of errant psionics. Deal 5d10 psychic damage to all enemies in a 50 ft cone starting in front of you. When you cast this ability, you may expend an additional 20 of any resource aside from the type initially used; if you do, this attack deals 100% increased damage and strips a random buff from all affected targets."
                     ],
                     "tags": [
-                        "Psionic",
+                        "psionic",
                         "offensive",
                         "attack",
                         "psychic",
@@ -5392,13 +5437,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You scramble an enemy's thoughts. Inflict Confusion on a target in range until the end of its next turn. When you cast this ability, you may expend an additional 15 of any resource aside from the type initially used; if you do, Stun the target until the end of its next turn instead."
                     ],
                     "tags": [
-                        "Psionic",
+                        "psionic",
                         "offensive",
                         "attack",
                         "condition",
-                        "Confusion",
+                        "confusion",
                         "modal",
-                        "Stun"
+                        "stun"
                     ]
                 },
                 "Insinuate": {
@@ -5412,13 +5457,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Psionic",
+                        "psionic",
                         "offensive",
                         "attack",
                         "condition",
                         "modal",
-                        "Fear",
-                        "Slow"
+                        "fear",
+                        "slow"
                     ]
                 },
                 "Focal Point": {
@@ -5432,7 +5477,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Psionics",
+                        "psionics",
                         "defensive",
                         "modal",
                         "redirect"
@@ -5452,15 +5497,15 @@ var BarbsComponents = BarbsComponents || (function () {
                         "When you cast this ability, you may expend an additional 30 of any resource aside from the type initially used; if you do, you may target an additional ally, and the psychic GDR increases to 40%. You may spend an additional 30 of the final unused resource aside from the two types used in order to target a third ally and have the psychic GDR increase to 60%."
                     ],
                     "tags": [
-                        "Psionics",
+                        "psionics",
                         "defensive",
                         "modal",
                         "conditional",
-                        "increase AC",
-                        "increase Evasion",
-                        "increase MR",
-                        "increase CR",
-                        "GDR"
+                        "increase ac",
+                        "increase evasion",
+                        "increase mr",
+                        "increase cr",
+                        "gdr"
                     ]
                 }
             }
@@ -5480,7 +5525,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You toss a mote of fire at an enemy. Deal 4d12 fire magic damage to a target in range. This spell deals an additional 2d12 fire magic damage if it's the second fire spell you've cast this turn."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "fire",
                         "destruction",
@@ -5495,13 +5540,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You scald an enemy with vicious flames. Deal 5d12 fire magic damage to a target in range. The target is then inflicted with Burn X, where X is equal to the amount of damage rolled."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "fire",
                         "destruction",
                         "single-target",
                         "condition",
-                        "Burn",
+                        "burn",
                         "conditional"
                     ]
                 },
@@ -5512,7 +5557,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You burn an enemy with overpowering fire. Deal 6d12 fire magic damage to a target in range. This spell cannot be blocked or counterspelled if it's the second fire spell you've cast this turn."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "fire",
                         "destruction",
@@ -5529,15 +5574,15 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You spray flames from outstretched hands. Deal 4d12 fire magic damage to all enemies in a 30 ft cone. Enemies hit by this spell that are at most 15 ft from you are additionally inflicted with Burn X, where X is equal to the amount of damage rolled."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "fire",
                         "destruction",
-                        "AOE",
+                        "aoe",
                         "cone",
                         "conditional",
                         "condition",
-                        "Burn"
+                        "burn"
                     ]
                 },
                 "Fireball": {
@@ -5547,11 +5592,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You conjure a massive ball of flames. Deal 5d12 fire magic damage to all enemies in a 35 ft square centered on a space in range. When you cast this spell, you may pay an additional 5 mana to add 1 damage die to the spell's damage roll, and you may do this any number of times."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "fire",
                         "destruction",
-                        "AOE",
+                        "aoe",
                         "square",
                         "modal"
                     ]
@@ -5563,15 +5608,15 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a beam of heat and fire. Deal 6d12 fire magic damage to all enemies in a 120 ft line. This spell deals an additional 3d12 fire magic damage if it's the second fire spell you've cast this turn."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "attack",
                         "fire",
                         "destruction",
-                        "AOE",
+                        "aoe",
                         "cone",
                         "conditional",
                         "condition",
-                        "Burn"
+                        "burn"
                     ]
                 },
                 "Burn Trail": {
@@ -5581,7 +5626,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You let your flames run loose. Create flames in up to 5 spaces within range for the duration; all target spaces must touch at least one other target space in an orthogonal or diagonal direction. These flames deal 3d12 fire magic damage to any entity that passes through their space, starts in their space, or ends a turn in their space."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "fire",
                         "conjuration",
                         "modal",
@@ -5595,7 +5640,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You ignite an enemy mage's mana. As a reaction to a target in range casting a spell, you may counter that spell. The target takes fire magic damage equal to the amount of mana they spent on the countered spell"
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "fire",
                         "destruction",
                         "defensive",
@@ -5610,7 +5655,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create a flame within a target. Target in range gains the Inflame mark. When a target marked this way dies (or is knocked unconscious), they deal fire magic damage equal to half the amount of damage taken from the lethal hit to all adjacent targets, inflicting those targets with the Inflame mark. You may cast this spell as a reaction if you spend an additional 15 mana."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "fire",
                         "conjuration",
                         "destruction",
@@ -5639,12 +5684,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "single-target",
                         "scythe",
-                        "AC penetration",
-                        "ignore Block",
+                        "ac penetration",
+                        "ignore block",
                         "modal",
                         "heal"
                     ]
@@ -5656,7 +5701,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You spin your scythe in a wide arc, harvesting power as you take life. Deal 5d10 physical damage to all adjacent targets. If this ability kills a target, you may repeat this ability immediately at no cost."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "multi-target",
                         "scythe",
@@ -5671,7 +5716,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You absorb the life force of recently slain enemies and deliver a killing blow. Sacrifice any number of souls you've created with your Ferryman of the Dead passive. Deal 6d10 physical damage to a target in range, with 100% increased damage and 20% lethality for each soul sacrificed."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "single-target",
                         "scythe",
@@ -5692,15 +5737,15 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "melee",
                         "multi-target",
                         "scythe",
                         "conditional",
-                        "Lethality",
+                        "lethality",
                         "no-block",
                         "no-dodge",
-                        "ignore AC"
+                        "ignore ac"
                     ]
                 },
                 "Call of the Void": {
@@ -5710,7 +5755,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You afflict a target with deadly magic to prevent escape. Deal 4d10 dark magic damage to a target in range. They are afflicted with a condition for the duration that makes movement that isn't towards you count as moving over difficult terrain and prevents dashes or teleports that aren't towards you."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "destruction",
                         "damage",
@@ -5726,7 +5771,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You create a spirit reaper to assist you in your work. Summon a Harvester in an empty space in range with 50 HP, 40 ft flying speed, and 100% evasion. It wields an ephemeral copy of the scythe you wield when you cast this spell. It obeys your Commands and telepathically communicates to you everything it sees or hears, but not across planes. It persists regardless of the distance from its summoner. It can freely travel through mundane walls but cannot pass through enchanted or hallowed barriers. The Harvester's kills with its scythe count towards your Ferryman of the Dead passive. Unless you give it commands otherwise, it automatically does the following on its turn: It uses its Move Action to move up to its speed towards an enemy it sees. It uses its Major Action to attack with its scythe. It uses its Minor Action to inflict a random target within 30 ft with Fear."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "scythe",
                         "summoning",
@@ -5740,7 +5785,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You chain an enemy's soul to its ultimate fate. Deal 6d10 dark magic damage to a target in range. They are afflicted with a condition for the duration that pulls them 30 ft in a direction of your choice and deals 3d10 dark magic damage to them at the beginning of each of their turns. Additionally, while this condition persists, you may use your reaction to pull the afflicted target 20 ft in a direction of your choice."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "destruction",
                         "damage",
@@ -5758,7 +5803,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You call upon one of many souls you've harvested. Select an entity whom you have killed at any point in the past. Unless blocked by divine intervention, you summon the soul of the selected entity assuming it is still intact, spending mana equal to the entity's Level. The Enslaved Soul has all of the same stats, abilities, and knowledge as it did in life. It is bound by your magic to assist you in combat and obey Command Actions that involve attacking enemies, defending allies, or being otherwise tactically relevant (including staying near you instead of trying to escape or staying quiet during stealthy operations). However, it knows you had a hand in ending its life, and may not be cooperative if you seek information. The Enslaved Soul remains with you for 1 minute or until its health reaches 0. You may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 6 hours."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "necromancy",
                         "summoning",
@@ -5774,11 +5819,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You afflict an enemy with a curse that slowly kills. A target in range is afflicted with a condition that causes them to gain a Curse at the beginning of each of their turns (or every 10 seconds while out of combat)."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "destruction",
                         "condition",
-                        "Curse",
+                        "curse",
                         "single-target"
                     ]
                 },
@@ -5789,7 +5834,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You afflict an enemy with a curse that makes their efforts to avoid death helpless and pathetic. A target in range is afflicted with a condition that forces them to reroll all dice they roll, taking the lower of the two results each time. The sole exception is death saves, for which the target must reroll and take the higher result. Additionally, healing on the target is half as effective while they have this condition."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "condition",
                         "single-target"
@@ -5802,11 +5847,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You afflict an enemy with a curse that tears away their strength and leaves them frail. A target in range is stripped of all buffs and breaks all concentration. They are then afflicted with a condition that prevents them from gaining buffs, concentrating on abilities, benefiting from potions or fields, and using reactions and minor actions. This condition also afflicts the target with a 50% Weaken."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "condition",
                         "single-target",
-                        "Weaken",
+                        "weaken",
                         "buff strip",
                         "concentration break"
                     ]
@@ -5818,7 +5863,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You sentence an enemy to death. A target in range becomes marked for the duration. While marked this way, the target will be vaguely aware of a sense of doom, which will rapidly become more prominent over time. They will also become unable to take life while marked this way, finding that their courage or calmness fails them. When the duration of the mark expires, the target will die, even if it is Lethality-immune. The mark can only be removed by a blessing with divine support, such as from a priest of Adol or a paladin of Nox."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "control",
                         "mark"
@@ -5843,7 +5888,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "Secondary Fire: Fire your currently equipped firearm at an enemy in range, dealing an additional 2d12 physical damage. The target is inflicted with 10% physical vulnerability, which can stack up to 5 times. If this attack is made with a silver bullet, your target gains 2 stacks of this vulnerability."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "ranged",
@@ -5863,7 +5908,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "Secondary Fire: Fire your currently equipped firearm at a target in range, dealing 3d12 physical damage, inflicting any on-hit effects with tripled effectiveness."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "multi-target",
@@ -5880,7 +5925,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You aim down your iron sights for increased accuracy. Your next firearm attack has +10% critical strike chance; it also has +100% critical damage modifier if it is made with a silver bullet."
                     ],
                     "tags": [
-                        "Empower",
+                        "empower",
                         "conditional",
                         "increase critical"
                     ]
@@ -5892,10 +5937,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You aim for areas of high blood flow. Your next firearm attack inflicts a d12 Bleed, increased to 2d12 Bleed if it is made with a silver bullet."
                     ],
                     "tags": [
-                        "Empower",
+                        "empower",
                         "conditional",
                         "condition",
-                        "Bleed"
+                        "bleed"
                     ]
                 },
                 "Quick Reload": {
@@ -5905,7 +5950,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You've learned how to quickly load a new clip of ammo. Reload each firearm you have currently equipped. When you do, each firearm you have currently equipped gains a silver bullet in a chamber of your choice."
                     ],
                     "tags": [
-                        "Reload"
+                        "reload"
                     ]
                 },
                 "Steady Shooting": {
@@ -5915,7 +5960,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You've learned to steady your gun to minimize misfire rate. Your next attack has -10% Misfire Rate. When you cast this ability, you may drop into a prone position; if you do, your next attack has -20% Misfire Rate instead."
                     ],
                     "tags": [
-                        "Modal"
+                        "modal"
                     ]
                 }
             }
@@ -5935,7 +5980,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You swing your bladed shields in an X shaped pattern. Deal 4d10 physical damage to a target in range. This attack can block all incoming attacks that it reacts to, and if this attack combos with a dash, the block will also block any attacks along the path of your dash as well as at the final destination. If you are dual wielding shields, you may expend any number of Shield stacks; this attack deals an additional Xd10 physical damage, where X is the number of Shield stacks spent, and also hits enemies diagonally to your target."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -5953,12 +5998,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You spin your shields around you in a wide arc. Deal 5d10 physical damage to all targets in range. This attack acts as an AOE block for the spaces it hits as well as your current space when it is used as a reaction. If you are dual wielding shields, you may expend any number of Shield stacks; this attack deals an additional Xd10 physical damage, where X is the number of Shield stacks spent, and has its range increased to 10 ft."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "multi-target",
                         "conditional",
-                        "AOE block",
+                        "aoe block",
                         "shield",
                         "modal"
                     ]
@@ -5972,7 +6017,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "Alternatively, if you are dual wielding shields, you may expend a Shield stack to layer the shields atop each other, blocking a single attack on yourself. This block is effective even against attacks that normally cannot be blocked, and an attack blocked this way cannot penetrate AC."
                     ],
                     "tags": [
-                        "Block",
+                        "block",
                         "shield",
                         "self-target",
                         "ally-target",
@@ -5987,7 +6032,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You toss up your shields to block multiple attacks from a dangerous enemy. Block all the hits of a multi-hit attack on yourself or an ally in range. For each hit blocked this way, you may autoattack the attacking enemy as a free reaction. If you are dual wielding shields, you may expend a Shield stack to autoattack with each shield per hit instead."
                     ],
                     "tags": [
-                        "Block",
+                        "block",
                         "shield",
                         "self-target",
                         "ally-target",
@@ -6002,7 +6047,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You toss your shield and pull yourself to a new location with the chains. Toss your shield to a target space in range; if the space is occupied, push the entity in that space 5 ft away from you. If you are dual wielding shields, drop your other shield in your current space, then dash along your chain to the target space and pick up the shield there. As long as you do not use the shield at your original location for another action, you may dash along the chain back to that shield as a free reaction, picking the shield back up."
                     ],
                     "tags": [
-                        "Dash",
+                        "dash",
                         "conditional",
                         "modal",
                         "shield"
@@ -6015,7 +6060,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You toss your shield at an enemy to pull them towards you. Toss your shield at a target enemy in range, then drag them to a space within melee range. If you are dual wielding shields, do this twice. If you dash during this ability, drag your targets along with you."
                     ],
                     "tags": [
-                        "Forced movement",
+                        "forced movement",
                         "pull",
                         "conditional",
                         "shield"
@@ -6038,7 +6083,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire an empowered arrow, skewering multiple enemies. Deal 5d8 physical damage to all enemy targets in a 200 ft line. Targets beyond the first one hit take half damage, unless they are Spotted."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "ranged",
                         "physical",
                         "multi-target",
@@ -6052,12 +6097,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a single, massive arrow with deadly accuracy. Deal 7d8 physical damage to a target in range. You may choose to expend any number of Spotting stacks to add 10% Lethality to the attack per stack."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "ranged",
                         "physical",
                         "single-target",
                         "modal",
-                        "Lethal"
+                        "lethal"
                     ]
                 },
                 "Shrapnel Shot": {
@@ -6067,12 +6112,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire an arrow rigged to detonate, shooting deadly shrapnel from the arrowhead after initial impact. Deal 6d8 to a target in range. If the target is Spotted, this ability deals half as much damage taken by the target to all enemies within 20 ft of the target. If the target was killed by the initial hit, this ability deals damage equal to the damage taken by the target to all enemies within 20 ft of the target instead."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "ranged",
                         "physical",
                         "single-target",
                         "conditional",
-                        "AOE"
+                        "aoe"
                     ]
                 },
                 "Rapid Shot": {
@@ -6082,7 +6127,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a heavy stream of arrows. Expend any amount of stamina in order to deal 2d8 physical damage to a target in range for every 10 stamina spent this way. If the target is Spotted, these hits gain the damage increase from consuming Spotting stacks without actually consuming them until the last hit."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "ranged",
                         "physical",
                         "single-target",
@@ -6097,7 +6142,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire specialized arrows which speed up as they fly. Your next ranged attack deals 2 additional damage for every 5 ft between you and your target."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "self-target",
                         "conditional",
                         "ranged",
@@ -6111,10 +6156,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire specialized arrows which fly faster and punch through armor. Your next ranged attack ignores AC and MR, cannot miss, bypasses barriers and walls, cannot be blocked or redirected, and cannot be reacted to."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "self-target",
-                        "ignore AC",
-                        "ignore MR",
+                        "ignore ac",
+                        "ignore mr",
                         "ignore barriers/walls/blocks",
                         "no-miss",
                         "no-react",
@@ -6128,7 +6173,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You aim carefully, scanning for a target's weak points. Your next ranged attack gains 20% critical strike chance and 50% critical damage modifier. When you cast this ability, you may choose to concentrate on it. While concentrating on this ability, you may use a Major Action to gain an additional 10% critical strike chance and 25% critical damage modifier on your next ranged attack. This ability cannot grant more than 100% critical strike chance or more than 200% critical damage modifier. Concentration on this ability ends immediately upon making an attack."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "self-target",
                         "stat improve",
                         "critical",
@@ -6144,7 +6189,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You force your senses past their limit. If you have an enemy Spotted, when you cast this ability, you instantly gain max Spotting stacks. After casting this ability, you lose the benefits of the Spotter passive until your next long rest."
                     ],
                     "tags": [
-                        "Self-target",
+                        "self-target",
                         "bow"
                     ]
                 },
@@ -6155,7 +6200,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You quickly spring to your feet and sprint from danger. Cleanse Slow, Immobilize, Crippled, and Prone, then dash 10 ft in any direction. You may choose to expend a stack of Spotting to dash 25 ft instead."
                     ],
                     "tags": [
-                        "Dash",
+                        "dash",
                         "modal",
                         "cleanse"
                     ]
@@ -6167,12 +6212,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You flick your aim elsewhere and take a snap potshot. Deal 3d8 physical damage to a target in range, Stunning them until the end of the turn."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "ranged",
                         "physical",
                         "single-target",
                         "condition",
-                        "Stun"
+                        "stun"
                     ]
                 },
                 "Bola Shot": {
@@ -6182,14 +6227,14 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire an arrow with a bola head. Deal 4d8 damage and inflict Slow on a target in range. You may choose to expend a stack of Spotting to inflict Immobilize instead."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "ranged",
                         "physical",
                         "single-target",
                         "condition",
-                        "Slow",
+                        "slow",
                         "modal",
-                        "Immobilize"
+                        "immobilize"
                     ]
                 },
                 "Evasive Maneuvers": {
@@ -6199,7 +6244,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You concentrate all your energy on avoiding attacks. Expend any number of Spotting stacks to gain 10% evasion per stack expended this way. While this buff is active, you may use your Reaction to cast any Sniper ability."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "concentration",
                         "add evasion",
                         ""
@@ -6222,7 +6267,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You slash quickly at an enemy while staying mobile. Deal 4d10 physical damage to a target in range. If you cast a dash reaction ability, you may cast this ability as a free reaction at the beginning or end of your dash."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -6238,7 +6283,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You attack relentlessly in between evasive moves. Deal 2d10 physical damage to a target in range. You may choose to concentrate on this ability when you cast it. If you do, you may use your Major Action to repeat this ability at no stamina cost, dealing 2d10 + Xd10 physical damage to a target in range, where X is the number of times you have hit with this ability since beginning concentration. Concentration on this ability ends immediately when you take at least 1 point of damage or recieve a condition."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -6255,7 +6300,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You build energy while blocking to attack when the opening presents itself. Deal 5d10 physical damage to a target in range. If you cast a block reaction ability, you may cast this ability as a free reaction after your block, dealing 5d10 + X physical damage to a target in range, where X is half the blocked damage amount."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -6271,7 +6316,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You dive the enemy's backline with the goal of slaying their commander. Dash to a space adjacent to a target in range, marking the target and dealing 6d10 physical damage to it. While the target is marked, it loses its reaction and takes 50% increased damage from your attacks. The mark lasts until the beginning of your next turn or until you take at least 1 point of damage or gain a condition. Alternatively, you may end the mark early to dash up to 30 ft in any direction as a free reaction at any time."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -6289,7 +6334,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You toss your shield up to block an attack. Completely block one single-target attack on you as a reaction. If the attacker is in melee range, you may dash to any empty space that is still in melee range."
                     ],
                     "tags": [
-                        "Block",
+                        "block",
                         "self-target",
                         "dash",
                         "conditional",
@@ -6303,13 +6348,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You preemptively counterattack before your enemy's attack lands. When an enemy in range targets you with an attack, deal 4d6 physical damage to that enemy. If you roll at least 18 on your damage dice for this ability, it also Stuns your target until the beginning of their next turn."
                     ],
                     "tags": [
-                        "Single-target",
+                        "single-target",
                         "attack",
                         "physical",
                         "melee",
                         "shield",
                         "conditional",
-                        "Stun",
+                        "stun",
                         "condition"
                     ]
                 },
@@ -6320,8 +6365,8 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You spin your shield in a wide circle, protecting an entire area. Block all the effects of an incoming AOE attack for all spaces within range."
                     ],
                     "tags": [
-                        "Block",
-                        "AOE",
+                        "block",
+                        "aoe",
                         "shield"
                     ]
                 },
@@ -6332,7 +6377,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You stand by an important ally, protecting them from harm. Until the beginning of your next turn, you may use any number of free reactions to redirect all attacks that would hit target adjacent ally to yourself, blocking 50% of the damage of those attacks. If the ally you targetted is not adjacent to you when they are attacked, you may dash to a space adjacent to them as a free reaction to such an attack, expending 5 stamina for every 5 ft traveled this way up to a limit of 50 ft."
                     ],
                     "tags": [
-                        "Block",
+                        "block",
                         "dash",
                         "modal",
                         "variable stamina cost",
@@ -6346,7 +6391,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You roll away or towards enemies. Dash up to 20 ft in any direction at any time. The max dash range extends to 30 ft if you use this ability as a reaction after using it as a minor action in the same round."
                     ],
                     "tags": [
-                        "Dash",
+                        "dash",
                         "conditional"
                     ]
                 },
@@ -6357,7 +6402,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You speed up your pace in combat. Increase your move speed by +20 and convert all movement made during Move Actions to dashes."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "move speed"
                     ]
                 },
@@ -6368,7 +6413,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You sprint out of a tactically unsound position. When you successfully resolve this ability, actions you take this turn do not trigger enemy reactions (although the initial cast of this ability can be reacted to). Dash up to 40 ft in any direction to a space that is not adjacent to an enemy."
                     ],
                     "tags": [
-                        "Dash",
+                        "dash",
                         "conditional",
                         "action denial"
                     ]
@@ -6380,7 +6425,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You build up speed as you deliver death. Until the beginning of your next turn, you gain 5 ft of additional move speed for every 5 damage you deal this round, and you gain 5% evasion for every 10 damage you deal this round. At the beginning of your next turn, any unused move speed you accumulated during the last round carries over to the new turn."
                     ],
                     "tags": [
-                        "Gain move speed",
+                        "gain move speed",
                         "gain evasion"
                     ]
                 }
@@ -6401,12 +6446,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon one of the monstrous, toxic beasts of Ascari, the plane of amethyst poisons. Summon an Ascarion Beast with 30 HP, 40 ft Move Speed, 10 AC, 20% Evasion, 20% MR, and 20% CR. The Beast obeys your commands; otherwise, it uses its Move Action to approach enemies and its Major Action to attack them for 4d6 physical damage with \"On Hit: Inflict 2d6 Poison\". The Beast has a 20 ft aura that causes attacks made by allies to ignore 20% of their targets' CR."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "minion",
                         "physical",
                         "condition",
-                        "Poison"
+                        "poison"
                     ]
                 },
                 "Summon Asiok Dracolord": {
@@ -6416,10 +6461,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon one of the elite Draconian siegebreakers of Asiok, the war-scarred plane of scarlet tragedy. Summon an Asiok Dracolord with 50 HP, 40 ft Move Speed, 40 AC, 30% MR, and 30% CR. The Dracolord obeys your commands; otherwise, it uses its Move Action to approach enemies and its Major Action to use Firebreath, dealing 6d10 fire magic damage in a 30 ft cone. Firebreath deals double damage to constructs and buildings. The Dracolord has a 20 ft aura that increases ally damage by 30%."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "minion",
-                        "AOE",
+                        "aoe",
                         "cone"
                     ]
                 },
@@ -6430,7 +6475,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon one of the terrifying, evil demons that stalk the Aetherways. Summon a Throatslitter Demon with 50 HP, 50 ft Move Speed, 70% EV, 20% MR, 100% Armor Penetration, 50% Critical Strike Chance, and +100% Critical Damage Modifier. The Demon obeys your commands; otherwise, it uses its Move Action to approach enemies, its Major Action to attack in melee range for 6d6 physical damage, and its Minor Action to make Sneak checks with a +20 bonus. The Demon has a 20 ft aura that increases ally critical strike chance by +15%."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "minion",
                         "physical"
@@ -6443,11 +6488,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon a monster from the depths of the oceans of Siretsu, the plane of lifestealing waters. Summon a Leviathan with 200 HP, massive size, 100 ft speed on land and in water, 50 AC, 50% MR, and 50% CR. The Leviathan obeys your commands; otherwise, it uses its Move Action to approach enemies, its Major Action to spawn tidal waves that deal 10d10 water magic damage in a 45 ft square centered on a space within 100 ft, and its Minor Action to grapple up to 4 enemies with its tentacles or to devour grappled enemies, dealing 10d10 physical damage and banishing them to Siretsu. The Leviathan has a 100 ft aura that drains 30 stamina and 30 mana from each enemy within the aura."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "minion",
                         "water",
-                        "AOE",
+                        "aoe",
                         "square"
                     ]
                 },
@@ -6458,11 +6503,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon an armored golem from Batusa, the plane of blacksteel mountains. Summon a Batusan Golem with 60 HP, 30 ft Move Speed, 30 AC, 50% MR, and 40% CR. The Golem obeys your commands; otherwise, it uses its Move Action to move towards you, its Major Action to make a melee multi-target attack, knocking back enemies 20 ft away from you, and its Reaction to block one attack or AOE hit on you. The Golem has a 20 ft aura that increases the AC of allies by 30%."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "minion",
                         "knockback",
-                        "AC increase"
+                        "ac increase"
                     ]
                 },
                 "Summon Noxian Seraph": {
@@ -6472,12 +6517,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon an angel from the domain of Nox. Summon a Noxian Seraph with 50 HP, 40 ft Move Speed, 10 AC, 50% MR, and 70% CR. The Seraph obeys your commands; otherwise, it uses its Move Action to move towards you, its Major Action to heal you for 5d10 health, and its Minor Action to cleanse you of 1 random condition. The Seraph has a 20 ft aura that increases the MR of allies by 30%."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "minion",
                         "healing",
                         "cleanse",
-                        "MR increase"
+                        "mr increase"
                     ]
                 },
                 "Summon Vilyrian Spellmaster": {
@@ -6487,7 +6532,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon a wizard from Vilyr, the Infinite Library. Summon a Vilyrian Spellmaster with 40 HP, 30 ft Move Speed, 70% MR, and 20% CR. The Spellmaster obeys your commands; otherwise, it uses its Move Action to move towards you, its Major Action to dispel a non-allied magical field or effect that it is adjacent to or inside of, and its reaction to cast a counterspell, countering an enemy spell cast within 50 ft. The Spellcaster has a 20 ft aura that increases the CR of allies by 20%."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "minion",
                         "defense",
@@ -6501,7 +6546,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon a warpwurm from the Aetherways. Summon a Warpwurm with 50 HP. The Warpwurm obeys you commands; otherwise, it does nothing. It uses its Major Action to create up to 2  temporary portals in empty spaces within 100 ft, linked to its own duration; these portals can be walked into to teleport to any other portal made by the Warpwurm. It uses its reaction to teleport you or other allies out of danger, such as to avoid AOE spells or to rescue someone from falling. The Warpwurm has a 20 ft aura; within this aura, all allies are spatially locked to the current plane of existence and cannot be forcibly banished or teleported."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "minion"
                     ]
@@ -6521,7 +6566,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "minion"
                     ]
@@ -6533,7 +6578,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon a psionic guide from Estia, the plane of ephemeral, psychic pleasures. Summon an Estian Wayfinder with 30 HP, 150 ft Move Speed, 100% Evasion, and 50% CR. The Wayfinder obeys your commands; otherwise, it follows you and does nothing. The Wayfinder has masterful knowledge of most planes, and can act as a guide to nearly any location on a plane that isn't a well kept secret or whose location isn't lost to the ages. The Wayfinder has a 150 ft aura with the following effects: allies, mounts, and vehicles have doubled Move Speed; allies have +30 to Psionics: Defense checks; allies cannot be charmed, Feared, Confused, or put to Sleep."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "minion"
                     ]
@@ -6545,7 +6590,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon a small totemic spirit from Xat'hul, the plane of living, virulent mana. Summon a Xat'hul Charmspirit with 10 HP and 60 ft Move Speed. The Charmspirit obeys your commands; otherwise, it follows you and does nothing. The Charmspirit will imprint upon a humanoid of your choice, following them instead and granting them a random benefit (a humanoid cannot be imprinted by more than one Charmspirit at a time). The Charmspirit is attracted to sources of mana, informing its imprinted humanoid of nearby people or objects that contain mana up to a range of 1 mile, although it struggles with expressing exact numbers. The Charmspirit has a 5 ft aura with the following effects: allies have +25 to Artistry and Interaction skill checks; allies have +10% Health Regeneration; allies automatically stabilize if downed."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "minion"
                     ]
@@ -6557,7 +6602,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You summon a silent guardian from a plane long dead. Summon a Watcher with 1 HP and immunity to all damage and conditions. The Watcher maintains a vigilant guard upon all spaces within 100 ft of it, has true sight and can see through walls and barriers, and can telepathically inform the caster of the status of all entities within its sight. The Watcher will warn the caster of any changes or threats in the area. The Watcher prevents scrying magic or teleportation magic from affecting the spaces it watches unless otherwise commanded. If commanded, the Watcher can cause the spaces and entities it sees to phase out of the current plane of existence, moving everyone within its area of influence to a pocket realm for 1 hour before dying. Allies that short rest while being guarded by a Watcher gain +30% health regeneration, +30% stamina regeneration, and +30% mana regeneration. Allies that long rest while being guarded by a Watcher have dreams of possible future events."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "summoning",
                         "minion"
                     ]
@@ -6579,7 +6624,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You strengthen an ally's conviction and confidence. Target ally in range gains a buff that increases their damage by 50% for the duration. When an ally gains this buff, they may use their reaction to make an autoattack."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "buff",
                         "increase damage"
                     ]
@@ -6591,7 +6636,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You empower an ally's willpower and forcefulness. Target ally in range gains a buff that causes their attacks to ignore 20% MR and evasion for the duration. You may expend any amount of additional mana when you cast this spell to add to the percentage MR and evasion ignored by twice the amount of additional mana spent."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "buff",
                         "modal"
                     ]
@@ -6603,7 +6648,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You bolster an ally's focus and precision. Target ally in range gains a buff that grants +20% critical strike chance and +100% critical damage modifier for the duration. As a free reaction to attacking an enemy, an ally with this buff may end the buff early to make the triggering attack a critical hit that cannot be reacted to."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "buff",
                         "modal",
                         "increase critical strike chance",
@@ -6617,7 +6662,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You embolden an ally's forward advance. Target ally in range gains a buff that causes them to lose their Minor Action but gain an extra Major Action each turn. When this buff ends (for any reason), the target may make an attack as a free reaction."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "buff",
                         "concentration"
                     ]
@@ -6629,10 +6674,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You strengthen an ally's attention and constitution. Target ally in range gains a buff that increases their AC and Evasion by 40% for the duration. You may cast this spell as a reaction for an additional 10 mana."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "buff",
-                        "increase AC",
-                        "increase Evasion",
+                        "increase ac",
+                        "increase evasion",
                         "modal"
                     ]
                 },
@@ -6643,10 +6688,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You suffuse an ally's body with protective magic. Target ally in range gains a buff that grants +20% general MR and +20% MR for an element of your choice for the duration. You may cast this spell as a reaction for an additional 10 mana."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "buff",
                         "defensive",
-                        "increase MR",
+                        "increase mr",
                         "modal"
                     ]
                 },
@@ -6657,10 +6702,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You bolster an ally's natural defenses against conditions. Target ally in range gains a buff that grants +20% general CR and +20% CR for a condition of your choice for the duration. You may cast this spell as a reaction for an additional 10 mana."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "buff",
                         "defensive",
-                        "increase CR",
+                        "increase cr",
                         "modal"
                     ]
                 },
@@ -6671,7 +6716,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You embolden an ally's forward advance. Target ally in range gains a buff that causes them to lose their Minor Action but gain an extra Reaction each turn. When this buff ends (for any reason), the target becomes invulnerable to damage until the end of the turn."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "buff",
                         "concentration"
                     ]
@@ -6683,7 +6728,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You strengthen an ally's instincts and proficiency. Target ally in range gains a buff that grants +30 to all skill checks for the duration. The target may consume 10 minutes of this buff's duration to reroll a skill check and take the new result while this buff is active."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "buff",
                         "skill boost"
                     ]
@@ -6695,7 +6740,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You empower a buff effect at the cost of its duration. Target buff effect in range that you originally granted has its effectiveness increased by 50% and its current duration cut in half (always rounded down to the nearest 10 second, 10 minute, or 6 hour interval as applicable for minute, hour, and day long buffs)."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "utility"
                     ]
                 },
@@ -6706,7 +6751,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You bolster an ally's quickness and endurance. Target ally in range gains a buff that grants +30 move speed for the duration. The target may consume 10 seconds of this buff's duration to dash 30 ft in any direction as a minor action or reaction."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "buff",
                         "increase speed"
                     ]
@@ -6718,7 +6763,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You layer multiple buff spells together. When you successfully cast this spell, immediately cast 2 different buff spells on a target in range. Those buff spells cannot be countered when cast this way, and if one of those buff effects is targeted by the Power Spike spell, the other is also affected by it. The mana cost of Power Surge is 30 + X where X is the sum of the mana costs of the 2 buff spells being cast by Power Surge."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "utility",
                         "modal",
                         "conditional"
@@ -6741,7 +6786,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You stab at an enemy behind the veil of stealth or with the sudden violence of a mugging. Deal 5d4 physical damage to a target in range. If you are in Hit Stance, this attack has +100% critical damage modifier. If you are in Run Stance, this attack has +20% critical strike chance."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "conditional",
@@ -6756,12 +6801,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You toss a knife from the shadows. Deal 5d4 physical damage to a target in range. If you entered Hit Stance this turn, you may dash to a space adjacent to your target after the attack, gaining 50% critical damage modifier until the end of your next turn. If you entered Run Stance this turn, this attack does not break your Hidden status, and you gain 10% critical strike chance until the end of your next turn."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "ranged",
                         "conditional",
                         "stance",
-                        "Hidden",
+                        "hidden",
                         "buff",
                         "modal",
                         "single-target"
@@ -6774,7 +6819,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You quickly stab with your dagger multiple times. Deal d4 physical damage to a target in range, repeated 3 times. If you are in Hit Stance, these hits have, \"On Hit: Target loses your choice of 10 AC, 10% evasion, or 10% MR.\" If you are in Run Stance, you may dash up to 10 ft before each hit, and you may choose new targets for each hit."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "conditional",
@@ -6791,12 +6836,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You cut down the unsuspecting person who just happens to be in your way. As a reaction to stealing from an enemy, moving out of melee range of an enemy, or being attacked by an enemy in range, deal 20d4 physical damage to that enemy. If you are in Hit Stance, this attack gains 5% Lethality for every damage die that rolls its maximum. If you are in Run Stance, gain 5 stamina for every damage die that rolls its maximum. You may not attack an enemy who was hit by this ability during your next turn."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "conditional",
                         "stance",
-                        "Lethality",
+                        "lethality",
                         "recover stamina"
                     ]
                 },
@@ -6807,7 +6852,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You reach into a distracted enemy's bag and grab the first thing you touch. Steal a random item or up to 100 gp from the inventory of a target in range. If you are in Hit Stance, steal twice from the target. If you fail to steal an item because the target's inventory is empty, you may make an auto attack against the target with an equipped dagger as a free action."
                     ],
                     "tags": [
-                        "Conditional",
+                        "conditional",
                         "random",
                         "modal",
                         "attack",
@@ -6823,12 +6868,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You distract an enemy and snatch the weapon right out of an enemy's hand, or loosen the clasps on their armor so it falls free. A target in range becomes Confused until the beginning of their next turn. Then steal a weapon or armor piece that is equipped to that target. If you are in Hit Stance and steal a weapon this way, you may make an autoattack with that weapon as a free action before stowing or discarding it. If you are in Hit Stance and steal a piece of armor this way, the target's Confusion lasts until the end of their next turn instead."
                     ],
                     "tags": [
-                        "Conditional",
+                        "conditional",
                         "stance",
                         "modal",
                         "attack",
                         "condition",
-                        "Confuse"
+                        "confuse"
                     ]
                 },
                 "Purloin Powers": {
@@ -6842,7 +6887,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Buff strip",
+                        "buff strip",
                         "buff",
                         "modal",
                         "conditional",
@@ -6857,7 +6902,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You dash forward with the intent of stealing everything you can get your hands on. Dash up to 30 ft in any direction. Then, steal a random item or up to 100 gp from the inventory of a target in range. If you are in Hit Stance, steal twice instead. Then make a Steal check with a DC of 10 + X where X is 10 times the number of times you have stolen with this ability. If your Steal check succeeds, repeat this ability as a free action with no cost."
                     ],
                     "tags": [
-                        "Conditional",
+                        "conditional",
                         "random",
                         "stance",
                         "repeatable"
@@ -6870,7 +6915,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You move quickly and quietly past doors and guards. Dash up to 40 ft in any direction. During this dash, you automatically unlock doors and windows and pass through magical barriers without harm. If you are in Run Stance, you may cast this ability as a Minor Action instead."
                     ],
                     "tags": [
-                        "Dash",
+                        "dash",
                         "conditional",
                         "modal",
                         "stance"
@@ -6883,11 +6928,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You evade an attempt at capture and escape the hands of your pursuers. Cleanse Cripple, Immobilize, Prone, and Slow. Break any grapple or bindings you are in and temporarily ignore any condition or spell that would prevent you from moving freely until the end of your next turn. Then dash up to 30 ft in any direction. If you are in Run Stance, you may instead dash up to 40 ft in any direction and become Hidden after your dash."
                     ],
                     "tags": [
-                        "Cleanse",
+                        "cleanse",
                         "dash",
                         "conditional",
                         "stance",
-                        "Hidden"
+                        "hidden"
                     ]
                 },
                 "Smokescreen": {
@@ -6897,7 +6942,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You drop a smoke bomb and disappear. Drop a 35 ft square of thick smoke that enemies cannot see through. You and your allies remain Hidden while in this smoke, and can see through it. This smoke suppresses the field effects of your enemies that overlap with it, and enemies inside the smoke have -50% evasion and -50% MR. This smoke can be blown away by a strong wind. If you are in Run Stance, you may cast this ability as a reaction; if you do, the smoke blocks AOE attacks and effects within its spaces until the beginning of your next turn."
                     ],
                     "tags": [
-                        "Hidden",
+                        "hidden",
                         "conditional",
                         "stance",
                         "modal",
@@ -6911,12 +6956,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You embody the legend of the master thief that you are, a spirit of freedom. Gain a buff that grants +100% Evasion, +100% crowd control CR, 1 additional Minor Action per turn, and 1 additional reaction per round, for the duration. If you enter Run stance while this buff is active, gain an additional Major Action."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "conditional",
                         "stance",
                         "gain actions",
                         "gain evasion",
-                        "gain CR"
+                        "gain cr"
                     ]
                 }
             }
@@ -7008,7 +7053,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "organics",
                         "augmentation",
                         "condition",
-                        "Bleed",
+                        "bleed",
                         "minion"
                     ]
                 },
@@ -7122,12 +7167,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You cover allies in darkness. All allies in range become Hidden; while Hidden in this way, allies ignore traps and difficult terrain, and their attacks have, \"On Hit: Inflict Blind\". Additionally, allies in Touch range cleanse 1 condition of their choice."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "buff",
-                        "Hidden",
+                        "hidden",
                         "condition",
-                        "Blind",
+                        "blind",
                         "conditional",
                         "cleanse"
                     ]
@@ -7139,7 +7184,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You teleport a short distance with friends in tow. You and any number of allies and objects in range teleport to adjacent, empty spaces within 200 ft that you can see. Allies in range can extend the range of this ability by also being in touch range of other targets."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "conjuration",
                         "teleport"
@@ -7152,7 +7197,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You envelop the ground with the magic of the void. Up to 30 target spaces within range that you can see turn black, each becoming a field which blocks AOE effects and treats allied movement within them as dashes. Additionally, any allies standing in black spaces are considered to be in touch range."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "dark",
                         "conjuration",
                         "defensive",
@@ -7177,7 +7222,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You focus on your footwork while you attack, looking for an opening. Deal 4d10 physical damage to a target in range. You may dash up to 5 ft in any direction before or after this attack."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -7192,7 +7237,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You slam your weapon into your opponent to push them. Deal 5d10 physical damage to a target in range, pushing them 10 ft in any direction except towards you."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -7206,11 +7251,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You aim for an enemy's legs as they attempt to escape. As a reaction to an enemy attempt to move out of your reach, deal 5d10 physical damage to them, reduce their move speed to 0 for the turn, and inflict Crippled."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
-                        "Crippled"
+                        "crippled"
                     ]
                 },
                 "Advancing Fire": {
@@ -7220,7 +7265,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire at an enemy as you approach. Deal 4d10 physical damage to a target in range. You may dash up to 15 ft towards the target if your attack does not miss."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "ranged",
@@ -7236,7 +7281,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire at an enemy with a projectile and chain. Deal 5d10 physical damage to a target in range, then pull them 20 ft towards you."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "ranged",
@@ -7250,7 +7295,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You shoot an enemy with a heavy projectile designed to stop their progression. As a reaction to an enemy moving into range or moving towards you, deal 5d10 physical damage to that enemy, reduce their move speed to 0 for the turn, and inflict Crippled."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "ranged",
@@ -7264,7 +7309,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You roll while swapping weapons. Dash up to 20 ft in any direction, then you may swap weapons in both hands."
                     ],
                     "tags": [
-                        "Modal",
+                        "modal",
                         "dash"
                     ]
                 },
@@ -7275,7 +7320,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You quickly down a potion while swapping weapons. Quaff a potion from your inventory, then you may swap weapons in both hands."
                     ],
                     "tags": [
-                        "Modal"
+                        "modal"
                     ]
                 },
                 "Weapon Swap: Attack": {
@@ -7285,7 +7330,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You swap weapons and make a quick attack. Swap weapons in both hands, then you may make an autoattack with each weapon currently equipped if applicable."
                     ],
                     "tags": [
-                        "Modal",
+                        "modal",
                         "attack",
                         "physical",
                         "melee",
@@ -7310,7 +7355,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You slip your knife into the back of a weakened foe. Deal 5d4 + Xd4 physical damage to a target in range, where X is the number of crowd control conditions that target has."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "conditional",
                         "melee"
@@ -7323,11 +7368,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You slice low at the muscles of the leg in order to escape or prevent escape. Deal 6d4 physical damage to a target in range and inflict Crippled. You may then choose to dash 20 ft in any direction."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
                         "crowd control",
-                        "Cripple",
+                        "cripple",
                         "modal",
                         "dash"
                     ]
@@ -7343,11 +7388,11 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "ranged",
                         "stat loss",
-                        "Condition Resist",
+                        "condition resist",
                         "cost reduction",
                         "mark",
                         "modal",
@@ -7361,7 +7406,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You become a spectre of sudden death. For 1 minute, you gain the following effects: When you teleport, you may cast an attack ability as a free action; Your attacks that deal more than 10% of an enemy's maximum health refresh the duration of their crowd control conditions; When you kill an enemy, you gain a special free reaction, allowing you to cast any teleport spell immediately without paying its costs."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "concentration",
                         "conditional",
                         "modal",
@@ -7375,7 +7420,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You teleport towards your prey. Teleport to a target empty space within range that you can see. You may cast this ability as a reaction to an enemy gaining a crowd control condition, but if you do, the target space you teleport to must be adjacent to that enemy."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "conjuration",
                         "teleport",
                         "conditional",
@@ -7389,7 +7434,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You and your allies teleport randomly to escape. You and up to 4 target allies within range that you can see teleport 1000 ft in a random direction (corrected slightly to avoid barriers). You may target additional allies when you cast this ability, at a cost of an additional 5 mana per additional target."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "conjuration",
                         "multi-target",
                         "teleport",
@@ -7404,7 +7449,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You forcibly teleport someone else to a new location. Fire a bolt of dispersed energy at a target within range (checks against Evasion) and teleport them to any empty location up to a distance of 400 ft (checks against Condition Resist). If the target is willing to be teleported, this spell costs half mana."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "conjuration",
                         "single-target",
                         "teleport",
@@ -7421,7 +7466,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "Instead of casting this ability as a Major Action, you may instead choose to spend 10 minutes casting this spell as a minor ritual and expend an additional 40 mana. If you do, the duration of this ability is extended to 12 hours, and you may wait to place the second portal as a Major Action at any time during the ability's duration."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "conjuration",
                         "teleport",
                         "modal",
@@ -7436,9 +7481,9 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire a pulse of mana to rattle an enemy's senses. A target entity within range becomes Stunned until the beginning of their next turn."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "control",
-                        "Stun",
+                        "stun",
                         "crowd control"
                     ]
                 },
@@ -7449,12 +7494,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You put large crowds to sleep. All entities in a 20 ft cube, centered on a point in range, fall Asleep for the duration. Any entity that resists this Sleep becomes Stunned instead."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "control",
-                        "Sleep",
-                        "Stun",
+                        "sleep",
+                        "stun",
                         "crowd control",
-                        "AOE",
+                        "aoe",
                         "cube"
                     ]
                 },
@@ -7465,12 +7510,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You fire magical bolts designed to disorient. All entities in a 60 ft cone in front of you become Confused. You are considered Hidden from any entities Confused in this way."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "control",
-                        "AOE",
+                        "aoe",
                         "cone",
-                        "Confuse",
-                        "Hidden"
+                        "confuse",
+                        "hidden"
                     ]
                 },
                 "Fulminant Prism": {
@@ -7480,12 +7525,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You capture an enemy in a magical prison. A target entity within range becomes captured by your magic and has their current position locked. While captured in this way, they cannot move, dash, teleport, planeswalk, or be displaced by any means. For the duration of this ability, teleport spells you cast can have their target destination be an empty space adjacent to the captured target instead."
                     ],
                     "tags": [
-                        "Spell",
+                        "spell",
                         "control",
                         "single-target",
                         "conjuration",
                         "condition",
-                        "Immobilize"
+                        "immobilize"
                     ]
                 }
             }
@@ -7505,12 +7550,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You hack at an enemy, severing blood vessels. Deal 4d10 physical damage to a target in range. Inflict a d10 Bleed on the target. This Bleed's damage is amplified by your passive."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
                         "condition",
-                        "Bleed"
+                        "bleed"
                     ]
                 },
                 "Cut Down": {
@@ -7525,14 +7570,14 @@ var BarbsComponents = BarbsComponents || (function () {
                         "If you have at least 3 buffs active on you, choose both options."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "melee",
-                        "AOE",
+                        "aoe",
                         "cone",
                         "horizontal line",
-                        "Knock Prone",
-                        "Knock Back",
+                        "knock prone",
+                        "knock back",
                         "modal",
                         "conditional"
                     ]
@@ -7544,7 +7589,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You turn vigor into violence, attacking quickly. Deal 4d10 physical damage to a target in range. Then, you may sacrifice a buff on you to repeat this skill at no cost."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "single-target",
                         "melee",
@@ -7559,7 +7604,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You finish off weakened enemies. Deal 8d10 physical damage to all targets in range. This attack has lethality equal to each target's percentage of missing health (calculated after this ability's damage). You may sacrifice any number of buffs on you as you cast this ability to increase the base lethality of this attack by 10% per buff sacrificed this way."
                     ],
                     "tags": [
-                        "Attack",
+                        "attack",
                         "physical",
                         "multi-target",
                         "melee",
@@ -7575,7 +7620,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You toss up your shield or armguard to defend against an attack. Block an attack on you or an adjacent ally, reducing damage by 25%. Gain an additional 25% damage reduction for each buff you have."
                     ],
                     "tags": [
-                        "Block",
+                        "block",
                         "damage reduction",
                         "self-target",
                         "ally-target"
@@ -7588,12 +7633,12 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You strengthen your armor's natural defenses. Sacrifice any number of buffs active on you. Gain 25% increased AC, Evasion, or MR for each buff sacrificed this way for 1 minute. Recasting this ability while its buff is active will end your previous buff and start a new one."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "concentration",
                         "sacrifice",
-                        "increase AC",
-                        "increase Evasion",
-                        "increase MR"
+                        "increase ac",
+                        "increase evasion",
+                        "increase mr"
                     ]
                 },
                 "Take Cover": {
@@ -7608,13 +7653,13 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Dash",
+                        "dash",
                         "ally-target",
                         "modal",
                         "redirect",
                         "knock prone",
-                        "increase AC",
-                        "increase Evasion"
+                        "increase ac",
+                        "increase evasion"
                     ]
                 },
                 "Paragon of Victory": {
@@ -7629,10 +7674,10 @@ var BarbsComponents = BarbsComponents || (function () {
                         "</ul>"
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "concentration",
                         "sacrifice",
-                        "Immunity",
+                        "immunity",
                         "add speed",
                         "increase damage",
                         "modal"
@@ -7645,7 +7690,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You bellow a righteous cry, calling all to drive forward into battle. You and all allies who can hear you gain 50% increased damage until the end of your next turn. When you cast this ability, all allies who can hear you may use their reaction to move up to their speed in any direction."
                     ],
                     "tags": [
-                        "Buff",
+                        "buff",
                         "multi-target",
                         "self-target",
                         "ally-target",
@@ -7659,8 +7704,8 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You bellow a belligerent cry, igniting your enemies' fury. All enemies who can hear you are Taunted for 1 minute. An enemy Taunted by this ability previously is Immune to this ability's Taunt. When you cast this ability, all enemies who can hear you break concentration."
                     ],
                     "tags": [
-                        "Condition",
-                        "Taunt",
+                        "condition",
+                        "taunt",
                         "multi-target",
                         "break concentration"
                     ]
@@ -7672,8 +7717,8 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You bellow an inspiring cry, encouraging everyone to persist. You and all allies who can hear you are cleansed of Fear, Stun, Paralysis, Confusion, Sleep, and Charm. Allies in a 1000 ft range who are in a downed state become immediately stabilized. When you cast this ability, all allies who can hear you may use their reaction to cleanse an additional condition on them of their choice."
                     ],
                     "tags": [
-                        "Cleanse",
-                        "Stabilize",
+                        "cleanse",
+                        "stabilize",
                         "multi-target",
                         "self-target",
                         "ally-target"
@@ -7686,9 +7731,9 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You bellow a powerful cry, cowing your enemies and announcing their coming deaths. All enemies who can hear you gain 50% physical damage vulnerability, lose natural elemental resistances, and become Feared. When you cast this ability, all enemies who can hear you are stripped of all buffs, and those buffs are distributed as you choose amongst you and all allies who can hear you."
                     ],
                     "tags": [
-                        "Condition",
+                        "condition",
                         "multi-target",
-                        "Fear",
+                        "fear",
                         "vulnerability",
                         "buff stripping",
                         "buff"
@@ -7804,13 +7849,17 @@ var BarbsComponents = BarbsComponents || (function () {
 
             this.stats = {};
             this.stat_multipliers = {};
-
             this.hidden_stats = {};
+
             this.condition_resists = {};
             this.magic_resists = {};
+
             this.skills = {};
-            this.concentration_bonus = 0;
+
             this.initiative_bonus = 0;
+            this.concentration_bonus = 0;
+            this.buff_effectiveness = 1;
+            this.enchant_effectiveness = 1;
 
             this.crit = false;
             this.crit_damage_mod = 2;
@@ -7895,12 +7944,20 @@ var BarbsComponents = BarbsComponents || (function () {
             }
         }
 
+        add_initiative_bonus(bonus) {
+            this.initiative_bonus += bonus;
+        }
+
         add_concentration_bonus(bonus) {
             this.concentration_bonus += bonus;
         }
 
-        add_initiative_bonus(bonus) {
-            this.initiative_bonus += bonus;
+        add_buff_effectiveness(bonus) {
+            this.buff_effectiveness += bonus / 100;
+        }
+
+        add_enchant_effectiveness(bonus) {
+            this.enchant_effectiveness += bonus / 100;
         }
 
         add_skill_bonus(skill, bonus) {
@@ -8221,6 +8278,14 @@ var BarbsComponents = BarbsComponents || (function () {
             });
         }
 
+        static initiative_bonus(bonus) {
+            assert_not_null(bonus, 'initiative_bonus() bonus');
+
+            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+                roll.add_initiative_bonus(bonus);
+            });
+        }
+
         static concentration_bonus(bonus) {
             assert_not_null(bonus, 'concentration_bonus() bonus');
 
@@ -8229,11 +8294,19 @@ var BarbsComponents = BarbsComponents || (function () {
             });
         }
 
-        static initiative_bonus(bonus) {
-            assert_not_null(bonus, 'initiative_bonus() bonus');
+        static buff_effectiveness(bonus) {
+            assert_not_null(bonus, 'buff_effectiveness() bonus');
 
             return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
-                roll.add_initiative_bonus(bonus);
+                roll.add_buff_effectiveness(bonus);
+            });
+        }
+
+        static enchant_effectiveness(bonus) {
+            assert_not_null(bonus, 'enchant_effectiveness() bonus');
+
+            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+                roll.add_enchant_effectiveness(bonus);
             });
         }
 
@@ -8345,6 +8418,77 @@ var BarbsComponents = BarbsComponents || (function () {
     }
 
 
+    const AFFIX_CONSTRUCTORS = {
+        'initiative': function(self, part) { return self.irregular_stat_affix(part, 'initiative', Effect.initiative_bonus); },
+        'concentration': function(self, part) { return self.irregular_stat_affix(part, 'concentration', Effect.concentration_bonus); },
+        'buff effectiveness': function(self, part) { return self.irregular_stat_affix(part, 'buff effectiveness', Effect.buff_effectiveness); },
+        'enchant effectiveness': function(self, part) { return self.irregular_stat_affix(part, 'enchant effectiveness', Effect.enchant_effectiveness); },
+        'damage': function(self, part) { return self.get_damage_from_part(part, Effect.roll_damage); },
+        'multiplier': function(self, part) { return self.get_multiplier_from_part(part, Effect.roll_multiplier); },
+        'effect': function(self, part) { return self.effect_affix(part, 'effect', Effect.roll_effect); },
+        'crit damage': function(self, part) { return self.get_damage_from_part(part, Effect.crit_damage); },
+        'crit multiplier': function(self, part) { return self.get_multiplier_from_part(part, Effect.crit_multiplier); },
+        'crit effect': function(self, part) { return self.effect_affix(part, 'effect', Effect.crit_effect); },
+        'crit damage mod': function(self, part) { return self.crit_damage_mod_affix(part); },
+    }
+
+    // Add stat bonus definitions to affix constructors
+    Object.keys(Stat).forEach(function (key) {
+        const stat = Stat[key];
+        AFFIX_CONSTRUCTORS[stat.name.toLowerCase().replace(/_/g, ' ') + ':'] = function (self, part) {
+            return self.stat_affix(part, stat, Effect.stat_effect);
+        }
+    });
+
+    // Add stat acronyms to affix constructors
+    Object.keys(STAT_ACROS).forEach(function (acronym) {
+        AFFIX_CONSTRUCTORS[acronym] = function(self, part) {
+            return self.stat_affix(part, STAT_ACROS[acronym], Effect.stat_effect);
+        }
+    });
+
+    // Add hidden stats and crit hidden stats to affix constructors
+    Object.keys(HIDDEN_STAT_ACROS).forEach(function (acronym) {
+        AFFIX_CONSTRUCTORS[acronym] = function(self, part) {
+            return self.stat_affix(part, HIDDEN_STAT_ACROS[acronym], Effect.hidden_stat);
+        }
+
+        AFFIX_CONSTRUCTORS['crit ' + acronym] = function(self, part) {
+            return self.stat_affix(part, HIDDEN_STAT_ACROS[acronym], Effect.crit_hidden_stat);
+        }
+    });
+
+    // Add skill bonus definitions to affix constructors
+    Object.keys(Skill).forEach(function (key) {
+        const skill = Skill[key];
+        AFFIX_CONSTRUCTORS[skill.name.toLowerCase()] = function(self, part) {
+            return self.skill_affix(part, function(bonus) {
+                return Effect.skill_effect(skill, bonus);
+            });
+        };
+    });
+
+    // Add element-specific magic resistances
+    Object.keys(ElementalDamage).forEach(function (key) {
+        const type = ElementalDamage[key];
+        const handler = function(self, part) {
+            return self.magic_resist_affix(part, type);
+        };
+        AFFIX_CONSTRUCTORS[type + ' mr'] = handler;
+        AFFIX_CONSTRUCTORS[type + ' magic resist'] = handler;
+    });
+
+    // Add condition-specific resistances
+    conditions.forEach(function (condition) {
+        condition = condition.toLowerCase().replace(/[()]/g, '');
+        const handler = function (self, part) {
+            return self.condition_resist_affix(part, condition);
+        };
+        AFFIX_CONSTRUCTORS[condition + ' cr'] = handler;
+        AFFIX_CONSTRUCTORS[condition + ' condition resist'] = handler;
+    });
+
+
     class Item {
         constructor(name, type, slot, base_damage, damage_scaling, effects) {
             assert_not_null(name, 'Item::new() name');
@@ -8383,15 +8527,21 @@ var BarbsComponents = BarbsComponents || (function () {
             parts = remove_empty(parts);
 
             const item_name = parts[0];
+            parts = parts.slice(1);
 
             let base_damage = Effect.no_op_roll_effect();
             let scaler = ItemScaler.NONE;
             let effects = [];
 
+            // Order of these keys matters. Handle longer keys first because some keys start with the same
+            // strings (e.g. crit damage and crit damage mod)
+            const affix_keys = Object.keys(AFFIX_CONSTRUCTORS).sort(function(a, b) {
+                return b.length - a.length;
+            });
+
             for (let i = 0; i < parts.length; i++) {
-                let handled_part = false;
-                const part = parts[i].toLowerCase();
-                LOG.debug('construct_item(), handling part ' + part);
+                LOG.debug('construct_item(), handling part ' + parts[i]);
+                const part = parts[i].toLowerCase().replace(/[()]/g, '');
 
                 // Check for base damage definition
                 if (part.startsWith('base')) {
@@ -8439,286 +8589,24 @@ var BarbsComponents = BarbsComponents || (function () {
                     continue;
                 }
 
-                // Check for an initiative bonus
-                if (part.startsWith('initiative')) {
-                    const pieces = part.split(':');
-                    if (pieces.length !== 2) {
-                        LOG.error('Expected exactly one colon in initiative bonus "%s"'.format(part));
-                        continue;
-                    }
+                let identified_part = false;
+                for (let j = 0; j < affix_keys.length; j++) {
+                    const affix_key = affix_keys[j];
+                    const affix_constructor = AFFIX_CONSTRUCTORS[affix_key];
+                    if (part.startsWith(affix_key)) {
+                        identified_part = true;
 
-                    const bonus = parse_int(pieces[1].trim());
-                    if (Number.isNaN(bonus)) {
-                        LOG.error('Initiative bonus value %s is not a number'.format(pieces[1].trim()));
-                        continue;
-                    }
-
-                    effects.push(Effect.initiative_bonus(bonus));
-                    LOG.debug('construct_item(), handled initiative bonus part');
-                }
-
-                // Check for a concentration bonus
-                if (part.startsWith('concentration')) {
-                    const pieces = part.split(':');
-                    if (pieces.length !== 2) {
-                        LOG.error('Expected exactly one colon in concentration bonus "%s"'.format(part));
-                        continue;
-                    }
-
-                    const bonus = parse_int(pieces[1].trim());
-                    if (Number.isNaN(bonus)) {
-                        LOG.error('Concentration bonus value %s is not a number'.format(pieces[1].trim()));
-                        continue;
-                    }
-
-                    effects.push(Effect.concentration_bonus(bonus));
-                    LOG.trace('construct_item(), handled concentration bonus part');
-                }
-
-                // Check for a skill bonus definition
-                const skill_keys = Object.keys(Skill);
-                for (let i = 0; i < skill_keys.length; i++) {
-                    const skill = Skill[skill_keys[i]];
-                    if (part.startsWith(skill.name.toLowerCase())) {
-                        const pieces = part.split(':');
-                        if (pieces.length !== 3) {
-                            LOG.error('Expected exactly two colons in skill bonus "%s"'.format(part));
-                            break;
-                        }
-
-                        const bonus = pieces.slice(-1)[0];
-                        effects.push(Effect.skill_effect(skill, bonus));
-                        handled_part = true;
-                        LOG.trace('construct_item(), handled skill bonus part');
-                        break;
-                    }
-                }
-                if (handled_part) {
-                    continue;
-                }
-
-                // Check for crit damage mod (order matters, check longer matches first)
-                if (part.startsWith('crit damage mod')) {
-                    let pieces = part.split(':');
-                    if (pieces.length !== 2) {
-                        LOG.error('Expected exactly one colon in crit damage mod "%s"'.format(part));
-                        continue;
-                    }
-
-                    pieces = pieces[1].trim().split(' ');
-                    if (pieces.length !== 2) {
-                        LOG.error('Expected exactly two space-separated pieces after colon in crit damage mod, ' +
-                                      'found "%s"'.format(pieces.join(' ')));
-                        continue;
-                    }
-
-                    let value = parse_int(trim_percent(pieces[0]));
-                    if (Number.isNaN(value)) {
-                        LOG.error('Crit damage mod value %s is not a number ' + pieces[0]);
-                        continue;
-                    }
-
-                    const roll_type = get_roll_type(pieces[1]);
-                    if (roll_type === null) {
-                        LOG.error('Unrecognized roll type %s in crit damage mod'.format(pieces[1]));
-                        continue;
-                    }
-
-                    effects.push(Effect.crit_damage_mod(value, roll_type));
-                    LOG.trace('construct_item(), handled crit damage mod part');
-                    continue;
-                }
-
-                // Check for crit damage multiplier
-                if (part.startsWith('crit multiplier')) {
-                    const effect = this.get_multiplier_from_part(part, Effect.crit_multiplier);
-                    if (effect !== null) {
-                        effects.push(effect);
-                        LOG.trace('construct_item(), handled crit multiplier part');
-                    }
-                    continue;
-                }
-
-                // Check for crit damage
-                if (part.startsWith('crit damage')) {
-                    const effect = this.get_damage_from_part(part, Effect.crit_damage);
-                    if (effect !== null) {
-                        effects.push(effect);
-                        LOG.trace('construct_item(), handled crit damage part');
-                    }
-                    continue;
-                }
-
-                // Check for generic damage
-                if (part.startsWith('damage')) {
-                    const effect = this.get_damage_from_part(part, Effect.roll_damage);
-                    if (effect !== null) {
-                        effects.push(effect);
-                    }
-                    LOG.trace('construct_item(), handled damage part');
-                    continue;
-                }
-
-                // Check for generic multiplier
-                if (part.startsWith('multiplier')) {
-                    const effect = this.get_multiplier_from_part(part, Effect.roll_multiplier);
-                    if (effect !== null) {
-                        effects.push(effect);
-                        LOG.trace('construct_item(), handled multiplier part');
-                    }
-                    continue;
-                }
-
-                // Check for hidden stats and crit hidden stats
-                const hidden_stat_acro_keys = Object.keys(HIDDEN_STAT_ACROS);
-                for (let i = 0; i < hidden_stat_acro_keys.length; i++) {
-                    const acro = hidden_stat_acro_keys[i];
-                    if (part.startsWith(acro)) {
-                        const effect = this.get_stat_effect_from_part(part, HIDDEN_STAT_ACROS[acro],
-                                                                      Effect.hidden_stat);
+                        const effect = affix_constructor(this, part);
                         if (effect !== null) {
+                            LOG.trace('construct_item(), handled "%s" part on item %s'.format(affix_key, item_name));
                             effects.push(effect);
-                            LOG.trace('construct_item(), handled hidden stat bonus part');
-                        }
-                        handled_part = true;
-                        break;
-
-                    } else if (part.startsWith('crit ' + acro)) {
-                        const effect = this.get_stat_effect_from_part(part, HIDDEN_STAT_ACROS[acro],
-                                                                      Effect.crit_hidden_stat);
-                        if (effect !== null) {
-                            effects.push(effect);
-                            LOG.trace('construct_item(), handled crit hidden stat bonus part');
-                        }
-                        handled_part = true;
-                        break;
-                    }
-                }
-
-                // Check for a stat bonus definition
-                const stat_keys = Object.keys(Stat);
-                for (let i = 0; i < stat_keys.length; i++) {
-                    const stat = Stat[stat_keys[i]];
-                    if (part.startsWith(stat.name.toLowerCase().replace(/_/g, ' ') + ':')) {
-                        const effect = this.get_stat_effect_from_part(part, stat, Effect.stat_effect);
-                        if (effect !== null) {
-                            effects.push(effect);
-                            LOG.trace('construct_item(), handled stat bonus part');
-                        }
-                        handled_part = true;
-                        break;
-                    }
-                }
-                if (handled_part) {
-                    continue;
-                }
-
-                // Check for stat acronyms
-                const acro_keys = Object.keys(STAT_ACROS);
-                for (let i = 0; i < acro_keys.length; i++) {
-                    const acro = acro_keys[i];
-                    if (part.startsWith(acro)) {
-                        const effect = this.get_stat_effect_from_part(part, STAT_ACROS[acro], Effect.stat_effect);
-                        if (effect !== null) {
-                            effects.push(effect);
-                            LOG.trace('construct_item(), handled acro-stat bonus part');
-                        }
-                        handled_part = true;
-                        break;
-                    }
-                }
-
-                // Check for miscellaneous effects
-                if (part.startsWith('effect')) {
-                    let pieces = part.split(':');
-                    if (pieces.length !== 2) {
-                        LOG.error('Expected exactly one colon in effect "%s"'.format(part));
-                        continue;
-                    }
-
-                    pieces = pieces[1].trim().split(' ');
-                    const effect_text = pieces.slice(0, pieces.length - 1).join(' ');
-                    const roll_type = get_roll_type(pieces.slice(-1)[0]);
-                    if (roll_type === null) {
-                        LOG.error('Unrecognized roll type %s in effect'.format(pieces[1]));
-                        continue;
-                    }
-
-                    effects.push(Effect.roll_effect(effect_text, roll_type));
-                    LOG.trace('construct_item(), handled effect part');
-                    continue;
-                }
-
-                // Check for miscellaneous crit effects
-                if (part.startsWith('crit effect')) {
-                    let pieces = part.split(':');
-                    if (pieces.length !== 2) {
-                        LOG.error('Expected exactly one colon in crit effect "%s"'.format(part));
-                        continue;
-                    }
-
-                    pieces = pieces[1].trim().split(' ');
-                    const effect_text = pieces.slice(0, pieces.length - 1).join(' ');
-                    const roll_type = get_roll_type(pieces.slice(-1)[0]);
-                    if (roll_type === null) {
-                        LOG.error('Unrecognized roll type %s in effect'.format(pieces[1]));
-                        continue;
-                    }
-
-                    effects.push(Effect.crit_effect(effect_text, roll_type));
-                    LOG.trace('construct_item(), handled crit effect part');
-                    continue;
-                }
-
-                // Check for element-specific mr
-                const element_keys = Object.keys(ElementalDamage);
-                for (let i = 0; i < element_keys.length; i++) {
-                    const type = ElementalDamage[element_keys[i]];
-                    if (part.startsWith(type + ' mr') || part.startsWith(type + ' magic resist')) {
-                        let pieces = part.split(':');
-                        if (pieces.length !== 2) {
-                            LOG.error('Expected exactly one colon in magic resist "%s"'.format(part));
                             break;
                         }
-
-                        const value = parse_int(trim_percent(pieces[1]));
-                        if (Number.isNaN(value)) {
-                            LOG.error('Magic resist bonus %s is not a number ' + pieces[1]);
-                            break;
-                        }
-
-                        effects.push(Effect.magic_resist(type, value));
-                        handled_part = true;
-                        break;
                     }
                 }
-                if (handled_part) {
-                    continue;
-                }
 
-                for (let i = 0; i < conditions.length; i++) {
-                    const revised_part = part.replace(/[()]/g, '');
-                    const condition = conditions[i].toLowerCase().replace(/[()]/g, '');
-                    if (revised_part.startsWith(condition + ' cr') || revised_part.startsWith(condition + ' condition resist')) {
-                        let pieces = revised_part.split(':');
-                        if (pieces.length !== 2) {
-                            LOG.error('Expected exactly one colon in specific CR "%s"'.format(revised_part));
-                            break;
-                        }
-
-                        const value = parse_int(trim_percent(pieces[1]));
-                        if (Number.isNaN(value)) {
-                            LOG.error('Specific CR bonus %s is not a number ' + pieces[1]);
-                            break;
-                        }
-
-                        effects.push(Effect.condition_resist(condition, value));
-                        handled_part = true;
-                        break;
-                    }
-                }
-                if (handled_part) {
-                    continue;
+                if (!identified_part) {
+                    LOG.error('No known handler for item affix "%s" on item "%s"'.format(part, item_name));
                 }
             }
 
@@ -8733,6 +8621,34 @@ var BarbsComponents = BarbsComponents || (function () {
             item.type = null;
             LOG.debug('Constructed item with name "%s"'.format(item.name));
             return item;
+        }
+
+        static irregular_stat_affix(part, stat_name, create_effect) {
+            const pieces = part.split(':');
+            if (pieces.length !== 2) {
+                LOG.error('Expected exactly one colon in %s "%s"'.format(stat_name, part));
+                return null;
+            }
+
+            const bonus = parse_int(pieces[1].trim());
+            if (Number.isNaN(bonus)) {
+                LOG.error('%s value %s is not a number'.format(stat_name, pieces[1].trim()));
+                return null;
+            }
+
+            LOG.trace('construct_item(), handled %s part'.format(stat_name));
+            return create_effect(bonus);
+        }
+
+        static skill_affix(part, create_effect) {
+            const pieces = part.split(':');
+            if (pieces.length !== 3) {
+                LOG.error('Expected exactly two colons in skill bonus "%s"'.format(part));
+                return null;
+            }
+
+            const bonus = pieces.slice(-1)[0];
+            return create_effect(bonus);
         }
 
         static get_damage_from_part(part, create_effect) {
@@ -8806,7 +8722,36 @@ var BarbsComponents = BarbsComponents || (function () {
             return create_effect(value, damage_type, roll_type);
         }
 
-        static get_stat_effect_from_part(part, stat, create_effect) {
+        static crit_damage_mod_affix(part) {
+            let pieces = part.split(':');
+            if (pieces.length !== 2) {
+                LOG.error('Expected exactly one colon in crit damage mod "%s"'.format(part));
+                return null;
+            }
+
+            pieces = pieces[1].trim().split(' ');
+            if (pieces.length !== 2) {
+                LOG.error('Expected exactly two space-separated pieces after colon in crit damage mod, ' +
+                              'found "%s"'.format(pieces.join(' ')));
+                return null;
+            }
+
+            let value = parse_int(trim_percent(pieces[0]));
+            if (Number.isNaN(value)) {
+                LOG.error('Crit damage mod value %s is not a number ' + pieces[0]);
+                return null;
+            }
+
+            const roll_type = get_roll_type(pieces[1]);
+            if (roll_type === null) {
+                LOG.error('Unrecognized roll type %s in crit damage mod'.format(pieces[1]));
+                return null;
+            }
+
+            return Effect.crit_damage_mod(value, roll_type);
+        }
+
+        static stat_affix(part, stat, create_effect) {
             let pieces = part.split(':');
             if (pieces.length !== 2) {
                 LOG.error('Expected exactly one colon in stat bonus "%s"'.format(part));
@@ -8833,6 +8778,56 @@ var BarbsComponents = BarbsComponents || (function () {
             }
 
             return create_effect(stat, bonus, roll_type);
+        }
+
+        static effect_affix(part, effect_type, create_effect) {
+            let pieces = part.split(':');
+            if (pieces.length !== 2) {
+                LOG.error('Expected exactly one colon in %s "%s"'.format(effect_type, part));
+                return null;
+            }
+
+            pieces = pieces[1].trim().split(' ');
+            const effect_text = pieces.slice(0, pieces.length - 1).join(' ');
+            const roll_type = get_roll_type(pieces.slice(-1)[0]);
+            if (roll_type === null) {
+                LOG.error('Unrecognized roll type %s in %s'.format(pieces[1], effect_type));
+                return null;
+            }
+
+            return create_effect(effect_text, roll_type);
+        }
+
+        static magic_resist_affix(part, type) {
+            let pieces = part.split(':');
+            if (pieces.length !== 2) {
+                LOG.error('Expected exactly one colon in magic resist "%s"'.format(part));
+                return null;
+            }
+
+            const value = parse_int(trim_percent(pieces[1]));
+            if (Number.isNaN(value)) {
+                LOG.error('Magic resist bonus %s is not a number ' + pieces[1]);
+                return null;
+            }
+
+            return Effect.magic_resist(type, value);
+        }
+
+        static condition_resist_affix(part, condition) {
+            let pieces = part.split(':');
+            if (pieces.length !== 2) {
+                LOG.error('Expected exactly one colon in specific CR "%s"'.format(part));
+                return null;
+            }
+
+            const value = parse_int(trim_percent(pieces[1]));
+            if (Number.isNaN(value)) {
+                LOG.error('Specific CR bonus %s is not a number ' + pieces[1]);
+                return null;
+            }
+
+            return Effect.condition_resist(condition, value);
         }
     }
 
@@ -9566,8 +9561,8 @@ var BarbsComponents = BarbsComponents || (function () {
             [
                 Effect.hidden_stat(HiddenStat.ACCURACY, 15, RollType.MAGIC),
                 Effect.hidden_stat(HiddenStat.REDUCE_CR, 5, RollType.MAGIC),
-                // TODO 20% buff effectiveness
-                // TODO 20% enchanting effectiveness
+                Effect.buff_effectiveness(20),
+                Effect.enchant_effectiveness(20),
             ]
         ),
 
@@ -9580,8 +9575,8 @@ var BarbsComponents = BarbsComponents || (function () {
             [
                 Effect.roll_multiplier(0.25, Damage.ALL_MAGIC, RollType.MAGIC),
                 Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                // TODO 15% buff effectiveness
-                // TODO 15% enchanting effectiveness
+                Effect.buff_effectiveness(15),
+                Effect.enchant_effectiveness(15),
             ]
         ),
 
@@ -9658,7 +9653,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
                 Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
                 Effect.concentration_bonus(25),
-                // TODO 20% buff effectiveness
+                Effect.buff_effectiveness(20),
             ]
         ),
 
