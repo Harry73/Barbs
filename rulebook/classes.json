@@ -2448,7 +2448,7 @@
             "Hollow": "The Hollow branch gives options for defensive spells with a focus on entering the ethereal realm."
         },
         "passive": {
-            "Embrace the Void": "Before initiative is rolled, choose two:<ul><li>All allies become Hidden</li><li>All allies get +20 Initiative</li><li>All allies teleport up to 20 ft to empty spaces of their choosing</li><li>All enemies teleport up to 20 ft to empty spaces in random directions</li><ul>"
+            "Embrace the Void": "Before initiative is rolled, choose two:<ul><li>All allies become Hidden</li><li>All allies get +20 Initiative</li><li>All allies teleport up to 20 ft to empty spaces of their choosing</li><li>All enemies teleport up to 20 ft to empty spaces in random directions</li></ul>"
         },
         "abilities": [
             "Veil of Darkness",

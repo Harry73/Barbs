@@ -337,7 +337,7 @@ def _build_calendar():
     holidays_per_month = read_json_file(holidays_path)
 
     def _month_set(index):
-        month_header = empty_row + empty_th
+        month_header = empty_th
         for i in range(index, index + 3):
             if i >= len(MONTHS):
                 month_header += '<th colspan="8">&nbsp;</th>'
@@ -357,7 +357,7 @@ def _build_calendar():
                 days_header += '<th class="bottom-bordered">%s</th>' % day_of_the_week[0]
             days_header += empty_th
 
-        return (tr % month_header) + (tr % days_header)
+        return empty_row + (tr % month_header) + (tr % days_header)
 
     def _days_set(index):
         rows = ''

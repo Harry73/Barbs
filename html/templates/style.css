@@ -8,8 +8,9 @@ html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pr
     background: transparent
 }
 
-body, html {
+html, body {
     background-color: #999999;
+    overflow-x: hidden;
 }
 
 body {
@@ -221,7 +222,7 @@ td {
 
 /* sidebar */
 
-.sidenav {
+.grid-container {
     height: 100%;
     width: 20%;
     position: fixed;
@@ -230,8 +231,12 @@ td {
     left: 0;
     background-color: #111;
     overflow-x: hidden;
-    padding-top: 20px;
     transition: 0.1s;
+}
+
+.sidenav {
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .sidenav a {

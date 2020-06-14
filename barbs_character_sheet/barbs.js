@@ -3796,16 +3796,16 @@ var Barbs = Barbs || (function () {
 
 
     const subcommand_handlers = {
-        'item': roll_item,
         'initiative': roll_initiative,
-        'stat': roll_stat,
         'dmg': damage_reduction,
         'cr': roll_condition_resist,
         'concentration': roll_concentration,
+        'stat': roll_stat,
         'skill': roll_skill,
-        'ability': process_ability,
         'list_effects': list_persistent_effects,
         'remove_effect': remove_persistent_effect,
+        'item': roll_item,
+        'ability': process_ability,
     };
 
 
