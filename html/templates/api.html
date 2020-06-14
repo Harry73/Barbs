@@ -214,6 +214,15 @@
             </ul>
             <p>Following this, you specify each affix on the item, implicit and explicit, separated by semicolons. Each affix is identified by some keyword, and then the keyword is followed by values. How you should define each kind of affix is described below. Any field in &lt;angled brackets&gt; is a placeholder that should be replaced with some real value.</p>
             <ul>
+                <li>Base Damage - <span class="monospace">base: &lt;dice&gt; &lt;damage type&gt; &lt;scaling stat&gt;</span>
+                    <ul>
+                        <li>For weapons, you need to specify the damage the weapon deals for auto-attacks with this affix.</li>
+                        <li>"dice" can be any Roll20 dice expression, e.g. d10</li>
+                        <li>"damage type" must be one of the following: physical, psychic, healing, fire, water, earth, air, ice, lightning, light, dark</li>
+                        <li>"scaling stat" is a three-letter acronym for the attribute the weapon scales off of, e.g. DEX or STR. If the weapon does not scale off any stat, like daggers or unarmed weapons, use "none".</li>
+                    </ul>
+                </li>
+
                 <li>Initiative bonus - <span class="monospace">initiative: &lt;bonus&gt;</span>
                     <ul>
                         <li>"bonus" must be an integer</li>
@@ -250,7 +259,7 @@
                     <ul>
                         <li>"multiplier percent" is the percentage increase on damage, e.g. 50%. The percent sign is optional.</li>
                         <li>"damage type" must be one of the following: physical, psychic, healing, fire, water, earth, air, ice, lightning, light, dark, all_magic, all</li>
-                        <li>"applicable attack type" must be one of the following: physical, psychic, magic, healing, all. The applicable attack type is often based on the item type itself. Damage from a longsword should only be applied to physical attacks. Damage from an orb should only be applied to magic attacks. Damage from armor may apply to all attacks (though "all" is almost never the case).</li>
+                        <li>"applicable attack type" must be one of the following: physical, psychic, magic, healing, all. The applicable attack type is often based on the item type itself. A multiplier from a longsword should only be applied to physical attacks. A multiplier from an orb should only be applied to magic attacks. A multiplier from armor may apply to all attacks (though "all" is almost never the case).</li>
                     </ul>
                 </li>
 
@@ -266,7 +275,7 @@
                     <ul>
                         <li>"multiplier percent" is the percentage increase on damage, e.g. 50%. The percent sign is optional.</li>
                         <li>"damage type" must be one of the following: physical, psychic, healing, fire, water, earth, air, ice, lightning, light, dark, all_magic, all</li>
-                        <li>"applicable attack type" must be one of the following: physical, psychic, magic, healing, all. The applicable attack type is often based on the item type itself. Damage from a longsword should only be applied to physical attacks. Damage from an orb should only be applied to magic attacks. Damage from armor may apply to all attacks (though "all" is almost never the case).</li>
+                        <li>"applicable attack type" must be one of the following: physical, psychic, magic, healing, all. The applicable attack type is often based on the item type itself. A multiplier from a longsword should only be applied to physical attacks. A multiplier from an orb should only be applied to magic attacks. A multiplier from armor may apply to all attacks (though "all" is almost never the case).</li>
                     </ul>
                 </li>
 
