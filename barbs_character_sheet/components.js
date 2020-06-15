@@ -7905,7 +7905,7 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         add_effect(effect) {
-            this.effects.push('%s'.format(effect));
+            this.effects.push(effect);
         }
 
         add_stat_bonus(stat, bonus) {

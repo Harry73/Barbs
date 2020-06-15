@@ -671,11 +671,18 @@ var Barbs = Barbs || (function () {
             roll.add_crit_damage_mod(effectiveness * 100 * (fake_roll.crit_damage_mod - 2));
             roll.add_concentration_bonus(effectiveness * fake_roll.concentration_bonus);
             roll.add_initiative_bonus(effectiveness * fake_roll.initiative_bonus);
+            roll.add_combo_chance(effectiveness * fake_roll.combo_chance);
 
             // If the old effect changed these, the new effect should do the same
-            roll.crit = fake_roll.crit;
-            roll.should_apply_crit = fake_roll.should_apply_crit;
-            roll.max_damage = fake_roll.max_damage;
+            if (roll.crit !== fake_roll.crit) {
+                roll.crit = fake_roll.crit;
+            }
+            if (roll.should_apply_crit !== fake_roll.should_apply_crit) {
+                roll.should_apply_crit = fake_roll.should_apply_crit;
+            }
+            if (roll.max_damage !== fake_roll.max_damage) {
+                roll.max_damage = fake_roll.max_damage;
+            }
 
             // Increase stat bonuses by effectiveness
             const stats = Object.keys(fake_roll.stats);
@@ -701,6 +708,22 @@ var Barbs = Barbs || (function () {
                 roll.add_hidden_stat(hidden_stat, Math.round(effectiveness * base_bonus));
             }
 
+            // Increase condition resists by effectiveness
+            const condition_resists = Object.keys(fake_roll.condition_resists);
+            for (let i = 0; i < condition_resists.length; i++) {
+                const condition = condition_resists[i];
+                const base_bonus = fake_roll.condition_resists[condition];
+                roll.add_condition_resist(condition, Math.round(effectiveness * base_bonus));
+            }
+
+            // Increase magic resists by effectiveness
+            const magic_resists = Object.keys(fake_roll.magic_resists);
+            for (let i = 0; i < magic_resists.length; i++) {
+                const damage_type = magic_resists[i];
+                const base_bonus = fake_roll.magic_resists[damage_type];
+                roll.add_magic_resist(damage_type, Math.round(effectiveness * base_bonus));
+            }
+
             // Increase skill bonus by effectiveness
             const skills = Object.keys(fake_roll.skills);
             for (let i = 0; i < skills.length; i++) {
@@ -711,10 +734,7 @@ var Barbs = Barbs || (function () {
 
             // Copy over effects
             for (let i = 0; i < fake_roll.effects.length; i++) {
-                const effect = fake_roll.effects[i];
-                // Using direct access because roll.add_effect() turns the effect into an HTML list item, which we
-                // don't want to do twice.
-                roll.effects.push(effect);
+                roll.add_effect(fake_roll.effects[i]);
             }
 
             return true;
