@@ -146,6 +146,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
         static error(string) {
             this._log(LogLevel.ERROR, string);
+            sendChat('API', string);
         }
     }
     LOG.level = LogLevel.INFO;
@@ -8654,13 +8655,13 @@ var BarbsComponents = BarbsComponents || (function () {
         static irregular_stat_affix(part, stat_name, create_effect) {
             const pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected exactly one colon in %s "%s"'.format(stat_name, part));
+                LOG.error('Expected one colon in %s affix "%s"'.format(stat_name, part));
                 return null;
             }
 
             const bonus = parse_int(pieces[1].trim());
             if (Number.isNaN(bonus)) {
-                LOG.error('%s value %s is not a number'.format(stat_name, pieces[1].trim()));
+                LOG.error('%s affix value %s in "%s" is not a number'.format(stat_name, pieces[1].trim(), part));
                 return null;
             }
 
@@ -8671,7 +8672,7 @@ var BarbsComponents = BarbsComponents || (function () {
         static skill_affix(part, create_effect) {
             const pieces = part.split(':');
             if (pieces.length !== 3) {
-                LOG.error('Expected exactly two colons in skill bonus "%s"'.format(part));
+                LOG.error('Expected two colons in skill bonus affix "%s"'.format(part));
                 return null;
             }
 
@@ -8685,27 +8686,26 @@ var BarbsComponents = BarbsComponents || (function () {
 
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected exactly one colon in damage "%s"'.format(part));
+                LOG.error('Expected one colon in damage affix "%s"'.format(part));
                 return null;
             }
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 3) {
-                LOG.error('Expected exactly three space-separated pieces after colon in damage, ' +
-                              'found "%s"'.format(pieces.join(' ')));
+                LOG.error('Expected three space-separated pieces after colon in damage affix "%s"'.format(part));
                 return null;
             }
 
             const damage = pieces[0];
             const damage_type = get_damage_from_type(pieces[1]);
             if (damage_type === null) {
-                LOG.error('Unrecognized damage type ' + pieces[1]);
+                LOG.error('Unrecognized damage type %s in affix "%s"'.format(pieces[1], part));
                 return null;
             }
 
             const roll_type = get_roll_type(pieces[2]);
             if (roll_type === null) {
-                LOG.error('Unrecognized roll type ' + pieces[2]);
+                LOG.error('Unrecognized roll type %s in affix "%s"'.format(pieces[2], part));
                 return null;
             }
 
@@ -8718,32 +8718,31 @@ var BarbsComponents = BarbsComponents || (function () {
 
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected exactly one colon in multiplier "%s"'.format(part));
+                LOG.error('Expected one colon in multiplier affix "%s"'.format(part));
                 return null;
             }
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 3) {
-                LOG.error('Expected exactly three space-separated pieces after colon in multiplier, ' +
-                              'found "%s"'.format(pieces.join(' ')));
+                LOG.error('Expected three space-separated pieces after colon in multiplier affix "%s"'.format(part));
                 return null;
             }
 
             const value = parse_int(trim_percent(pieces[0])) / 100;
             if (Number.isNaN(value)) {
-                LOG.error('Multiplier value %s is not a number '.format(pieces[0]));
+                LOG.error('Value %s in multiplier affix "%s" is not a number'.format(pieces[0], part));
                 return null;
             }
 
             const damage_type = get_damage_from_type(pieces[1]);
             if (damage_type === null) {
-                LOG.error('Unrecognized multiplier damage type ' + pieces[1]);
+                LOG.error('Unrecognized multiplier damage type %s in affix "%s"'.format(pieces[1], part));
                 return null;
             }
 
             const roll_type = get_roll_type(pieces[2]);
             if (roll_type === null) {
-                LOG.error('Unrecognized roll type ' + pieces[2]);
+                LOG.error('Unrecognized roll type %s in affix "%s"'.format(pieces[2], part));
                 return null;
             }
 
@@ -8753,26 +8752,25 @@ var BarbsComponents = BarbsComponents || (function () {
         static crit_damage_mod_affix(part) {
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected exactly one colon in crit damage mod "%s"'.format(part));
+                LOG.error('Expected one colon in crit damage mod affix "%s"'.format(part));
                 return null;
             }
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 2) {
-                LOG.error('Expected exactly two space-separated pieces after colon in crit damage mod, ' +
-                              'found "%s"'.format(pieces.join(' ')));
+                LOG.error('Expected two space-separated pieces after colon in crit damage mod affix "%s"'.format(part));
                 return null;
             }
 
             let value = parse_int(trim_percent(pieces[0]));
             if (Number.isNaN(value)) {
-                LOG.error('Crit damage mod value %s is not a number ' + pieces[0]);
+                LOG.error('Value %s in crit damage mod affix "%s" is not a number'.format(pieces[0], part));
                 return null;
             }
 
             const roll_type = get_roll_type(pieces[1]);
             if (roll_type === null) {
-                LOG.error('Unrecognized roll type %s in crit damage mod'.format(pieces[1]));
+                LOG.error('Unrecognized roll type %s in crit damage mod affix "%s"'.format(pieces[1], part));
                 return null;
             }
 
@@ -8782,26 +8780,25 @@ var BarbsComponents = BarbsComponents || (function () {
         static stat_affix(part, stat, create_effect) {
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected exactly one colon in stat bonus "%s"'.format(part));
+                LOG.error('Expected one colon in stat affix bonus "%s"'.format(part));
                 return null;
             }
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 2) {
-                LOG.error('Expected exactly three space-separated pieces after colon in stat, ' +
-                              'found "%s"'.format(pieces.join(' ')));
+                LOG.error('Expected two space-separated pieces after colon in stat affix "%s"'.format(part));
                 return null;
             }
 
             const bonus = parse_int(trim_percent(pieces[0]));
             if (Number.isNaN(bonus)) {
-                LOG.error('Stat bonus value %s is not a number ' + pieces[0]);
+                LOG.error('Value %s in stat affix "%s" is not a number'.format(pieces[0], part));
                 return null;
             }
 
             const roll_type = get_roll_type(pieces[1]);
             if (roll_type === null) {
-                LOG.error('Unrecognized roll type %s in stat'.format(pieces[1]));
+                LOG.error('Unrecognized roll type %s in stat affix "%s"'.format(pieces[1], part));
                 return null;
             }
 
@@ -8811,7 +8808,7 @@ var BarbsComponents = BarbsComponents || (function () {
         static effect_affix(part, effect_type, create_effect) {
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected exactly one colon in %s "%s"'.format(effect_type, part));
+                LOG.error('Expected one colon in %s affix "%s"'.format(effect_type, part));
                 return null;
             }
 
@@ -8819,7 +8816,7 @@ var BarbsComponents = BarbsComponents || (function () {
             const effect_text = pieces.slice(0, pieces.length - 1).join(' ');
             const roll_type = get_roll_type(pieces.slice(-1)[0]);
             if (roll_type === null) {
-                LOG.error('Unrecognized roll type %s in %s'.format(pieces[1], effect_type));
+                LOG.error('Unrecognized roll type %s in %s affix "%s"'.format(pieces[1], effect_type, part));
                 return null;
             }
 
@@ -8829,13 +8826,13 @@ var BarbsComponents = BarbsComponents || (function () {
         static magic_resist_affix(part, type) {
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected exactly one colon in magic resist "%s"'.format(part));
+                LOG.error('Expected one colon in magic resist affix "%s"'.format(part));
                 return null;
             }
 
             const value = parse_int(trim_percent(pieces[1]));
             if (Number.isNaN(value)) {
-                LOG.error('Magic resist bonus %s is not a number ' + pieces[1]);
+                LOG.error('Value %s in magic resist affix "%s" is not a number'.format(pieces[1], part));
                 return null;
             }
 
@@ -8845,13 +8842,13 @@ var BarbsComponents = BarbsComponents || (function () {
         static condition_resist_affix(part, condition) {
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected exactly one colon in specific CR affix "%s"'.format(part));
+                LOG.error('Expected one colon in specific CR affix "%s"'.format(part));
                 return null;
             }
 
             const value = parse_int(trim_percent(pieces[1]));
             if (Number.isNaN(value)) {
-                LOG.error('Specific CR bonus %s is not a number ' + pieces[1]);
+                LOG.error('Value %s in specific CR affix "%s" is not a number'.format(pieces[1], part));
                 return null;
             }
 
