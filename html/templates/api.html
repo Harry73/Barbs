@@ -28,8 +28,14 @@
             <a href="#Parameters">Ability/Item Parameters</a>
             <a href="#Persistent Effects">Persistent Effects</a>
             <a href="#Crit Rolls">Crit Rolls</a>
+            <a href="#Effectiveness">Buff/Enchant Effectiveness</a>
         </div>
         <a href="#Items">Items</a>
+        <div class="sidenav-subsection">
+            <a href="#What Items Apply When">What Items Apply When</a>
+            <a href="#Auto Attacks">Auto-attacks</a>
+            <a href="#Defining an Item">Defining an Item</a>
+        </div>
         <a href="#Class Abilities">Class Abilities</a>
         <div class="sidenav-subsection">
             <a href="#Extra">Extra</a>
@@ -192,7 +198,7 @@
                 <h2>Items</h2>
             </a>
 
-            <h3>What is applied when</h3>
+            <a id="What Items Apply When"><h3>What Items Apply When</h3></a>
             <p>Regardless of the type of attack you are doing, your head, body, hands, feet, rings, and belt will all be applied. When the main hand and offhand weapons are applied varies.</p>
             <ul>
                 <li>If you are doing an auto-attack with your main hand weapon, only your main hand weapon's affixes will be included in the attack. Your offhand weapon will not be included.</li>
@@ -202,11 +208,11 @@
             </ul>
             <br>
 
-            <h3>Auto-attacks</h3>
+            <a id="Auto Attacks"><h3>Auto Attacks</h3></a>
             <p>You can perform an auto-attack with an item by clicking the roll button on the “Equipment” tab of your character sheet. If other abilities you have used require you to specify parameters, you can do so in the boxes below the main hand and offhand slots. Parameters here behave the same as parameters for classes.</p>
             <br>
 
-            <h3>Defining an Item</h3>
+            <a id="Defining an Item"><h3>Defining an Item</h3></a>
             <p>Originally, on the Items tab of your character sheet, you would only put the name of the item in each text box. The Barbs API scripts contain a big list of items, and looked through this list for an item with a name matching what you entered. This requires hardcoding every item into the API scripts. While existing items using this paradigm will continue to work, the methodology for defining items is <b>deprecated</b>. Do not hardcode any more items into API scripts.</p>
             <p>For any new items, you should define all affixes for the item in the corresponding text box on your character sheet. The API will then "construct" the item based on what you include in the text box for the item. This way, you can easily see and change what effects your items should have, and it's on players, rather than me, to define their items.</p>
             <br>
