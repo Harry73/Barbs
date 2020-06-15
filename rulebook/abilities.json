@@ -5684,7 +5684,9 @@
         ],
         "api": {
             "description": "If you are attacking an enemy that is grappled with Choke Hold, add the \"choke_hold\" parameter to that ability to gain the extra combo chance. Otherwise, do not include the parameter.",
-            "examples": ["choke_hold"]
+            "examples": [
+                "choke_hold"
+            ]
         }
     },
     {
@@ -5712,7 +5714,9 @@
         ],
         "api": {
             "description": "If your dash's total displace is 20 ft, add the \"combo_bonus\" parameter to gain the extra combo chance from this ability. Otherwise, do not include the parameter.",
-            "examples": ["combo_chance"]
+            "examples": [
+                "combo_chance"
+            ]
         }
     },
     {
