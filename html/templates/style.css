@@ -9,7 +9,7 @@ html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pr
 }
 
 html, body {
-    background-color: #999999;
+    background-color: #36393F;
     overflow-x: hidden;
 }
 
@@ -37,11 +37,13 @@ h2 {
     font-weight: normal;
     text-align: center;
     padding-bottom: 15px;
+    mix-blend-mode: exclusion;
 }
 
 h3 {
     font-size: 36px;
     padding-bottom: 15px;
+    mix-blend-mode: exclusion;
 }
 
 h4 {
@@ -49,6 +51,7 @@ h4 {
     font-size: 20px;
     font-weight: bold;
     padding-bottom: 15px;
+    mix-blend-mode: exclusion;
 }
 
 .small {
@@ -77,15 +80,23 @@ h4 {
 }
 
 article {
-    border-bottom: 2px dotted #999;
     padding-bottom: 20px;
-    color: #000000;
+    color: #FFFFFF;
     font-size: 20px;
 }
 
 article p {
     margin-top: 5px;
     margin-bottom: 5px;
+    mix-blend-mode: exclusion;
+}
+
+a:link {
+    color: #1CB0E9;
+}
+
+a:visited {
+    color: #A472E5;
 }
 
 a.green-link:link {
@@ -110,6 +121,10 @@ a.green-link:visited {
     vertical-align: middle;
 }
 
+.blended {
+    mix-blend-mode: exclusion;
+}
+
 img {
     width: 100%;
 }
@@ -119,6 +134,7 @@ img {
 ul {
     padding-top: 5px;
     padding-bottom: 5px;
+    mix-blend-mode: exclusion;
 }
 
 ul li {
@@ -146,6 +162,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
+    mix-blend-mode: exclusion;
 }
 
 th, td {
@@ -182,7 +199,7 @@ td {
 }
 
 .bordered {
-    border: 1px solid black;
+    border: 1px solid #FFFFFF;
 }
 
 .thin-bordered {
@@ -190,12 +207,12 @@ td {
 }
 
 .bottom-bordered {
-    border-bottom: 1px solid #002691;
-    color: #002691;
+    border-bottom: 1px solid #FF2014;
+    color: #FF2014;
 }
 
 .table-title {
-    background-color: #002691;
+    background-color: #FF2014;
     color: #FFFFFF;
     font-size: 40px;
     font-weight: bold;
@@ -205,7 +222,7 @@ td {
 }
 
 .table-header {
-    color: #002691;
+    color: #FF2014;
     font-size: 25px;
     font-weight: bold;
 }
@@ -242,13 +259,13 @@ td {
 .sidenav a {
     display: block;
     font-size: 20px;
-    color: #818181;
+    color: #c1c1c1;
     text-decoration: none;
     padding: 6px 8px 6px 16px;
 }
 
 .sidenav a:hover {
-    color: #f1f1f1;
+    color: #FF6D6D;
 }
 
 .sidenav-subsection {

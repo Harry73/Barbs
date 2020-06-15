@@ -2532,7 +2532,7 @@ Desired example
         {{/physical}}
 
         {{#psychic}}
-        <tr style="background:#FF9BFF;">
+        <tr style="background:#C0C0C0;">
             <td class="template_label">Psychic:</td>
             <td class="template_value">{{psychic}}</td>
         </tr>
@@ -2546,7 +2546,7 @@ Desired example
         {{/fire}}
 
         {{#water}}
-        <tr style="background:#70D8FF;">
+        <tr style="background:#5B82EF;">
             <td class="template_label">Water:</td>
             <td class="template_value">{{water}}</td>
         </tr>
@@ -2567,7 +2567,7 @@ Desired example
         {{/air}}
 
         {{#ice}}
-        <tr style="background:#C0C0C0;">
+        <tr style="background:#A3FFE9;">
             <td class="template_label">Ice:</td>
             <td class="template_value">{{ice}}</td>
         </tr>
@@ -2595,7 +2595,7 @@ Desired example
         {{/dark}}
 
         {{#healing}}
-        <tr style="background:#FFB5E6;">
+        <tr style="background:#FF9BFF;">
             <td class="template_label">Healing:</td>
             <td class="template_value">{{healing}}</td>
         </tr>
@@ -2610,14 +2610,14 @@ Desired example
 
         {{#modified_crit}}
         {{#rollLess() crit_value crit_cutoff}}
-        <tr style="background:#702082; color:#FFFFFF">
+        <tr style="background:#B20088; color:#FFFFFF">
             <td class="template_label">Crit ({{crit_chance}}%):</td>
             <td class="template_value">{{modified_crit}}</td>
         </tr>
         {{/rollLess() crit_value crit_cutoff}}
 
         {{#^rollLess() crit_value crit_cutoff}}
-        <tr style="background:#702082; color:#FFFFFF; border: 3px solid #3FB315;">
+        <tr style="background:#B20088; color:#FFFFFF; border: 3px solid #3FB315;">
             <td class="template_label">Crit ({{crit_chance}}%):</td>
             <td class="template_value">{{modified_crit}}</td>
         </tr>
@@ -2625,7 +2625,7 @@ Desired example
         {{/modified_crit}}
 
         {{#combo}}
-        <tr style="background:#E7B5FF">
+        <tr style="background:#A472E5">
             <td class="template_label">Combo ({{combo_chance}}%):</td>
             <td class="template_value">{{combo}}</td>
         </tr>

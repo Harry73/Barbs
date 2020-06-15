@@ -177,7 +177,7 @@ def _build_class_hint_unlocks(classes, skills):
                 name_or_linked_name = href('#class_%s' % clazz['name'], clazz['name'])
 
             class_hint_html = class_hint_template.format(
-                color='#99747A' if clazz['all_reqs_known'] else 'transparent',
+                color='#550000' if clazz['all_reqs_known'] else 'transparent',
                 name=name_or_linked_name,
                 preview=clazz['preview'],
                 requirements=', '.join([get_link_skill_req(req, skills) for req in clazz['requirements']]),
