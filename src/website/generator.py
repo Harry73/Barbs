@@ -488,7 +488,7 @@ def _generate_calendar_months_html(log):
         month_html = '<table class="padded thin-bordered">%s</table>' % table
         calendar_month_html = calendar_month_template.format(month=month_html)
 
-        with open(os.path.join(CALENDAR_GENERATED, '%s.html' % month), 'w') as f:
+        with open(os.path.join(CALENDAR_GENERATED, '%s.html' % month), 'w', encoding='utf8') as f:
             f.write(calendar_month_html)
 
 
