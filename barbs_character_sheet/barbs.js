@@ -41,9 +41,10 @@ var Barbs = Barbs || (function () {
     const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
     const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s)+1]]]]}}';
 
-    const roll_format = '&{template:Barbs} {{name=%s}} %s %s %s %s';
+    const roll_format = '&{template:Barbs} {{name=%s}} %s %s %s %s %s';
     const damage_section_format = '{{%s=[[%s]]}}';
     const crit_section_format = '{{crit_value=[[%s]]}} {{crit_cutoff=[[%s]]}} {{crit_chance=%s}} {{modified_crit=[[%s-%s]]}}';
+    const combo_section_format = '{{combo_chance=%s}} {{combo=[[d100cs>%s]]}}';
     const effects_section_format = '{{effects=%s}}';
 
     const ability_block_format = '&{template:5eDefault} {{spell=1}} {{title=%s}} {{subheader=%s}} 0 {{spellshowdesc=1}} {{spelldescription=%s }} 0 0 0 0 0 0 0';
@@ -1089,7 +1090,8 @@ var Barbs = Barbs || (function () {
         }
 
         const crit_chance = roll.get_crit_chance();
-        const crit_compare_value = 100 - crit_chance + 1;
+        // Crit chance threshold can't go below 0, even if the crit chance is over 100%, or Roll20 will break.
+        const crit_compare_value = Math.max(0, 100 - crit_chance + 1);
 
         chat(roll.character, '[[d100]]', function (results) {
             const rolls = results[0].inlinerolls;
@@ -1127,19 +1129,28 @@ var Barbs = Barbs || (function () {
         }
 
         const rolls_per_type = roll.roll();
-        format_and_send_roll(character, ability.name, roll, rolls_per_type, crit_section);
+
+        let combo_section = '';
+        if ('tags' in ability && ability.tags.includes('combo')) {
+            const combo_chance = Math.round(character.get_base_combo_chance() + roll.combo_chance);
+            const combo_threshold = Math.max(0, 100 - combo_chance + 1);
+            combo_section = combo_section_format.format(combo_chance, combo_threshold);
+        }
+
+        format_and_send_roll(character, ability.name, roll, rolls_per_type, crit_section, combo_section);
         if (do_finalize) {
             finalize_roll(character, roll, parameters);
         }
     }
 
 
-    function format_and_send_roll(character, roll_title, roll, rolls_per_type, crit_section) {
+    function format_and_send_roll(character, roll_title, roll, rolls_per_type, crit_section, combo_section = '') {
         assert_not_null(character, 'format_and_send_roll() character');
         assert_not_null(roll_title, 'format_and_send_roll() roll_title');
         assert_not_null(roll, 'format_and_send_roll() roll');
         assert_not_null(rolls_per_type, 'format_and_send_roll() rolls_per_type');
         assert_not_null(crit_section, 'format_and_send_roll() crit_section');
+        assert_not_null(combo_section, 'format_and_send_roll() combo_section');
 
         let damage_section = '';
         Object.keys(rolls_per_type).forEach(function (type) {
@@ -1169,7 +1180,7 @@ var Barbs = Barbs || (function () {
         }
 
         const effects_section = effects_section_format.format(effects.join(''));
-        const msg = roll_format.format(roll_title, damage_section, crit_section, effects_section);
+        const msg = roll_format.format(roll_title, damage_section, crit_section, combo_section, effects_section);
 
         LOG.info('Roll: ' + msg);
         chat(character, msg);
@@ -1384,7 +1395,18 @@ var Barbs = Barbs || (function () {
         return true;
     }
 
-    function mirror_mage_concave_mirror(roll, roll_time, parameter, parameters) {
+
+    function martial_artist_choke_hold_combo(roll, roll_time, parameter) {
+        if (roll_time !== RollTime.DEFAULT) {
+            return true;
+        }
+
+        roll.add_combo_chance(15);
+        return true;
+    }
+
+
+    function mirror_mage_concave_mirror(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
         }
@@ -1394,6 +1416,7 @@ var Barbs = Barbs || (function () {
         roll.max_damage = true;
         return true;
     }
+
 
     // Note that this is a "takeover arbitrary parameter", so it behaves differently from other arbitrary
     // parameter handlers. The occurs strictly after we've determined if the roll is a crit, in case that matters.
@@ -1519,13 +1542,14 @@ var Barbs = Barbs || (function () {
 
         'assassinate': assassin_assassinate,
         'arc_lightning': lightning_duelist_arc_lightning_mark,
-        'frostbite': cryomancer_frostbite,
-        'juggernaut': juggernaut_what_doesnt_kill_you,
-        'pursued': assassin_pursue_mark,
+        'choke_hold': martial_artist_choke_hold_combo,
+        'concave': mirror_mage_concave_mirror,
         'daggerspell_marked': daggerspell_marked,
         'draconic_pact': dragoncaller_draconic_pact,
         'empowered': daggerspell_ritual_dagger,
-		'concave': mirror_mage_concave_mirror,
+        'frostbite': cryomancer_frostbite,
+        'juggernaut': juggernaut_what_doesnt_kill_you,
+        'pursued': assassin_pursue_mark,
         'spotting': sniper_spotter,
         'stance': thief_stance,
         'tide': aquamancer_tide,
@@ -2424,16 +2448,16 @@ var Barbs = Barbs || (function () {
 
 
     function ki_monk_spirit_punch(character, ability, parameters) {
-        const monk_mastery = character.get_monk_mastery();
+        const monk_dice = character.get_monk_dice();
 
         const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('4d%s'.format(monk_mastery), Damage.PHYSICAL);
+        roll.add_damage('4d%s'.format(monk_dice), Damage.PHYSICAL);
         add_scale_damage(character, roll, parameters);
         roll.add_effect('Gain Ki equal to rolled value');
 
         const spent_ki = get_parameter('ki', parameters);
         if (spent_ki !== null) {
-            roll.add_damage('4d%s'.format(monk_mastery), Damage.PSYCHIC);
+            roll.add_damage('4d%s'.format(monk_dice), Damage.PSYCHIC);
         }
 
         roll_crit(roll, parameters, function (crit_section) {
@@ -2443,16 +2467,16 @@ var Barbs = Barbs || (function () {
 
 
     function ki_monk_drain_punch(character, ability, parameters) {
-        const monk_mastery = character.get_monk_mastery();
+        const monk_dice = character.get_monk_dice();
 
         const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('5d%s'.format(monk_mastery), Damage.PHYSICAL);
+        roll.add_damage('5d%s'.format(monk_dice), Damage.PHYSICAL);
         add_scale_damage(character, roll, parameters);
         roll.add_effect('Gain Ki equal to half the rolled value');
 
         const spent_ki = get_parameter('ki', parameters);
         if (spent_ki !== null) {
-            roll.add_damage('5d%s'.format(monk_mastery), Damage.PSYCHIC);
+            roll.add_damage('5d%s'.format(monk_dice), Damage.PSYCHIC);
         }
 
         roll_crit(roll, parameters, function (crit_section) {
@@ -2462,10 +2486,10 @@ var Barbs = Barbs || (function () {
 
 
     function ki_monk_spirit_shotgun(character, ability, parameters) {
-        const monk_mastery = character.get_monk_mastery();
+        const monk_dice = character.get_monk_dice();
 
         const roll = new Roll(character, RollType.PSYCHIC);
-        roll.add_damage('5d%s'.format(monk_mastery), Damage.PSYCHIC);
+        roll.add_damage('5d%s'.format(monk_dice), Damage.PSYCHIC);
 
         const spent_ki = get_parameter('ki', parameters);
         if (spent_ki !== null) {
@@ -2567,10 +2591,10 @@ var Barbs = Barbs || (function () {
 
 
     function martial_artist_choke_hold(character, ability, parameters) {
-        const monk_mastery = character.get_monk_mastery();
+        const monk_dice = character.get_monk_dice();
 
         const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('4d%s'.format(monk_mastery), Damage.PHYSICAL);
+        roll.add_damage('4d%s'.format(monk_dice), Damage.PHYSICAL);
         add_scale_damage(character, roll, parameters);
 
         roll_crit(roll, parameters, function (crit_section) {
@@ -2580,15 +2604,38 @@ var Barbs = Barbs || (function () {
 
 
     function martial_artist_flying_kick(character, ability, parameters) {
-        const monk_mastery = character.get_monk_mastery();
+        const monk_dice = character.get_monk_dice();
 
         const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('6d%s'.format(monk_mastery), Damage.PHYSICAL);
+        roll.add_damage('6d%s'.format(monk_dice), Damage.PHYSICAL);
         add_scale_damage(character, roll, parameters);
+
+        const combo_bonus = get_parameter('combo_bonus', parameters);
+        if (combo_bonus !== null) {
+            roll.add_combo_chance(20);
+        }
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
         });
+    }
+
+
+    function martial_artist_focus_energy(character, ability, parameters) {
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].name === ability.name && persistent_effects[i].target === character.name) {
+                chat(character, 'Focus Energy is already active on %s and does not stack'.format(character.name));
+                return;
+            }
+        }
+
+        add_persistent_effect(character, ability, parameters, character, Duration.SINGLE_USE(), Ordering(),
+                              RollType.ALL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
+                    roll.add_combo_chance(30);
+                    return true;
+                });
+
+        print_ability_description(character, ability);
     }
 
 
@@ -3441,9 +3488,9 @@ var Barbs = Barbs || (function () {
             'Light Touch': luxomancer_light_touch,
         },
         'Martial Artist': {
-            'Focus Energy': print_ability_description,
             'Choke Hold': martial_artist_choke_hold,
             'Flying Kick': martial_artist_flying_kick,
+            'Focus Energy': martial_artist_focus_energy,
         },
         'Mirror Mage': {
             'Helix Beam': mirror_mage_helix_beam,
@@ -3508,8 +3555,8 @@ var Barbs = Barbs || (function () {
             'Snatch and Grab': thief_snatch_and_grab,
         },
         'Voidwalker': {
-            'Dimension Door': print_ability_description,
             'Blacklands': print_ability_description,
+            'Dimension Door': print_ability_description,
         },
         'Warlord': {
             'Hookshot': warlord_hookshot,
@@ -3522,7 +3569,7 @@ var Barbs = Barbs || (function () {
             'Reinforce Armor': warrior_reinforce_armor,  // TODO this could do more
             'Shields Up': print_ability_description,
             'Warleader': warrior_warleader,
-        }
+        },
     };
 
 

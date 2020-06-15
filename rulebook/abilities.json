@@ -5683,8 +5683,8 @@
             "forced movement"
         ],
         "api": {
-            "description": "The API does not track combo percents.",
-            "examples": []
+            "description": "If you are attacking an enemy that is grappled with Choke Hold, add the \"choke_hold\" parameter to that ability to gain the extra combo chance. Otherwise, do not include the parameter.",
+            "examples": ["choke_hold"]
         }
     },
     {
@@ -5711,8 +5711,8 @@
             "dash"
         ],
         "api": {
-            "description": "The API does not track combo percents.",
-            "examples": []
+            "description": "If your dash's total displace is 20 ft, add the \"combo_bonus\" parameter to gain the extra combo chance from this ability. Otherwise, do not include the parameter.",
+            "examples": ["combo_chance"]
         }
     },
     {
@@ -9096,7 +9096,11 @@
             "dark",
             "conjuration",
             "teleport"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print his ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -9118,7 +9122,11 @@
             "defensive",
             "field",
             "block"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print his ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",

@@ -891,11 +891,7 @@
             "Demolish",
             "Challenge",
             "Flatten"
-        ],
-        "api": {
-            "description": "Not implemented",
-            "examples": []
-        }
+        ]
     },
     {
         "type": "class",
@@ -991,7 +987,7 @@
             "Frazzle"
         ],
         "api": {
-            "description": "Not implemented. And tbh, it may never be. Re-rolls like this are very difficult.",
+            "description": "Not implemented, and probably never will be. Re-rolls like this are very difficult to handle nicely.",
             "examples": []
         }
     },
@@ -1049,11 +1045,7 @@
             "Mint Coinage",
             "Enhance Vehicle",
             "Empower Ammo"
-        ],
-        "api": {
-            "description": "Not implemented.",
-            "examples": []
-        }
+        ]
     },
     {
         "type": "class",
@@ -1465,11 +1457,7 @@
             "Sword of Lightning",
             "Plasma Saber",
             "Lightning Coil Cuirass"
-        ],
-        "api": {
-            "description": "Not implemented.",
-            "examples": []
-        }
+        ]
     },
     {
         "type": "class",
@@ -1564,7 +1552,7 @@
             "Arrow Catch"
         ],
         "api": {
-            "description": "The API will calculate what dice to use for your monk-mastery-dependent attacks. It will not track action economy.",
+            "description": "The API will calculate what dice to use for your monk-mastery-dependent attacks. The API rolls for combo for abilities with the \"combo\" tag, and your base combo chance increases with your monk mastery automatically. The API will not track action economy.",
             "examples": []
         }
     },
@@ -2496,11 +2484,7 @@
             "Weapon Swap: Roll",
             "Weapon Swap: Quaff",
             "Weapon Swap: Attack"
-        ],
-        "api": {
-            "description": "Not implemented.",
-            "examples": []
-        }
+        ]
     },
     {
         "type": "class",

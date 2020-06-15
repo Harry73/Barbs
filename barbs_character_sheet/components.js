@@ -7875,6 +7875,7 @@ var BarbsComponents = BarbsComponents || (function () {
             this.concentration_bonus = 0;
             this.buff_effectiveness = 1;
             this.enchant_effectiveness = 1;
+            this.combo_chance = 0;
 
             this.crit = false;
             this.crit_damage_mod = 2;
@@ -7973,6 +7974,10 @@ var BarbsComponents = BarbsComponents || (function () {
 
         add_enchant_effectiveness(bonus) {
             this.enchant_effectiveness += bonus / 100;
+        }
+
+        add_combo_chance(bonus) {
+            this.combo_chance += bonus;
         }
 
         add_skill_bonus(skill, bonus) {
@@ -8122,8 +8127,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 final_crit_chance += eval(this.stats[Stat.CRITICAL_HIT_CHANCE.name]);
             }
 
-            // Crit chance can't go over 100%, which we'll interpret as 101 because of the crit chance math.
-            return Math.min(101, Math.round(final_crit_chance));
+            return Math.round(final_crit_chance);
         }
 
         roll() {
@@ -8325,6 +8329,14 @@ var BarbsComponents = BarbsComponents || (function () {
             });
         }
 
+        static combo_chance(bonus) {
+            assert_not_null(bonus, 'combo_chance() bonus');
+
+            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+                roll.add_combo_chance(bonus);
+            });
+        }
+
         static roll_damage(dmg, dmg_type, applicable_roll_type) {
             assert_not_null(dmg, 'roll_damage(), dmg');
             assert_not_null(dmg_type, 'roll_damage(), dmg_type');
@@ -8332,9 +8344,9 @@ var BarbsComponents = BarbsComponents || (function () {
 
             return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
                 if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
-                    if (dmg.includes('U')) {
-                        const monk_mastery = roll.character.get_monk_mastery();
-                        dmg = dmg.replace(/U/g, monk_mastery);
+                    if (/[Uu]/.test(dmg)) {
+                        const monk_mastery = roll.character.get_monk_dice();
+                        dmg = dmg.replace(/[Uu]/g, monk_mastery);
                     }
 
                     roll.add_damage(dmg, dmg_type);
@@ -8438,6 +8450,7 @@ var BarbsComponents = BarbsComponents || (function () {
         'concentration': function(self, part) { return self.irregular_stat_affix(part, 'concentration', Effect.concentration_bonus); },
         'buff effectiveness': function(self, part) { return self.irregular_stat_affix(part, 'buff effectiveness', Effect.buff_effectiveness); },
         'enchant effectiveness': function(self, part) { return self.irregular_stat_affix(part, 'enchant effectiveness', Effect.enchant_effectiveness); },
+        'combo chance': function(self, part) { return self.irregular_stat_affix(part, 'combo chance', Effect.combo_chance); },
         'damage': function(self, part) { return self.get_damage_from_part(part, Effect.roll_damage); },
         'multiplier': function(self, part) { return self.get_multiplier_from_part(part, Effect.roll_multiplier); },
         'effect': function(self, part) { return self.effect_affix(part, 'effect', Effect.roll_effect); },
@@ -8832,7 +8845,7 @@ var BarbsComponents = BarbsComponents || (function () {
         static condition_resist_affix(part, condition) {
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected exactly one colon in specific CR "%s"'.format(part));
+                LOG.error('Expected exactly one colon in specific CR affix "%s"'.format(part));
                 return null;
             }
 
@@ -9869,7 +9882,7 @@ var BarbsComponents = BarbsComponents || (function () {
             Effect.roll_damage('2dU', Damage.PHYSICAL, RollType.PHYSICAL),
             ItemScaler.RANGED_FINE,
             [
-                // TODO 5% combo chance
+                Effect.combo_chance(5),
                 Effect.hidden_stat(HiddenStat.AC_PENETRATION, 20, RollType.ALL),
                 Effect.roll_damage('4dU', Damage.PHYSICAL, RollType.PHYSICAL),
                 Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
@@ -10003,6 +10016,9 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     class Character {
+        static monk_mastery_dice = [4, 6, 8, 10, 12, 20];
+        static monk_mastery_combo = [0, 10, 20, 30, 35, 40];
+
         constructor(game_object, who) {
             this._type = 'Character';
             this.id = game_object.id;  // roll20 id for the character
@@ -10027,6 +10043,7 @@ var BarbsComponents = BarbsComponents || (function () {
             // Fetched lazily, aka when requested
             this.attributes = {};
             this.stats = {};
+            this.monk_classes = null;
         }
 
         csv_to_array(list) {
@@ -10088,23 +10105,9 @@ var BarbsComponents = BarbsComponents || (function () {
             return stat_value;
         }
 
-        is_using(weapon_type) {
-            for (let i = 0; i < this.items.length; i++) {
-                const item = this.items[i];
-                if ((item.slot === ItemSlot.MAIN_HAND || item.slot === ItemSlot.TWO_HAND) && item.type === weapon_type) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        get_monk_mastery() {
+        get_num_monk_classes() {
             const self = this;
-            const all_attributes = findObjs({
-                type: 'attribute',
-                characterid: self.id,
-            });
+            const all_attributes = findObjs({type: 'attribute', characterid: self.id});
 
             let class_abilities = {};
             for (let i = 0; i < all_attributes.length; i++) {
@@ -10146,11 +10149,26 @@ var BarbsComponents = BarbsComponents || (function () {
                 }
             }
 
-            const mastery_levels = [4, 6, 8, 10, 12, 20];
-            const monk_classes = Math.min(classes_with_combo_abilities.size, mastery_levels.length - 1);
-            return mastery_levels[monk_classes];
+            return classes_with_combo_abilities.size;
         }
 
+        get_monk_dice() {
+            if (this.monk_classes === null) {
+                this.monk_classes = this.get_num_monk_classes()
+            }
+
+            const index = Math.min(this.monk_classes, Character.monk_mastery_dice.length - 1);
+            return Character.monk_mastery_dice[index];
+        }
+
+        get_base_combo_chance() {
+            if (this.monk_classes === null) {
+                this.monk_classes = this.get_num_monk_classes()
+            }
+
+            const index = Math.min(this.monk_classes, Character.monk_mastery_combo.length - 1);
+            return Character.monk_mastery_combo[index];
+        }
     }
 
 

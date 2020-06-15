@@ -493,9 +493,6 @@ def _generate_calendar_months_html(log):
 
 
 def _build_abilities_api(clazz, abilities):
-    if 'api' not in clazz:
-        return '<p>Not implemented</p>'
-
     with open(os.path.join(HTML_TEMPLATES, 'api_ability.html'), encoding='utf8') as f:
         api_ability_template = f.read().strip()
     with open(os.path.join(HTML_TEMPLATES, 'list_item.html'), encoding='utf8') as f:
@@ -517,10 +514,17 @@ def _build_abilities_api(clazz, abilities):
 
     # Add the passive first
     passive_name = next(iter(clazz['passive']))
-    passive_examples_html = _build_examples_html(clazz['api']['examples'])
+
+    if 'api' in clazz:
+        passive_description = clazz['api']['description']
+        passive_examples_html = _build_examples_html(clazz['api']['examples'])
+    else:
+        passive_description = 'Not implemented'
+        passive_examples_html = ''
+
     passive_ability_html = api_ability_template.format(
         name=href('/#%s_%s' % (clazz['name'], passive_name), passive_name, title='Rulebook'),
-        description=clazz['api']['description'],
+        description=passive_description,
         examples=passive_examples_html,
     )
     abilities_htmls.append(passive_ability_html)
