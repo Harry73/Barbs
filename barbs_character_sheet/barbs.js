@@ -3925,9 +3925,16 @@ var Barbs = Barbs || (function () {
     const register_event_handlers = function () {
         // Set up permanent state
         if (!(STATE_NAME in state)) {
+            LOG.info('Created initial Barbs state');
             state[STATE_NAME] = {};
+        }
+        if (!(LAST_TURN_ID in state[STATE_NAME])) {
+            LOG.info('Created Barbs last turn id state');
             state[STATE_NAME][LAST_TURN_ID] = '';
         }
+
+        // TODO: If we want to maintain persistent effects through API restarts, we would have to reconstruct handlers.
+        //  Functions cannot be saved permanently in state.
 
         on('chat:message', handle_input);
         on('change:campaign:turnorder', handle_turn_order_change);
