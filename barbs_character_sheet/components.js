@@ -8169,7 +8169,7 @@ var BarbsComponents = BarbsComponents || (function () {
         BLUNT: 'blunt',
         BULLETS: 'bullets',
         CROSSBOW: 'crossbow',
-        HEAVY_THRoWING: 'heavy throwing',
+        HEAVY_THROWING: 'heavy throwing',
         JAVELIN: 'javelin',
         LIGHT_THROWING: 'light throwing',
         LONGBLADE: 'longblade',

@@ -222,12 +222,19 @@
             </ul>
             <p>Following this, you specify each affix on the item, implicit and explicit, separated by semicolons. Each affix is identified by some keyword, and then the keyword is followed by values. How you should define each kind of affix is described below. Any field in &lt;angled brackets&gt; is a placeholder that should be replaced with some real value.</p>
             <ul>
-                <li>Base Damage - <span class="monospace">base: &lt;dice&gt; &lt;damage type&gt; &lt;scaling stat&gt;</span>
+                <li>Base damage - <span class="monospace">base: &lt;dice&gt; &lt;damage type&gt; &lt;scaling stat&gt;</span>
                     <ul>
                         <li>For weapons, you need to specify the damage the weapon deals for auto-attacks with this affix.</li>
                         <li>"dice" can be any Roll20 dice expression, e.g. d10</li>
                         <li>"damage type" must be one of the following: physical, psychic, healing, fire, water, earth, air, ice, lightning, light, dark</li>
                         <li>"scaling stat" is a three-letter acronym for the attribute the weapon scales off of, e.g. DEX or STR. If the weapon does not scale off any stat, like daggers or unarmed weapons, use "none".</li>
+                    </ul>
+                </li>
+
+                <li>Item type - <span class="monospace">type: &lt;item type&gt;</span>
+                    <ul>
+                        <li>Specifying the type of an item is not strictly required, but may be necessary in the future for certain effects.</li>
+                        <li>"item type" must be one of the following: accessory, axe, armor, blunt, bullets, crossbow, heavy throwing, javelin, light throwing, longblade, longbow, orb, polearm, shield, shortblade, unarmed, wand</li>
                     </ul>
                 </li>
 
