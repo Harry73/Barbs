@@ -8167,19 +8167,109 @@ var BarbsComponents = BarbsComponents || (function () {
         AXE: 'axe',
         ARMOR: 'armor',
         BLUNT: 'blunt',
+        BOW: 'bow',
         BULLETS: 'bullets',
         CROSSBOW: 'crossbow',
+        FINE: 'fine',
         HEAVY_THROWING: 'heavy throwing',
-        JAVELIN: 'javelin',
         LIGHT_THROWING: 'light throwing',
         LONGBLADE: 'longblade',
-        LONGBOW: 'longbow',
         ORB: 'orb',
         POLEARM: 'polearm',
         SHIELD: 'shield',
         SHORTBLADE: 'shortblade',
+        STAFF: 'staff',
         UNARMED: 'unarmed',
         WAND: 'wand',
+    };
+
+    const ITEM_TYPE_KEYWORDS = {
+        // Heck slot
+        'amulet': ItemType.ACCESSORY,
+        'periapt': ItemType.ACCESSORY,
+        'brooch': ItemType.ACCESSORY,
+        'necklace': ItemType.ACCESSORY,
+        'choker': ItemType.ACCESSORY,
+        // Ring slot
+        'ring': ItemType.ACCESSORY,
+        'band': ItemType.ACCESSORY,
+        // Belt slot
+        'belt': ItemType.ACCESSORY,
+        'sash': ItemType.ACCESSORY,
+        'buckle': ItemType.ACCESSORY,
+        // Chest slot
+        'robes': ItemType.ARMOR,
+        'shirt': ItemType.ARMOR,
+        'jacket': ItemType.ARMOR,
+        'vest': ItemType.ARMOR,
+        'steelplate': ItemType.ARMOR,
+        'chestplate': ItemType.ARMOR,
+        'breastplate': ItemType.ARMOR,
+        'coat': ItemType.ARMOR,
+        'longcoat': ItemType.ARMOR,
+        // Feet slot
+        'shoes': ItemType.ARMOR,
+        'slippers': ItemType.ARMOR,
+        'sneakers': ItemType.ARMOR,
+        'greaves': ItemType.ARMOR,
+        'boots': ItemType.ARMOR,
+        'sandals': ItemType.ARMOR,
+        // Hand slot
+        'mittens': ItemType.ARMOR,
+        'gloves': ItemType.ARMOR,
+        'mitts': ItemType.ARMOR,
+        'gauntlets': ItemType.ARMOR,
+        'bracelets': ItemType.ARMOR,
+        // Head slot
+        'hood': ItemType.ARMOR,
+        'shawl': ItemType.ARMOR,
+        'helmet': ItemType.ARMOR,
+        'halfhelm': ItemType.ARMOR,
+        'greathelm': ItemType.ARMOR,
+        'hardhard': ItemType.ARMOR,
+        'skullcap': ItemType.ARMOR,
+        'hat': ItemType.ARMOR,
+        'headband': ItemType.ARMOR,
+        'cap': ItemType.ARMOR,
+        // Weapons
+        'axe': ItemType.AXE,
+        'scythe': ItemType.AXE,
+        'warhammer': ItemType.BLUNT,
+        'shortbow': ItemType.BOW,
+        'longbow': ItemType.BOW,
+        'bullets': ItemType.BULLETS,
+        'crossbow': ItemType.CROSSBOW,
+        'rapier': ItemType.FINE,
+        'foil': ItemType.FINE,
+        'saber': ItemType.FINE,
+        'javelin': ItemType.HEAVY_THROWING,
+        'net': ItemType.HEAVY_THROWING,
+        'bola': ItemType.LIGHT_THROWING,
+        'blade': ItemType.LONGBLADE,
+        'greatsword': ItemType.LONGBLADE,
+        'sword': ItemType.LONGBLADE,
+        'scimitar': ItemType.LONGBLADE,
+        'longsword': ItemType.LONGBLADE,
+        'sakabato': ItemType.LONGBLADE,
+        'orb': ItemType.ORB,
+        'halbred': ItemType.POLEARM,
+        'spear': ItemType.POLEARM,
+        'lance': ItemType.POLEARM,
+        'shield': ItemType.SHIELD,
+        'bladeshield': ItemType.SHIELD,
+        'spikeshield': ItemType.SHIELD,
+        'dagger': ItemType.SHORTBLADE,
+        'swordbreaker': ItemType.SHORTBLADE,
+        'knife': ItemType.SHORTBLADE,
+        'shortsword': ItemType.SHORTBLADE,
+        'quickblade': ItemType.SHORTBLADE,
+        'longknife': ItemType.SHORTBLADE,
+        'stilleto': ItemType.SHORTBLADE,
+        'kukri': ItemType.SHORTBLADE,
+        'kris': ItemType.SHORTBLADE,
+        'staff': ItemType.STAFF,
+        'knuckles': ItemType.UNARMED,
+        'wand': ItemType.WAND,
     };
 
 
@@ -8696,8 +8786,21 @@ var BarbsComponents = BarbsComponents || (function () {
                 }
             }
 
+            // If the item type wasn't specified, take a guess based on a bunch of common keywords
+            if (item_type === ItemType.UNKNOWN) {
+                const name_parts = item_name.toLowerCase().split(' ');
+                const keys = Object.keys(ITEM_TYPE_KEYWORDS);
+                for (let i = 0; i < keys.length; i++) {
+                    const key = keys[i];
+                    if (name_parts.includes(key)) {
+                        item_type = ITEM_TYPE_KEYWORDS[key];
+                        break;
+                    }
+                }
+            }
+
             const item = new Item(item_name, item_type, slot, base_damage, scaler, effects);
-            LOG.debug('Constructed item with name "%s"'.format(item.name));
+            LOG.debug('Constructed item, name=%s, type=%s, slot=%s'.format(item.name, item.type, item.slot));
             return item;
         }
 
@@ -8946,7 +9049,7 @@ var BarbsComponents = BarbsComponents || (function () {
     const ITEMS = [
         new Item(
             'Longbow of Stunning',
-            ItemType.LONGBOW,
+            ItemType.BOW,
             ItemSlot.TWO_HAND,
             Effect.roll_damage('d8', Damage.PHYSICAL, RollType.PHYSICAL),
             ItemScaler.RANGED_FINE,
@@ -8957,7 +9060,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
         new Item(
             'Longbow of Flames',
-            ItemType.LONGBOW,
+            ItemType.BOW,
             ItemSlot.TWO_HAND,
             Effect.roll_damage('d6', Damage.PHYSICAL, RollType.PHYSICAL),
             ItemScaler.RANGED_FINE,
