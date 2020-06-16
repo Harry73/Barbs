@@ -36,7 +36,7 @@ var Barbs = Barbs || (function () {
     const STATE_NAME = 'Barbs';
     const LAST_TURN_ID = 'last_turn_id';
 
-    const initiative_format = '&{template:5eDefault} {{title=Initiative}} {{subheader=%s}} {{rollname=Initiative}} {{roll=[[d100+%s+%s]]}}';
+    const initiative_format = '&{template:5eDefault} {{title=Initiative}} {{subheader=%s}} {{rollname=Initiative}} {{roll=[[%s+%s+%s]]}}';
     const total_format = '&{template:default} {{name=%s}} {{%s=[[%s]]}}';
     const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
     const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s)+1]]]]}}';
@@ -260,9 +260,74 @@ var Barbs = Barbs || (function () {
         }
 
         const roll = get_roll_with_items_and_effects(character);
-        chat(msg, initiative_format.format(character.name, roll.initiative_bonus, character.get_attribute('AGI')));
-        // TODO: add the character to the tracker, if possible. Trying to add the '&{tracker}' tag to the roll sent
-        //  by the API causes an error. I guess we would edit the turn order manually.
+        chat(character, '[[d100]]', function (results) {
+            const rolls = results[0].inlinerolls;
+            const initiative_roll = rolls[0].results.total;
+            chat(character, initiative_format.format(character.name, initiative_roll, roll.initiative_bonus,
+                                                     character.get_attribute('AGI')));
+
+            /*
+                [{
+                    "_id":"-M6lgdQEUXiMKuXgZlLM",
+                    "_pageid":"-Lk6uhdRWP32g0OY4nCe",
+                    ...
+                    "name":"Janatris",
+                    ...
+                    "represents":"-Ljms24S-oCLvsIB_tEn",
+                    ...
+               }]
+            */
+            const tokens = findObjs({_type: 'graphic', represents: character.id});
+            if (tokens === undefined || tokens === null || tokens.length <= 0) {
+                LOG.warn('No tokens found for character %s'.format(character.name));
+                return;
+            }
+
+            const initiative = initiative_roll + roll.initiative_bonus + character.get_attribute('AGI');
+
+            let token;
+            if (tokens.length === 1) {
+                token = tokens[0];
+            } else {
+                // Additionally filter by the character's first name, if multiple tokens are found for
+                // the character. This should really only be necessary for Nightside.
+                for (let i = 0; i < tokens.length; i++) {
+                    const character_first_name = character.name.split(' ')[0];
+                    if (tokens[i].get('name').startsWith(character_first_name)) {
+                        token = tokens[i];
+                    }
+                }
+            }
+
+            if (token === null) {
+                LOG.error('Found tokens for character %s, but no names matched'.format(character.name));
+                return;
+            }
+
+            let turn_order = Campaign().get('turnorder');
+            if (turn_order === '') {
+                turn_order = [];
+            } else {
+                turn_order = JSON.parse(turn_order);
+            }
+
+            // Update existing entry in the turn order, if one exists
+            for (let i = 0; i < turn_order.length; i++) {
+                if (turn_order[i].id === token.id) {
+                    turn_order[i].pr = initiative.toString();
+                    Campaign().set('turnorder', JSON.stringify(turn_order));
+                    return;
+                }
+            }
+
+            // Otherwise, add a new entry to the turn order
+            turn_order.push({
+                                id: token.id,
+                                pr: initiative.toString(),
+                                custom: character.name
+                           });
+            Campaign().set('turnorder', JSON.stringify(turn_order));
+        });
     }
 
 
