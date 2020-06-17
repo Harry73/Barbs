@@ -10149,6 +10149,43 @@ var BarbsComponents = BarbsComponents || (function () {
             return classes_with_combo_abilities.size;
         }
 
+        get_shield_skill() {
+            const self = this;
+            const all_attributes = findObjs({type: 'attribute', characterid: self.id});
+
+            let class_abilities = {};
+            for (let i = 0; i < all_attributes.length; i++) {
+                const attribute = all_attributes[i];
+
+                const attribute_name = attribute.get('name');
+                if (attribute_name.includes('repeating_skills')) {
+                    const attribute_id = attribute_name.split('_')[2];
+
+                    if (attribute_name.includes('skill_name')) {
+                        if (!(attribute_id in class_abilities)) {
+                            class_abilities[attribute_id] = {};
+                        }
+                        class_abilities[attribute_id]['class'] = attribute.get('current');
+                    }
+
+                    if (attribute_name.includes('skill_points')) {
+                        if (!(attribute_id in class_abilities)) {
+                            class_abilities[attribute_id] = {};
+                        }
+                        class_abilities[attribute_id]['AP'] = attribute.get('current');
+                    }
+                }
+            }
+            // iterate over everything in class_abilities, looking for class_abilities[attribute_id]['class'] == 'Shields. When you find it, return class_abilities[attribute_id]['AP']
+            const keys = Object.keys(class_abilities);
+            for (let i = 0; i < keys.length; i++) {
+                const ability = class_abilities[keys[i]];
+                if (ability['class'] == 'Weapon Mastery: Shields') {
+                    return ability['AP'];
+                }
+            }
+        }
+
         get_monk_dice() {
             if (this.monk_classes === null) {
                 this.monk_classes = this.get_num_monk_classes()
