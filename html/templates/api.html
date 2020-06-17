@@ -68,7 +68,7 @@
             <p>This tab contains a variety of miscellaneous things.</p>
             <ul>
                 <li>The top section contains fields for the general description of your character.</li>
-                <li>On the left are your base Health, Stamina, Mana, and Speed. These are based <b>solely</b> on your attribute values; they do not include boosts from your items.</li>
+                <li>On the left are your base Health, Stamina, Mana, and Speed. These are based primarily on your attribute values. If you <a href="#Defining an Item">define your items</a> in the character sheet, item affixes will be reflected in these stats automatically.</li>
                 <li>
                     The middle right has four buttons for rolls that don't fall into any other category.
                     <ul>
@@ -102,14 +102,14 @@
             <a id="Stats Tab">
                 <h3>Stats Tab</h3>
             </a>
-            <p>The "Stats" page shows your stats based <b>solely</b> on your Attribute values. These are updated automatically as your Attributes update. Each of these stats can be rolled by clicking the dice button next to the stat. Rolling a stat will account for equipped items and class abilities. Rolling a stat like Health or Buff Limit will print your boosted value for this stat. Rolling a stat like Critical Hit Chance will perform a d100; a value greater than or equal to <span class="monospace">100 - Critical Hit Chance + 1</span> would be a critical hit. Rolling a regeneration stat will show how much Health/Stamina/Mana you regenerate on a short rest.</p>
+            <p>The "Stats" page shows your stats based on your Attribute values. These are updated automatically as your Attributes update. If you <a href="#Defining an Item">define your items</a> in the character sheet, item affixes will be included in these stats automatically. Each of these stats can be rolled by clicking the dice button next to the stat. Rolling a stat will also account for equipped items and class abilities. Rolling a stat like Health or Buff Limit will print your boosted value for this stat. Rolling a stat like Critical Hit Chance will perform a d100; a value greater than or equal to <span class="monospace">100 - Critical Hit Chance + 1</span> would be a critical hit. Rolling a regeneration stat will show how much Health/Stamina/Mana you regenerate on a short rest.</p>
             <br>
             <p>Notable stats:</p>
             <ul>
                 <li>AC - Rolling the AC stat has the same effect as the <a href="#Take Damage">"Take Damage"</a> button on the Characteristics Tab.</li>
-                <li>Magic Resist - Rolling the Magic Resist stat has the same effect as the <a href="#Take Damage">"Take Damage"</a> button on the Characteristics Tab.</li>
-                <li>Condition Resist - Rolling the Condition Resist stat has the same effect as the <a href="#Condition Resist">Condition Resist</a> button on the Characteristics Tab.</li>
-                <li>Critical Hit Chance - Crit chance is normally rolled and displayed with attacks that can crit. If you do need to roll Critical Hit Chance separately for some reason, though, you can use this button.</li>
+                <li>Magic Resist - Rolling the Magic Resist stat has the same effect as the <a href="#Take Damage">"Take Damage"</a> button on the Characteristics Tab. The value shown on your character sheet is your general MR.</li>
+                <li>Condition Resist - Rolling the Condition Resist stat has the same effect as the <a href="#Condition Resist">Condition Resist</a> button on the Characteristics Tab. The value shown on your character sheet is your general CR.</li>
+                <li>Critical Hit Chance - Crit chance is normally rolled and displayed with attacks that can crit. If you do need to roll Critical Hit Chance separately for some reason, though, you can use this button. If you <a href="#Defining an Item">define your items</a> in your character sheet, the value shown with this stat incorporates crit chance from all items, regardless of what types of rolls the crit chance applies to. When you roll crit chance, the API will check roll types and apply crit chance properly.</li>
             </ul>
             <br>
             <a id="Skills Tab">
@@ -222,12 +222,19 @@
             </ul>
             <p>Following this, you specify each affix on the item, implicit and explicit, separated by semicolons. Each affix is identified by some keyword, and then the keyword is followed by values. How you should define each kind of affix is described below. Any field in &lt;angled brackets&gt; is a placeholder that should be replaced with some real value.</p>
             <ul>
-                <li>Base Damage - <span class="monospace">base: &lt;dice&gt; &lt;damage type&gt; &lt;scaling stat&gt;</span>
+                <li>Base damage - <span class="monospace">base: &lt;dice&gt; &lt;damage type&gt; &lt;scaling stat&gt;</span>
                     <ul>
                         <li>For weapons, you need to specify the damage the weapon deals for auto-attacks with this affix.</li>
                         <li>"dice" can be any Roll20 dice expression, e.g. d10</li>
                         <li>"damage type" must be one of the following: physical, psychic, healing, fire, water, earth, air, ice, lightning, light, dark</li>
                         <li>"scaling stat" is a three-letter acronym for the attribute the weapon scales off of, e.g. DEX or STR. If the weapon does not scale off any stat, like daggers or unarmed weapons, use "none".</li>
+                    </ul>
+                </li>
+
+                <li>Item type - <span class="monospace">type: &lt;item type&gt;</span>
+                    <ul>
+                        <li>Specifying the type of an item is not strictly required, but may be necessary in the future for certain effects.</li>
+                        <li>"item type" must be one of the following: accessory, axe, armor, blunt, bullets, crossbow, heavy throwing, javelin, light throwing, longblade, longbow, orb, polearm, shield, shortblade, unarmed, wand</li>
                     </ul>
                 </li>
 
@@ -322,10 +329,10 @@
                         <li><span class="monospace">melee damage: &lt;bonus&gt; all</span></li>
                         <li><span class="monospace">ranged fine damage: &lt;bonus&gt; all</span></li>
                         <li><span class="monospace">magic damage: &lt;bonus&gt; all</span></li>
-                        <li><span class="monospace">critical hit chance: &lt;bonus&gt;  &lt;applicable roll type&gt;</span> - Unlike all other stats, applicable roll type is <i>very rarely</i> "all" here. It is normally "physical" or "magic".</li>
+                        <li><span class="monospace">critical hit chance: &lt;bonus&gt;  &lt;applicable roll type&gt;</span> - Unlike all other stats, applicable roll type is <i>very rarely</i> "all" here. It is normally "physical", "magic", or "psychic".</li>
                         <li><span class="monospace">commands: &lt;bonus&gt; all</span></li>
                         <li><span class="monospace">languages: &lt;bonus&gt; all</span></li>
-                        <li><span class="monospace">item efficient: &lt;bonus&gt; all</span></li>
+                        <li><span class="monospace">item efficiency: &lt;bonus&gt; all</span></li>
                         <li><span class="monospace">buff limit: &lt;bonus&gt; all</span></li>
                         <li><span class="monospace">concentration limit: &lt;bonus&gt; all</span></li>
                     </ul>
@@ -374,7 +381,7 @@
                     <br>
                     <ul>
                         <li>Accuracy - <span class="monospace">accuracy: &lt;percentage&gt; &lt;applicable roll type&gt;</span></li>
-                        <li>Buff strip - <span class="monospace">ac pen: &lt;number of buffs stripped&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Buff strip - <span class="monospace">buff strip: &lt;number of buffs stripped&gt; &lt;applicable roll type&gt;</span></li>
                         <li>Forced movement - <span class="monospace">forced movement: &lt;number of ft of movement&gt; &lt;applicable roll type&gt;</span></li>
                         <li>Lethality - <span class="monospace">lethality: &lt;percentage&gt; &lt;applicable roll type&gt;</span></li>
                         <li>Lifesteal - <span class="monospace">lifesteal: &lt;percentage&gt; &lt;applicable roll type&gt;</span></li>

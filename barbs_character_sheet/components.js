@@ -8161,23 +8161,115 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     const ItemType = {
+        UNKNOWN: 'unknown',
+
         ACCESSORY: 'accessory',
         AXE: 'axe',
         ARMOR: 'armor',
         BLUNT: 'blunt',
+        BOW: 'bow',
         BULLETS: 'bullets',
         CROSSBOW: 'crossbow',
-        HEAVY_THRoWING: 'heavy throwing',
-        JAVELIN: 'javelin',
+        FINE: 'fine',
+        HEAVY_THROWING: 'heavy throwing',
         LIGHT_THROWING: 'light throwing',
         LONGBLADE: 'longblade',
-        LONGBOW: 'longbow',
         ORB: 'orb',
         POLEARM: 'polearm',
         SHIELD: 'shield',
         SHORTBLADE: 'shortblade',
+        STAFF: 'staff',
         UNARMED: 'unarmed',
         WAND: 'wand',
+    };
+
+    const ITEM_TYPE_KEYWORDS = {
+        // Heck slot
+        'amulet': ItemType.ACCESSORY,
+        'periapt': ItemType.ACCESSORY,
+        'brooch': ItemType.ACCESSORY,
+        'necklace': ItemType.ACCESSORY,
+        'choker': ItemType.ACCESSORY,
+        // Ring slot
+        'ring': ItemType.ACCESSORY,
+        'band': ItemType.ACCESSORY,
+        // Belt slot
+        'belt': ItemType.ACCESSORY,
+        'sash': ItemType.ACCESSORY,
+        'buckle': ItemType.ACCESSORY,
+        // Chest slot
+        'robes': ItemType.ARMOR,
+        'shirt': ItemType.ARMOR,
+        'jacket': ItemType.ARMOR,
+        'vest': ItemType.ARMOR,
+        'steelplate': ItemType.ARMOR,
+        'chestplate': ItemType.ARMOR,
+        'breastplate': ItemType.ARMOR,
+        'coat': ItemType.ARMOR,
+        'longcoat': ItemType.ARMOR,
+        // Feet slot
+        'shoes': ItemType.ARMOR,
+        'slippers': ItemType.ARMOR,
+        'sneakers': ItemType.ARMOR,
+        'greaves': ItemType.ARMOR,
+        'boots': ItemType.ARMOR,
+        'sandals': ItemType.ARMOR,
+        // Hand slot
+        'mittens': ItemType.ARMOR,
+        'gloves': ItemType.ARMOR,
+        'mitts': ItemType.ARMOR,
+        'gauntlets': ItemType.ARMOR,
+        'bracelets': ItemType.ARMOR,
+        // Head slot
+        'hood': ItemType.ARMOR,
+        'shawl': ItemType.ARMOR,
+        'helmet': ItemType.ARMOR,
+        'halfhelm': ItemType.ARMOR,
+        'greathelm': ItemType.ARMOR,
+        'hardhard': ItemType.ARMOR,
+        'skullcap': ItemType.ARMOR,
+        'hat': ItemType.ARMOR,
+        'headband': ItemType.ARMOR,
+        'cap': ItemType.ARMOR,
+        // Weapons
+        'axe': ItemType.AXE,
+        'scythe': ItemType.AXE,
+        'warhammer': ItemType.BLUNT,
+        'shortbow': ItemType.BOW,
+        'longbow': ItemType.BOW,
+        'bullets': ItemType.BULLETS,
+        'crossbow': ItemType.CROSSBOW,
+        'rapier': ItemType.FINE,
+        'foil': ItemType.FINE,
+        'saber': ItemType.FINE,
+        'javelin': ItemType.HEAVY_THROWING,
+        'net': ItemType.HEAVY_THROWING,
+        'bola': ItemType.LIGHT_THROWING,
+        'blade': ItemType.LONGBLADE,
+        'greatsword': ItemType.LONGBLADE,
+        'sword': ItemType.LONGBLADE,
+        'scimitar': ItemType.LONGBLADE,
+        'longsword': ItemType.LONGBLADE,
+        'sakabato': ItemType.LONGBLADE,
+        'orb': ItemType.ORB,
+        'halbred': ItemType.POLEARM,
+        'spear': ItemType.POLEARM,
+        'lance': ItemType.POLEARM,
+        'shield': ItemType.SHIELD,
+        'bladeshield': ItemType.SHIELD,
+        'spikeshield': ItemType.SHIELD,
+        'dagger': ItemType.SHORTBLADE,
+        'swordbreaker': ItemType.SHORTBLADE,
+        'knife': ItemType.SHORTBLADE,
+        'shortsword': ItemType.SHORTBLADE,
+        'quickblade': ItemType.SHORTBLADE,
+        'longknife': ItemType.SHORTBLADE,
+        'stilleto': ItemType.SHORTBLADE,
+        'kukri': ItemType.SHORTBLADE,
+        'kris': ItemType.SHORTBLADE,
+        'staff': ItemType.STAFF,
+        'knuckles': ItemType.UNARMED,
+        'wand': ItemType.WAND,
     };
 
 
@@ -8447,51 +8539,75 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     const AFFIX_CONSTRUCTORS = {
-        'initiative': function(self, part) { return self.irregular_stat_affix(part, 'initiative', Effect.initiative_bonus); },
-        'concentration': function(self, part) { return self.irregular_stat_affix(part, 'concentration', Effect.concentration_bonus); },
-        'buff effectiveness': function(self, part) { return self.irregular_stat_affix(part, 'buff effectiveness', Effect.buff_effectiveness); },
-        'enchant effectiveness': function(self, part) { return self.irregular_stat_affix(part, 'enchant effectiveness', Effect.enchant_effectiveness); },
-        'combo chance': function(self, part) { return self.irregular_stat_affix(part, 'combo chance', Effect.combo_chance); },
-        'damage': function(self, part) { return self.get_damage_from_part(part, Effect.roll_damage); },
-        'multiplier': function(self, part) { return self.get_multiplier_from_part(part, Effect.roll_multiplier); },
-        'effect': function(self, part) { return self.effect_affix(part, 'effect', Effect.roll_effect); },
-        'crit damage': function(self, part) { return self.get_damage_from_part(part, Effect.crit_damage); },
-        'crit multiplier': function(self, part) { return self.get_multiplier_from_part(part, Effect.crit_multiplier); },
-        'crit effect': function(self, part) { return self.effect_affix(part, 'effect', Effect.crit_effect); },
-        'crit damage mod': function(self, part) { return self.crit_damage_mod_affix(part); },
+        'initiative': function(self, item_name, part) {
+            return self.irregular_stat_affix(item_name, part, 'initiative', Effect.initiative_bonus);
+        },
+        'concentration': function(self, item_name, part) {
+            return self.irregular_stat_affix(item_name, part, 'concentration', Effect.concentration_bonus);
+        },
+        'buff effectiveness': function(self, item_name, part) {
+            return self.irregular_stat_affix(item_name, part, 'buff effectiveness', Effect.buff_effectiveness);
+        },
+        'enchant effectiveness': function(self, item_name, part) {
+            return self.irregular_stat_affix(item_name, part, 'enchant effectiveness', Effect.enchant_effectiveness);
+        },
+        'combo chance': function(self, item_name, part) {
+            return self.irregular_stat_affix(item_name, part, 'combo chance', Effect.combo_chance);
+        },
+        'damage': function(self, item_name, part) {
+            return self.damage_affix(item_name, part, Effect.roll_damage);
+        },
+        'multiplier': function(self, item_name, part) {
+            return self.multiplier_affix(item_name, part, Effect.roll_multiplier);
+        },
+        'effect': function(self, item_name, part, original_part) {
+            return self.effect_affix(item_name, original_part, Effect.roll_effect);
+        },
+        'crit damage': function(self, item_name, part) {
+            return self.damage_affix(item_name, part, Effect.crit_damage);
+        },
+        'crit multiplier': function(self, item_name, part) {
+            return self.multiplier_affix(item_name, part, Effect.crit_multiplier);
+        },
+        'crit effect': function(self, item_name, part, original_part) {
+            return self.effect_affix(item_name, original_part, Effect.crit_effect);
+        },
+        'crit damage mod': function(self, item_name, part) {
+            return self.crit_damage_mod_affix(item_name, part);
+        },
     }
 
     // Add stat bonus definitions to affix constructors
     Object.keys(Stat).forEach(function (key) {
         const stat = Stat[key];
-        AFFIX_CONSTRUCTORS[stat.name.toLowerCase().replace(/_/g, ' ') + ':'] = function (self, part) {
-            return self.stat_affix(part, stat, Effect.stat_effect);
+        AFFIX_CONSTRUCTORS[stat.name.toLowerCase().replace(/_/g, ' ') + ':'] = function (self, item_name, part) {
+            return self.stat_affix(item_name, part, stat, Effect.stat_effect);
         }
     });
 
     // Add stat acronyms to affix constructors
     Object.keys(STAT_ACROS).forEach(function (acronym) {
-        AFFIX_CONSTRUCTORS[acronym] = function(self, part) {
-            return self.stat_affix(part, STAT_ACROS[acronym], Effect.stat_effect);
+        AFFIX_CONSTRUCTORS[acronym] = function(self, item_name, part) {
+            return self.stat_affix(item_name, part, STAT_ACROS[acronym], Effect.stat_effect);
         }
     });
 
     // Add hidden stats and crit hidden stats to affix constructors
     Object.keys(HIDDEN_STAT_ACROS).forEach(function (acronym) {
-        AFFIX_CONSTRUCTORS[acronym] = function(self, part) {
-            return self.stat_affix(part, HIDDEN_STAT_ACROS[acronym], Effect.hidden_stat);
+        AFFIX_CONSTRUCTORS[acronym] = function(self, item_name, part) {
+            return self.stat_affix(item_name, part, HIDDEN_STAT_ACROS[acronym], Effect.hidden_stat);
         }
 
-        AFFIX_CONSTRUCTORS['crit ' + acronym] = function(self, part) {
-            return self.stat_affix(part, HIDDEN_STAT_ACROS[acronym], Effect.crit_hidden_stat);
+        AFFIX_CONSTRUCTORS['crit ' + acronym] = function(self, item_name, part) {
+            return self.stat_affix(item_name, part, HIDDEN_STAT_ACROS[acronym], Effect.crit_hidden_stat);
         }
     });
 
     // Add skill bonus definitions to affix constructors
     Object.keys(Skill).forEach(function (key) {
         const skill = Skill[key];
-        AFFIX_CONSTRUCTORS[skill.name.toLowerCase()] = function(self, part) {
-            return self.skill_affix(part, function(bonus) {
+        AFFIX_CONSTRUCTORS[skill.name.toLowerCase()] = function(self, item_name, part) {
+            return self.skill_affix(item_name, part, function(bonus) {
                 return Effect.skill_effect(skill, bonus);
             });
         };
@@ -8500,8 +8616,8 @@ var BarbsComponents = BarbsComponents || (function () {
     // Add element-specific magic resistances
     Object.keys(ElementalDamage).forEach(function (key) {
         const type = ElementalDamage[key];
-        const handler = function(self, part) {
-            return self.magic_resist_affix(part, type);
+        const handler = function(self, item_name, part) {
+            return self.magic_resist_affix(item_name, part, type);
         };
         AFFIX_CONSTRUCTORS[type + ' mr'] = handler;
         AFFIX_CONSTRUCTORS[type + ' magic resist'] = handler;
@@ -8510,8 +8626,8 @@ var BarbsComponents = BarbsComponents || (function () {
     // Add condition-specific resistances
     conditions.forEach(function (condition) {
         condition = condition.toLowerCase().replace(/[()]/g, '');
-        const handler = function (self, part) {
-            return self.condition_resist_affix(part, condition);
+        const handler = function (self, item_name, part) {
+            return self.condition_resist_affix(item_name, part, condition);
         };
         AFFIX_CONSTRUCTORS[condition + ' cr'] = handler;
         AFFIX_CONSTRUCTORS[condition + ' condition resist'] = handler;
@@ -8558,6 +8674,7 @@ var BarbsComponents = BarbsComponents || (function () {
             const item_name = parts[0];
             parts = parts.slice(1);
 
+            let item_type = ItemType.UNKNOWN;
             let base_damage = Effect.no_op_roll_effect();
             let scaler = ItemScaler.NONE;
             let effects = [];
@@ -8570,34 +8687,36 @@ var BarbsComponents = BarbsComponents || (function () {
 
             for (let i = 0; i < parts.length; i++) {
                 LOG.debug('construct_item(), handling part ' + parts[i]);
+                const original_part = parts[i];
                 const part = parts[i].toLowerCase().replace(/[()]/g, '');
 
                 // Check for base damage definition
                 if (part.startsWith('base')) {
                     let pieces = part.split(':');
                     if (pieces.length !== 2) {
-                        LOG.error('Expected exactly one colon in concentration bonus "%s"'.format(part));
+                        LOG.error('In item "%s", in base damage "%s", expected one colon'.format(item_name, part));
                         continue;
                     }
 
                     pieces = pieces[1].trim().split(' ');
                     if (pieces.length !== 3) {
-                        LOG.error('Expected exactly three space-separated pieces after colon in crit ' +
-                                      'damage mod, found "%s"'.format(pieces.join(' ')));
+                        LOG.error('In item "%s", in base damage "%s", expected three space-separated pieces ' +
+                                      'after colon'.format(item_name, part));
                         continue;
                     }
 
                     const damage = pieces[0];
                     const damage_type = get_damage_from_type(pieces[1]);
                     if (damage_type === null) {
-                        LOG.error('Unrecognized damage type ' + pieces[1]);
+                        LOG.error('In item "%s", in base damage "%s", unrecognized damage type %s'.format(
+                            item_name, part, pieces[1]));
                         continue;
                     }
 
                     const roll_type = guess_applicable_roll_type_from_damage(damage_type);
                     if (roll_type === null) {
-                        LOG.error('Failed to guess what rolls base damage type "%s" ' +
-                                      'should apply to'.format(damage_type));
+                        LOG.error('In item "%s", in base damage "%s", damage type should not be "all_magic" ' +
+                                      'or "all"'.format(item_name, part));
                         continue;
                     }
 
@@ -8608,13 +8727,41 @@ var BarbsComponents = BarbsComponents || (function () {
                     } else {
                         const scaling_stat = get_stat_for_attribute(pieces[2]);
                         if (scaling_stat === null) {
-                            LOG.error('Unrecognized attribute acronym "%s"'.format(pieces[2]));
+                            LOG.error('In item "%s", in base damage "%s", unrecognized attribute acronym "%s"'.format(
+                                item_name, part, pieces[2]));
                             continue;
                         }
 
                         scaler = ItemScaler.OTHER(scaling_stat, damage_type);
                     }
                     LOG.trace('construct_item(), handled base damage part');
+                    continue;
+
+                } else if (part.startsWith('type')) {
+
+                    let pieces = part.split(':');
+                    if (pieces.length !== 2) {
+                        LOG.error('In item "%s", in item type "%s", expected one colon'.format(item_name, part));
+                        continue;
+                    }
+
+                    const given_string = pieces[1].trim();
+                    let temp_item_type = null;
+                    const item_types = Object.keys(ItemType);
+                    for (let j = 0; j < item_types.length; j++) {
+                        if (ItemType[item_types[j]].toLowerCase() === given_string) {
+                            temp_item_type = ItemType[item_types[j]];
+                        }
+                    }
+
+                    if (temp_item_type === null) {
+                       LOG.error('In item "%s", in item type "%s", unrecognized type %s'.format(
+                           item_name, part, given_string));
+                       continue;
+                    }
+
+                    item_type = temp_item_type;
+                    LOG.trace('construct_item(), handled item type part');
                     continue;
                 }
 
@@ -8625,7 +8772,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     if (part.startsWith(affix_key)) {
                         identified_part = true;
 
-                        const effect = affix_constructor(this, part);
+                        const effect = affix_constructor(this, item_name, part, original_part);
                         if (effect !== null) {
                             LOG.trace('construct_item(), handled "%s" part on item %s'.format(affix_key, item_name));
                             effects.push(effect);
@@ -8635,33 +8782,43 @@ var BarbsComponents = BarbsComponents || (function () {
                 }
 
                 if (!identified_part) {
-                    LOG.error('No known handler for item affix "%s" on item "%s"'.format(part, item_name));
+                    LOG.error('In item "%s", no known handler for affix "%s"'.format(item_name, part));
                 }
             }
 
-            // TODO: get the type from somewhere or stop caring about it. Current character.is_using() looks at it, and
-            //  that method is used for exactly one item.
-            const item = new Item(
-                item_name, ItemType.ACCESSORY, slot,
-                base_damage, scaler,
-                effects
-            );
+            // If the item type wasn't specified, take a guess based on a bunch of common keywords
+            if (item_type === ItemType.UNKNOWN) {
+                const name_parts = item_name.toLowerCase().split(' ');
+                const keys = Object.keys(ITEM_TYPE_KEYWORDS);
+                for (let i = 0; i < keys.length; i++) {
+                    const key = keys[i];
+                    if (name_parts.includes(key)) {
+                        item_type = ITEM_TYPE_KEYWORDS[key];
+                        break;
+                    }
+                }
+            }
 
-            item.type = null;
-            LOG.debug('Constructed item with name "%s"'.format(item.name));
+            const item = new Item(item_name, item_type, slot, base_damage, scaler, effects);
+            LOG.debug('Constructed item, name=%s, type=%s, slot=%s'.format(item.name, item.type, item.slot));
             return item;
         }
 
-        static irregular_stat_affix(part, stat_name, create_effect) {
+        static irregular_stat_affix(item_name, part, stat_name, create_effect) {
+            assert_not_null(item_name, 'irregular_stat_affix() item_name');
+            assert_not_null(part, 'irregular_stat_affix() part');
+            assert_not_null(stat_name, 'irregular_stat_affix() stat_name');
+            assert_not_null(create_effect, 'irregular_stat_affix() create_effect');
+
             const pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected one colon in %s affix "%s"'.format(stat_name, part));
+                LOG.error('In item "%s", in affix "%s", expected one colon'.format(item_name, part));
                 return null;
             }
 
             const bonus = parse_int(pieces[1].trim());
             if (Number.isNaN(bonus)) {
-                LOG.error('%s affix value %s in "%s" is not a number'.format(stat_name, pieces[1].trim(), part));
+                LOG.error('In item "%s", in affix "%s", value %s is not a number'.format(item_name, part, pieces[1]));
                 return null;
             }
 
@@ -8669,10 +8826,14 @@ var BarbsComponents = BarbsComponents || (function () {
             return create_effect(bonus);
         }
 
-        static skill_affix(part, create_effect) {
+        static skill_affix(item_name, part, create_effect) {
+            assert_not_null(item_name, 'skill_affix() item_name');
+            assert_not_null(part, 'skill_affix() part');
+            assert_not_null(create_effect, 'skill_affix() create_effect');
+
             const pieces = part.split(':');
             if (pieces.length !== 3) {
-                LOG.error('Expected two colons in skill bonus affix "%s"'.format(part));
+                LOG.error('In item "%s", in affix "%s", expected two colons'.format(item_name, part));
                 return null;
             }
 
@@ -8680,175 +8841,203 @@ var BarbsComponents = BarbsComponents || (function () {
             return create_effect(bonus);
         }
 
-        static get_damage_from_part(part, create_effect) {
-            assert_not_null(part, 'get_damage_from_part() part');
-            assert_not_null(create_effect, 'get_damage_from_part() create_effect');
+        static damage_affix(item_name, part, create_effect) {
+            assert_not_null(item_name, 'damage_affix() item_name');
+            assert_not_null(part, 'damage_affix() part');
+            assert_not_null(create_effect, 'damage_affix() create_effect');
 
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected one colon in damage affix "%s"'.format(part));
+                LOG.error('In item "%s", in affix "%s", expected one colon'.format(item_name, part));
                 return null;
             }
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 3) {
-                LOG.error('Expected three space-separated pieces after colon in damage affix "%s"'.format(part));
+                LOG.error('In item "%s", in affix "%s", expected three space-separated pieces after colon'.format(
+                    item_name, part));
                 return null;
             }
 
             const damage = pieces[0];
             const damage_type = get_damage_from_type(pieces[1]);
             if (damage_type === null) {
-                LOG.error('Unrecognized damage type %s in affix "%s"'.format(pieces[1], part));
+                LOG.error('In item "%s", in affix "%s", unrecognized damage type %s'.format(
+                    item_name, part, pieces[1]));
                 return null;
             }
 
             const roll_type = get_roll_type(pieces[2]);
             if (roll_type === null) {
-                LOG.error('Unrecognized roll type %s in affix "%s"'.format(pieces[2], part));
+                LOG.error('In item "%s", in affix "%s", unrecognized roll type %s'.format(item_name, part, pieces[2]));
                 return null;
             }
 
             return create_effect(damage, damage_type, roll_type);
         }
 
-        static get_multiplier_from_part(part, create_effect) {
-            assert_not_null(part, 'get_multiplier_from_part() part');
-            assert_not_null(create_effect, 'get_multiplier_from_part() create_effect');
+        static multiplier_affix(item_name, part, create_effect) {
+            assert_not_null(item_name, 'multiplier_affix() item_name');
+            assert_not_null(part, 'multiplier_affix() part');
+            assert_not_null(create_effect, 'multiplier_affix() create_effect');
 
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected one colon in multiplier affix "%s"'.format(part));
+                LOG.error('In item "%s", in affix "%s", expected one colon'.format(item_name, part));
                 return null;
             }
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 3) {
-                LOG.error('Expected three space-separated pieces after colon in multiplier affix "%s"'.format(part));
+                LOG.error('In item "%s", in affix "%s", expected three space-separated pieces after colon'.format(
+                    item_name, part));
                 return null;
             }
 
             const value = parse_int(trim_percent(pieces[0])) / 100;
             if (Number.isNaN(value)) {
-                LOG.error('Value %s in multiplier affix "%s" is not a number'.format(pieces[0], part));
+                LOG.error('In item "%s", in affix "%s", value %s is not a number'.format(item_name, part, pieces[1]));
                 return null;
             }
 
             const damage_type = get_damage_from_type(pieces[1]);
             if (damage_type === null) {
-                LOG.error('Unrecognized multiplier damage type %s in affix "%s"'.format(pieces[1], part));
+                LOG.error('In item "%s", in affix "%s", unrecognized multiplier damage type %s'.format(
+                    item_name, part, pieces[1]));
                 return null;
             }
 
             const roll_type = get_roll_type(pieces[2]);
             if (roll_type === null) {
-                LOG.error('Unrecognized roll type %s in affix "%s"'.format(pieces[2], part));
+                LOG.error('In item "%s", in affix "%s", unrecognized roll type %s'.format(item_name, part, pieces[2]));
                 return null;
             }
 
             return create_effect(value, damage_type, roll_type);
         }
 
-        static crit_damage_mod_affix(part) {
+        static crit_damage_mod_affix(item_name, part) {
+            assert_not_null(item_name, 'crit_damage_mod_affix() item_name');
+            assert_not_null(part, 'crit_damage_mod_affix() part');
+
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected one colon in crit damage mod affix "%s"'.format(part));
+                LOG.error('In item "%s", in affix "%s", expected one colon'.format(item_name, part));
                 return null;
             }
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 2) {
-                LOG.error('Expected two space-separated pieces after colon in crit damage mod affix "%s"'.format(part));
+                LOG.error('In item "%s", in affix "%s", expected two space-separated pieces after colon'.format(
+                    item_name, part));
                 return null;
             }
 
             let value = parse_int(trim_percent(pieces[0]));
             if (Number.isNaN(value)) {
-                LOG.error('Value %s in crit damage mod affix "%s" is not a number'.format(pieces[0], part));
+                LOG.error('In item "%s", in affix "%s", value %s is not a number'.format(item_name, part, pieces[1]));
                 return null;
             }
 
             const roll_type = get_roll_type(pieces[1]);
             if (roll_type === null) {
-                LOG.error('Unrecognized roll type %s in crit damage mod affix "%s"'.format(pieces[1], part));
+                LOG.error('In item "%s", in affix "%s", unrecognized roll type %s'.format(item_name, part, pieces[1]));
                 return null;
             }
 
             return Effect.crit_damage_mod(value, roll_type);
         }
 
-        static stat_affix(part, stat, create_effect) {
+        static stat_affix(item_name, part, stat, create_effect) {
+            assert_not_null(item_name, 'stat_affix() item_name');
+            assert_not_null(part, 'stat_affix() part');
+            assert_not_null(stat, 'stat_affix() stat');
+            assert_not_null(create_effect, 'stat_affix() create_effect');
+
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected one colon in stat affix bonus "%s"'.format(part));
+                LOG.error('In item "%s", in affix "%s", expected one colon'.format(item_name, part));
                 return null;
             }
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 2) {
-                LOG.error('Expected two space-separated pieces after colon in stat affix "%s"'.format(part));
+                LOG.error('In item "%s", in affix "%s", expected two space-separated pieces after colon'.format(
+                    item_name, part));
                 return null;
             }
 
             const bonus = parse_int(trim_percent(pieces[0]));
             if (Number.isNaN(bonus)) {
-                LOG.error('Value %s in stat affix "%s" is not a number'.format(pieces[0], part));
+                LOG.error('In item "%s", in affix "%s", value %s is not a number'.format(item_name, part, pieces[0]));
                 return null;
             }
 
             const roll_type = get_roll_type(pieces[1]);
             if (roll_type === null) {
-                LOG.error('Unrecognized roll type %s in stat affix "%s"'.format(pieces[1], part));
+                LOG.error('In item "%s", in affix "%s", unrecognized roll type %s'.format(item_name, part, pieces[1]));
                 return null;
             }
 
             return create_effect(stat, bonus, roll_type);
         }
 
-        static effect_affix(part, effect_type, create_effect) {
+        static effect_affix(item_name, part, create_effect) {
+            assert_not_null(item_name, 'effect_affix() item_name');
+            assert_not_null(part, 'effect_affix() part');
+            assert_not_null(create_effect, 'effect_affix() create_effect');
+
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected one colon in %s affix "%s"'.format(effect_type, part));
+                LOG.error('In item "%s", in affix "%s", expected one colon'.format(item_name, part));
                 return null;
             }
 
             pieces = pieces[1].trim().split(' ');
             const effect_text = pieces.slice(0, pieces.length - 1).join(' ');
-            const roll_type = get_roll_type(pieces.slice(-1)[0]);
+            const roll_type = get_roll_type(pieces.slice(-1)[0].toLowerCase());
             if (roll_type === null) {
-                LOG.error('Unrecognized roll type %s in %s affix "%s"'.format(pieces[1], effect_type, part));
+                LOG.error('In item "%s", in affix "%s", unrecognized roll type %s'.format(item_name, part, pieces[1]));
                 return null;
             }
 
             return create_effect(effect_text, roll_type);
         }
 
-        static magic_resist_affix(part, type) {
+        static magic_resist_affix(item_name, part, type) {
+            assert_not_null(item_name, 'magic_resist_affix() item_name');
+            assert_not_null(part, 'magic_resist_affix() part');
+            assert_not_null(type, 'magic_resist_affix() type');
+
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected one colon in magic resist affix "%s"'.format(part));
+                LOG.error('In item "%s", in affix "%s", expected one colon'.format(item_name, part));
                 return null;
             }
 
             const value = parse_int(trim_percent(pieces[1]));
             if (Number.isNaN(value)) {
-                LOG.error('Value %s in magic resist affix "%s" is not a number'.format(pieces[1], part));
+                LOG.error('In item "%s", in affix "%s", value %s is not a number'.format(item_name, part, pieces[1]));
                 return null;
             }
 
             return Effect.magic_resist(type, value);
         }
 
-        static condition_resist_affix(part, condition) {
+        static condition_resist_affix(item_name, part, condition) {
+            assert_not_null(item_name, 'condition_resist_affix() item_name');
+            assert_not_null(part, 'condition_resist_affix() part');
+            assert_not_null(condition, 'condition_resist_affix() condition');
+
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                LOG.error('Expected one colon in specific CR affix "%s"'.format(part));
+                LOG.error('In item "%s", in affix "%s", expected one colon'.format(item_name, part));
                 return null;
             }
 
             const value = parse_int(trim_percent(pieces[1]));
             if (Number.isNaN(value)) {
-                LOG.error('Value %s in specific CR affix "%s" is not a number'.format(pieces[1], part));
+                LOG.error('In item "%s", in affix "%s", value %s is not a number'.format(item_name, part, pieces[1]));
                 return null;
             }
 
@@ -8860,7 +9049,7 @@ var BarbsComponents = BarbsComponents || (function () {
     const ITEMS = [
         new Item(
             'Longbow of Stunning',
-            ItemType.LONGBOW,
+            ItemType.BOW,
             ItemSlot.TWO_HAND,
             Effect.roll_damage('d8', Damage.PHYSICAL, RollType.PHYSICAL),
             ItemScaler.RANGED_FINE,
@@ -8871,7 +9060,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
         new Item(
             'Longbow of Flames',
-            ItemType.LONGBOW,
+            ItemType.BOW,
             ItemSlot.TWO_HAND,
             Effect.roll_damage('d6', Damage.PHYSICAL, RollType.PHYSICAL),
             ItemScaler.RANGED_FINE,

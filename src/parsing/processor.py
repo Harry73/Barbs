@@ -73,6 +73,9 @@ def process_data_file():
 
     with open(os.path.join(DATA_PATH, 'skills_to_attributes.json'), 'w') as f:
         json.dump(skill_to_attr, f)
+    with open(os.path.join(DATA_PATH, 'skills_to_attributes_lower.json'), 'w') as f:
+        skill_to_attr = {k.lower(): v for k, v in skill_to_attr.items()}
+        json.dump(skill_to_attr, f)
 
     # Create js for SkillObjects in the API
     with open(os.path.join(DATA_PATH, 'skills.txt'), 'w') as f:
