@@ -68,7 +68,7 @@
             <p>This tab contains a variety of miscellaneous things.</p>
             <ul>
                 <li>The top section contains fields for the general description of your character.</li>
-                <li>On the left are your base Health, Stamina, Mana, and Speed. These are based <b>solely</b> on your attribute values; they do not include boosts from your items.</li>
+                <li>On the left are your base Health, Stamina, Mana, and Speed. These are based primarily on your attribute values. If you <a href="#Defining an Item">define your items</a> in the character sheet, item affixes will be reflected in these stats automatically.</li>
                 <li>
                     The middle right has four buttons for rolls that don't fall into any other category.
                     <ul>
@@ -102,14 +102,14 @@
             <a id="Stats Tab">
                 <h3>Stats Tab</h3>
             </a>
-            <p>The "Stats" page shows your stats based <b>solely</b> on your Attribute values. These are updated automatically as your Attributes update. Each of these stats can be rolled by clicking the dice button next to the stat. Rolling a stat will account for equipped items and class abilities. Rolling a stat like Health or Buff Limit will print your boosted value for this stat. Rolling a stat like Critical Hit Chance will perform a d100; a value greater than or equal to <span class="monospace">100 - Critical Hit Chance + 1</span> would be a critical hit. Rolling a regeneration stat will show how much Health/Stamina/Mana you regenerate on a short rest.</p>
+            <p>The "Stats" page shows your stats based on your Attribute values. These are updated automatically as your Attributes update. If you <a href="#Defining an Item">define your items</a> in the character sheet, item affixes will be included in these stats automatically. Each of these stats can be rolled by clicking the dice button next to the stat. Rolling a stat will also account for equipped items and class abilities. Rolling a stat like Health or Buff Limit will print your boosted value for this stat. Rolling a stat like Critical Hit Chance will perform a d100; a value greater than or equal to <span class="monospace">100 - Critical Hit Chance + 1</span> would be a critical hit. Rolling a regeneration stat will show how much Health/Stamina/Mana you regenerate on a short rest.</p>
             <br>
             <p>Notable stats:</p>
             <ul>
                 <li>AC - Rolling the AC stat has the same effect as the <a href="#Take Damage">"Take Damage"</a> button on the Characteristics Tab.</li>
-                <li>Magic Resist - Rolling the Magic Resist stat has the same effect as the <a href="#Take Damage">"Take Damage"</a> button on the Characteristics Tab.</li>
-                <li>Condition Resist - Rolling the Condition Resist stat has the same effect as the <a href="#Condition Resist">Condition Resist</a> button on the Characteristics Tab.</li>
-                <li>Critical Hit Chance - Crit chance is normally rolled and displayed with attacks that can crit. If you do need to roll Critical Hit Chance separately for some reason, though, you can use this button.</li>
+                <li>Magic Resist - Rolling the Magic Resist stat has the same effect as the <a href="#Take Damage">"Take Damage"</a> button on the Characteristics Tab. The value shown on your character sheet is your general MR.</li>
+                <li>Condition Resist - Rolling the Condition Resist stat has the same effect as the <a href="#Condition Resist">Condition Resist</a> button on the Characteristics Tab. The value shown on your character sheet is your general CR.</li>
+                <li>Critical Hit Chance - Crit chance is normally rolled and displayed with attacks that can crit. If you do need to roll Critical Hit Chance separately for some reason, though, you can use this button. If you <a href="#Defining an Item">define your items</a> in your character sheet, the value shown with this stat incorporates crit chance from all items, regardless of what types of rolls the crit chance applies to. When you roll crit chance, the API will check roll types and apply crit chance properly.</li>
             </ul>
             <br>
             <a id="Skills Tab">
