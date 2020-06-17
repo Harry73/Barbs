@@ -134,32 +134,36 @@
                     <div class="sheet-row">
                         <div class="sheet-col-3-4 sheet-core-stat-label">Health</div>
                         <div class="sheet-col-1-4">
-                            <input type="number" name="attr_overview_health" value="100+10*@{VIT}" disabled="disabled"/>
+                            <input type="number" name="attr_overview_health" value="@{hidden_overview_health}" disabled="disabled"/>
                         </div>
+                        <input type="hidden" name="attr_hidden_overview_health" value="100+10*@{VIT}"/>
                     </div>
 
                     <!-- Core stat: Stamina -->
                     <div class="sheet-row">
                         <div class="sheet-col-3-4 sheet-core-stat-label">Stamina</div>
                         <div class="sheet-col-1-4">
-                            <input type="number" name="attr_overview_stamina" value="100+10*@{END}" disabled="disabled" />
+                            <input type="number" name="attr_overview_stamina" value="@{hidden_overview_stamina}" disabled="disabled" />
                         </div>
+                        <input type="hidden" name="attr_hidden_overview_stamina" value="100+10*@{END}"/>
                     </div>
 
                     <!-- Core stat: Mana -->
                     <div class="sheet-row">
                         <div class="sheet-col-3-4 sheet-core-stat-label">Mana</div>
                         <div class="sheet-col-1-4">
-                            <input type="number" name="attr_overview_mana" value="100+10*@{SPT}" disabled="disabled" />
+                            <input type="number" name="attr_overview_mana" value="@{hidden_overview_mana}" disabled="disabled" />
                         </div>
+                        <input type="hidden" name="attr_hidden_overview_mana" value="100+10*@{SPT}"/>
                     </div>
 
                     <!-- Core stat: Agility -->
                     <div class="sheet-row">
                         <div class="sheet-col-3-4 sheet-core-stat-label">Speed</div>
                         <div class="sheet-col-1-4">
-                            <input type="number" name="attr_overview_speed" value="30+5*floor(@{AGI}/2)" disabled="disabled" />
+                            <input type="number" name="attr_overview_speed" value="@{hidden_overview_speed}" disabled="disabled" />
                         </div>
+                        <input type="hidden" name="attr_hidden_overview_speed" value="30+5*floor(@{AGI}/2)"/>
                     </div>
                 </div>
 
@@ -488,10 +492,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Health</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_health" value="100+10*@{VIT}" disabled="disabled"/>
+                            <input type="number" name="attr_health" value="@{hidden_health}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_health" value="100+10*@{VIT}"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -500,10 +505,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Stamina</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_stamina" value="100+10*@{END}" disabled="disabled"/>
+                            <input type="number" name="attr_stamina" value="@{hidden_stamina}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_stamina" value="100+10*@{END}"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -512,10 +518,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Mana</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_mana" value="100+10*@{SPT}" disabled="disabled"/>
+                            <input type="number" name="attr_mana" value="@{hidden_mana}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_mana" value="100+10*@{SPT}"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -524,10 +531,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Health Regeneration</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_health_regeneration" value="10+@{RCV}" disabled="disabled"/>
+                            <input type="number" name="attr_health_regeneration" value="@{hidden_health_regeneration}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_health_regeneration" value="10+@{RCV}"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -536,10 +544,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Stamina Regeneration</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_stamina_regeneration" value="10+@{PER}" disabled="disabled"/>
+                            <input type="number" name="attr_stamina_regeneration" value="@{hidden_stamina_regeneration}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_stamina_regeneration" value="10+@{PER}"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -548,10 +557,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Mana Regeneration</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_mana_regeneration" value="10+@{SAN}" disabled="disabled"/>
+                            <input type="number" name="attr_mana_regeneration" value="@{hidden_mana_regeneration}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_mana_regeneration" value="10+@{SAN}"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -560,10 +570,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Movement Speed</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_movement_speed" value="30+5*floor(@{AGI}/2)" disabled="disabled"/>
+                            <input type="number" name="attr_movement_speed" value="@{hidden_movement_speed}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_movement_speed" value="30+5*floor(@{AGI}/2)"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -572,10 +583,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">AC</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_ac" value="10+@{TGH}" disabled="disabled"/>
+                            <input type="number" name="attr_ac" value="@{hidden_ac}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_ac" value="10+@{TGH}"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -584,10 +596,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Evasion</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_evasion" value="10+@{REF}" disabled="disabled"/>
+                            <input type="number" name="attr_evasion" value="@{hidden_evasion}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_evasion" value="10+@{REF}"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -596,10 +609,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Magic Resist</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_magic_resist" value="10+@{RES}" disabled="disabled"/>
+                            <input type="number" name="attr_magic_resist" value="@{hidden_magic_resist}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_magic_resist" value="10+@{RES}"/>
                 </div>
 
                 <!-- right column -->
@@ -618,10 +632,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Condition Resist</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_condition_resist" value="10+@{FRT}" disabled="disabled"/>
+                            <input type="number" name="attr_condition_resist" value="@{hidden_condition_resist}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_condition_resist" value="10+@{FRT}"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -630,10 +645,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Melee Damage</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_melee_damage" value="@{STR}" disabled="disabled"/>
+                            <input type="number" name="attr_melee_damage" value="@{hidden_melee_damage}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_melee_damage" value="@{STR}"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -642,10 +658,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Ranged/Fine Damage</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_ranged_fine_damage" value="@{DEX}" disabled="disabled"/>
+                            <input type="number" name="attr_ranged_fine_damage" value="@{hidden_ranged_fine_damage}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_ranged_fine_damage" value="@{DEX}"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -654,10 +671,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Magic Damage</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_magic_damage" value="@{ATN}" disabled="disabled"/>
+                            <input type="number" name="attr_magic_damage" value="@{hidden_magic_damage}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_magic_damage" value="@{ATN}"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -666,10 +684,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Critical Hit Chance</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_critical_hit_chance" value="10+@{PRE}" disabled="disabled"/>
+                            <input type="number" name="attr_critical_hit_chance" value="@{hidden_critical_hit_chance}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_critical_hit_chance" value="10+@{PRE}"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -678,10 +697,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Commands</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_commands" value="floor((@{APL}+10)/10)+1" disabled="disabled"/>
+                            <input type="number" name="attr_commands" value="@{hidden_commands}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_commands" value="floor((@{APL}+10)/10)+1"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -690,10 +710,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Languages</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_num_languages" value="floor((@{INT}+10)/3)+1" disabled="disabled"/>
+                            <input type="number" name="attr_num_languages" value="@{hidden_num_languages}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_num_languages" value="floor((@{INT}+10)/3)+1"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -702,10 +723,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Item Efficiency</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_item_efficiency" value="(@{WIS}+10)*5" disabled="disabled"/>
+                            <input type="number" name="attr_item_efficiency" value="@{hidden_item_efficiency}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_item_efficiency" value="(@{WIS}+10)*5"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -714,10 +736,11 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-3 sheet-skill-name">Buff Limit</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_buff_limit" value="floor((@{COM}+10)/2)" disabled="disabled"/>
+                            <input type="number" name="attr_buff_limit" value="@{hidden_buff_limit}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_buff_limit" value="floor((@{COM}+10)/2)"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-12">
@@ -1861,14 +1884,15 @@
     </div>
 
 
-    <!-- Skills rank and bonus updater -->
+    <!-- Updates skill ranks and bonuses as skills change -->
     <script type="text/worker">
 
         // This dictionary is auto-generated by running parse.py. The contents of the resulting
         // skills_to_attributes.json file can be copy-pasted here.
-        const skill_to_attribute_map = {"Alchemy: Augmentation": "INT", "Alchemy: Constructs": "INT", "Alchemy: Organics": "INT", "Alchemy: Transformation": "INT", "Armor Mastery: Cloth": "RES", "Armor Mastery: Heavy": "TGH", "Armor Mastery: Light": "REF", "Armor Mastery: Shields": "TGH", "Artistry: Acting": "APL", "Artistry: Dancing": "APL", "Artistry: Illustration": "APL", "Artistry: Literature": "APL", "Artistry: Music": "APL", "Artistry: Sculpture": "APL", "Athletics: Balance": "DEX", "Athletics: Climbing": "AGI", "Athletics: Flexibility": "DEX", "Athletics: Force": "STR", "Athletics: Movement": "AGI", "Athletics: Pain Tolerance": "COM", "Beast Mastery: Battle Pet": "WIS", "Beast Mastery: Riding": "AGI", "Beast Mastery: Taming": "WIS", "Combat: Blocking": "TGH", "Combat: Dodging": "REF", "Combat: Grappling": "AGI", "Combat: Trapping": "FRT", "Crafting: Armorsmithing": "TGH", "Crafting: Artificing": "RES", "Crafting: Cooking": "APL", "Crafting: Enchanting": "RES", "Crafting: Fine Weapons": "REF", "Crafting: Forgery": "PRE", "Crafting: Leatherworking": "REF", "Crafting: Jewelry": "FRT", "Crafting: Heavy Weapons": "TGH", "Crafting: Poisons": "FRT", "Crafting: Potions": "FRT", "Crafting: Ranged Weapons": "REF", "Crafting: Shortblades": "PRE", "Crafting: Tailoring": "RES", "Element Mastery: Air": "AGI", "Element Mastery: Dark": "FRT", "Element Mastery: Earth": "RES", "Element Mastery: Fire": "ATN", "Element Mastery: Ice": "FRT", "Element Mastery: Light": "FCS", "Element Mastery: Lightning": "ATN", "Element Mastery: Water": "FCS", "Gathering: Forestry": "TGH", "Gathering: Harvest": "AGI", "Gathering: Herbology": "RES", "Gathering: Hunting": "REF", "Gathering: Mining": "TGH", "Gathering: Skinning": "REF", "Interaction: Deception": "APL", "Interaction: Intent": "WIS", "Interaction: Intimidation": "COM", "Interaction: Leadership": "COM", "Interaction: Persuasion": "APL", "Interaction: Seduction": "APL", "Item Use: Appraisal": "WIS", "Item Use: Construction": "STR", "Item Use: First Aid": "FRT", "Item Use: Literacy": "INT", "Item Use: Ropes": "WIS", "Item Use: Tinkering": "WIS", "Item Use: Traps": "COM", "Knowledge: Arcana": "INT", "Knowledge: Culture": "INT", "Knowledge: History": "INT", "Knowledge: Nature": "INT", "Knowledge: Religion": "INT", "Magic: Buffs": "FCS", "Magic: Conditions": "ATN", "Magic: Conjuration": "FCS", "Magic: Control": "ATN", "Magic: Defensive": "RES", "Magic: Destruction": "ATN", "Magic: Divination": "ATN", "Magic: Enchantment": "FCS", "Magic: Illusions": "FCS", "Magic: Mana Channeling": "COM", "Magic: Restoration": "ATN", "Magic: Summoning": "FCS", "Magic: Transmutation": "FCS", "Magic: Utility": "ATN", "Observation: Listen": "WIS", "Observation: Search": "WIS", "Observation: Tracking": "WIS", "Psionics: Defensive": "COM", "Psionics: Offensive": "COM", "Psionics: Utility": "COM", "Stealth: Disguise": "PRE", "Stealth: Lockpicking": "PRE", "Stealth: Sleight of Hand": "PRE", "Stealth: Sneak": "PRE", "Stealth: Steal": "PRE", "Transportation: Air Vehicles": "COM", "Transportation: Land Vehicles": "AGI", "Transportation: Sea Vehicles": "FCS", "Weapon Mastery: Axes": "STR", "Weapon Mastery: Blunt": "STR", "Weapon Mastery: Bows": "DEX", "Weapon Mastery: Bullets": "DEX", "Weapon Mastery: Crossbows": "DEX", "Weapon Mastery: Fine": "DEX", "Weapon Mastery: Improvised Weapons": "WIS", "Weapon Mastery: Heavy Thrown Weapons": "STR", "Weapon Mastery: Light Thrown Weapons": "DEX", "Weapon Mastery: Longblades": "STR", "Weapon Mastery: Polearms": "STR", "Weapon Mastery: Shields": "STR", "Weapon Mastery: Shortblades": "PRE", "Weapon Mastery: Unarmed": "DEX"}
+        const skill_to_attribute_map = {"Alchemy: Augmentation": "INT", "Alchemy: Constructs": "INT", "Alchemy: Organics": "INT", "Alchemy: Transformation": "INT", "Armor Mastery: Cloth": "RES", "Armor Mastery: Heavy": "TGH", "Armor Mastery: Light": "REF", "Armor Mastery: Shields": "TGH", "Artistry: Acting": "APL", "Artistry: Dancing": "APL", "Artistry: Illustration": "APL", "Artistry: Literature": "APL", "Artistry: Music": "APL", "Artistry: Sculpture": "APL", "Athletics: Balance": "DEX", "Athletics: Climbing": "AGI", "Athletics: Flexibility": "DEX", "Athletics: Force": "STR", "Athletics: Movement": "AGI", "Athletics: Pain Tolerance": "COM", "Beast Mastery: Battle Pet": "WIS", "Beast Mastery: Riding": "AGI", "Beast Mastery: Taming": "WIS", "Combat: Blocking": "TGH", "Combat: Dodging": "REF", "Combat: Grappling": "AGI", "Combat: Trapping": "FRT", "Crafting: Armorsmithing": "TGH", "Crafting: Artificing": "RES", "Crafting: Cooking": "APL", "Crafting: Enchanting": "RES", "Crafting: Fine Weapons": "REF", "Crafting: Forgery": "PRE", "Crafting: Leatherworking": "REF", "Crafting: Jewelry": "FRT", "Crafting: Heavy Weapons": "TGH", "Crafting: Poisons": "FRT", "Crafting: Potions": "FRT", "Crafting: Ranged Weapons": "REF", "Crafting: Shortblades": "PRE", "Crafting: Tailoring": "RES", "Element Mastery: Air": "AGI", "Element Mastery: Dark": "FRT", "Element Mastery: Earth": "RES", "Element Mastery: Fire": "ATN", "Element Mastery: Ice": "FRT", "Element Mastery: Light": "FCS", "Element Mastery: Lightning": "ATN", "Element Mastery: Water": "FCS", "Gathering: Forestry": "TGH", "Gathering: Harvest": "AGI", "Gathering: Herbology": "RES", "Gathering: Hunting": "REF", "Gathering: Mining": "TGH", "Gathering: Skinning": "REF", "Interaction: Deception": "APL", "Interaction: Intent": "WIS", "Interaction: Intimidation": "COM", "Interaction: Leadership": "COM", "Interaction: Persuasion": "APL", "Interaction: Seduction": "APL", "Item Use: Appraisal": "WIS", "Item Use: Construction": "STR", "Item Use: First Aid": "FRT", "Item Use: Literacy": "INT", "Item Use: Ropes": "WIS", "Item Use: Tinkering": "WIS", "Item Use: Traps": "COM", "Knowledge: Arcana": "INT", "Knowledge: Culture": "INT", "Knowledge: History": "INT", "Knowledge: Nature": "INT", "Knowledge: Religion": "INT", "Magic: Buffs": "FCS", "Magic: Conditions": "ATN", "Magic: Conjuration": "FCS", "Magic: Control": "ATN", "Magic: Defensive": "RES", "Magic: Destruction": "ATN", "Magic: Divination": "ATN", "Magic: Enchantment": "FCS", "Magic: Illusions": "FCS", "Magic: Mana Channeling": "COM", "Magic: Restoration": "ATN", "Magic: Summoning": "FCS", "Magic: Transmutation": "FCS", "Magic: Utility": "ATN", "Observation: Listen": "WIS", "Observation: Search": "WIS", "Observation: Tracking": "WIS", "Psionics: Defensive": "COM", "Psionics: Offensive": "COM", "Psionics: Utility": "COM", "Stealth: Disguise": "PRE", "Stealth: Lockpicking": "PRE", "Stealth: Sleight of Hand": "PRE", "Stealth: Sneak": "PRE", "Stealth: Steal": "PRE", "Transportation: Air Vehicles": "COM", "Transportation: Land Vehicles": "AGI", "Transportation: Sea Vehicles": "FCS", "Weapon Mastery: Axes": "STR", "Weapon Mastery: Blunt": "STR", "Weapon Mastery: Bows": "DEX", "Weapon Mastery: Bullets": "DEX", "Weapon Mastery: Crossbows": "DEX", "Weapon Mastery: Fine": "DEX", "Weapon Mastery: Improvised Weapons": "WIS", "Weapon Mastery: Heavy Thrown Weapons": "STR", "Weapon Mastery: Light Thrown Weapons": "DEX", "Weapon Mastery: Longblades": "STR", "Weapon Mastery: Polearms": "STR", "Weapon Mastery: Shields": "STR", "Weapon Mastery: Shortblades": "PRE", "Weapon Mastery: Unarmed": "DEX"};
 
         const ranks = ['Untrained', 'F', 'E', 'D', 'C', 'B', 'A', '9', '8', '7', '6', '5', '4', '3', '2', '1'];
+        const item_attrs = ['main_hand', 'offhand', 'head', 'body', 'hands', 'feet', 'neck', 'left_ring', 'right_ring', 'belt'];
 
         String.prototype.format = function() {
             let a = this;
@@ -1878,7 +1902,26 @@
             return a
         };
 
-        function do_update(skill_name, value) {
+        function organize_items(items) {
+            const revised = [];
+
+            for (let i = 0; i < item_attrs.length; i++) {
+                if (!(item_attrs[i] in items)) {
+                    continue;
+                }
+
+                const item = items[item_attrs[i]];
+                if (!item.startsWith('construct')) {
+                    continue;
+                }
+
+                revised.push(item);
+            }
+
+            return revised;
+        }
+
+        function do_update(skill_name, value, items) {
             value = Math.min(value, ranks.length - 1);
             value = Math.max(0, value);
 
@@ -1891,7 +1934,30 @@
             }
 
             const attr = skill_to_attribute_map[skill_name];
-            const bonus_string = '%s+@{%s}'.format(bonus.toString(10), attr);
+            let bonus_string = '%s+@{%s}'.format(bonus.toString(), attr);
+
+            // Check items for bonuses to this skill
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+
+                const parts = item.split(';');
+                for (let j = 0; j < parts.length; j++) {
+                    const pieces = parts[j].split(':');
+                    if (pieces.length !== 3) {
+                        continue;
+                    }
+
+                    const potential_bonus = pieces[2].trim();
+                    if (Number.isNaN(parseInt(potential_bonus, 10))) {
+                        continue;
+                    }
+
+                    const potential_skill = pieces.slice(0, 2).join(':').trim();
+                    if (skill_name.toLowerCase() === potential_skill.toLowerCase()) {
+                        bonus_string = '%s+%s'.format(bonus_string, potential_bonus.toString());
+                    }
+                }
+            }
 
             setAttrs({
                 'repeating_skills_hidden_rank': rank,
@@ -1904,7 +1970,11 @@
 
             getAttrs(['repeating_skills_skill_name'], function(values) {
                 const skill_name = values.repeating_skills_skill_name;
-                do_update(skill_name, value);
+
+                getAttrs(item_attrs, function(items) {
+                    items = organize_items(items);
+                    do_update(skill_name, value, items);
+                });
             });
         });
 
@@ -1913,14 +1983,258 @@
 
             getAttrs(['repeating_skills_skill_points'], function(values) {
                 let value = parseInt(values.repeating_skills_skill_points, 10);
-                do_update(skill_name, value);
+
+                getAttrs(item_attrs, function(items) {
+                    items = organize_items(items);
+                    do_update(skill_name, value, items);
+                });
             });
         });
 
     </script>
 
 
-    <!-- Level updater -->
+    <!-- Updates stats and skills as items change -->
+    <script type="text/worker">
+
+        // This dictionary is auto-generated by running parse.py. The contents of the resulting
+        // skills_to_attributes.json file can be copy-pasted here.
+        const skill_to_attribute_map = {"alchemy: augmentation": "INT", "alchemy: constructs": "INT", "alchemy: organics": "INT", "alchemy: transformation": "INT", "armor mastery: cloth": "RES", "armor mastery: heavy": "TGH", "armor mastery: light": "REF", "armor mastery: shields": "TGH", "artistry: acting": "APL", "artistry: dancing": "APL", "artistry: illustration": "APL", "artistry: literature": "APL", "artistry: music": "APL", "artistry: sculpture": "APL", "athletics: balance": "DEX", "athletics: climbing": "AGI", "athletics: flexibility": "DEX", "athletics: force": "STR", "athletics: movement": "AGI", "athletics: pain tolerance": "COM", "beast mastery: battle pet": "WIS", "beast mastery: riding": "AGI", "beast mastery: taming": "WIS", "combat: blocking": "TGH", "combat: dodging": "REF", "combat: grappling": "AGI", "combat: trapping": "FRT", "crafting: armorsmithing": "TGH", "crafting: artificing": "RES", "crafting: cooking": "APL", "crafting: enchanting": "RES", "crafting: fine weapons": "REF", "crafting: forgery": "PRE", "crafting: heavy weapons": "TGH", "crafting: jewelry": "FRT", "crafting: leatherworking": "REF", "crafting: poisons": "FRT", "crafting: potions": "FRT", "crafting: ranged weapons": "REF", "crafting: shortblades": "PRE", "crafting: tailoring": "RES", "element mastery: air": "AGI", "element mastery: dark": "FRT", "element mastery: earth": "RES", "element mastery: fire": "ATN", "element mastery: ice": "FRT", "element mastery: light": "FCS", "element mastery: lightning": "ATN", "element mastery: water": "FCS", "gathering: forestry": "TGH", "gathering: harvest": "AGI", "gathering: herbology": "RES", "gathering: hunting": "REF", "gathering: mining": "TGH", "gathering: skinning": "REF", "interaction: deception": "APL", "interaction: intent": "WIS", "interaction: intimidation": "COM", "interaction: leadership": "COM", "interaction: persuasion": "APL", "interaction: seduction": "APL", "item use: appraisal": "WIS", "item use: construction": "STR", "item use: first aid": "FRT", "item use: literacy": "INT", "item use: ropes": "WIS", "item use: tinkering": "WIS", "item use: traps": "COM", "knowledge: arcana": "INT", "knowledge: culture": "INT", "knowledge: history": "INT", "knowledge: nature": "INT", "knowledge: religion": "INT", "magic: buffs": "FCS", "magic: conditions": "ATN", "magic: conjuration": "FCS", "magic: control": "ATN", "magic: defensive": "RES", "magic: destruction": "ATN", "magic: divination": "ATN", "magic: enchantment": "FCS", "magic: illusions": "FCS", "magic: mana channeling": "COM", "magic: restoration": "ATN", "magic: summoning": "FCS", "magic: transmutation": "FCS", "magic: utility": "ATN", "observation: listen": "WIS", "observation: search": "WIS", "observation: tracking": "WIS", "psionics: defensive": "COM", "psionics: offensive": "COM", "psionics: utility": "COM", "stealth: disguise": "PRE", "stealth: lockpicking": "PRE", "stealth: sleight of hand": "PRE", "stealth: sneak": "PRE", "stealth: steal": "PRE", "transportation: air vehicles": "COM", "transportation: land vehicles": "AGI", "transportation: sea vehicles": "FCS", "weapon mastery: axes": "STR", "weapon mastery: blunt": "STR", "weapon mastery: bows": "DEX", "weapon mastery: bullets": "DEX", "weapon mastery: crossbows": "DEX", "weapon mastery: fine": "DEX", "weapon mastery: heavy thrown weapons": "STR", "weapon mastery: improvised weapons": "WIS", "weapon mastery: light thrown weapons": "DEX", "weapon mastery: longblades": "STR", "weapon mastery: polearms": "STR", "weapon mastery: shields": "STR", "weapon mastery: shortblades": "PRE", "weapon mastery: unarmed": "DEX"};
+
+        const ranks = ['Untrained', 'F', 'E', 'D', 'C', 'B', 'A', '9', '8', '7', '6', '5', '4', '3', '2', '1'];
+        const item_attrs = ['main_hand', 'offhand', 'head', 'body', 'hands', 'feet', 'neck', 'left_ring', 'right_ring', 'belt'];
+        const stat_keywords = [
+            {'attr': 'health', 'key': 'health', 'equation': '100+10*@{VIT}'},
+            {'attr': 'stamina', 'key': 'stamina', 'equation': '100+10*@{END}'},
+            {'attr': 'mana', 'key': 'mana', 'equation': '100+10*@{SPT}'},
+            {'attr': 'health_regeneration', 'key': 'health regeneration', 'equation': '10+@{RCV}'},
+            {'attr': 'stamina_regeneration', 'key': 'stamina regeneration', 'equation': '10+@{PER}'},
+            {'attr': 'mana_regeneration', 'key': 'mana regeneration', 'equation': '10+@{SAN}'},
+            {'attr': 'movement_speed', 'key': 'movement speed', 'equation': '30+5*floor(@{AGI}/2)'},
+            {'attr': 'movement_speed', 'key': 'mv', 'equation': '30+5*floor(@{AGI}/2)'},
+            {'attr': 'ac', 'key': 'ac', 'equation': '10+@{TGH}'},
+            {'attr': 'evasion', 'key': 'evasion', 'equation': '10+@{REF}'},
+            {'attr': 'evasion', 'key': 'ev', 'equation': '10+@{REF}'},
+            {'attr': 'magic_resist', 'key': 'magic resist', 'equation': '10+@{RES}'},
+            {'attr': 'magic_resist', 'key': 'mr', 'equation': '10+@{RES}'},
+            {'attr': 'condition_resist', 'key': 'condition resist', 'equation': '10+@{FRT}'},
+            {'attr': 'condition_resist', 'key': 'cr', 'equation': '10+@{FRT}'},
+            {'attr': 'melee_damage', 'key': 'melee damage', 'equation': '@{STR}'},
+            {'attr': 'ranged_fine_damage', 'key': 'ranged fine damage', 'equation': '@{DEX}'},
+            {'attr': 'magic_damage', 'key': 'magic damage', 'equation': '@{ATN}'},
+            {'attr': 'critical_hit_chance', 'key': 'critical hit chance', 'equation': '10+@{PRE}'},
+            {'attr': 'commands', 'key': 'commands', 'equation': 'floor((@{APL}+10)/10)+1'},
+            {'attr': 'num_languages', 'key': 'languages', 'equation': 'floor((@{INT}+10)/3)+1'},
+            {'attr': 'item_efficiency', 'key': 'item efficiency', 'equation': '(@{WIS}+10)*5'},
+            {'attr': 'buff_limit', 'key': 'buff limit', 'equation': 'floor((@{COM}+10)/2)'},
+            {'attr': 'concentration_limit', 'key': 'concentration limit', 'equation': 'floor((@{FCS}+10)/2)'},
+        ];
+
+        String.prototype.format = function() {
+            let a = this;
+            for (let i = 0; i < arguments.length; i++) {
+                a = a.replace('%s', arguments[i]);
+            }
+            return a
+        };
+
+        function organize_items(items) {
+            const revised = [];
+
+            for (let i = 0; i < item_attrs.length; i++) {
+                if (!(item_attrs[i] in items)) {
+                    continue;
+                }
+
+                const item = items[item_attrs[i]];
+                if (!item.startsWith('construct')) {
+                    continue;
+                }
+
+                revised.push(item);
+            }
+
+            return revised;
+        }
+
+        function organize_skills(skills) {
+            const pass_1 = {};
+
+            let skill_ids = Object.keys(skills);
+            for (let i = 0; i < skill_ids.length; i++) {
+                const skill_id = skill_ids[i];
+                const value = skills[skill_id];
+
+                const pieces = skill_id.split('_');
+                const game_id = pieces[2];
+                const attribute = pieces[4];
+
+                if (!(game_id in pass_1)) {
+                    pass_1[game_id] = {};
+                }
+
+                pass_1[game_id][attribute] = value;
+            }
+
+            const pass_2 = [];
+            skill_ids = Object.keys(pass_1);
+            for (let i = 0; i < skill_ids.length; i++) {
+                const skill_id = skill_ids[i];
+                const values = pass_1[skill_id];
+
+                const revised = {'id': skill_id};
+                if (!('name' in values) || !('points' in values)) {
+                    continue;
+                }
+
+                revised['name'] = values['name'].toLowerCase();
+                revised['points'] = values['points'];
+                pass_2.push(revised);
+            }
+
+            return pass_2;
+        }
+
+        function do_update(items, skills) {
+            // Build maps of stat and skill bonuses from items
+            const stat_bonuses = {};
+            const skill_bonuses = {};
+
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+
+                const affixes = item.split(';');
+                for (let j = 0; j < affixes.length; j++) {
+                    const affix = affixes[j].trim().toLowerCase();
+                    const affix_pieces = affix.split(':');
+
+                    // Stat (maybe)
+                    if (affix_pieces.length === 2) {
+                        for (let k = 0; k < stat_keywords.length; k++) {
+                            const stat_info = stat_keywords[k];
+                            const stat_attr = stat_info['attr'];
+                            const stat_key = stat_info['key'];
+
+                            // Stat (definitely)
+                            if (affix_pieces[0] === stat_key) {
+                                let potential_bonus = affix_pieces[1].trim().split(' ')[0];
+                                if (potential_bonus.endsWith('%')) {
+                                    potential_bonus = potential_bonus.substring(0, potential_bonus.length - 1);
+                                }
+
+                                potential_bonus = parseInt(potential_bonus, 10);
+                                if (Number.isNaN(potential_bonus)) {
+                                    break;
+                                }
+
+                                if (!(stat_attr in stat_bonuses)) {
+                                    stat_bonuses[stat_attr] = 0;
+                                }
+
+                                stat_bonuses[stat_attr] += potential_bonus;
+                            }
+                        }
+                    }
+
+                    // Skill
+                    if (affix_pieces.length === 3) {
+                        const potential_bonus = parseInt(affix_pieces[2].trim(), 10);
+                        if (Number.isNaN(potential_bonus)) {
+                            continue;
+                        }
+
+                        const potential_skill = affix_pieces.slice(0, 2).join(':').trim();
+                        if (potential_skill in skill_to_attribute_map) {
+                            if (!(potential_skill in skill_bonuses)) {
+                                skill_bonuses[potential_skill] = 0;
+                            }
+
+                            skill_bonuses[potential_skill] += potential_bonus;
+                        }
+                    }
+                }
+            }
+
+            const attrs_to_update = {};
+
+            // Update stats
+            for (let i = 0; i < stat_keywords.length; i++) {
+                const stat_info = stat_keywords[i];
+                const stat_attr = stat_info['attr'];
+                const stat_key = stat_info['key'];
+                let stat_equation = stat_info['equation'];
+
+                if (stat_attr in stat_bonuses) {
+                    stat_equation = '%s+%s'.format(stat_equation, stat_bonuses[stat_attr]);
+                }
+
+                attrs_to_update['hidden_' + stat_attr] = stat_equation;
+            }
+
+            attrs_to_update['hidden_overview_health'] = attrs_to_update['hidden_health'];
+            attrs_to_update['hidden_overview_stamina'] = attrs_to_update['hidden_stamina'];
+            attrs_to_update['hidden_overview_mana'] = attrs_to_update['hidden_mana'];
+            attrs_to_update['hidden_overview_speed'] = attrs_to_update['hidden_movement_speed'];
+
+            // Update skills
+            for (let i = 0; i < skills.length; i++) {
+                const skill_id = skills[i]['id'];
+
+                const skill_name = skills[i]['name'];
+                if (!(skill_name in skill_to_attribute_map)) {
+                    console.log('error, unknown skill ' + skill_name);
+                    return;
+                }
+                const attr = skill_to_attribute_map[skill_name];
+
+                let skill_points = parseInt(skills[i]['points'], 10);
+                if (Number.isNaN(skill_points)) {
+                    continue;
+                }
+
+                skill_points = Math.min(skill_points, ranks.length - 1);
+                skill_points = Math.max(0, skill_points);
+                const bonus = 5 * skill_points;
+                let bonus_string = '%s+@{%s}'.format(bonus.toString(), attr);
+
+                if (skill_name in skill_bonuses) {
+                    bonus_string = '%s+%s'.format(bonus_string, skill_bonuses[skill_name]);
+                }
+
+                const attr_name = 'repeating_skills_%s_hidden_bonus'.format(skill_id);
+                attrs_to_update[attr_name] = bonus_string;
+            }
+
+            setAttrs(attrs_to_update);
+        }
+
+        function handle_item_change(event) {
+            getAttrs(item_attrs, function(items) {
+                getSectionIDs('repeating_skills', function(skill_ids) {
+                    const specific_skill_ids = [];
+                    for(let i = 0; i < skill_ids.length; i++) {
+                        const skill_id = skill_ids[i];
+                        specific_skill_ids.push('repeating_skills_%s_skill_name'.format(skill_id));
+                        specific_skill_ids.push('repeating_skills_%s_skill_points'.format(skill_id));
+                    }
+
+                    getAttrs(specific_skill_ids, function(skills) {
+                        skills = organize_skills(skills);
+                        items = organize_items(items);
+                        do_update(items, skills);
+                    });
+                });
+            });
+        }
+
+        for (let i = 0; i < item_attrs.length; i++) {
+            on('change:%s'.format(item_attrs[i]), handle_item_change);
+        }
+
+    </script>
+
+
+    <!-- Updates overall level as attributes, skills, and abilities change -->
     <script type="text/worker">
 
         const base_equation = '200+@{VIT}+@{END}+@{SPT}+@{RCV}+@{PER}+@{SAN}+@{AGI}+@{TGH}+@{REF}+@{RES}+@{FRT}+@{STR}+@{DEX}+@{ATN}+@{PRE}+@{APL}+@{INT}+@{WIS}+@{COM}+@{FCS}';
