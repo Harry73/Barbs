@@ -522,7 +522,6 @@ var BarbsComponents = BarbsComponents || (function () {
 
     class SkillObject {
         constructor(name, scaling_attr_tla) {
-            this._type = 'SkillObject';
             this.name = name;
             this.scaling_attr_tla = scaling_attr_tla;
         }
@@ -1392,57 +1391,6 @@ var BarbsComponents = BarbsComponents || (function () {
                         "buff field",
                         "modal",
                         "concentration"
-                    ]
-                }
-            }
-        },
-        "Arcane Archer": {
-            "type": "class",
-            "name": "Arcane Archer",
-            "description": "Arcane Archer is an archery class that uses buff magic to greatly increase their offensive and defensive power. The offensive buffs in this class provide straightforward raw power for the already adept archer, and the defensive buffs focus on improving evasion and kiting ability for fights that are too close for comfort. The class's passive provides extra action economy so that the shooting can start sooner rather than later. The goal of the class is to either repeatedly cast buffs and maintain a heavy rate of fire or to keep buff uptime high for more simple yet effective play. Overall, an Arcane Archer has more mechanics to worry about, in using and sacrificing buffs, but there are great rewards to reap and relatively easy decisions to make within the class.",
-            "passive": {
-                "Battle Ready": "At the beginning of each of your turns, if you attacked an enemy with a bow or crossbow last turn, gain a special Major Action, which can only be used to cast a buff ability. Buff abilities cast this way cost half stamina/mana."
-            },
-            "abilities": {
-                "Surefire Shot": {
-                    "name": "Surefire Shot",
-                    "class": "Arcane Archer",
-                    "description": [
-                        "You focus to fire a shot that won't miss. Deal 7d8 physical damage to a target in range. This attack has +20% Accuracy and +40 ft range for every buff you have. If you sacrificed a buff this turn, this attack gains +50% increased physical damage and cannot be blocked."
-                    ],
-                    "tags": [
-                        "attack",
-                        "ranged",
-                        "single-target",
-                        "physical",
-                        "bow",
-                        "crossbow",
-                        "conditional"
-                    ]
-                },
-                "Broadhead Arrow": {
-                    "name": "Broadhead Arrow",
-                    "class": "Arcane Archer",
-                    "description": [
-                        "You augment your attacks to hit hard and strike wide. Gain +100% increased physical damage with bows and crossbows for the duration. Also, your attacks with bows and crossbows on single targets also hit adjacent targets while this buff is active. You may sacrifice this buff as a free action; if you do, your next bow/crossbow attack has +200% increased physical damage and ignores 100% of the target's AC."
-                    ],
-                    "tags": [
-                        "buff",
-                        "self-target",
-                        "modal"
-                    ]
-                },
-                "Elusive Hunter": {
-                    "name": "Elusive Hunter",
-                    "class": "Arcane Archer",
-                    "description": [
-                        "You improve your speed and evasiveness. Gain +15 Move Speed and 50% increased Evasion for the duration. This bonus Move Speed temporarily increases to +30 if you begin your turn adjacent to an enemy, for that turn. You may sacrifice this buff as a free reaction; if you do, dash up to your Move Speed in any direction."
-                    ],
-                    "tags": [
-                        "buff",
-                        "self-target",
-                        "modal",
-                        "dash"
                     ]
                 }
             }
@@ -7225,7 +7173,7 @@ var BarbsComponents = BarbsComponents || (function () {
             "name": "Voidwalker",
             "description": "The Voidwalker is a rogue that has adapted magic heavily into its suite of tools in order to assist small groups in exercising stealth and safety during travel and site execution. The spell list of the Voidwalker looks a lot like the ability list of the Thief, but is adapted to function for the entire party, providing multiple people with access to Hidden, breaking line of sight, avoiding capture, and evading enemy attacks. An additional layer of defenses is provided by a suite of powerful group defensive spells, covering multiple angles that enemies might attack from. More uniquely, this class provides a heavy amount of mobility in the form of group teleportation, even over very long distances, and is effective at protecting groups during movement by providing access to an ethereal realm where enemies cannot freely interact with them. Ultimately this class's goal is to provide a group with options to avoid combat while infiltrating an enemy fortress or options to cover long distances without needing to walk or use mounts.",
             "passive": {
-                "Embrace the Void": "Before initiative is rolled, choose two:<ul><li>All allies become Hidden</li><li>All allies get +20 Initiative</li><li>All allies teleport up to 20 ft to empty spaces of their choosing</li><li>All enemies teleport up to 20 ft to empty spaces in random directions</li></ul>"
+                "Embrace the Void": "Before initiative is rolled, choose two:<ul><li>All allies become Hidden</li><li>All allies get +20 Initiative</li><li>All allies teleport up to 20 ft to empty spaces of their choosing</li><li>All enemies teleport up to 20 ft to empty spaces in random directions</li><ul>"
             },
             "abilities": {
                 "Veil of Darkness": {
@@ -10281,9 +10229,7 @@ var BarbsComponents = BarbsComponents || (function () {
             // Fetched lazily, aka when requested
             this.attributes = {};
             this.stats = {};
-            this.game_attributes = null;
-            this.skills = null;
-            this.abilities = null;
+            this.monk_classes = null;
         }
 
         csv_to_array(list) {
@@ -10345,74 +10291,11 @@ var BarbsComponents = BarbsComponents || (function () {
             return stat_value;
         }
 
-        get_game_attributes() {
-            if (this.game_attributes === null) {
-                this.game_attributes = findObjs({type: 'attribute', characterid: this.id});
-            }
+        get_num_monk_classes() {
+            const self = this;
+            const all_attributes = findObjs({type: 'attribute', characterid: self.id});
 
-            return this.game_attributes;
-        }
-
-        get_skills() {
-            if (this.skills !== null) {
-                return this.skills;
-            }
-
-            const all_attributes = this.get_game_attributes();
-
-            let attributes_by_id = {};
-            for (let i = 0; i < all_attributes.length; i++) {
-                const attribute = all_attributes[i];
-                const attribute_name = attribute.get('name');
-
-                if (attribute_name.includes('repeating_skills')) {
-                    const attribute_id = attribute_name.split('_')[2];
-
-                    if (attribute_name.includes('skill_name')) {
-                        if (!(attribute_id in attributes_by_id)) {
-                            attributes_by_id[attribute_id] = {};
-                        }
-                        attributes_by_id[attribute_id]['name'] = attribute.get('current');
-                    }
-
-                    if (attribute_name.includes('skill_points')) {
-                        if (!(attribute_id in attributes_by_id)) {
-                            attributes_by_id[attribute_id] = {};
-                        }
-                        attributes_by_id[attribute_id]['ap'] = attribute.get('current');
-                    }
-                }
-            }
-
-            this.skills = {};
-            const keys = Object.keys(attributes_by_id);
-            for (let i = 0; i < keys.length; i++) {
-                const skill_attributes = attributes_by_id[keys[i]];
-                if (!('name' in skill_attributes) || !('ap' in skill_attributes)) {
-                    continue;
-                }
-
-                const name = skill_attributes['name'].toLowerCase();
-                const ap = parse_int(skill_attributes['ap']);
-                if (Number.isNaN(ap)) {
-                    continue;
-                }
-
-                this.skills[name] = ap;
-            }
-
-            LOG.info(JSON.stringify(this.skills));
-            return this.skills;
-        }
-
-        get_abilities() {
-            if (this.abilities !== null) {
-                return this.abilities;
-            }
-
-            const all_attributes = this.get_game_attributes();
-
-            let attributes_by_id = {};
+            let class_abilities = {};
             for (let i = 0; i < all_attributes.length; i++) {
                 const attribute = all_attributes[i];
 
@@ -10421,44 +10304,32 @@ var BarbsComponents = BarbsComponents || (function () {
                     const attribute_id = attribute_name.split('_')[2];
 
                     if (attribute_name.includes('class_name')) {
-                        if (!(attribute_id in attributes_by_id)) {
-                            attributes_by_id[attribute_id] = {};
+                        if (!(attribute_id in class_abilities)) {
+                            class_abilities[attribute_id] = {};
                         }
-                        attributes_by_id[attribute_id]['class'] = attribute.get('current');
+                        class_abilities[attribute_id]['class'] = attribute.get('current');
                     }
 
                     if (attribute_name.includes('ability_name')) {
-                        if (!(attribute_id in attributes_by_id)) {
-                            attributes_by_id[attribute_id] = {};
+                        if (!(attribute_id in class_abilities)) {
+                            class_abilities[attribute_id] = {};
                         }
-                        attributes_by_id[attribute_id]['ability'] = attribute.get('current');
+                        class_abilities[attribute_id]['ability'] = attribute.get('current');
                     }
                 }
             }
-
-            this.abilities = [];
-            const keys = Object.keys(attributes_by_id);
-            for (let i = 0; i < keys.length; i++) {
-                const ability_attributes = attributes_by_id[keys[i]];
-                const ability = get_ability(ability_attributes['class'], ability_attributes['ability']);
-                if (ability === null) {
-                    continue;
-                }
-
-                this.abilities.push(ability);
-            }
-
-            return this.abilities;
-        }
-
-        get_num_monk_classes() {
-            const abilities = this.get_abilities();
 
             // See what abilities have the "combo" tag, and build a set of their parent classes. Monk mastery
             // increases by 1 for each class of this nature that the character has.
             let classes_with_combo_abilities = new Set();
-            for (let i = 0; i < abilities.length; i++) {
-                const ability = abilities[i];
+            const keys = Object.keys(class_abilities);
+            for (let i = 0; i < keys.length; i++) {
+                const class_ability = class_abilities[keys[i]];
+                const ability = get_ability(class_ability['class'], class_ability['ability']);
+                if (ability === null) {
+                    continue;
+                }
+
                 if (ability['tags'].includes('combo')) {
                     classes_with_combo_abilities.add(ability['class']);
                 }
@@ -10505,14 +10376,20 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         get_monk_dice() {
-            const num_monk_classes = this.get_num_monk_classes();
-            const index = Math.min(num_monk_classes, Character.monk_mastery_dice.length - 1);
+            if (this.monk_classes === null) {
+                this.monk_classes = this.get_num_monk_classes()
+            }
+
+            const index = Math.min(this.monk_classes, Character.monk_mastery_dice.length - 1);
             return Character.monk_mastery_dice[index];
         }
 
         get_base_combo_chance() {
-            const num_monk_classes = this.get_num_monk_classes();
-            const index = Math.min(num_monk_classes, Character.monk_mastery_combo.length - 1);
+            if (this.monk_classes === null) {
+                this.monk_classes = this.get_num_monk_classes()
+            }
+
+            const index = Math.min(this.monk_classes, Character.monk_mastery_combo.length - 1);
             return Character.monk_mastery_combo[index];
         }
     }
@@ -10528,7 +10405,7 @@ var BarbsComponents = BarbsComponents || (function () {
         RollType,
         RollTime,
         Roll,
-        ItemType, ItemSlot, Item,
+        Item,
         Character,
     };
 

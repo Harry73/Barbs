@@ -182,25 +182,25 @@
         "num_requirements": 2,
         "requirements": [
             "Weapon Mastery: Bows Rank A or Weapon Mastery: Crossbows Rank A",
-            "Magic: Buffs Rank 5"
+			"Magic: Buffs Rank A"
         ],
         "all_reqs_known": true,
-        "flavor_text": "\"I used to be a purist. Archery was the only thing I knew. But eventually you come across some monster that won't go down with a couple well-placed shots, when there are people counting on you to protect them. I learned magic for when that eventually and inevitably happens to me.\"",
-        "description": "Arcane Archer is an archery class that uses buff magic to greatly increase their offensive and defensive power. The offensive buffs in this class provide straightforward raw power for the already adept archer, and the defensive buffs focus on improving evasion and kiting ability for fights that are too close for comfort. The class's passive provides extra action economy so that the shooting can start sooner rather than later. The goal of the class is to either repeatedly cast buffs and maintain a heavy rate of fire or to keep buff uptime high for more simple yet effective play. Overall, an Arcane Archer has more mechanics to worry about, in using and sacrificing buffs, but there are great rewards to reap and relatively easy decisions to make within the class.",
-        "branches": {
-            "Shooting": "The Shooting branch gives options for dealing physical damage with bows or crossbows.",
-            "Vigor": "The Vigor branch gives options for offensive, self-targeted buffs.",
-            "Focus": "The Focus branch gives options for defensive, self-targeted buffs."
-        },
-        "passive": {
-            "Battle Ready": "At the beginning of each of your turns, if you attacked an enemy with a bow or crossbow last turn, gain a special Major Action, which can only be used to cast a buff ability. Buff abilities cast this way cost half stamina/mana."
-        },
-        "abilities": [
-            "Surefire Shot",
-            "Broadhead Arrow",
-            "Elusive Hunter"
-        ]
-    },
+		"flavor_text": "\"I used to be a purist. Archery was the only thing I knew. But eventually you come across some monster that won't go down with a couple well-placed shots, when there are people counting on you to protect them. I learned magic for when that eventually and inevitably happens to me.\"",
+		"description": "Arcane Archer is an archery class that uses buff magic to greatly increase their offensive and defensive power. The offensive buffs in this class provide straightforward raw power for the already adept archer, and the defensive buffs focus on improving evasion and kiting ability for fights that are too close for comfort. The class's passive provides extra action economy so that the shooting can start sooner rather than later. The goal of the class is to either repeatedly cast buffs and maintain a heavy rate of fire or to keep buff uptime high for more simple yet effective play. Overall, an Arcane Archer has more mechanics to worry about, in using and sacrificing buffs, but there are great rewards to reap and relatively easy decisions to make within the class.",
+		"branches": {
+			"Shooting": "The Shooting branch gives options for dealing physical damage with bows or crossbows.",
+			"Vigor": "The Vigor branch gives options for offensive, self-targeted buffs.",
+			"Focus": "The Focus branch gives options for defensive, self-targeted buffs."
+		},
+		"passive": {
+			"Battle Ready": "At the beginning of each of your turns, if you attacked an enemy with a bow or crossbow last turn, gain a special Major Action, which can only be used to cast a buff ability. Buff abilities cast this way cost half stamina/mana."
+		},
+		"abilities": [
+			"Surefire Shot",
+			"Broadhead Arrow",
+			"Elusive Hunter"
+		]
+	},
     {
         "type": "class",
         "name": "Arcane Artist",
