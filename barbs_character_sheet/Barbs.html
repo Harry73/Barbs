@@ -1910,8 +1910,8 @@
                     continue;
                 }
 
-                const item = items[item_attrs[i]];
-                if (!item.startsWith('construct')) {
+                let item = items[item_attrs[i]];
+                if (item === null || item === '') {
                     continue;
                 }
 
@@ -2046,8 +2046,8 @@
                     continue;
                 }
 
-                const item = items[item_attrs[i]];
-                if (!item.startsWith('construct')) {
+                let item = items[item_attrs[i]];
+                if (item === null || item === '') {
                     continue;
                 }
 

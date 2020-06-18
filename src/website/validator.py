@@ -244,4 +244,23 @@ def validate(log):
     check_skill_attribute_links(skills, attributes)
     check_class_skill_requirements(classes, skills, log)
     check_class_ability_links(classes, abilities)
+
+    # Organize abilities by class, branch, and tier
+    abilities.sort(key=lambda a: (a['class'], a['branch'], a['tier']))
+
+    lists = {
+        'abilities': abilities,
+        'attributes': attributes,
+        'buffs': buffs,
+        'classes': classes,
+        'conditions': conditions,
+        'races': races,
+        'skills': skills,
+    }
+
+    # Dump what we read back to their files to sort items and fix formatting
+    for file_name, items in lists.items():
+        with open(os.path.join(RULEBOOK_PATH, '%s.json' % file_name), 'w') as f:
+            json.dump(items, f, indent=4)
+
     log('Validated rulebook files')

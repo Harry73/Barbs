@@ -958,6 +958,68 @@
     },
     {
         "type": "ability",
+        "name": "Elusive Hunter",
+        "class": "Arcane Archer",
+        "branch": "Focus",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "20 mana",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You improve your speed and evasiveness. Gain +15 Move Speed and 50% increased Evasion for the duration. This bonus Move Speed temporarily increases to +30 if you begin your turn adjacent to an enemy, for that turn. You may sacrifice this buff as a free reaction; if you do, dash up to your Move Speed in any direction."
+        ],
+        "tags": [
+            "Buff",
+            "self-target",
+            "modal",
+            "dash"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Surefire Shot",
+        "class": "Arcane Archer",
+        "branch": "Shooting",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "range": "140 ft",
+        "duration": "Instant",
+        "description": [
+            "You focus to fire a shot that won't miss. Deal 7d8 physical damage to a target in range. This attack has +20% Accuracy and +40 ft range for every buff you have. If you sacrificed a buff this turn, this attack gains +50% increased physical damage and cannot be blocked."
+        ],
+        "tags": [
+            "Attack",
+            "ranged",
+            "single-target",
+            "physical",
+            "bow",
+            "crossbow",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Broadhead Arrow",
+        "class": "Arcane Archer",
+        "branch": "Vigor",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "20 mana",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You augment your attacks to hit hard and strike wide. Gain +100% increased physical damage with bows and crossbows for the duration. Also, your attacks with bows and crossbows on single targets also hit adjacent targets while this buff is active. You may sacrifice this buff as a free action; if you do, your next bow/crossbow attack has +200% increased physical damage and ignores 100% of the target's AC."
+        ],
+        "tags": [
+            "Buff",
+            "self-target",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Magic Primer",
         "class": "Arcanist",
         "branch": "Arcane",
@@ -7326,7 +7388,7 @@
             "modal"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Dual Shield Strike",
         "class": "Sentinel",
@@ -7343,14 +7405,14 @@
             "Attack",
             "physical",
             "melee",
-			"single-target",
+            "single-target",
             "multi-target",
             "conditional",
             "modal",
-			"interrupt"
+            "interrupt"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Giga Drill Break",
         "class": "Sentinel",
@@ -7367,12 +7429,12 @@
             "Attack",
             "physical",
             "melee",
-			"single-target",
+            "single-target",
             "multi-target",
             "conditional",
-			"condition",
-			"Vulnerability",
-			"modal"
+            "condition",
+            "Vulnerability",
+            "modal"
         ]
     },
     {
@@ -7421,7 +7483,7 @@
             "modal"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Absorption Barrier",
         "class": "Sentinel",
@@ -7441,10 +7503,10 @@
             "ally-target",
             "conditional",
             "modal",
-			"dash"
+            "dash"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Grand Guardian",
         "class": "Sentinel",
@@ -7459,8 +7521,8 @@
         ],
         "tags": [
             "Buff",
-			"concentration",
-			"conditional"
+            "concentration",
+            "conditional"
         ]
     },
     {
@@ -7503,7 +7565,7 @@
             "shield"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Chain Snare",
         "class": "Sentinel",
@@ -7518,14 +7580,14 @@
         ],
         "tags": [
             "Attack",
-			"single-target",
-			"multi-target",
-			"grapple",
-			"modal",
-			"conditional"
+            "single-target",
+            "multi-target",
+            "grapple",
+            "modal",
+            "conditional"
         ]
     },
-	{
+    {
         "type": "ability",
         "name": "Chain Blitz",
         "class": "Sentinel",
@@ -7540,8 +7602,8 @@
         ],
         "tags": [
             "Buff",
-			"concentration",
-			"conditional"
+            "concentration",
+            "conditional"
         ]
     },
     {
@@ -10056,68 +10118,6 @@
             "vulnerability",
             "buff stripping",
             "buff"
-        ]
-    },
-	{
-        "type": "ability",
-        "name": "Surefire Shot",
-        "class": "Arcane Archer",
-        "branch": "Shooting",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "20 stamina",
-        "range": "140 ft",
-        "duration": "Instant",
-        "description": [
-            "You focus to fire a shot that won't miss. Deal 7d8 physical damage to a target in range. This attack has +20% Accuracy and +40 ft range for every buff you have. If you sacrificed a buff this turn, this attack gains +50% increased physical damage and cannot be blocked."
-        ],
-        "tags": [
-            "Attack",
-			"ranged",
-			"single-target",
-			"physical",
-			"bow",
-			"crossbow",
-			"conditional"
-        ]
-    },
-	{
-        "type": "ability",
-        "name": "Broadhead Arrow",
-        "class": "Arcane Archer",
-        "branch": "Vigor",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "20 mana",
-        "range": "Self",
-        "duration": "1 minute",
-        "description": [
-            "You augment your attacks to hit hard and strike wide. Gain +100% increased physical damage with bows and crossbows for the duration. Also, your attacks with bows and crossbows on single targets also hit adjacent targets while this buff is active. You may sacrifice this buff as a free action; if you do, your next bow/crossbow attack has +200% increased physical damage and ignores 100% of the target's AC."
-        ],
-        "tags": [
-            "Buff",
-			"self-target",
-			"modal"
-        ]
-    },
-	{
-        "type": "ability",
-        "name": "Elusive Hunter",
-        "class": "Arcane Archer",
-        "branch": "Focus",
-        "tier": 1,
-        "action": "1 Major Action",
-        "cost": "20 mana",
-        "range": "Self",
-        "duration": "1 minute",
-        "description": [
-            "You improve your speed and evasiveness. Gain +15 Move Speed and 50% increased Evasion for the duration. This bonus Move Speed temporarily increases to +30 if you begin your turn adjacent to an enemy, for that turn. You may sacrifice this buff as a free reaction; if you do, dash up to your Move Speed in any direction."
-        ],
-        "tags": [
-            "Buff",
-			"self-target",
-			"modal",
-			"dash"
         ]
     }
 ]

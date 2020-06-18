@@ -68,7 +68,7 @@
             <p>This tab contains a variety of miscellaneous things.</p>
             <ul>
                 <li>The top section contains fields for the general description of your character.</li>
-                <li>On the left are your base Health, Stamina, Mana, and Speed. These are based primarily on your attribute values. If you <a href="#Defining an Item">define your items</a> in the character sheet, item affixes will be reflected in these stats automatically.</li>
+                <li>On the left are your base Health, Stamina, Mana, and Speed. These are based primarily on your attribute values. Item affixes will be reflected in these stats automatically.</li>
                 <li>
                     The middle right has four buttons for rolls that don't fall into any other category.
                     <ul>
@@ -102,14 +102,14 @@
             <a id="Stats Tab">
                 <h3>Stats Tab</h3>
             </a>
-            <p>The "Stats" page shows your stats based on your Attribute values. These are updated automatically as your Attributes update. If you <a href="#Defining an Item">define your items</a> in the character sheet, item affixes will be included in these stats automatically. Each of these stats can be rolled by clicking the dice button next to the stat. Rolling a stat will also account for equipped items and class abilities. Rolling a stat like Health or Buff Limit will print your boosted value for this stat. Rolling a stat like Critical Hit Chance will perform a d100; a value greater than or equal to <span class="monospace">100 - Critical Hit Chance + 1</span> would be a critical hit. Rolling a regeneration stat will show how much Health/Stamina/Mana you regenerate on a short rest.</p>
+            <p>The "Stats" page shows your stats based on your Attribute values. These are updated automatically as your Attributes update. Item affixes will be included in these stats automatically. Each of these stats can be rolled by clicking the dice button next to the stat. Rolling a stat will also account for equipped items and class abilities. Rolling a stat like Health or Buff Limit will print your boosted value for this stat. Rolling a stat like Critical Hit Chance will perform a d100; a value greater than or equal to <span class="monospace">100 - Critical Hit Chance + 1</span> would be a critical hit. Rolling a regeneration stat will show how much Health/Stamina/Mana you regenerate on a short rest.</p>
             <br>
             <p>Notable stats:</p>
             <ul>
                 <li>AC - Rolling the AC stat has the same effect as the <a href="#Take Damage">"Take Damage"</a> button on the Characteristics Tab.</li>
                 <li>Magic Resist - Rolling the Magic Resist stat has the same effect as the <a href="#Take Damage">"Take Damage"</a> button on the Characteristics Tab. The value shown on your character sheet is your general MR.</li>
                 <li>Condition Resist - Rolling the Condition Resist stat has the same effect as the <a href="#Condition Resist">Condition Resist</a> button on the Characteristics Tab. The value shown on your character sheet is your general CR.</li>
-                <li>Critical Hit Chance - Crit chance is normally rolled and displayed with attacks that can crit. If you do need to roll Critical Hit Chance separately for some reason, though, you can use this button. If you <a href="#Defining an Item">define your items</a> in your character sheet, the value shown with this stat incorporates crit chance from all items, regardless of what types of rolls the crit chance applies to. When you roll crit chance, the API will check roll types and apply crit chance properly.</li>
+                <li>Critical Hit Chance - Crit chance is normally rolled and displayed with attacks that can crit. If you do need to roll Critical Hit Chance separately for some reason, though, you can use this button. The value shown with this stat incorporates crit chance from all items, regardless of what types of rolls the crit chance applies to. When you roll crit chance, the API will check roll types and apply crit chance properly.</li>
             </ul>
             <br>
             <a id="Skills Tab">
@@ -213,12 +213,11 @@
             <br>
 
             <a id="Defining an Item"><h3>Defining an Item</h3></a>
-            <p>Originally, on the Items tab of your character sheet, you would only put the name of the item in each text box. The Barbs API scripts contain a big list of items, and looked through this list for an item with a name matching what you entered. This requires hardcoding every item into the API scripts. While existing items using this paradigm will continue to work, the methodology for defining items is <b>deprecated</b>. Do not hardcode any more items into API scripts.</p>
-            <p>For any new items, you should define all affixes for the item in the corresponding text box on your character sheet. The API will then "construct" the item based on what you include in the text box for the item. This way, you can easily see and change what effects your items should have, and it's on players, rather than me, to define their items.</p>
+            <p>For your items, you should define all affixes for the item in the corresponding text box on your character sheet. The API will then "construct" the item based on what you include in the text box for the item. This way, you can easily see and change what effects your items should have, and it's on players, rather than me, to define their items.</p>
             <br>
-            <p>To tell the API to build your item from what you enter, your item should start with "construct;". Follow that with the item name, and then another semicolon. The item name can be whatever you want.</p>
+            <p>To tell the API to build your item from what you enter, start with the item name, followed by a semicolon. The item name can be whatever you want.</p>
             <ul>
-                <li><span class="monospace">construct; My New Item;</span></li>
+                <li><span class="monospace">My New Item;</span></li>
             </ul>
             <p>Following this, you specify each affix on the item, implicit and explicit, separated by semicolons. Each affix is identified by some keyword, and then the keyword is followed by values. How you should define each kind of affix is described below. Any field in &lt;angled brackets&gt; is a placeholder that should be replaced with some real value.</p>
             <ul>
@@ -233,8 +232,8 @@
 
                 <li>Item type - <span class="monospace">type: &lt;item type&gt;</span>
                     <ul>
-                        <li>Specifying the type of an item is not strictly required, but may be necessary in the future for certain effects.</li>
-                        <li>"item type" must be one of the following: accessory, axe, armor, blunt, bullets, crossbow, heavy throwing, javelin, light throwing, longblade, longbow, orb, polearm, shield, shortblade, unarmed, wand</li>
+                        <li>Specifying the type of an item is not strictly required. If you do not specify an item type, the API will take an educated guess based on the item name. If you do specify a type, the API will use what you specified.</li>
+                        <li>"item type" must be one of the following: accessory, axe, armor, blunt, bow, bullets, crossbow, heavy throwing, light throwing, longblade, orb, polearm, shield, shortblade, staff, unarmed, wand</li>
                     </ul>
                 </li>
 
@@ -455,11 +454,11 @@
 
             <p>Some examples of items:</p>
             <ul class="monospace">
-                <li class="spaced">construct; Angel's Longbow of Accuracy; base: d10 physical DEX; damage: 4d10 light physical; accuracy: 20% physical</li>
-                <li class="spaced">construct; Resistant Hat of Dodging; evasion: 10% all; ac: -10% all; evasion: 10% all; mr: 10% all</li>
-                <li class="spaced">construct; Name does not matter; crit damage mod: 100% physical; critical hit chance: 50% physical; effect: makes pretty lights</li>
-                <li class="spaced">construct; Item Name; crit accuracy: 20% physical; multiplier: 25% ice magic; buff effectiveness: 25%; concentration: 20;</li>
-                <li class="spaced">construct; The Item; general magic pen: 20% physical; Athletics: Balance: 20; silenced chance: 35% all; crit lifesteal: 20% all;</li>
+                <li class="spaced">Angel's Longbow of Accuracy; base: d10 physical DEX; damage: 4d10 light physical; accuracy: 20% physical</li>
+                <li class="spaced">Resistant Hat of Dodging; evasion: 10% all; ac: -10% all; evasion: 10% all; mr: 10% all</li>
+                <li class="spaced">Name does not matter; crit damage mod: 100% physical; critical hit chance: 50% physical; effect: makes pretty lights</li>
+                <li class="spaced">Item Name; crit accuracy: 20% physical; multiplier: 25% ice magic; buff effectiveness: 25%; concentration: 20;</li>
+                <li class="spaced">The Item; general magic pen: 20% physical; Athletics: Balance: 20; silenced chance: 35% all; crit lifesteal: 20% all;</li>
             </ul>
             <br>
 
@@ -559,9 +558,9 @@
             <br>
             <h3>Item Auto-attack</h3>
             <ul>
-                <li><span class="monospace">!barbs item &lt;item slot&gt; &lt;item name or construction args&gt;|&lt;attack parameters&gt;</span></li>
+                <li><span class="monospace">!barbs item &lt;item slot&gt; &lt;item construction args&gt;|&lt;attack parameters&gt;</span></li>
             </ul>
-            <p>The "item slot" should be <span class="monospace">main_hand</span> or <span class="monospace">offhand</span>. The "item name or construction args" field should follow the rules laid out in the <a href="#Items">Items section</a>. Either give the full name of an item that has been hardcoded into the API, or describe the item as a "construct", followed by its affixes, semicolon-separated. The "attack parameters" field follows the normal <a href="#Parameters">pattern for parameters</a>, just semicolon-separate each parameter.</p>
+            <p>The "item slot" should be <span class="monospace">main_hand</span> or <span class="monospace">offhand</span>. The "item construction args" field should follow the rules laid out in the <a href="#Items">Items section</a>. Describe the item as a "construct", followed by its affixes, semicolon-separated. The "attack parameters" field follows the normal <a href="#Parameters">pattern for parameters</a>, just semicolon-separate each parameter.</p>
             <br>
             <h3>Class Abilities</h3>
             <ul>

@@ -57,19 +57,24 @@ def get_component(component_name, component_list, condition=None):
 
 
 def get_link_skill_req(skill_req, skills):
-    longest_match = None
-    for skill in skills:
-        if skill['name'] in skill_req:
-            if longest_match is None or len(skill['name']) > len(longest_match['name']):
-                longest_match = skill
+    strings_to_check = skill_req.split(' or ')
 
-    if longest_match is not None:
-        skill_req = skill_req.replace(longest_match['name'],
-                                      href('#skill_%s' % longest_match['name'], longest_match['name']))
-        return skill_req
+    for string_to_check in strings_to_check:
+        longest_match = None
+        for skill in skills:
+            if skill['name'] in string_to_check:
+                if longest_match is None or len(skill['name']) > len(longest_match['name']):
+                    longest_match = skill
 
-    for skill in skills:
-        if 'any' in skill_req.lower() and skill['category'] in skill_req:
-            return skill_req.replace(skill['category'], href('#skills_%s' % skill['category'], skill['category']))
+        if longest_match is not None:
+            skill_req = skill_req.replace(longest_match['name'],
+                                          href('#skill_%s' % longest_match['name'], longest_match['name']))
+            continue
+
+        for skill in skills:
+            if 'any' in string_to_check.lower() and skill['category'] in string_to_check:
+                skill_req = skill_req.replace(skill['category'],
+                                              href('#skills_%s' % skill['category'], skill['category']))
+                break
 
     return skill_req

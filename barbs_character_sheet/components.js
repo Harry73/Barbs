@@ -522,6 +522,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
     class SkillObject {
         constructor(name, scaling_attr_tla) {
+            this._type = 'SkillObject';
             this.name = name;
             this.scaling_attr_tla = scaling_attr_tla;
         }
@@ -1391,6 +1392,57 @@ var BarbsComponents = BarbsComponents || (function () {
                         "buff field",
                         "modal",
                         "concentration"
+                    ]
+                }
+            }
+        },
+        "Arcane Archer": {
+            "type": "class",
+            "name": "Arcane Archer",
+            "description": "Arcane Archer is an archery class that uses buff magic to greatly increase their offensive and defensive power. The offensive buffs in this class provide straightforward raw power for the already adept archer, and the defensive buffs focus on improving evasion and kiting ability for fights that are too close for comfort. The class's passive provides extra action economy so that the shooting can start sooner rather than later. The goal of the class is to either repeatedly cast buffs and maintain a heavy rate of fire or to keep buff uptime high for more simple yet effective play. Overall, an Arcane Archer has more mechanics to worry about, in using and sacrificing buffs, but there are great rewards to reap and relatively easy decisions to make within the class.",
+            "passive": {
+                "Battle Ready": "At the beginning of each of your turns, if you attacked an enemy with a bow or crossbow last turn, gain a special Major Action, which can only be used to cast a buff ability. Buff abilities cast this way cost half stamina/mana."
+            },
+            "abilities": {
+                "Surefire Shot": {
+                    "name": "Surefire Shot",
+                    "class": "Arcane Archer",
+                    "description": [
+                        "You focus to fire a shot that won't miss. Deal 7d8 physical damage to a target in range. This attack has +20% Accuracy and +40 ft range for every buff you have. If you sacrificed a buff this turn, this attack gains +50% increased physical damage and cannot be blocked."
+                    ],
+                    "tags": [
+                        "attack",
+                        "ranged",
+                        "single-target",
+                        "physical",
+                        "bow",
+                        "crossbow",
+                        "conditional"
+                    ]
+                },
+                "Broadhead Arrow": {
+                    "name": "Broadhead Arrow",
+                    "class": "Arcane Archer",
+                    "description": [
+                        "You augment your attacks to hit hard and strike wide. Gain +100% increased physical damage with bows and crossbows for the duration. Also, your attacks with bows and crossbows on single targets also hit adjacent targets while this buff is active. You may sacrifice this buff as a free action; if you do, your next bow/crossbow attack has +200% increased physical damage and ignores 100% of the target's AC."
+                    ],
+                    "tags": [
+                        "buff",
+                        "self-target",
+                        "modal"
+                    ]
+                },
+                "Elusive Hunter": {
+                    "name": "Elusive Hunter",
+                    "class": "Arcane Archer",
+                    "description": [
+                        "You improve your speed and evasiveness. Gain +15 Move Speed and 50% increased Evasion for the duration. This bonus Move Speed temporarily increases to +30 if you begin your turn adjacent to an enemy, for that turn. You may sacrifice this buff as a free reaction; if you do, dash up to your Move Speed in any direction."
+                    ],
+                    "tags": [
+                        "buff",
+                        "self-target",
+                        "modal",
+                        "dash"
                     ]
                 }
             }
@@ -7173,7 +7225,7 @@ var BarbsComponents = BarbsComponents || (function () {
             "name": "Voidwalker",
             "description": "The Voidwalker is a rogue that has adapted magic heavily into its suite of tools in order to assist small groups in exercising stealth and safety during travel and site execution. The spell list of the Voidwalker looks a lot like the ability list of the Thief, but is adapted to function for the entire party, providing multiple people with access to Hidden, breaking line of sight, avoiding capture, and evading enemy attacks. An additional layer of defenses is provided by a suite of powerful group defensive spells, covering multiple angles that enemies might attack from. More uniquely, this class provides a heavy amount of mobility in the form of group teleportation, even over very long distances, and is effective at protecting groups during movement by providing access to an ethereal realm where enemies cannot freely interact with them. Ultimately this class's goal is to provide a group with options to avoid combat while infiltrating an enemy fortress or options to cover long distances without needing to walk or use mounts.",
             "passive": {
-                "Embrace the Void": "Before initiative is rolled, choose two:<ul><li>All allies become Hidden</li><li>All allies get +20 Initiative</li><li>All allies teleport up to 20 ft to empty spaces of their choosing</li><li>All enemies teleport up to 20 ft to empty spaces in random directions</li><ul>"
+                "Embrace the Void": "Before initiative is rolled, choose two:<ul><li>All allies become Hidden</li><li>All allies get +20 Initiative</li><li>All allies teleport up to 20 ft to empty spaces of their choosing</li><li>All enemies teleport up to 20 ft to empty spaces in random directions</li></ul>"
             },
             "abilities": {
                 "Veil of Darkness": {
@@ -8652,22 +8704,15 @@ var BarbsComponents = BarbsComponents || (function () {
             this.effects = effects;
         }
 
-        static get_item(item_string, slot) {
-            if (item_string.startsWith('construct')) {
-                return Item.construct_item(item_string, slot);
-            }
-
-            for (let i = 0; i < ITEMS.length; i++) {
-                if (ITEMS[i].name === item_string) {
-                    return ITEMS[i];
-                }
-            }
-
-            return null;
-        }
-
         static construct_item(item_string, slot) {
-            let parts = item_string.split(';').slice(1);
+            assert_not_null(item_string, 'construct_item() item_string');
+            assert_not_null(slot, 'construct_item() slot');
+
+            if (item_string === '' || slot === '') {
+                return null;
+            }
+
+            let parts = item_string.split(';');
             parts = trim_all(parts);
             parts = remove_empty(parts);
 
@@ -8797,6 +8842,9 @@ var BarbsComponents = BarbsComponents || (function () {
                         break;
                     }
                 }
+            }
+            if (item_type === ItemType.UNKNOWN) {
+                LOG.warn('In item "%s", failed to guess the type'.format(item_name));
             }
 
             const item = new Item(item_name, item_type, slot, base_damage, scaler, effects);
@@ -9046,1164 +9094,18 @@ var BarbsComponents = BarbsComponents || (function () {
     }
 
 
-    const ITEMS = [
-        new Item(
-            'Longbow of Stunning',
-            ItemType.BOW,
-            ItemSlot.TWO_HAND,
-            Effect.roll_damage('d8', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.RANGED_FINE,
-            [
-                Effect.crit_effect('Stun', RollType.PHYSICAL),
-            ]
-        ),
-
-        new Item(
-            'Longbow of Flames',
-            ItemType.BOW,
-            ItemSlot.TWO_HAND,
-            Effect.roll_damage('d6', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.RANGED_FINE,
-            [
-                Effect.roll_damage('3d10', Damage.FIRE, RollType.PHYSICAL),
-            ]
-        ),
-
-        new Item(
-            'Leather Cap of Serenity',
-            ItemType.ARMOR,
-            ItemSlot.HEAD,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.EVASION, 5, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH_REGENERATION, 10, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Hunter's Longcoat of Resistance",
-            ItemType.ARMOR,
-            ItemSlot.BODY,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.EVASION, 20, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Viper's Gloves of Dodging",
-            ItemType.ARMOR,
-            ItemSlot.FEET,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.EVASION, 15, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            'Leather Sandals of Slickness',
-            ItemType.ARMOR,
-            ItemSlot.FEET,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.EVASION, 15, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA_REGENERATION, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            'Cleansing Brooch of Mana Storage',
-            ItemType.ACCESSORY,
-            ItemSlot.NECK,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            []
-        ),
-
-        new Item(
-            'Energetic Ring of the Mind',
-            ItemType.ACCESSORY,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.STAMINA, 30, RollType.ALL),
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            'Invigorated Belt of Greater Stamina',
-            ItemType.ACCESSORY,
-            ItemSlot.BELT,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.STAMINA, 60, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA_REGENERATION, 15, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Earthen Bladeshield of Hacking",
-            ItemType.SHIELD,
-            ItemSlot.MAIN_HAND,
-            Effect.roll_damage('d8', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.MELEE,
-            [
-                Effect.roll_damage('2d8', Damage.PHYSICAL, RollType.PHYSICAL),
-                Effect.roll_damage('2d10', Damage.EARTH, RollType.PHYSICAL),
-            ]
-        ),
-
-        new Item(
-            "Paralyzing Shield of Accuracy",
-            ItemType.SHIELD,
-            ItemSlot.OFFHAND,
-            Effect.roll_damage('d10', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.MELEE,
-            [
-                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.PHYSICAL),
-                Effect.hidden_stat(HiddenStat.PARALYZED_CHANCE, 30, RollType.PHYSICAL),
-            ]
-        ),
-
-        new Item(
-            'Shocking Band of Critical Strikes',
-            ItemType.ACCESSORY,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.roll_damage('2d8', Damage.LIGHTNING, RollType.ALL),
-                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 5, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            'Impeding Quickblade of Normalizing',
-            ItemType.SHORTBLADE,
-            ItemSlot.MAIN_HAND,
-            Effect.roll_damage('d4', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 20, RollType.PHYSICAL),
-                Effect.crit_hidden_stat(HiddenStat.BUFF_STRIP, 1, RollType.PHYSICAL),
-                Effect.crit_hidden_stat(HiddenStat.REDUCE_EVASION, 10, RollType.PHYSICAL),
-            ]
-        ),
-
-        new Item(
-            'Sharpened Penetrating Moonblade of Waves',
-            ItemType.SHORTBLADE,
-            ItemSlot.MAIN_HAND,
-            Effect.roll_damage('2d4', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 10, RollType.PHYSICAL),
-                Effect.crit_damage_mod(100, RollType.PHYSICAL),
-                Effect.crit_effect('Ignore blocks and shielding', RollType.PHYSICAL),
-                Effect.crit_damage('3d6', Damage.WATER, RollType.PHYSICAL),
-            ]
-        ),
-
-        new Item(
-            'Seeking Dagger of Paralysis',
-            ItemType.SHORTBLADE,
-            ItemSlot.MAIN_HAND,
-            Effect.roll_damage('d4', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.NONE,
-            [
-                Effect.roll_effect('When thrown, this dagger cannot miss', RollType.PHYSICAL),
-                Effect.roll_effect('Inflict Paralysis', RollType.PHYSICAL),
-            ]
-        ),
-
-        new Item(
-            "Battlemage's Wand of Glacial Rage",
-            ItemType.WAND,
-            ItemSlot.MAIN_HAND,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.roll_multiplier(0.1, Damage.ALL_MAGIC, RollType.MAGIC),
-                Effect.hidden_stat(HiddenStat.ICE_MAGIC_PENETRATION, 50, RollType.MAGIC),
-                Effect.roll_multiplier(0.25, Damage.ICE, RollType.MAGIC),
-            ]
-        ),
-
-        new Item(
-            "Phasing Blizzard's Glimmering Orb of Debilitating Sorcery",
-            ItemType.ORB,
-            ItemSlot.OFFHAND,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 20, RollType.MAGIC),
-                Effect.hidden_stat(HiddenStat.REDUCE_CR, 5, RollType.MAGIC),
-                Effect.roll_multiplier(0.3, Damage.ICE, RollType.MAGIC),
-                Effect.roll_multiplier(0.2, Damage.ICE, RollType.MAGIC),
-            ]
-        ),
-
-        new Item(
-            "Mage’s Resilient Hood of Accurate Concentration",
-            ItemType.ARMOR,
-            ItemSlot.HEAD,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 20, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
-                Effect.concentration_bonus(30),
-            ]
-        ),
-
-        new Item(
-            "Mage’s Meditating Resilient Vest of the Healing Beast",
-            ItemType.ARMOR,
-            ItemSlot.BODY,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 20, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
-                Effect.stat_effect(Stat.MANA, 60, RollType.ALL),
-                Effect.stat_effect(Stat.MANA_REGENERATION, 20, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 60, RollType.ALL),
-                Effect.roll_multiplier(0.3, Damage.HEALING, RollType.HEALING),
-            ]
-        ),
-
-        new Item(
-            "Unblockable Accurate Resilient Gloves of Phasing Chills",
-            ItemType.ARMOR,
-            ItemSlot.HANDS,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 20, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.UNBLOCKABLE_CHANCE, 20, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 10, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.ICE_MAGIC_PENETRATION, 25, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Mage’s Meditating Resilient Shoes of Speed",
-            ItemType.ARMOR,
-            ItemSlot.FEET,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 20, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.MANA_REGENERATION, 15, RollType.ALL),
-                Effect.stat_effect(Stat.MOVEMENT_SPEED, 20, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Mage’s Concentrating Skillful Amulet of Healing",
-            ItemType.ARMOR,
-            ItemSlot.NECK,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                Effect.concentration_bonus(20),
-                Effect.roll_multiplier(0.3, Damage.HEALING, RollType.HEALING),
-            ]
-        ),
-
-        new Item(
-            "Unblockable Phasing Skillful Ring of Sorcerous Blizzards",
-            ItemType.ARMOR,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.roll_multiplier(0.2, Damage.ALL_MAGIC, RollType.MAGIC),
-                Effect.roll_multiplier(0.3, Damage.ICE, RollType.MAGIC),
-                Effect.hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 15, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.UNBLOCKABLE_CHANCE, 10, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Mage’s Skillful Belt of the Bestial Antidote",
-            ItemType.ARMOR,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
-                Effect.condition_resist('Poisoned', 50),
-            ]
-        ),
-
-        new Item(
-            "Ring of Critical Damage",
-            ItemType.ACCESSORY,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.crit_damage_mod(100, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Bestial Skillful Belt of the Working Mage",
-            ItemType.ACCESSORY,
-            ItemSlot.BELT,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                Effect.skill_effect(Skill.ATHLETICS_BALANCE, 30),
-            ]
-        ),
-
-        new Item(
-            "Energetic Enchanted Band of Lucky Blows",
-            ItemType.ACCESSORY,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.STAMINA, 30, RollType.ALL),
-                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 5, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Bestial Worker’s Skillful Amulet of the Counterspelling Mage",
-            ItemType.ACCESSORY,
-            ItemSlot.NECK,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.skill_effect(Skill.MAGIC_CONJURATION, 30),
-                Effect.stat_effect(Stat.HEALTH, 30, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 30, RollType.ALL),
-                Effect.stat_effect(Stat.MANA, 30, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Steadfast Resilient Slippers of Quickness",
-            ItemType.ARMOR,
-            ItemSlot.FEET,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.CONDITION_RESIST, 20, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 15, RollType.ALL),
-                Effect.condition_resist('Stunned', 50),
-                Effect.condition_resist('Slowed', 50),
-            ]
-        ),
-
-        new Item(
-            "Worker’s Resistant Resilient Gloves of the Evasive Viper",
-            ItemType.ARMOR,
-            ItemSlot.HANDS,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 20, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, 10, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Raptor's Resilient Shawl of the Championed Wizard",
-            ItemType.ARMOR,
-            ItemSlot.HEAD,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 20, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 15, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 15, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 55, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Phasing Powerful Sharpened Knife of Stripping Penetration",
-            ItemType.SHORTBLADE,
-            ItemSlot.MAIN_HAND,
-            Effect.roll_damage('2d4', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 10, RollType.PHYSICAL),
-                Effect.crit_damage_mod(100, RollType.PHYSICAL),
-                Effect.crit_effect('Ignore 100% of target AC', RollType.PHYSICAL),
-                Effect.crit_effect('Strip 2 buffs from target', RollType.PHYSICAL),
-                Effect.crit_damage('7d10', Damage.PHYSICAL, RollType.PHYSICAL),
-            ]
-        ),
-
-        new Item(
-            "Insulated Resilient Parrying Dagger of Shaded Work",
-            ItemType.SHORTBLADE,
-            ItemSlot.OFFHAND,
-            Effect.roll_damage('d4', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.EVASION, 20, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -20, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 30, RollType.ALL),
-                Effect.magic_resist(Damage.LIGHTNING, 20),
-                Effect.magic_resist(Damage.LIGHT, 20),
-            ]
-        ),
-
-        new Item(
-            "Evasive Pristine Robes of Resistance",
-            ItemType.ARMOR,
-            ItemSlot.BODY,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, 10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 30, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Resistant Viper's Enchanted Helm of Accurate Solidarity",
-            ItemType.ARMOR,
-            ItemSlot.HEAD,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
-                Effect.condition_resist('Stunned', 50),
-            ]
-        ),
-
-        new Item(
-            "Resistant Viper's Enchanted Chestplate of the Working Beast",
-            ItemType.ARMOR,
-            ItemSlot.BODY,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 50, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Resistant Viper's Enchanted Gauntlets of the Working Beast",
-            ItemType.ARMOR,
-            ItemSlot.HANDS,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 50, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Resistant Viper's Enchanted Greaves of Solid Adamantium",
-            ItemType.ARMOR,
-            ItemSlot.FEET,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.condition_resist('Stunned', 50),
-                // TODO: 15% Crit Strike Resist
-            ]
-        ),
-
-        new Item(
-            "Resistant Viper's Enchanted Amulet of the Working Beast",
-            ItemType.ARMOR,
-            ItemSlot.NECK,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 50, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Powerful Slaying Skillful Ring of Accurate Minion Slaying",
-            ItemType.ARMOR,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
-                Effect.roll_damage('3d10', Damage.PHYSICAL, RollType.ALL),
-                Effect.roll_multiplier(0.2, Damage.PHYSICAL, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.MINION_LETHALITY, 20, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Powerful Slaying Enchanted Ring of Accuracy",
-            ItemType.ARMOR,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.hidden_stat(HiddenStat.ACCURACY, 25, RollType.ALL),
-                Effect.roll_damage('4d10', Damage.PHYSICAL, RollType.ALL),
-                Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.MINION_LETHALITY, 20, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Resistant Viper's Enchanted Buckle of the Working Beast",
-            ItemType.ARMOR,
-            ItemSlot.BELT,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Slayer",
-            ItemType.SHIELD,
-            ItemSlot.MAIN_HAND,
-            Effect.roll_damage('d10', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.MELEE,
-            [
-                Effect.roll_damage('4d10', Damage.PHYSICAL, RollType.PHYSICAL),
-                Effect.roll_multiplier(0.2, Damage.PHYSICAL, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.MINION_LETHALITY, 50, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Vladsbane",
-            ItemType.SHIELD,
-            ItemSlot.OFFHAND,
-            Effect.roll_damage('d10', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.MELEE,
-            [
-                Effect.roll_multiplier(0.4, Damage.PHYSICAL, RollType.PHYSICAL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.MINION_LETHALITY, 70, RollType.ALL),
-                // TODO: 15% Critical Strike Resist
-            ]
-        ),
-
-        new Item(
-            "Powerful Slaying Sharpened Warhammer of Penetrating Cripples",
-            ItemType.BLUNT,
-            ItemSlot.MAIN_HAND,
-            Effect.roll_damage('2d12', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.MELEE,
-            [
-                Effect.hidden_stat(HiddenStat.CRIPPLED_CHANCE, 20, RollType.PHYSICAL),
-                Effect.roll_damage('6d10', Damage.PHYSICAL, RollType.PHYSICAL),
-                Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.PHYSICAL),
-                Effect.hidden_stat(HiddenStat.AC_PENETRATION, 30, RollType.PHYSICAL),
-                Effect.hidden_stat(HiddenStat.CRIPPLED_CHANCE, 20, RollType.PHYSICAL),
-            ]
-        ),
-
-        new Item(
-            "Resistant Worker's Greathelm of Bestial Stun Resist",
-            ItemType.ARMOR,
-            ItemSlot.HEAD,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
-                Effect.condition_resist('Stunned', 50),
-            ]
-        ),
-
-        new Item(
-            "Resistant Worker's Chestplate of Bestial Slow Resist",
-            ItemType.ARMOR,
-            ItemSlot.HEAD,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 50, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
-                Effect.condition_resist('Slowed', 50),
-            ]
-        ),
-
-        new Item(
-            "Resistant Accurate Gauntlets of Penetrating Cripple Resist",
-            ItemType.ARMOR,
-            ItemSlot.HEAD,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.AC_PENETRATION, 20, RollType.PHYSICAL),
-                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.PHYSICAL),
-                Effect.condition_resist('Crippled', 50),
-            ]
-        ),
-
-        new Item(
-            "Resistant Speedy Greaves of Bestial Immobilize",
-            ItemType.ARMOR,
-            ItemSlot.HEAD,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.MOVEMENT_SPEED, 20, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
-                Effect.condition_resist('Immobilized', 50),
-            ]
-        ),
-
-        new Item(
-            "Lifestealing Leader's Amulet of Swift Fear Resist",
-            ItemType.ACCESSORY,
-            ItemSlot.NECK,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.hidden_stat(HiddenStat.LIFESTEAL, 5, RollType.ALL),
-                Effect.skill_effect(Skill.INTERACTION_LEADERSHIP, 20),
-                Effect.initiative_bonus(20),
-                Effect.condition_resist('Fear', 50),
-            ]
-        ),
-
-        new Item(
-            "Slayer's Penetrating Ring of Critical Power",
-            ItemType.ACCESSORY,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.roll_multiplier(0.2, Damage.PHYSICAL, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.AC_PENETRATION, 10, RollType.PHYSICAL),
-                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 5, RollType.ALL),
-                Effect.roll_damage('3d10', Damage.PHYSICAL, RollType.PHYSICAL),
-            ]
-        ),
-
-        new Item(
-            "Armored Resistant Buckle of Healing Paralysis Resist",
-            ItemType.ACCESSORY,
-            ItemSlot.BELT,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.AC, 5, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 5, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH_REGENERATION, 10, RollType.ALL),
-                Effect.condition_resist('Paralyzed', 50),
-            ]
-        ),
-
-        new Item(
-            "Debilitating Symbiote's Wand of the Accurate Enchanter",
-            ItemType.WAND,
-            ItemSlot.MAIN_HAND,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.hidden_stat(HiddenStat.ACCURACY, 15, RollType.MAGIC),
-                Effect.hidden_stat(HiddenStat.REDUCE_CR, 5, RollType.MAGIC),
-                Effect.buff_effectiveness(20),
-                Effect.enchant_effectiveness(20),
-            ]
-        ),
-
-        new Item(
-            "Sorcerous Symbiote's Orb of the Enchanter Mage",
-            ItemType.ORB,
-            ItemSlot.OFFHAND,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.roll_multiplier(0.25, Damage.ALL_MAGIC, RollType.MAGIC),
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                Effect.buff_effectiveness(15),
-                Effect.enchant_effectiveness(15),
-            ]
-        ),
-
-        new Item(
-            "Armored Hood of the Concentrating Viper",
-            ItemType.ARMOR,
-            ItemSlot.HEAD,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, 15, RollType.ALL),
-                Effect.concentration_bonus(20),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Angelic Mage's Robes of the Armored Beast",
-            ItemType.ARMOR,
-            ItemSlot.BODY,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
-                Effect.stat_effect(Stat.MANA, 50, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
-                Effect.magic_resist(Damage.LIGHT, 25),
-            ]
-        ),
-
-        new Item(
-            "Armored Resistant Gloves of the Beast Mage",
-            ItemType.ARMOR,
-            ItemSlot.HANDS,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, 15, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.MANA, 50, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 50, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Demon Mage's Slippers of the Armored Beast",
-            ItemType.ARMOR,
-            ItemSlot.FEET,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, -10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, 10, RollType.ALL),
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
-                Effect.magic_resist(Damage.DARK, 25),
-            ]
-        ),
-
-        new Item(
-            "Concentrating Symbiote's Necklace of the Viper Mage",
-            ItemType.ACCESSORY,
-            ItemSlot.NECK,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.concentration_bonus(25),
-                Effect.buff_effectiveness(20),
-            ]
-        ),
-
-        new Item(
-            "Mage's Bestial Ring of Viper Resistance",
-            ItemType.ACCESSORY,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Evasive Phasing Ring of the Burning Mage",
-            ItemType.ACCESSORY,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.ACCURACY, 15, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 15, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.BURN_CHANCE, 20, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Infused Belt of Greater Mana",
-            ItemType.ACCESSORY,
-            ItemSlot.BELT,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MANA, 60, RollType.ALL),
-                Effect.stat_effect(Stat.MANA_REGENERATION, 15, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Penetrating Pyromancer’s Wand of the Sorcerer’s Torch",
-            ItemType.WAND,
-            ItemSlot.MAIN_HAND,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 20, RollType.MAGIC),
-                Effect.roll_multiplier(0.3, Damage.FIRE, RollType.MAGIC),
-                Effect.roll_multiplier(0.2, Damage.ALL_MAGIC, RollType.MAGIC),
-                Effect.hidden_stat(HiddenStat.FIRE_MAGIC_PENETRATION, 30, RollType.MAGIC),
-            ]
-        ),
-
-        new Item(
-            "Phasing Penetrating Dagger of Powerful Striking",
-            ItemType.SHORTBLADE,
-            ItemSlot.OFFHAND,
-            Effect.roll_damage('d4', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 10, RollType.PHYSICAL),
-                Effect.crit_damage_mod(100, RollType.PHYSICAL),
-                Effect.crit_effect('Cannot be blocked or dodged', RollType.PHYSICAL),
-                Effect.crit_effect("Ignores 100% of target's AC", RollType.PHYSICAL),
-                Effect.crit_damage('7d10', Damage.PHYSICAL, RollType.PHYSICAL),
-                Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.PHYSICAL),
-            ]
-        ),
-
-        new Item(
-            "Mage’s Evasive Hood of the Working Beast",
-            ItemType.ARMOR,
-            ItemSlot.HEAD,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, 10, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Mage’s Viper’s Robes of the Working Beast",
-            ItemType.ARMOR,
-            ItemSlot.BODY,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
-                Effect.stat_effect(Stat.MANA, 60, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 60, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 60, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Mage’s Evasive Sandals of the Working Viper",
-            ItemType.ARMOR,
-            ItemSlot.FEET,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, 10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 60, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Mage’s Evasive Bracelets of the Working Viper",
-            ItemType.ARMOR,
-            ItemSlot.HANDS,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, 10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Mage’s Penetrating Amulet of the Working Torch",
-            ItemType.ACCESSORY,
-            ItemSlot.NECK,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MANA, 40, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 10, RollType.MAGIC),
-                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.FIRE_MAGIC_PENETRATION, 20, RollType.MAGIC),
-            ]
-        ),
-
-        new Item(
-            "Penetrating Pyromancer’s Ring of the Sorcerer's Torch",
-            ItemType.ACCESSORY,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 20, RollType.MAGIC),
-                Effect.roll_multiplier(0.3, Damage.FIRE, RollType.MAGIC),
-                Effect.roll_multiplier(0.2, Damage.ALL_MAGIC, RollType.MAGIC),
-                Effect.hidden_stat(HiddenStat.FIRE_MAGIC_PENETRATION, 30, RollType.MAGIC),
-            ]
-        ),
-
-        new Item(
-            "Critical Lucky Ring of Penetrating Accuracy",
-            ItemType.ACCESSORY,
-            ItemSlot.RING,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.crit_damage_mod(50, RollType.ALL),
-                Effect.stat_effect(Stat.CRITICAL_HIT_CHANCE, 5, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.AC_PENETRATION, 20, RollType.ALL),
-                Effect.hidden_stat(HiddenStat.ACCURACY, 10, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Evasive Resistant Belt of the Solid Viper",
-            ItemType.ACCESSORY,
-            ItemSlot.BELT,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.EVASION, 10, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.condition_resist('Stunned', 50),
-            ]
-        ),
-
-        new Item(
-            "Penetrating Striking Knuckles of Accurate Power",
-            ItemType.UNARMED,
-            ItemSlot.TWO_HAND,
-            Effect.roll_damage('2dU', Damage.PHYSICAL, RollType.PHYSICAL),
-            ItemScaler.RANGED_FINE,
-            [
-                Effect.combo_chance(5),
-                Effect.hidden_stat(HiddenStat.AC_PENETRATION, 20, RollType.ALL),
-                Effect.roll_damage('4dU', Damage.PHYSICAL, RollType.PHYSICAL),
-                Effect.hidden_stat(HiddenStat.ACCURACY, 20, RollType.ALL),
-                Effect.roll_multiplier(0.3, Damage.PHYSICAL, RollType.PHYSICAL),
-            ]
-        ),
-
-        new Item(
-            "Viper’s Evasive Headband of the Working Beast",
-            ItemType.ARMOR,
-            ItemSlot.HEAD,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, 10, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Viper’s Evasive Robes of the Working Beast",
-            ItemType.ARMOR,
-            ItemSlot.BODY,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, 10, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 60, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 60, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Viper’s Evasive Sandals of the Working Beast",
-            ItemType.ARMOR,
-            ItemSlot.FEET,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, 10, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Viper’s Evasive Bracelets of the Working Beast",
-            ItemType.ARMOR,
-            ItemSlot.HANDS,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.AC, -10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.EVASION, 10, RollType.ALL),
-                Effect.stat_effect(Stat.STAMINA, 40, RollType.ALL),
-                Effect.stat_effect(Stat.HEALTH, 40, RollType.ALL),
-            ]
-        ),
-
-        new Item(
-            "Penetrating Psion’s Amulet of Solid Initiative",
-            ItemType.ACCESSORY,
-            ItemSlot.NECK,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.hidden_stat(HiddenStat.AC_PENETRATION, 10, RollType.ALL),
-                Effect.roll_multiplier(0.1, Damage.PSYCHIC, RollType.ALL),
-                Effect.condition_resist('Stunned', 20),
-                Effect.initiative_bonus(20),
-            ]
-        ),
-
-        new Item(
-            "Powerful Striking Ring of Psionic Initiative",
-            ItemType.ACCESSORY,
-            ItemSlot.NECK,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.roll_multiplier(0.2, Damage.PHYSICAL, RollType.ALL),
-                Effect.roll_damage('3d10', Damage.PHYSICAL, RollType.PHYSICAL),
-                Effect.roll_multiplier(0.1, Damage.PSYCHIC, RollType.ALL),
-                Effect.initiative_bonus(10),
-            ]
-        ),
-
-        new Item(
-            "Evasive Resistant Belt of the Viper’s Initiative",
-            ItemType.ACCESSORY,
-            ItemSlot.NECK,
-            Effect.no_op_roll_effect(),
-            ItemScaler.NONE,
-            [
-                Effect.stat_effect(Stat.EVASION, 10, RollType.ALL),
-                Effect.stat_effect(Stat.MAGIC_RESIST, 10, RollType.ALL),
-                Effect.stat_effect(Stat.CONDITION_RESIST, 10, RollType.ALL),
-                Effect.initiative_bonus(10),
-            ]
-        ),
-
-    ];
-
-
     // ################################################################################################################
     // Characters
 
 
-    const CHARACTER_SHEET_ITEM_SLOTS = [
-        ItemSlot.HEAD,
-        ItemSlot.BODY,
-        ItemSlot.HANDS,
-        ItemSlot.FEET,
-        ItemSlot.NECK,
-        'left_ring',
-        'right_ring',
-        ItemSlot.BELT,
-    ];
-
 
     class Character {
-        static monk_mastery_dice = [4, 6, 8, 10, 12, 20];
-        static monk_mastery_combo = [0, 10, 20, 30, 35, 40];
+        static CHARACTER_SHEET_ITEM_SLOTS = [
+            ItemSlot.HEAD, ItemSlot.BODY, ItemSlot.HANDS, ItemSlot.FEET, ItemSlot.NECK,
+            'left_ring', 'right_ring', ItemSlot.BELT,
+        ];
+        static MONK_MASTERY_DICE = [4, 6, 8, 10, 12, 20];
+        static MONK_MASTERY_COMBO = [0, 10, 20, 30, 35, 40];
 
         constructor(game_object, who) {
             this._type = 'Character';
@@ -10229,12 +9131,15 @@ var BarbsComponents = BarbsComponents || (function () {
             // Fetched lazily, aka when requested
             this.attributes = {};
             this.stats = {};
-            this.monk_classes = null;
+            this.game_attributes = null;
+            this.skills = null;
+            this.abilities = null;
         }
 
         csv_to_array(list) {
             const items = [];
             if (list !== undefined && list !== null) {
+                list.split(',').forEach(i => items.push(i.trim()));
                 list.split(',').forEach(i => items.push(i.trim()));
             }
             return items;
@@ -10243,8 +9148,8 @@ var BarbsComponents = BarbsComponents || (function () {
         get_items() {
             const character_items = [];
 
-            for (let i = 0; i < CHARACTER_SHEET_ITEM_SLOTS.length; i++) {
-                const slot = CHARACTER_SHEET_ITEM_SLOTS[i];
+            for (let i = 0; i < Character.CHARACTER_SHEET_ITEM_SLOTS.length; i++) {
+                const slot = Character.CHARACTER_SHEET_ITEM_SLOTS[i];
                 const item = this.get_item(slot);
                 if (item !== null) {
                     character_items.push(item);
@@ -10258,7 +9163,7 @@ var BarbsComponents = BarbsComponents || (function () {
             const item_name = getAttrByName(this.id, slot);
 
             if (item_name !== undefined && item_name !== null && item_name !== '') {
-                const item = Item.get_item(item_name, slot);
+                const item = Item.construct_item(item_name, slot);
                 if (item === null) {
                     LOG.error('Could not get item for name "%s" and slot %s'.format(item_name, slot));
                 } else {
@@ -10291,11 +9196,74 @@ var BarbsComponents = BarbsComponents || (function () {
             return stat_value;
         }
 
-        get_num_monk_classes() {
-            const self = this;
-            const all_attributes = findObjs({type: 'attribute', characterid: self.id});
+        get_game_attributes() {
+            if (this.game_attributes === null) {
+                this.game_attributes = findObjs({type: 'attribute', characterid: this.id});
+            }
 
-            let class_abilities = {};
+            return this.game_attributes;
+        }
+
+        get_skills() {
+            if (this.skills !== null) {
+                return this.skills;
+            }
+
+            const all_attributes = this.get_game_attributes();
+
+            let attributes_by_id = {};
+            for (let i = 0; i < all_attributes.length; i++) {
+                const attribute = all_attributes[i];
+                const attribute_name = attribute.get('name');
+
+                if (attribute_name.includes('repeating_skills')) {
+                    const attribute_id = attribute_name.split('_')[2];
+
+                    if (attribute_name.includes('skill_name')) {
+                        if (!(attribute_id in attributes_by_id)) {
+                            attributes_by_id[attribute_id] = {};
+                        }
+                        attributes_by_id[attribute_id]['name'] = attribute.get('current');
+                    }
+
+                    if (attribute_name.includes('skill_points')) {
+                        if (!(attribute_id in attributes_by_id)) {
+                            attributes_by_id[attribute_id] = {};
+                        }
+                        attributes_by_id[attribute_id]['ap'] = attribute.get('current');
+                    }
+                }
+            }
+
+            this.skills = {};
+            const keys = Object.keys(attributes_by_id);
+            for (let i = 0; i < keys.length; i++) {
+                const skill_attributes = attributes_by_id[keys[i]];
+                if (!('name' in skill_attributes) || !('ap' in skill_attributes)) {
+                    continue;
+                }
+
+                const name = skill_attributes['name'].toLowerCase();
+                const ap = parse_int(skill_attributes['ap']);
+                if (Number.isNaN(ap)) {
+                    continue;
+                }
+
+                this.skills[name] = ap;
+            }
+
+            LOG.info(JSON.stringify(this.skills));
+            return this.skills;
+        }
+
+        get_abilities() {
+            if (this.abilities !== null) {
+                return this.abilities;
+            }
+
+            const all_attributes = this.get_game_attributes();
+
+            let attributes_by_id = {};
             for (let i = 0; i < all_attributes.length; i++) {
                 const attribute = all_attributes[i];
 
@@ -10304,32 +9272,44 @@ var BarbsComponents = BarbsComponents || (function () {
                     const attribute_id = attribute_name.split('_')[2];
 
                     if (attribute_name.includes('class_name')) {
-                        if (!(attribute_id in class_abilities)) {
-                            class_abilities[attribute_id] = {};
+                        if (!(attribute_id in attributes_by_id)) {
+                            attributes_by_id[attribute_id] = {};
                         }
-                        class_abilities[attribute_id]['class'] = attribute.get('current');
+                        attributes_by_id[attribute_id]['class'] = attribute.get('current');
                     }
 
                     if (attribute_name.includes('ability_name')) {
-                        if (!(attribute_id in class_abilities)) {
-                            class_abilities[attribute_id] = {};
+                        if (!(attribute_id in attributes_by_id)) {
+                            attributes_by_id[attribute_id] = {};
                         }
-                        class_abilities[attribute_id]['ability'] = attribute.get('current');
+                        attributes_by_id[attribute_id]['ability'] = attribute.get('current');
                     }
                 }
             }
 
-            // See what abilities have the "combo" tag, and build a set of their parent classes. Monk mastery
-            // increases by 1 for each class of this nature that the character has.
-            let classes_with_combo_abilities = new Set();
-            const keys = Object.keys(class_abilities);
+            this.abilities = [];
+            const keys = Object.keys(attributes_by_id);
             for (let i = 0; i < keys.length; i++) {
-                const class_ability = class_abilities[keys[i]];
-                const ability = get_ability(class_ability['class'], class_ability['ability']);
+                const ability_attributes = attributes_by_id[keys[i]];
+                const ability = get_ability(ability_attributes['class'], ability_attributes['ability']);
                 if (ability === null) {
                     continue;
                 }
 
+                this.abilities.push(ability);
+            }
+
+            return this.abilities;
+        }
+
+        get_num_monk_classes() {
+            const abilities = this.get_abilities();
+
+            // See what abilities have the "combo" tag, and build a set of their parent classes. Monk mastery
+            // increases by 1 for each class of this nature that the character has.
+            let classes_with_combo_abilities = new Set();
+            for (let i = 0; i < abilities.length; i++) {
+                const ability = abilities[i];
                 if (ability['tags'].includes('combo')) {
                     classes_with_combo_abilities.add(ability['class']);
                 }
@@ -10338,59 +9318,16 @@ var BarbsComponents = BarbsComponents || (function () {
             return classes_with_combo_abilities.size;
         }
 
-        get_shield_skill() {
-            const self = this;
-            const all_attributes = findObjs({type: 'attribute', characterid: self.id});
-
-            let class_abilities = {};
-            for (let i = 0; i < all_attributes.length; i++) {
-                const attribute = all_attributes[i];
-
-                const attribute_name = attribute.get('name');
-                if (attribute_name.includes('repeating_skills')) {
-                    const attribute_id = attribute_name.split('_')[2];
-
-                    if (attribute_name.includes('skill_name')) {
-                        if (!(attribute_id in class_abilities)) {
-                            class_abilities[attribute_id] = {};
-                        }
-                        class_abilities[attribute_id]['class'] = attribute.get('current');
-                    }
-
-                    if (attribute_name.includes('skill_points')) {
-                        if (!(attribute_id in class_abilities)) {
-                            class_abilities[attribute_id] = {};
-                        }
-                        class_abilities[attribute_id]['AP'] = attribute.get('current');
-                    }
-                }
-            }
-            // iterate over everything in class_abilities, looking for class_abilities[attribute_id]['class'] == 'Shields. When you find it, return class_abilities[attribute_id]['AP']
-            const keys = Object.keys(class_abilities);
-            for (let i = 0; i < keys.length; i++) {
-                const ability = class_abilities[keys[i]];
-                if (ability['class'] == 'Weapon Mastery: Shields') {
-                    return ability['AP'];
-                }
-            }
-        }
-
         get_monk_dice() {
-            if (this.monk_classes === null) {
-                this.monk_classes = this.get_num_monk_classes()
-            }
-
-            const index = Math.min(this.monk_classes, Character.monk_mastery_dice.length - 1);
-            return Character.monk_mastery_dice[index];
+            const num_monk_classes = this.get_num_monk_classes();
+            const index = Math.min(num_monk_classes, Character.MONK_MASTERY_DICE.length - 1);
+            return Character.MONK_MASTERY_DICE[index];
         }
 
         get_base_combo_chance() {
-            if (this.monk_classes === null) {
-                this.monk_classes = this.get_num_monk_classes()
-            }
-
-            const index = Math.min(this.monk_classes, Character.monk_mastery_combo.length - 1);
-            return Character.monk_mastery_combo[index];
+            const num_monk_classes = this.get_num_monk_classes();
+            const index = Math.min(num_monk_classes, Character.MONK_MASTERY_COMBO.length - 1);
+            return Character.MONK_MASTERY_COMBO[index];
         }
     }
 
@@ -10402,11 +9339,8 @@ var BarbsComponents = BarbsComponents || (function () {
         characters_by_owner,
         Stat, HiddenStat, Skill, conditions, classes,
         Damage, get_damage_from_type,
-        RollType,
-        RollTime,
-        Roll,
-        Item,
+        RollType, RollTime, Roll,
+        ItemType, ItemSlot, Item,
         Character,
     };
-
 })();
