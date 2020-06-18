@@ -182,7 +182,7 @@
         "num_requirements": 2,
         "requirements": [
             "Weapon Mastery: Bows Rank A or Weapon Mastery: Crossbows Rank A",
-			"Magic: Buffs Rank A"
+			"Magic: Buffs Rank 5"
         ],
         "all_reqs_known": true,
 		"flavor_text": "\"I used to be a purist. Archery was the only thing I knew. But eventually you come across some monster that won't go down with a couple well-placed shots, when there are people counting on you to protect them. I learned magic for when that eventually and inevitably happens to me.\"",
@@ -2031,7 +2031,13 @@
             "Parallel Shields",
             "Rapid Shields",
             "Chain Rush",
-            "Chain Drag"
+            "Chain Drag",
+			"Dual Shield Strike",
+			"Giga Drill Break",
+			"Absorption Barrier",
+			"Grand Guardian",
+			"Chain Snare",
+			"Chain Blitz"
         ]
     },
     {

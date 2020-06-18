@@ -7326,6 +7326,55 @@
             "modal"
         ]
     },
+	{
+        "type": "ability",
+        "name": "Dual Shield Strike",
+        "class": "Sentinel",
+        "branch": "Dauntless",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "35 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You move quickly to stab with both shields. Dash up to 20 ft, then deal 6d10 physical damage to a target in range, dealing half as much damage to any enemy behind the target as well. When this attack is used as a reaction, it interrupts any enemy attack or spell it reacts to. If you are dual wielding shields, you may expend any number of Shield stacks; if you do, you may repeat this attack as a free reaction until the end of the turn without paying its stamina cost, except it deals an additional Xd10 physical damage, where X is the number of Shield stacks spent, and it hits up to 2 enemies behind the target as well."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "melee",
+			"single-target",
+            "multi-target",
+            "conditional",
+            "modal",
+			"interrupt"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Giga Drill Break",
+        "class": "Sentinel",
+        "branch": "Dauntless",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "65 stamina",
+        "range": "Melee",
+        "duration": "1 minute",
+        "description": [
+            "You rapidly rotate your shields using a complex gear and chain system. Dash up to 40 ft, then deal 10d10 physical damage to a target in range, dealing an equal amount of damage to any enemies adjacent to the target as well. Targets hit by this attack are then inflicted with +30% Physical Vulnerability, plus an additional +10% Physical Vulnerability for every damage die that rolls a 10. You may concentrate on this ability when you cast it; if you do, you may cast it without paying its stamina cost as a major action or reaction for the duration. While concentrating on this ability, it deals an additional Xd10 physical damage, where X is the number of Shield stacks you have, and it ignores 100% of the target's AC."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "melee",
+			"single-target",
+            "multi-target",
+            "conditional",
+			"condition",
+			"Vulnerability",
+			"modal"
+        ]
+    },
     {
         "type": "ability",
         "name": "Parallel Shields",
@@ -7372,6 +7421,48 @@
             "modal"
         ]
     },
+	{
+        "type": "ability",
+        "name": "Absorption Barrier",
+        "class": "Sentinel",
+        "branch": "Stalwart",
+        "tier": 3,
+        "action": "1 Reaction",
+        "cost": "40 stamina",
+        "range": "Self",
+        "duration": "Instant",
+        "description": [
+            "You cover a wide area, fully absorbing enemy attacks. Block all damage and effects of the entire AOE of an attack that would hit you or an adjacent ally. You recover 10 stamina per ally protected with this ability, up to a limit of 30 stamina. If you are dual wielding shields, you may expend a Shield stack; if you do, you may dash to any empty space protected by this ability."
+        ],
+        "tags": [
+            "Block",
+            "shield",
+            "self-target",
+            "ally-target",
+            "conditional",
+            "modal",
+			"dash"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Grand Guardian",
+        "class": "Sentinel",
+        "branch": "Stalwart",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "60 stamina",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You focus in order to react instinctively to attacks. For the duration, you may freely block an attack on yourself or an adjacent ally up to once per round as a free reaction, increased to up to twice per round if you are dual wielding shields. While this buff is active, you do not generate Shield stacks through your Perfect Shield passive; instead, you gain a Shield stack at the end of each of your turns."
+        ],
+        "tags": [
+            "Buff",
+			"concentration",
+			"conditional"
+        ]
+    },
     {
         "type": "ability",
         "name": "Chain Rush",
@@ -7410,6 +7501,47 @@
             "pull",
             "conditional",
             "shield"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Chain Snare",
+        "class": "Sentinel",
+        "branch": "Tenacious",
+        "tier": 3,
+        "action": "1 Minor Action or Reaction",
+        "cost": "25 stamina",
+        "range": "30 ft",
+        "duration": "Instant",
+        "description": [
+            "You ensnare enemies by wrapping them in chains. Toss your shield at a target enemy in range; they become Grappled. If you are dual wielding shields, do this twice. While you have enemies Grappled in this manner, your attacks against them have +100% Accuracy, but you are limited to attacks made with your currently equipped shields."
+        ],
+        "tags": [
+            "Attack",
+			"single-target",
+			"multi-target",
+			"grapple",
+			"modal",
+			"conditional"
+        ]
+    },
+	{
+        "type": "ability",
+        "name": "Chain Blitz",
+        "class": "Sentinel",
+        "branch": "Tenacious",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "100 stamina",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You cycle the gears around your chains to a more offensive set up. For the duration, you do not generate Shield stacks through your Perfect Shield passive; instead, you gain a Shield stack whenever you hit an enemy with a shield attack. Also, while this buff is active, all of your physical attacks with your shields have +30 ft range. This buff ends automatically when you enter Shield stance; if this buff ends in this manner, you gain +100% increased physical damage until Shield stance ends."
+        ],
+        "tags": [
+            "Buff",
+			"concentration",
+			"conditional"
         ]
     },
     {
