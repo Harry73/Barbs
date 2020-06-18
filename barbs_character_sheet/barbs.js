@@ -3,7 +3,7 @@ var Barbs = Barbs || (function () {
 
 
     // ################################################################################################################
-    // Constants
+    // Imports
 
 
     const assert_not_null = BarbsComponents.assert_not_null;
@@ -25,6 +25,7 @@ var Barbs = Barbs || (function () {
     const RollType = BarbsComponents.RollType;
     const RollTime = BarbsComponents.RollTime;
     const Roll = BarbsComponents.Roll;
+    const ItemType = BarbsComponents.ItemType;
     const Item = BarbsComponents.Item;
     const Character = BarbsComponents.Character;
 
@@ -996,6 +997,29 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function add_bonuses_from_skills(character, roll, attack_weapons) {
+        assert_not_null(character, 'check_skills() character');
+        assert_not_null(roll, 'check_skills() roll');
+        assert_not_null(attack_weapons, 'check_skills() attack_weapons');
+
+        const item_types = new Set();
+        for (let i = 0; i < attack_weapons.length; i++) {
+            const weapon = attack_weapons[i];
+            assert_type(weapon, 'Item', 'add_bonuses_from_skills() weapon');
+            item_types.add(weapon.type);
+        }
+
+        // Check if Weapon Mastery: Shields is at rank 1 (15 AP)
+        if (item_types.has(ItemType.SHIELD)) {
+            const skills = character.get_skills();
+            const skill_of_interest = Skill.WEAPON_MASTERY_SHIELDS.name.toLowerCase();
+            if (skill_of_interest in skills && skills[skill_of_interest] === 15) {
+                roll.add_multiplier(0.5, Damage.PHYSICAL, 'self');
+            }
+        }
+    }
+
+
     function get_applying_weapons(character, roll, parameters) {
         const applying_weapons = [];
 
@@ -1023,8 +1047,7 @@ var Barbs = Barbs || (function () {
     }
 
 
-    // For classes abilities specifically. We assume that the ability uses the character's equipped item with type
-    // MAIN_HAND or TWO_HAND.
+    // For classes abilities specifically
     function add_scale_damage(character, roll, parameters) {
         assert_not_null(character, 'add_scale_damage() character');
         assert_not_null(roll, 'add_scale_damage() roll');
@@ -1036,8 +1059,8 @@ var Barbs = Barbs || (function () {
         }
 
         const attack_weapons = get_applying_weapons(character, roll, parameters);
-        let max_damage_scaling = null;
 
+        let max_damage_scaling = null;
         for (let i = 0; i < attack_weapons.length; i++) {
             const damage_scaling = attack_weapons[i].damage_scaling;
             if (damage_scaling.stat === null) {
@@ -1050,6 +1073,7 @@ var Barbs = Barbs || (function () {
         }
 
         if (max_damage_scaling !== null) {
+            assert_type(max_damage_scaling, 'ItemScaler', 'add_scale_damage() max_damage_scaling');
             max_damage_scaling.handler(character, roll);
         }
     }
@@ -1087,6 +1111,8 @@ var Barbs = Barbs || (function () {
 
             add_item_to_roll(attack_weapon, roll, roll_time);
         }
+
+        add_bonuses_from_skills(character, roll, attack_weapons);
     }
 
 
@@ -1110,11 +1136,7 @@ var Barbs = Barbs || (function () {
 
         // Try these special arbitrary parameters last. They will effectively "take over" handling the rest of the roll,
         // so we will fail here and let the arbitrary parameter do it's thing.
-        if (handle_takeover_arbitrary_parameters(roll, roll_time, parameters, crit_section)) {
-            return false;
-        }
-
-        return true;
+        return !handle_takeover_arbitrary_parameters(roll, roll_time, parameters, crit_section);
     }
 
 
@@ -1739,6 +1761,9 @@ var Barbs = Barbs || (function () {
 
         // We know the item being used explicitly, so don't use add_scale_damage(), which guesses
         item.damage_scaling.handler(character, roll);
+
+        // Still need to check for potential bonuses from high-ranking skills though
+        add_bonuses_from_skills(character, roll, [item]);
 
         parameters.push('skip_applying_weapons');
         add_item_to_roll(item, roll, RollTime.DEFAULT);
