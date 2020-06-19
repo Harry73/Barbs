@@ -1568,7 +1568,9 @@
             "Axe Kick",
             "Open Palm Strike",
             "Backstep",
-            "Arrow Catch"
+            "Arrow Catch",
+            "Adaptive Brawling",
+            "Dragonfall Kick"
         ],
         "api": {
             "description": "The API will calculate what dice to use for your monk-mastery-dependent attacks. The API rolls for combo for abilities with the \"combo\" tag, and your base combo chance increases with your monk mastery automatically. The API will not track action economy.",

@@ -5756,6 +5756,24 @@
     },
     {
         "type": "ability",
+        "name": "Adaptive Brawling",
+        "class": "Martial Artist",
+        "branch": "Balance",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "50 stamina",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You focus your mind and quickly adapt. For the duration, you may reroll a failed combo roll once per turn. If you do, you have -10% combo chance for that roll. This buff's duration resets when you kill an enemy."
+        ],
+        "tags": [
+            "Buff",
+            "self-target"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Straight Punch",
         "class": "Martial Artist",
         "branch": "Pummel",
@@ -5840,6 +5858,29 @@
     },
     {
         "type": "ability",
+        "name": "Barrage of Blows",
+        "class": "Martial Artist",
+        "branch": "Pummel",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "40 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You let loose with many punches. Deal 2dU physical damage to a target in range, then repeat this attack X times, where X is the number of times you have succeeded on a combo chance roll this turn. After casting this ability, you no longer roll combo chance for the rest of the current turn."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "melee",
+            "single-target",
+            "unarmed",
+            "conditional",
+            "combo"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Roundhouse Kick",
         "class": "Martial Artist",
         "branch": "Thrash",
@@ -5909,6 +5950,34 @@
             "conditional",
             "combo",
             "dash"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Dragonfall Kick",
+        "class": "Martial Artist",
+        "branch": "Thrash",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "55 stamina",
+        "range": "40 ft",
+        "duration": "Instant",
+        "description": [
+            "You fly through the air before dropping an earth shattering kick. Dash to an empty space in range, then deal 8dU physical damage to all enemies within 20 ft, knocking them prone and inflicting Crippled. The damage of this ability increases by 20% for every enemy hit. If you choose not to dash with this ability, your next combo roll has +20%."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "melee",
+            "multi-target",
+            "unarmed",
+            "conditional",
+            "combo",
+            "dash",
+            "modal",
+            "condition",
+            "Crippled",
+            "Knock Prone"
         ]
     },
     {
