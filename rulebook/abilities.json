@@ -6918,6 +6918,27 @@
     },
     {
         "type": "ability",
+        "name": "Fiery Temper",
+        "class": "Pyromancer",
+        "branch": "Conflagration",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "55 mana",
+        "range": "30 ft",
+        "duration": "1 minute",
+        "description": [
+            "You convert the rage of battle into heat and flames. For the duration, at the beginning of each of your turns, deal 4d12 fire magic damage to all enemies in range. Additionally, enemies in range take twice as much damage from their Burns."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "fire",
+            "destruction",
+            "multi-target"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Firebolt",
         "class": "Pyromancer",
         "branch": "Incineration",
@@ -6992,6 +7013,28 @@
     },
     {
         "type": "ability",
+        "name": "Devour In Flames",
+        "class": "Pyromancer",
+        "branch": "Incineration",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "50 mana",
+        "range": "120 ft",
+        "duration": "Instant",
+        "description": [
+            "You overpower an enemy with fire. Deal fire magic damage to a target in range equal to 10% of their maximum health. If this is the second fire spell you've cast this turn, this spell has X% Lethality, where X is the percentage of Vulnerability the target has in total."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "fire",
+            "destruction",
+            "single-target",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Burn Trail",
         "class": "Pyromancer",
         "branch": "Wildfire",
@@ -7057,6 +7100,27 @@
             "destruction",
             "conditional",
             "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Heat Seeker",
+        "class": "Pyromancer",
+        "branch": "Wildfire",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "30 mana",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You can see heat signatures. For the duration, your vision becomes altered such that you can see the heat of living beings. You can see entities and objects with warmth that are invisible or Hidden with ease, even through walls that are no thicker than 2 ft. Additionally, while this buff is active, your fire spell attacks are attracted to your targets, gaining +100% Accuracy and triggering your Reduce to Ashes passive twice."
+        ],
+        "tags": [
+            "Spell",
+            "fire",
+            "utility",
+            "divination",
+            "buff"
         ]
     },
     {

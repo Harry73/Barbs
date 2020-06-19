@@ -1885,7 +1885,10 @@
             "Heat Ray",
             "Burn Trail",
             "Pyroblast",
-            "Inflame"
+            "Inflame",
+            "Fiery Temper",
+            "Devour In Flames",
+            "Heat Seeker"
         ],
         "api": {
             "description": "The extra effects are listed with pyromancer abilities that deal fire damage.",
