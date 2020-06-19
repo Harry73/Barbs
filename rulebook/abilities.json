@@ -4155,6 +4155,25 @@
     },
     {
         "type": "ability",
+        "name": "Inscribe Book",
+        "class": "Enchanter",
+        "branch": "Minutiae",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "X mana",
+        "range": "Touch",
+        "duration": "Endless",
+        "description": [
+            "You inscribe magic into a book. Target empty book becomes a magical item as you write spell instructions for a spell you know within it. You may enchant multiple spells within a book in this manner. A book with spells inscribed in it in this manner may have up to 10 tiers of spells within it before becoming too full of magic for further enchantment. A player with such a book in their inventory can cast spells written in the book as if they were casting a spell scroll, but the book is never consumed. Instead, each spell within the book can be cast once per day; the book recharges its spells at dawn. An entity may only have one such book in their inventory at any given time; the more full book will automatically destroy the lesser book (if they are equal, one will randomly be destroyed). The mana cost of this spell is X mana, where X is 50 plus the mana cost of the spell being enchanted into the book."
+        ],
+        "tags": [
+            "Spell",
+            "enchantment",
+            "utility"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Modify Weapon",
         "class": "Enchanter",
         "branch": "Personal",
@@ -4234,6 +4253,25 @@
             "enchantment",
             "modal",
             "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Bless Equipment",
+        "class": "Enchanter",
+        "branch": "Personal",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "40 mana",
+        "range": "Touch",
+        "duration": "Endless",
+        "description": [
+            "You enchant a piece of equipment with an assortment of useful blessings. Target equipment in range gains the following properties: the item is indestructible; the item cannot be cursed; the item cannot be lost, stolen, removed by others, or disarmed; the item can only be equipped by the entity who has it equipped at the time of casting this spell (or the first person who equips it after it's been enchanted); the item can be telepathically moved by the owner within 30 ft; the item stores strong memories of the owner made after this enchantment."
+        ],
+        "tags": [
+            "Spell",
+            "enchantment",
+            "utility"
         ]
     },
     {
@@ -4318,6 +4356,25 @@
             "major ritual",
             "modal",
             "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Sphere of Safety",
+        "class": "Enchanter",
+        "branch": "Structural",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "50 mana",
+        "range": "Touch",
+        "duration": "1 hour",
+        "description": [
+            "You enchant an area to protect others. You enchant a 55 ft AOE centered on a space in range, leaving behind a field of safety. This field cannot be forcibly dispelled or destroyed, and this spell cannot be reacted to. Within this field, no entities can take damage, be inflicted by conditions, die, cast spells, or attack. You may cast this spell as a minor ritual by spending 10 minutes; if you do, its duration becomes 6 hours. You may cast this spell as a major ritual by spending 1 hour; if you do, its duration becomes 24 hours. If you cast this spell as a major ritual, you may attune the spell to a gold, key-like object of approximately 1 ft size; if you do, the spell's duration becomes endless, and it is dispelled if its key is destroyed."
+        ],
+        "tags": [
+            "Spell",
+            "enchantment",
+            "defensive"
         ]
     },
     {
@@ -7434,7 +7491,8 @@
             "conditional",
             "condition",
             "Vulnerability",
-            "modal"
+            "modal",
+            "concentration"
         ]
     },
     {
