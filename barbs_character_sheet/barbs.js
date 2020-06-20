@@ -1025,6 +1025,20 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function append_weapon(character, list, item, slot) {
+        assert_not_null(character, 'append_weapon() character');
+        assert_not_null(list, 'append_weapon() list');
+        // The item may be null
+        assert_not_null(slot, 'append_weapon() slot');
+
+        if (item !== undefined && item !== null) {
+            list.push(item);
+        } else {
+            chat(character, '%s has no %s weapon'.format(character.name, slot));
+        }
+    }
+
+
     function get_applying_weapons(character, roll, parameters) {
         const applying_weapons = [];
 
@@ -1036,16 +1050,23 @@ var Barbs = Barbs || (function () {
 
         if (roll.roll_type === RollType.PHYSICAL) {
             if (get_parameter('offhand', parameters) !== null) {
-                applying_weapons.push(character.offhand);
+                append_weapon(character, applying_weapons, character.offhand, 'offhand');
             } else if (get_parameter('dual_wield', parameters) !== null) {
-                applying_weapons.push(character.main_hand);
-                applying_weapons.push(character.offhand);
+                append_weapon(character, applying_weapons, character.main_hand, 'main hand');
+                append_weapon(character, applying_weapons, character.offhand, 'offhand');
             } else {
-                applying_weapons.push(character.main_hand);
+                append_weapon(character, applying_weapons, character.main_hand, 'main hand');
             }
         } else {
-            applying_weapons.push(character.main_hand);
-            applying_weapons.push(character.offhand);
+            // Not using append_weapon() here because we don't necessarily expect a magic-using character to have main
+            // hand and offhand weapons. Also, this is where we land when calculating buff/enchant effectiveness, since
+            // we use a fake roll with RollType.ALL.
+            if (character.main_hand !== null) {
+                applying_weapons.push(character.main_hand);
+            }
+            if (character.offhand !== null) {
+                applying_weapons.push(character.offhand);
+            }
         }
 
         return applying_weapons;

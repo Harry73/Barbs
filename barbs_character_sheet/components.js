@@ -41,9 +41,9 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     function assert_type(object, type, message) {
-        assert_not_null(object, 'assert_type() object');
-        assert_not_null(type, 'assert_type() type');
         assert_not_null(message, 'assert_type() message');
+        assert_not_null(object, 'assert_type() object, ' + message);
+        assert_not_null(type, 'assert_type() type, ' + message);
 
         assert('_type' in object, '%s, no _type member in object %s'.format(message, JSON.stringify(object)));
         assert(type === object._type,
