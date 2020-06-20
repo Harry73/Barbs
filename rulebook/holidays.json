@@ -11,6 +11,7 @@
         "9": "Cordelia's Birthday",
         "10": "Coronation Day (Vastwood)",
         "22": "Feast of Kefanas",
+        "24": "Kirin's Birthday",
         "25": "Admirer's Day"
     },
     "Earthdust": {
@@ -39,7 +40,8 @@
     "Windring": {
         "7": "Feast of Aloys",
         "11": "The Unspoken Oath",
-        "23": "Kalitas' Birthday"
+        "23": "Adric's Birthday",
+        "24": "Faust's Birthday"
     },
     "Darknight": {
         "1": "Winter Solstice",
