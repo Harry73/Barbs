@@ -3492,6 +3492,24 @@ var Barbs = Barbs || (function () {
         });
     }
 
+    function warrior_fight_me(character, ability, parameters) {
+        const target = get_parameter('target', parameters);
+        if (target === null) {
+            chat(character, '"target" parameter is missing');
+            return;
+        }
+        
+        
+        const number = target.split(', ');
+        const roll = new Roll(character, RollType.PHYSICAL);
+        for (let i = 0; i < number; i++) {
+            roll.add_effect('CR: [[1d100]]');
+        }
+        do_roll(character, ability, roll, parameters, '');
+        print_ability_description(character, ability);
+
+    }
+
 
     function warrior_reinforce_armor(character, ability, parameters) {
         const sacrifices = get_parameter('buffs', parameters);
@@ -3730,7 +3748,7 @@ var Barbs = Barbs || (function () {
         'Warrior': {
             '"Charge!"': warrior_charge,
             'Cut Down': warrior_cut_down,
-            '"Fight Me!"': print_ability_description,  // TODO this maybe could do more
+            '"Fight Me!"': warrior_fight_me, 
             'Reinforce Armor': warrior_reinforce_armor,  // TODO this could do more
             'Shields Up': print_ability_description,
             'Warleader': warrior_warleader,
