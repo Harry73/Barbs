@@ -903,7 +903,7 @@
         "type": "skill",
         "name": "Magic: Divination",
         "category": "Magic",
-        "description": "Divination magic involves spells that protect. Skill checks usually involve knowledge about the divination magic subtype, or possibly improvised divination spell usage",
+        "description": "Divination magic involves spells that extract information. Skill checks usually involve knowledge about the divination magic subtype, or possibly improvised divination spell usage",
         "attribute": "Attunement",
         "rank_notes": {
             "Untrained": "You automatically fail Divination Magic checks",

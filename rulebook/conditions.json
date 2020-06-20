@@ -91,6 +91,12 @@
     },
     {
         "type": "condition",
+        "name": "Poisoned",
+        "duration": "1 minute",
+        "description": "You take water magic damage at the beginning of each of your turns. Stacks when you are inflicted with new instances of poison. Wears off at the end of combat, and easily cleansed with First Aid."
+    },
+    {
+        "type": "condition",
         "name": "Silenced",
         "duration": "Varies",
         "description": "You cannot speak or cast spells."
