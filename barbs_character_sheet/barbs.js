@@ -3161,6 +3161,7 @@ var Barbs = Barbs || (function () {
         add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
             roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 20);
+            return true;
         });
 
         print_ability_description(character, ability);
