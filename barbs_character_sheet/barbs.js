@@ -1529,7 +1529,7 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function martial_artist_choke_hold_combo(roll, roll_time, parameter) {
+    function martial_artist_choke_hold_arbitrary(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
         }
@@ -1627,6 +1627,11 @@ var Barbs = Barbs || (function () {
         }
 
         const stacks = parse_int(parameter.split(' ')[1]);
+        if (Number.isNaN(stacks)) {
+            chat(roll.character, 'Non-numeric number of stacks for "spotter" parameter');
+            return false;
+        }
+
         roll.add_multiplier(stacks * 0.25, Damage.ALL, 'self');
         return true;
     }
@@ -1669,13 +1674,29 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function warrior_warleader_arbitrary(roll, roll_time, parameter) {
+        if (roll_time !== RollTime.DEFAULT) {
+            return true;
+        }
+
+        const buffs = parse_int(parameter.split(' ')[1]);
+        if (Number.isNaN(buffs)) {
+            chat(roll.character, 'Non-numeric number of buffs for "warleader" parameter');
+            return false;
+        }
+
+        roll.add_multiplier(buffs * 0.25, Damage.PHYSICAL, 'self');
+        return true;
+    }
+
+
     const arbitrary_parameters = {
         'damage': arbitrary_damage,
         'multiplier': arbitrary_multiplier,
 
         'assassinate': assassin_assassinate,
         'arc_lightning': lightning_duelist_arc_lightning_mark,
-        'choke_hold': martial_artist_choke_hold_combo,
+        'choke_hold': martial_artist_choke_hold_arbitrary,
         'concave': mirror_mage_concave_mirror,
         'daggerspell_marked': daggerspell_marked,
         'draconic_pact': dragoncaller_draconic_pact,
@@ -1687,6 +1708,7 @@ var Barbs = Barbs || (function () {
         'stance': thief_stance,
         'tide': aquamancer_tide,
         'warper_cc': warper_opportunistic_predator,
+        'warleader': warrior_warleader_arbitrary,
     };
 
 
@@ -3508,7 +3530,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-    // TODO there is another half of this passive
     function warrior_warleader(character, ability, parameters) {
         const target_name = get_parameter('target', parameters);
         if (target_name === null) {

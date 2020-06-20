@@ -2587,9 +2587,10 @@
             "\"Kill them all!\""
         ],
         "api": {
-            "description": "You should add this to your Class Abilities as if this were a proper ability. This is half-implemented. The damage increase on yourself will not be present. You can empower an ally by using the ability with the \"target\" parameter. The API currently just assumes you have a buff to sacrifice to do this.",
+            "description": "You should add this to your Class Abilities as if this were a proper ability. You can empower an ally by using the ability with the \"target\" parameter. The API currently just assumes you have a buff to sacrifice to do this. To get the damage multiplier from this passive, use the \"warleader\" parameter, followed by the number of buffs on you, when you use an ability.",
             "examples": [
-                "target <ally name>"
+                "target <ally name>",
+                "warleader <number of buffs>"
             ]
         }
     },
