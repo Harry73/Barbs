@@ -194,6 +194,20 @@ def _build_class_hint_unlocks(classes, skills):
 
 
 def _build_branches_html(clazz, abilities):
+    def _make_description(lines, style_classes=''):
+        description = []
+        for line in lines:
+            if any(tag in line for tag in HTML_TAGS):
+                description.append(line)
+            else:
+                description.append('<p class="%s">%s</p>' % (style_classes, line))
+
+        for i in range(len(description)):
+            link = href('#%s_%s' % (clazz['name'], passive_name), passive_name)
+            description[i] = description[i].replace(passive_name, '<i>%s</i>' % link)
+
+        return ''.join(description)
+
     with open(os.path.join(HTML_TEMPLATES, 'branch.html'), encoding='utf8') as f:
         branch_template = f.read().strip()
     with open(os.path.join(HTML_TEMPLATES, 'ability.html'), encoding='utf8') as f:
@@ -211,17 +225,6 @@ def _build_branches_html(clazz, abilities):
 
         ability_htmls = []
         for ability in branch_abilities:
-            description = []
-            for line in ability['description']:
-                if any(tag in line for tag in HTML_TAGS):
-                    description.append(line)
-                else:
-                    description.append('<p>%s</p>' % line)
-
-            for i in range(len(description)):
-                link = href('#%s_%s' % (clazz['name'], passive_name), passive_name)
-                description[i] = description[i].replace(passive_name, '<i>%s</i>' % link)
-
             ability_html = ability_template.format(
                 name=html.escape(ability['name']),
                 clazz=ability['class'],
@@ -229,7 +232,8 @@ def _build_branches_html(clazz, abilities):
                 cost=ability['cost'],
                 range=ability['range'],
                 duration=ability['duration'],
-                description=''.join(description),
+                description=_make_description(ability['description']),
+                hidden_description=_make_description(ability['description'], style_classes='hidden-p'),
                 tags=', '.join(ability['tags']),
             )
             ability_htmls.append(ability_html)
@@ -402,7 +406,7 @@ def _build_calendar():
     if any(month_days['Windring (Autumn)'][6][i] != 0 or month_days['Darknight (Winter)'][6][i] != 0 for i in range(7)):
         calendar_html += empty_row
 
-    return '<table class="padded bordered">%s</table>' % calendar_html
+    return '<table class="visible-table padded bordered">%s</table>' % calendar_html
 
 
 def _generate_rulebook_html(log):
@@ -423,7 +427,11 @@ def _generate_rulebook_html(log):
     # The rulebook organizes skills into sections by category
     skill_categories = sorted(list(set(skill['category'] for skill in skills)))
 
+    with open(os.path.join(HTML_TEMPLATES, 'copy_script.js'), encoding='utf8') as f:
+        copy_script = f.read().strip()
+
     format_args = {
+        'script': copy_script,
         'calendar': _build_calendar(),
         'skills_nav': _build_skills_nav(skill_categories),
         'classes_nav': _build_classes_nav(classes),
@@ -485,7 +493,7 @@ def _generate_calendar_months_html(log):
 
             table += tr % row
 
-        month_html = '<table class="padded thin-bordered">%s</table>' % table
+        month_html = '<table class="visible-table padded thin-bordered">%s</table>' % table
         calendar_month_html = calendar_month_template.format(month=month_html)
 
         with open(os.path.join(CALENDAR_GENERATED, '%s.html' % month), 'w', encoding='utf8') as f:

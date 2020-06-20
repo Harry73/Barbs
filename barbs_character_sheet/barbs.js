@@ -182,6 +182,11 @@ var Barbs = Barbs || (function () {
             LOG.warn('Found ' + characters.length + ' matching characters for ' + msg.who);
         }
 
+        if (characters[0] === undefined || characters[0] === null) {
+            LOG.info('character 0 is undefined');
+            return null;
+        }
+
         return new Character(characters[0], msg.who);
     }
 

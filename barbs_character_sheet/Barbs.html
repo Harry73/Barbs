@@ -982,37 +982,21 @@
         <div class="sheet-section-inventory">
 
             <h4 class="sheet-center">Coin Carried <span class="sheet-pictos">h</span></h4>
-            <p class="sheet-small-note">Total = value of all coins converted to GP</p>
             <div class="sheet-row sheet-sub-header">
-                <div class="sheet-col-1-6 sheet-center sheet-small-label">CP</div>
-                <div class="sheet-col-1-6 sheet-center sheet-small-label">SP</div>
-                <div class="sheet-col-1-6 sheet-center sheet-small-label">EP</div>
-                <div class="sheet-col-1-6 sheet-center sheet-small-label">GP</div>
-                <div class="sheet-col-1-6 sheet-center sheet-small-label">PP</div>
-                <div class="sheet-col-1-6 sheet-center sheet-small-label">Total</div>
+                <div class="sheet-col-1-2 sheet-center sheet-small-label">GP</div>
+                <div class="sheet-col-1-2 sheet-center sheet-small-label">Total</div>
             </div>
 
             <div class="sheet-row">
-                <div class="sheet-col-1-6" title="Copper Pieces">
-                    <input type="number" name="attr_cp" value="0" min="0" step="1">
-                </div>
-                <div class="sheet-col-1-6" title="Silver Pieces">
-                    <input type="number" name="attr_sp" value="0" min="0" step="1">
-                </div>
-                <div class="sheet-col-1-6" title="Electrum Pieces">
-                    <input type="number" name="attr_ep" value="0" min="0" step="1">
-                </div>
-                <div class="sheet-col-1-6" title="Gold Pieces">
+                <div class="sheet-col-1-2" title="Gold Pieces">
                     <input type="number" name="attr_gp" value="0" min="0" step="1">
                 </div>
-                <div class="sheet-col-1-6" title="Platinum Pieces">
-                    <input type="number" name="attr_pp" value="0" min="0" step="1">
-                </div>
-                <div class="sheet-col-1-6" title="Total (in Gold Pieces)">
-                    <input type="number" name="attr_money_total_gp" value="(@{cp} / 100) + (@{sp} / 10) + (@{ep} / 2) + @{gp} + (@{pp} * 10) " disabled="disabled">
+                <div class="sheet-col-1-2" title="Total (in Gold Pieces)">
+                    <input type="number" name="attr_money_total_gp" value="(@{gp}) " disabled="disabled">
                 </div>
             </div>
 
+            <h4 class="sheet-center">Inventory</h4>
             <input type="radio" name="attr_inventorytab" class="sheet-inventorytab sheet-inventorytab1" value="1" title="Page 1" checked="checked" />
             <span class="sheet-inventorytab sheet-inventorytab1">Page 1</span>
             <input type="radio" name="attr_inventorytab" class="sheet-inventorytab sheet-inventorytab2" value="2" title="Page 2" />

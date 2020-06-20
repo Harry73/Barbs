@@ -393,8 +393,7 @@
             "buff",
             "self-target",
             "on-hit",
-            "bow",
-            ""
+            "bow"
         ],
         "api": {
             "description": "No special notes.",
@@ -1533,8 +1532,7 @@
             "minion",
             "AOE",
             "physical",
-            "magic",
-            ""
+            "magic"
         ]
     },
     {
@@ -4818,8 +4816,7 @@
             "alchemy",
             "constructs",
             "minion",
-            "modular component",
-            ""
+            "modular component"
         ]
     },
     {
@@ -7988,8 +7985,7 @@
         "tags": [
             "Buff",
             "concentration",
-            "add evasion",
-            ""
+            "add evasion"
         ]
     },
     {
@@ -8009,8 +8005,7 @@
             "Attack",
             "ranged",
             "physical",
-            "multi-target",
-            ""
+            "multi-target"
         ],
         "api": {
             "description": "No special notes.",

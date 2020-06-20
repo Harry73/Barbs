@@ -8276,6 +8276,7 @@ var BarbsComponents = BarbsComponents || (function () {
         'hood': ItemType.ARMOR,
         'shawl': ItemType.ARMOR,
         'helmet': ItemType.ARMOR,
+        'helm': ItemType.ARMOR,
         'halfhelm': ItemType.ARMOR,
         'greathelm': ItemType.ARMOR,
         'hardhard': ItemType.ARMOR,

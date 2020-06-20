@@ -1,4 +1,4 @@
-<a id="class_{clazz}_ability_{name}"><table class="bordered">
+<a id="class_{clazz}_ability_{name}"><table class="visible-table bordered">
     <tr class="center bordered">
         <td class="center bordered"><i>{name}</i></td>
         <td class="center bordered">{action}</td>
@@ -13,3 +13,21 @@
         <td class="left bordered" colspan="5">Tags: {tags}</td>
     </tr>
 </table></a>
+
+<table id="table_class_{clazz}_ability_{name}" class="hidden-table">
+    <tr class="center black-bordered">
+        <td class="center black-bordered"><i>{name}</i></td>
+        <td class="center black-bordered">{action}</td>
+        <td class="center black-bordered">Cost: {cost}</td>
+        <td class="center black-bordered">Range: {range}</td>
+        <td class="center black-bordered">Duration: {duration}</td>
+    </tr>
+    <tr class="center black-bordered">
+        <td class="left black-bordered" colspan="5">{hidden_description}</td>
+    </tr>
+    <tr class="center black-bordered">
+        <td class="left black-bordered" colspan="5">Tags: {tags}</td>
+    </tr>
+</table>
+<button class="copy-button" onclick="copy_ability('table_class_{clazz}_ability_{name}')">Copy Ability</button>
+<br>

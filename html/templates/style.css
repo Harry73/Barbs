@@ -61,9 +61,8 @@ h4 {
 .row-full{
     width: 100vw;
     position: relative;
-    margin-left: -50vw;
+    margin: 20px 0 0 -50vw;
     height: 2px;
-    margin-top: 10px;
     left: 50%;
     color: #FFFFFF;
     background-color: #FFFFFF;
@@ -157,7 +156,7 @@ ul li ul li {
 
 /* tables */
 
-table {
+.visible-table {
     table-layout: fixed;
     width: 100%;
     border-collapse: collapse;
@@ -235,6 +234,59 @@ td {
 .padded {
     margin-top: 15px;
     margin-bottom: 15px;
+}
+
+/* stuff for copying abilities */
+
+.hidden-table {
+    background: #FFFFFF;
+    color: #000000;
+    border: 1px solid #000000;
+    font-family: "Times New Roman", Times, serif;
+    table-layout: fixed;
+    width: 850px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    mix-blend-mode: normal;
+    display: none;
+}
+
+.black-bordered {
+    background: #FFFFFF;
+    color: #000000;
+    border: 1px solid #000000;
+    font-family: "Times New Roman", Times, serif;
+    mix-blend-mode: normal;
+}
+
+.hidden-p {
+    background: #FFFFFF;
+    color: #000000;
+    font-family: "Times New Roman", Times, serif;
+    mix-blend-mode: normal;
+}
+
+.copy-button {
+    margin: 10px 5px 5px 0;
+    float: right;
+    background-color: transparent;
+    color: #c1c1c1;
+    outline: 2px solid #c1c1c1;
+    outline-offset: 2px;
+    border: 0;
+    box-shadow: none;
+}
+
+.copy-button:active {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    float: right;
+    background-color: transparent;
+    color: lightgreen;
+    outline: 2px solid lightgreen;
+    outline-offset: 2px;
+    border: 0;
+    box-shadow: none;
 }
 
 /* sidebar */
