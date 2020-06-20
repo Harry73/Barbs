@@ -1138,7 +1138,9 @@ var Barbs = Barbs || (function () {
             add_item_to_roll(attack_weapon, roll, roll_time);
         }
 
-        add_bonuses_from_skills(character, roll, attack_weapons);
+        if (roll_time === RollTime.DEFAULT) {
+            add_bonuses_from_skills(character, roll, attack_weapons);
+        }
     }
 
 
