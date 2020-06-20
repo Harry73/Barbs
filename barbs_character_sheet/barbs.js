@@ -1689,6 +1689,13 @@ var Barbs = Barbs || (function () {
         return true;
     }
 
+    function warlord_aggression(roll, roll_time, parameter) {
+        if (roll_time !== RollTime.DEFAULT) {
+            return true;
+        }
+        roll.add_multiplier(0.5, Damage.PHYSICAL, 'self');
+        return true;
+    }
 
     const arbitrary_parameters = {
         'damage': arbitrary_damage,
@@ -1709,6 +1716,7 @@ var Barbs = Barbs || (function () {
         'tide': aquamancer_tide,
         'warper_cc': warper_opportunistic_predator,
         'warleader': warrior_warleader_arbitrary,
+		'warlord': warlord_aggression,
     };
 
 
