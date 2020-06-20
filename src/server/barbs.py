@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template, request
 
 server = Flask(__name__)
+server.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 
 @server.route('/')
