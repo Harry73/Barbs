@@ -2103,6 +2103,16 @@ var Barbs = Barbs || (function () {
         print_ability_description(character, ability);
     }
 
+    function captain_blitzkrieg(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll, parameters);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+        print_ability_description(character, ability);
+    }
 
     function captain_inspirational_speech(character, ability, parameters) {
         const parameter = get_parameter('targets', parameters);
@@ -3624,6 +3634,7 @@ var Barbs = Barbs || (function () {
         },
         'Captain': {
             'Inspirational Speech': captain_inspirational_speech,
+            'Blitzkrieg': captain_blitzkrieg,
         },
         'Champion': {
             'Disarming Blow': champion_disarming_blow,
@@ -3723,6 +3734,8 @@ var Barbs = Barbs || (function () {
             'Crossguard Guillotine': sentinel_crossguard_guillotine,
             'Parallel Shields': print_ability_description,
             'Bladeshield Arc': sentinel_bladeshield_arc,
+            'Rapid Shields': print_ability_description,
+			'Chain Drag': print_ability_description,
         },
         'Sniper': {
             'Analytical Shooter': sniper_analytical_shooter,
