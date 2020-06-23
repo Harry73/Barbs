@@ -3029,7 +3029,7 @@ var Barbs = Barbs || (function () {
         roll.add_damage('4d10', Damage.PHYSICAL);
         add_scale_damage(character, roll, parameters);
 
-        const stacks = get_parameter(parameters, 'stacks');
+        const stacks = get_parameter('stacks', parameters);
         if (stacks !== null) {
             roll.add_damage('%sd10'.format(stacks), Damage.PHYSICAL);
             roll.add_effect('Hits enemies diagonally to your target');
