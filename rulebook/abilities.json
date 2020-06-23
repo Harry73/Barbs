@@ -1729,7 +1729,7 @@
         "range": "50 ft",
         "duration": "Instant",
         "description": [
-            "You call for a tactical retreat to regroup. All allies in range gain a free reaction to dash up to their Move Speed away from enemies, then any number of allies may use their normal reaction to cast any heal ability. This ability, nor the heal abilities cast by allies due to this ability, cannot be reacted to. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a heal ability."
+            "You call for a tactical retreat to regroup. All allies in range gain a free reaction to dash up to their Move Speed away from enemies, then any number of allies may use their normal reaction to cast any heal ability. This ability and the heal abilities cast by allies due to this ability cannot be reacted to. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a heal ability."
         ],
         "tags": [
             "Dash",
