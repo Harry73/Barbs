@@ -3067,6 +3067,23 @@ var Barbs = Barbs || (function () {
         });        
     }
 
+    function sentinel_giga_drill_break(character, ability, parameters) {
+        const stacks = get_parameter('stacks', parameters);
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('10d10', Damage.PHYSICAL);
+        roll.add_effect('30% Physical Vulnerability + 10% for every 10 rolled. CR: [[1d100]]');
+        add_scale_damage(character, roll, parameters);
+        if (stacks !== null) {
+            roll.add_damage('%sd10'.format(stacks), Damage.PHYSICAL)
+            roll.add_hidden_stat(HiddenStat.AC_PENETRATION, 100);
+        }
+        
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });  
+        
+    }
+
     function sniper_analytical_shooter(character, ability, parameters) {
         const parameter = get_parameter('concentration', parameters);
         if (parameter === null) {
@@ -3736,6 +3753,7 @@ var Barbs = Barbs || (function () {
             'Bladeshield Arc': sentinel_bladeshield_arc,
             'Rapid Shields': print_ability_description,
             'Chain Drag': print_ability_description,
+			'Giga Drill Break': sentinel_giga_drill_break,
         },
         'Sniper': {
             'Analytical Shooter': sniper_analytical_shooter,
@@ -3755,6 +3773,7 @@ var Barbs = Barbs || (function () {
             'Intercept': print_ability_description,
             'Steadfast Strikes': soldier_steadfast_strikes,
             'Protective Sweep': print_ability_description,
+
         },
         'Summoner': {
             'Summon Ascarion Beast': summoner_summon_ascarion_beast,
