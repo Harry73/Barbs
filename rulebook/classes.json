@@ -943,7 +943,10 @@
         "abilities": [
             "Summon Bronze Dragon",
             "Bronze Dragon Breath",
-            "Dragonfear"
+            "Dragonfear",
+            "Summon Silver Dragon",
+            "Silver Dragon Breath",
+            "Dragonflight"
         ],
         "api": {
             "description": "For a summoned creature's attack ability, add the 'draconic_pact' parameter with the number of pacts you have. The API will add in the increased damage based on this.",

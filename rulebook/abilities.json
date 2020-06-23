@@ -3842,6 +3842,29 @@
     },
     {
         "type": "ability",
+        "name": "Silver Dragon Breath",
+        "class": "Dragoncaller",
+        "branch": "Derivation",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "30 mana",
+        "range": "80 ft",
+        "duration": "Instant",
+        "description": [
+            "You release the overpowering violence of a silver dragon's breath attack. Deal 10d8 ice magic damage to all enemies in an 80 ft cone AOE. All Silver Dragons you control then use their reactions to use their breath attacks in directions of your choosing."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "destruction",
+            "ice",
+            "AOE",
+            "cone",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Summon Bronze Dragon",
         "class": "Dragoncaller",
         "branch": "Descent",
@@ -3874,6 +3897,29 @@
     },
     {
         "type": "ability",
+        "name": "Summon Silver Dragon",
+        "class": "Dragoncaller",
+        "branch": "Descent",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "60 mana",
+        "range": "40 ft",
+        "duration": "1 minute",
+        "description": [
+            "You summon a juvenile silver dragon, bringer of ice. Summon a Silver Dragon with 250 health, large size, 30 AC, 30% EV, 70% MR, 40% CR, and 70 ft flying Move Speed. The Dragon obeys your commands; otherwise, it uses its Move Action to fly to positions above enemies, its Major Action to either swipe with its tail for 8d10 physical damage on all enemy targets in melee range or use its breath attack for 12d8 ice magic damage in an 80 ft cone AOE, and its Minor Action to either buff all allies with +10% CR and +10% Magic Penetration for 1 minute, stacking and refreshing, or inflict all enemies with -10% CR and +10% Magic Vulnerability for 1 minute, stacking and refreshing. The Silver Dragon is a master of ancient arcane practices; if given a moment to study anything associated with magic, it can provide detailed information about the object of study, and can assist in tampering with or destroying any magic spell or object studied in this manner."
+        ],
+        "tags": [
+            "Spell",
+            "summoning",
+            "minion",
+            "physical",
+            "ice",
+            "buff",
+            "condition"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Dragonfear",
         "class": "Dragoncaller",
         "branch": "Dignify",
@@ -3892,6 +3938,28 @@
             "conditional",
             "Fear",
             "Weaken"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Dragonflight",
+        "class": "Dragoncaller",
+        "branch": "Dignify",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "35 mana",
+        "range": "Battlefield",
+        "duration": "1 minute",
+        "description": [
+            "You invoke the free spirit of the dragon. An ally in range gains a buff that converts all of their Move Speed into flying Move Speed, and they cleanse a condition of their choice. When you cast this spell, you may target an additional ally for each Dragon you control."
+        ],
+        "tags": [
+            "Spell",
+            "utility",
+            "restoration",
+            "buff",
+            "cleanse",
+            "conditional"
         ]
     },
     {
