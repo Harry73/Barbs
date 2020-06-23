@@ -3735,7 +3735,7 @@ var Barbs = Barbs || (function () {
             'Parallel Shields': print_ability_description,
             'Bladeshield Arc': sentinel_bladeshield_arc,
             'Rapid Shields': print_ability_description,
-			'Chain Drag': print_ability_description,
+            'Chain Drag': print_ability_description,
         },
         'Sniper': {
             'Analytical Shooter': sniper_analytical_shooter,
@@ -3754,6 +3754,7 @@ var Barbs = Barbs || (function () {
             'Fleetfoot Blade': soldier_fleetfoot_blade,
             'Intercept': print_ability_description,
             'Steadfast Strikes': soldier_steadfast_strikes,
+            'Protective Sweep': print_ability_description,
         },
         'Summoner': {
             'Summon Ascarion Beast': summoner_summon_ascarion_beast,
@@ -3792,8 +3793,10 @@ var Barbs = Barbs || (function () {
             'Reinforce Armor': warrior_reinforce_armor,  // TODO this could do more
             'Shields Up': print_ability_description,
             'Warleader': warrior_warleader,
+            'Take Cover': print_ability_description,
         },
     };
+
 
 
     function process_ability(msg) {
