@@ -6351,6 +6351,28 @@
     },
     {
         "type": "ability",
+        "name": "Cold Shoulder",
+        "class": "Mistguard",
+        "branch": "Haze",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "35 mana",
+        "range": "20 ft",
+        "duration": "1 minute",
+        "description": [
+            "You shield everyone in a protective aura. All allies in range gain a 5 ft aura; within this aura, enemies have a 50% chance of being Frozen when they enter or leave the aura (or if the aura enters or leaves their space when the ally moves). You may spend an additional 10 mana to cast this ability when Initiative is rolled."
+        ],
+        "tags": [
+            "Spell",
+            "ice",
+            "defensive",
+            "modal",
+            "condition",
+            "Frozen"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Silver Armor",
         "class": "Mistguard",
         "branch": "Murk",
@@ -6374,6 +6396,26 @@
     },
     {
         "type": "ability",
+        "name": "Annul",
+        "class": "Mistguard",
+        "branch": "Murk",
+        "tier": 2,
+        "action": "1 Reaction",
+        "cost": "30 mana",
+        "range": "100 ft",
+        "duration": "Instant",
+        "description": [
+            "You steal an enemy mage's mana to use for your defenses. As a reaction to a target in range casting a spell, you may counter that spell. Then, you gain shielding equal to twice the amount of mana spent on the countered spell."
+        ],
+        "tags": [
+            "Spell",
+            "ice",
+            "defensive",
+            "counterspell"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Deep Snow",
         "class": "Mistguard",
         "branch": "Vapor",
@@ -6393,6 +6435,30 @@
             "attack",
             "multi-target",
             "field"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Glacial Gust",
+        "class": "Mistguard",
+        "branch": "Vapor",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "35 mana",
+        "range": "60 ft",
+        "duration": "Instant",
+        "description": [
+            "You push enemies back with an icy wind. Deal 9d8 ice magic damage to all enemies in a 60 ft cone, pushing all targets back to the edge of the cone. Targets cannot dash to avoid this AOE attack."
+        ],
+        "tags": [
+            "Spell",
+            "ice",
+            "destruction",
+            "defensive",
+            "attack",
+            "AOE",
+            "cone",
+            "forced movement"
         ]
     },
     {

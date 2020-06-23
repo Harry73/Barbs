@@ -1669,7 +1669,10 @@
         "abilities": [
             "Deep Snow",
             "Silver Armor",
-            "Morning Frost"
+            "Morning Frost",
+            "Cold Shoulder",
+            "Annul",
+            "Glacial Gust"
         ],
         "api": {
             "description": "The API will not do anything for this passive. You should track it by hand.",
