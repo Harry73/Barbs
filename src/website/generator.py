@@ -193,6 +193,83 @@ def _build_class_hint_unlocks(classes, skills):
     return BR_JOIN(class_hint_section_htmls)
 
 
+def _build_pretty_table_ability(ability):
+    def _cut_line_at_width(line, width):
+        words = line.split(' ')
+        trimmed_lines = []
+
+        def _add(curr):
+            remaining_space = width - len(curr)
+            trimmed_lines.append(curr + ' ' * remaining_space)
+
+        current_line = ''
+        for word in words:
+            if len(current_line) + len(word) + 1 > width:
+                _add(current_line)
+                current_line = ''
+
+            if current_line == '':
+                current_line += word
+            else:
+                current_line += ' ' + word
+
+        if current_line:
+            _add(current_line)
+
+        return trimmed_lines
+
+    top_row = [
+        ' %s ' % ability['name'].strip(),
+        ' %s ' % ability['duration'].strip(),
+        ' Cost: %s ' % ability['cost'].strip(),
+        ' Range: %s ' % ability['range'].strip(),
+        ' Duration: %s ' % ability['duration'].strip(),
+    ]
+
+    total_width = sum([len(item) for item in top_row]) + 2
+
+    divider = ''
+    for item in top_row:
+        divider += '+' + '-' * len(item)
+    divider += '+\n'
+
+    table = divider
+    for item in top_row:
+        table += '|%s' % item
+    table += '|\n'
+
+    table += divider
+
+    for line in ability['description']:
+        line = line.strip()
+        if line in ['<ul>', '</ul>']:
+            continue
+
+        if line.startswith('<li>'):
+            inner_text = line.split('>')[1].split('<')[0]
+            for i, trimmed_line in enumerate(_cut_line_at_width(inner_text, total_width - 2)):
+                prefix = '* ' if i == 0 else '  '
+                table += '| %s%s |\n' % (prefix, trimmed_line)
+            continue
+
+        if line == '<br>':
+            empty = ' ' * total_width
+            table += '| %s |\n' % empty
+            continue
+
+        for trimmed_line in _cut_line_at_width(line, total_width):
+            table += '| %s |\n' % trimmed_line
+
+    table += divider
+
+    tags = 'Tags: ' + ', '.join([t.strip() for t in ability['tags']])
+    for trimmed_line in _cut_line_at_width(tags, total_width):
+        table += '| %s |\n' % trimmed_line
+    table += divider
+
+    return '```\n%s```' % table
+
+
 def _build_branches_html(clazz, abilities):
     def _make_description(lines, style_classes=''):
         description = []
@@ -234,6 +311,7 @@ def _build_branches_html(clazz, abilities):
                 duration=ability['duration'],
                 description=_make_description(ability['description']),
                 hidden_description=_make_description(ability['description'], style_classes='hidden-p'),
+                pretty_table=_build_pretty_table_ability(ability),
                 tags=', '.join(ability['tags']),
             )
             ability_htmls.append(ability_html)

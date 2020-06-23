@@ -29,5 +29,9 @@
         <td class="left black-bordered" colspan="5">Tags: {tags}</td>
     </tr>
 </table>
-<button class="copy-button" onclick="copy_ability('table_class_{clazz}_ability_{name}')">Copy Ability</button>
+
+<div id="pretty_table_class_{clazz}_ability_{name}" class="hidden-table">{pretty_table}</div>
+
+<button class="copy-button" onclick="copy_ability('table_class_{clazz}_ability_{name}')">Copy for Roll20</button>
+<button class="copy-button" onclick="copy_ability('pretty_table_class_{clazz}_ability_{name}')">Copy for Discord</button>
 <br>

@@ -267,7 +267,7 @@ td {
 }
 
 .copy-button {
-    margin: 10px 5px 5px 0;
+    margin: 10px 5px 5px 10px;
     float: right;
     background-color: transparent;
     color: #c1c1c1;
