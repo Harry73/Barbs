@@ -3040,6 +3040,22 @@ var Barbs = Barbs || (function () {
         });
     }
 
+    function sentinel_bladeshield_arc(character, ability, parameters) {
+        const stacks = get_parameter('stacks', parameters);
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll, parameters);
+
+
+        if (stacks !== null) {
+            roll.add_damage('%sd10'.format(stacks), Damage.PHYSICAL);
+            roll.add_effect('Range extended to 10 feet');
+        }
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });        
+    }
 
     function sniper_analytical_shooter(character, ability, parameters) {
         const parameter = get_parameter('concentration', parameters);
@@ -3706,6 +3722,7 @@ var Barbs = Barbs || (function () {
         'Sentinel': {
             'Crossguard Guillotine': sentinel_crossguard_guillotine,
             'Parallel Shields': print_ability_description,
+            'Bladeshield Arc': sentinel_bladeshield_arc,
         },
         'Sniper': {
             'Analytical Shooter': sniper_analytical_shooter,
