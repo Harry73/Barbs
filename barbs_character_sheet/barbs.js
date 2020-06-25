@@ -2662,6 +2662,7 @@ var Barbs = Barbs || (function () {
         const spent_ki = get_parameter('ki', parameters);
         if (spent_ki !== null) {
             roll.add_damage('5d%s'.format(monk_dice), Damage.PSYCHIC);
+			roll.add_effect('Heal half the psychic damage rolled');
         }
 
         roll_crit(roll, parameters, function (crit_section) {
