@@ -988,6 +988,56 @@ var Barbs = Barbs || (function () {
     // Class abilities helpers
 
 
+    // Helper to do a roll and collect the results into strings that sum the results for each roll.
+    // This is meant for rolls that are just individual collections of dice, e.g. "[[5d10]][[4d12]]".
+    // This probably won't work if you put math in the expression, e.g. "[[5d10+12]]".
+    function hidden_roll(roll, handler) {
+        chat({'who': 'API'}, roll, function (response) {
+            LOG.trace('Roll response: ' + JSON.stringify(response));
+            // results[0].inlinerolls = [
+            //   {
+            //     "expression":"4d8",
+            //     "results": {
+            //       "type":"V",
+            //       "rolls":[
+            //         {
+            //           "type":"R",
+            //           "dice":4,
+            //           "sides":8,
+            //           "mods":{},
+            //           "results":[{"v":2},{"v":6},{"v":3},{"v":4}]
+            //         }
+            //       ],
+            //       "resultType":"sum",
+            //       "total":15
+            //     },
+            //   },
+            //   {
+            //       <next roll>
+            //   },
+            // ]
+            const rolls = response[0]['inlinerolls'];
+            const value_strings = [];
+            for (let i = 0; i < rolls.length; i++) {
+                const results = rolls[i]['results']['rolls'][0]['results'];
+                let value_string = '';
+                for (let j = 0; j < results.length; j++) {
+                    const value = results[j]['v'];
+                    if (value_string === '') {
+                        value_string = '%s'.format(value);
+                    } else {
+                        value_string += '+%s'.format(value);
+                    }
+                }
+                value_strings.push(value_string);
+            }
+            LOG.trace('Value strings: ' + JSON.stringify(value_strings));
+
+            handler(value_strings);
+        });
+    }
+
+
     function get_parameter(parameter, parameters) {
         assert_not_null(parameter, 'get_parameter() parameter');
         assert_not_null(parameters, 'get_parameter() parameters');
@@ -1691,6 +1741,7 @@ var Barbs = Barbs || (function () {
         return true;
     }
 
+
     function warlord_aggression(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
@@ -1698,6 +1749,7 @@ var Barbs = Barbs || (function () {
         roll.add_multiplier(0.5, Damage.PHYSICAL, 'self');
         return true;
     }
+
 
     const arbitrary_parameters = {
         'damage': arbitrary_damage,
@@ -2103,6 +2155,7 @@ var Barbs = Barbs || (function () {
         print_ability_description(character, ability);
     }
 
+
     function captain_blitzkrieg(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('5d10', Damage.PHYSICAL);
@@ -2113,6 +2166,7 @@ var Barbs = Barbs || (function () {
         });
         print_ability_description(character, ability);
     }
+
 
     function captain_inspirational_speech(character, ability, parameters) {
         const parameter = get_parameter('targets', parameters);
@@ -2635,38 +2689,50 @@ var Barbs = Barbs || (function () {
     function ki_monk_spirit_punch(character, ability, parameters) {
         const monk_dice = character.get_monk_dice();
 
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('4d%s'.format(monk_dice), Damage.PHYSICAL);
-        add_scale_damage(character, roll, parameters);
-        roll.add_effect('Gain Ki equal to rolled value');
+        hidden_roll('[[4d%s]]'.format(monk_dice), function (value_strings) {
+            const physical_damage = value_strings[0];
+            const roll = new Roll(character, RollType.PHYSICAL);
+            roll.add_damage(physical_damage, Damage.PHYSICAL);
+            add_scale_damage(character, roll, parameters);
+            roll.add_effect('Gain [[%s]] Ki'.format(physical_damage));
 
-        const spent_ki = get_parameter('ki', parameters);
-        if (spent_ki !== null) {
-            roll.add_damage('4d%s'.format(monk_dice), Damage.PSYCHIC);
-        }
+            const spent_ki = get_parameter('ki', parameters);
+            if (spent_ki !== null) {
+                roll.add_damage('4d%s'.format(monk_dice), Damage.PSYCHIC);
+            }
 
-        roll_crit(roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
+            roll_crit(roll, parameters, function (crit_section) {
+                do_roll(character, ability, roll, parameters, crit_section);
+            });
         });
     }
 
 
     function ki_monk_drain_punch(character, ability, parameters) {
         const monk_dice = character.get_monk_dice();
-
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('5d%s'.format(monk_dice), Damage.PHYSICAL);
-        add_scale_damage(character, roll, parameters);
-        roll.add_effect('Gain Ki equal to half the rolled value');
-
         const spent_ki = get_parameter('ki', parameters);
+
+        let secret_roll = '[[5d%s]]'.format(monk_dice);
         if (spent_ki !== null) {
-            roll.add_damage('5d%s'.format(monk_dice), Damage.PSYCHIC);
-			roll.add_effect('Heal half the psychic damage rolled');
+            secret_roll += '[[5d%s]]'.format(monk_dice);
         }
 
-        roll_crit(roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
+        hidden_roll(secret_roll.format(monk_dice), function (value_strings) {
+            const physical_damage = value_strings[0];
+            const roll = new Roll(character, RollType.PHYSICAL);
+            roll.add_damage(physical_damage, Damage.PHYSICAL);
+            add_scale_damage(character, roll, parameters);
+            roll.add_effect('Gain [[round((%s)/2)]] Ki'.format(physical_damage));
+
+            if (spent_ki !== null) {
+                const psychic_damage = value_strings[1];
+                roll.add_damage(psychic_damage, Damage.PSYCHIC);
+                roll.add_effect('Heal [[round((%s)/2)]]'.format(psychic_damage));
+            }
+
+            roll_crit(roll, parameters, function (crit_section) {
+                do_roll(character, ability, roll, parameters, crit_section);
+            });
         });
     }
 
@@ -3051,6 +3117,7 @@ var Barbs = Barbs || (function () {
         });
     }
 
+
     function sentinel_bladeshield_arc(character, ability, parameters) {
         const stacks = get_parameter('stacks', parameters);
         const roll = new Roll(character, RollType.PHYSICAL);
@@ -3065,8 +3132,9 @@ var Barbs = Barbs || (function () {
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
-        });        
+        });
     }
+
 
     function sentinel_giga_drill_break(character, ability, parameters) {
         const stacks = get_parameter('stacks', parameters);
@@ -3078,12 +3146,13 @@ var Barbs = Barbs || (function () {
             roll.add_damage('%sd10'.format(stacks), Damage.PHYSICAL)
             roll.add_hidden_stat(HiddenStat.AC_PENETRATION, 100);
         }
-        
+
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
-        });  
-        
+        });
+
     }
+
 
     function sniper_analytical_shooter(character, ability, parameters) {
         const parameter = get_parameter('concentration', parameters);
@@ -3552,8 +3621,8 @@ var Barbs = Barbs || (function () {
             chat(character, '"target" parameter is missing');
             return;
         }
-        
-        
+
+
         const number = target.split(', ');
         const roll = new Roll(character, RollType.PHYSICAL);
         for (let i = 0; i < number; i++) {
@@ -3809,7 +3878,7 @@ var Barbs = Barbs || (function () {
         'Warrior': {
             '"Charge!"': warrior_charge,
             'Cut Down': warrior_cut_down,
-            '"Fight Me!"': warrior_fight_me, 
+            '"Fight Me!"': warrior_fight_me,
             'Reinforce Armor': warrior_reinforce_armor,  // TODO this could do more
             'Shields Up': print_ability_description,
             'Warleader': warrior_warleader,
