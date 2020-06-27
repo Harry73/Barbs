@@ -1088,8 +1088,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "buff",
                         "self-target",
                         "on-hit",
-                        "bow",
-                        ""
+                        "bow"
                     ]
                 },
                 "Bow of Hurricanes": {
@@ -1787,8 +1786,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "minion",
                         "aoe",
                         "physical",
-                        "magic",
-                        ""
+                        "magic"
                     ]
                 },
                 "Crafted Cleric": {
@@ -1929,7 +1927,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "name": "Retreat",
                     "class": "Captain",
                     "description": [
-                        "You call for a tactical retreat to regroup. All allies in range gain a free reaction to dash up to their Move Speed away from enemies, then any number of allies may use their normal reaction to cast any heal ability. This ability, nor the heal abilities cast by allies due to this ability, cannot be reacted to. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a heal ability."
+                        "You call for a tactical retreat to regroup. All allies in range gain a free reaction to dash up to their Move Speed away from enemies, then any number of allies may use their normal reaction to cast any heal ability. This ability and the heal abilities cast by allies due to this ability cannot be reacted to. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a heal ability."
                     ],
                     "tags": [
                         "dash",
@@ -3489,6 +3487,53 @@ var BarbsComponents = BarbsComponents || (function () {
                         "fear",
                         "weaken"
                     ]
+                },
+                "Summon Silver Dragon": {
+                    "name": "Summon Silver Dragon",
+                    "class": "Dragoncaller",
+                    "description": [
+                        "You summon a juvenile silver dragon, bringer of ice. Summon a Silver Dragon with 250 health, large size, 30 AC, 30% EV, 70% MR, 40% CR, and 70 ft flying Move Speed. The Dragon obeys your commands; otherwise, it uses its Move Action to fly to positions above enemies, its Major Action to either swipe with its tail for 8d10 physical damage on all enemy targets in melee range or use its breath attack for 12d8 ice magic damage in an 80 ft cone AOE, and its Minor Action to either buff all allies with +10% CR and +10% Magic Penetration for 1 minute, stacking and refreshing, or inflict all enemies with -10% CR and +10% Magic Vulnerability for 1 minute, stacking and refreshing. The Silver Dragon is a master of ancient arcane practices; if given a moment to study anything associated with magic, it can provide detailed information about the object of study, and can assist in tampering with or destroying any magic spell or object studied in this manner."
+                    ],
+                    "tags": [
+                        "spell",
+                        "summoning",
+                        "minion",
+                        "physical",
+                        "ice",
+                        "buff",
+                        "condition"
+                    ]
+                },
+                "Silver Dragon Breath": {
+                    "name": "Silver Dragon Breath",
+                    "class": "Dragoncaller",
+                    "description": [
+                        "You release the overpowering violence of a silver dragon's breath attack. Deal 10d8 ice magic damage to all enemies in an 80 ft cone AOE. All Silver Dragons you control then use their reactions to use their breath attacks in directions of your choosing."
+                    ],
+                    "tags": [
+                        "spell",
+                        "attack",
+                        "destruction",
+                        "ice",
+                        "aoe",
+                        "cone",
+                        "conditional"
+                    ]
+                },
+                "Dragonflight": {
+                    "name": "Dragonflight",
+                    "class": "Dragoncaller",
+                    "description": [
+                        "You invoke the free spirit of the dragon. An ally in range gains a buff that converts all of their Move Speed into flying Move Speed, and they cleanse a condition of their choice. When you cast this spell, you may target an additional ally for each Dragon you control."
+                    ],
+                    "tags": [
+                        "spell",
+                        "utility",
+                        "restoration",
+                        "buff",
+                        "cleanse",
+                        "conditional"
+                    ]
                 }
             }
         },
@@ -3813,6 +3858,42 @@ var BarbsComponents = BarbsComponents || (function () {
                         "utility",
                         "modal",
                         "concentration"
+                    ]
+                },
+                "Inscribe Book": {
+                    "name": "Inscribe Book",
+                    "class": "Enchanter",
+                    "description": [
+                        "You inscribe magic into a book. Target empty book becomes a magical item as you write spell instructions for a spell you know within it. You may enchant multiple spells within a book in this manner. A book with spells inscribed in it in this manner may have up to 10 tiers of spells within it before becoming too full of magic for further enchantment. A player with such a book in their inventory can cast spells written in the book as if they were casting a spell scroll, but the book is never consumed. Instead, each spell within the book can be cast once per day; the book recharges its spells at dawn. An entity may only have one such book in their inventory at any given time; the more full book will automatically destroy the lesser book (if they are equal, one will randomly be destroyed). The mana cost of this spell is X mana, where X is 50 plus the mana cost of the spell being enchanted into the book."
+                    ],
+                    "tags": [
+                        "spell",
+                        "enchantment",
+                        "utility"
+                    ]
+                },
+                "Bless Equipment": {
+                    "name": "Bless Equipment",
+                    "class": "Enchanter",
+                    "description": [
+                        "You enchant a piece of equipment with an assortment of useful blessings. Target equipment in range gains the following properties: the item is indestructible; the item cannot be cursed; the item cannot be lost, stolen, removed by others, or disarmed; the item can only be equipped by the entity who has it equipped at the time of casting this spell (or the first person who equips it after it's been enchanted); the item can be telepathically moved by the owner within 30 ft; the item stores strong memories of the owner made after this enchantment."
+                    ],
+                    "tags": [
+                        "spell",
+                        "enchantment",
+                        "utility"
+                    ]
+                },
+                "Sphere of Safety": {
+                    "name": "Sphere of Safety",
+                    "class": "Enchanter",
+                    "description": [
+                        "You enchant an area to protect others. You enchant a 55 ft AOE centered on a space in range, leaving behind a field of safety. This field cannot be forcibly dispelled or destroyed, and this spell cannot be reacted to. Within this field, no entities can take damage, be inflicted by conditions, die, cast spells, or attack. You may cast this spell as a minor ritual by spending 10 minutes; if you do, its duration becomes 6 hours. You may cast this spell as a major ritual by spending 1 hour; if you do, its duration becomes 24 hours. If you cast this spell as a major ritual, you may attune the spell to a gold, key-like object of approximately 1 ft size; if you do, the spell's duration becomes endless, and it is dispelled if its key is destroyed."
+                    ],
+                    "tags": [
+                        "spell",
+                        "enchantment",
+                        "defensive"
                     ]
                 }
             }
@@ -4149,8 +4230,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "alchemy",
                         "constructs",
                         "minion",
-                        "modular component",
-                        ""
+                        "modular component"
                     ]
                 },
                 "Remodulate": {
@@ -4909,6 +4989,38 @@ var BarbsComponents = BarbsComponents || (function () {
                         "conditional",
                         "attack"
                     ]
+                },
+                "Adaptive Brawling": {
+                    "name": "Adaptive Brawling",
+                    "class": "Martial Artist",
+                    "description": [
+                        "You focus your mind and quickly adapt. For the duration, you may reroll a failed combo roll once per turn. If you do, you have -10% combo chance for that roll. This buff's duration resets when you kill an enemy."
+                    ],
+                    "tags": [
+                        "buff",
+                        "self-target"
+                    ]
+                },
+                "Dragonfall Kick": {
+                    "name": "Dragonfall Kick",
+                    "class": "Martial Artist",
+                    "description": [
+                        "You fly through the air before dropping an earth shattering kick. Dash to an empty space in range, then deal 8dU physical damage to all enemies within 20 ft, knocking them prone and inflicting Crippled. The damage of this ability increases by 20% for every enemy hit. If you choose not to dash with this ability, your next combo roll has +20%."
+                    ],
+                    "tags": [
+                        "attack",
+                        "physical",
+                        "melee",
+                        "multi-target",
+                        "unarmed",
+                        "conditional",
+                        "combo",
+                        "dash",
+                        "modal",
+                        "condition",
+                        "crippled",
+                        "knock prone"
+                    ]
                 }
             }
         },
@@ -5173,6 +5285,51 @@ var BarbsComponents = BarbsComponents || (function () {
                         "ice",
                         "defensive",
                         "modal"
+                    ]
+                },
+                "Cold Shoulder": {
+                    "name": "Cold Shoulder",
+                    "class": "Mistguard",
+                    "description": [
+                        "You shield everyone in a protective aura. All allies in range gain a 5 ft aura; within this aura, enemies have a 50% chance of being Frozen when they enter or leave the aura (or if the aura enters or leaves their space when the ally moves). You may spend an additional 10 mana to cast this ability when Initiative is rolled."
+                    ],
+                    "tags": [
+                        "spell",
+                        "ice",
+                        "defensive",
+                        "modal",
+                        "condition",
+                        "frozen"
+                    ]
+                },
+                "Annul": {
+                    "name": "Annul",
+                    "class": "Mistguard",
+                    "description": [
+                        "You steal an enemy mage's mana to use for your defenses. As a reaction to a target in range casting a spell, you may counter that spell. Then, you gain shielding equal to twice the amount of mana spent on the countered spell."
+                    ],
+                    "tags": [
+                        "spell",
+                        "ice",
+                        "defensive",
+                        "counterspell"
+                    ]
+                },
+                "Glacial Gust": {
+                    "name": "Glacial Gust",
+                    "class": "Mistguard",
+                    "description": [
+                        "You push enemies back with an icy wind. Deal 9d8 ice magic damage to all enemies in a 60 ft cone, pushing all targets back to the edge of the cone. Targets cannot dash to avoid this AOE attack."
+                    ],
+                    "tags": [
+                        "spell",
+                        "ice",
+                        "destruction",
+                        "defensive",
+                        "attack",
+                        "aoe",
+                        "cone",
+                        "forced movement"
                     ]
                 }
             }
@@ -5731,6 +5888,49 @@ var BarbsComponents = BarbsComponents || (function () {
                         "conditional",
                         "modal"
                     ]
+                },
+                "Fiery Temper": {
+                    "name": "Fiery Temper",
+                    "class": "Pyromancer",
+                    "description": [
+                        "You convert the rage of battle into heat and flames. For the duration, at the beginning of each of your turns, deal 4d12 fire magic damage to all enemies in range. Additionally, enemies in range take twice as much damage from their Burns."
+                    ],
+                    "tags": [
+                        "spell",
+                        "attack",
+                        "fire",
+                        "destruction",
+                        "multi-target"
+                    ]
+                },
+                "Devour In Flames": {
+                    "name": "Devour In Flames",
+                    "class": "Pyromancer",
+                    "description": [
+                        "You overpower an enemy with fire. Deal fire magic damage to a target in range equal to 10% of their maximum health. If this is the second fire spell you've cast this turn, this spell has X% Lethality, where X is the percentage of Vulnerability the target has in total."
+                    ],
+                    "tags": [
+                        "spell",
+                        "attack",
+                        "fire",
+                        "destruction",
+                        "single-target",
+                        "conditional"
+                    ]
+                },
+                "Heat Seeker": {
+                    "name": "Heat Seeker",
+                    "class": "Pyromancer",
+                    "description": [
+                        "You can see heat signatures. For the duration, your vision becomes altered such that you can see the heat of living beings. You can see entities and objects with warmth that are invisible or Hidden with ease, even through walls that are no thicker than 2 ft. Additionally, while this buff is active, your fire spell attacks are attracted to your targets, gaining +100% Accuracy and triggering your Reduce to Ashes passive twice."
+                    ],
+                    "tags": [
+                        "spell",
+                        "fire",
+                        "utility",
+                        "divination",
+                        "buff"
+                    ]
                 }
             }
         },
@@ -6134,6 +6334,97 @@ var BarbsComponents = BarbsComponents || (function () {
                         "conditional",
                         "shield"
                     ]
+                },
+                "Dual Shield Strike": {
+                    "name": "Dual Shield Strike",
+                    "class": "Sentinel",
+                    "description": [
+                        "You move quickly to stab with both shields. Dash up to 20 ft, then deal 6d10 physical damage to a target in range, dealing half as much damage to any enemy behind the target as well. When this attack is used as a reaction, it interrupts any enemy attack or spell it reacts to. If you are dual wielding shields, you may expend any number of Shield stacks; if you do, you may repeat this attack as a free reaction until the end of the turn without paying its stamina cost, except it deals an additional Xd10 physical damage, where X is the number of Shield stacks spent, and it hits up to 2 enemies behind the target as well."
+                    ],
+                    "tags": [
+                        "attack",
+                        "physical",
+                        "melee",
+                        "single-target",
+                        "multi-target",
+                        "conditional",
+                        "modal",
+                        "interrupt"
+                    ]
+                },
+                "Giga Drill Break": {
+                    "name": "Giga Drill Break",
+                    "class": "Sentinel",
+                    "description": [
+                        "You rapidly rotate your shields using a complex gear and chain system. Dash up to 40 ft, then deal 10d10 physical damage to a target in range, dealing an equal amount of damage to any enemies adjacent to the target as well. Targets hit by this attack are then inflicted with +30% Physical Vulnerability, plus an additional +10% Physical Vulnerability for every damage die that rolls a 10. You may concentrate on this ability when you cast it; if you do, you may cast it without paying its stamina cost as a major action or reaction for the duration. While concentrating on this ability, it deals an additional Xd10 physical damage, where X is the number of Shield stacks you have, and it ignores 100% of the target's AC."
+                    ],
+                    "tags": [
+                        "attack",
+                        "physical",
+                        "melee",
+                        "single-target",
+                        "multi-target",
+                        "conditional",
+                        "condition",
+                        "vulnerability",
+                        "modal",
+                        "concentration"
+                    ]
+                },
+                "Absorption Barrier": {
+                    "name": "Absorption Barrier",
+                    "class": "Sentinel",
+                    "description": [
+                        "You cover a wide area, fully absorbing enemy attacks. Block all damage and effects of the entire AOE of an attack that would hit you or an adjacent ally. You recover 10 stamina per ally protected with this ability, up to a limit of 30 stamina. If you are dual wielding shields, you may expend a Shield stack; if you do, you may dash to any empty space protected by this ability."
+                    ],
+                    "tags": [
+                        "block",
+                        "shield",
+                        "self-target",
+                        "ally-target",
+                        "conditional",
+                        "modal",
+                        "dash"
+                    ]
+                },
+                "Grand Guardian": {
+                    "name": "Grand Guardian",
+                    "class": "Sentinel",
+                    "description": [
+                        "You focus in order to react instinctively to attacks. For the duration, you may freely block an attack on yourself or an adjacent ally up to once per round as a free reaction, increased to up to twice per round if you are dual wielding shields. While this buff is active, you do not generate Shield stacks through your Perfect Shield passive; instead, you gain a Shield stack at the end of each of your turns."
+                    ],
+                    "tags": [
+                        "buff",
+                        "concentration",
+                        "conditional"
+                    ]
+                },
+                "Chain Snare": {
+                    "name": "Chain Snare",
+                    "class": "Sentinel",
+                    "description": [
+                        "You ensnare enemies by wrapping them in chains. Toss your shield at a target enemy in range; they become Grappled. If you are dual wielding shields, do this twice. While you have enemies Grappled in this manner, your attacks against them have +100% Accuracy, but you are limited to attacks made with your currently equipped shields."
+                    ],
+                    "tags": [
+                        "attack",
+                        "single-target",
+                        "multi-target",
+                        "grapple",
+                        "modal",
+                        "conditional"
+                    ]
+                },
+                "Chain Blitz": {
+                    "name": "Chain Blitz",
+                    "class": "Sentinel",
+                    "description": [
+                        "You cycle the gears around your chains to a more offensive set up. For the duration, you do not generate Shield stacks through your Perfect Shield passive; instead, you gain a Shield stack whenever you hit an enemy with a shield attack. Also, while this buff is active, all of your physical attacks with your shields have +30 ft range. This buff ends automatically when you enter Shield stance; if this buff ends in this manner, you gain +100% increased physical damage until Shield stance ends."
+                    ],
+                    "tags": [
+                        "buff",
+                        "concentration",
+                        "conditional"
+                    ]
                 }
             }
         },
@@ -6155,8 +6446,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "attack",
                         "ranged",
                         "physical",
-                        "multi-target",
-                        ""
+                        "multi-target"
                     ]
                 },
                 "Kill Shot": {
@@ -6315,8 +6605,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "tags": [
                         "buff",
                         "concentration",
-                        "add evasion",
-                        ""
+                        "add evasion"
                     ]
                 }
             }
