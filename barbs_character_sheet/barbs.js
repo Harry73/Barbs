@@ -578,9 +578,7 @@ var Barbs = Barbs || (function () {
         }
 
         const pieces = msg.content.split(' ');
-
         const points_in_skill = parse_int(pieces[pieces.length - 1]);
-        const bonus = 5 * points_in_skill;
         const given_skill_name = pieces.slice(2, pieces.length - 1).join(' ');
         const skill_name = given_skill_name.replace(/:/g, '').replace(/ /g, '_').toUpperCase();
 
@@ -590,6 +588,27 @@ var Barbs = Barbs || (function () {
         }
 
         const skill = Skill[skill_name];
+        do_skill_check(character, skill, given_skill_name, points_in_skill);
+    }
+
+
+    function roll_psionics_offensive(character) {
+        const skills = character.get_skills();
+        const skill_name = Skill.PSIONICS_OFFENSIVE.name.toLowerCase();
+        if (!(skill_name in skills)) {
+            chat(character, 'Attack has psychic damage but character does not have Psionics: Offensive. ' +
+                'You auto-fail the Psionics check.');
+            return;
+        }
+
+        const points_in_skill = skills[skill_name];
+        do_skill_check(character, Skill.PSIONICS_OFFENSIVE, 'Psionics: Offensive', points_in_skill);
+    }
+
+
+    function do_skill_check(character, skill, skill_name, points_in_skill) {
+        const bonus = 5 * points_in_skill;
+
         const attribute = character.get_attribute(skill.scaling_attr_tla);
         let roll_string = 'd100+%s+%s'.format(bonus, attribute);
 
@@ -602,7 +621,7 @@ var Barbs = Barbs || (function () {
         }
         roll_string = 'round(%s)'.format(roll_string);
 
-        chat(msg, total_format.format(given_skill_name, 'Roll', roll_string));
+        chat(character, total_format.format(skill_name, 'Roll', roll_string));
     }
 
 
@@ -1311,6 +1330,11 @@ var Barbs = Barbs || (function () {
         // dependent on whether or not the roll was a crit should not have been applied.
         if (!roll.should_apply_crit) {
             crit_section = '';
+        }
+
+        // If an attack has psychic damage, we have to do a Psionics: Offensive skill check
+        if (Damage.PSYCHIC in roll.damages) {
+            roll_psionics_offensive(character);
         }
 
         const rolls_per_type = roll.roll();
