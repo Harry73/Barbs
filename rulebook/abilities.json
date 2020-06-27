@@ -973,7 +973,11 @@
             "self-target",
             "modal",
             "dash"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -1015,7 +1019,13 @@
             "Buff",
             "self-target",
             "modal"
-        ]
+        ],
+        "api": {
+            "description": "No special notes for casting this buff. To sacrifice it for the additional damage and effect, add the \"sacrifice\" parameter. The original effect, if active, will be replaced with one that grants the new one-time effects.",
+            "examples": [
+                "sacrifice"
+            ]
+        }
     },
     {
         "type": "ability",

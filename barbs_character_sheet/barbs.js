@@ -40,7 +40,7 @@ var Barbs = Barbs || (function () {
     const initiative_format = '&{template:5eDefault} {{title=Initiative}} {{subheader=%s}} {{rollname=Initiative}} {{roll=[[%s+%s+%s]]}}';
     const total_format = '&{template:default} {{name=%s}} {{%s=[[%s]]}}';
     const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
-    const percent_format = '&{template:default} {{name=%s}} {{%s=[[1d100cs>[[100-(%s)+1]]]]}}';
+    const percent_format = '&{template:default} {{name=%s}} {{%s (%s%)=[[1d100cs>[[100-(%s)+1]]]]}}';
 
     const roll_format = '&{template:Barbs} {{name=%s}} %s %s %s %s %s';
     const damage_section_format = '{{%s=[[%s]]}}';
@@ -354,6 +354,12 @@ var Barbs = Barbs || (function () {
         const stat = Stat[msg.content.split(' ')[2].toUpperCase()];
         const roll = get_roll_with_items_and_effects(character);
         const modifier = get_stat_roll_modifier(character, roll, stat);
+        const numeric_modifier = eval(modifier);
+        if (Number.isNaN(numeric_modifier)) {
+            LOG.warn('Bad modifier: ' + modifier);
+            raw_chat('API', 'Non-numeric stat roll modifier, something went wrong');
+            return;
+        }
 
         switch (stat.name) {
             case Stat.HEALTH.name:
@@ -392,7 +398,8 @@ var Barbs = Barbs || (function () {
                 break;
 
             case Stat.EVASION.name:
-                chat(character, percent_format.format('Evasion', 'Evasion', modifier));
+                chat(character, percent_format.format('Evasion', 'Evasion', numeric_modifier,
+                                                      Math.min(101, numeric_modifier)));
                 break;
 
             case Stat.MAGIC_RESIST.name:
@@ -422,7 +429,8 @@ var Barbs = Barbs || (function () {
                 break;
 
             case Stat.CRITICAL_HIT_CHANCE.name:
-                chat(character, percent_format.format('Critical Hit Chance', 'Crit', modifier));
+                chat(character, percent_format.format('Critical Hit Chance', 'Crit', numeric_modifier,
+                                                      Math.min(101, numeric_modifier)));
                 break;
 
             case Stat.COMMANDS.name:
@@ -465,8 +473,7 @@ var Barbs = Barbs || (function () {
             total_cr += roll.condition_resists[condition.toLowerCase().replace(/[()]/g, '')];
         }
 
-        total_cr = Math.min(101, total_cr);
-        chat(character, percent_format.format(condition + ' Resist', 'CR', total_cr));
+        chat(character, percent_format.format(condition + ' Condition Resist', 'CR', total_cr, Math.min(101, total_cr)));
     }
 
 
@@ -2010,6 +2017,55 @@ var Barbs = Barbs || (function () {
     function aquamancer_draught_of_vigor(character, ability, parameters) {
         // NOTE: It's a "pick two of these effects" case
         chat(character, 'Not yet implemented');
+    }
+
+
+    function arcane_archer_broadhead_arrow(character, ability, parameters) {
+        const sacrifice = get_parameter('sacrifice', parameters);
+        if (sacrifice !== null) {
+            for (let i = 0; i < persistent_effects.length; i++) {
+                if (persistent_effects[i].name === ability.name && persistent_effects[i].target === character.name) {
+                    persistent_effects.splice(i, 1);
+
+                    ability.name = ability.name + ' (sacrificed)';
+                    add_persistent_effect(character, ability, parameters, character, Duration.SINGLE_USE(), Ordering(),
+                                          RollType.PHYSICAL, RollTime.DEFAULT, 1,
+                                          function (character, roll, parameters) {
+                        roll.add_multiplier(2, Damage.PHYSICAL, 'self');
+                        roll.add_effect('Ignore 100% of target\'s AC');
+                        return true;
+                    });
+
+                    chat(character, 'Sacrificed Broadhead Arrow');
+                    return;
+                }
+            }
+
+            chat(character, 'Broadhead Arrow is not active on %s, and thus cannot be ' +
+                'sacrified.'.format(character.name));
+
+        } else {
+            add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
+                                  RollType.PHYSICAL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
+                roll.add_multiplier(1, Damage.PHYSICAL, 'self');
+                roll.add_effect('Single target attacks hit adjacent targets');
+                return true;
+            });
+
+            print_ability_description(character, ability);
+        }
+    }
+
+
+    function arcane_archer_elusive_hunter(character, ability, parameters) {
+        add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
+                              RollType.ALL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
+            roll.add_stat_multiplier(Stat.EVASION, 0.5);
+            roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 15);
+            return true;
+        });
+
+        print_ability_description(character, ability);
     }
 
 
@@ -3661,6 +3717,7 @@ var Barbs = Barbs || (function () {
         });
     }
 
+
     function warrior_fight_me(character, ability, parameters) {
         const target = get_parameter('target', parameters);
         if (target === null) {
@@ -3750,6 +3807,10 @@ var Barbs = Barbs || (function () {
             'Baptize': aquamancer_baptize,
             'Tidal Wave': aquamancer_tidal_wave,
             'Draught of Vigor': aquamancer_draught_of_vigor,
+        },
+        'Arcane Archer': {
+            'Broadhead Arrow': arcane_archer_broadhead_arrow,
+            'Elusive Hunter': arcane_archer_elusive_hunter,
         },
         'Arcanist': {
             'Magic Dart': arcanist_magic_dart,
