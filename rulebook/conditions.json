@@ -13,6 +13,12 @@
     },
     {
         "type": "condition",
+        "name": "Burned",
+        "duration": "1 minute",
+        "description": "At the beginning of each of your turns, you take fire magic damage equal to your amount of Burn. Wears off at the end of combat, and easily cleansed with First Aid. New instances do not stack, but replace old instances of Burn if the new instance is higher. Ignores defenses."
+    },
+    {
+        "type": "condition",
         "name": "Charmed",
         "duration": "Varies",
         "description": "You consider the entity that charmed you as a friend."
@@ -93,7 +99,7 @@
         "type": "condition",
         "name": "Poisoned",
         "duration": "1 minute",
-        "description": "You take water magic damage at the beginning of each of your turns. Stacks when you are inflicted with new instances of poison. Wears off at the end of combat, and easily cleansed with First Aid."
+        "description": "You take water magic damage at the beginning of each of your turns. Stacks when you are inflicted with new instances of poison. Wears off at the end of combat, and easily cleansed with First Aid. Ignores defenses."
     },
     {
         "type": "condition",

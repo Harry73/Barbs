@@ -513,7 +513,10 @@
         "abilities": [
             "Blitzkrieg",
             "Retreat",
-            "Inspirational Speech"
+            "Inspirational Speech",
+            "Fire At Will",
+            "Bunker Down",
+            "Scramble"
         ]
     },
     {
