@@ -67,11 +67,19 @@ var Barbs = Barbs || (function () {
     };
 
 
+    function raw_chat(sender, message, handler) {
+        assert_not_null(sender, 'raw_chat() sender');
+        assert_not_null(message, 'raw_chat() message');
+
+        sendChat(sender, message, handler);
+    }
+
+
     function chat(character, message, handler) {
         assert_not_null(character, 'chat() character');
         assert_not_null(message, 'chat() message');
 
-        sendChat(character.who, message, handler);
+        raw_chat(character.who, message, handler);
     }
 
 
@@ -3940,22 +3948,9 @@ var Barbs = Barbs || (function () {
         parameters = trim_all(parameters);
         parameters = remove_empty(parameters);
 
-        // Verify that we have a processor for this class + ability combo
-        if (!(class_name in abilities_processors)) {
-            chat(msg, 'Unknown class %s'.format(class_name));
-            return;
-        }
-
-        if (!(ability_name in abilities_processors[class_name])) {
-            chat(msg, 'Unknown ability %s'.format(ability_name));
-            return;
-        }
-
-        const processor = abilities_processors[class_name][ability_name];
-
         // Get the ability or passive info from master class list
         if (!(class_name in classes)) {
-            chat(msg, 'Mismatched class %s, wrong spelling?'.format(class_name));
+            raw_chat('API', 'Unrecognized class "%s", wrong spelling?'.format(class_name));
             return;
         }
 
@@ -3963,23 +3958,33 @@ var Barbs = Barbs || (function () {
         const class_abilities = clazz['abilities'];
         const class_passive_name = Object.keys(clazz.passive)[0];
 
+        let ability = null;
         if (ability_name in class_abilities) {
-            processor(character, class_abilities[ability_name], parameters);
-            return;
+            ability = class_abilities[ability_name];
         }
-
         if (ability_name === class_passive_name) {
-            const ability = {
+            ability = {
                 'name': class_passive_name,
                 'description': [clazz['passive'][class_passive_name]],
                 'class': clazz['name'],
             };
+        }
 
-            processor(character, ability, parameters);
+        if (ability === null) {
+            raw_chat('API', 'Unrecognized passive or ability "%s" for class "%s", ' +
+                'wrong spelling?'.format(ability_name, clazz.name));
             return;
         }
 
-        chat(msg, 'Mismatched ability %s, wrong spelling?'.format(ability_name));
+        // See if we have a processor for this class + ability combo
+        if (!(class_name in abilities_processors) || !(ability_name in abilities_processors[class_name])) {
+            raw_chat('API', 'The API does not know how to handle this ability yet, printing ability description');
+            print_ability_description(character, ability);
+            return;
+        }
+
+        const processor = abilities_processors[class_name][ability_name];
+        processor(character, ability, parameters);
     }
 
 
