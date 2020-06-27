@@ -658,6 +658,7 @@ var BarbsComponents = BarbsComponents || (function () {
     const conditions = [
         "Bleeding",
         "Blinded",
+        "Burned",
         "Charmed",
         "Confused",
         "Crippled",

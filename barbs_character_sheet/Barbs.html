@@ -178,7 +178,7 @@
 
                     <div class="sheet-row sheet-padb sheet-center">
                         <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Take_Damage" value="!barbs dmg ?{Physical|0} ?{Psychic|0} ?{Fire|0} ?{Water|0} ?{Earth|0} ?{Air|0} ?{Ice|0} ?{Lightning|0} ?{Light|0} ?{Dark|0}">Take Damage</button>
-                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Condition_Resist" value="!barbs cr ?{Condition|General|Bleeding|Blinded|Charmed|Confused|Crippled|Cursed|Decreased Stats|Fear|Frozen|Helpless|Immobilized|Knocked Down (Prone)|Knocked Up (Airborne)|Paralyzed|Petrified|Poisoned|Silenced|Sleeping|Slowed|Stunned|Taunted|Weakened}">Condition Resist</button>
+                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Condition_Resist" value="!barbs cr ?{Condition|General|Bleeding|Blinded|Burned|Charmed|Confused|Crippled|Cursed|Decreased Stats|Fear|Frozen|Helpless|Immobilized|Knocked Down (Prone)|Knocked Up (Airborne)|Paralyzed|Petrified|Poisoned|Silenced|Sleeping|Slowed|Stunned|Taunted|Weakened}">Condition Resist</button>
                         <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Concentration" value="!barbs concentration">Concentration</button>
                     </div>
 
@@ -214,257 +214,276 @@
                 <!-- left column -->
                 <div class="sheet-col-1-2 sheet-padr">
                     <div class="sheet-row sheet-sub-header">
-                        <div class="sheet-col-1-6 sheet-center sheet-small-label">&nbsp;</div>
-                        <div class="sheet-col-5-6 sheet-small-label">Attribute</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-23-24 sheet-small-label">Attribute</div>
                     </div>
 
-                    <!-- TODO fix the rolls -->
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Vitality}} {{VIT=[[1d100+@{VIT}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Vitality (VIT)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Vitality (VIT)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_VIT" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_vitality" value="&{template:default} {{name=Vitality}} {{VIT=[[1d100+@{VIT}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_endurance" value="&{template:default} {{name=Endurance}} {{END=[[1d100+@{END}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Endurance (END)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Endurance (END)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_END" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_endurance" value="&{template:default} {{name=Endurance}} {{END=[[1d100+@{END}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_spirit" value="&{template:default} {{name=Spirit}} {{SPT=[[1d100+@{SPT}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Spirit (SPT)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Spirit (SPT)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_SPT" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_spirit" value="&{template:default} {{name=Spirit}} {{SPT=[[1d100+@{SPT}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_recovery" value="&{template:default} {{name=Recovery}} {{RCV=[[1d100+@{RCV}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Recovery (RCV)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Recovery (RCV)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_RCV" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_recovery" value="&{template:default} {{name=Recovery}} {{RCV=[[1d100+@{RCV}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_perseverance" value="&{template:default} {{name=Perseverance}} {{PER=[[1d100+@{PER}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Perseverance (PER)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Perseverance (PER)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_PER" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_perseverance" value="&{template:default} {{name=Perseverance}} {{PER=[[1d100+@{PER}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_sanity" value="&{template:default} {{name=Sanity}} {{SAN=[[1d100+@{SAN}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Sanity (SAN)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Sanity (SAN)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_SAN" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_sanity" value="&{template:default} {{name=Sanity}} {{SAN=[[1d100+@{SAN}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_agility" value="&{template:default} {{name=Agility}} {{AGI=[[1d100+@{AGI}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Agility (AGI)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Agility (AGI)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_AGI" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_agility" value="&{template:default} {{name=Agility}} {{AGI=[[1d100+@{AGI}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_toughness" value="&{template:default} {{name=Toughness}} {{TGH=[[1d100+@{TGH}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Toughness (TGH)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Toughness (TGH)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_TGH" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_toughness" value="&{template:default} {{name=Toughness}} {{TGH=[[1d100+@{TGH}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_reflex" value="&{template:default} {{name=Reflex}} {{REF=[[1d100+@{REF}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Reflex (REF)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Reflex (REF)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_REF" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_reflex" value="&{template:default} {{name=Reflex}} {{REF=[[1d100+@{REF}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_resistance" value="&{template:default} {{name=Resistance}} {{RES=[[1d100+@{RES}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Resistance (RES)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Resistance (RES)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_RES" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_resistance" value="&{template:default} {{name=Resistance}} {{RES=[[1d100+@{RES}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
                 </div>
 
                 <!-- right column -->
                 <div class="sheet-col-1-2">
                     <div class="sheet-row sheet-sub-header">
-                        <div class="sheet-col-1-6 sheet-center sheet-small-label">&nbsp;</div>
-                        <div class="sheet-col-5-6 sheet-small-label">Attribute</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-23-24 sheet-small-label">Attribute</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_fortitude" value="&{template:default} {{name=Fortitude}} {{FRT=[[1d100+@{FRT}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Fortitude (FRT)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Fortitude (FRT)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_FRT" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_fortitude" value="&{template:default} {{name=Fortitude}} {{FRT=[[1d100+@{FRT}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_strength" value="&{template:default} {{name=Strength}} {{STR=[[1d100+@{STR}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Strength (STR)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Strength (STR)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_STR" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_strength" value="&{template:default} {{name=Strength}} {{STR=[[1d100+@{STR}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_dexterity" value="&{template:default} {{name=Dexterity}} {{DEX=[[1d100+@{DEX}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Dexterity (DEX)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Dexterity (DEX)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_DEX" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_dexterity" value="&{template:default} {{name=Dexterity}} {{DEX=[[1d100+@{DEX}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_attunement" value="&{template:default} {{name=Attunement}} {{ATN=[[1d100+@{ATN}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Attunement (ATN)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Attunement (ATN)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_ATN" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_attunement" value="&{template:default} {{name=Attunement}} {{ATN=[[1d100+@{ATN}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_precision" value="&{template:default} {{name=Precision}} {{PRE=[[1d100+@{PRE}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Precision (PRE)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Precision (PRE)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_PRE" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_precision" value="&{template:default} {{name=Precision}} {{PRE=[[1d100+@{PRE}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_appeal" value="&{template:default} {{name=Appeal}} {{APL=[[1d100+@{APL}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Appeal (APL)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Appeal (APL)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_APL" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_appeal" value="&{template:default} {{name=Appeal}} {{APL=[[1d100+@{APL}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_intelligence" value="&{template:default} {{name=Intelligence}} {{INT=[[1d100+@{INT}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Intelligence (INT)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Intelligence (INT)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_INT" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_intelligence" value="&{template:default} {{name=Intelligence}} {{INT=[[1d100+@{INT}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_wisdom" value="&{template:default} {{name=Wisdom}} {{WIS=[[1d100+@{WIS}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Wisdom (WIS)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Wisdom (WIS)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_WIS" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_wisdom" value="&{template:default} {{name=Wisdom}} {{WIS=[[1d100+@{WIS}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_composure" value="&{template:default} {{name=Composure}} {{COM=[[1d100+@{COM}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Composure (COM)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Composure (COM)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_COM" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_composure" value="&{template:default} {{name=Composure}} {{COM=[[1d100+@{COM}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_focus" value="&{template:default} {{name=Focus}} {{FCS=[[1d100+@{FCS}]]}}"></button>
-                        </div>
-                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Focus (FCS)</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Focus (FCS)</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_FCS" min="-10" max="20" step="1" value="-10" />
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_focus" value="&{template:default} {{name=Focus}} {{FCS=[[1d100+@{FCS}]]}}"></button>
+                        </div>
+                        <div class="sheet-col-1-6">&nbsp;</div>
                     </div>
                 </div>
             </div>
@@ -474,144 +493,154 @@
         <!-- Stats Sheet -->
         <div class="sheet-section-stats">
 
-            <h4 class="sheet-center">Stats</h4>
-            <div class="sheet-row">
+            <h4 class="sheet-center">Core Stats</h4>
+            <div class="sheet-row sheet-padb">
                 <!-- left column -->
                 <div class="sheet-col-1-2 sheet-padr">
                     <div class="sheet-row sheet-sub-header">
-                        <div class="sheet-col-1-8 sheet-center sheet-small-label">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-small-label">Stat</div>
+                        <div class="sheet-col-1-24 sheet-center sheet-small-label">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-small-label">Stat</div>
                         <div class="sheet-col-1-6 sheet-center sheet-small-label">Base Value</div>
-                        <div class="sheet-col-9-24 sheet-center sheet-small-label">&nbsp;</div>
+                        <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_health" value="!barbs stat Health"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Health</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Health</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_health" value="@{hidden_health}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_health" value="!barbs stat Health"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_health" value="100+10*@{VIT}"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_stamina" value="!barbs stat Stamina"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Stamina</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Stamina</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_stamina" value="@{hidden_stamina}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_stamina" value="!barbs stat Stamina"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_stamina" value="100+10*@{END}"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_mana" value="!barbs stat Mana"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Mana</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Mana</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_mana" value="@{hidden_mana}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_mana" value="!barbs stat Mana"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_mana" value="100+10*@{SPT}"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_health_regeneration" value="!barbs stat Health_Regeneration"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Health Regeneration</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Health Regeneration</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_health_regeneration" value="@{hidden_health_regeneration}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_health_regeneration" value="!barbs stat Health_Regeneration"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_health_regeneration" value="10+@{RCV}"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_stamina_regeneration" value="!barbs stat Stamina_Regeneration"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Stamina Regeneration</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Stamina Regeneration</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_stamina_regeneration" value="@{hidden_stamina_regeneration}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_stamina_regeneration" value="!barbs stat Stamina_Regeneration"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_stamina_regeneration" value="10+@{PER}"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_mana_regeneration" value="!barbs stat Mana_Regeneration"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Mana Regeneration</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Mana Regeneration</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_mana_regeneration" value="@{hidden_mana_regeneration}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_mana_regeneration" value="!barbs stat Mana_Regeneration"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_mana_regeneration" value="10+@{SAN}"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_movement_speed" value="!barbs stat Movement_Speed"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Movement Speed</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Movement Speed</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_movement_speed" value="@{hidden_movement_speed}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_movement_speed" value="!barbs stat Movement_Speed"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_movement_speed" value="30+5*floor(@{AGI}/2)"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_ac" value="!barbs dmg ?{Physical|0} ?{Psychic|0} ?{Fire|0} ?{Water|0} ?{Earth|0} ?{Air|0} ?{Ice|0} ?{Lightning|0} ?{Light|0} ?{Dark|0}"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">AC</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">AC</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_ac" value="@{hidden_ac}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_ac" value="!barbs dmg ?{Physical|0} ?{Psychic|0} ?{Fire|0} ?{Water|0} ?{Earth|0} ?{Air|0} ?{Ice|0} ?{Lightning|0} ?{Light|0} ?{Dark|0}"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_ac" value="10+@{TGH}"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_evasion" value="!barbs stat Evasion"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Evasion</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Evasion</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_evasion" value="@{hidden_evasion}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_evasion" value="!barbs stat Evasion"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_evasion" value="10+@{REF}"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_magic_resist" value="!barbs dmg ?{Physical|0} ?{Psychic|0} ?{Fire|0} ?{Water|0} ?{Earth|0} ?{Air|0} ?{Ice|0} ?{Lightning|0} ?{Light|0} ?{Dark|0}"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Magic Resist</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Magic Resist</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_magic_resist" value="@{hidden_magic_resist}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_magic_resist" value="!barbs dmg ?{Physical|0} ?{Psychic|0} ?{Fire|0} ?{Water|0} ?{Earth|0} ?{Air|0} ?{Ice|0} ?{Lightning|0} ?{Light|0} ?{Dark|0}"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_magic_resist" value="10+@{RES}"/>
                 </div>
@@ -619,140 +648,904 @@
                 <!-- right column -->
                 <div class="sheet-col-1-2">
                     <div class="sheet-row sheet-sub-header">
-                        <div class="sheet-col-1-8 sheet-center sheet-small-label">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-small-label">Stat</div>
+                        <div class="sheet-col-1-24 sheet-center sheet-small-label">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-small-label">Stat</div>
                         <div class="sheet-col-1-6 sheet-center sheet-small-label">Base Value</div>
-                        <div class="sheet-col-9-24 sheet-center sheet-small-label">&nbsp;</div>
+                        <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_condition_resist" value="!barbs cr ?{Condition|General|Bleeding|Blinded|Charmed|Confused|Crippled|Cursed|Decreased Stats|Fear|Frozen|Helpless|Immobilized|Knocked Down (Prone)|Knocked Up (Airborne)|Paralyzed|Petrified|Poisoned|Silenced|Sleeping|Slowed|Stunned|Taunted|Weakened}"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Condition Resist</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Condition Resist</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_condition_resist" value="@{hidden_condition_resist}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_condition_resist" value="!barbs cr ?{Condition|General|Bleeding|Blinded|Burned|Charmed|Confused|Crippled|Cursed|Decreased Stats|Fear|Frozen|Helpless|Immobilized|Knocked Down (Prone)|Knocked Up (Airborne)|Paralyzed|Petrified|Poisoned|Silenced|Sleeping|Slowed|Stunned|Taunted|Weakened}"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_condition_resist" value="10+@{FRT}"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_melee_damage" value="!barbs stat Melee_Damage"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Melee Damage</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Melee Damage</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_melee_damage" value="@{hidden_melee_damage}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_melee_damage" value="!barbs stat Melee_Damage"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_melee_damage" value="@{STR}"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_ranged_fine_damage" value="!barbs stat Ranged_Fine_Damage"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Ranged/Fine Damage</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Ranged/Fine Damage</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_ranged_fine_damage" value="@{hidden_ranged_fine_damage}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_ranged_fine_damage" value="!barbs stat Ranged_Fine_Damage"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_ranged_fine_damage" value="@{DEX}"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_magic_damage" value="!barbs stat Magic_Damage"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Magic Damage</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Magic Damage</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_magic_damage" value="@{hidden_magic_damage}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_magic_damage" value="!barbs stat Magic_Damage"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_magic_damage" value="@{ATN}"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_critical_hit_chance" value="!barbs stat Critical_Hit_Chance"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Critical Hit Chance</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Critical Hit Chance</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_critical_hit_chance" value="@{hidden_critical_hit_chance}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_critical_hit_chance" value="!barbs stat Critical_Hit_Chance"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_critical_hit_chance" value="10+@{PRE}"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_commands" value="!barbs stat Commands"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Commands</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Commands</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_commands" value="@{hidden_commands}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_commands" value="!barbs stat Commands"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_commands" value="floor((@{APL}+10)/10)+1"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_languages" value="!barbs stat Languages"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Languages</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Languages</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_num_languages" value="@{hidden_num_languages}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_languages" value="!barbs stat Languages"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_num_languages" value="floor((@{INT}+10)/3)+1"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_item_efficiency" value="!barbs stat Item_Efficiency"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Item Efficiency</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Item Efficiency</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_item_efficiency" value="@{hidden_item_efficiency}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_item_efficiency" value="!barbs stat Item_Efficiency"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_item_efficiency" value="(@{WIS}+10)*5"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_buff_limit" value="!barbs stat Buff_Limit"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Buff Limit</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Buff Limit</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_buff_limit" value="@{hidden_buff_limit}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_buff_limit" value="!barbs stat Buff_Limit"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_buff_limit" value="floor((@{COM}+10)/2)"/>
 
                     <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_concentration_limit" value="!barbs stat Concentration_Limit"></button>
-                        </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
-                        <div class="sheet-col-1-3 sheet-skill-name">Concentration Limit</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Concentration Limit</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_concentration_limit" value="floor((@{FCS}+10)/2)" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-9-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_concentration_limit" value="!barbs stat Concentration_Limit"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
+                </div>
+            </div>
+
+            <h4 class="sheet-center">Miscellaneous</h4>
+            <div class="sheet-row sheet-padb">
+                <!-- left column -->
+                <div class="sheet-col-1-2 sheet-padr">
+                    <div class="sheet-row sheet-sub-header">
+                        <div class="sheet-col-1-24 sheet-center sheet-small-label">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-small-label">Stat</div>
+                        <div class="sheet-col-1-6 sheet-center sheet-small-label">Base Value</div>
+                        <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
+                    </div>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Initiative Bonus</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_initiative_bonus" value="@{hidden_initiative_bonus}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_initiative_bonus" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Concentration Bonus</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_concentration_bonus" value="@{hidden_concentration_bonus}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_concentration_bonus" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Buff Effectiveness</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_buff_effectiveness" value="@{hidden_buff_effectiveness}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_buff_effectiveness" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Enchant Effectiveness</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_enchant_effectiveness" value="@{hidden_enchant_effectiveness}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_enchant_effectiveness" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Combo Chance</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_combo_chance" value="@{hidden_combo_chance}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_combo_chance" value="0"/>
+                </div>
+
+                <!-- right column -->
+                <div class="sheet-col-1-2">
+                    <div class="sheet-row sheet-sub-header">
+                        <div class="sheet-col-1-24 sheet-center sheet-small-label">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-small-label">Stat</div>
+                        <div class="sheet-col-1-6 sheet-center sheet-small-label">Base Value</div>
+                        <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
+                    </div>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Crit Damage Mod</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_crit_damage_mod" value="@{hidden_crit_damage_mod}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_crit_damage_mod" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Lethality</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_lethality" value="@{hidden_lethality}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_lethality" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Minion Lethality</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_minion_lethality" value="@{hidden_minion_lethality}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_minion_lethality" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Lifesteal</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_lifesteal" value="@{hidden_lifesteal}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_lifesteal" value="0"/>
+                </div>
+            </div>
+
+            <h4 class="sheet-center">Damage Multipliers</h4>
+            <div class="sheet-row sheet-padb">
+                <!-- left column -->
+                <div class="sheet-col-1-2 sheet-padr">
+                    <div class="sheet-row sheet-sub-header">
+                        <div class="sheet-col-1-24 sheet-center sheet-small-label">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-small-label">Stat</div>
+                        <div class="sheet-col-1-6 sheet-center sheet-small-label">Base Value</div>
+                        <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
+                    </div>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">All Damage Multiplier</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_all_multiplier" value="@{hidden_all_multiplier}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_all_multiplier" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">All Magic Damage Multiplier</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_all_magic_multiplier" value="@{hidden_all_magic_multiplier}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_all_magic_multiplier" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Physical Damage Multiplier</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_physical_multiplier" value="@{hidden_physical_multiplier}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_physical_multiplier" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Psychic Damage Multiplier</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_psychic_multiplier" value="@{hidden_psychic_multiplier}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_psychic_multiplier" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Healing Multiplier</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_healing_multiplier" value="@{hidden_healing_multiplier}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_healing_multiplier" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Fire Magic Damage Multiplier</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_fire_multiplier" value="@{hidden_fire_multiplier}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_fire_multiplier" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Water Magic Damage Multiplier</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_water_multiplier" value="@{hidden_water_multiplier}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_water_multiplier" value="0"/>
+                </div>
+
+                <!-- right column -->
+                <div class="sheet-col-1-2">
+                    <div class="sheet-row sheet-sub-header">
+                        <div class="sheet-col-1-24 sheet-center sheet-small-label">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-small-label">Stat</div>
+                        <div class="sheet-col-1-6 sheet-center sheet-small-label">Base Value</div>
+                        <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
+                    </div>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Earth Magic Damage Multiplier</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_earth_multiplier" value="@{hidden_earth_multiplier}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_earth_multiplier" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Air Magic Damage Multiplier</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_air_multiplier" value="@{hidden_air_multiplier}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_air_multiplier" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Ice Magic Damage Multiplier</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_ice_multiplier" value="@{hidden_ice_multiplier}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_ice_multiplier" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Lightning Magic Damage Multiplier</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_lightning_multiplier" value="@{hidden_lightning_multiplier}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_lightning_multiplier" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Light Magic Damage Multiplier</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_light_multiplier" value="@{hidden_light_multiplier}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_light_multiplier" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Dark Magic Damage Multiplier</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_dark_multiplier" value="@{hidden_dark_multiplier}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_dark_multiplier" value="0"/>
+                </div>
+            </div>
+
+            <h4 class="sheet-center">Penetration Stats</h4>
+            <div class="sheet-row sheet-padb">
+                <!-- left column -->
+                <div class="sheet-col-1-2 sheet-padr">
+                    <div class="sheet-row sheet-sub-header">
+                        <div class="sheet-col-1-24 sheet-center sheet-small-label">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-small-label">Stat</div>
+                        <div class="sheet-col-1-6 sheet-center sheet-small-label">Base Value</div>
+                        <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
+                    </div>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Accuracy</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_accuracy" value="@{hidden_accuracy}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_accuracy" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">AC Penetration</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_ac_pen" value="@{hidden_ac_pen}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_ac_pen" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Psychic Penetration</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_psychic_pen" value="@{hidden_psychic_pen}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_psychic_pen" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">General Magic Penetration</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_general_magic_pen" value="@{hidden_general_magic_pen}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_general_magic_pen" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Fire Magic Penetration</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_fire_magic_pen" value="@{hidden_fire_magic_pen}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_fire_magic_pen" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Water Magic Penetration</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_water_magic_pen" value="@{hidden_water_magic_pen}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_water_magic_pen" value="0"/>
+                </div>
+
+                <!-- right column -->
+                <div class="sheet-col-1-2">
+                    <div class="sheet-row sheet-sub-header">
+                        <div class="sheet-col-1-24 sheet-center sheet-small-label">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-small-label">Stat</div>
+                        <div class="sheet-col-1-6 sheet-center sheet-small-label">Base Value</div>
+                        <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
+                    </div>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Earth Magic Penetration</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_earth_magic_pen" value="@{hidden_earth_magic_pen}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_earth_magic_pen" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Air Magic Penetration</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_air_magic_pen" value="@{hidden_air_magic_pen}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_air_magic_pen" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Ice Magic Penetration</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_ice_magic_pen" value="@{hidden_ice_magic_pen}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_ice_magic_pen" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Lightning Magic Penetration</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_lightning_magic_pen" value="@{hidden_lightning_magic_pen}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_lightning_magic_pen" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Light Magic Penetration</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_light_magic_pen" value="@{hidden_light_magic_pen}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_light_magic_pen" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Dark Magic Penetration</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_dark_magic_pen" value="@{hidden_dark_magic_pen}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_dark_magic_pen" value="0"/>
+                </div>
+            </div>
+
+            <h4 class="sheet-center">Specific Condition Resistances</h4>
+            <div class="sheet-row sheet-padb">
+                <!-- left column -->
+                <div class="sheet-col-1-2 sheet-padr">
+                    <div class="sheet-row sheet-sub-header">
+                        <div class="sheet-col-1-24 sheet-center sheet-small-label">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-small-label">Stat</div>
+                        <div class="sheet-col-1-6 sheet-center sheet-small-label">Base Value</div>
+                        <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
+                    </div>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Bleeding Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_bleeding_cr" value="@{hidden_bleeding_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_bleeding_cr" value="!barbs cr Bleeding"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_bleeding_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Blinded Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_blinded_cr" value="@{hidden_blinded_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_blinded_cr" value="!barbs cr Blinded"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_blinded_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Burned Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_burned_cr" value="@{hidden_burned_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_burned_cr" value="!barbs cr Burned"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_burned_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Charmed Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_charmed_cr" value="@{hidden_charmed_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_charmed_cr" value="!barbs cr Charmed"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_charmed_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Confused Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_confused_cr" value="@{hidden_confused_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_confused_cr" value="!barbs cr Confused"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_confused_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Crippled Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_crippled_cr" value="@{hidden_crippled_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_crippled_cr" value="!barbs cr Crippled"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_crippled_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Cursed Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_cursed_cr" value="@{hidden_cursed_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_cursed_cr" value="!barbs cr Cursed"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_cursed_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Decreased Stats Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_decreased_stats_cr" value="@{hidden_decreased_stats_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_decreased_stats_cr" value="!barbs cr Decreased Stats"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_decreased_stats_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Fear Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_fear_cr" value="@{hidden_fear_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_fear_cr" value="!barbs cr Fear"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_fear_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Frozen Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_frozen_cr" value="@{hidden_frozen_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_frozen_cr" value="!barbs cr Frozen"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_frozen_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Helpless Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_helpless_cr" value="@{hidden_helpless_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_helpless_cr" value="!barbs cr Helpless"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_helpless_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Immobilized Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_immobilized_cr" value="@{hidden_immobilized_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_immobilized_cr" value="!barbs cr Immobilized"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_immobilized_cr" value="0"/>
+                </div>
+
+                <!-- right column -->
+                <div class="sheet-col-1-2">
+                    <div class="sheet-row sheet-sub-header">
+                        <div class="sheet-col-1-24 sheet-center sheet-small-label">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-small-label">Stat</div>
+                        <div class="sheet-col-1-6 sheet-center sheet-small-label">Base Value</div>
+                        <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
+                    </div>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Knocked Down (Prone) Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_knocked_down_prone_cr" value="@{hidden_knocked_down_prone_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_knocked_down_prone_cr" value="!barbs cr Knocked Down (Prone)"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_knocked_down_prone_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Knocked Up (Airborne) Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_knocked_up_airborne_cr" value="@{hidden_knocked_up_airborne_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_knocked_up_airborne_cr" value="!barbs cr Knocked Up (Airborne)"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_knocked_up_airborne_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Paralyzed Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_paralyzed_cr" value="@{hidden_paralyzed_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_paralyzed_cr" value="!barbs cr Paralyzed"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_paralyzed_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Petrified Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_petrified_cr" value="@{hidden_petrified_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_petrified_cr" value="!barbs cr Petrified"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_petrified_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Poisoned Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_poisoned_cr" value="@{hidden_poisoned_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_poisoned_cr" value="!barbs cr Poisoned"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_poisoned_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Silenced Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_silenced_cr" value="@{hidden_silenced_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_silenced_cr" value="!barbs cr Silenced"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_silenced_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Sleeping Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_sleeping_cr" value="@{hidden_sleeping_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_sleeping_cr" value="!barbs cr Sleeping"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_sleeping_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Slowed Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_slowed_cr" value="@{hidden_slowed_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_slowed_cr" value="!barbs cr Slowed"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_slowed_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Stunned Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_stunned_cr" value="@{hidden_stunned_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_stunned_cr" value="!barbs cr Stunned"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_stunned_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Taunted Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_taunted_cr" value="@{hidden_taunted_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_taunted_cr" value="!barbs cr Taunted"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_taunted_cr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Weakened Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_weakened_cr" value="@{hidden_weakened_cr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_weakened_cr" value="!barbs cr Weakened"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_weakened_cr" value="0"/>
                 </div>
             </div>
         </div>

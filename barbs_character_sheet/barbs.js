@@ -1382,7 +1382,14 @@ var Barbs = Barbs || (function () {
         const hidden_stat_formats = Object.keys(roll.hidden_stats);
         for (let i = 0; i < hidden_stat_formats.length; i++) {
             const hidden_stat_format = hidden_stat_formats[i];
-            const value = roll.hidden_stats[hidden_stat_format];
+            let value = roll.hidden_stats[hidden_stat_format];
+
+            // Minion lethality is a little special, because the value should also include Lethality chance,
+            // if present. The API doesn't know what you're attacking though, so we'll show both regular lethality and
+            // minion lethality.
+            if (hidden_stat_format === HiddenStat.MINION_LETHALITY && HiddenStat.LETHALITY in roll.hidden_stats) {
+                value += roll.hidden_stats[HiddenStat.LETHALITY];
+            }
 
             const format_args = occurrences(hidden_stat_format, '%s');
             let formatted_hidden_stat;
@@ -3916,7 +3923,6 @@ var Barbs = Barbs || (function () {
             'Take Cover': print_ability_description,
         },
     };
-
 
 
     function process_ability(msg) {
