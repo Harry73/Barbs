@@ -464,6 +464,7 @@ var BarbsComponents = BarbsComponents || (function () {
         STUNNED_CHANCE: '%s% chance to Stun, chance: [[d100cs>%s]], CR: [[1d100]]',
 
         AC_PENETRATION: '%s% armor penetration',
+        // TODO: psychic pen?
         GENERAL_MAGIC_PENETRATION: '%s% magic penetration',
         FIRE_MAGIC_PENETRATION: '%s% fire magic penetration',
         WATER_MAGIC_PENETRATION: '%s% water magic penetration',
@@ -1913,7 +1914,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "name": "Blitzkrieg",
                     "class": "Captain",
                     "description": [
-                        "You lead your forces into swift battle. Deal 5d10 physical damage to a target in range. Then, an ally within 50 ft gains a free reaction to dash to a space adjacent to you. They may then use their normal reaction to cast a non-spell, melee, attack ability. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a non-spell, melee, attack ability."
+                        "You lead your forces into swift battle. Deal 5d10 physical damage to a target in range. Then, an ally within 50 ft gains a free reaction to dash to a space adjacent to you. They may then use their normal reaction to cast a physical, melee, attack ability. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a physical, melee, attack ability."
                     ],
                     "tags": [
                         "attack",
@@ -1942,6 +1943,44 @@ var BarbsComponents = BarbsComponents || (function () {
                     ],
                     "tags": [
                         "buff"
+                    ]
+                },
+                "Fire At Will": {
+                    "name": "Fire At Will",
+                    "class": "Captain",
+                    "description": [
+                        "You concentrate attacks on a single point. Deal 6d10 physical damage to a target in range; you may dash up to 25 ft before or after this attack. Then, an ally anywhere on the battlefield gains a free reaction to Weapon Swap. They may then use their normal reaction to cast a physical, ranged, attack ability. Then set standing Orders for your Follow The Leader passive as follows: allies cast a physical, ranged, attack ability."
+                    ],
+                    "tags": [
+                        "attack",
+                        "single-target",
+                        "melee",
+                        "physical",
+                        "modal",
+                        "dash"
+                    ]
+                },
+                "Bunker Down": {
+                    "name": "Bunker Down",
+                    "class": "Captain",
+                    "description": [
+                        "You order your forces to hold position. All allies in range have their next Move Action automatically converted to a Major Action and each ally becomes invulnerable to damage until the end of each of their turns, or until your concentration breaks (whichever happens first). Each time you cast this ability, it gains a +25% chance to fail. Then, set standing Orders for your Follow The Leader passive as follows: allies quaff a potion or apply a poison to their weapons."
+                    ],
+                    "tags": [
+                        "buff",
+                        "concentration"
+                    ]
+                },
+                "Scramble": {
+                    "name": "Scramble",
+                    "class": "Captain",
+                    "description": [
+                        "You order everyone to make a break for it. All allies in range dash up to half their Move Speed if moving away from enemies, or twice their Move Speed if moving towards enemies. Then, set standing Orders for your Follow The Leader passive as follows: allies cast a dash ability or teleport spell."
+                    ],
+                    "tags": [
+                        "dash",
+                        "modal",
+                        "conditional"
                     ]
                 }
             }

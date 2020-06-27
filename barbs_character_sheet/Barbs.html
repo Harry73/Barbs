@@ -812,7 +812,11 @@
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_initiative_bonus" value="@{hidden_initiative_bonus}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-7-24">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_Initiative" value="!barbs initiative"></button>
+                        </div>
+                        <div class="sheet-col-1-8">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_initiative_bonus" value="0"/>
 
@@ -822,7 +826,11 @@
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_concentration_bonus" value="@{hidden_concentration_bonus}" disabled="disabled"/>
                         </div>
-                        <div class="sheet-col-7-24">&nbsp;</div>
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_Concentration" value="!barbs concentration"></button>
+                        </div>
+                        <div class="sheet-col-1-8">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_concentration_bonus" value="0"/>
 
@@ -2780,7 +2788,9 @@
 
         const ranks = ['Untrained', 'F', 'E', 'D', 'C', 'B', 'A', '9', '8', '7', '6', '5', '4', '3', '2', '1'];
         const item_attrs = ['main_hand', 'offhand', 'head', 'body', 'hands', 'feet', 'neck', 'left_ring', 'right_ring', 'belt'];
+        const damage_multiplier_types = ['all', 'all_magic', 'physical', 'psychic', 'healing', 'fire', 'water', 'earth', 'air', 'ice', 'lightning', 'light', 'dark'];
         const stat_keywords = [
+            // Core stats
             {'attr': 'health', 'key': 'health', 'equation': '100+10*@{VIT}'},
             {'attr': 'stamina', 'key': 'stamina', 'equation': '100+10*@{END}'},
             {'attr': 'mana', 'key': 'mana', 'equation': '100+10*@{SPT}'},
@@ -2805,6 +2815,73 @@
             {'attr': 'item_efficiency', 'key': 'item efficiency', 'equation': '(@{WIS}+10)*5'},
             {'attr': 'buff_limit', 'key': 'buff limit', 'equation': 'floor((@{COM}+10)/2)'},
             {'attr': 'concentration_limit', 'key': 'concentration limit', 'equation': 'floor((@{FCS}+10)/2)'},
+
+            // Miscellaneous stats
+            {'attr': 'initiative_bonus', 'key': 'initiative', 'equation': '0'},
+            {'attr': 'concentration_bonus', 'key': 'concentration', 'equation': '0'},
+            {'attr': 'buff_effectiveness', 'key': 'buff effectiveness', 'equation': '0'},
+            {'attr': 'enchant_effectiveness', 'key': 'enchant effectiveness', 'equation': '0'},
+            {'attr': 'combo_chance', 'key': 'combo chance', 'equation': '0'},
+            {'attr': 'crit_damage_mod', 'key': 'crit damage mod', 'equation': '0'},
+            {'attr': 'lethality', 'key': 'lethality', 'equation': '0'},
+            {'attr': 'minion_lethality', 'key': 'minion lethality', 'equation': '0'},
+            {'attr': 'lifesteal', 'key': 'lifesteal', 'equation': '0'},
+
+            // Damage multipliers all use the "multiplier" keyword, so we don't actually look for the keys here, we
+            // check for the "multiplier" keyword separately. These entries are still included here, though, so that
+            // we update the attrs.
+            {'attr': 'all_multiplier', 'key': 'all_multiplier', 'equation': '0'},
+            {'attr': 'all_magic_multiplier', 'key': 'all_magic_multiplier', 'equation': '0'},
+            {'attr': 'physical_multiplier', 'key': 'physical_multiplier', 'equation': '0'},
+            {'attr': 'psychic_multiplier', 'key': 'psychic_multiplier', 'equation': '0'},
+            {'attr': 'healing_multiplier', 'key': 'healing_multiplier', 'equation': '0'},
+            {'attr': 'fire_multiplier', 'key': 'fire_multiplier', 'equation': '0'},
+            {'attr': 'water_multiplier', 'key': 'water_multiplier', 'equation': '0'},
+            {'attr': 'earth_multiplier', 'key': 'earth_multiplier', 'equation': '0'},
+            {'attr': 'air_multiplier', 'key': 'air_multiplier', 'equation': '0'},
+            {'attr': 'ice_multiplier', 'key': 'ice_multiplier', 'equation': '0'},
+            {'attr': 'lightning_multiplier', 'key': 'lightning_multiplier', 'equation': '0'},
+            {'attr': 'light_multiplier', 'key': 'light_multiplier', 'equation': '0'},
+            {'attr': 'dark_multiplier', 'key': 'dark_multiplier', 'equation': '0'},
+
+            // Penetration stats
+            {'attr': 'accuracy', 'key': 'accuracy', 'equation': '0'},
+            {'attr': 'ac_pen', 'key': 'ac pen', 'equation': '0'},
+            {'attr': 'psychic_pen', 'key': 'psychic pen', 'equation': '0'},
+            {'attr': 'general_magic_pen', 'key': 'general magic pen', 'equation': '0'},
+            {'attr': 'fire_magic_pen', 'key': 'fire magic pen', 'equation': '0'},
+            {'attr': 'water_magic_pen', 'key': 'water magic pen', 'equation': '0'},
+            {'attr': 'earth_magic_pen', 'key': 'earth magic pen', 'equation': '0'},
+            {'attr': 'air_magic_pen', 'key': 'air magic pen', 'equation': '0'},
+            {'attr': 'ice_magic_pen', 'key': 'ice magic pen', 'equation': '0'},
+            {'attr': 'lightning_magic_pen', 'key': 'lightning magic pen', 'equation': '0'},
+            {'attr': 'light_magic_pen', 'key': 'light magic pen', 'equation': '0'},
+            {'attr': 'dark_magic_pen', 'key': 'dark magic pen', 'equation': '0'},
+
+            // Specific condition resist stats
+            {'attr': 'bleeding_cr', 'key': 'bleeding cr', 'equation': '0'},
+            {'attr': 'blinded_cr', 'key': 'blinded cr', 'equation': '0'},
+            {'attr': 'burned_cr', 'key': 'burned cr', 'equation': '0'},
+            {'attr': 'charmed_cr', 'key': 'charmed cr', 'equation': '0'},
+            {'attr': 'confused_cr', 'key': 'confused cr', 'equation': '0'},
+            {'attr': 'crippled_cr', 'key': 'crippled cr', 'equation': '0'},
+            {'attr': 'cursed_cr', 'key': 'cursed cr', 'equation': '0'},
+            {'attr': 'decreased_stats_cr', 'key': 'decreased stats cr', 'equation': '0'},
+            {'attr': 'fear_cr', 'key': 'fear cr', 'equation': '0'},
+            {'attr': 'frozen_cr', 'key': 'frozen cr', 'equation': '0'},
+            {'attr': 'helpless_cr', 'key': 'helpless cr', 'equation': '0'},
+            {'attr': 'immobilized_cr', 'key': 'immobilized cr', 'equation': '0'},
+            {'attr': 'knocked_down_prone_cr', 'key': 'knocked down prone cr', 'equation': '0'},
+            {'attr': 'knocked_up_airborne_cr', 'key': 'knocked up airborne cr', 'equation': '0'},
+            {'attr': 'paralyzed_cr', 'key': 'paralyzed cr', 'equation': '0'},
+            {'attr': 'petrified_cr', 'key': 'petrified cr', 'equation': '0'},
+            {'attr': 'poisoned_cr', 'key': 'poisoned cr', 'equation': '0'},
+            {'attr': 'silenced_cr', 'key': 'silenced cr', 'equation': '0'},
+            {'attr': 'sleeping_cr', 'key': 'sleeping cr', 'equation': '0'},
+            {'attr': 'slowed_cr', 'key': 'slowed cr', 'equation': '0'},
+            {'attr': 'stunned_cr', 'key': 'stunned cr', 'equation': '0'},
+            {'attr': 'taunted_cr', 'key': 'taunted cr', 'equation': '0'},
+            {'attr': 'weakened_cr', 'key': 'weakened cr', 'equation': '0'},
         ];
 
         String.prototype.format = function() {
@@ -2814,6 +2891,15 @@
             }
             return a
         };
+
+        function trim_percent(string) {
+            string = string.trim();
+            if (string.endsWith('%')) {
+                return string.substring(0, string.length - 1);
+            } else {
+                return string;
+            }
+        }
 
         function organize_items(items) {
             const revised = [];
@@ -2882,7 +2968,7 @@
 
                 const affixes = item.split(';');
                 for (let j = 0; j < affixes.length; j++) {
-                    const affix = affixes[j].trim().toLowerCase();
+                    const affix = affixes[j].trim().toLowerCase().replace(/[()]/g, '');
                     const affix_pieces = affix.split(':');
 
                     // Stat (maybe)
@@ -2895,10 +2981,7 @@
                             // Stat (definitely)
                             if (affix_pieces[0] === stat_key) {
                                 let potential_bonus = affix_pieces[1].trim().split(' ')[0];
-                                if (potential_bonus.endsWith('%')) {
-                                    potential_bonus = potential_bonus.substring(0, potential_bonus.length - 1);
-                                }
-
+                                potential_bonus = trim_percent(potential_bonus);
                                 potential_bonus = parseInt(potential_bonus, 10);
                                 if (Number.isNaN(potential_bonus)) {
                                     break;
@@ -2909,7 +2992,30 @@
                                 }
 
                                 stat_bonuses[stat_attr] += potential_bonus;
+                                continue;
                             }
+                        }
+
+                        if (affix_pieces[0] === 'multiplier') {
+                            let potential_bonus = affix_pieces[1].trim().split(' ')[0];
+                            potential_bonus = trim_percent(potential_bonus);
+                            potential_bonus = parseInt(potential_bonus, 10);
+                            if (Number.isNaN(potential_bonus)) {
+                                continue;
+                            }
+
+                            let potential_type = affix_pieces[1].trim().split(' ')[1];
+                            if (!damage_multiplier_types.includes(potential_type)) {
+                                continue;
+                            }
+
+                            const stat_attr = potential_type + '_multiplier';
+                            if (!(stat_attr in stat_bonuses)) {
+                                stat_bonuses[stat_attr] = 0;
+                            }
+
+                            stat_bonuses[stat_attr] += potential_bonus;
+                            continue;
                         }
                     }
 
