@@ -521,15 +521,22 @@ var Barbs = Barbs || (function () {
             }
 
             if (damage_type === Damage.PHYSICAL) {
-                total_ac = Math.max(0, total_ac - eval(penetrations[i]));
-                let damage_taken = '((%s)-%s)'.format(damage_value, total_ac);
+                total_ac = Math.max(0, total_ac);
+
+                let pen = eval(penetrations[i]);
+                pen = Math.max(0, pen);
+                pen = Math.min(100, pen);
+
+                let damage_taken = '((%s)-(%s*%s))'.format(damage_value, total_ac, 1 - pen / 100);
                 if (eval(damage_taken) < 0) {
                     damage_taken = '0';
                 }
                 reduced_damages[Damage.PHYSICAL] = damage_taken;
+
             } else if (damage_type === Damage.PSYCHIC) {
                 // TODO: psychic resistance / damage reduction is possible, handle it when we have classes that do this
                 reduced_damages[Damage.PSYCHIC] = damage_value;
+
             } else {
                 let total_mr = base_mr;
                 if (damage_type in roll.magic_resists) {
