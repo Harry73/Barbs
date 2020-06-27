@@ -61,6 +61,23 @@ var BarbsComponents = BarbsComponents || (function () {
     }
 
 
+    function assert_numeric(string, message, ...rest) {
+        assert_not_null(string, 'assert_numeric() string');
+        assert_not_null(message, 'assert_numeric() message');
+
+        let val;
+        try {
+            val = eval(string);
+        } catch (err) {
+            throw message.format(...rest);
+        }
+
+        if (Number.isNaN(val)) {
+            throw message.format(...rest);
+        }
+    }
+
+
     // ################################################################################################################
     // Functional
 
@@ -8506,7 +8523,9 @@ var BarbsComponents = BarbsComponents || (function () {
 
             // Crit chance may be upped by items. Add in that amount.
             if (Stat.CRITICAL_HIT_CHANCE.name in this.stats) {
-                final_crit_chance += eval(this.stats[Stat.CRITICAL_HIT_CHANCE.name]);
+                const crit_chance_string = this.stats[Stat.CRITICAL_HIT_CHANCE.name];
+                assert_numeric(crit_chance_string, 'Crit chance "%s" is non-numeric', crit_chance_string)
+                final_crit_chance += eval(crit_chance_string);
             }
 
             return Math.round(final_crit_chance);
@@ -9663,7 +9682,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     return {
-        assert_not_null, assert_type, assert_starts_with,
+        assert_not_null, assert_type, assert_starts_with, assert_numeric,
         parse_int, trim_percent, trim_all, remove_empty,
         LOG,
         characters_by_owner,

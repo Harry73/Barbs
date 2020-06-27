@@ -9,6 +9,7 @@ var Barbs = Barbs || (function () {
     const assert_not_null = BarbsComponents.assert_not_null;
     const assert_type = BarbsComponents.assert_type;
     const assert_starts_with = BarbsComponents.assert_starts_with;
+    const assert_numeric = BarbsComponents.assert_numeric;
     const parse_int = BarbsComponents.parse_int;
     const trim_percent = BarbsComponents.trim_percent;
     const trim_all = BarbsComponents.trim_all;
@@ -263,6 +264,7 @@ var Barbs = Barbs || (function () {
             mod = '(%s)*(1+%s)'.format(mod, roll.stat_multipliers[stat.name]);
         }
 
+        assert_numeric(mod, 'Non-numeric stat roll modifier "%s"', mod);
         return mod;
     }
 
@@ -355,11 +357,7 @@ var Barbs = Barbs || (function () {
         const roll = get_roll_with_items_and_effects(character);
         const modifier = get_stat_roll_modifier(character, roll, stat);
         const numeric_modifier = eval(modifier);
-        if (Number.isNaN(numeric_modifier)) {
-            LOG.warn('Bad modifier: ' + modifier);
-            raw_chat('API', 'Non-numeric stat roll modifier, something went wrong');
-            return;
-        }
+        assert_numeric(numeric_modifier, 'Non-numeric stat roll modifier "%s", something went wrong', modifier);
 
         switch (stat.name) {
             case Stat.HEALTH.name:
@@ -488,9 +486,9 @@ var Barbs = Barbs || (function () {
             Damage.LIGHTNING, Damage.LIGHT, Damage.DARK
         ];
 
-        let damages_taken = msg.content.split(' ');
+        let damages_taken = remove_empty(msg.content.split(' '));
         if (damages_taken.length !== damage_types.length + 2) {
-            chat(character, 'Wrong number of parameters for "!barbs dmg" command, ' +
+            raw_chat('API', 'Wrong number of parameters for "!barbs dmg" command, ' +
                 'expected %s, got %s'.format(damage_types.length + 2, damages_taken.length));
             return;
         }
@@ -500,26 +498,20 @@ var Barbs = Barbs || (function () {
         damages_taken.forEach(function(damage_string, index, self) {
             if (damage_string.includes('|')) {
                 const parts = trim_all(damage_string.split('|'));
-                damages_taken[index] = parts[0];
+                self[index] = parts[0];
                 penetrations.push(parts[1]);
             } else {
-                penetrations.push(0);
+                penetrations.push('0');
             }
         });
 
         for (let i = 0; i < damages_taken.length; i++) {
             const given_value = damages_taken[i];
-            if (Number.isNaN(eval(given_value))) {
-                chat(character, 'Non-numeric value "%s" for %s damage type'.format(given_value, damage_types[i]));
-                return;
-            }
+            assert_numeric(given_value, 'Non-numeric value "%s" for %s damage type', given_value, damage_types[i]);
 
             const penetration = penetrations[i];
-            if (Number.isNaN(eval(penetration))) {
-                chat(character, 'Non-numeric penetration value "%s" for %s damage type'.format(penetration,
-                                                                                               damage_types[i]));
-                return;
-            }
+            assert_numeric(penetration, 'Non-numeric penetration value "%s" for %s damage type', penetration,
+                           damage_types[i]);
         }
 
         const roll = get_roll_with_items_and_effects(character);
@@ -2041,8 +2033,8 @@ var Barbs = Barbs || (function () {
                 }
             }
 
-            chat(character, 'Broadhead Arrow is not active on %s, and thus cannot be ' +
-                'sacrified.'.format(character.name));
+            const msg_format = 'Broadhead Arrow is not active on %s, and thus cannot be sacrificed.'
+            chat(character, msg_format.format(character.name));
 
         } else {
             add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
@@ -4310,7 +4302,16 @@ var Barbs = Barbs || (function () {
             }
 
             const processor = subcommand_handlers[sub_command];
-            processor(msg);
+
+            try {
+                processor(msg);
+            } catch (err) {
+                if (Object.prototype.toString.call(err) === '[object String]') {
+                    raw_chat('API', err);
+                } else {
+                    throw err;
+                }
+            }
         }
 
         // TODO: There are some abilities, like something in Demon Hunter, where we'd like to get back the result of a
