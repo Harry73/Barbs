@@ -6624,6 +6624,25 @@
     },
     {
         "type": "ability",
+        "name": "Nothing Sacred",
+        "class": "Night Lord",
+        "branch": "Breach",
+        "tier": 2,
+        "action": "1 Minor Action",
+        "cost": "30 stamina",
+        "range": "20 ft",
+        "duration": "1 minute",
+        "description": [
+            "You destroy magical defenses against thieves. Dispel all defensive spells within range and create a square field for the duration encompassing the range that silences all entites within it and causes you to auto-succeed on attempts to unlock things within it."
+        ],
+        "tags": [
+            "Field",
+            "condition",
+            "Silence"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Burglary",
         "class": "Night Lord",
         "branch": "Loot",
@@ -6638,6 +6657,27 @@
         "tags": [
             "Attack",
             "single-target"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Larceny",
+        "class": "Night Lord",
+        "branch": "Loot",
+        "tier": 2,
+        "action": "1 Minor Action",
+        "cost": "30 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You steal energy and morale. Drain 6d6 health from a target in range. Strip 1 buff from the target for every 6 rolled, applying the buff to yourself instead. Additionally, the target is inflicted with a mark that gives them -30 to skill checks until their next long rest."
+        ],
+        "tags": [
+            "Attack",
+            "single-target",
+            "buff strip",
+            "conditional",
+            "mark"
         ]
     },
     {
@@ -6658,6 +6698,28 @@
             "Blind",
             "Knock Prone",
             "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Decoy",
+        "class": "Night Lord",
+        "branch": "Perplex",
+        "tier": 2,
+        "action": "1 Minor Action",
+        "cost": "35 stamina",
+        "range": "60 ft",
+        "duration": "1 minute",
+        "description": [
+            "You lure enemies away. Create a Decoy totem in an empty space within range that you can see. The Decoy has 1 health and lasts for the duration. The Decoy immediately Taunts all enemies within line of sight for 1 minute. Additionally, it Charms those targets, forcing them to use their Move Action to approach the totem. When an enemy moves towards the Decoy, you may dash an equal distance in any direction as a free reaction. An enemy that has not been Taunted or Charmed by this ability previously has -30% CR for the Taunt and Charm."
+        ],
+        "tags": [
+            "Totem",
+            "condition",
+            "Taunt",
+            "Charm",
+            "conditional",
+            "dash"
         ]
     },
     {

@@ -21,7 +21,7 @@
         "type": "condition",
         "name": "Charmed",
         "duration": "Varies",
-        "description": "You consider the entity that charmed you as a friend."
+        "description": "You consider the entity that charmed you as a non-hostile entity."
     },
     {
         "type": "condition",
