@@ -9753,6 +9753,27 @@
     },
     {
         "type": "ability",
+        "name": "Void Portal",
+        "class": "Voidwalker",
+        "branch": "Abyss",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "50 mana",
+        "range": "5 ft",
+        "duration": "20 seconds",
+        "description": [
+            "You create a portal to faraway lands. Create an invisible portal within range for the duration that teleports entrants to a specified location on the current plane. If you haven't been to the destination, you need to roll a Conjurations skill check, with a DC based on distance. When you cast this spell, allies in touch range are teleported directly to the portal."
+        ],
+        "tags": [
+            "Spell",
+            "dark",
+            "conjuration",
+            "teleport",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Blacklands",
         "class": "Voidwalker",
         "branch": "Hollow",
@@ -9779,6 +9800,27 @@
     },
     {
         "type": "ability",
+        "name": "Shadowstep",
+        "class": "Voidwalker",
+        "branch": "Hollow",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "40 mana",
+        "range": "Touch",
+        "duration": "1 minute",
+        "description": [
+            "You transport allies to a shadow of the real world. All allies in range are transported to the Ethereal Realm for the duration, a shadow of the current plane. Within this realm, the setting is similar to the current realm but nothing within the real world can be interacted with. Additionally, within this realm, entities cannot rest or recover health, stamina, or mana via abilities or items, and entities that are Downed die instantly, their bodies turning to dust. Travel within the Ethereal Realm equals a similar amount of travel in the real world, and after this spell's duration expires, all entities are returned to their new position in the real world. You may choose to spend 1 minute to cast this spell as a minor ritual; if you do, its duration becomes 1 hour. You may choose to spend 10 minutes to cast this spell as a major ritual; if you do, its duration becomes 6 hours."
+        ],
+        "tags": [
+            "Spell",
+            "dark",
+            "defensive",
+            "conjuration",
+            "ritual"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Veil of Darkness",
         "class": "Voidwalker",
         "branch": "Nothingness",
@@ -9799,6 +9841,27 @@
             "Blind",
             "conditional",
             "cleanse"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Shadow Puppets",
+        "class": "Voidwalker",
+        "branch": "Nothingness",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "40 mana",
+        "range": "Touch",
+        "duration": "1 minute",
+        "description": [
+            "You create shadow clones of your allies to deceive enemies. All allies in range gain a buff that creates 3 duplicate illusions of each of them. Duplicates redirect attacks to themselves based on how many are present, and are destroyed upon being attacked or having a condition inflicted on them. With 3 duplicates, the chance of redirection is 90%. With 2 duplicates, the chance of redirection is 70%. With 1 duplicate, the chance of redirection is 40%. An entity cannot benefit from more than 3 duplicates at a time."
+        ],
+        "tags": [
+            "Spell",
+            "dark",
+            "conjuration",
+            "defensive",
+            "illusions"
         ]
     },
     {
