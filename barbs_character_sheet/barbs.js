@@ -6,6 +6,7 @@ var Barbs = Barbs || (function () {
     // Imports
 
 
+    const assert = BarbsComponents.assert;
     const assert_not_null = BarbsComponents.assert_not_null;
     const assert_type = BarbsComponents.assert_type;
     const assert_starts_with = BarbsComponents.assert_starts_with;
@@ -155,6 +156,15 @@ var Barbs = Barbs || (function () {
     // Character lookup
 
 
+    function return_or_assert(ignore, message) {
+        if (!ignore) {
+            assert(false, message);
+        }
+
+        return null;
+    }
+
+
     function get_character_names(who, id) {
         const found_characters = [];
         Object.keys(characters_by_owner).forEach(function (character_name) {
@@ -170,6 +180,8 @@ var Barbs = Barbs || (function () {
     }
 
 
+    // If 'ignore_failure' is false, this method will always return a Character object, or it will throw an exception.
+    // If 'ignore_failure' is true, this method may return null if no matching characater is found.
     function get_character(msg, ignore_failure = false) {
         const character_names = get_character_names(msg.who, msg.id);
 
@@ -183,19 +195,16 @@ var Barbs = Barbs || (function () {
             characters = characters.concat(objects);
         }
 
-        if (characters.length === 0 && !ignore_failure) {
-            chat(msg, 'Error, did not find a character for ' + msg.who);
-            return null;
+        if (characters.length === 0) {
+            return return_or_assert(ignore_failure, 'Error, did not find a character for ' + msg.who);
         } else if (characters.length > 1) {
             // warn, but pray we've got the right ones regardless
             LOG.warn('Found ' + characters.length + ' matching characters for ' + msg.who);
         }
 
         if (characters[0] === undefined || characters[0] === null) {
-            LOG.info('character 0 is undefined');
-            return null;
+            return return_or_assert(ignore_failure, 'character 0 is undefined');
         }
-
         return new Character(characters[0], msg.who);
     }
 
@@ -271,10 +280,6 @@ var Barbs = Barbs || (function () {
 
     function roll_initiative(msg) {
         const character = get_character(msg);
-        if (character === null) {
-            return;
-        }
-
         const roll = get_roll_with_items_and_effects(character);
         chat(character, '[[d100]]', function (results) {
             const rolls = results[0].inlinerolls;
@@ -349,10 +354,6 @@ var Barbs = Barbs || (function () {
 
     function roll_stat(msg) {
         const character = get_character(msg);
-        if (character === null) {
-            return;
-        }
-
         const stat = Stat[msg.content.split(' ')[2].toUpperCase()];
         const roll = get_roll_with_items_and_effects(character);
         const modifier = get_stat_roll_modifier(character, roll, stat);
@@ -459,10 +460,6 @@ var Barbs = Barbs || (function () {
 
     function roll_condition_resist(msg) {
         const character = get_character(msg);
-        if (character === null) {
-            return;
-        }
-
         const roll = get_roll_with_items_and_effects(character);
         let total_cr = eval(get_stat_roll_modifier(character, roll, Stat.CONDITION_RESIST));
 
@@ -477,9 +474,6 @@ var Barbs = Barbs || (function () {
 
     function damage_reduction(msg) {
         const character = get_character(msg);
-        if (character === null) {
-            return;
-        }
 
         const damage_types = [
             Damage.PHYSICAL, Damage.PSYCHIC, Damage.FIRE, Damage.WATER, Damage.EARTH, Damage.AIR, Damage.ICE,
@@ -487,11 +481,8 @@ var Barbs = Barbs || (function () {
         ];
 
         let damages_taken = remove_empty(msg.content.split(' '));
-        if (damages_taken.length !== damage_types.length + 2) {
-            raw_chat('API', 'Wrong number of parameters for "!barbs dmg" command, ' +
-                'expected %s, got %s'.format(damage_types.length + 2, damages_taken.length));
-            return;
-        }
+        assert(damages_taken.length === damage_types.length + 2, 'Wrong number of parameters for "!barbs dmg" ' +
+            'command, expected %s, got %s', damage_types.length + 2, damages_taken.length);
         damages_taken = damages_taken.slice(2);
 
         const penetrations = [];
@@ -574,22 +565,14 @@ var Barbs = Barbs || (function () {
 
     function roll_concentration(msg) {
         const character = get_character(msg);
-        if (character === null) {
-            return;
-        }
-
         const roll = get_roll_with_items_and_effects(character);
         const roll_string = 'd100+%s'.format(roll.concentration_bonus);
         chat(msg, total_format.format('Concentration Check', 'Roll', roll_string));
-
     }
 
 
     function roll_skill(msg) {
         const character = get_character(msg);
-        if (character === null) {
-            return;
-        }
 
         const pieces = msg.content.split(' ');
         const points_in_skill = parse_int(pieces[pieces.length - 1]);
@@ -881,10 +864,7 @@ var Barbs = Barbs || (function () {
         if (effectiveness_string !== null) {
             effectiveness_string = trim_percent(effectiveness_string);
             effectiveness += parse_int(effectiveness_string) / 100;
-            if (Number.isNaN(effectiveness)) {
-                chat(caster, 'Non-numeric effectiveness "%s"'.format(effectiveness_string));
-                return;
-            }
+            assert_numeric(effectiveness, 'Non-numeric effectiveness "%s"', effectiveness_string);
         }
 
         const effect = {
@@ -917,16 +897,12 @@ var Barbs = Barbs || (function () {
 
     function list_persistent_effects(msg) {
         const pieces = msg.content.split(' ');
-        let character = null;
+        let character;
         if (pieces.length > 2) {
             const character_name = pieces.slice(2).join(' ');
             character = get_character_by_name(character_name);
         } else {
             character = get_character(msg);
-        }
-
-        if (character === null) {
-            return;
         }
 
         let effects = '';
@@ -966,10 +942,6 @@ var Barbs = Barbs || (function () {
             // only effect was specified
             effect_name = option_pieces[0];
             character = get_character(msg);
-        }
-
-        if (character === null) {
-            return;
         }
 
         for (let i = 0; i < persistent_effects.length; i++) {
@@ -1890,9 +1862,6 @@ var Barbs = Barbs || (function () {
 
     function roll_item(msg) {
         const character = get_character(msg);
-        if (character === null) {
-            return;
-        }
 
         const halves = msg.content.split('|');
         if (halves.length !== 2) {
@@ -2273,9 +2242,6 @@ var Barbs = Barbs || (function () {
         const target_characters = [];
         for (let i = 0; i < target_names.length; i++) {
             const target_character = get_character_by_name(target_names[i].trim());
-            if (target_character === null) {
-                return;
-            }
             target_characters.push(target_character);
         }
 
@@ -2578,9 +2544,6 @@ var Barbs = Barbs || (function () {
             const target_characters = [];
             for (let i = 0; i < target_names.length; i++) {
                 const target_character = get_character_by_name(target_names[i].trim());
-                if (target_character === null) {
-                    return;
-                }
                 target_characters.push(target_character);
             }
 
@@ -2630,10 +2593,6 @@ var Barbs = Barbs || (function () {
         }
 
         const target_character = get_character_by_name(target_name);
-        if (target_character === null) {
-            return;
-        }
-
         const choice = get_parameter('choice', parameters);
         if (choice === null) {
             chat(character, '"choice {first/second}" parameter is missing');
@@ -3458,9 +3417,6 @@ var Barbs = Barbs || (function () {
         }
 
         const target_character = get_character_by_name(target_name);
-        if (target_character === null) {
-            return;
-        }
 
         let percentage = 20;
         const extra_mana_spent = get_parameter('mana', parameters);
@@ -3493,9 +3449,6 @@ var Barbs = Barbs || (function () {
         }
 
         const target_character = get_character_by_name(target_name);
-        if (target_character === null) {
-            return;
-        }
 
         // Find the buff
         let index = -1;
@@ -3527,9 +3480,6 @@ var Barbs = Barbs || (function () {
         }
 
         const target_character = get_character_by_name(target_name);
-        if (target_character === null) {
-            return;
-        }
 
         add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
@@ -3550,9 +3500,6 @@ var Barbs = Barbs || (function () {
         }
 
         const target_character = get_character_by_name(target_name);
-        if (target_character === null) {
-            return;
-        }
 
         add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_HOUR(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
@@ -3572,9 +3519,6 @@ var Barbs = Barbs || (function () {
         }
 
         const target_character = get_character_by_name(target_name);
-        if (target_character === null) {
-            return;
-        }
 
         const source = character.name;
         add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(), Ordering(),
@@ -3649,9 +3593,6 @@ var Barbs = Barbs || (function () {
         const target_characters = [];
         for (let i = 0; i < target_names.length; i++) {
             const target_character = get_character_by_name(target_names[i].trim());
-            if (target_character === null) {
-                return;
-            }
             target_characters.push(target_character);
         }
 
@@ -3774,9 +3715,6 @@ var Barbs = Barbs || (function () {
         }
 
         const target_character = get_character_by_name(target_name);
-        if (target_character === null) {
-            return;
-        }
 
         const source = character.name;
         add_persistent_effect(character, ability, parameters, target_character, Duration.SINGLE_USE(), Ordering(),
@@ -3988,9 +3926,6 @@ var Barbs = Barbs || (function () {
 
     function process_ability(msg) {
         const character = get_character(msg);
-        if (character === null) {
-            return;
-        }
 
         const pieces = msg.content.split(' ');
         const options = pieces.slice(2).join(' ');

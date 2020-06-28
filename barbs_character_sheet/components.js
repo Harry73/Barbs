@@ -16,27 +16,27 @@ var BarbsComponents = BarbsComponents || (function () {
     // Assertions
 
 
-    function assert(condition, message) {
-        if (condition === null || condition === undefined) {
+    function assert(condition, message, ...rest) {
+        if (condition === undefined || condition === null) {
             throw 'assert() missing condition';
         }
-        if (message === null || message === undefined) {
+        if (message === undefined || message === null) {
             throw 'assert() missing message';
         }
 
         if (!condition) {
-            throw 'AssertionError: ' + message;
+            throw message.format(...rest);
         }
     }
 
 
     function assert_not_null(parameter, message) {
-        if (message === null || message === undefined) {
+        if (message === undefined || message === null) {
             throw 'assert_not_null() missing message';
         }
 
-        assert(parameter !== null, message);
-        assert(parameter !== undefined, message);
+        assert(parameter !== undefined, 'AssertionError: ' + message);
+        assert(parameter !== null, 'AssertionError: ' + message);
     }
 
 
@@ -45,9 +45,9 @@ var BarbsComponents = BarbsComponents || (function () {
         assert_not_null(object, 'assert_type() object, ' + message);
         assert_not_null(type, 'assert_type() type, ' + message);
 
-        assert('_type' in object, '%s, no _type member in object %s'.format(message, JSON.stringify(object)));
-        assert(type === object._type,
-               '%s, wrong object type, expected=%s, actual=%s'.format(message, type, object._type));
+        assert('_type' in object, 'AssertionError: %s, no _type member in object %s', message, JSON.stringify(object));
+        assert(type === object._type, 'AssertionError: %s, wrong object type, expected=%s, actual=%s', message, type,
+               object._type);
     }
 
 
@@ -56,8 +56,8 @@ var BarbsComponents = BarbsComponents || (function () {
         assert_not_null(prefix, 'assert_starts_with() prefix');
         assert_not_null(message, 'assert_starts_with() message');
 
-        assert(string.startsWith(prefix),
-               '%s, expected string "%s" to start with "%s"'.format(message, string, prefix));
+        assert(string.startsWith(prefix), 'AssertionError: %s, expected string "%s" to start with "%s"', message,
+               string, prefix);
     }
 
 
@@ -9682,7 +9682,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     return {
-        assert_not_null, assert_type, assert_starts_with, assert_numeric,
+        assert, assert_not_null, assert_type, assert_starts_with, assert_numeric,
         parse_int, trim_percent, trim_all, remove_empty,
         LOG,
         characters_by_owner,
