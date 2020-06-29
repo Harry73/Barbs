@@ -981,6 +981,27 @@
     },
     {
         "type": "ability",
+        "name": "Persistent Hunter",
+        "class": "Arcane Archer",
+        "branch": "Focus",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 mana",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You push onwards through adversity. Cleanse a condition of your choice on yourself, then gain +30% CR for the duration. Gain an additional +30% CR against crowd control conditions for the duration as part of this buff. You may sacrifice this buff as a free reaction; if you do, cleanse a condition of your choice on yourself."
+        ],
+        "tags": [
+            "Buff",
+            "self-target",
+            "conditional",
+            "modal",
+            "cleanse"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Surefire Shot",
         "class": "Arcane Archer",
         "branch": "Shooting",
@@ -1000,6 +1021,32 @@
             "bow",
             "crossbow",
             "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Swelling Shot",
+        "class": "Arcane Archer",
+        "branch": "Shooting",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "35 stamina",
+        "range": "140 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire an arrow that bursts into many. Deal 9d8 physical damage to all enemies in a 25 ft square AOE centered on a space in range. The size of this square AOE increases by 10 ft for every buff you have when you cast this ability. If you sacrificed a buff this turn, this attack gains +50% increased physical damage and inflicts Crippled to all enemies hit."
+        ],
+        "tags": [
+            "Attack",
+            "ranged",
+            "AOE",
+            "square",
+            "physical",
+            "bow",
+            "crossbow",
+            "conditional",
+            "condition",
+            "Cripple"
         ]
     },
     {
@@ -1026,6 +1073,27 @@
                 "sacrifice"
             ]
         }
+    },
+    {
+        "type": "ability",
+        "name": "Serrated Arrow",
+        "class": "Arcane Archer",
+        "branch": "Vigor",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "30 mana",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You augment your attacks to tear at flesh and armor. While this buff is active, convert 20% of your physical damage that you deal with bows and crossbows to an equal amount of Bleed inflicted on hit. Also, your attacks with bows and crossbows shred 20 AC from targets that are hit. You may sacrifice this buff as a free action; if you do, your next bow/crossbow attack has 50% of its physical damage converted to an equal amount of Bleed inflicted on hit, and this Bleed ignores the target's CR."
+        ],
+        "tags": [
+            "Buff",
+            "self-target",
+            "modal",
+            "condition",
+            "Bleed"
+        ]
     },
     {
         "type": "ability",

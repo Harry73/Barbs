@@ -198,7 +198,10 @@
         "abilities": [
             "Surefire Shot",
             "Broadhead Arrow",
-            "Elusive Hunter"
+            "Elusive Hunter",
+            "Swelling Shot",
+            "Serrated Arrow",
+            "Persistent Hunter"
         ],
         "api": {
             "description": "The API will not track action economy for you. Manage this passive yourself.",
