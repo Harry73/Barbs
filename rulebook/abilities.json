@@ -7032,6 +7032,78 @@
     },
     {
         "type": "ability",
+        "name": "Atrophic Blow",
+        "class": "Pinpoint Monk",
+        "branch": "Disrupt",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You hit pressure points that control the application of physical force. With a target in range, choose one of the following:",
+            "<ul>",
+            "<li>Inflict a 40% Weaken to the target until the end of their next turn</li>",
+            "<li>Inflict a 20% Weaken to the target until the end of their next turn. Your next combo roll has +10%</li>",
+            "</ul>"
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "melee",
+            "single-target",
+            "unarmed",
+            "modal",
+            "condition",
+            "Weaken",
+            "combo"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Jolt Jab",
+        "class": "Pinpoint Monk",
+        "branch": "Jab",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "20 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You dash in like lightning with a quick blow. Dash up to 15 ft in any direction, then deal 3dU physical damage + 2d12 lightning magic damage to a target in range. Your next combo roll has +5% for every damage die on this ability that rolls an 11 or higher."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "lightning",
+            "melee",
+            "single-target",
+            "unarmed",
+            "dash",
+            "conditional",
+            "combo"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Rising Energy",
+        "class": "Pinpoint Monk",
+        "branch": "Vitalize",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "20 stamina",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You focus on aiming for weak spots without losing speed or power. While this buff is active, your unarmed attacks have +5% critical strike chance for every combo roll you have succeeded on within the current action for the duration."
+        ],
+        "tags": [
+            "Buff",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Focal Point",
         "class": "Psion",
         "branch": "Memory",

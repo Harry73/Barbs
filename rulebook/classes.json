@@ -1843,9 +1843,25 @@
         "num_requirements": 3,
         "requirements": [
             "Armor Mastery: Cloth Rank A",
-            "Element Mastery: Lightning Rank A"
+            "Element Mastery: Lightning Rank A",
+            "Weapon Mastery: Unarmed Rank A"
         ],
-        "all_reqs_known": false
+        "all_reqs_known": true,
+        "flavor_text": "\"The quick little bastard hit me twice, in each shoulder, and just like that, I dropped my axes. Couldn't feel a damned thing, let alone fight back. I thought I was a goner then, but all he did was politely ask me to go back to the tavern to pay my tab. I didn't know a smile could be so damned frightening.\"",
+        "description": "The Pinpoint Monk has learned two vitally important systems over the beginner monk: the understanding of the body's natural pressure points and the effects of electricity on the body's nerves. Using just two fingers, this class applies force in an extremely fine and directed manner to specific parts of an opponent's body, releasing small amounts of lightning from their fingertips to disrupt the flow of energy and the nerve signals of the target's body. The result is immediate: paralysis of major muscle groups, disabling of sensory equipment, and sometimes critical amounts of damage to tissues. With an excess of mobility, the Pinpoint Monk opens fights with crowd control on single targets before following with devastating critical strikes later in their combos. The abilities of this class can provide a lot of needed versatility to the repertoire of the beginner monk, and provide them with a somewhat reliable new angle of attack in the form of critical strikes.",
+        "branches": {
+            "Jab": "The Jab branch provides options for dealing a combination of physical and lightning magic damage to single or multiple targets.",
+            "Disrupt": "The Disrupt branch provides options for inflicting crowd control conditions to single or multiple targets.",
+            "Vitalize": "The Vitalize branch provides options for additional utility and mobility."
+        },
+        "passive": {
+            "Precision Pummeling": "Your monk mastery increases. Additionally, before making an unarmed attack, you may convert up to half your critical strike chance to combo chance, or vice versa."
+        },
+        "abilities": [
+            "Jolt Jab",
+            "Atrophic Blow",
+            "Rising Energy"
+        ]
     },
     {
         "type": "class",
