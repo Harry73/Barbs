@@ -10822,7 +10822,7 @@
         "range": "---",
         "duration": "Instant",
         "description": [
-            "You bellow an inspiring cry, encouraging everyone to persist. You and all allies who can hear you are cleansed of Fear, Stun, Paralysis, Confusion, Sleep, and Charm. Allies in a 1000 ft range who are in a downed state become immediately stabilized. When you cast this ability, all allies who can hear you may use their reaction to cleanse an additional condition on them of their choice."
+            "You bellow an inspiring cry, encouraging everyone to persist. All allies who can hear you are cleansed of Fear, Stun, Paralysis, Confusion, Sleep, and Charm. Other allies in a 1000 ft range who are in a downed state become immediately stabilized. When you cast this ability, all allies who can hear you may use their reaction to cleanse an additional condition on them of their choice."
         ],
         "tags": [
             "Cleanse",
