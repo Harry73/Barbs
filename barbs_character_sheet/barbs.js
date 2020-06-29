@@ -2542,9 +2542,11 @@ var Barbs = Barbs || (function () {
         if (minor_action !== null) {
             const target_names = minor_action.split(',');
             const target_characters = [];
+            const official_names = []
             for (let i = 0; i < target_names.length; i++) {
                 const target_character = get_character_by_name(target_names[i].trim());
                 target_characters.push(target_character);
+                official_names.push(target_character.name);
             }
 
             for (let i = 0; i < target_characters.length; i++) {
@@ -2570,6 +2572,79 @@ var Barbs = Barbs || (function () {
                     return true;
                 });
             }
+
+            chat(character, 'Buffed ' + official_names.join(', '));
+        }
+    }
+
+
+    function dragoncaller_summon_silver_dragon(character, ability, parameters) {
+        const short_name = 'Silver Dragon';
+
+        const major_action = get_parameter('major', parameters);
+        if (major_action !== null) {
+            // The summon acts as a separate character, so we make a fake one to be able to do rolls with. The critical
+            // hit chance stat must at least be set for this to work properly.
+            const dragon = new Character({'id': 'silver_dragon'}, character.who);
+            dragon.stats[Stat.CRITICAL_HIT_CHANCE.name] = 0;
+
+            if (major_action === 'breath') {
+                const roll = new Roll(dragon, RollType.MAGIC);
+                roll.add_damage('12d8', Damage.ICE);
+
+                roll_crit(roll, parameters, function (crit_section) {
+                    do_roll(dragon, ability, roll, parameters, crit_section);
+                });
+
+            } else if (major_action === 'tail') {
+                const roll = new Roll(dragon, RollType.PHYSICAL);
+                roll.add_damage('8d10', Damage.PHYSICAL);
+
+                roll_crit(roll, parameters, function (crit_section) {
+                    do_roll(dragon, ability, roll, parameters, crit_section);
+                });
+
+            } else {
+                chat(character, 'Unexpected option for parameter "major", expected {tail/breath}')
+            }
+        }
+
+        const minor_action = get_parameter('minor', parameters);
+        if (minor_action !== null) {
+            const target_names = minor_action.split(',');
+            const target_characters = [];
+            const official_names = []
+            for (let i = 0; i < target_names.length; i++) {
+                const target_character = get_character_by_name(target_names[i].trim());
+                target_characters.push(target_character);
+                official_names.push(target_character.name);
+            }
+
+            for (let i = 0; i < target_characters.length; i++) {
+                const target_character = target_characters[i];
+                let count = 1;
+                for (let j = 0; j < persistent_effects.length; j++) {
+                    const persistent_effect = persistent_effects[j];
+                    if (persistent_effect.target === target_character.name && persistent_effect.name.startsWith(short_name)) {
+                        count = persistent_effect.count + 1;
+                        persistent_effects.splice(j, 1);
+                        LOG.debug('Found previous instance of %s on %s, replacing it with %s instance'.format(
+                            short_name, target_character.name, count));
+                        break;
+                    }
+                }
+
+                const modified_name = {'name': '%s: %s% CR and %s% Magic Pen'.format(short_name, 10 * count, 10 * count)}
+                add_persistent_effect(character, modified_name, parameters, target_character, Duration.ONE_MINUTE(),
+                                      Ordering(), RollType.ALL, RollTime.DEFAULT, count,
+                                      function (char, roll, parameters) {
+                                          roll.add_stat_bonus(Stat.CONDITION_RESIST, 10 * count);
+                                          roll.add_hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 10 * count);
+                                          return true;
+                                      });
+            }
+
+            chat(character, 'Buffed ' + official_names.join(', '));
         }
     }
 
@@ -2578,6 +2653,17 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('6d12', Damage.LIGHTNING);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.LIGHTNING);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function dragoncaller_silver_dragon_breath(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('10d8', Damage.ICE);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -3798,7 +3884,9 @@ var Barbs = Barbs || (function () {
         },
         'Dragoncaller': {
             'Summon Bronze Dragon': dragoncaller_summon_bronze_dragon,
+            'Summon Silver Dragon': dragoncaller_summon_silver_dragon,
             'Bronze Dragon Breath': dragoncaller_bronze_dragon_breath,
+            'Silver Dragon Breath': dragoncaller_silver_dragon_breath,
         },
         'Dynamancer': {
             'Spark Bolt': dynamancer_spark_bolt,

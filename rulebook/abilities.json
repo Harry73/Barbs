@@ -3930,7 +3930,11 @@
             "AOE",
             "cone",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "Roll \"Summon Silver Dragon\" to do the breath attacks of your summoned silver dragons separately.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -3985,7 +3989,16 @@
             "ice",
             "buff",
             "condition"
-        ]
+        ],
+        "api": {
+            "description": "Using this ability replicates the summoned dragon's Major and Minor actions. There are two parameters for this ability, \"major\" and \"minor\", both of which are optional. If neither are included, the ability does nothing. The \"major\" parameter, if included, requires the type of attack you want the summon to perform, either \"tail\" or \"breath\". The \"minor\" parameter, if included, takes a comma-separated list of allies and applies the buff effect. The debuff minor is not supported, as the API does not track enemies. Both the \"major\" and \"minor\" parameters can be included to do both actions at once.",
+            "examples": [
+                "major: tail",
+                "major: breath",
+                "minor: Faust, Ren, Orpheus",
+                "major: tail; minor: Faust, Ren"
+            ]
+        }
     },
     {
         "type": "ability",
