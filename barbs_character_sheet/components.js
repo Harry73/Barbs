@@ -1462,6 +1462,53 @@ var BarbsComponents = BarbsComponents || (function () {
                         "modal",
                         "dash"
                     ]
+                },
+                "Swelling Shot": {
+                    "name": "Swelling Shot",
+                    "class": "Arcane Archer",
+                    "description": [
+                        "You fire an arrow that bursts into many. Deal 9d8 physical damage to all enemies in a 25 ft square AOE centered on a space in range. The size of this square AOE increases by 10 ft for every buff you have when you cast this ability. If you sacrificed a buff this turn, this attack gains +50% increased physical damage and inflicts Crippled to all enemies hit."
+                    ],
+                    "tags": [
+                        "attack",
+                        "ranged",
+                        "aoe",
+                        "square",
+                        "physical",
+                        "bow",
+                        "crossbow",
+                        "conditional",
+                        "condition",
+                        "cripple"
+                    ]
+                },
+                "Serrated Arrow": {
+                    "name": "Serrated Arrow",
+                    "class": "Arcane Archer",
+                    "description": [
+                        "You augment your attacks to tear at flesh and armor. While this buff is active, convert 20% of your physical damage that you deal with bows and crossbows to an equal amount of Bleed inflicted on hit. Also, your attacks with bows and crossbows shred 20 AC from targets that are hit. You may sacrifice this buff as a free action; if you do, your next bow/crossbow attack has 50% of its physical damage converted to an equal amount of Bleed inflicted on hit, and this Bleed ignores the target's CR."
+                    ],
+                    "tags": [
+                        "buff",
+                        "self-target",
+                        "modal",
+                        "condition",
+                        "bleed"
+                    ]
+                },
+                "Persistent Hunter": {
+                    "name": "Persistent Hunter",
+                    "class": "Arcane Archer",
+                    "description": [
+                        "You push onwards through adversity. Cleanse a condition of your choice on yourself, then gain +30% CR for the duration. Gain an additional +30% CR against crowd control conditions for the duration as part of this buff. You may sacrifice this buff as a free reaction; if you do, cleanse a condition of your choice on yourself."
+                    ],
+                    "tags": [
+                        "buff",
+                        "self-target",
+                        "conditional",
+                        "modal",
+                        "cleanse"
+                    ]
                 }
             }
         },
@@ -3501,7 +3548,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "name": "Summon Bronze Dragon",
                     "class": "Dragoncaller",
                     "description": [
-                        "You summon a juvenile bronze dragon, bringer of lightning. Summon a Bronze Dragon with 200 health, large size, 20 AC, 80% EV, 20% MR, 30% CR, and 80 ft flying Move Speed. The Dragon obeys your Commands; otherwise, it uses its Move Action to fly to positions above enemies, its Major Action to either swipe with its claws for 10d10 physical damage on a single target in melee range or use its breath attack for 10d12 lightning magic damage in a 200 ft line AOE, and its Minor Action to either buff all allies with +10 Move Speed and +10% Armor Penetration for 1 minute, stacking and refreshing, or inflict all enemies with -10 Move Speed and +10% Physical Vulnerability for 1 minute, stacking and refreshing. The Bronze Dragon is a superior predator and hunter; if supplied with a magical signature, it can hunt down any individual anywhere on a plane regardless of distance, unless they are magically hidden."
+                        "You summon a juvenile bronze dragon, bringer of lightning. Summon a Bronze Dragon with 200 health, large size, 20 AC, 80% EV, 20% MR, 30% CR, and 80 ft flying Move Speed. The Dragon obeys your Commands; otherwise, it uses its Move Action to fly to positions above enemies, its Major Action to either swipe with its claws for 10d10 physical damage on a single target in melee range or use its breath attack for 10d12 lightning magic damage in a 200 ft line AOE, and its Minor Action to either buff all other allies with +10 Move Speed and +10% Armor Penetration for 1 minute, stacking and refreshing, or inflict all enemies with -10 Move Speed and +10% Physical Vulnerability for 1 minute, stacking and refreshing. The Bronze Dragon is a superior predator and hunter; if supplied with a magical signature, it can hunt down any individual anywhere on a plane regardless of distance, unless they are magically hidden."
                     ],
                     "tags": [
                         "spell",
@@ -3548,7 +3595,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "name": "Summon Silver Dragon",
                     "class": "Dragoncaller",
                     "description": [
-                        "You summon a juvenile silver dragon, bringer of ice. Summon a Silver Dragon with 250 health, large size, 30 AC, 30% EV, 70% MR, 40% CR, and 70 ft flying Move Speed. The Dragon obeys your commands; otherwise, it uses its Move Action to fly to positions above enemies, its Major Action to either swipe with its tail for 8d10 physical damage on all enemy targets in melee range or use its breath attack for 12d8 ice magic damage in an 80 ft cone AOE, and its Minor Action to either buff all allies with +10% CR and +10% Magic Penetration for 1 minute, stacking and refreshing, or inflict all enemies with -10% CR and +10% Magic Vulnerability for 1 minute, stacking and refreshing. The Silver Dragon is a master of ancient arcane practices; if given a moment to study anything associated with magic, it can provide detailed information about the object of study, and can assist in tampering with or destroying any magic spell or object studied in this manner."
+                        "You summon a juvenile silver dragon, bringer of ice. Summon a Silver Dragon with 250 health, large size, 30 AC, 30% EV, 70% MR, 40% CR, and 70 ft flying Move Speed. The Dragon obeys your commands; otherwise, it uses its Move Action to fly to positions above enemies, its Major Action to either swipe with its tail for 8d10 physical damage on all enemy targets in melee range or use its breath attack for 12d8 ice magic damage in an 80 ft cone AOE, and its Minor Action to either buff all other allies with +10% CR and +10% Magic Penetration for 1 minute, stacking and refreshing, or inflict all enemies with -10% CR and +10% Magic Vulnerability for 1 minute, stacking and refreshing. The Silver Dragon is a master of ancient arcane practices; if given a moment to study anything associated with magic, it can provide detailed information about the object of study, and can assist in tampering with or destroying any magic spell or object studied in this manner."
                     ],
                     "tags": [
                         "spell",
@@ -3580,7 +3627,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "name": "Dragonflight",
                     "class": "Dragoncaller",
                     "description": [
-                        "You invoke the free spirit of the dragon. An ally in range gains a buff that converts all of their Move Speed into flying Move Speed, and they cleanse a condition of their choice. When you cast this spell, you may target an additional ally for each Dragon you control."
+                        "You invoke the free spirit of the dragon. An ally in range gains a buff that converts all of their Move Speed into flying Move Speed for the duration, and they cleanse a condition of their choice. When you cast this spell, you may target an additional ally for each Dragon you control."
                     ],
                     "tags": [
                         "spell",
@@ -3588,6 +3635,52 @@ var BarbsComponents = BarbsComponents || (function () {
                         "restoration",
                         "buff",
                         "cleanse",
+                        "conditional"
+                    ]
+                },
+                "Summon Gold Dragon": {
+                    "name": "Summon Gold Dragon",
+                    "class": "Dragoncaller",
+                    "description": [
+                        "You summon a juvenile gold dragon, bringer of fire. Summon a Gold Dragon with 300 health, large size, 80 AC, 30% EV, 50% MR, 50% CR, and 75 ft flying Move Speed. The Dragon obeys your commands; otherwise, it uses its Move Action to fly to positions above enemies, its Major Action to use its breath attack for 10d12 fire magic damage in a 45 ft square AOE centered on a space within 120 ft (leaving behind a field of fire for 1 minute that deals 60 fire magic damage to entities that start/end their turn within, or enter/leave the field during their turn), and its Minor Action to either buff all other allies with +20% increased damage for 1 minute, stacking and refreshing, or inflict all enemies with +20% Vulnerability, stacking and refreshing. All fire magic damage that the Gold Dragon or its fields inflict ignores 100% of the targets' MR. The Gold Dragon is a shining leader of man and beast; with its assistance, you and your allies cannot fail Beast Mastery or Interaction skill checks, and while you control a Gold Dragon, your maximum number of Commands within a Command Action becomes 5."
+                    ],
+                    "tags": [
+                        "spell",
+                        "summoning",
+                        "minion",
+                        "fire",
+                        "buff",
+                        "condition",
+                        "vulnerability",
+                        "field"
+                    ]
+                },
+                "Gold Dragon Breath": {
+                    "name": "Gold Dragon Breath",
+                    "class": "Dragoncaller",
+                    "description": [
+                        "You release the devastating destruction of a gold dragon's breath attack. Deal 8d12 fire magic damage to all enemies in a 45 ft square centered on a space in range. All Gold Dragons you control then use their reactions to use their breath attacks on locations of your choosing."
+                    ],
+                    "tags": [
+                        "spell",
+                        "attack",
+                        "destruction",
+                        "fire",
+                        "aoe",
+                        "square",
+                        "conditional"
+                    ]
+                },
+                "Dragonsight": {
+                    "name": "Dragonsight",
+                    "class": "Dragoncaller",
+                    "description": [
+                        "You invoke the supernatural vision of the dragon. An ally in range gains a buff that grants them true sight and your choice of +50% Accuracy, +50% Armor Penetration, or +50% Magic Penetration for the duration. When you cast this spell, you may target an additional ally for each Dragon you control."
+                    ],
+                    "tags": [
+                        "spell",
+                        "utility",
+                        "buff",
                         "conditional"
                     ]
                 }
@@ -5495,6 +5588,47 @@ var BarbsComponents = BarbsComponents || (function () {
                         "attack",
                         "single-target"
                     ]
+                },
+                "Nothing Sacred": {
+                    "name": "Nothing Sacred",
+                    "class": "Night Lord",
+                    "description": [
+                        "You destroy magical defenses against thieves. Dispel all defensive spells within range and create a square field for the duration encompassing the range that silences all entites within it and causes you to auto-succeed on attempts to unlock things within it."
+                    ],
+                    "tags": [
+                        "field",
+                        "condition",
+                        "silence"
+                    ]
+                },
+                "Decoy": {
+                    "name": "Decoy",
+                    "class": "Night Lord",
+                    "description": [
+                        "You lure enemies away. Create a Decoy totem in an empty space within range that you can see. The Decoy has 1 health and lasts for the duration. The Decoy immediately Taunts all enemies within line of sight for 1 minute. Additionally, it Charms those targets, forcing them to use their Move Action to approach the totem. When an enemy moves towards the Decoy, you may dash an equal distance in any direction as a free reaction. An enemy that has not been Taunted or Charmed by this ability previously has -30% CR for the Taunt and Charm."
+                    ],
+                    "tags": [
+                        "totem",
+                        "condition",
+                        "taunt",
+                        "charm",
+                        "conditional",
+                        "dash"
+                    ]
+                },
+                "Larceny": {
+                    "name": "Larceny",
+                    "class": "Night Lord",
+                    "description": [
+                        "You steal energy and morale. Drain 6d6 health from a target in range. Strip 1 buff from the target for every 6 rolled, applying the buff to yourself instead. Additionally, the target is inflicted with a mark that gives them -30 to skill checks until their next long rest."
+                    ],
+                    "tags": [
+                        "attack",
+                        "single-target",
+                        "buff strip",
+                        "conditional",
+                        "mark"
+                    ]
                 }
             }
         },
@@ -5668,6 +5802,67 @@ var BarbsComponents = BarbsComponents || (function () {
                         "conditional",
                         "modal",
                         "concentration"
+                    ]
+                }
+            }
+        },
+        "Pinpoint Monk": {
+            "type": "class",
+            "name": "Pinpoint Monk",
+            "description": "The Pinpoint Monk has learned two vitally important systems over the beginner monk: the understanding of the body's natural pressure points and the effects of electricity on the body's nerves. Using just two fingers, this class applies force in an extremely fine and directed manner to specific parts of an opponent's body, releasing small amounts of lightning from their fingertips to disrupt the flow of energy and the nerve signals of the target's body. The result is immediate: paralysis of major muscle groups, disabling of sensory equipment, and sometimes critical amounts of damage to tissues. With an excess of mobility, the Pinpoint Monk opens fights with crowd control on single targets before following with devastating critical strikes later in their combos. The abilities of this class can provide a lot of needed versatility to the repertoire of the beginner monk, and provide them with a somewhat reliable new angle of attack in the form of critical strikes.",
+            "passive": {
+                "Precision Pummeling": "Your monk mastery increases. Additionally, before making an unarmed attack, you may convert up to half your critical strike chance to combo chance, or vice versa."
+            },
+            "abilities": {
+                "Jolt Jab": {
+                    "name": "Jolt Jab",
+                    "class": "Pinpoint Monk",
+                    "description": [
+                        "You dash in like lightning with a quick blow. Dash up to 15 ft in any direction, then deal 3dU physical damage + 2d12 lightning magic damage to a target in range. Your next combo roll has +5% for every damage die on this ability that rolls an 11 or higher."
+                    ],
+                    "tags": [
+                        "attack",
+                        "physical",
+                        "lightning",
+                        "melee",
+                        "single-target",
+                        "unarmed",
+                        "dash",
+                        "conditional",
+                        "combo"
+                    ]
+                },
+                "Atrophic Blow": {
+                    "name": "Atrophic Blow",
+                    "class": "Pinpoint Monk",
+                    "description": [
+                        "You hit pressure points that control the application of physical force. With a target in range, choose one of the following:",
+                        "<ul>",
+                        "<li>Inflict a 40% Weaken to the target until the end of their next turn</li>",
+                        "<li>Inflict a 20% Weaken to the target until the end of their next turn. Your next combo roll has +10%</li>",
+                        "</ul>"
+                    ],
+                    "tags": [
+                        "attack",
+                        "physical",
+                        "melee",
+                        "single-target",
+                        "unarmed",
+                        "modal",
+                        "condition",
+                        "weaken",
+                        "combo"
+                    ]
+                },
+                "Rising Energy": {
+                    "name": "Rising Energy",
+                    "class": "Pinpoint Monk",
+                    "description": [
+                        "You focus on aiming for weak spots without losing speed or power. While this buff is active, your unarmed attacks have +5% critical strike chance for every combo roll you have succeeded on within the current action for the duration."
+                    ],
+                    "tags": [
+                        "buff",
+                        "conditional"
                     ]
                 }
             }
@@ -7618,6 +7813,48 @@ var BarbsComponents = BarbsComponents || (function () {
                         "field",
                         "block"
                     ]
+                },
+                "Shadowstep": {
+                    "name": "Shadowstep",
+                    "class": "Voidwalker",
+                    "description": [
+                        "You transport allies to a shadow of the real world. All allies in range are transported to the Ethereal Realm for the duration, a shadow of the current plane. Within this realm, the setting is similar to the current realm but nothing within the real world can be interacted with. Additionally, within this realm, entities cannot rest or recover health, stamina, or mana via abilities or items, and entities that are Downed die instantly, their bodies turning to dust. Travel within the Ethereal Realm equals a similar amount of travel in the real world, and after this spell's duration expires, all entities are returned to their new position in the real world. You may choose to spend 1 minute to cast this spell as a minor ritual; if you do, its duration becomes 1 hour. You may choose to spend 10 minutes to cast this spell as a major ritual; if you do, its duration becomes 6 hours."
+                    ],
+                    "tags": [
+                        "spell",
+                        "dark",
+                        "defensive",
+                        "conjuration",
+                        "ritual"
+                    ]
+                },
+                "Void Portal": {
+                    "name": "Void Portal",
+                    "class": "Voidwalker",
+                    "description": [
+                        "You create a portal to faraway lands. Create an invisible portal within range for the duration that teleports entrants to a specified location on the current plane. If you haven't been to the destination, you need to roll a Conjurations skill check, with a DC based on distance. When you cast this spell, allies in touch range are teleported directly to the portal."
+                    ],
+                    "tags": [
+                        "spell",
+                        "dark",
+                        "conjuration",
+                        "teleport",
+                        "conditional"
+                    ]
+                },
+                "Shadow Puppets": {
+                    "name": "Shadow Puppets",
+                    "class": "Voidwalker",
+                    "description": [
+                        "You create shadow clones of your allies to deceive enemies. All allies in range gain a buff that creates 3 duplicate illusions of each of them. Duplicates redirect attacks to themselves based on how many are present, and are destroyed upon being attacked or having a condition inflicted on them. With 3 duplicates, the chance of redirection is 90%. With 2 duplicates, the chance of redirection is 70%. With 1 duplicate, the chance of redirection is 40%. An entity cannot benefit from more than 3 duplicates at a time."
+                    ],
+                    "tags": [
+                        "spell",
+                        "dark",
+                        "conjuration",
+                        "defensive",
+                        "illusions"
+                    ]
                 }
             }
         },
@@ -8101,7 +8338,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "name": "\"Charge!\"",
                     "class": "Warrior",
                     "description": [
-                        "You bellow a righteous cry, calling all to drive forward into battle. You and all allies who can hear you gain 50% increased damage until the end of your next turn. When you cast this ability, all allies who can hear you may use their reaction to move up to their speed in any direction."
+                        "You bellow a righteous cry, calling all to drive forward into battle. All allies who can hear you gain 50% increased damage until the end of your next turn. When you cast this ability, all other allies who can hear you may use their reaction to move up to their speed in any direction."
                     ],
                     "tags": [
                         "buff",
@@ -8128,7 +8365,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "name": "\"Overcome!\"",
                     "class": "Warrior",
                     "description": [
-                        "You bellow an inspiring cry, encouraging everyone to persist. You and all allies who can hear you are cleansed of Fear, Stun, Paralysis, Confusion, Sleep, and Charm. Allies in a 1000 ft range who are in a downed state become immediately stabilized. When you cast this ability, all allies who can hear you may use their reaction to cleanse an additional condition on them of their choice."
+                        "You bellow an inspiring cry, encouraging everyone to persist. All allies who can hear you are cleansed of Fear, Stun, Paralysis, Confusion, Sleep, and Charm. Other allies in a 1000 ft range who are in a downed state become immediately stabilized. When you cast this ability, all allies who can hear you may use their reaction to cleanse an additional condition on them of their choice."
                     ],
                     "tags": [
                         "cleanse",

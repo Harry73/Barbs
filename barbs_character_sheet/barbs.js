@@ -2649,6 +2649,72 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function dragoncaller_summon_gold_dragon(character, ability, parameters) {
+        const short_name = 'Gold Dragon';
+
+        const major_action = get_parameter('major', parameters);
+        if (major_action !== null) {
+            // The summon acts as a separate character, so we make a fake one to be able to do rolls with. The critical
+            // hit chance stat must at least be set for this to work properly.
+            const dragon = new Character({'id': 'gold_dragon'}, character.who);
+            dragon.stats[Stat.CRITICAL_HIT_CHANCE.name] = 0;
+
+            // There's only one option, but we're doing it like this so that this ability follows the same pattern as
+            // other summons in this class.
+            if (major_action === 'breath') {
+                const roll = new Roll(dragon, RollType.MAGIC);
+                roll.add_damage('10d12', Damage.FIRE);
+                roll.add_effect('Leaves behind a field of fire');
+                roll.add_hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 100);
+
+                roll_crit(roll, parameters, function (crit_section) {
+                    do_roll(dragon, ability, roll, parameters, crit_section);
+                });
+
+            } else {
+                chat(character, 'Unexpected option for parameter "major", expected {breath}')
+            }
+        }
+
+        const minor_action = get_parameter('minor', parameters);
+        if (minor_action !== null) {
+            const target_names = minor_action.split(',');
+            const target_characters = [];
+            const official_names = []
+            for (let i = 0; i < target_names.length; i++) {
+                const target_character = get_character_by_name(target_names[i].trim());
+                target_characters.push(target_character);
+                official_names.push(target_character.name);
+            }
+
+            for (let i = 0; i < target_characters.length; i++) {
+                const target_character = target_characters[i];
+                let count = 1;
+                for (let j = 0; j < persistent_effects.length; j++) {
+                    const persistent_effect = persistent_effects[j];
+                    if (persistent_effect.target === target_character.name && persistent_effect.name.startsWith(short_name)) {
+                        count = persistent_effect.count + 1;
+                        persistent_effects.splice(j, 1);
+                        LOG.debug('Found previous instance of %s on %s, replacing it with %s instance'.format(
+                            short_name, target_character.name, count));
+                        break;
+                    }
+                }
+
+                const modified_name = {'name': '%s: %s% increased damage'.format(short_name, 20 * count)}
+                add_persistent_effect(character, modified_name, parameters, target_character, Duration.ONE_MINUTE(),
+                                      Ordering(), RollType.ALL, RollTime.DEFAULT, count,
+                                      function (char, roll, parameters) {
+                                          roll.add_multiplier(0.2 * count, Damage.ALL, short_name);
+                                          return true;
+                                      });
+            }
+
+            chat(character, 'Buffed ' + official_names.join(', '));
+        }
+    }
+
+
     function dragoncaller_bronze_dragon_breath(character, ability, parameters) {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('6d12', Damage.LIGHTNING);
@@ -2668,6 +2734,95 @@ var Barbs = Barbs || (function () {
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
         });
+    }
+
+
+    function dragoncaller_gold_dragon_breath(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('8d12', Damage.FIRE);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.FIRE);
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function dragoncaller_dragonflight(character, ability, parameters) {
+        const targets = get_parameter('targets', parameters);
+        assert(targets !== null, '"targets" parameter is required');
+
+        const target_names = targets.split(',');
+        const target_characters = [];
+        const effects = ['<p>The following characters have flying Movement Speed and cleanse one condition:</p>'];
+        for (let i = 0; i < target_names.length; i++) {
+            const target_character = get_character_by_name(target_names[i].trim());
+            target_characters.push(target_character);
+            effects.push('<li>%s</li>'.format(target_character.name));
+        }
+
+        for (let i = 0; i < target_characters.length; i++) {
+            const target_character = target_characters[i];
+            // The buff itself doesn't do anything relevant to the API, but we'll create it for buff-tracking purposes
+            add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(),
+                                  Ordering(), RollType.ALL, RollTime.DEFAULT, 1, function () {
+                                      return true;
+                                  });
+        }
+
+        const effects_section = effects_section_format.format(effects.join(''));
+        const msg = roll_format.format(ability.name, /*damage_section=*/'', /*crit_section=*/'', /*combo_section=*/'',
+                                       effects_section);
+        chat(character, msg);
+    }
+
+
+    function dragoncaller_dragonsight(character, ability, parameters) {
+        const targets = get_parameter('targets', parameters);
+        assert(targets !== null, '"targets" parameter is required');
+
+        let choice = get_parameter('choice', parameters);
+        assert(choice !== null, '"choice" parameter is required');
+
+        let choice_string = '';
+        if (choice === 'acc') {
+            choice = HiddenStat.ACCURACY;
+            choice_string = 'Accuracy';
+        } else if (choice === 'ac pen') {
+            choice = HiddenStat.AC_PENETRATION;
+            choice_string = 'AC Penetration';
+        } else if (choice === 'mr pen') {
+            choice = HiddenStat.GENERAL_MAGIC_PENETRATION;
+            choice_string = 'Magic Penetration';
+        } else {
+            chat(character, '"choice" parameter must be one of the following: {acc, ac pen, mr pen}');
+            return;
+        }
+
+        const target_names = targets.split(',');
+        const target_characters = [];
+        const effects = ['<p>The following characters gain true sight and 50% %s:</p>'.format(choice_string)];
+        for (let i = 0; i < target_names.length; i++) {
+            const target_character = get_character_by_name(target_names[i].trim());
+            target_characters.push(target_character);
+            effects.push('<li>%s</li>'.format(target_character.name));
+        }
+
+        const revised_name = {'name': '%s (%s)'.format(ability.name, choice_string)};
+        for (let i = 0; i < target_characters.length; i++) {
+            const target_character = target_characters[i];
+            // The buff itself doesn't do anything relevant to the API, but we'll create it for buff-tracking purposes
+            add_persistent_effect(character, revised_name, parameters, target_character, Duration.ONE_MINUTE(),
+                                  Ordering(), RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
+                    roll.add_hidden_stat(choice, 50);
+                    return true;
+                });
+        }
+
+        const effects_section = effects_section_format.format(effects.join(''));
+        const msg = roll_format.format(ability.name, /*damage_section=*/'', /*crit_section=*/'', /*combo_section=*/'',
+                                       effects_section);
+        chat(character, msg);
     }
 
 
@@ -3885,8 +4040,13 @@ var Barbs = Barbs || (function () {
         'Dragoncaller': {
             'Summon Bronze Dragon': dragoncaller_summon_bronze_dragon,
             'Summon Silver Dragon': dragoncaller_summon_silver_dragon,
+            'Summon Gold Dragon': dragoncaller_summon_gold_dragon,
             'Bronze Dragon Breath': dragoncaller_bronze_dragon_breath,
             'Silver Dragon Breath': dragoncaller_silver_dragon_breath,
+            'Gold Dragon Breath': dragoncaller_gold_dragon_breath,
+            'Dragonfear': print_ability_description,
+            'Dragonflight': dragoncaller_dragonflight,
+            'Dragonsight': dragoncaller_dragonsight,
         },
         'Dynamancer': {
             'Spark Bolt': dynamancer_spark_bolt,
@@ -4047,8 +4207,8 @@ var Barbs = Barbs || (function () {
         }
 
         if (ability === null) {
-            raw_chat('API', 'Unrecognized passive or ability "%s" for class "%s", ' +
-                'wrong spelling?'.format(ability_name, clazz.name));
+            raw_chat('API', 'Unrecognized passive or ability "%s" for class "%s", wrong spelling?'.format(
+                ability_name, clazz.name));
             return;
         }
 

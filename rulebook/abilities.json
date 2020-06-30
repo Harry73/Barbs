@@ -4025,7 +4025,11 @@
             "AOE",
             "square",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "Roll \"Summon Gold Dragon\" to do the breath attacks of your summoned gold dragons separately.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4113,7 +4117,15 @@
             "condition",
             "Vulnerability",
             "field"
-        ]
+        ],
+        "api": {
+            "description": "Using this ability replicates the summoned dragon's Major and Minor actions. There are two parameters for this ability, \"major\" and \"minor\", both of which are optional. If neither are included, the ability does nothing. The \"major\" parameter, if included, requires the type of attack you want the summon to perform, namely \"breath\". The \"minor\" parameter, if included, takes a comma-separated list of allies and applies the buff effect. The debuff minor is not supported, as the API does not track enemies. Both the \"major\" and \"minor\" parameters can be included to do both actions at once.",
+            "examples": [
+                "major: breath",
+                "minor: Faust, Ren, Orpheus",
+                "major: breath; minor: Faust, Ren"
+            ]
+        }
     },
     {
         "type": "ability",
