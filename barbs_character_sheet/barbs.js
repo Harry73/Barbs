@@ -2927,6 +2927,59 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function evangelist_anthos_pagetou_khilion_eton(character, ability, parameters) {
+        let count = 1;
+        if (get_parameter('me', parameters) !== null) {
+            count = 2;
+        }
+
+        let num_enemies = get_parameter('enemies', parameters);
+        assert(num_enemies !== null, '"enemies" parameter is required');
+        num_enemies = parse_int(num_enemies);
+        if (Number.isNaN(num_enemies)) {
+            chat(character, 'Value given for "enemies" parameter must be numeric');
+            return;
+        }
+
+        let secret_roll = '';
+        for (let i = 0; i < num_enemies; i++) {
+            secret_roll += '[[%sd6]]'.format(count);
+        }
+
+        hidden_roll(secret_roll, function (value_strings) {
+            const effects = [];
+            for (let i = 0; i < value_strings.length; i++) {
+                const value_string = value_strings[i];
+                const values = value_string.split('+');
+                const effect_format = '<li>CR: [[d100]]<br/>Flower rolls: %s<br/>%s</li>';
+
+                // Figure out what effect this would have, assuming the enemy fails the CR check
+                let flower_effect = '';
+                if (values.includes('1') || values.includes('2')) {
+                    flower_effect = 'Cursed, Slowed, Confused';
+                } else if (values.includes('3') || values.includes('4')) {
+                    flower_effect = 'May not move away from flower';
+                } else if (values.includes('5') || values.includes('6')) {
+                    flower_effect = 'Must use Move Action to move towards flower';
+                }
+
+                // Build the flower rolls string
+                const revised_values = [];
+                for (let j = 0; j < values.length; j++) {
+                    revised_values.push('[[%s]]'.format(values[j]));
+                }
+                const flower_rolls = revised_values.join(' ');
+
+                effects.push(effect_format.format(flower_rolls, flower_effect));
+            }
+
+            const msg = roll_format.format(ability.name, /*damage_section=*/'', /*crit_section=*/'',
+                                           /*combo_section=*/'', effects_section_format.format(effects.join('<br>')));
+            chat(character, msg);
+        });
+    }
+
+
     function juggernaut_wild_swing(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('5d10', Damage.PHYSICAL);
@@ -4058,6 +4111,7 @@ var Barbs = Barbs || (function () {
         },
         'Evangelist': {
             'Magia Erebea': evangelist_magia_erebea,
+            'Anthos Pagetou Khilion Eton': evangelist_anthos_pagetou_khilion_eton,
         },
         'Juggernaut': {
             'Wild Swing': juggernaut_wild_swing,
@@ -4155,6 +4209,8 @@ var Barbs = Barbs || (function () {
         'Voidwalker': {
             'Blacklands': print_ability_description,
             'Dimension Door': print_ability_description,
+            'Void Portal': print_ability_description,
+            'Shadowstep': print_ability_description,
         },
         'Warlord': {
             'Hookshot': warlord_hookshot,

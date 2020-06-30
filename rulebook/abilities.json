@@ -4917,7 +4917,14 @@
             "totem",
             "conditional",
             "Confused"
-        ]
+        ],
+        "api": {
+            "description": "The API doesn't exactly action this ability, but using the ability helps with the enemy rolls and the flower's effects. When you use this ability, indicate the number of affected enemies with the \"enemies\" parameter. The API will do one set of rolls for each enemy. If you are casting this ability via Magia Erebea, add the \"me\" parameter to THIS ability, do not use the passive. The API will do the two rolls against the flower when you use this ability automatically.",
+            "examples": [
+                "enemies: 5",
+                "enemies: 5; me"
+            ]
+        }
     },
     {
         "type": "ability",
