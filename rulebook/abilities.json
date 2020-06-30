@@ -4147,7 +4147,11 @@
             "conditional",
             "Fear",
             "Weaken"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4169,7 +4173,13 @@
             "buff",
             "cleanse",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "The list of allies affected by this ability must be specified with the \"targets\" parameter in a comma-separated list. You can just use the first name of each ally.",
+            "examples": [
+                "targets <ally name> <ally name> ..."
+            ]
+        }
     },
     {
         "type": "ability",
@@ -4189,7 +4199,15 @@
             "utility",
             "buff",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "The list of allies affected by this ability must be specified with the \"targets\" parameter in a comma-separated list. You can just use the first name of each ally. The \"choice\" parameter must also be included to indicate the effect of this buff. Accepted values are \"acc\", \"ac pen\", and \"mr pen\".",
+            "examples": [
+                "targets <ally name> <ally name> ...; choice: acc",
+                "targets <ally name> <ally name> ...; choice: ac pen",
+                "targets <ally name> <ally name> ...; choice: mr pen"
+            ]
+        }
     },
     {
         "type": "ability",
