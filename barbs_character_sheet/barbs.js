@@ -565,9 +565,21 @@ var Barbs = Barbs || (function () {
 
     function roll_concentration(msg) {
         const character = get_character(msg);
+
+        // Proper concentration check
         const roll = get_roll_with_items_and_effects(character);
         const roll_string = 'd100+%s'.format(roll.concentration_bonus);
         chat(msg, total_format.format('Concentration Check', 'Roll', roll_string));
+
+        // Athletics: Pain Tolerance check, if the character has it
+        const skills = character.get_skills();
+        const skill_name = Skill.ATHLETICS_PAIN_TOLERANCE.name.toLowerCase();
+        if (!(skill_name in skills)) {
+            return;
+        }
+
+        const points_in_skill = skills[skill_name];
+        do_skill_check(character, Skill.ATHLETICS_PAIN_TOLERANCE, 'Athletics: Pain Tolerance', points_in_skill);
     }
 
 
@@ -958,8 +970,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-    // Iterate through effects of abilities (buffs, empowers, etc) that may last multiple turns and add applicable ones
-    // to the roll.
     function add_persistent_effects_to_roll(character, roll, roll_time, parameters) {
         for (let i = 0; i < persistent_effects.length; i++) {
             const effect = persistent_effects[i];
@@ -986,6 +996,45 @@ var Barbs = Barbs || (function () {
         }
 
         return true;
+    }
+
+    // Iterate through effects of abilities (buffs, empowers, etc) that may last multiple turns and return a list of
+    // applicable ones.
+    function get_applicable_persistent_effects_to_roll(character, roll, roll_time, parameters) {
+        assert_not_null(character, 'get_applicable_persistent_effects_to_roll() character');
+        assert_not_null(roll, 'get_applicable_persistent_effects_to_roll() roll');
+        assert_not_null(roll_time, 'get_applicable_persistent_effects_to_roll() roll_time');
+        assert_not_null(parameters, 'get_applicable_persistent_effects_to_roll() parameters');
+
+        const runnables = [];
+        for (let i = 0; i < persistent_effects.length; i++) {
+            const effect = persistent_effects[i];
+
+            const right_target = effect.target === character.name;
+            const right_time = effect.roll_time === roll_time;
+            const right_type = RollType.is_type(effect.roll_type, roll.roll_type);
+            if (right_target && right_time && right_type) {
+
+                // Modify the handler here if it has an effectiveness other than 1. We do this here because this is on
+                // the path for an attack roll, which is when the effect's effectiveness actually matters. This also
+                // lets us pass along the actual parameters that are used for the attack when deducing buff
+                // effectiveness.
+                let func = persistent_effects[i].handler;
+                if (persistent_effects[i].effectiveness !== 1) {
+                    func = make_handler_effective(character, func, parameters,
+                                                     persistent_effects[i].effectiveness);
+                }
+
+                // Wrap the handler to bind the args and so that calling the handler is consistent with arbitrary
+                // parameters.
+                persistent_effects[i].handler = function() {
+                    return func(character, roll, parameters);
+                }
+                runnables.push(persistent_effects[i]);
+            }
+        }
+
+        return runnables;
     }
 
 
@@ -1199,6 +1248,34 @@ var Barbs = Barbs || (function () {
     }
 
 
+    // Merge the two given lists based on ordering
+    function merge(left, right) {
+        const result = [];
+
+        while (left.length !== 0 && right.length !== 0) {
+            if (left[0].ordering.val <= right[0].ordering.val) {
+                result.push(left[0]);
+                left.shift();
+            } else {
+                result.push(right[0]);
+                right.shift();
+            }
+        }
+
+        // Either left or right may have elements left; consume them.
+        while (left.length !== 0) {
+            result.push(left[0]);
+            left.shift();
+        }
+        while (right.length !== 0) {
+            result.push(right[0]);
+            right.shift();
+        }
+
+        return result;
+    }
+
+
     function add_extras(character, roll, roll_time, parameters, crit_section) {
         assert_not_null(character, 'add_extras() character');
         assert_not_null(roll, 'add_extras() roll');
@@ -1207,18 +1284,19 @@ var Barbs = Barbs || (function () {
 
         add_items_to_roll(character, roll, roll_time, parameters);
 
-        if (!handle_normal_arbitrary_parameters(roll, roll_time, parameters)) {
-            LOG.warn('Problem handling arbitrary parameters at time ' + roll_time);
-            return false;
+        const runnables_1 = get_applicable_normal_arbitrary_parameter_handlers(roll, roll_time, parameters);
+        const runnables_2 = get_applicable_persistent_effects_to_roll(character, roll, roll_time, parameters);
+        const runnables = merge(runnables_1, runnables_2);
+
+        for (let i = 0; i < runnables.length; i++) {
+            if (!runnables[i].handler()) {
+                LOG.warn('Problem adding effects at time ' + roll_time);
+                return false;
+            }
         }
 
-        if (!add_persistent_effects_to_roll(character, roll, roll_time, parameters)) {
-            LOG.warn('Problem adding persistent effects to roll at time ' + roll_time);
-            return false;
-        }
-
-        // Try these special arbitrary parameters last. They will effectively "take over" handling the rest of the roll,
-        // so we will fail here and let the arbitrary parameter do it's thing.
+        // Try these special arbitrary parameters last. They will effectively "take over" handling the rest of the
+        // roll, so we will fail here and let the arbitrary parameter do it's thing.
         return !handle_takeover_arbitrary_parameters(roll, roll_time, parameters, crit_section);
     }
 
@@ -1415,6 +1493,15 @@ var Barbs = Barbs || (function () {
     // Class passives (usually) that may apply to anything
 
 
+    class ArbitraryParameter {
+        constructor(handler, ordering) {
+            this._type = 'ArbitraryParameter';
+            this.handler = handler;
+            this.ordering = ordering;
+        }
+    }
+
+
     function arbitrary_damage(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
@@ -1568,6 +1655,42 @@ var Barbs = Barbs || (function () {
         const missing_health = total_health - current_health;
 
         roll.add_multiplier(missing_health / total_health, Damage.PHYSICAL, 'self');
+        return true;
+    }
+
+
+    function pinpoint_monk_precision_pummeling(roll, roll_time, parameter) {
+        // Any effects that modify combo chance or crit chance must happen at DEFAULT time. An item affix or ability
+        // like "Your next combo roll gains +X if you crit" or vice versa cannot exist because of this passive.
+        // This arbitrary parameter has a later ordering so that other effects that modify combo and crit chance
+        // happen first.
+        if (roll_time !== RollTime.DEFAULT) {
+            return true;
+        }
+
+        const pieces = parameter.split(' ');
+        if (pieces.length < 2) {
+            chat(roll.character, 'Pinpoint Monk passive parameter "pinpoint" must have a value');
+            return false;
+        }
+
+        const choice = pieces[1];
+
+        // This is kind of hacky. We're adding a negative bonus to incorporate the loss of crit/combo chance rather
+        // than supporting something like a negative multiplier.
+        if (choice === 'crit') {
+            const combo_chance = roll.combo_chance;
+            roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, combo_chance / 2);
+            roll.add_combo_chance(-combo_chance / 2);
+        } else if (choice === 'combo') {
+            const crit_chance = roll.get_crit_chance();
+            roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, -crit_chance / 2);
+            roll.add_combo_chance(crit_chance / 2);
+        } else {
+            chat(roll.character, 'Value for "pinpoint" passive must be either "crit" or "combo"');
+            return false;
+        }
+
         return true;
     }
 
@@ -1769,25 +1892,26 @@ var Barbs = Barbs || (function () {
 
 
     const arbitrary_parameters = {
-        'damage': arbitrary_damage,
-        'multiplier': arbitrary_multiplier,
+        'damage': new ArbitraryParameter(arbitrary_damage, Ordering()),
+        'multiplier': new ArbitraryParameter(arbitrary_multiplier, Ordering()),
 
-        'assassinate': assassin_assassinate,
-        'arc_lightning': lightning_duelist_arc_lightning_mark,
-        'choke_hold': martial_artist_choke_hold_arbitrary,
-        'concave': mirror_mage_concave_mirror,
-        'daggerspell_marked': daggerspell_marked,
-        'draconic_pact': dragoncaller_draconic_pact,
-        'empowered': daggerspell_ritual_dagger,
-        'frostbite': cryomancer_frostbite,
-        'juggernaut': juggernaut_what_doesnt_kill_you,
-        'pursued': assassin_pursue_mark,
-        'spotting': sniper_spotter,
-        'stance': thief_stance,
-        'tide': aquamancer_tide,
-        'warper_cc': warper_opportunistic_predator,
-        'warleader': warrior_warleader_arbitrary,
-		'warlord': warlord_aggression,
+        'assassinate': new ArbitraryParameter(assassin_assassinate, Ordering()),
+        'arc_lightning': new ArbitraryParameter(lightning_duelist_arc_lightning_mark, Ordering()),
+        'choke_hold': new ArbitraryParameter(martial_artist_choke_hold_arbitrary, Ordering()),
+        'concave': new ArbitraryParameter(mirror_mage_concave_mirror, Ordering()),
+        'daggerspell_marked': new ArbitraryParameter(daggerspell_marked, Ordering()),
+        'draconic_pact': new ArbitraryParameter(dragoncaller_draconic_pact, Ordering()),
+        'empowered': new ArbitraryParameter(daggerspell_ritual_dagger, Ordering()),
+        'frostbite': new ArbitraryParameter(cryomancer_frostbite, Ordering()),
+        'juggernaut': new ArbitraryParameter(juggernaut_what_doesnt_kill_you, Ordering()),
+        'pinpoint': new ArbitraryParameter(pinpoint_monk_precision_pummeling, Ordering(85)),
+        'pursued': new ArbitraryParameter(assassin_pursue_mark, Ordering()),
+        'spotting': new ArbitraryParameter(sniper_spotter, Ordering()),
+        'stance': new ArbitraryParameter(thief_stance, Ordering()),
+        'tide': new ArbitraryParameter(aquamancer_tide, Ordering()),
+        'warper_cc': new ArbitraryParameter(warper_opportunistic_predator, Ordering()),
+        'warleader': new ArbitraryParameter(warrior_warleader_arbitrary, Ordering()),
+        'warlord': new ArbitraryParameter(warlord_aggression, Ordering()),
     };
 
 
@@ -1796,12 +1920,13 @@ var Barbs = Barbs || (function () {
     };
 
 
-    function handle_normal_arbitrary_parameters(roll, roll_time, parameters) {
-        assert_type(roll, 'Roll', 'handle_normal_arbitrary_parameters() roll');
-        assert_starts_with(roll_time, 'roll_time', 'handle_normal_arbitrary_parameters() roll_time');
-        assert_not_null(parameters, 'handle_normal_arbitrary_parameters() parameters');
+    function get_applicable_normal_arbitrary_parameter_handlers(roll, roll_time, parameters) {
+        assert_type(roll, 'Roll', 'get_applicable_normal_arbitrary_parameter_handlers() roll');
+        assert_starts_with(roll_time, 'roll_time', 'get_applicable_normal_arbitrary_parameter_handlers() roll_time');
+        assert_not_null(parameters, 'get_applicable_normal_arbitrary_parameter_handlers() parameters');
 
         // Apply arbitrary parameter handlers, and return false if one fails
+        const runnables = [];
         for (let i = 0; i < parameters.length; i++) {
             const parameter = parameters[i];
             const parameter_keyword = parameter.split(' ')[0].split(':')[0];
@@ -1809,17 +1934,21 @@ var Barbs = Barbs || (function () {
             const keywords = Object.keys(arbitrary_parameters);
             for (let j = 0; j < keywords.length; j++) {
                 const keyword = keywords[j];
-                const func = arbitrary_parameters[keyword];
+                const arbitrary_parameter = arbitrary_parameters[keyword];
+                const func = arbitrary_parameter.handler;
 
                 if (parameter_keyword === keyword) {
-                    if (!func(roll, roll_time, parameter, parameters, /*crit_section=*/'')) {
-                        return false;
-                    }
+                    // Wrap the handler to bind the args and so that calling the handler is consistent with persistent
+                    // effects.
+                    arbitrary_parameter.handler = function() {
+                        return func(roll, roll_time, parameter, parameters, /*crit_section=*/'');
+                    };
+                    runnables.push(arbitrary_parameter);
                 }
             }
         }
 
-        return true;
+        return runnables;
     }
 
 
@@ -2466,20 +2595,45 @@ var Barbs = Barbs || (function () {
 
 
     function destroyer_challenge(character, ability, parameters) {
-        const num_targets = get_parameter('targets', parameters);
-        if (num_targets === null) {
-            chat(character, '"targets" parameter is missing');
-            return;
+        let num_targets = get_parameter('targets', parameters);
+        let buff = get_parameter('buff', parameters);
+
+        if (num_targets !== null) {
+            // Do the CR roll for the taunts
+            num_targets = parse_int(num_targets);
+            assert(!Number.isNaN(num_targets), 'Value for "targets" parameter must be numeric');
+
+            let rolls = '';
+            for (let i = 0; i < num_targets; i++) {
+                rolls += '[[d100]]';
+            }
+
+            const effects_section = effects_section_format.format(
+                '<li>Taunt %s enemies: %s</li>'.format(num_targets, rolls));
+            const msg = roll_format.format(ability.name, /*damage_section=*/'', /*crit_section=*/'',
+                                           /*combo_section=*/'', effects_section);
+            chat(character, msg);
+
+        } else if (buff !== null) {
+            // Add the buff based on how many enemies failed the taunt
+            buff = parse_int(buff);
+            assert(!Number.isNaN(buff), 'Value for "count" parameter must be numeric');
+
+            add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
+                                  RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
+                    roll.add_stat_multiplier(Stat.AC, 0.1 * buff);
+                    roll.add_stat_bonus(Stat.MAGIC_RESIST, 10 * buff);
+                    return true;
+                });
+
+            const msg = roll_format.format(
+                ability.name, /*damage_section=*/'', /*crit_section=*/'', /*combo_section=*/'',
+                /*effects_section=*/effects_section_format.format('<p>Gain %s% AC and MR.</p>'.format(buff)));
+            chat(character, msg);
+
+        } else {
+            chat(character, '"targets" or "buff" parameter should be specified');
         }
-
-        add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
-                              RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
-            roll.add_stat_multiplier(Stat.AC, 0.1 * parse_int(num_targets));
-            roll.add_stat_bonus(Stat.MAGIC_RESIST, 10 * parse_int(num_targets));
-            return true;
-        });
-
-        print_ability_description(character, ability);
     }
 
 
@@ -3102,6 +3256,17 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function ki_monk_find_center(character, ability, parameters) {
+        const monk_dice = character.get_monk_dice();
+        const roll = '<li>Gain Ki: [[3d%s]]</li>'.format(monk_dice);
+
+        const effects_section = effects_section_format.format(roll);
+        const msg = roll_format.format(ability.name, /*damage_section=*/'', /*crit_section=*/'', /*combo_section=*/'',
+                                       effects_section);
+        chat(character, msg);
+    }
+
+
     function lightning_duelist_arc_lightning(character, ability, parameters) {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('6d8', Damage.LIGHTNING);
@@ -3304,13 +3469,16 @@ var Barbs = Barbs || (function () {
             // Don't use do_roll(), because we don't actually want to send this roll to chat. Don't use add_extras()
             // because we're handling redirects ourselves and don't want to run takeover parameters.
             add_items_to_roll(character, roll, RollTime.POST_CRIT, parameters);
-            if (!handle_normal_arbitrary_parameters(roll, RollTime.POST_CRIT, parameters)) {
-                LOG.warn('Problem handling arbitrary parameters at time ' + RollTime.POST_CRIT);
-                return false;
-            }
-            if (!add_persistent_effects_to_roll(character, roll, RollTime.POST_CRIT, parameters)) {
-                LOG.warn('Problem adding persistent effects to roll at time ' + RollTime.POST_CRIT);
-                return false;
+
+            const runnables_1 = get_applicable_normal_arbitrary_parameter_handlers(roll, RollTime.POST_CRIT, parameters);
+            const runnables_2 = get_applicable_persistent_effects_to_roll(character, roll, RollTime.POST_CRIT, parameters);
+            const runnables = merge(runnables_1, runnables_2);
+
+            for (let i = 0; i < runnables.length; i++) {
+                if (!runnables[i].handler()) {
+                    LOG.warn('Problem adding effects at time ' + RollTime.POST_CRIT);
+                    return false;
+                }
             }
 
             // Extract damages from the original roll and send them to chat to actually do the roll.
@@ -3417,6 +3585,25 @@ var Barbs = Barbs || (function () {
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
         });
+    }
+
+
+    function pinpoint_monk_atrophic_blow(character, ability, parameters) {
+        const choice = get_parameter('choice', parameters);
+        assert(choice !== null, '"choice {first/second}" parameter is required');
+
+        const roll = new Roll(character, RollType.PHYSICAL);
+        if (choice === 'first') {
+            roll.add_effect('Inflict 40% Weaken until end of their next turn [[d100]]');
+        } else if (choice === 'second') {
+            roll.add_effect('Inflict 20% Weaken until end of their next turn [[d100]]');
+            roll.add_combo_chance(10);
+        } else {
+            assert(false, 'Value for "choice" parameter must be either "first" or "second"');
+            return;
+        }
+
+        do_roll(character, ability, roll, parameters, /*crit_section=*/'');
     }
 
 
@@ -4122,6 +4309,7 @@ var Barbs = Barbs || (function () {
             'Spirit Punch': ki_monk_spirit_punch,
             'Drain Punch': ki_monk_drain_punch,
             'Spirit Shotgun': ki_monk_spirit_shotgun,
+            'Find Center': ki_monk_find_center,
         },
         'Lightning Duelist': {
             'Arc Lightning': lightning_duelist_arc_lightning,
@@ -4151,6 +4339,9 @@ var Barbs = Barbs || (function () {
             'Defile': print_ability_description,  // TODO this maybe could do more
             'Siphon Soul': print_ability_description,
         },
+        'Pinpoint Monk': {
+            'Atrophic Blow': pinpoint_monk_atrophic_blow,
+        },
         'Pyromancer': {
             'Banefire': pyromancer_banefire,
             'Magma Spray': pyromancer_magma_spray,
@@ -4162,7 +4353,7 @@ var Barbs = Barbs || (function () {
             'Bladeshield Arc': sentinel_bladeshield_arc,
             'Rapid Shields': print_ability_description,
             'Chain Drag': print_ability_description,
-			'Giga Drill Break': sentinel_giga_drill_break,
+            'Giga Drill Break': sentinel_giga_drill_break,
         },
         'Sniper': {
             'Analytical Shooter': sniper_analytical_shooter,

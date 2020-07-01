@@ -1864,7 +1864,14 @@
             "Jolt Jab",
             "Atrophic Blow",
             "Rising Energy"
-        ]
+        ],
+        "api": {
+            "description": "If you are doing an unarmed attack, you can add the \"pinpoint\" parameter to transfer your crit chance to combo chance, and vice versa. \"pinpoint crit\" will increase crit chance at the cost of combo chance. \"pinpoint combo\" will increase combo chance at the cost of crit chance.",
+            "examples": [
+                "pinpoint crit",
+                "pinpoint combo"
+            ]
+        }
     },
     {
         "type": "class",

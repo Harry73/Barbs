@@ -3927,9 +3927,10 @@
             "gain MR"
         ],
         "api": {
-            "description": "Specify the number of affected targets when you use this ability.",
+            "description": "This ability requires two steps: one to do CR rolls for the Taunts, one to grant yourself the buff. For the first part, specify the number of affected targets with the \"targets\" parameter. For the second part, specify the number of Taunted enemies with the \"buff\" parameters.",
             "examples": [
-                "targets <number of taunted targets>"
+                "targets <number of enemies>",
+                "buff <number of taunted enemies>"
             ]
         }
     },
@@ -5519,7 +5520,11 @@
         ],
         "tags": [
             "No-react"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7161,7 +7166,14 @@
             "condition",
             "Weaken",
             "combo"
-        ]
+        ],
+        "api": {
+            "description": "This is a modal ability. To select the first option, the 40% Weaken, add the \"choice first\" parameter. To select the second option, the 20% weapon and combo chance, add the \"choice second\" parameter.",
+            "examples": [
+                "choice first",
+                "choice second"
+            ]
+        }
     },
     {
         "type": "ability",

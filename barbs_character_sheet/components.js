@@ -8765,6 +8765,9 @@ var BarbsComponents = BarbsComponents || (function () {
                 final_crit_chance += eval(crit_chance_string);
             }
 
+            assert(!(Stat.CRITICAL_HIT_CHANCE.name in this.stat_multipliers),
+                   'Crit chance stat multiplier is not supported');
+
             return Math.round(final_crit_chance);
         }
 
