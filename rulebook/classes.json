@@ -8,7 +8,7 @@
             "Magic: Defensive Rank A",
             "Armor Mastery: Cloth Rank A"
         ],
-        "all_reqs_known": false,
+        "all_reqs_known": true,
         "flavor_text": "The 41st Mage Corps' first training objective is usually to learn how to form a proper defensive line. Unlike regular infantry, a defense line for a horde of mage soldiers involves a complex layering of defensive magical fields, floating magical shields, reflecting panels, and a host of other defensive spells. The result is a nearly unbreakable line with enough redundancy to cover the loss of up to half the squad.",
         "description": "The Abjurer is a mid-level magical practitioner who has specialized in the magical school of Defense. As the name suggests, Defense magic protects the caster and their allies from enemy attacks. The school contains spells such as shields, temporary health, counterspells, buffs that boost defensive stats, and a variety of other methods to defend a person or group. The class contains no offensive abilities whatsoever, so such a mage is usually included as part of a party or regularly seen with other defensive mages within a section of an army. The class plays especially well with other members of the party who play the tank role, further augmenting their ability to protect the backline. Being an effective Abjurer requires excellent concentration.",
         "branches": {
