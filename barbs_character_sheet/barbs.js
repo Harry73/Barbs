@@ -1613,7 +1613,7 @@ var Barbs = Barbs || (function () {
         roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, 10);
 
         const empowered = get_parameter('empowered', parameters);
-        if (empowered !== null) {
+        if (empowered !== null && RollType.is_physical(roll.roll_type)) {
             roll.add_crit_damage_mod(100);
         }
         return true;
@@ -1636,7 +1636,13 @@ var Barbs = Barbs || (function () {
             return true;
         }
 
-        const mana_spent = parameter.split(' ')[1];
+        const parts = parameter.split(' ');
+        if (parts.length !== 2) {
+            chat(roll.character, 'Missing mana spent for "empowered" parameter');
+            return false;
+        }
+
+        const mana_spent = parts[1];
         roll.add_damage(Math.round(mana_spent / 2), Damage.PHYSICAL);
         return true;
     }
@@ -2553,9 +2559,15 @@ var Barbs = Barbs || (function () {
 
 
     function daggerspell_exposing_tear(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('8d4', Damage.PHYSICAL);
-        add_scale_damage(character, roll, parameters);
+        const type = get_parameter('type', parameters);
+        assert(type !== null, '"type" parameter is required');
+
+        const magic_type = get_damage_from_type(type)
+        assert(magic_type !== null, 'Unexpected damage type "%s"'.format(type));
+
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('8d8', magic_type);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), magic_type);
 
         roll_crit(roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -3077,6 +3089,36 @@ var Barbs = Barbs || (function () {
         } else {
             chat(character, 'Unrecognized spell "%s"'.format(chosen_spell));
         }
+    }
+
+
+    function evangelist_krystalline_basileia(character, ability, parameters) {
+        const conditions_paramater = get_parameter('conditions', parameters);
+        if (conditions_paramater === null) {
+            chat(character, '"conditions" parameter is missing');
+        }
+
+        const conditions_list = conditions_paramater.split(',');
+        if (conditions_list.length !== 2) {
+            chat(character, 'Select 2 conditions');
+            return;
+        }
+
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('6d8', Damage.ICE);
+        roll.add_damage('6d8', Damage.DARK);
+
+        for (let i = 0; i < 2; i++) {
+            if (conditions_list[i].toLowerCase().includes('curse')){
+                roll.add_effect(conditions_list[i].trim() + ': [[1d100]] [[1d100]]');
+            } else {
+                roll.add_effect(conditions_list[i].trim() + ': [[1d100]]');
+            }
+        }
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -4297,6 +4339,7 @@ var Barbs = Barbs || (function () {
         },
         'Evangelist': {
             'Magia Erebea': evangelist_magia_erebea,
+            'Krystalline Basileia': evangelist_krystalline_basileia,
             'Anthos Pagetou Khilion Eton': evangelist_anthos_pagetou_khilion_eton,
         },
         'Juggernaut': {

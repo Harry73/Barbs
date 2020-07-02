@@ -2876,8 +2876,10 @@
             "conditional"
         ],
         "api": {
-            "description": "If you are attacking a target that is marked via this ability, add the \"daggerspell_marked\" parameter for the extra crit chance and conditional crit damage modifier.",
+            "description": "You must specify the damage type with the \"type\" parameter. If you are attacking a target that is marked via this ability, add the \"daggerspell_marked\" parameter for the extra crit chance and conditional crit damage modifier.",
             "examples": [
+                "type fire",
+                "type water",
                 "daggerspell_marked"
             ]
         }
@@ -4434,7 +4436,7 @@
             "You power up or power down a vehicle. Choose one:",
             "<ul>",
             "<li>Target vehicle in range has its move speed doubled and no longer requires a system to propel it forward (horses, engines) for the duration.</li>",
-            "<li>Target vehicle becomes immotile through its regular means (wheels lock, sails fail, etc) for the duration.</li>",
+            "<li>Target vehicle becomes immobile through its regular means (wheels lock, sails fail, etc) for the duration.</li>",
             "</ul>",
             "When you cast this spell, you may choose to expend an additional 10 mana to affect another target Vehicle with a new choice, and you may do this any number of times. Concentration is held once for all instances of this spell within one cast."
         ],
@@ -4728,7 +4730,14 @@
             "conditional",
             "dark",
             "ice"
-        ]
+        ],
+        "api": {
+            "description": "Use the \"conditions\" parameter, followed by a comma-separated list, to specify which conditions you are applying via KB. The API will roll a d100 for each condition, or two d100s for the \"curse\" condition.",
+            "examples": [
+                "conditions: Freeze, Slow",
+                "conditions: Curse, Blind"
+            ]
+        }
     },
     {
         "type": "ability",
