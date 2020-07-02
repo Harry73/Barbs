@@ -1021,13 +1021,12 @@ var Barbs = Barbs || (function () {
                 // effectiveness.
                 let func = persistent_effects[i].handler;
                 if (persistent_effects[i].effectiveness !== 1) {
-                    func = make_handler_effective(character, func, parameters,
-                                                     persistent_effects[i].effectiveness);
+                    func = make_handler_effective(character, func, parameters, persistent_effects[i].effectiveness);
                 }
 
                 // Wrap the handler to bind the args and so that calling the handler is consistent with arbitrary
                 // parameters.
-                persistent_effects[i].handler = function() {
+                persistent_effects[i].modified_handler = function() {
                     return func(character, roll, parameters);
                 }
                 runnables.push(persistent_effects[i]);
@@ -1289,7 +1288,7 @@ var Barbs = Barbs || (function () {
         const runnables = merge(runnables_1, runnables_2);
 
         for (let i = 0; i < runnables.length; i++) {
-            if (!runnables[i].handler()) {
+            if (!runnables[i].modified_handler()) {
                 LOG.warn('Problem adding effects at time ' + roll_time);
                 return false;
             }
@@ -1679,11 +1678,12 @@ var Barbs = Barbs || (function () {
         // This is kind of hacky. We're adding a negative bonus to incorporate the loss of crit/combo chance rather
         // than supporting something like a negative multiplier.
         if (choice === 'crit') {
-            const combo_chance = roll.combo_chance;
+            const combo_chance = Math.round(roll.character.get_base_combo_chance() + roll.combo_chance);
             roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, combo_chance / 2);
             roll.add_combo_chance(-combo_chance / 2);
         } else if (choice === 'combo') {
             const crit_chance = roll.get_crit_chance();
+            LOG.info(crit_chance);
             roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, -crit_chance / 2);
             roll.add_combo_chance(crit_chance / 2);
         } else {
@@ -1935,13 +1935,12 @@ var Barbs = Barbs || (function () {
             for (let j = 0; j < keywords.length; j++) {
                 const keyword = keywords[j];
                 const arbitrary_parameter = arbitrary_parameters[keyword];
-                const func = arbitrary_parameter.handler;
 
                 if (parameter_keyword === keyword) {
                     // Wrap the handler to bind the args and so that calling the handler is consistent with persistent
                     // effects.
-                    arbitrary_parameter.handler = function() {
-                        return func(roll, roll_time, parameter, parameters, /*crit_section=*/'');
+                    arbitrary_parameter.modified_handler = function() {
+                        return arbitrary_parameter.handler(roll, roll_time, parameter, parameters, /*crit_section=*/'');
                     };
                     runnables.push(arbitrary_parameter);
                 }
@@ -3475,7 +3474,7 @@ var Barbs = Barbs || (function () {
             const runnables = merge(runnables_1, runnables_2);
 
             for (let i = 0; i < runnables.length; i++) {
-                if (!runnables[i].handler()) {
+                if (!runnables[i].modified_handler()) {
                     LOG.warn('Problem adding effects at time ' + RollTime.POST_CRIT);
                     return false;
                 }
@@ -3742,7 +3741,7 @@ var Barbs = Barbs || (function () {
                 distance_roll.copy_multipliers(roll);
                 const rolls_per_type = distance_roll.roll();
                 format_and_send_roll(character, '%s (%s ft)'.format(ability.name, distances[i]), distance_roll,
-                    rolls_per_type, '');
+                    rolls_per_type, '', '');
             }
 
             return true;
