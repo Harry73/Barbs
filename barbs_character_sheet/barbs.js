@@ -854,6 +854,14 @@ var Barbs = Barbs || (function () {
         assert_starts_with(roll_time, 'roll_time', 'add_persistent_effect() roll_time');
         assert_not_null(handler, 'add_persistent_effect() handler');
 
+        // See if this effect already exists on the character. Effects generally should not be stackable.
+        for (let i = 0; i < persistent_effects.length; i++) {
+            const persistent_effect = persistent_effects[i];
+            if (persistent_effect.name === ability['name'] && persistent_effect.target === target_character.name) {
+                assert(false, 'Effect "%s" is already present on %s', ability['name'], target_character.name);
+            }
+        }
+
         // Figure out the caster's buff or enchant effectiveness
         const roll = new Roll(caster, RollType.ALL);
         if (!add_extras(caster, roll, RollTime.DEFAULT, parameters, '')) {
@@ -892,18 +900,8 @@ var Barbs = Barbs || (function () {
             'handler': handler,
         };
 
-        // Keep persistent effects in a priority queue, so that we process lower priority effects first and higher
-        // priority effects last
-        for (let i = 0; i < persistent_effects.length; i++) {
-            if (persistent_effects[i].ordering.val > effect.ordering.val) {
-                LOG.info('Added persistent effect %s'.format(JSON.stringify(effect)));
-                persistent_effects.splice(i, 0, effect);
-                return;
-            }
-        }
-
-        persistent_effects.push(effect);
         LOG.info('Added persistent effect %s'.format(JSON.stringify(effect)));
+        persistent_effects.push(effect);
     }
 
 
