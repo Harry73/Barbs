@@ -7186,6 +7186,30 @@
     },
     {
         "type": "ability",
+        "name": "Paralyzing Blow",
+        "class": "Pinpoint Monk",
+        "branch": "Disrupt",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You hit pressure points that control the propagation of neural signals. Inflict Paralysis on a target in range, then repeat this attack twice. Roll for critical strike chance with each attack; if you succeed, inflict 2 stacks of Paralysis instead."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "melee",
+            "single-target",
+            "unarmed",
+            "condition",
+            "Paralysis",
+            "combo"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Jolt Jab",
         "class": "Pinpoint Monk",
         "branch": "Jab",
@@ -7211,6 +7235,32 @@
     },
     {
         "type": "ability",
+        "name": "Static Flurry",
+        "class": "Pinpoint Monk",
+        "branch": "Jab",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "30 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You let loose with a flurry of lightning fast blows. Deal 4dU + 3d12 lightning magic damage to all targets in range; you may choose to push all targets back 15 ft, and you may also choose to dash in order to follow one target as you push them. Your next combo roll has +5% for every damage die on this ability that rolls an 11 or higher."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "lightning",
+            "melee",
+            "multi-target",
+            "unarmed",
+            "dash",
+            "modal",
+            "forced movement",
+            "combo"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Rising Energy",
         "class": "Pinpoint Monk",
         "branch": "Vitalize",
@@ -7225,6 +7275,25 @@
         "tags": [
             "Buff",
             "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Move Like Lightning",
+        "class": "Pinpoint Monk",
+        "branch": "Vitalize",
+        "tier": 2,
+        "action": "1 Minor Action",
+        "cost": "30 stamina",
+        "range": "Self",
+        "duration": "Instant",
+        "description": [
+            "You dash quickly when your momentum is high. Dash up to 25 ft in any direction. If you made a successful critical strike this round, or if you completed a 3 ability combo this round, the dash has a distance of 40 ft instead, and you may cast this ability as a reaction until the end of the round."
+        ],
+        "tags": [
+            "Dash",
+            "conditional",
+            "modal"
         ]
     },
     {
