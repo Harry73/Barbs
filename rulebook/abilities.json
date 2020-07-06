@@ -5447,7 +5447,7 @@
             "conditional"
         ],
         "api": {
-            "description": "If you spend Ki on this ability, add the \"ki\" parameter for the extra damage.",
+            "description": "If you spend ki on this ability, add the \"ki\" parameter for the extra damage.",
             "examples": [
                 "ki"
             ]
@@ -5480,7 +5480,7 @@
             "heal"
         ],
         "api": {
-            "description": "If you spend Ki on this ability, add the \"ki\" parameter for the extra damage.",
+            "description": "If you spend ki on this ability, add the \"ki\" parameter for the extra damage.",
             "examples": [
                 "ki"
             ]
@@ -5497,7 +5497,7 @@
         "range": "Melee",
         "duration": "Instant",
         "description": [
-            "You use Ki to addle an enemy's senses. Deal 6dU physical damage to a target in range and gain dU ki. When you cast this ability, you may spend 40 Ki to additionally inflict 6dU psychic damage to the target; if you do, the target is Stunned until the end of their next turn."
+            "You use ki to addle an enemy's senses. Deal 6dU physical damage to a target in range and gain dU ki. When you cast this ability, you may spend 40 Ki to additionally inflict 6dU psychic damage to the target; if you do, the target is Stunned until the end of their next turn."
         ],
         "tags": [
             "Attack",
@@ -5512,6 +5512,33 @@
             "conditional",
             "condition",
             "Stun"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Soul Stealing Strike",
+        "class": "Ki Monk",
+        "branch": "Discipline",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "60 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You deliver a blow that shocks to the core. Deal 8dU physical damage to a target in range. When you cast this ability, you may spend 60 ki to additionally inflict 8dU psychic damage to the target; if you do, this attack has Lethality equal to the target's percentage missing health. If this attack kills a target, you gain 50 ki, increased to 100 ki if you spent ki when casting this ability."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "melee",
+            "single-target",
+            "combo",
+            "psionic",
+            "offensive",
+            "psychic",
+            "modal",
+            "conditional",
+            "Lethality"
         ]
     },
     {
@@ -5568,6 +5595,24 @@
         "tags": [
             "Cleanse",
             "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Find Strength",
+        "class": "Ki Monk",
+        "branch": "Meditation",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "X ki",
+        "range": "Self",
+        "duration": "Instant",
+        "description": [
+            "You use ki to reach for new reserves of power. Recover you choice of either X health or X stamina, where X is the amount of ki you choose to spend to cast this ability."
+        ],
+        "tags": [
+            "Modal",
+            "heal"
         ]
     },
     {
@@ -5643,7 +5688,7 @@
         "tags": [
             "Attack",
             "ranged",
-            "single-target",
+            "multi-target",
             "combo",
             "psionic",
             "offensive",
@@ -5652,6 +5697,31 @@
             "conditional",
             "condition",
             "Vulnerability"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Spirit Bomb",
+        "class": "Ki Monk",
+        "branch": "Spirit",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "45 stamina or ki",
+        "range": "50 ft",
+        "duration": "Instant",
+        "description": [
+            "You drop concentrated ki on enemies. Deal 8dU psychic damage to all enemies in a 25 ft square centered on a point in range. If ki is spent to cast this ability, it has +50% increased damage and you may recast this ability as a free action."
+        ],
+        "tags": [
+            "Attack",
+            "ranged",
+            "multi-target",
+            "combo",
+            "psionic",
+            "offensive",
+            "psychic",
+            "modal",
+            "conditional"
         ]
     },
     {

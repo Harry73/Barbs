@@ -1416,12 +1416,15 @@
             "Spirit Punch",
             "Drain Punch",
             "Stunning Strike",
+            "Soul Stealing Strike",
             "Spirit Gun",
             "Spirit Shotgun",
             "Spirit Wave",
+            "Spirit Bomb",
             "Find Center",
             "Find Stability",
-            "Find Solace"
+            "Find Solace",
+            "Find Strength"
         ],
         "api": {
             "description": "The API will calculate what dice to use for your monk-mastery-dependent attacks. It will not track Ki.",
