@@ -302,26 +302,48 @@ var Barbs = Barbs || (function () {
             return null;
         }
 
-        let token;
-        if (tokens.length === 1) {
-            token = tokens[0];
-        } else {
-            // Additionally filter by the character's first name, if multiple tokens are found for
-            // the character. This should really only be necessary for Nightside.
-            for (let i = 0; i < tokens.length; i++) {
-                const character_first_name = character.name.split(' ')[0];
-                if (tokens[i].get('name').startsWith(character_first_name)) {
-                    token = tokens[i];
-                }
+        // Filter by player-active page id, in case there are multiple tokens strewn about multiple pages
+        const filtered_by_page_id = [];
+        const page_id = Campaign().get('playerpageid');
+        for (let i = 0; i < tokens.length; i++) {
+            const token_page_id = tokens[i].get('_pageid');
+            if (token_page_id === page_id) {
+                filtered_by_page_id.push(tokens[i]);
+            } else {
+                LOG.debug('Token for character %s on wrong page %s, looking for page %s'.format(
+                    character.name, token_page_id, page_id));
             }
         }
 
-        if (token === null) {
-            LOG.error('Found tokens for character %s, but no names matched'.format(character.name));
+        if (filtered_by_page_id.length === 0) {
+            LOG.error('Did not find token for character %s on this page'.format(character.name));
             return null;
+        } else if (filtered_by_page_id.length === 1) {
+            return filtered_by_page_id[0];
         }
 
-        return token;
+        // Filter by the character's first name, if multiple tokens are found for the character. This should really
+        // only be necessary for Nightside.
+        const filtered_by_name = [];
+        for (let i = 0; i < filtered_by_page_id.length; i++) {
+            const character_first_name = character.name.split(' ')[0];
+            const token_name = filtered_by_page_id[i].get('name');
+            if (token_name.startsWith(character_first_name)) {
+                filtered_by_name.push(filtered_by_page_id[i]);
+            } else {
+                LOG.debug('Found token for character %s with wrong name %s'.format(character.name, token_name));
+            }
+        }
+
+        if (filtered_by_name.length === 1) {
+            return filtered_by_name[0];
+        } else if (filtered_by_name.length === 0) {
+            LOG.error('Found tokens for character %s, but no names matched'.format(character.name));
+        } else {
+            LOG.error('Found mutiple tokens for character %s, please remove all but one'.format(character.name));
+        }
+
+        return null;
     }
 
 
@@ -331,13 +353,14 @@ var Barbs = Barbs || (function () {
         chat(character, '[[d100]]', function (results) {
             const rolls = results[0].inlinerolls;
             const initiative_roll = rolls[0].results.total;
-            chat(character, initiative_format.format(character.name, initiative_roll, roll.initiative_bonus,
-                                                     character.get_attribute('AGI')));
 
             const token = get_token(character);
             if (token === null) {
                 return;
             }
+
+            chat(character, initiative_format.format(character.name, initiative_roll, roll.initiative_bonus,
+                                                     character.get_attribute('AGI')));
 
             const initiative = initiative_roll + roll.initiative_bonus + character.get_attribute('AGI');
 
@@ -654,6 +677,14 @@ var Barbs = Barbs || (function () {
     // Rests
 
 
+    function get_bar_value(token, type, arg) {
+        let value = token.get(arg);
+        value = value === '' ? 0 : parse_int(value);
+        assert(!Number.isNaN(value), '%s bar value "%s" is non-numeric'.format(type, token.get(arg)));
+        return value;
+    }
+
+
     function take_rest(msg) {
         const character = get_character(msg);
 
@@ -670,13 +701,9 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        let current_health = parse_int(token.get('bar3_value'));
-        let current_stamina = parse_int(token.get('bar1_value'));
-        let current_mana = parse_int(token.get('bar2_value'));
-        if (Number.isNaN(current_health) || Number.isNaN(current_stamina) || Number.isNaN(current_mana)) {
-            chat(character, 'One of your stats is non-numeric');
-            return;
-        }
+        const current_health = get_bar_value(token, 'Health', 'bar3_value');
+        const current_stamina = get_bar_value(token, 'Stamina', 'bar1_value');
+        const current_mana = get_bar_value(token, 'Mana', 'bar2_value');
 
         const roll = get_roll_with_items_and_effects(character);
         const max_health = eval(get_stat_roll_modifier(character, roll, Stat.HEALTH));
