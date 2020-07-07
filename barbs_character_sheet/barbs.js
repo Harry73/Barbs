@@ -249,7 +249,13 @@ var Barbs = Barbs || (function () {
         // Apply persistent effects that have the proper roll time
         for (let i = 0; i < persistent_effects.length; i++) {
             if (persistent_effects[i].target === character.name && persistent_effects[i].roll_time === roll_time) {
-                persistent_effects[i].handler(character, roll, /*parameters=*/[]);
+                let func = persistent_effects[i].handler;
+                if (persistent_effects[i].effectiveness !== 1) {
+                    func = make_handler_effective(character, func, /*parameters=*/[],
+                                                  persistent_effects[i].effectiveness);
+                }
+
+                func(character, roll, /*parameters=*/[]);
             }
         }
 
@@ -486,10 +492,10 @@ var Barbs = Barbs || (function () {
         damages_taken = damages_taken.slice(2);
 
         const penetrations = [];
-        damages_taken.forEach(function(damage_string, index, self) {
+        damages_taken.forEach(function(damage_string, index, this_) {
             if (damage_string.includes('|')) {
                 const parts = trim_all(damage_string.split('|'));
-                self[index] = parts[0];
+                this_[index] = parts[0];
                 penetrations.push(parts[1]);
             } else {
                 penetrations.push('0');
@@ -1120,7 +1126,7 @@ var Barbs = Barbs || (function () {
             const skills = character.get_skills();
             const skill_of_interest = Skill.WEAPON_MASTERY_SHIELDS.name.toLowerCase();
             if (skill_of_interest in skills && skills[skill_of_interest] === 15) {
-                roll.add_multiplier(0.5, Damage.PHYSICAL, 'self');
+                roll.add_multiplier(0.5, Damage.PHYSICAL, character.name);
             }
         }
     }
@@ -1433,8 +1439,8 @@ var Barbs = Barbs || (function () {
         });
 
         let effects = Array.from(roll.effects);
-        effects.forEach(function(effect, index, self) {
-            self[index] = '<li>%s</li>'.format(effect);
+        effects.forEach(function(effect, index, this_) {
+            this_[index] = '<li>%s</li>'.format(effect);
         });
 
         // TODO: only add specific-magic-type penetrations if that damage type is in the roll
@@ -1559,13 +1565,13 @@ var Barbs = Barbs || (function () {
         const tide = pieces.splice(1).join(' ');
 
         if (tide.toLowerCase() === 'flood tide') {
-            roll.add_multiplier(0.5, Damage.WATER, 'self');
+            roll.add_multiplier(0.5, Damage.WATER, roll.character.name);
             if (HiddenStat.FORCED_MOVEMENT in roll.hidden_stats) {
                 roll.add_hidden_stat(HiddenStat.FORCED_MOVEMENT, 20);
             }
 
         } else if (tide.toLowerCase() === 'ebb tide') {
-            roll.add_multiplier(0.5, Damage.HEALING, 'self');
+            roll.add_multiplier(0.5, Damage.HEALING, roll.character.name);
             // TODO: buffs grant 20% general MR
         } else {
             chat(roll.character, 'Unknown tide for Aquamancer passive: ' + tide);
@@ -1581,7 +1587,7 @@ var Barbs = Barbs || (function () {
             return true;
         }
 
-        roll.add_multiplier(1, Damage.ALL, 'self');
+        roll.add_multiplier(1, Damage.ALL, roll.character.name);
         return true;
     }
 
@@ -1603,7 +1609,7 @@ var Barbs = Barbs || (function () {
         }
 
         const stacks = parse_int(parameter.split(' ')[1]);
-        roll.add_multiplier(stacks * 0.5, Damage.ICE, 'self');
+        roll.add_multiplier(stacks * 0.5, Damage.ICE, roll.character.name);
         return true;
     }
 
@@ -1629,7 +1635,7 @@ var Barbs = Barbs || (function () {
         }
 
         const pacts = parse_int(parameter.split(' ')[1]);
-        roll.add_multiplier(pacts, Damage.ALL, 'self');
+        roll.add_multiplier(pacts, Damage.ALL, roll.character.name);
         return true;
     }
 
@@ -1662,7 +1668,7 @@ var Barbs = Barbs || (function () {
         const total_health = parse_int(ratio.split('/')[1]);
         const missing_health = total_health - current_health;
 
-        roll.add_multiplier(missing_health / total_health, Damage.PHYSICAL, 'self');
+        roll.add_multiplier(missing_health / total_health, Damage.PHYSICAL, roll.character.name);
         return true;
     }
 
@@ -1758,9 +1764,10 @@ var Barbs = Barbs || (function () {
         const character = roll.character;
         const parameter_pieces = parameter.split(' ');
         const redirects = parse_int(parameter_pieces[1]);
-        let source = 'self';
+        let source = roll.character.name;
         if (parameter_pieces.length > 2) {
-            source = parameter_pieces[2];
+            const source_character = get_character_by_name(parameter_pieces[2]);
+            source = source_character.name;
         }
 
         // Extract damages from the original roll and send them to chat to actually do the roll.
@@ -1833,7 +1840,7 @@ var Barbs = Barbs || (function () {
             return false;
         }
 
-        roll.add_multiplier(stacks * 0.25, Damage.ALL, 'self');
+        roll.add_multiplier(stacks * 0.25, Damage.ALL, roll.character.name);
         return true;
     }
 
@@ -1886,7 +1893,7 @@ var Barbs = Barbs || (function () {
             return false;
         }
 
-        roll.add_multiplier(buffs * 0.25, Damage.PHYSICAL, 'self');
+        roll.add_multiplier(buffs * 0.25, Damage.PHYSICAL, roll.character.name);
         return true;
     }
 
@@ -1895,7 +1902,7 @@ var Barbs = Barbs || (function () {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
         }
-        roll.add_multiplier(0.5, Damage.PHYSICAL, 'self');
+        roll.add_multiplier(0.5, Damage.PHYSICAL, roll.character.name);
         return true;
     }
 
@@ -2017,7 +2024,7 @@ var Barbs = Barbs || (function () {
         const item_string = args.slice(3).join(' ');
 
         // Create the item object from the given string
-        const item = Item.construct_item(item_string, item_slot);
+        const item = Item.construct_item(character, item_string, item_slot);
         if (item === null) {
             chat(character, 'Error, failed to construct item for "%s"'.format(item_string));
             return;
@@ -2128,8 +2135,8 @@ var Barbs = Barbs || (function () {
                     ability.name = ability.name + ' (sacrificed)';
                     add_persistent_effect(character, ability, parameters, character, Duration.SINGLE_USE(), Ordering(),
                                           RollType.PHYSICAL, RollTime.DEFAULT, 1,
-                                          function (character, roll, parameters) {
-                        roll.add_multiplier(2, Damage.PHYSICAL, 'self');
+                                          function (char, roll, parameters) {
+                        roll.add_multiplier(2, Damage.PHYSICAL, character.name);
                         roll.add_effect('Ignore 100% of target\'s AC');
                         return true;
                     });
@@ -2144,8 +2151,8 @@ var Barbs = Barbs || (function () {
 
         } else {
             add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
-                                  RollType.PHYSICAL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
-                roll.add_multiplier(1, Damage.PHYSICAL, 'self');
+                                  RollType.PHYSICAL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
+                roll.add_multiplier(1, Damage.PHYSICAL, character.name);
                 roll.add_effect('Single target attacks hit adjacent targets');
                 return true;
             });
@@ -2224,8 +2231,8 @@ var Barbs = Barbs || (function () {
     function arcanist_magic_primer(character, ability, parameters) {
         // This should be applied before other effects that rely on knowing whether or not a roll was a crit
         add_persistent_effect(character, ability, parameters, character, Duration.SINGLE_USE(), Ordering(10),
-                              RollType.MAGIC, RollTime.DEFAULT, 1, function (character, roll, parameters) {
-            roll.add_multiplier(0.3, Damage.ALL, 'self');
+                              RollType.MAGIC, RollTime.DEFAULT, 1, function (char, roll, parameters) {
+            roll.add_multiplier(0.3, Damage.ALL, character.name);
             roll.should_apply_crit = true;
             return true;
         });
@@ -3017,8 +3024,8 @@ var Barbs = Barbs || (function () {
 
         } else if (choice === 'second') {
             add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(), Ordering(),
-                                  RollType.PHYSICAL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
-                roll.add_multiplier(-0.5, Damage.PHYSICAL, 'self');
+                                  RollType.PHYSICAL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
+                roll.add_multiplier(-0.5, Damage.PHYSICAL, character.name);
                 return true;
             });
 
@@ -3211,7 +3218,7 @@ var Barbs = Barbs || (function () {
 
     function juggernaut_tachycardia(character, ability, parameters) {
         add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
-                              RollType.ALL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
+                              RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
             roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 30);
 
             if (RollType.is_physical(roll.roll_type)) {
@@ -3221,7 +3228,7 @@ var Barbs = Barbs || (function () {
 
             const parameter = get_parameter('low_health', parameters);
             if (parameter !== null) {
-                roll.add_multiplier(1, Damage.PHYSICAL, 'self');
+                roll.add_multiplier(1, Damage.PHYSICAL, character.name);
             }
 
             return true;
@@ -3290,7 +3297,7 @@ var Barbs = Barbs || (function () {
 
         const spent_ki = get_parameter('ki', parameters);
         if (spent_ki !== null) {
-            roll.add_multiplier(0.5, Damage.ALL, 'self');
+            roll.add_multiplier(0.5, Damage.ALL, character.name);
             roll.add_effect('All hit targets are knocked back 20 ft');
         }
 
@@ -3581,7 +3588,7 @@ var Barbs = Barbs || (function () {
                     }
 
                     // Add the multiplier for the redirect number
-                    redirected_roll.add_multiplier(redirect_num * 0.5, Damage.ALL, 'self');
+                    redirected_roll.add_multiplier(redirect_num * 0.5, Damage.ALL, character.name);
 
                     const rolls_per_type = redirected_roll.roll();
                     format_and_send_roll(character, 'Helix Beam (Redirect: %s)'.format(redirect_num), redirected_roll,

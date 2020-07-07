@@ -8775,37 +8775,37 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         get_multiplier_string(type) {
-            const self = this;
+            const this_ = this;
             let multiplier_string = '1';
 
             let per_source_multipliers = {};
-            if (type in self.multipliers) {
-                Object.keys(self.multipliers[type]).forEach(function (source) {
+            if (type in this_.multipliers) {
+                Object.keys(this_.multipliers[type]).forEach(function (source) {
                     if (!(source in per_source_multipliers)) {
                         per_source_multipliers[source] = [];
                     }
 
-                    per_source_multipliers[source].push(self.multipliers[type][source]);
+                    per_source_multipliers[source].push(this_.multipliers[type][source]);
                 });
             }
 
-            if (is_magic_damage_type(type) && Damage.ALL_MAGIC in self.multipliers) {
-                Object.keys(self.multipliers[Damage.ALL_MAGIC]).forEach(function (source) {
+            if (is_magic_damage_type(type) && Damage.ALL_MAGIC in this_.multipliers) {
+                Object.keys(this_.multipliers[Damage.ALL_MAGIC]).forEach(function (source) {
                     if (!(source in per_source_multipliers)) {
                         per_source_multipliers[source] = [];
                     }
 
-                    per_source_multipliers[source].push(self.multipliers[Damage.ALL_MAGIC][source]);
+                    per_source_multipliers[source].push(this_.multipliers[Damage.ALL_MAGIC][source]);
                 });
             }
 
-            if (Damage.ALL in self.multipliers) {
-                Object.keys(self.multipliers[Damage.ALL]).forEach(function (source) {
+            if (Damage.ALL in this_.multipliers) {
+                Object.keys(this_.multipliers[Damage.ALL]).forEach(function (source) {
                     if (!(source in per_source_multipliers)) {
                         per_source_multipliers[source] = [];
                     }
 
-                    per_source_multipliers[source].push(self.multipliers[Damage.ALL][source]);
+                    per_source_multipliers[source].push(this_.multipliers[Damage.ALL][source]);
                 });
             }
 
@@ -8869,20 +8869,20 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         roll() {
-            const self = this;
+            const this_ = this;
             const rolls = {};
 
-            if (self.max_damage) {
-                self.convert_to_max_damages();
+            if (this_.max_damage) {
+                this_.convert_to_max_damages();
             }
 
-            Object.keys(self.damages).forEach(function (type) {
-                let dmg_str = '(%s)'.format(self.damages[type]);
+            Object.keys(this_.damages).forEach(function (type) {
+                let dmg_str = '(%s)'.format(this_.damages[type]);
 
-                dmg_str = '%s*(%s)'.format(dmg_str, self.get_multiplier_string(type));
+                dmg_str = '%s*(%s)'.format(dmg_str, this_.get_multiplier_string(type));
 
-                if (self.should_apply_crit && self.crit) {
-                    dmg_str = '(%s)*%s'.format(dmg_str, self.crit_damage_mod);
+                if (this_.should_apply_crit && this_.crit) {
+                    dmg_str = '(%s)*%s'.format(dmg_str, this_.crit_damage_mod);
                 }
 
                 rolls[type] = 'round(%s)'.format(dmg_str);
@@ -9185,14 +9185,14 @@ var BarbsComponents = BarbsComponents || (function () {
             });
         }
 
-        static roll_multiplier(value, dmg_type, applicable_roll_type) {
+        static roll_multiplier(character, value, dmg_type, applicable_roll_type) {
             assert_not_null(value, 'roll_multiplier() value');
             assert_not_null(dmg_type, 'roll_multiplier() dmg_type');
             assert_not_null(applicable_roll_type, 'roll_multiplier() applicable_roll_type');
 
             return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
                 if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
-                    roll.add_multiplier(value, dmg_type, 'self');
+                    roll.add_multiplier(value, dmg_type, character.name);
                 }
             });
         }
@@ -9236,7 +9236,7 @@ var BarbsComponents = BarbsComponents || (function () {
             });
         }
 
-        static crit_multiplier(value, dmg_type, applicable_roll_type) {
+        static crit_multiplier(character, value, dmg_type, applicable_roll_type) {
             assert_not_null(value, 'crit_multiplier() value');
             assert_not_null(dmg_type, 'crit_multiplier() dmg_type');
             assert_not_null(applicable_roll_type, 'crit_multiplier() applicable_roll_type');
@@ -9244,7 +9244,7 @@ var BarbsComponents = BarbsComponents || (function () {
             return new Effect(RollTime.POST_CRIT, applicable_roll_type, function (roll) {
                 if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     if (roll.should_apply_crit && roll.crit) {
-                        roll.add_multiplier(value, dmg_type, 'self');
+                        roll.add_multiplier(value, dmg_type, character.name);
                     }
                 }
             });
@@ -9277,75 +9277,75 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     const AFFIX_CONSTRUCTORS = {
-        'initiative': function(self, item_name, part) {
-            return self.irregular_stat_affix(item_name, part, 'initiative', Effect.initiative_bonus);
+        'initiative': function(character, item_name, part) {
+            return Item.irregular_stat_affix(item_name, part, 'initiative', Effect.initiative_bonus);
         },
-        'concentration': function(self, item_name, part) {
-            return self.irregular_stat_affix(item_name, part, 'concentration', Effect.concentration_bonus);
+        'concentration': function(character, item_name, part) {
+            return Item.irregular_stat_affix(item_name, part, 'concentration', Effect.concentration_bonus);
         },
-        'buff effectiveness': function(self, item_name, part) {
-            return self.irregular_stat_affix(item_name, part, 'buff effectiveness', Effect.buff_effectiveness);
+        'buff effectiveness': function(character, item_name, part) {
+            return Item.irregular_stat_affix(item_name, part, 'buff effectiveness', Effect.buff_effectiveness);
         },
-        'enchant effectiveness': function(self, item_name, part) {
-            return self.irregular_stat_affix(item_name, part, 'enchant effectiveness', Effect.enchant_effectiveness);
+        'enchant effectiveness': function(character, item_name, part) {
+            return Item.irregular_stat_affix(item_name, part, 'enchant effectiveness', Effect.enchant_effectiveness);
         },
-        'combo chance': function(self, item_name, part) {
-            return self.irregular_stat_affix(item_name, part, 'combo chance', Effect.combo_chance);
+        'combo chance': function(character, item_name, part) {
+            return Item.irregular_stat_affix(item_name, part, 'combo chance', Effect.combo_chance);
         },
-        'damage': function(self, item_name, part) {
-            return self.damage_affix(item_name, part, Effect.roll_damage);
+        'damage': function(character, item_name, part) {
+            return Item.damage_affix(item_name, part, Effect.roll_damage);
         },
-        'multiplier': function(self, item_name, part) {
-            return self.multiplier_affix(item_name, part, Effect.roll_multiplier);
+        'multiplier': function(character, item_name, part) {
+            return Item.multiplier_affix(character, item_name, part, Effect.roll_multiplier);
         },
-        'effect': function(self, item_name, part, original_part) {
-            return self.effect_affix(item_name, original_part, Effect.roll_effect);
+        'effect': function(character, item_name, part, original_part) {
+            return Item.effect_affix(item_name, original_part, Effect.roll_effect);
         },
-        'crit damage': function(self, item_name, part) {
-            return self.damage_affix(item_name, part, Effect.crit_damage);
+        'crit damage': function(character, item_name, part) {
+            return Item.damage_affix(item_name, part, Effect.crit_damage);
         },
-        'crit multiplier': function(self, item_name, part) {
-            return self.multiplier_affix(item_name, part, Effect.crit_multiplier);
+        'crit multiplier': function(character, item_name, part) {
+            return Item.multiplier_affix(character, item_name, part, Effect.crit_multiplier);
         },
-        'crit effect': function(self, item_name, part, original_part) {
-            return self.effect_affix(item_name, original_part, Effect.crit_effect);
+        'crit effect': function(character, item_name, part, original_part) {
+            return Item.effect_affix(item_name, original_part, Effect.crit_effect);
         },
-        'crit damage mod': function(self, item_name, part) {
-            return self.crit_damage_mod_affix(item_name, part);
+        'crit damage mod': function(character, item_name, part) {
+            return Item.crit_damage_mod_affix(item_name, part);
         },
     }
 
     // Add stat bonus definitions to affix constructors
     Object.keys(Stat).forEach(function (key) {
         const stat = Stat[key];
-        AFFIX_CONSTRUCTORS[stat.name.toLowerCase().replace(/_/g, ' ') + ':'] = function (self, item_name, part) {
-            return self.stat_affix(item_name, part, stat, Effect.stat_effect);
+        AFFIX_CONSTRUCTORS[stat.name.toLowerCase().replace(/_/g, ' ') + ':'] = function (character, item_name, part) {
+            return Item.stat_affix(item_name, part, stat, Effect.stat_effect);
         }
     });
 
     // Add stat acronyms to affix constructors
     Object.keys(STAT_ACROS).forEach(function (acronym) {
-        AFFIX_CONSTRUCTORS[acronym] = function(self, item_name, part) {
-            return self.stat_affix(item_name, part, STAT_ACROS[acronym], Effect.stat_effect);
+        AFFIX_CONSTRUCTORS[acronym] = function(character, item_name, part) {
+            return Item.stat_affix(item_name, part, STAT_ACROS[acronym], Effect.stat_effect);
         }
     });
 
     // Add hidden stats and crit hidden stats to affix constructors
     Object.keys(HIDDEN_STAT_ACROS).forEach(function (acronym) {
-        AFFIX_CONSTRUCTORS[acronym] = function(self, item_name, part) {
-            return self.stat_affix(item_name, part, HIDDEN_STAT_ACROS[acronym], Effect.hidden_stat);
+        AFFIX_CONSTRUCTORS[acronym] = function(character, item_name, part) {
+            return Item.stat_affix(item_name, part, HIDDEN_STAT_ACROS[acronym], Effect.hidden_stat);
         }
 
-        AFFIX_CONSTRUCTORS['crit ' + acronym] = function(self, item_name, part) {
-            return self.stat_affix(item_name, part, HIDDEN_STAT_ACROS[acronym], Effect.crit_hidden_stat);
+        AFFIX_CONSTRUCTORS['crit ' + acronym] = function(character, item_name, part) {
+            return Item.stat_affix(item_name, part, HIDDEN_STAT_ACROS[acronym], Effect.crit_hidden_stat);
         }
     });
 
     // Add skill bonus definitions to affix constructors
     Object.keys(Skill).forEach(function (key) {
         const skill = Skill[key];
-        AFFIX_CONSTRUCTORS[skill.name.toLowerCase()] = function(self, item_name, part) {
-            return self.skill_affix(item_name, part, function(bonus) {
+        AFFIX_CONSTRUCTORS[skill.name.toLowerCase()] = function(character, item_name, part) {
+            return Item.skill_affix(item_name, part, function(bonus) {
                 return Effect.skill_effect(skill, bonus);
             });
         };
@@ -9354,8 +9354,8 @@ var BarbsComponents = BarbsComponents || (function () {
     // Add element-specific magic resistances
     Object.keys(ElementalDamage).forEach(function (key) {
         const type = ElementalDamage[key];
-        const handler = function(self, item_name, part) {
-            return self.magic_resist_affix(item_name, part, type);
+        const handler = function(character, item_name, part) {
+            return Item.magic_resist_affix(item_name, part, type);
         };
         AFFIX_CONSTRUCTORS[type + ' mr'] = handler;
         AFFIX_CONSTRUCTORS[type + ' magic resist'] = handler;
@@ -9364,8 +9364,8 @@ var BarbsComponents = BarbsComponents || (function () {
     // Add condition-specific resistances
     conditions.forEach(function (condition) {
         condition = condition.toLowerCase().replace(/[()]/g, '');
-        const handler = function (self, item_name, part) {
-            return self.condition_resist_affix(item_name, part, condition);
+        const handler = function (character, item_name, part) {
+            return Item.condition_resist_affix(item_name, part, condition);
         };
         AFFIX_CONSTRUCTORS[condition + ' cr'] = handler;
         AFFIX_CONSTRUCTORS[condition + ' condition resist'] = handler;
@@ -9390,7 +9390,8 @@ var BarbsComponents = BarbsComponents || (function () {
             this.effects = effects;
         }
 
-        static construct_item(item_string, slot) {
+        static construct_item(character, item_string, slot) {
+            assert_not_null(character, 'construct_item() character');
             assert_not_null(item_string, 'construct_item() item_string');
             assert_not_null(slot, 'construct_item() slot');
 
@@ -9503,7 +9504,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     if (part.startsWith(affix_key)) {
                         identified_part = true;
 
-                        const effect = affix_constructor(this, item_name, part, original_part);
+                        const effect = affix_constructor(character, item_name, part, original_part);
                         if (effect !== null) {
                             LOG.trace('construct_item(), handled "%s" part on item %s'.format(affix_key, item_name));
                             effects.push(effect);
@@ -9610,7 +9611,8 @@ var BarbsComponents = BarbsComponents || (function () {
             return create_effect(damage, damage_type, roll_type);
         }
 
-        static multiplier_affix(item_name, part, create_effect) {
+        static multiplier_affix(character, item_name, part, create_effect) {
+            assert_not_null(character, 'multiplier_affix() character');
             assert_not_null(item_name, 'multiplier_affix() item_name');
             assert_not_null(part, 'multiplier_affix() part');
             assert_not_null(create_effect, 'multiplier_affix() create_effect');
@@ -9647,7 +9649,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 return null;
             }
 
-            return create_effect(value, damage_type, roll_type);
+            return create_effect(character, value, damage_type, roll_type);
         }
 
         static crit_damage_mod_affix(item_name, part) {
@@ -9849,7 +9851,7 @@ var BarbsComponents = BarbsComponents || (function () {
             const item_name = getAttrByName(this.id, slot);
 
             if (item_name !== undefined && item_name !== null && item_name !== '') {
-                const item = Item.construct_item(item_name, slot);
+                const item = Item.construct_item(this, item_name, slot);
                 if (item === null) {
                     LOG.error('Could not get item for name "%s" and slot %s'.format(item_name, slot));
                 } else {
