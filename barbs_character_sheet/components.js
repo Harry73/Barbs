@@ -479,6 +479,7 @@ var BarbsComponents = BarbsComponents || (function () {
         SILENCED_CHANCE: '%s% chance to Silence, chance: [[d100cs>%s]], CR: [[1d100]]',
         SLOWED_CHANCE: '%s% chance to Slow, chance: [[d100cs>%s]], CR: [[1d100]]',
         STUNNED_CHANCE: '%s% chance to Stun, chance: [[d100cs>%s]], CR: [[1d100]]',
+		TAUNTED_CHANCE: '%s% chance to Taunt, chance: [[d100cs>%s]], CR: [[1d100]]',
 
         AC_PENETRATION: '%s% armor penetration',
         // TODO: psychic pen?
@@ -520,6 +521,7 @@ var BarbsComponents = BarbsComponents || (function () {
         'silenced chance': HiddenStat.SILENCED_CHANCE,
         'slowed chance': HiddenStat.SLOWED_CHANCE,
         'stunned chance': HiddenStat.STUNNED_CHANCE,
+		'taunted chance': HiddenStat.TAUNTED_CHANCE,
 
         'ac pen:': HiddenStat.AC_PENETRATION,
         'general magic pen:': HiddenStat.GENERAL_MAGIC_PENETRATION,
