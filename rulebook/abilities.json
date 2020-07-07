@@ -7710,7 +7710,13 @@
             "destruction",
             "single-target",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "Enemy max health is not information that players are privy to, so the API will print this ability and relevant stats. If the enemy has vulnerability, you can add the \"vulnerability\" parameter to do the lethality roll automatically.",
+            "examples": [
+                "vulnerability 20"
+            ]
+        }
     },
     {
         "type": "ability",

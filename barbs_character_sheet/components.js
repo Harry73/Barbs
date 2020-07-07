@@ -3983,7 +3983,7 @@ var BarbsComponents = BarbsComponents || (function () {
                         "You power up or power down a vehicle. Choose one:",
                         "<ul>",
                         "<li>Target vehicle in range has its move speed doubled and no longer requires a system to propel it forward (horses, engines) for the duration.</li>",
-                        "<li>Target vehicle becomes immotile through its regular means (wheels lock, sails fail, etc) for the duration.</li>",
+                        "<li>Target vehicle becomes immobile through its regular means (wheels lock, sails fail, etc) for the duration.</li>",
                         "</ul>",
                         "When you cast this spell, you may choose to expend an additional 10 mana to affect another target Vehicle with a new choice, and you may do this any number of times. Concentration is held once for all instances of this spell within one cast."
                     ],
@@ -4626,7 +4626,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "name": "Stunning Strike",
                     "class": "Ki Monk",
                     "description": [
-                        "You use Ki to addle an enemy's senses. Deal 6dU physical damage to a target in range and gain dU ki. When you cast this ability, you may spend 40 Ki to additionally inflict 6dU psychic damage to the target; if you do, the target is Stunned until the end of their next turn."
+                        "You use ki to addle an enemy's senses. Deal 6dU physical damage to a target in range and gain dU ki. When you cast this ability, you may spend 40 Ki to additionally inflict 6dU psychic damage to the target; if you do, the target is Stunned until the end of their next turn."
                     ],
                     "tags": [
                         "attack",
@@ -4641,6 +4641,26 @@ var BarbsComponents = BarbsComponents || (function () {
                         "conditional",
                         "condition",
                         "stun"
+                    ]
+                },
+                "Soul Stealing Strike": {
+                    "name": "Soul Stealing Strike",
+                    "class": "Ki Monk",
+                    "description": [
+                        "You deliver a blow that shocks to the core. Deal 8dU physical damage to a target in range. When you cast this ability, you may spend 60 ki to additionally inflict 8dU psychic damage to the target; if you do, this attack has Lethality equal to the target's percentage missing health. If this attack kills a target, you gain 50 ki, increased to 100 ki if you spent ki when casting this ability."
+                    ],
+                    "tags": [
+                        "attack",
+                        "physical",
+                        "melee",
+                        "single-target",
+                        "combo",
+                        "psionic",
+                        "offensive",
+                        "psychic",
+                        "modal",
+                        "conditional",
+                        "lethality"
                     ]
                 },
                 "Spirit Gun": {
@@ -4689,7 +4709,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "tags": [
                         "attack",
                         "ranged",
-                        "single-target",
+                        "multi-target",
                         "combo",
                         "psionic",
                         "offensive",
@@ -4698,6 +4718,24 @@ var BarbsComponents = BarbsComponents || (function () {
                         "conditional",
                         "condition",
                         "vulnerability"
+                    ]
+                },
+                "Spirit Bomb": {
+                    "name": "Spirit Bomb",
+                    "class": "Ki Monk",
+                    "description": [
+                        "You drop concentrated ki on enemies. Deal 8dU psychic damage to all enemies in a 25 ft square centered on a point in range. If ki is spent to cast this ability, it has +50% increased damage and you may recast this ability as a free action."
+                    ],
+                    "tags": [
+                        "attack",
+                        "ranged",
+                        "multi-target",
+                        "combo",
+                        "psionic",
+                        "offensive",
+                        "psychic",
+                        "modal",
+                        "conditional"
                     ]
                 },
                 "Find Center": {
@@ -4729,6 +4767,17 @@ var BarbsComponents = BarbsComponents || (function () {
                     "tags": [
                         "cleanse",
                         "conditional"
+                    ]
+                },
+                "Find Strength": {
+                    "name": "Find Strength",
+                    "class": "Ki Monk",
+                    "description": [
+                        "You use ki to reach for new reserves of power. Recover you choice of either X health or X stamina, where X is the amount of ki you choose to spend to cast this ability."
+                    ],
+                    "tags": [
+                        "modal",
+                        "heal"
                     ]
                 }
             }
@@ -5863,6 +5912,54 @@ var BarbsComponents = BarbsComponents || (function () {
                     "tags": [
                         "buff",
                         "conditional"
+                    ]
+                },
+                "Static Flurry": {
+                    "name": "Static Flurry",
+                    "class": "Pinpoint Monk",
+                    "description": [
+                        "You let loose with a flurry of lightning fast blows. Deal 4dU + 3d12 lightning magic damage to all targets in range; you may choose to push all targets back 15 ft, and you may also choose to dash in order to follow one target as you push them. Your next combo roll has +5% for every damage die on this ability that rolls an 11 or higher."
+                    ],
+                    "tags": [
+                        "attack",
+                        "physical",
+                        "lightning",
+                        "melee",
+                        "multi-target",
+                        "unarmed",
+                        "dash",
+                        "modal",
+                        "forced movement",
+                        "combo"
+                    ]
+                },
+                "Paralyzing Blow": {
+                    "name": "Paralyzing Blow",
+                    "class": "Pinpoint Monk",
+                    "description": [
+                        "You hit pressure points that control the propagation of neural signals. Inflict Paralysis on a target in range, then repeat this attack twice. Roll for critical strike chance with each attack; if you succeed, inflict 2 stacks of Paralysis instead."
+                    ],
+                    "tags": [
+                        "attack",
+                        "physical",
+                        "melee",
+                        "single-target",
+                        "unarmed",
+                        "condition",
+                        "paralysis",
+                        "combo"
+                    ]
+                },
+                "Move Like Lightning": {
+                    "name": "Move Like Lightning",
+                    "class": "Pinpoint Monk",
+                    "description": [
+                        "You dash quickly when your momentum is high. Dash up to 25 ft in any direction. If you made a successful critical strike this round, or if you completed a 3 ability combo this round, the dash has a distance of 40 ft instead, and you may cast this ability as a reaction until the end of the round."
+                    ],
+                    "tags": [
+                        "dash",
+                        "conditional",
+                        "modal"
                     ]
                 }
             }

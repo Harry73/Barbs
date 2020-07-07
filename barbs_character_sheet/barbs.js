@@ -1374,7 +1374,8 @@ var Barbs = Barbs || (function () {
     // 2. Fill out a roll template to construct the message.
     // 3. Add in any extra effects that don't fit nicely into a damage type to the message.
     // 4. Record and send the message.
-    function do_roll(character, ability, roll, parameters, crit_section, do_finalize = true) {
+    function do_roll(character, ability, roll, parameters, crit_section, do_finalize = true,
+                     last_minute_handler = null) {
         assert_not_null(character, 'do_roll() character');
         assert_not_null(ability, 'do_roll() ability');
         assert_not_null(roll, 'do_roll() roll');
@@ -1396,6 +1397,10 @@ var Barbs = Barbs || (function () {
         // If an attack has psychic damage, we have to do a Psionics: Offensive skill check
         if (Damage.PSYCHIC in roll.damages) {
             roll_psionics_offensive(character);
+        }
+
+        if (last_minute_handler !== null) {
+            last_minute_handler(roll);
         }
 
         const rolls_per_type = roll.roll();
@@ -3674,6 +3679,30 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function pyromancer_devour_in_flames(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+
+        let vulnerability = get_parameter('vulnerability', parameters);
+        if (vulnerability !== null) {
+            vulnerability = parse_int(vulnerability);
+            if (Number.isNaN(vulnerability)) {
+                chat(character, 'Value for "vulnerability" parameter must be numeric');
+                return;
+            }
+            roll.add_hidden_stat(HiddenStat.LETHALITY, vulnerability);
+        }
+
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section, /*do_finalize=*/true,
+                    /*last_minute_handler=*/function(r) {
+                        r.add_effect('Fire magic damage multiplier: ' + eval(r.get_multiplier_string(Damage.FIRE)));
+                    });
+        });
+
+        print_ability_description(character, ability);
+    }
+
+
     function sentinel_crossguard_guillotine(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('4d10', Damage.PHYSICAL);
@@ -4386,6 +4415,7 @@ var Barbs = Barbs || (function () {
             'Banefire': pyromancer_banefire,
             'Magma Spray': pyromancer_magma_spray,
             'Pyroblast': print_ability_description,
+            'Devour In Flames': pyromancer_devour_in_flames,
         },
         'Sentinel': {
             'Crossguard Guillotine': sentinel_crossguard_guillotine,
