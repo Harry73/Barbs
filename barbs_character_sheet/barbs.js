@@ -284,6 +284,47 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function get_token(character) {
+        /*
+            [{
+                "_id":"-M6lgdQEUXiMKuXgZlLM",
+                "_pageid":"-Lk6uhdRWP32g0OY4nCe",
+                ...
+                "name":"Janatris",
+                ...
+                "represents":"-Ljms24S-oCLvsIB_tEn",
+                ...
+           }]
+        */
+        const tokens = findObjs({_type: 'graphic', represents: character.id});
+        if (tokens === undefined || tokens === null || tokens.length <= 0) {
+            LOG.warn('No tokens found for character %s'.format(character.name));
+            return null;
+        }
+
+        let token;
+        if (tokens.length === 1) {
+            token = tokens[0];
+        } else {
+            // Additionally filter by the character's first name, if multiple tokens are found for
+            // the character. This should really only be necessary for Nightside.
+            for (let i = 0; i < tokens.length; i++) {
+                const character_first_name = character.name.split(' ')[0];
+                if (tokens[i].get('name').startsWith(character_first_name)) {
+                    token = tokens[i];
+                }
+            }
+        }
+
+        if (token === null) {
+            LOG.error('Found tokens for character %s, but no names matched'.format(character.name));
+            return null;
+        }
+
+        return token;
+    }
+
+
     function roll_initiative(msg) {
         const character = get_character(msg);
         const roll = get_roll_with_items_and_effects(character);
@@ -293,43 +334,12 @@ var Barbs = Barbs || (function () {
             chat(character, initiative_format.format(character.name, initiative_roll, roll.initiative_bonus,
                                                      character.get_attribute('AGI')));
 
-            /*
-                [{
-                    "_id":"-M6lgdQEUXiMKuXgZlLM",
-                    "_pageid":"-Lk6uhdRWP32g0OY4nCe",
-                    ...
-                    "name":"Janatris",
-                    ...
-                    "represents":"-Ljms24S-oCLvsIB_tEn",
-                    ...
-               }]
-            */
-            const tokens = findObjs({_type: 'graphic', represents: character.id});
-            if (tokens === undefined || tokens === null || tokens.length <= 0) {
-                LOG.warn('No tokens found for character %s'.format(character.name));
+            const token = get_token(character);
+            if (token === null) {
                 return;
             }
 
             const initiative = initiative_roll + roll.initiative_bonus + character.get_attribute('AGI');
-
-            let token;
-            if (tokens.length === 1) {
-                token = tokens[0];
-            } else {
-                // Additionally filter by the character's first name, if multiple tokens are found for
-                // the character. This should really only be necessary for Nightside.
-                for (let i = 0; i < tokens.length; i++) {
-                    const character_first_name = character.name.split(' ')[0];
-                    if (tokens[i].get('name').startsWith(character_first_name)) {
-                        token = tokens[i];
-                    }
-                }
-            }
-
-            if (token === null) {
-                LOG.error('Found tokens for character %s, but no names matched'.format(character.name));
-                return;
-            }
 
             let turn_order = Campaign().get('turnorder');
             if (turn_order === '') {
@@ -637,6 +647,116 @@ var Barbs = Barbs || (function () {
         roll_string = 'round(%s)'.format(roll_string);
 
         chat(character, total_format.format(skill_name, 'Roll', roll_string));
+    }
+
+
+    // ################################################################################################################
+    // Rests
+
+
+    function take_rest(msg) {
+        const character = get_character(msg);
+
+        const pieces = msg.content.split(' ');
+        if (pieces.length < 3) {
+            chat(character, 'Not enough parts in "!barbs rest" call');
+            return;
+        }
+
+        const type = pieces[2];
+
+        const token = get_token(character);
+        if (token === null) {
+            return;
+        }
+
+        let current_health = parse_int(token.get('bar3_value'));
+        let current_stamina = parse_int(token.get('bar1_value'));
+        let current_mana = parse_int(token.get('bar2_value'));
+        if (Number.isNaN(current_health) || Number.isNaN(current_stamina) || Number.isNaN(current_mana)) {
+            chat(character, 'One of your stats is non-numeric');
+            return;
+        }
+
+        const roll = get_roll_with_items_and_effects(character);
+        const max_health = eval(get_stat_roll_modifier(character, roll, Stat.HEALTH));
+        const max_stamina = eval(get_stat_roll_modifier(character, roll, Stat.STAMINA));
+        const max_mana = eval(get_stat_roll_modifier(character, roll, Stat.MANA));
+
+        if (type === 'short') {
+            const health_regen = eval(get_stat_roll_modifier(character, roll, Stat.HEALTH_REGENERATION));
+            const stamina_regen = eval(get_stat_roll_modifier(character, roll, Stat.STAMINA_REGENERATION));
+            const mana_regen = eval(get_stat_roll_modifier(character, roll, Stat.MANA_REGENERATION));
+
+            const health_regenerated = Math.min(max_health - current_health, max_health * health_regen / 100);
+            const stamina_regenerated = Math.min(max_stamina - current_stamina, max_stamina * stamina_regen / 100);
+            const mana_regenerated = Math.min(max_mana - current_mana, max_mana * mana_regen / 100);
+
+            const new_health = current_health + health_regenerated;
+            const new_stamina = current_stamina + stamina_regenerated;
+            const new_mana = current_mana + mana_regenerated;
+
+            token.set({'bar3_value': new_health, 'bar1_value': new_stamina, 'bar2_value': new_mana});
+
+            const effects = [
+                '<li>Health regenerated: [[%s]]</li>'.format(health_regenerated),
+                '<li>Stamina regenerated: [[%s]]</li>'.format(stamina_regenerated),
+                '<li>Mana regenerated: [[%s]]</li>'.format(mana_regenerated),
+            ];
+            const effects_section = effects_section_format.format(effects.join(''));
+
+            const button_section = " {{button=<a href='!barbs rest undo %s %s %s'>Undo</a>}}".format(
+                health_regenerated, stamina_regenerated, mana_regenerated);
+
+            chat(character, roll_format.format('Short Rest', '', '', '', effects_section, button_section));
+
+        } else if (type === 'long') {
+            const health_regenerated = max_health - current_health;
+            const stamina_regenerated = max_stamina - current_stamina;
+            const mana_regenerated = max_mana - current_mana;
+
+            token.set({'bar3_value': max_health, 'bar1_value': max_stamina, 'bar2_value': max_mana});
+
+            const effects = [
+                '<li>Health regenerated: [[%s]]</li>'.format(health_regenerated),
+                '<li>Stamina regenerated: [[%s]]</li>'.format(stamina_regenerated),
+                '<li>Mana regenerated: [[%s]]</li>'.format(mana_regenerated),
+            ];
+            const effects_section = effects_section_format.format(effects.join(''));
+
+            const button_section = " {{button=<a href='!barbs rest undo %s %s %s'>Undo</a>}}".format(
+                health_regenerated, stamina_regenerated, mana_regenerated);
+
+            chat(character, roll_format.format('Long Rest', '', '', '', effects_section, button_section));
+
+        } else if (type === 'undo') {
+            if (pieces.length < 6) {
+                chat(character, 'Not enough parts in "!barbs rest undo" call');
+                return;
+            }
+
+            const health_regenerated = parse_int(pieces[3]);
+            const stamina_regenerated = parse_int(pieces[4]);
+            const mana_regenerated = parse_int(pieces[5]);
+
+            const new_health = current_health - health_regenerated;
+            const new_stamina = current_stamina - stamina_regenerated;
+            const new_mana = current_mana - mana_regenerated;
+
+            token.set({'bar3_value': new_health, 'bar1_value': new_stamina, 'bar2_value': new_mana});
+
+            const effects = [
+                '<li>Health reverted to: [[%s]]</li>'.format(new_health),
+                '<li>Stamina reverted to: [[%s]]</li>'.format(new_stamina),
+                '<li>Mana reverted to: [[%s]]</li>'.format(new_mana),
+            ];
+            const effects_section = effects_section_format.format(effects.join(''));
+
+            chat(character, roll_format.format('Undoing Rest', '', '', '', effects_section, ''));
+
+        } else {
+            chat(character, 'Unknown rest type "%s"'.format(type));
+        }
     }
 
 
@@ -973,34 +1093,6 @@ var Barbs = Barbs || (function () {
         chat(msg, 'Did not find effect %s on %s'.format(effect_name, character.name));
     }
 
-
-    function add_persistent_effects_to_roll(character, roll, roll_time, parameters) {
-        for (let i = 0; i < persistent_effects.length; i++) {
-            const effect = persistent_effects[i];
-
-            const right_target = effect.target === character.name;
-            const right_time = effect.roll_time === roll_time;
-            const right_type = RollType.is_type(effect.roll_type, roll.roll_type);
-            if (right_target && right_time && right_type) {
-
-                // Modify the handler here if it has an effectiveness other than 1. We do this here because this is on
-                // the path for an attack roll, which is when the effect's effectiveness actually matters. This also
-                // lets us pass along the actual parameters that are used for the attack when deducing buff
-                // effectiveness.
-                let handler = persistent_effects[i].handler;
-                if (persistent_effects[i].effectiveness !== 1) {
-                    handler = make_handler_effective(character, handler, parameters,
-                                                     persistent_effects[i].effectiveness);
-                }
-
-                if (!handler(character, roll, parameters)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
 
     // Iterate through effects of abilities (buffs, empowers, etc) that may last multiple turns and return a list of
     // applicable ones.
@@ -4766,6 +4858,7 @@ var Barbs = Barbs || (function () {
         'concentration': roll_concentration,
         'stat': roll_stat,
         'skill': roll_skill,
+        'rest': take_rest,
         'list_effects': list_persistent_effects,
         'remove_effect': remove_persistent_effect,
         'item': roll_item,
