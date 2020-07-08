@@ -2415,11 +2415,22 @@ var Barbs = Barbs || (function () {
                 const roll = new Roll(character, RollType.PHYSICAL);
                 roll.add_damage('%sd4'.format(dice_divisions[i]), Damage.PHYSICAL);
                 add_scale_damage(character, roll, parameters);
-                roll.add_hidden_stat(HiddenStat.LETHALITY, 5 * dice_divisions[i]);
+
+                const lethality_chance = 5 * dice_divisions[i];
+                roll.add_effect('%s% Massacre lethality chance, chance: [[d100cs>%s]]'.format(
+                    lethality_chance, 100 - Math.min(101, lethality_chance) + 1))
 
                 roll.copy_damages(dummy_roll);
                 roll.copy_multipliers(dummy_roll);
                 roll.copy_effects(dummy_roll);
+
+                // Copy hidden stats
+                const hidden_stats = Object.keys(dummy_roll.hidden_stats);
+                for (let i = 0; i < hidden_stats.length; i++) {
+                    const hidden_stat = hidden_stats[i];
+                    const base_bonus = dummy_roll.hidden_stats[hidden_stat];
+                    roll.add_hidden_stat(hidden_stat, base_bonus);
+                }
 
                 const rolls_per_type = roll.roll();
                 format_and_send_roll(character, '%s (%sd4)'.format(ability.name, dice_divisions[i]), roll,

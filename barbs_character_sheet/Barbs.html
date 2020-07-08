@@ -217,10 +217,10 @@
                     <fieldset class="repeating_investment">
                         <div class="sheet-row">
                             <div class="sheet-col-1-2">
-                                <input type="text" name="attr_invest_name" value="@{hidden_invest_name}" disabled="disabled"/>
+                                <input class="sheet-center" type="text" name="attr_invest_name" value="@{hidden_invest_name}" disabled="disabled"/>
                             </div>
                             <div class="sheet-col-1-2">
-                                <input type="number" name="attr_investment-ap" value="@{hidden_invest_ap}" disabled="disabled"/>
+                                <input class="sheet-center" type="number" name="attr_investment-ap" value="@{hidden_invest_ap}" disabled="disabled"/>
                             </div>
 
                             <input type="hidden" name="attr_hidden_invest_name" value=""/>
@@ -1813,17 +1813,12 @@
         <div class="sheet-section-inventory">
 
             <h4 class="sheet-center">Coin Carried <span class="sheet-pictos">h</span></h4>
-            <div class="sheet-row sheet-sub-header">
-                <div class="sheet-col-1-2 sheet-center sheet-small-label">GP</div>
-                <div class="sheet-col-1-2 sheet-center sheet-small-label">Total</div>
-            </div>
-
             <div class="sheet-row">
                 <div class="sheet-col-1-2" title="Gold Pieces">
-                    <input type="number" name="attr_gp" value="0" min="0" step="1">
+                    <input class="sheet-center" type="text" value="GP" disabled="disabled"/>
                 </div>
-                <div class="sheet-col-1-2" title="Total (in Gold Pieces)">
-                    <input type="number" name="attr_money_total_gp" value="(@{gp}) " disabled="disabled">
+                <div class="sheet-col-1-2" title="Gold Pieces">
+                    <input class="sheet-center" type="text" name="attr_gp">
                 </div>
             </div>
 
@@ -2806,6 +2801,21 @@
             });
         });
 
+
+    </script>
+
+    <script type="text/worker">
+        on('change:gp', function(eventInfo) {
+            let new_value = eventInfo.newValue;
+            if (new_value.startsWith('-') || new_value.startsWith('+')) {
+                new_value = parseInt(eventInfo.previousValue, 10) + parseInt(eventInfo.newValue, 10);
+            }
+            if (Number.isNaN(new_value)) {
+                new_value = eventInfo.previousValue;
+            }
+
+            setAttrs({gp: new_value});
+        });
     </script>
 
 
