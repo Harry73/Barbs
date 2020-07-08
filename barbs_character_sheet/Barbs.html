@@ -158,12 +158,27 @@
                     </div>
 
                     <!-- Core stat: Agility -->
-                    <div class="sheet-row">
+                    <div class="sheet-row sheet-padb">
                         <div class="sheet-col-3-4 sheet-core-stat-label">Speed</div>
                         <div class="sheet-col-1-4">
                             <input type="number" name="attr_overview_speed" value="@{hidden_overview_speed}" disabled="disabled" />
                         </div>
                         <input type="hidden" name="attr_hidden_overview_speed" value="30+5*floor(@{AGI}/2)"/>
+                    </div>
+
+                    <h4 class="sheet-center">Class AP Investment</h4>
+                    <div class="sheet-row">
+                        <fieldset class="repeating_investment">
+                            <div class="sheet-col-1-2">
+                                <input class="sheet-center" type="text" name="attr_invest_name" value="@{hidden_invest_name}" disabled="disabled"/>
+                            </div>
+                            <div class="sheet-col-1-2">
+                                <input class="sheet-center" type="number" name="attr_investment-ap" value="@{hidden_invest_ap}" disabled="disabled"/>
+                            </div>
+
+                            <input type="hidden" name="attr_hidden_invest_name" value=""/>
+                            <input type="hidden" name="attr_hidden_invest_ap" value=""/>
+                        </fieldset>
                     </div>
                 </div>
 
@@ -207,29 +222,6 @@
                     </div>
 
                 </div>
-            </div>
-
-
-            <div class="sheet-row sheet-padb">
-                <div class="sheet-col-1-2">
-                    <h4 class="sheet-center">Class AP Investment</h4>
-
-                    <fieldset class="repeating_investment">
-                        <div class="sheet-row">
-                            <div class="sheet-col-1-2">
-                                <input class="sheet-center" type="text" name="attr_invest_name" value="@{hidden_invest_name}" disabled="disabled"/>
-                            </div>
-                            <div class="sheet-col-1-2">
-                                <input class="sheet-center" type="number" name="attr_investment-ap" value="@{hidden_invest_ap}" disabled="disabled"/>
-                            </div>
-
-                            <input type="hidden" name="attr_hidden_invest_name" value=""/>
-                            <input type="hidden" name="attr_hidden_invest_ap" value=""/>
-                        </div>
-                    </fieldset>
-                </div>
-
-                <div class="sheet-col-1-2">&nbsp;</div>
             </div>
         </div>
 
