@@ -78,6 +78,8 @@
                         <li>Take Damage - This is discussed more below.</li>
                         <li>Condition Resist - This is discussed more below.</li>
                         <li>Concentration - A concentration check is a d100 plus any bonuses from items. This button performs this roll.</li>
+                        <li>Short Rest - Regenerate Health, Stamina, and Mana based on your regeneration stats and max health/stamina/mana. Bonuses from items are accounted for. The numbers on your token are updated automatically.</li>
+                        <li>Long Rest - Set Health, Stamina, and Mana to your max health/stamina/mana. Bonuses from items are accounted for. The numbers on your token are updated automatically.</li>
                     </ul>
                 </li>
                 <li>The bottom right shows your current level, based on points placed in attributes, skills, and class abilities. There is a place to track combat EXP, which is earned as you fight and kill monsters. Every 100 points of combat EXP grants 1 AP to be spent on attributes.</li>
@@ -131,7 +133,7 @@
             <a id="Inventory Tab">
                 <h3>Inventory Tab</h3>
             </a>
-            <p>The inventory tab on Barbs character sheets is a direct rip from the D&D 5E character sheet. This tab has no bearing on the API. Use it as you see fit.</p>
+            <p>The inventory tab on Barbs character sheets is nearly a direct rip from the D&D 5E character sheet. This tab has no bearing on the API. Use it as you see fit.</p>
             <br>
             <a id="Filling out your character sheet">
                 <h3>Filling out your character sheet</h3>
@@ -371,9 +373,9 @@
                     </ul>
                 </li>
 
-                <li>Hidden Stats
+                <li>Secondary Stats
                     <ul>
-                        <li>There are some stat-like things that items can grant, but they aren't listed as normal stats. This includes things like chance to inflict conditions, accuracy, AC pen, MR pen, and lethality. I call these "hidden stats". The pattern for all of these is generally the same. All supported "hidden stats" are listed below.</li>
+                        <li>There are some stat-like things that items can grant, but they aren't listed as normal stats. This includes things like chance to inflict conditions, accuracy, AC pen, MR pen, and lethality. These are "secondary stats". The pattern for all of these is generally the same. All supported "secondary stats" are listed below.</li>
                         <li>For all of these, an applicable roll type is required. This must be one of the following: physical, psychic, magic, healing, all. The applicable attack type is often based on the item type itself. Accuracy from a longsword should only be applied to physical attacks. MR pen from an orb should only be applied to magic attacks. Lethality from armor may apply to all attacks.</li>
                         <li>Every single one of these can additionally be prefixed with "crit ", to indicate that the affix should only be applied on crit.</li>
                     </ul>
@@ -402,6 +404,7 @@
                         <li>Chance to inflict Silenced - <span class="monospace">silenced chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
                         <li>Chance to inflict Slowed - <span class="monospace">slowed chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
                         <li>Chance to inflict Stunned - <span class="monospace">stunned chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
+                        <li>Chance to inflict Taunted - <span class="monospace">taunted chance: &lt;percentage chance&gt; &lt;applicable roll type&gt;</span></li>
                         <li>Reduce AC - <span class="monospace">reduce ac: &lt;ac reduction&gt; &lt;applicable roll type&gt;</span></li>
                         <li>Reduce CR - <span class="monospace">reduce cr: &lt;cr reduction&gt; &lt;applicable roll type&gt;</span></li>
                         <li>Reduce evasion - <span class="monospace">reduce evasion: &lt;evasion reduction&gt; &lt;applicable roll type&gt;</span></li>
@@ -433,6 +436,10 @@
                         <li><span class="monospace">item use: first aid: &lt;bonus&gt;</span></li>
                         <li><span class="monospace">Weapon mastery: bows: &lt;bonus&gt;</span></li>
                         <li><span class="monospace">...</span></li>
+                    </ul>
+                    <br>
+                    <ul>
+                        <li>A bonus to <i>ALL</i> skills follows the same format. Use "Skill: All" for the "skill name."</li>
                     </ul>
                 </li>
 

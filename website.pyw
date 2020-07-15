@@ -3,6 +3,8 @@ import sys
 import tkinter as tk
 import traceback
 
+from threading import Thread
+
 from src.website.generator import generate_html
 from src.website.validator import validate
 from src.website.deployer import deploy
@@ -12,6 +14,8 @@ WIDTH = 1000
 HEIGHT = 600
 
 CURRENT_PATH = os.path.dirname(os.path.realpath(sys.argv[0]))
+
+THREADS = []
 
 
 def open_local(log):
@@ -72,16 +76,21 @@ class Application(tk.Frame):
         return button
 
     def on_press(self, method):
-        def _on_press():
-            self.text_lines = []
-            self.textbox.delete('1.0', tk.END)
-            self.master.update()
-
+        def _run_method():
             try:
                 method(self.log_text)
             except Exception as e:
                 self.log_text('Error: %s' % str(e))
                 traceback.print_exc()
+
+        def _on_press():
+            self.text_lines = []
+            self.textbox.delete('1.0', tk.END)
+            self.master.update()
+
+            t = Thread(target=_run_method)
+            t.daemon = True
+            t.start()
 
         return _on_press
 

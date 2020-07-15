@@ -3,6 +3,7 @@ import os
 import paramiko
 import scp
 import sys
+import time
 
 
 CURRENT_PATH = os.path.dirname(os.path.realpath(sys.argv[0]))
@@ -16,10 +17,11 @@ LOCAL_STYLE_SHEET = 'style.css'
 CALENDAR_LOCAL_STYLE_SHEET = '../style.css'
 REMOTE_STYLE_SHEET = "{{ url_for('static', filename='style.css') }}"
 
-INSTANCE_HOSTNAME = 'ec2-3-82-252-244.compute-1.amazonaws.com'
+INSTANCE_HOSTNAME = '3.82.252.244'
 INSTANCE_USER = 'ubuntu'
 KEY_FILE = 'barbs.pem'
-TIMEOUT_SEC = 10
+TIMEOUT_SEC = 60
+LAST_TIME = time.time()
 
 
 def find_ssh_key_path():
@@ -46,7 +48,23 @@ def swap(file_path, text_to_replace, replacement_text):
         f.write(html)
 
 
+def upload(scp_client, local_path, remote_path, file_name, log):
+    global LAST_TIME
+    LAST_TIME = time.time()
+
+    log('Uploading %s' % file_name)
+    scp_client.put(local_path, remote_path=remote_path)
+
+
 def deploy(log):
+    global LAST_TIME
+
+    def progress(filename, size, sent):
+        global LAST_TIME
+        if time.time() > LAST_TIME + 1:
+            log('%s progress: %.2f%%' % (filename.decode('utf-8'), 100 * float(sent) / float(size)))
+            LAST_TIME = time.time()
+
     ssh_key_path = find_ssh_key_path()
 
     # Swap out the style sheet inclusion with one that flask will understand
@@ -64,17 +82,14 @@ def deploy(log):
         ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh_client.connect(hostname=INSTANCE_HOSTNAME, username=INSTANCE_USER, pkey=ssh_key, timeout=TIMEOUT_SEC)
 
-        scp_client = scp.SCPClient(ssh_client.get_transport(), socket_timeout=TIMEOUT_SEC)
-        log('Uploading rulebook')
-        scp_client.put(GENERATED_RULEBOOK_PATH, remote_path='/home/ubuntu/barbs/templates/rulebook.html')
-        log('Uploading api')
-        scp_client.put(GENERATED_API_PATH, remote_path='/home/ubuntu/barbs/templates/api.html')
+        scp_client = scp.SCPClient(ssh_client.get_transport(), socket_timeout=TIMEOUT_SEC, progress=progress)
+        upload(scp_client, GENERATED_RULEBOOK_PATH, '/home/ubuntu/barbs/templates/rulebook.html', 'rulebook', log)
+        upload(scp_client, GENERATED_API_PATH, '/home/ubuntu/barbs/templates/api.html', 'api', log)
         for month_file in os.listdir(GENERATED_CALENDAR_PATH):
-            log('Uploading calendar month %s' % month_file)
             generated_month_path = os.path.join(GENERATED_CALENDAR_PATH, month_file)
-            scp_client.put(generated_month_path, remote_path='/home/ubuntu/barbs/templates/%s' % month_file)
-        log('Uploading style sheets')
-        scp_client.put(GENERATED_STYLE_PATH, remote_path='/home/ubuntu/barbs/static/style.css')
+            remote_month_path = '/home/ubuntu/barbs/templates/%s' % month_file
+            upload(scp_client, generated_month_path, remote_month_path, 'calendar month %s' % month_file, log)
+        upload(scp_client, GENERATED_STYLE_PATH, '/home/ubuntu/barbs/static/style.css', 'style sheets', log)
 
         log('Restarting server')
         ssh_client.exec_command('pm2 restart barbs')
