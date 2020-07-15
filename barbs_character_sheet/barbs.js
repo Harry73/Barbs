@@ -2159,6 +2159,44 @@ var Barbs = Barbs || (function () {
     // Auto-attacks with an item
 
 
+    function check_items(msg) {
+        const errors = [];
+
+        // Temporarily change Item's logger to something that lets us save the error messages.
+        class Collector {
+            static trace() {
+            }
+            static debug() {
+            }
+            static info() {
+            }
+            static warn(string) {
+                assert_not_null(string, 'warn() string');
+                errors.push(string);
+            }
+            static error(string) {
+                assert_not_null(string, 'error() string');
+                errors.push(string);
+            }
+        }
+        Item.LOGGER = Collector;
+
+        // Getting the character constructs items under the hood, so this is good enough to check for errors
+        const character = get_character(msg);
+
+        if (errors.length > 0) {
+            for (let i = 0; i < errors.length; i++) {
+                raw_chat('API', errors[i]);
+            }
+        } else {
+            raw_chat('API', 'Items for %s are correct.'.format(character.name));
+        }
+
+        // Revert the logger hack
+        Item.LOGGER = LOG;
+    }
+
+
     function roll_item(msg) {
         const character = get_character(msg);
 
@@ -4935,6 +4973,7 @@ var Barbs = Barbs || (function () {
         'rest': take_rest,
         'list_effects': list_persistent_effects,
         'remove_effect': remove_persistent_effect,
+        'check_items': check_items,
         'item': roll_item,
         'ability': process_ability,
     };
