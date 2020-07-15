@@ -805,6 +805,33 @@ var Barbs = Barbs || (function () {
         return new Order(val);
     }
 
+    // Merge two lists based on ordering
+    function merge(left, right) {
+        const result = [];
+
+        while (left.length !== 0 && right.length !== 0) {
+            if (left[0].ordering.val <= right[0].ordering.val) {
+                result.push(left[0]);
+                left.shift();
+            } else {
+                result.push(right[0]);
+                right.shift();
+            }
+        }
+
+        // Either left or right may have elements left; consume them.
+        while (left.length !== 0) {
+            result.push(left[0]);
+            left.shift();
+        }
+        while (right.length !== 0) {
+            result.push(right[0]);
+            right.shift();
+        }
+
+        return result;
+    }
+
 
     const DurationType = {
         HARD: 'duration_type_hard',
@@ -857,6 +884,14 @@ var Barbs = Barbs || (function () {
             return this.HARD(59);
         }
     }
+
+
+    const EffectType = {
+        BUFF: 'effect_type_buff',
+        ENCHANTMENT: 'effect_type_enchantment',
+        EMPOWER: 'effect_type_empower',
+        UNKNOWN: 'effect_type_unknown',
+    };
 
 
     function make_handler_effective(target_character, handler, parameters, effectiveness) {
@@ -1040,6 +1075,33 @@ var Barbs = Barbs || (function () {
             assert_numeric(effectiveness, 'Non-numeric effectiveness "%s"', effectiveness_string);
         }
 
+        // Determine type of the effect, e.g. buff, enchant, other
+        let effect_type = EffectType.UNKNOWN;
+        if ('tags' in ability) {
+            if (ability.tags.includes('buff')) {
+                effect_type = EffectType.BUFF;
+            } else if (ability.tags.includes('enchantment')) {
+                effect_type = EffectType.ENCHANTMENT;
+            } else if (ability.tags.includes('empower')) {
+                effect_type = EffectType.EMPOWER;
+            }
+        }
+
+        // Check if adding this effect is putting the target character over their buff limit and issue a warning if so.
+        // We'll still add the effect though.
+        let buffs_on_character = 0;
+        for (let i = 0; i < persistent_effects.length; i++) {
+            const effect = persistent_effects[i];
+            if (effect.target === target_character.name && effect.effect_type === EffectType.BUFF) {
+                buffs_on_character += 1;
+            }
+        }
+
+        const character_buff_limit = target_character.get_stat(Stat.BUFF_LIMIT);
+        if (buffs_on_character + 1 > character_buff_limit) {
+            raw_chat('API', '%s is over his/her buff limit (%s)'.format(target_character.name, character_buff_limit));
+        }
+
         const effect = {
             'caster': caster.name,
             'name': ability['name'],
@@ -1050,6 +1112,7 @@ var Barbs = Barbs || (function () {
             'roll_time': roll_time,
             'count': count,
             'effectiveness': effectiveness,
+            'effect_type': effect_type,
             'handler': handler,
         };
 
@@ -1369,33 +1432,6 @@ var Barbs = Barbs || (function () {
         }
     }
 
-
-    // Merge the two given lists based on ordering
-    function merge(left, right) {
-        const result = [];
-
-        while (left.length !== 0 && right.length !== 0) {
-            if (left[0].ordering.val <= right[0].ordering.val) {
-                result.push(left[0]);
-                left.shift();
-            } else {
-                result.push(right[0]);
-                right.shift();
-            }
-        }
-
-        // Either left or right may have elements left; consume them.
-        while (left.length !== 0) {
-            result.push(left[0]);
-            left.shift();
-        }
-        while (right.length !== 0) {
-            result.push(right[0]);
-            right.shift();
-        }
-
-        return result;
-    }
 
 
     function add_extras(character, roll, roll_time, parameters, crit_section) {
