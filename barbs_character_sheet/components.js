@@ -9024,6 +9024,7 @@ var BarbsComponents = BarbsComponents || (function () {
         NECK: 'neck',
         RING: 'ring',
         BELT: 'belt',
+        MISCELLANEOUS: 'miscellaneous',
     };
 
 
@@ -9810,7 +9811,7 @@ var BarbsComponents = BarbsComponents || (function () {
     class Character {
         static CHARACTER_SHEET_ITEM_SLOTS = [
             ItemSlot.HEAD, ItemSlot.BODY, ItemSlot.HANDS, ItemSlot.FEET, ItemSlot.NECK,
-            'left_ring', 'right_ring', ItemSlot.BELT,
+            'left_ring', 'right_ring', ItemSlot.BELT, ItemSlot.MISCELLANEOUS,
         ];
         static MONK_MASTERY_DICE = [4, 6, 8, 10, 12, 20];
         static MONK_MASTERY_COMBO = [0, 10, 20, 30, 35, 40];

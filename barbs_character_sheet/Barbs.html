@@ -804,7 +804,7 @@
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-2 sheet-skill-name">Concentration Limit</div>
                         <div class="sheet-col-1-6">
-                            <input type="number" name="attr_concentration_limit" value="floor((@{FCS}+10)/2)" disabled="disabled"/>
+                            <input type="number" name="attr_concentration_limit" value="@{hidden_concentration_limit}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
@@ -812,6 +812,7 @@
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
+                    <input type="hidden" name="attr_hidden_concentration_limit" value="floor((@{FCS}+10)/2)"/>
                 </div>
             </div>
 
@@ -1793,6 +1794,16 @@
                     </div>
                     <div class="sheet-col-1-24">&nbsp;</div>
                 </div>
+
+                <div class="sheet-row sheet-skill-row">
+                    <div class="sheet-col-1-6">
+                        <input type="text" class="sheet-center sheet-bold" value="Miscellaneous" disabled="disabled"/>
+                    </div>
+                    <div class="sheet-col-19-24">
+                        <input type="text" name="attr_miscellaneous" value=""/>
+                    </div>
+                    <div class="sheet-col-1-24">&nbsp;</div>
+                </div>
             </div>
 
             <div class="sheet-row">
@@ -2700,7 +2711,7 @@
         const skill_to_attribute_map = {"Alchemy: Augmentation": "INT", "Alchemy: Constructs": "INT", "Alchemy: Organics": "INT", "Alchemy: Transformation": "INT", "Armor Mastery: Cloth": "RES", "Armor Mastery: Heavy": "TGH", "Armor Mastery: Light": "REF", "Armor Mastery: Shields": "TGH", "Artistry: Acting": "APL", "Artistry: Dancing": "APL", "Artistry: Illustration": "APL", "Artistry: Literature": "APL", "Artistry: Music": "APL", "Artistry: Sculpture": "APL", "Athletics: Balance": "DEX", "Athletics: Climbing": "AGI", "Athletics: Flexibility": "DEX", "Athletics: Force": "STR", "Athletics: Movement": "AGI", "Athletics: Pain Tolerance": "COM", "Beast Mastery: Battle Pet": "WIS", "Beast Mastery: Riding": "AGI", "Beast Mastery: Taming": "WIS", "Combat: Blocking": "TGH", "Combat: Dodging": "REF", "Combat: Grappling": "AGI", "Combat: Trapping": "FRT", "Crafting: Armorsmithing": "TGH", "Crafting: Artificing": "RES", "Crafting: Cooking": "APL", "Crafting: Enchanting": "RES", "Crafting: Fine Weapons": "REF", "Crafting: Forgery": "PRE", "Crafting: Leatherworking": "REF", "Crafting: Jewelry": "FRT", "Crafting: Heavy Weapons": "TGH", "Crafting: Poisons": "FRT", "Crafting: Potions": "FRT", "Crafting: Ranged Weapons": "REF", "Crafting: Shortblades": "PRE", "Crafting: Tailoring": "RES", "Element Mastery: Air": "AGI", "Element Mastery: Dark": "FRT", "Element Mastery: Earth": "RES", "Element Mastery: Fire": "ATN", "Element Mastery: Ice": "FRT", "Element Mastery: Light": "FCS", "Element Mastery: Lightning": "ATN", "Element Mastery: Water": "FCS", "Gathering: Forestry": "TGH", "Gathering: Harvest": "AGI", "Gathering: Herbology": "RES", "Gathering: Hunting": "REF", "Gathering: Mining": "TGH", "Gathering: Skinning": "REF", "Interaction: Deception": "APL", "Interaction: Intent": "WIS", "Interaction: Intimidation": "COM", "Interaction: Leadership": "COM", "Interaction: Persuasion": "APL", "Interaction: Seduction": "APL", "Item Use: Appraisal": "WIS", "Item Use: Construction": "STR", "Item Use: First Aid": "FRT", "Item Use: Literacy": "INT", "Item Use: Ropes": "WIS", "Item Use: Tinkering": "WIS", "Item Use: Traps": "COM", "Knowledge: Arcana": "INT", "Knowledge: Culture": "INT", "Knowledge: History": "INT", "Knowledge: Nature": "INT", "Knowledge: Religion": "INT", "Magic: Buffs": "FCS", "Magic: Conditions": "ATN", "Magic: Conjuration": "FCS", "Magic: Control": "ATN", "Magic: Defensive": "RES", "Magic: Destruction": "ATN", "Magic: Divination": "ATN", "Magic: Enchantment": "FCS", "Magic: Illusions": "FCS", "Magic: Mana Channeling": "COM", "Magic: Restoration": "ATN", "Magic: Summoning": "FCS", "Magic: Transmutation": "FCS", "Magic: Utility": "ATN", "Observation: Listen": "WIS", "Observation: Search": "WIS", "Observation: Tracking": "WIS", "Psionics: Defensive": "COM", "Psionics: Offensive": "COM", "Psionics: Utility": "COM", "Stealth: Disguise": "PRE", "Stealth: Lockpicking": "PRE", "Stealth: Sleight of Hand": "PRE", "Stealth: Sneak": "PRE", "Stealth: Steal": "PRE", "Transportation: Air Vehicles": "COM", "Transportation: Land Vehicles": "AGI", "Transportation: Sea Vehicles": "FCS", "Weapon Mastery: Axes": "STR", "Weapon Mastery: Blunt": "STR", "Weapon Mastery: Bows": "DEX", "Weapon Mastery: Bullets": "DEX", "Weapon Mastery: Crossbows": "DEX", "Weapon Mastery: Fine": "DEX", "Weapon Mastery: Improvised Weapons": "WIS", "Weapon Mastery: Heavy Thrown Weapons": "STR", "Weapon Mastery: Light Thrown Weapons": "DEX", "Weapon Mastery: Longblades": "STR", "Weapon Mastery: Polearms": "STR", "Weapon Mastery: Shields": "STR", "Weapon Mastery: Shortblades": "PRE", "Weapon Mastery: Unarmed": "DEX"};
 
         const ranks = ['Untrained', 'F', 'E', 'D', 'C', 'B', 'A', '9', '8', '7', '6', '5', '4', '3', '2', '1'];
-        const item_attrs = ['main_hand', 'offhand', 'head', 'body', 'hands', 'feet', 'neck', 'left_ring', 'right_ring', 'belt'];
+        const item_attrs = ['main_hand', 'offhand', 'head', 'body', 'hands', 'feet', 'neck', 'left_ring', 'right_ring', 'belt', 'miscellaneous'];
 
         String.prototype.format = function() {
             let a = this;
@@ -2825,7 +2836,7 @@
         const skill_to_attribute_map = {"alchemy: augmentation": "INT", "alchemy: constructs": "INT", "alchemy: organics": "INT", "alchemy: transformation": "INT", "armor mastery: cloth": "RES", "armor mastery: heavy": "TGH", "armor mastery: light": "REF", "armor mastery: shields": "TGH", "artistry: acting": "APL", "artistry: dancing": "APL", "artistry: illustration": "APL", "artistry: literature": "APL", "artistry: music": "APL", "artistry: sculpture": "APL", "athletics: balance": "DEX", "athletics: climbing": "AGI", "athletics: flexibility": "DEX", "athletics: force": "STR", "athletics: movement": "AGI", "athletics: pain tolerance": "COM", "beast mastery: battle pet": "WIS", "beast mastery: riding": "AGI", "beast mastery: taming": "WIS", "combat: blocking": "TGH", "combat: dodging": "REF", "combat: grappling": "AGI", "combat: trapping": "FRT", "crafting: armorsmithing": "TGH", "crafting: artificing": "RES", "crafting: cooking": "APL", "crafting: enchanting": "RES", "crafting: fine weapons": "REF", "crafting: forgery": "PRE", "crafting: heavy weapons": "TGH", "crafting: jewelry": "FRT", "crafting: leatherworking": "REF", "crafting: poisons": "FRT", "crafting: potions": "FRT", "crafting: ranged weapons": "REF", "crafting: shortblades": "PRE", "crafting: tailoring": "RES", "element mastery: air": "AGI", "element mastery: dark": "FRT", "element mastery: earth": "RES", "element mastery: fire": "ATN", "element mastery: ice": "FRT", "element mastery: light": "FCS", "element mastery: lightning": "ATN", "element mastery: water": "FCS", "gathering: forestry": "TGH", "gathering: harvest": "AGI", "gathering: herbology": "RES", "gathering: hunting": "REF", "gathering: mining": "TGH", "gathering: skinning": "REF", "interaction: deception": "APL", "interaction: intent": "WIS", "interaction: intimidation": "COM", "interaction: leadership": "COM", "interaction: persuasion": "APL", "interaction: seduction": "APL", "item use: appraisal": "WIS", "item use: construction": "STR", "item use: first aid": "FRT", "item use: literacy": "INT", "item use: ropes": "WIS", "item use: tinkering": "WIS", "item use: traps": "COM", "knowledge: arcana": "INT", "knowledge: culture": "INT", "knowledge: history": "INT", "knowledge: nature": "INT", "knowledge: religion": "INT", "magic: buffs": "FCS", "magic: conditions": "ATN", "magic: conjuration": "FCS", "magic: control": "ATN", "magic: defensive": "RES", "magic: destruction": "ATN", "magic: divination": "ATN", "magic: enchantment": "FCS", "magic: illusions": "FCS", "magic: mana channeling": "COM", "magic: restoration": "ATN", "magic: summoning": "FCS", "magic: transmutation": "FCS", "magic: utility": "ATN", "observation: listen": "WIS", "observation: search": "WIS", "observation: tracking": "WIS", "psionics: defensive": "COM", "psionics: offensive": "COM", "psionics: utility": "COM", "stealth: disguise": "PRE", "stealth: lockpicking": "PRE", "stealth: sleight of hand": "PRE", "stealth: sneak": "PRE", "stealth: steal": "PRE", "transportation: air vehicles": "COM", "transportation: land vehicles": "AGI", "transportation: sea vehicles": "FCS", "weapon mastery: axes": "STR", "weapon mastery: blunt": "STR", "weapon mastery: bows": "DEX", "weapon mastery: bullets": "DEX", "weapon mastery: crossbows": "DEX", "weapon mastery: fine": "DEX", "weapon mastery: heavy thrown weapons": "STR", "weapon mastery: improvised weapons": "WIS", "weapon mastery: light thrown weapons": "DEX", "weapon mastery: longblades": "STR", "weapon mastery: polearms": "STR", "weapon mastery: shields": "STR", "weapon mastery: shortblades": "PRE", "weapon mastery: unarmed": "DEX"};
 
         const ranks = ['Untrained', 'F', 'E', 'D', 'C', 'B', 'A', '9', '8', '7', '6', '5', '4', '3', '2', '1'];
-        const item_attrs = ['main_hand', 'offhand', 'head', 'body', 'hands', 'feet', 'neck', 'left_ring', 'right_ring', 'belt'];
+        const item_attrs = ['main_hand', 'offhand', 'head', 'body', 'hands', 'feet', 'neck', 'left_ring', 'right_ring', 'belt', 'miscellaneous'];
         const damage_multiplier_types = ['all', 'all_magic', 'physical', 'psychic', 'healing', 'fire', 'water', 'earth', 'air', 'ice', 'lightning', 'light', 'dark'];
         const stat_keywords = [
             // Core stats
