@@ -263,6 +263,14 @@
                     </ul>
                 </li>
 
+                <li>Split buff effectiveness - <span class="monospace">split buff effectiveness: &lt;json dictionary&gt;</span>
+                    <ul>
+                        <li>"json dictionary" is something like this: &#123;"Faust": -20, "default": 20&#125;</li>
+                        <li>If an item gives buff effectiveness when targeting a specific character, add that character's first name to the json dictionary. If the target is you, use your character's first name.</li>
+                        <li>Buff effectiveness given when targeting any non-specific character falls under the "default" category, if provided.</li>
+                    </ul>
+                </li>
+
                 <li>Combo chance - <span class="monospace">combo chance: &lt;bonus&gt;</span>
                     <ul>
                         <li>"bonus" must be an integer</li>

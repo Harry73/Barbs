@@ -151,7 +151,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-
     // ################################################################################################################
     // Character lookup
 
@@ -951,7 +950,7 @@ var Barbs = Barbs || (function () {
             }
 
             // Increase crit chance, crit damage mod, concentration bonus, and initiative bonus by effectiveness
-            if (Stat.CRITICAL_HIT_CHANCE.name in roll.stats) {
+            if (Stat.CRITICAL_HIT_CHANCE.name in fake_roll.stats) {
                 roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE,
                                     effectiveness * fake_roll.stats[Stat.CRITICAL_HIT_CHANCE.name]);
             }
@@ -1061,6 +1060,14 @@ var Barbs = Barbs || (function () {
         if ('tags' in ability) {
             if (ability.tags.includes('buff')) {
                 effectiveness = roll.buff_effectiveness;
+
+                const target_short_name = target_character.name.toLowerCase().split(' ')[0];
+                if (target_short_name in roll.split_buff_effectiveness) {
+                    effectiveness += roll.split_buff_effectiveness[target_short_name] / 100;
+                } else if ('default' in roll.split_buff_effectiveness) {
+                    effectiveness += roll.split_buff_effectiveness['default'] / 100;
+                }
+
             } else if (ability.tags.includes('enchant')) {
                 effectiveness = roll.enchant_effectiveness;
             }
@@ -1135,7 +1142,12 @@ var Barbs = Barbs || (function () {
         let callback_options = [];
         for (let i = 0; i < persistent_effects.length; i++) {
             if (persistent_effects[i].target === character.name) {
-                effects = effects + '<li>%s</li>'.format(persistent_effects[i].name);
+                if (persistent_effects[i].effectiveness === 1) {
+                    effects = effects + '<li>%s</li>'.format(persistent_effects[i].name);
+                } else {
+                    effects = effects + '<li>%s (%sx)</li>'.format(persistent_effects[i].name,
+                                                                   persistent_effects[i].effectiveness);
+                }
                 callback_options.push(persistent_effects[i].name);
             }
         }

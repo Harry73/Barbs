@@ -8610,6 +8610,7 @@ var BarbsComponents = BarbsComponents || (function () {
             this.concentration_bonus = 0;
             this.buff_effectiveness = 1;
             this.enchant_effectiveness = 1;
+            this.split_buff_effectiveness = {};
             this.combo_chance = 0;
 
             this.crit = false;
@@ -8709,6 +8710,20 @@ var BarbsComponents = BarbsComponents || (function () {
 
         add_enchant_effectiveness(bonus) {
             this.enchant_effectiveness += bonus / 100;
+        }
+
+        set_split_buff_effectiveness(dict) {
+            const keys = Object.keys(dict);
+            for (let i = 0; i < keys.length; i++) {
+                const key = keys[i].toLowerCase();
+                const value = dict[keys[i]];
+
+                if (key in this.split_buff_effectiveness) {
+                    this.split_buff_effectiveness[key] += value;
+                } else {
+                    this.split_buff_effectiveness[key] = value;
+                }
+            }
         }
 
         add_combo_chance(bonus) {
@@ -8971,6 +8986,7 @@ var BarbsComponents = BarbsComponents || (function () {
         'hat': ItemType.ARMOR,
         'headband': ItemType.ARMOR,
         'cap': ItemType.ARMOR,
+        'crest': ItemType.ARMOR,
         // Weapons
         'axe': ItemType.AXE,
         'scythe': ItemType.AXE,
@@ -9163,6 +9179,14 @@ var BarbsComponents = BarbsComponents || (function () {
             });
         }
 
+        static split_buff_effectiveness(dict) {
+            assert_not_null(dict, 'split_buff_effectiveness() dict');
+
+            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+                roll.set_split_buff_effectiveness(dict);
+            });
+        }
+
         static combo_chance(bonus) {
             assert_not_null(bonus, 'combo_chance() bonus');
 
@@ -9291,6 +9315,9 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         'enchant effectiveness': function(character, item_name, part) {
             return Item.irregular_stat_affix(item_name, part, 'enchant effectiveness', Effect.enchant_effectiveness);
+        },
+        'split buff effectiveness': function(character, item_name, part) {
+            return Item.split_buff_effectiveness_affix(item_name, part);
         },
         'combo chance': function(character, item_name, part) {
             return Item.irregular_stat_affix(item_name, part, 'combo chance', Effect.combo_chance);
@@ -9571,6 +9598,30 @@ var BarbsComponents = BarbsComponents || (function () {
             return create_effect(bonus);
         }
 
+        static split_buff_effectiveness_affix(item_name, part) {
+            assert_not_null(item_name, 'split_buff_effectiveness_affix() item_name');
+            assert_not_null(part, 'split_buff_effectiveness_affix() part');
+
+            const pieces = part.split(':');
+            if (pieces.length < 2) {
+                Item.LOGGER.error('In item "%s", in secondary stat affix "%s", expected at least one colon'.format(
+                    item_name, part));
+                return null;
+            }
+
+            let dict = pieces.slice(1).join(':');
+            try {
+                dict = JSON.parse(dict);
+            } catch (e) {
+                Item.LOGGER.error('In item "%s", in split buff effectiveness affix "%s", value %s is not json'.format(
+                    item_name, part, dict));
+                return null;
+            }
+
+            Item.LOGGER.trace('construct_item(), handled split buff effectiveness part');
+            return Effect.split_buff_effectiveness(dict);
+        }
+
         static skill_affix(item_name, part, create_effect) {
             assert_not_null(item_name, 'skill_affix() item_name');
             assert_not_null(part, 'skill_affix() part');
@@ -9805,7 +9856,6 @@ var BarbsComponents = BarbsComponents || (function () {
 
     // ################################################################################################################
     // Characters
-
 
 
     class Character {
