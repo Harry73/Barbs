@@ -3926,7 +3926,8 @@
             "Condition",
             "Taunt",
             "gain AC",
-            "gain MR"
+            "gain MR",
+            "buff"
         ],
         "api": {
             "description": "This ability requires two steps: one to do CR rolls for the Taunts, one to grant yourself the buff. For the first part, specify the number of affected targets with the \"targets\" parameter. For the second part, specify the number of Taunted enemies with the \"buff\" parameters.",
