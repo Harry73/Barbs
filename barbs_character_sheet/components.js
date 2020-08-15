@@ -174,7 +174,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     // This is how we identify what character should be used for a given caller.
-    const characters_by_owner = {
+    const CHARACTER_NAME_VARIANTS = {
         'Hoshiko Nightside': [
             'Hoshiko Nightside',
             'Hoshiko',
@@ -182,7 +182,6 @@ var BarbsComponents = BarbsComponents || (function () {
             'Luna',
             'Ian',
             'Ian P.',
-            '-LjmvO3KlA-S3iHQlRW3',
         ],
         'Ren Nightside': [
             'Ren Nightside',
@@ -191,7 +190,6 @@ var BarbsComponents = BarbsComponents || (function () {
             'Luna',
             'Ian',
             'Ian P.',
-            '-LjmvO3KlA-S3iHQlRW3',
         ],
         'Luna Nightside': [
             'Luna Nightside',
@@ -200,7 +198,6 @@ var BarbsComponents = BarbsComponents || (function () {
             'Luna',
             'Ian',
             'Ian P.',
-            '-LjmvO3KlA-S3iHQlRW3',
         ],
         'Rossa Algomar': [
             'Rossa Algomar',
@@ -209,27 +206,23 @@ var BarbsComponents = BarbsComponents || (function () {
             'Adric',
             'Ahasan R.',
             'Ahasan',
-            '-Ljmverqp4J9xjCdHGq4',
         ],
         'Kirin Inagami': [
             'Kirin Inagami',
             'Kirin',
             'Sanjay N.',
             'Sanjay',
-            '-Lk1li2MqriN_SAJ1ARF',
         ],
         'Russ': [
             'Russ',
             'Ravi B.',
             'Ravi',
-            '-Lk7Ovry6ltsLmK8qnUY',
         ],
         'Russ Finnegan': [
             'Russ Finnegan',
             'Russ',
             'Ravi B.',
             'Ravi',
-            '-Lk7Ovry6ltsLmK8qnUY',
         ],
         'Cordelia Tenebris': [
             'Cordelia Tenebris',
@@ -10075,7 +10068,7 @@ var BarbsComponents = BarbsComponents || (function () {
         assert, assert_not_null, assert_type, assert_starts_with, assert_numeric,
         parse_int, trim_percent, trim_all, remove_empty,
         LOG,
-        characters_by_owner,
+        CHARACTER_NAME_VARIANTS,
         Stat, HiddenStat, Skill, conditions, classes,
         Damage, get_damage_from_type,
         RollType, RollTime, Roll,

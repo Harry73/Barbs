@@ -186,20 +186,20 @@
                 <div class="sheet-col-1-2">
                     <h4 class="sheet-center">General</h4>
                     <div class="sheet-row sheet-padb sheet-center">
-                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Initiative" value="!barbs initiative">Initiative</button>
-                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_List_Effects" value="!barbs list_effects">List Effects</button>
+                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Initiative" value="!barbs initiative $@{character_name}$">Initiative</button>
+                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_List_Effects" value="!barbs list_effects $@{character_name}$">List Effects</button>
                         <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Death_Save" value="&{template:5eDefault}  {{title=Death Save}} {{subheader=@{character_name}}} {{rollname=Death save}} {{roll=[[1d100]]}}">Death Save</button>
                     </div>
 
                     <div class="sheet-row sheet-padb sheet-center">
-                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Take_Damage" value="!barbs dmg ?{Physical|0} ?{Psychic|0} ?{Fire|0} ?{Water|0} ?{Earth|0} ?{Air|0} ?{Ice|0} ?{Lightning|0} ?{Light|0} ?{Dark|0}">Take Damage</button>
-                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Condition_Resist" value="!barbs cr ?{Condition|General|Bleeding|Blinded|Burned|Charmed|Confused|Crippled|Cursed|Decreased Stats|Fear|Frozen|Helpless|Immobilized|Knocked Down (Prone)|Knocked Up (Airborne)|Paralyzed|Petrified|Poisoned|Silenced|Sleeping|Slowed|Stunned|Taunted|Weakened}">Condition Resist</button>
-                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Concentration" value="!barbs concentration">Concentration</button>
+                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Take_Damage" value="!barbs dmg $@{character_name}$ ?{Physical|0} ?{Psychic|0} ?{Fire|0} ?{Water|0} ?{Earth|0} ?{Air|0} ?{Ice|0} ?{Lightning|0} ?{Light|0} ?{Dark|0}">Take Damage</button>
+                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Condition_Resist" value="!barbs cr $@{character_name}$ ?{Condition|General|Bleeding|Blinded|Burned|Charmed|Confused|Crippled|Cursed|Decreased Stats|Fear|Frozen|Helpless|Immobilized|Knocked Down (Prone)|Knocked Up (Airborne)|Paralyzed|Petrified|Poisoned|Silenced|Sleeping|Slowed|Stunned|Taunted|Weakened}">Condition Resist</button>
+                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Concentration" value="!barbs concentration $@{character_name}$">Concentration</button>
                     </div>
 
                     <div class="sheet-row sheet-padb sheet-center">
-                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Short_Rest" value="!barbs rest short">Short Rest</button>
-                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Long_Rest" value="!barbs rest long">Long Rest</button>
+                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Short_Rest" value="!barbs rest $@{character_name}$ short">Short Rest</button>
+                        <button type="roll" class="sheet-col-7-24 sheet-center sheet-initiative sheet-large-button" name="roll_Long_Rest" value="!barbs rest $@{character_name}$ long">Long Rest</button>
                     </div>
 
                     <h4 class="sheet-center">Level and Combat Experience</h4>
@@ -532,7 +532,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_health" value="!barbs stat Health"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_health" value="!barbs stat $@{character_name}$ Health"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -546,7 +546,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_stamina" value="!barbs stat Stamina"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_stamina" value="!barbs stat $@{character_name}$ Stamina"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -560,7 +560,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_mana" value="!barbs stat Mana"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_mana" value="!barbs stat $@{character_name}$ Mana"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -574,7 +574,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_health_regeneration" value="!barbs stat Health_Regeneration"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_health_regeneration" value="!barbs stat $@{character_name}$ Health_Regeneration"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -588,7 +588,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_stamina_regeneration" value="!barbs stat Stamina_Regeneration"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_stamina_regeneration" value="!barbs stat $@{character_name}$ Stamina_Regeneration"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -602,7 +602,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_mana_regeneration" value="!barbs stat Mana_Regeneration"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_mana_regeneration" value="!barbs stat $@{character_name}$ Mana_Regeneration"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -616,7 +616,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_movement_speed" value="!barbs stat Movement_Speed"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_movement_speed" value="!barbs stat $@{character_name}$ Movement_Speed"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -630,7 +630,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_ac" value="!barbs dmg ?{Physical|0} ?{Psychic|0} ?{Fire|0} ?{Water|0} ?{Earth|0} ?{Air|0} ?{Ice|0} ?{Lightning|0} ?{Light|0} ?{Dark|0}"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_ac" value="!barbs dmg $@{character_name}$ ?{Physical|0} ?{Psychic|0} ?{Fire|0} ?{Water|0} ?{Earth|0} ?{Air|0} ?{Ice|0} ?{Lightning|0} ?{Light|0} ?{Dark|0}"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -644,7 +644,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_evasion" value="!barbs stat Evasion"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_evasion" value="!barbs stat $@{character_name}$ Evasion"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -658,7 +658,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_magic_resist" value="!barbs dmg ?{Physical|0} ?{Psychic|0} ?{Fire|0} ?{Water|0} ?{Earth|0} ?{Air|0} ?{Ice|0} ?{Lightning|0} ?{Light|0} ?{Dark|0}"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_magic_resist" value="!barbs dmg $@{character_name}$ ?{Physical|0} ?{Psychic|0} ?{Fire|0} ?{Water|0} ?{Earth|0} ?{Air|0} ?{Ice|0} ?{Lightning|0} ?{Light|0} ?{Dark|0}"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -682,7 +682,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_condition_resist" value="!barbs cr ?{Condition|General|Bleeding|Blinded|Burned|Charmed|Confused|Crippled|Cursed|Decreased Stats|Fear|Frozen|Helpless|Immobilized|Knocked Down (Prone)|Knocked Up (Airborne)|Paralyzed|Petrified|Poisoned|Silenced|Sleeping|Slowed|Stunned|Taunted|Weakened}"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_condition_resist" value="!barbs cr $@{character_name}$ ?{Condition|General|Bleeding|Blinded|Burned|Charmed|Confused|Crippled|Cursed|Decreased Stats|Fear|Frozen|Helpless|Immobilized|Knocked Down (Prone)|Knocked Up (Airborne)|Paralyzed|Petrified|Poisoned|Silenced|Sleeping|Slowed|Stunned|Taunted|Weakened}"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -696,7 +696,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_melee_damage" value="!barbs stat Melee_Damage"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_melee_damage" value="!barbs stat $@{character_name}$ Melee_Damage"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -710,7 +710,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_ranged_fine_damage" value="!barbs stat Ranged_Fine_Damage"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_ranged_fine_damage" value="!barbs stat $@{character_name}$ Ranged_Fine_Damage"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -724,7 +724,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_magic_damage" value="!barbs stat Magic_Damage"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_magic_damage" value="!barbs stat $@{character_name}$ Magic_Damage"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -738,7 +738,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_critical_hit_chance" value="!barbs stat Critical_Hit_Chance"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_critical_hit_chance" value="!barbs stat $@{character_name}$ Critical_Hit_Chance"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -752,7 +752,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_commands" value="!barbs stat Commands"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_commands" value="!barbs stat $@{character_name}$ Commands"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -766,7 +766,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_languages" value="!barbs stat Languages"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_languages" value="!barbs stat $@{character_name}$ Languages"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -780,7 +780,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_item_efficiency" value="!barbs stat Item_Efficiency"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_item_efficiency" value="!barbs stat $@{character_name}$ Item_Efficiency"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -794,7 +794,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_buff_limit" value="!barbs stat Buff_Limit"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_buff_limit" value="!barbs stat $@{character_name}$ Buff_Limit"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -808,7 +808,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_concentration_limit" value="!barbs stat Concentration_Limit"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_concentration_limit" value="!barbs stat $@{character_name}$ Concentration_Limit"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -835,7 +835,7 @@
                         </div>
                         <div class="sheet-col-1-24">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_Initiative" value="!barbs initiative"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_Initiative" value="!barbs initiative $@{character_name}$"></button>
                         </div>
                         <div class="sheet-col-1-8">&nbsp;</div>
                     </div>
@@ -849,7 +849,7 @@
                         </div>
                         <div class="sheet-col-1-24">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_Concentration" value="!barbs concentration"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_Concentration" value="!barbs concentration $@{character_name}$"></button>
                         </div>
                         <div class="sheet-col-1-8">&nbsp;</div>
                     </div>
@@ -1252,7 +1252,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_bleeding_cr" value="!barbs cr Bleeding"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_bleeding_cr" value="!barbs cr $@{character_name}$ Bleeding"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1266,7 +1266,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_blinded_cr" value="!barbs cr Blinded"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_blinded_cr" value="!barbs cr $@{character_name}$ Blinded"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1280,7 +1280,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_burned_cr" value="!barbs cr Burned"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_burned_cr" value="!barbs cr $@{character_name}$ Burned"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1294,7 +1294,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_charmed_cr" value="!barbs cr Charmed"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_charmed_cr" value="!barbs cr $@{character_name}$ Charmed"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1308,7 +1308,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_confused_cr" value="!barbs cr Confused"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_confused_cr" value="!barbs cr $@{character_name}$ Confused"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1322,7 +1322,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_crippled_cr" value="!barbs cr Crippled"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_crippled_cr" value="!barbs cr $@{character_name}$ Crippled"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1336,7 +1336,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_cursed_cr" value="!barbs cr Cursed"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_cursed_cr" value="!barbs cr $@{character_name}$ Cursed"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1350,7 +1350,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_decreased_stats_cr" value="!barbs cr Decreased Stats"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_decreased_stats_cr" value="!barbs cr $@{character_name}$ Decreased Stats"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1364,7 +1364,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_fear_cr" value="!barbs cr Fear"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_fear_cr" value="!barbs cr $@{character_name}$ Fear"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1378,7 +1378,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_frozen_cr" value="!barbs cr Frozen"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_frozen_cr" value="!barbs cr $@{character_name}$ Frozen"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1392,7 +1392,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_helpless_cr" value="!barbs cr Helpless"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_helpless_cr" value="!barbs cr $@{character_name}$ Helpless"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1406,7 +1406,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_immobilized_cr" value="!barbs cr Immobilized"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_immobilized_cr" value="!barbs cr $@{character_name}$ Immobilized"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1430,7 +1430,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_knocked_down_prone_cr" value="!barbs cr Knocked Down (Prone)"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_knocked_down_prone_cr" value="!barbs cr $@{character_name}$ Knocked Down (Prone)"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1444,7 +1444,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_knocked_up_airborne_cr" value="!barbs cr Knocked Up (Airborne)"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_knocked_up_airborne_cr" value="!barbs cr $@{character_name}$ Knocked Up (Airborne)"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1458,7 +1458,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_paralyzed_cr" value="!barbs cr Paralyzed"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_paralyzed_cr" value="!barbs cr $@{character_name}$ Paralyzed"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1472,7 +1472,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_petrified_cr" value="!barbs cr Petrified"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_petrified_cr" value="!barbs cr $@{character_name}$ Petrified"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1486,7 +1486,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_poisoned_cr" value="!barbs cr Poisoned"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_poisoned_cr" value="!barbs cr $@{character_name}$ Poisoned"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1500,7 +1500,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_silenced_cr" value="!barbs cr Silenced"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_silenced_cr" value="!barbs cr $@{character_name}$ Silenced"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1514,7 +1514,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_sleeping_cr" value="!barbs cr Sleeping"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_sleeping_cr" value="!barbs cr $@{character_name}$ Sleeping"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1528,7 +1528,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_slowed_cr" value="!barbs cr Slowed"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_slowed_cr" value="!barbs cr $@{character_name}$ Slowed"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1542,7 +1542,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_stunned_cr" value="!barbs cr Stunned"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_stunned_cr" value="!barbs cr $@{character_name}$ Stunned"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1556,7 +1556,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_taunted_cr" value="!barbs cr Taunted"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_taunted_cr" value="!barbs cr $@{character_name}$ Taunted"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1570,7 +1570,7 @@
                         </div>
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
                         <div class="sheet-col-1-12">
-                            <button class="sheet-skill-roll" type="roll" name="roll_weakened_cr" value="!barbs cr Weakened"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_weakened_cr" value="!barbs cr $@{character_name}$ Weakened"></button>
                         </div>
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
@@ -1608,7 +1608,7 @@
                             <input type="number" class="sheet-center" name="attr_skill_bonus" value="@{hidden_bonus}" disabled="disabled"/>
                         </div>
                         <div class="sheet-col-1-24">
-                            <button class="sheet-skill-roll" type="roll" name="roll_skill" value="!barbs skill @{skill_name} @{skill_points}"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_skill" value="!barbs skill $@{character_name}$ @{skill_name} @{skill_points}"></button>
                         </div>
 
                         <input type="hidden" name="attr_hidden_rank" value=""/>
@@ -1645,7 +1645,7 @@
                             <input style="font-weight: bolder;" type="number" class="sheet-center" name="attr_ability_tier" value="" min="0" max="4"/>
                         </div>
                         <div class="sheet-col-1-24">
-                            <button class="sheet-skill-roll" type="roll" name="roll_class_ability" value="!barbs ability @{class_name};@{ability_name};@{ability_options}"></button>
+                            <button class="sheet-skill-roll" type="roll" name="roll_class_ability" value="!barbs ability $@{character_name}$ @{class_name};@{ability_name};@{ability_options}"></button>
                         </div>
                     </div>
                     <div class="sheet-row sheet-skill-row">
@@ -1683,7 +1683,7 @@
                         <input type="text" name="attr_main_hand" value=""/>
                     </div>
                     <div class="sheet-col-1-24">
-                        <button class="sheet-skill-roll" type="roll" name="roll_item" value="!barbs item main_hand @{main_hand}|@{main_hand_options}"></button>
+                        <button class="sheet-skill-roll" type="roll" name="roll_item" value="!barbs item $@{character_name}$ main_hand @{main_hand}|@{main_hand_options}"></button>
                     </div>
                 </div>
 
@@ -1703,7 +1703,7 @@
                         <input type="text" name="attr_offhand" value=""/>
                     </div>
                     <div class="sheet-col-1-24">
-                        <button class="sheet-skill-roll" type="roll" name="roll_item" value="!barbs item offhand @{offhand}|@{offhand_options}"></button>
+                        <button class="sheet-skill-roll" type="roll" name="roll_item" value="!barbs item $@{character_name}$ offhand @{offhand}|@{offhand_options}"></button>
                     </div>
                 </div>
 
@@ -1808,7 +1808,7 @@
 
             <div class="sheet-row">
                 <div class="sheet-col-1-6">&nbsp;</div>
-                <button type="roll" class="sheet-col-2-3 sheet-center sheet-large-thin-button" name="roll_Check_Items" value="!barbs check_items">Check Items</button>
+                <button type="roll" class="sheet-col-2-3 sheet-center sheet-large-thin-button" name="roll_Check_Items" value="!barbs check_items $@{character_name}$">Check Items</button>
             </div>
             <br>
 

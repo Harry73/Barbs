@@ -51,16 +51,23 @@
             <a id="Foreword">
                 <h2>Foreword</h2>
             </a>
-            <p>The entirety of the Barbs API is stored <a href="https://github.com/Harry73/Barbs">externally here</a>. If you change something on the “API Scripts for Barbs” page on Roll20, you should let me know, or else I will inevitably overwrite your change.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;The entirety of the Barbs API is stored
+                <a href="https://github.com/Harry73/Barbs">externally here</a>. If you change something on the
+                “API Scripts for Barbs” page on Roll20, you should let me know, or else I will inevitably overwrite
+                your change.</p>
             <br>
-            <p>There is a ton of hard-coded information in the Barbs API. This means that every item must be manually created and added to a master list of items. Every ability must be manually implemented for the API to handle it properly. If you want to add something yourself, you may, but see the note above. If you want a particular item or ability added and don’t want to do it yourself, talk to me.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;There is a ton of hard-coded information in the Barbs API. Every ability must be
+                manually implemented for the API to handle it properly. If you want to add something yourself, you may,
+                but see the note above. If you want a particular ability added and don’t want to do it yourself,
+                talk to me.</p>
         </article>
 
         <article>
             <a id="Character Sheet">
                 <h2>Character Sheet</h2>
             </a>
-            <p>As in a standard DnD 5e campaign, there is a “Character Sheet” tab on your character’s page on Roll20.</p>
+            <p>As in a standard DnD 5e campaign, there is a “Character Sheet” tab on your character’s page
+                on Roll20.</p>
             <br>
             <a id="Characteristics Tab">
                 <h3>Characteristics Tab</h3>
@@ -68,82 +75,154 @@
             <p>This tab contains a variety of miscellaneous things.</p>
             <ul>
                 <li>The top section contains fields for the general description of your character.</li>
-                <li>On the left are your base Health, Stamina, Mana, and Speed. These are based primarily on your attribute values. Item affixes will be reflected in these stats automatically.</li>
+                <li>On the left are your base Health, Stamina, Mana, and Speed. These are based primarily on your
+                    attribute values. Item affixes will be reflected in these stats automatically.</li>
                 <li>
                     The middle right has four buttons for rolls that don't fall into any other category.
                     <ul>
-                        <li class="padt">Initiative - An initiative roll is a d100 plus Agility, plus any bonuses from items. This button performs this roll.</li>
-                        <li>List Effects - This button will print a list of current buffs and effects on your character that the API is aware of. These effects normally come from using class abilities.</li>
-                        <li>Death Save - This rolls a plain d100. When you are down, you have 100 "downed health". Each time you roll a death save, the result is subtracted from this 100 downed health. If you reach 0 downed health, you die.</li>
+                        <li class="padt">Initiative - An initiative roll is a d100 plus Agility, plus any bonuses
+                            from items. This button performs this roll.</li>
+                        <li>List Effects - This button will print a list of current buffs and effects on your character
+                            that the API is aware of. These effects normally come from using class abilities.</li>
+                        <li>Death Save - This rolls a plain d100. When you are down, you have 100 "downed health".
+                            Each time you roll a death save, the result is subtracted from this 100 downed health.
+                            If you reach 0 downed health, you die.</li>
                         <li>Take Damage - This is discussed more below.</li>
                         <li>Condition Resist - This is discussed more below.</li>
-                        <li>Concentration - A concentration check is a d100 plus any bonuses from items. This button performs this roll.</li>
-                        <li>Short Rest - Regenerate Health, Stamina, and Mana based on your regeneration stats and max health/stamina/mana. Bonuses from items are accounted for. The numbers on your token are updated automatically.</li>
-                        <li>Long Rest - Set Health, Stamina, and Mana to your max health/stamina/mana. Bonuses from items are accounted for. The numbers on your token are updated automatically.</li>
+                        <li>Concentration - A concentration check is a d100 plus any bonuses from items. This button
+                            performs this roll.</li>
+                        <li>Short Rest - Regenerate Health, Stamina, and Mana based on your regeneration stats and max
+                            health/stamina/mana. Bonuses from items are accounted for. The numbers on your token are
+                            updated automatically.</li>
+                        <li>Long Rest - Set Health, Stamina, and Mana to your max health/stamina/mana. Bonuses from
+                            items are accounted for. The numbers on your token are updated automatically.</li>
                     </ul>
                 </li>
-                <li>The bottom right shows your current level, based on points placed in attributes, skills, and class abilities. There is a place to track combat EXP, which is earned as you fight and kill monsters. Every 100 points of combat EXP grants 1 AP to be spent on attributes.</li>
+                <li>The bottom right shows your current level, based on points placed in attributes, skills, and class
+                    abilities. There is a place to track combat EXP, which is earned as you fight and kill monsters.
+                    Every 100 points of combat EXP grants 1 AP to be spent on attributes.</li>
             </ul>
             <br>
             <a id="Take Damage">
                 <h4>Take Damage</h4>
             </a>
-            <p>When your character is taking damage, this damage is normally reduced by your AC and Magic Resistance (MR). Both of these can be boosted by items and buffs, and can be reduced the the incoming attack's AC penetration (AC pen) and magic penetration (MR pen). The Take Damage button helps simplify the calculations necessary by applying your AC and MR, reduced by AC and MR pen, to an incoming damage amount.</p>
-            <p>When you use this button, you will be asked how much damage of each type you are taking - physical, psychic, and pe-element. Specify how much damage of each type you are taking, or 0 if none. The amount of damage you specify can be an equation, e.g. "10+20+30". If the attack has AC pen, add a bar | to the physical damage you take, followed by the AC pen. For example, specifying "50|20" for physical damage indicates that you are taking 50 physical damage and the attack has 20 AC pen. Use the same pattern for MR pen for each elemental type. For example, "60|30" ice damage indicates that you are taking 60 damage and the attack has 30% ice magic pen. The API will calculate your AC and MRs, reduce them by the AC and MR pen, and apply the end result to the given damage values. The amount of damage of each type is displayed, along with the total damage you take from the attack.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;When your character is taking damage, this damage is normally reduced by your
+                AC and Magic Resistance (MR). Both of these can be boosted by items and buffs, and can be reduced the
+                incoming attack's AC penetration (AC pen) and magic penetration (MR pen). The Take Damage button helps
+                simplify the calculations necessary by applying your AC and MR, reduced by AC and MR pen, to an incoming
+                damage amount.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;When you use this button, you will be asked how much damage of each type you are
+                taking - physical, psychic, and pe-element. Specify how much damage of each type you are taking, or 0
+                if none. The amount of damage you specify can be an equation, e.g. "10+20+30". If the attack has AC pen,
+                add a bar | to the physical damage you take, followed by the AC pen. For example, specifying "50|20"
+                for physical damage indicates that you are taking 50 physical damage and the attack has 20 AC pen.
+                Use the same pattern for MR pen for each elemental type. For example, "60|30" ice damage indicates
+                that you are taking 60 damage and the attack has 30% ice magic pen. The API will calculate your AC
+                and MRs, reduce them by the AC and MR pen, and apply the end result to the given damage values. The
+                amount of damage of each type is displayed, along with the total damage you take from the attack.</p>
             <br>
             <a id="Condition Resist">
                 <h4>Condition Resist</h4>
             </a>
-            <p>When an attack inflicts a condition on your character, you have a chance to resist the condition and avoid its effects. This is done with a Condition Resist (CR) check. Items and buffs may increase your CR against specific types of conditions. The Condition Resist button helps simplify this. When used, you will be asked what condition you are attempting to resist. Select one, or pick "General" if your check is not for any particular condition. The API will calculate your resistance against the given condition, accounting for items and ongoing buffs. The API will do a d100 with a threshold (d100cs>threshold), where the threshold is based on your resistance to the condition. If your d100 roll is greater than or equal to the threshold, you succeed, and the roll will be outlined in green. Otherwise, you fail and are inflicted with the condition.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;When an attack inflicts a condition on your character, you have a chance to
+                resist the condition and avoid its effects. This is done with a Condition Resist (CR) check. Items and
+                buffs may increase your CR against specific types of conditions. The Condition Resist button helps
+                simplify this. When used, you will be asked what condition you are attempting to resist. Select one,
+                or pick "General" if your check is not for any particular condition. The API will calculate your
+                resistance against the given condition, accounting for items and ongoing buffs. The API will do a
+                d100 with a threshold (d100cs>threshold), where the threshold is based on your resistance to the
+                condition. If your d100 roll is greater than or equal to the threshold, you succeed, and the roll will
+                be outlined in green. Otherwise, you fail and are inflicted with the condition.</p>
             <br>
             <a id="Attributes Tab">
                 <h3>Attributes Tab</h3>
             </a>
-            <p>Barbs has 20 basic attributes, which provide the basis for statistics, skills, and abilities. Each of the 20 attributes is listed on this tab. Each attribute can range from -10 to +20. Each of these attributes can be rolled by clicking the dice button next to the attribute. This rolls a d100 plus the attribute's value.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Barbs has 20 basic attributes, which provide the basis for statistics, skills,
+                and abilities. Each of the 20 attributes is listed on this tab. Each attribute can range from
+                -10 to +20. Each of these attributes can be rolled by clicking the dice button next to the attribute.
+                This rolls a d100 plus the attribute's value.</p>
             <br>
             <a id="Stats Tab">
                 <h3>Stats Tab</h3>
             </a>
-            <p>The "Stats" page shows your stats based on your Attribute values. These are updated automatically as your Attributes update. Item affixes will be included in these stats automatically. Each of these stats can be rolled by clicking the dice button next to the stat. Rolling a stat will also account for equipped items and class abilities. Rolling a stat like Health or Buff Limit will print your boosted value for this stat. Rolling a stat like Critical Hit Chance will perform a d100; a value greater than or equal to <span class="monospace">100 - Critical Hit Chance + 1</span> would be a critical hit. Rolling a regeneration stat will show how much Health/Stamina/Mana you regenerate on a short rest.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;The "Stats" page shows your stats based on your Attribute values. These are
+                updated automatically as your Attributes update. Item affixes will be included in these stats
+                automatically. Each of these stats can be rolled by clicking the dice button next to the stat. Rolling
+                a stat will also account for equipped items and class abilities. Rolling a stat like Health or Buff
+                Limit will print your boosted value for this stat. Rolling a stat like Critical Hit Chance will perform
+                a d100; a value greater than or equal to <span class="monospace">100 - Critical Hit Chance + 1</span>
+                would be a critical hit. Rolling a regeneration stat will show how much Health/Stamina/Mana you
+                regenerate on a short rest.</p>
             <br>
             <p>Notable stats:</p>
             <ul>
-                <li>AC - Rolling the AC stat has the same effect as the <a href="#Take Damage">"Take Damage"</a> button on the Characteristics Tab.</li>
-                <li>Magic Resist - Rolling the Magic Resist stat has the same effect as the <a href="#Take Damage">"Take Damage"</a> button on the Characteristics Tab. The value shown on your character sheet is your general MR.</li>
-                <li>Condition Resist - Rolling the Condition Resist stat has the same effect as the <a href="#Condition Resist">Condition Resist</a> button on the Characteristics Tab. The value shown on your character sheet is your general CR.</li>
-                <li>Critical Hit Chance - Crit chance is normally rolled and displayed with attacks that can crit. If you do need to roll Critical Hit Chance separately for some reason, though, you can use this button. The value shown with this stat incorporates crit chance from all items, regardless of what types of rolls the crit chance applies to. When you roll crit chance, the API will check roll types and apply crit chance properly.</li>
+                <li>AC - Rolling the AC stat has the same effect as the <a href="#Take Damage">"Take Damage"</a>
+                    button on the Characteristics Tab.</li>
+                <li>Magic Resist - Rolling the Magic Resist stat has the same effect as the
+                    <a href="#Take Damage">"Take Damage"</a> button on the Characteristics Tab. The value shown on your
+                    character sheet is your general MR.</li>
+                <li>Condition Resist - Rolling the Condition Resist stat has the same effect as the
+                    <a href="#Condition Resist">Condition Resist</a> button on the Characteristics Tab. The value shown
+                    on your character sheet is your general CR.</li>
+                <li>Critical Hit Chance - Crit chance is normally rolled and displayed with attacks that can crit.
+                    If you do need to roll Critical Hit Chance separately for some reason, though, you can use this
+                    button. The value shown with this stat incorporates crit chance from all items, regardless of what
+                    types of rolls the crit chance applies to. When you roll crit chance, the API will check roll types
+                    and apply crit chance properly.</li>
             </ul>
             <br>
             <a id="Skills Tab">
                 <h3>Skills Tab</h3>
             </a>
-            <p>This tab lets you create a list of Skills your character has. To add a new skill, use the "+Add" button in the bottom left. To remove or re-order skills, use the "Modify" button in the bottom right. To add a skill, fill out two things: the skill name and the number of AP you have put into the skill. The skill name must match the name in the rulebook exactly. The "Rank" and "Base Bonus" fields will update automatically as the "Points" field is updated. If they do not update, you likely have the skill name wrong.</p>
-            <p>If you have items or buffs that modify a skill, they will <b>not</b> be reflected in the "Base Bonus" field. When you roll the skill, however, by clicking the dice button next to the skill, bonuses from items and buffs will be included.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;This tab lets you create a list of Skills your character has. To add a new
+                skill, use the "+Add" button in the bottom left. To remove or re-order skills, use the "Modify"
+                button in the bottom right. To add a skill, fill out two things: the skill name and the number of
+                AP you have put into the skill. The skill name must match the name in the rulebook exactly. The
+                "Rank" and "Base Bonus" fields will update automatically as the "Points" field is updated. If they do
+                not update, you likely have the skill name wrong.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;If you have items or buffs that modify a skill, they will <b>not</b> be
+                reflected in the "Base Bonus" field. When you roll the skill, however, by clicking the dice button
+                next to the skill, bonuses from items and buffs will be included.</p>
             <br>
             <a id="Class Abilities Tab">
                 <h3>Class Abilities Tab</h3>
             </a>
-            <p>This tab lets you create a list Class Abilities your character has. To add a new ability, use the "+Add" button in the bottom left. To remove or re-order abilities, use the "Modify" button int he bottom right. To add an ability, fill out three things: the class the ability is from, the ability name, and the tier of the ability (1-4). The class and ability name must match the rulebook exactly. Each ability has a "parameters" text box below. This box's usage is discussed in the <a href="#Parameters">Parameters Section</a>.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;This tab lets you create a list Class Abilities your character has. To add a new
+                ability, use the "+Add" button in the bottom left. To remove or re-order abilities, use the "Modify"
+                button in the bottom right. To add an ability, fill out three things: the class the ability is from,
+                the ability name, and the tier of the ability (1-4). The class and ability name must match the rulebook
+                exactly. Each ability has a "parameters" text box below. This box's usage is discussed in the
+                <a href="#Parameters">Parameters Section</a>.</p>
             <br>
             <a id="Equipment Tab">
                 <h3>Equipment Tab</h3>
             </a>
-            <p>A character has 10 equipment slots. The text boxes on this tab are meant to hold the names of the items you have equipped in each slot.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;A character has 10 equipment slots. The text boxes on this tab are meant to hold
+                the names of the items you have equipped in each slot, along with the affixes on each item. See the
+                <a href="#Defining an Item">Defining an Item</a> section for more information on entering an item.</p>
             <br>
             <a id="Inventory Tab">
                 <h3>Inventory Tab</h3>
             </a>
-            <p>The inventory tab on Barbs character sheets is nearly a direct rip from the D&D 5E character sheet. This tab has no bearing on the API. Use it as you see fit.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;The inventory tab on Barbs character sheets is nearly a direct rip from the
+                D&D 5E character sheet. This tab has no bearing on the API. Use it as you see fit.</p>
             <br>
             <a id="Filling out your character sheet">
                 <h3>Filling out your character sheet</h3>
             </a>
-            <p>You should fill out the following:</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;You should fill out the following:</p>
             <ul>
-                <li class="spaced"><b>Attributes</b> – These are 1-1 with column D on your Google Sheets character sheet.</li>
-                <li class="spaced"><b>Skills</b> – Specify the proper name of each skill and the number of AP you have put into each ability. The sheet will update the rank and bonus for each skill when you add points. If it does not update, you likely have the skill name wrong.</li>
-                <li class="spaced"><b>Class Abilities</b> – The class name and ability name are required for each ability. Additionally include the tier level (0-4) if you want your level on the Characteristics page to be accurate. The parameter lines can be left blank for now. They are discussed in the <a href="#Parameters">Parameters section</a>.</li>
-                <li class="spaced"><b>Equipment</b> – See the section on <a href="#Items">items</a> for how to define items.</li>
+                <li class="spaced"><b>Attributes</b> – These are 1-1 with column D on your Google Sheets character
+                    sheet.</li>
+                <li class="spaced"><b>Skills</b> – Specify the proper name of each skill and the number of AP you have
+                    put into each ability. The sheet will update the rank and bonus for each skill when you add points.
+                    If it does not update, you likely have the skill name wrong.</li>
+                <li class="spaced"><b>Class Abilities</b> – The class name and ability name are required for each
+                    ability. Additionally include the tier level (0-4) if you want your level on the Characteristics
+                    page to be accurate. The parameter lines can be left blank for now. They are discussed in the
+                    <a href="#Parameters">Parameters section</a>.</li>
+                <li class="spaced"><b>Equipment</b> – See the section on <a href="#Items">items</a> for how to define
+                    items.</li>
             </ul>
         </article>
 
@@ -154,12 +233,23 @@
             <a id="Identification">
                 <h3>Identification</h3>
             </a>
-            <p>The API identifies you by who you are speaking as in Roll20 chat. If you need to specify a character for an ability, you can use their first name or their full name. A complete list of how each character can be identified <a href="https://github.com/Harry73/Barbs/blob/bb0154e3cf720caacae990334ece9a5192d5410a/barbs_character_sheet/components.js#L159">can be found here</a>.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;API requests include the character name, which the API uses to identify who sent
+                a request. If the character name is not present, the API falls back to who you are speaking as in
+                Roll20 chat as a means of identification.</p>
+            <p>If you need to specify a character for an ability, you can use their first name or their full name.
+                A complete list of how each character can be identified
+                <a href="https://github.com/Harry73/Barbs/blob/bb0154e3cf720caacae990334ece9a5192d5410a/barbs_character_sheet/components.js#L159">can be found here</a>.</p>
             <br>
             <a id="Parameters">
                 <h3>Ability/Item Parameters</h3>
             </a>
-            <p>Many abilities require "parameters", extra information that you must specify for the ability to work correctly. Parameters for an ability are specified in the line below the ability on your character sheet. Multiple parameters for one ability can be specified, and are separated by <b>semicolons</b>. Parameters usually take the form "keyword: value(s)". The colon is optional. The parameters that each class ability may require are listed in the <a href="#Class Abilities">Class Abilities section</a>. An example set of parameters for an ability may look like this:</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Many abilities require "parameters", extra information that you must specify for
+                the ability to work correctly. Parameters for an ability are specified in the line below the ability on
+                your character sheet. Multiple parameters for one ability can be specified, and are separated by
+                <b>semicolons</b>. Parameters usually take the form "keyword: value(s)". The colon is optional. The
+                parameters that each class ability may require are listed in the
+                <a href="#Class Abilities">Class Abilities section</a>. An example set of parameters for an ability may
+                look like this:</p>
             <ul>
                 <li><span class="monospace">distance 100; spotting 8</span></li>
             </ul>
@@ -167,23 +257,44 @@
             <a id="Persistent Effects">
                 <h3>Buffs and Persistent Effects</h3>
             </a>
-            <p>Buffs or persistent effects from abilities, like a damage-multiplying buff that lasts 1 minute, will be included in rolls automatically. The effect will be removed automatically when the turn order progresses through the required number of rounds. Effects like empowers, which only apply to the "next attack," will be removed after they are applied to an attack once.</p>
-            <p>You can see a list of effects currently on your character using the "List Effects" button on the Characteristics tab of your character sheet. The API will print effects currently on your character, along with a button to let you select one to remove. If you need to remove an effect, use this button and select the effect you want to remove. The API will send a message if the effect was successfully removed.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Buffs or persistent effects from abilities, like a damage-multiplying buff that
+                lasts 1 minute, will be included in rolls automatically. The effect will be removed automatically when
+                the turn order progresses through the required number of rounds. Effects like empowers, which only
+                apply to the "next attack," will be removed after they are applied to an attack once.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;You can see a list of effects currently on your character using the
+                "List Effects" button on the Characteristics tab of your character sheet. The API will print effects
+                currently on your character, along with a button to let you select one to remove. If you need to remove
+                an effect, use this button and select the effect you want to remove. The API will send a message if the
+                effect was successfully removed.</p>
             <a id="Crit Rolls">
                 <h3>Crit Rolls</h3>
             </a>
-            <p>Crit rolls appear a little oddly. A negative crit roll is failure. Zero and above is a success. If a crit roll is a success, the entire crit roll section in chat will be outlined in green. If you hover over the crit roll, the calculation is "what you rolled" minus "the threshold you needed to meet for this to be a crit". The crit threshold is adjusted based on your attributes, items, and abilities’ effects. If you crit, your crit damage modifier is factored into the roll's damage automatically.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Crit rolls appear a little oddly. A negative crit roll is failure. Zero and
+                above is a success. If a crit roll is a success, the entire crit roll section in chat will be outlined
+                in green. If you hover over the crit roll, the calculation is "what you rolled" minus "the threshold
+                you needed to meet for this to be a crit". The crit threshold is adjusted based on your attributes,
+                items, and abilities’ effects. If you crit, your crit damage modifier is factored into the roll's
+                damage automatically.</p>
             <br>
             <a id="Effectiveness">
                 <h3>Effectiveness</h3>
             </a>
-            <p>Barbs has concepts called "buff effectiveness" and "enchant effectiveness". These improve the strength of a buff or enchantment. For example, if you have 50% buff efficiency, a buff that normally grants 60% increased damage should instead grant 90% increased damage.</p>
-            <p><b>You do not need to specify buff and enchant effectiveness manually</b>. If your items give you effectiveness, it will be calculated and applied automatically when you cast buffing or enchanting abilities. If, however, you need to specify additional buff or enchant effectiveness for some reason, you can add a parameter to do so. For either buff or enchant effectiveness, specify the "effectiveness" parameter, followed by your buff or enchant effectiveness as a percentage.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Barbs has concepts called "buff effectiveness" and "enchant effectiveness".
+                These improve the strength of a buff or enchantment. For example, if you have 50% buff efficiency, a
+                buff that normally grants 60% increased damage should instead grant 90% increased damage.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;<b>You do not need to specify buff and enchant effectiveness manually</b>.
+                If your items give you effectiveness, it will be calculated and applied automatically when you cast
+                buffing or enchanting abilities. If, however, you need to specify additional buff or enchant
+                effectiveness for some reason, you can add a parameter to do so. For either buff or enchant
+                effectiveness, specify the "effectiveness" parameter, followed by your buff or enchant effectiveness
+                as a percentage.</p>
             <ul>
-                <li><span class="monospace">effectiveness 50%</span> - Indicates that the buffing/enchanting ability should be cast with 50% <b>increased</b> buff/enchant effectiveness.</li>
-                <li><span class="monospace">effectiveness -25%</span> - Indicates that the buffing/enchanting ability should be cast with 25% <b>decreased</b> buff/enchant effectiveness.</li>
+                <li><span class="monospace">effectiveness 50%</span> - Indicates that the buffing/enchanting ability
+                    should be cast with 50% <b>increased</b> buff/enchant effectiveness.</li>
+                <li><span class="monospace">effectiveness -25%</span> - Indicates that the buffing/enchanting ability
+                    should be cast with 25% <b>decreased</b> buff/enchant effectiveness.</li>
             </ul>
-            <p>A more effective buff or enchant has the following properties:</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;A more effective buff or enchant has the following properties:</p>
             <ul>
                 <li>Damage granted by the buff will have increased damage dice.</li>
                 <li>Multipliers granted by the buff will be increased.</li>
@@ -201,27 +312,45 @@
             </a>
 
             <a id="What Items Apply When"><h3>What Items Apply When</h3></a>
-            <p>Regardless of the type of attack you are doing, your head, body, hands, feet, rings, and belt will all be applied. When the main hand and offhand weapons are applied varies.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Regardless of the type of attack you are doing, your head, body, hands, feet,
+                rings, and belt will all be applied. When the main hand and offhand weapons are applied varies.</p>
             <ul>
-                <li>If you are doing an auto-attack with your main hand weapon, only your main hand weapon's affixes will be included in the attack. Your offhand weapon will not be included.</li>
-                <li>If you are doing an auto-attack with your offhand weapon, only your offhand weapon's affixes will be included in the attack. Your main hand weapon will not be included.</li>
-                <li>If you are using a physical class ability, only your main hand weapon will be applied to the attack by default. If you want to instead perform the attack with your offhand weapon, add the "offhand" parameter to the ability, and only your offhand weapon will be applied. If the ability is explicitly a dual-wielding ability, add the "dual_wield" parameter to the ability, and both weapons will be applied.</li>
-                <li>If you are using a magic, psychic, or healing class ability, both main hand and offhand weapons will be applied.</li>
+                <li>If you are doing an auto-attack with your main hand weapon, only your main hand weapon's affixes
+                    will be included in the attack. Your offhand weapon will not be included.</li>
+                <li>If you are doing an auto-attack with your offhand weapon, only your offhand weapon's affixes will
+                    be included in the attack. Your main hand weapon will not be included.</li>
+                <li>If you are using a physical class ability, only your main hand weapon will be applied to the attack
+                    by default. If you want to instead perform the attack with your offhand weapon, add the "offhand"
+                    parameter to the ability, and only your offhand weapon will be applied. If the ability is
+                    explicitly a dual-wielding ability, add the "dual_wield" parameter to the ability, and both weapons
+                    will be applied.</li>
+                <li>If you are using a magic, psychic, or healing class ability, both main hand and offhand weapons
+                    will be applied.</li>
             </ul>
             <br>
 
             <a id="Auto Attacks"><h3>Auto Attacks</h3></a>
-            <p>You can perform an auto-attack with an item by clicking the roll button on the “Equipment” tab of your character sheet. If other abilities you have used require you to specify parameters, you can do so in the boxes below the main hand and offhand slots. Parameters here behave the same as parameters for classes.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;You can perform an auto-attack with an item by clicking the roll button on the
+                “Equipment” tab of your character sheet. If other abilities you have used require you to specify
+                parameters, you can do so in the boxes below the main hand and offhand slots. Parameters here behave
+                the same as parameters for classes.</p>
             <br>
 
             <a id="Defining an Item"><h3>Defining an Item</h3></a>
-            <p>For your items, you should define all affixes for the item in the corresponding text box on your character sheet. The API will then "construct" the item based on what you include in the text box for the item. This way, you can easily see and change what effects your items should have, and it's on players, rather than me, to define their items.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;For your items, you should define all affixes for the item in the corresponding
+                text box on your character sheet. The API will then "construct" the item based on what you include in
+                the text box for the item. This way, you can easily see and change what effects your items should have,
+                and it's on players, rather than me, to define their items.</p>
             <br>
-            <p>To tell the API to build your item from what you enter, start with the item name, followed by a semicolon. The item name can be whatever you want.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;To tell the API to build your item from what you enter, start with the item name,
+                followed by a semicolon. The item name can be whatever you want.</p>
             <ul>
                 <li><span class="monospace">My New Item;</span></li>
             </ul>
-            <p>Following this, you specify each affix on the item, implicit and explicit, separated by semicolons. Each affix is identified by some keyword, and then the keyword is followed by values. How you should define each kind of affix is described below. Any field in &lt;angled brackets&gt; is a placeholder that should be replaced with some real value.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Following this, you specify each affix on the item, implicit and explicit,
+                separated by semicolons. Each affix is identified by some keyword, and then the keyword is followed by
+                values. How you should define each kind of affix is described below. Any field in &lt;angled brackets&gt; is
+                a placeholder that should be replaced with some real value.</p>
             <ul>
                 <li>Base damage - <span class="monospace">base: &lt;dice&gt; &lt;damage type&gt; &lt;scaling stat&gt;</span>
                     <ul>
@@ -519,69 +648,97 @@
             <a id="Pure API">
                 <h2>Pure Barbs API Usage</h2>
             </a>
-            <p>Most of the time, you should be going through your character sheet to do things. If you are looking to make a macro, though, the macro will make API calls directly. For these kinds of purposes, the pure API commands and usages are described here. Fields in &lt;angled brackets&gt; are placeholders, and should be filled out with some real value when making actual API calls. Unless otherwise specified, who you are speaking as in chat is used to determine what character to use to make rolls.</p>
+            <p&nbsp;&nbsp;&nbsp;&nbsp;Most of the time, you should be going through your character sheet to do things. If you are looking to
+                make a macro, though, the macro will make API calls directly. For these kinds of purposes, the pure API
+                commands and usages are described here. Fields in &lt;angled brackets&gt; are placeholders, and should be
+                filled out with some real value when making actual API calls.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;For all commands, the character name can optionally be included, wrapped in dollar signs
+                (e.g. <span class="monospace">$Ren Nightside$</span>. It does not matter where in the request the
+                character name is included, only that it follows <span class="monospace">!barbs &lt;command&gt;</span>.
+                If the character name is not specified, who you are speaking as in chat is used to determine what
+                character to use to make rolls.</p>
             <br>
             <h3>Initiative</h3>
             <ul>
-                <li><span class="monospace">!barbs initiative</span></li>
+                <li><span class="monospace">!barbs initiative $&lt;character_name&gt;$</span></li>
             </ul>
-            <p>Initiative is straightforward.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Initiative is straightforward.</p>
             <br>
             <h3>Concentration</h3>
             <ul>
-                <li><span class="monospace">!barbs concentration</span></li>
+                <li><span class="monospace">!barbs concentration $&lt;character_name&gt;$</span></li>
             </ul>
-            <p>Concentration is straightforward.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Concentration is straightforward.</p>
             <br>
             <h3>Take Damage</h3>
             <ul>
-                <li><span class="monospace">!barbs dmg &lt;physical damage and pen&gt; &lt;psychic damage and pen&gt; &lt;fire damage and pen&gt; &lt;water damage and pen&gt; &lt;earth damage and pen&gt; &lt;air damage and pen&gt; &lt;ice damage and pen&gt; &lt;lightning damage and pen&gt; &lt;light damage and pen&gt; &lt;dark damage and pen&gt;</span></li>
+                <li><span class="monospace">!barbs dmg $&lt;character_name&gt;$ &lt;physical damage and pen&gt; &lt;psychic damage and pen&gt; &lt;fire damage and pen&gt; &lt;water damage and pen&gt; &lt;earth damage and pen&gt; &lt;air damage and pen&gt; &lt;ice damage and pen&gt; &lt;lightning damage and pen&gt; &lt;light damage and pen&gt; &lt;dark damage and pen&gt;</span></li>
             </ul>
-            <p>Each "damage type and pen" field is the damage of that type being taken, optionally followed by a bar | and then the amount of penetration of that type the attack has. For example, "50" indicates you are taking 50 damage with no pen. "50|20" indicates that you are taking 50 damage with 20 AC pen or 20% MR pen, depending on the damage type.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Each "damage type and pen" field is the damage of that type being taken,
+                optionally followed by a bar | and then the amount of penetration of that type the attack has.
+                For example, "50" indicates you are taking 50 damage with no pen. "50|20" indicates that you are
+                taking 50 damage with 20 AC pen or 20% MR pen, depending on the damage type.</p>
             <br>
             <h3>Condition Resist</h3>
             <ul>
-                <li><span class="monospace">!barbs cr &lt;condition&gt;</span></li>
+                <li><span class="monospace">!barbs cr $&lt;character_name&gt;$ &lt;condition&gt;</span></li>
             </ul>
-            <p>The "condition" should be one of the <a href="/#Conditions">conditions listed in the rulebook</a>. If you are not resisting a particular condition, this field should be "General".</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;The "condition" should be one of the
+                <a href="/#Conditions">conditions listed in the rulebook</a>. If you are not resisting a particular
+                condition, this field should be "General".</p>
             <br>
             <h3>Stat</h3>
             <ul>
-                <li><span class="monospace">!barbs stat &lt;stat&gt;</span></li>
+                <li><span class="monospace">!barbs stat $&lt;character_name&gt;$ &lt;stat&gt;</span></li>
             </ul>
-            <p>The "stat" field should be one of the 20 stats on the "Stats" page of your character sheet. Replace spaces and slashes in the stat's name with underscores. Capitalization does not matter.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;The "stat" field should be one of the 20 stats on the "Stats" page of your
+                character sheet. Replace spaces and slashes in the stat's name with underscores. Capitalization
+                does not matter.</p>
             <br>
             <h3>Skills</h3>
             <ul>
-                <li><span class="monospace">!barbs skill &lt;skill name&gt; &lt;AP in the skill&gt;</span></li>
+                <li><span class="monospace">!barbs skill $&lt;character_name&gt;$ &lt;skill name&gt; &lt;AP in the skill&gt;</span></li>
             </ul>
-            <p>The "skill name" field should be one of the Skills listed in the <a href="/#Skills">rulebook</a>. Spaces in the skill name are fine. Capitalization does not matter. The "AP in the skill" field should be the number of AP you have invested into this skill. This is NOT your rank or bonus (though rank has a 1-1 relationship with AP investment).</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;The "skill name" field should be one of the Skills listed in the
+                <a href="/#Skills">rulebook</a>.
+                Spaces in the skill name are fine. Capitalization does not matter. The "AP in the skill" field should
+                be the number of AP you have invested into this skill. This is NOT your rank or bonus (though rank has
+                a 1-1 relationship with AP investment).</p>
             <br>
             <h3>List Effects</h3>
             <ul>
-                <li><span class="monospace">!barbs list_effects</span></li>
-                <li><span class="monospace">!barbs list_effects &lt;character name&gt;</span></li>
+                <li><span class="monospace">!barbs list_effects $&lt;character_name&gt;$</span></li>
             </ul>
-            <p>In the first case, who you are speaking as in chat is used to determine what character to list effects for. Alternatively, as in the latter case, you can give a specific character for whom effects should be listed.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;List effects is straightforward.</p>
             <br>
             <h3>Remove Effect</h3>
             <ul>
-                <li><span class="monospace">!barbs remove_effect &lt;effect name&gt;</span></li>
-                <li><span class="monospace">!barbs remove_effect &lt;character name&gt;;&lt;effect name&gt;</span></li>
+                <li><span class="monospace">!barbs remove_effect $&lt;character_name&gt;$ &lt;effect name&gt;</span></li>
             </ul>
-            <p>In the first case, who you are speaking as in chat is used to determine what character to remove an effect from. Alternatively, as in the latter, case you can give a specific character first, followed by a semicolon, and then the effect you would like removed. The "effect name" field is usually the name of the class ability that generated the effect. Spaces in both the character name and effect name are permitted. Capitalization for the character name and effect name do matter.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;In the first case, who you are speaking as in chat is used to determine what
+                character to remove an effect from. Alternatively, as in the latter, case you can give a specific
+                character first, followed by a semicolon, and then the effect you would like removed. The "effect name"
+                field is usually the name of the class ability that generated the effect. Spaces in both the character
+                name and effect name are permitted. Capitalization for the character name and effect name do matter.</p>
             <br>
             <h3>Item Auto-attack</h3>
             <ul>
-                <li><span class="monospace">!barbs item &lt;item slot&gt; &lt;item construction args&gt;|&lt;attack parameters&gt;</span></li>
+                <li><span class="monospace">!barbs item $&lt;character_name&gt;$ &lt;item slot&gt; &lt;item construction args&gt;|&lt;attack parameters&gt;</span></li>
             </ul>
-            <p>The "item slot" should be <span class="monospace">main_hand</span> or <span class="monospace">offhand</span>. The "item construction args" field should follow the rules laid out in the <a href="#Items">Items section</a>. Describe the item as a "construct", followed by its affixes, semicolon-separated. The "attack parameters" field follows the normal <a href="#Parameters">pattern for parameters</a>, just semicolon-separate each parameter.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;The "item slot" should be <span class="monospace">main_hand</span> or
+                <span class="monospace">offhand</span>. The "item construction args" field should follow the rules
+                laid out in the <a href="#Items">Items section</a>. Describe the item as a "construct", followed by
+                its affixes, semicolon-separated. The "attack parameters" field follows the normal
+                <a href="#Parameters">pattern for parameters</a>, just semicolon-separate each parameter.</p>
             <br>
             <h3>Class Abilities</h3>
             <ul>
-                <li><span class="monospace">!barbs ability &lt;class name&gt;;&lt;ability name&gt;;&lt;ability parameters&gt;</span></li>
+                <li><span class="monospace">!barbs ability $&lt;character_name&gt;$ &lt;class name&gt;;&lt;ability name&gt;;&lt;ability parameters&gt;</span></li>
             </ul>
-            <p>The "class name" field must be one of the classes defined in the rulebook. The "ability name" field must be one of the abilities defined under that class. Capitalization matters for both. The "ability parameters" field follows the normal <a href="#Parameters">pattern for parameters</a>, just semicolon-separate each parameter.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;The "class name" field must be one of the classes defined in the rulebook.
+                The "ability name" field must be one of the abilities defined under that class. Capitalization matters
+                for both. The "ability parameters" field follows the normal
+                <a href="#Parameters">pattern for parameters</a>, just semicolon-separate each parameter.</p>
         </article>
     </section>
 </div>

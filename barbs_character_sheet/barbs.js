@@ -16,7 +16,7 @@ var Barbs = Barbs || (function () {
     const trim_all = BarbsComponents.trim_all;
     const remove_empty = BarbsComponents.remove_empty;
     const LOG = BarbsComponents.LOG;
-    const characters_by_owner = BarbsComponents.characters_by_owner;
+    const CHARACTER_NAME_VARIANTS = BarbsComponents.CHARACTER_NAME_VARIANTS;
     const Stat = BarbsComponents.Stat;
     const HiddenStat = BarbsComponents.HiddenStat;
     const Skill = BarbsComponents.Skill;
@@ -155,64 +155,75 @@ var Barbs = Barbs || (function () {
     // Character lookup
 
 
-    function return_or_assert(ignore, message) {
-        if (!ignore) {
-            assert(false, message);
-        }
-
-        return null;
-    }
-
-
-    function get_character_names(who, id) {
-        const found_characters = [];
-        Object.keys(characters_by_owner).forEach(function (character_name) {
-            const owner_names = characters_by_owner[character_name];
-            for (let i = 0; i < owner_names.length; i++) {
-                if (owner_names[i] === who || owner_names[i] === id) {
-                    found_characters.push(character_name);
+    function get_proper_character_names(name_to_find) {
+        const matched_character_names = [];
+        Object.keys(CHARACTER_NAME_VARIANTS).forEach(function (proper_character_name) {
+            const name_variants = CHARACTER_NAME_VARIANTS[proper_character_name];
+            for (let i = 0; i < name_variants.length; i++) {
+                if (name_variants[i] === name_to_find) {
+                    matched_character_names.push(proper_character_name);
                 }
             }
         });
 
-        return found_characters;
+        return matched_character_names;
     }
 
 
-    // If 'ignore_failure' is false, this method will always return a Character object, or it will throw an exception.
-    // If 'ignore_failure' is true, this method may return null if no matching characater is found.
-    function get_character(msg, ignore_failure = false) {
-        const character_names = get_character_names(msg.who, msg.id);
+    // If 'ignore_failure' is false, this method will always return a Character object. It will throw an exception if
+    // no matching character is found. If 'ignore_failure' is true, this method may return null if no matching
+    // character is found.
+    function get_character(name_to_find, ignore_failure = false) {
+        const character_names = get_proper_character_names(name_to_find);
 
-        let characters = [];
+        let game_character_objects = [];
         for (let i = 0; i < character_names.length; i++) {
             const objects = findObjs({
                 _type: 'character',
                 name: character_names[i]
             });
 
-            characters = characters.concat(objects);
+            game_character_objects = game_character_objects.concat(objects);
         }
 
-        if (characters.length === 0) {
-            return return_or_assert(ignore_failure, 'Error, did not find a character for ' + msg.who);
-        } else if (characters.length > 1) {
+        if (game_character_objects.length === 0) {
+            if (!ignore_failure) {
+                assert(false, 'Error, did not find a character for ' + name_to_find);
+            } else {
+                return null;
+            }
+        } else if (game_character_objects.length > 1) {
             // warn, but pray we've got the right ones regardless
-            LOG.warn('Found ' + characters.length + ' matching characters for ' + msg.who);
+            LOG.warn('Found ' + game_character_objects.length + ' matching characters for ' + name_to_find);
         }
 
-        if (characters[0] === undefined || characters[0] === null) {
-            return return_or_assert(ignore_failure, 'character 0 is undefined');
+        if (game_character_objects[0] === undefined || game_character_objects[0] === null) {
+            if (!ignore_failure) {
+                assert(false, 'character 0 is undefined');
+            } else {
+                return null;
+            }
         }
-        return new Character(characters[0], msg.who);
+
+        return new Character(game_character_objects[0], name_to_find);
     }
 
 
-    function get_character_by_name(name, ignore_failure = false) {
-        assert_not_null(name, 'get_character_by_name() name');
+    // This method is ONLY for use at the very beginning of top-level request processor methods.
+    function get_character_from_msg(msg) {
+        // We've allowing two patterns here:
+        //   1) The character's name is explicitly passed in, surrounded by "$" to identify it. In this case,
+        //       we pick out the name, remove it from the original message, and then run the processor.
+        const match = msg.content.match(/\$.*?\$( ?)/);
+        if (match !== null) {
+            msg.content = msg.content.replace(match[0], '');
+            const character_name = match[0].trim().split('$')[1];
+            return get_character(character_name);
+        }
 
-        const fake_msg = {'who': name, 'id': ''};
-        return get_character(fake_msg, ignore_failure);
+        //   2) The character's name is not provided. We will attempt to deduce it based on who spoke the
+        //       message.
+        return get_character(msg.who);
     }
 
 
@@ -347,7 +358,7 @@ var Barbs = Barbs || (function () {
 
 
     function roll_initiative(msg) {
-        const character = get_character(msg);
+        const character = get_character_from_msg(msg);
         const roll = get_roll_with_items_and_effects(character);
         chat(character, '[[d100]]', function (results) {
             const rolls = results[0].inlinerolls;
@@ -391,7 +402,7 @@ var Barbs = Barbs || (function () {
 
 
     function roll_stat(msg) {
-        const character = get_character(msg);
+        const character = get_character_from_msg(msg);
         const stat = Stat[msg.content.split(' ')[2].toUpperCase()];
         const roll = get_roll_with_items_and_effects(character);
         const modifier = get_stat_roll_modifier(character, roll, stat);
@@ -448,7 +459,8 @@ var Barbs = Barbs || (function () {
                     '{{effects=<li>General CR: [[1d100cs>[[100-(%s)+1]]]]</li>}} {{button=%s}}';
 
                 const options = conditions.join('|');
-                let button_section = '<a href="!barbs cr ?{Condition|%s}">Specific Condition CR</a>'.format(options);
+                let button_section = '<a href="!barbs cr $%s$ ?{Condition|%s}">Specific Condition CR</a>'.format(
+                    character.name, options);
 
                 chat(character, msg_format.format(modifier, button_section));
                 break;
@@ -497,7 +509,7 @@ var Barbs = Barbs || (function () {
 
 
     function roll_condition_resist(msg) {
-        const character = get_character(msg);
+        const character = get_character_from_msg(msg);
         const roll = get_roll_with_items_and_effects(character);
         let total_cr = eval(get_stat_roll_modifier(character, roll, Stat.CONDITION_RESIST));
 
@@ -511,7 +523,7 @@ var Barbs = Barbs || (function () {
 
 
     function damage_reduction(msg) {
-        const character = get_character(msg);
+        const character = get_character_from_msg(msg);
 
         const damage_types = [
             Damage.PHYSICAL, Damage.PSYCHIC, Damage.FIRE, Damage.WATER, Damage.EARTH, Damage.AIR, Damage.ICE,
@@ -602,7 +614,7 @@ var Barbs = Barbs || (function () {
 
 
     function roll_concentration(msg) {
-        const character = get_character(msg);
+        const character = get_character_from_msg(msg);
 
         // Proper concentration check
         const roll = get_roll_with_items_and_effects(character);
@@ -622,8 +634,7 @@ var Barbs = Barbs || (function () {
 
 
     function roll_skill(msg) {
-        const character = get_character(msg);
-
+        const character = get_character_from_msg(msg);
         const pieces = msg.content.split(' ');
         const points_in_skill = parse_int(pieces[pieces.length - 1]);
         const given_skill_name = pieces.slice(2, pieces.length - 1).join(' ');
@@ -685,7 +696,7 @@ var Barbs = Barbs || (function () {
 
 
     function take_rest(msg) {
-        const character = get_character(msg);
+        const character = get_character_from_msg(msg);
 
         const pieces = msg.content.split(' ');
         if (pieces.length < 3) {
@@ -731,8 +742,8 @@ var Barbs = Barbs || (function () {
             ];
             const effects_section = effects_section_format.format(effects.join(''));
 
-            const button_section = " {{button=<a href='!barbs rest undo %s %s %s'>Undo</a>}}".format(
-                health_regenerated, stamina_regenerated, mana_regenerated);
+            const button_section = " {{button=<a href='!barbs rest $%s$ undo %s %s %s'>Undo</a>}}".format(
+                character.name, health_regenerated, stamina_regenerated, mana_regenerated);
 
             chat(character, roll_format.format('Short Rest', '', '', '', effects_section, button_section));
 
@@ -750,8 +761,8 @@ var Barbs = Barbs || (function () {
             ];
             const effects_section = effects_section_format.format(effects.join(''));
 
-            const button_section = " {{button=<a href='!barbs rest undo %s %s %s'>Undo</a>}}".format(
-                health_regenerated, stamina_regenerated, mana_regenerated);
+            const button_section = " {{button=<a href='!barbs rest $%s$ undo %s %s %s'>Undo</a>}}".format(
+                character.name, health_regenerated, stamina_regenerated, mana_regenerated);
 
             chat(character, roll_format.format('Long Rest', '', '', '', effects_section, button_section));
 
@@ -1129,14 +1140,7 @@ var Barbs = Barbs || (function () {
 
 
     function list_persistent_effects(msg) {
-        const pieces = msg.content.split(' ');
-        let character;
-        if (pieces.length > 2) {
-            const character_name = pieces.slice(2).join(' ');
-            character = get_character_by_name(character_name);
-        } else {
-            character = get_character(msg);
-        }
+        const character = get_character_from_msg(msg);
 
         let effects = '';
         let callback_options = [];
@@ -1156,7 +1160,7 @@ var Barbs = Barbs || (function () {
         if (callback_options.length > 0) {
             callback_options = callback_options.join('|').replace(/\'/g, '&#39;');
 
-            format += " {{button=<a href='!barbs remove_effect %s;?{Remove which effect?|%s}'>Remove Effect</a>}}";
+            format += " {{button=<a href='!barbs remove_effect $%s$ ?{Remove which effect?|%s}'>Remove Effect</a>}}";
             chat(character, format.format(character.name, effects, character.name, callback_options));
         } else {
             chat(character, format.format(character.name, '<li>None</li>'));
@@ -1165,34 +1169,21 @@ var Barbs = Barbs || (function () {
 
 
     function remove_persistent_effect(msg) {
+        const character = get_character_from_msg(msg);
         const pieces = msg.content.split(' ');
-        const options = pieces.slice(2).join(' ');
-        const option_pieces = options.split(';');
 
-        let character = null;
-        let effect_name = '';
-        if (option_pieces.length > 1) {
-            // both character and effect were specified
-            const character_name = option_pieces[0];
-            effect_name = option_pieces[1];
-            character = get_character_by_name(character_name);
-        } else {
-            // only effect was specified
-            effect_name = option_pieces[0];
-            character = get_character(msg);
-        }
-
+        const effect_name = pieces.slice(2).join(' ');
         for (let i = 0; i < persistent_effects.length; i++) {
             if (persistent_effects[i].name === effect_name && persistent_effects[i].target === character.name) {
                 persistent_effects.splice(i, 1);
                 i--;
 
-                chat(msg, 'Removed effect %s from %s'.format(effect_name, character.name));
+                chat(character, 'Removed effect %s from %s'.format(effect_name, character.name));
                 return;
             }
         }
 
-        chat(msg, 'Did not find effect %s on %s'.format(effect_name, character.name));
+        chat(character, 'Did not find effect %s on %s'.format(effect_name, character.name));
     }
 
 
@@ -1933,7 +1924,7 @@ var Barbs = Barbs || (function () {
         const redirects = parse_int(parameter_pieces[1]);
         let source = roll.character.name;
         if (parameter_pieces.length > 2) {
-            const source_character = get_character_by_name(parameter_pieces[2]);
+            const source_character = get_character(parameter_pieces[2]);
             source = source_character.name;
         }
 
@@ -2194,7 +2185,7 @@ var Barbs = Barbs || (function () {
         Item.LOGGER = Collector;
 
         // Getting the character constructs items under the hood, so this is good enough to check for errors
-        const character = get_character(msg);
+        const character = get_character_from_msg(msg);
 
         if (errors.length > 0) {
             for (let i = 0; i < errors.length; i++) {
@@ -2210,7 +2201,7 @@ var Barbs = Barbs || (function () {
 
 
     function roll_item(msg) {
-        const character = get_character(msg);
+        const character = get_character_from_msg(msg);
 
         const halves = msg.content.split('|');
         if (halves.length !== 2) {
@@ -2601,7 +2592,7 @@ var Barbs = Barbs || (function () {
         const target_names = parameter.split(',');
         const target_characters = [];
         for (let i = 0; i < target_names.length; i++) {
-            const target_character = get_character_by_name(target_names[i].trim());
+            const target_character = get_character(target_names[i].trim());
             target_characters.push(target_character);
         }
 
@@ -2681,11 +2672,11 @@ var Barbs = Barbs || (function () {
             let message = '&{template:Barbs} {{name=%s}} {{physical=%s}} {{button=%s}}'
             let rolls = '[[d10]][[d10]][[d10]][[d10]][[d10]]';
 
-            let button_section = '<a href="!barbs ability %s;%s;%s;keep ?{Rolls to keep:}">Pick Rolls to Keep</a>';
+            let button_section = '<a href="!barbs ability $%s$ %s;%s;%s;keep ?{Rolls to keep:}">Pick Rolls to Keep</a>';
             // Colons don't play well in the href for buttons in chat, for some reason. We don't really need them for
             // parameters, though, so just take them out.
             const parameters_string = parameters.join(';').replace(/:/g, '');
-            button_section = button_section.format(ability['class'], ability.name, parameters_string);
+            button_section = button_section.format(character.name, ability['class'], ability.name, parameters_string);
 
             message = message.format(ability.name, rolls, button_section);
             LOG.info('Roll: ' + message);
@@ -2935,7 +2926,7 @@ var Barbs = Barbs || (function () {
             const target_characters = [];
             const official_names = []
             for (let i = 0; i < target_names.length; i++) {
-                const target_character = get_character_by_name(target_names[i].trim());
+                const target_character = get_character(target_names[i].trim());
                 target_characters.push(target_character);
                 official_names.push(target_character.name);
             }
@@ -3006,7 +2997,7 @@ var Barbs = Barbs || (function () {
             const target_characters = [];
             const official_names = []
             for (let i = 0; i < target_names.length; i++) {
-                const target_character = get_character_by_name(target_names[i].trim());
+                const target_character = get_character(target_names[i].trim());
                 target_characters.push(target_character);
                 official_names.push(target_character.name);
             }
@@ -3073,7 +3064,7 @@ var Barbs = Barbs || (function () {
             const target_characters = [];
             const official_names = []
             for (let i = 0; i < target_names.length; i++) {
-                const target_character = get_character_by_name(target_names[i].trim());
+                const target_character = get_character(target_names[i].trim());
                 target_characters.push(target_character);
                 official_names.push(target_character.name);
             }
@@ -3147,7 +3138,7 @@ var Barbs = Barbs || (function () {
         const target_characters = [];
         const effects = ['<p>The following characters have flying Movement Speed and cleanse one condition:</p>'];
         for (let i = 0; i < target_names.length; i++) {
-            const target_character = get_character_by_name(target_names[i].trim());
+            const target_character = get_character(target_names[i].trim());
             target_characters.push(target_character);
             effects.push('<li>%s</li>'.format(target_character.name));
         }
@@ -3194,7 +3185,7 @@ var Barbs = Barbs || (function () {
         const target_characters = [];
         const effects = ['<p>The following characters gain true sight and 50% %s:</p>'.format(choice_string)];
         for (let i = 0; i < target_names.length; i++) {
-            const target_character = get_character_by_name(target_names[i].trim());
+            const target_character = get_character(target_names[i].trim());
             target_characters.push(target_character);
             effects.push('<li>%s</li>'.format(target_character.name));
         }
@@ -3224,7 +3215,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const target_character = get_character_by_name(target_name);
+        const target_character = get_character(target_name);
         const choice = get_parameter('choice', parameters);
         if (choice === null) {
             chat(character, '"choice {first/second}" parameter is missing');
@@ -4188,7 +4179,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const target_character = get_character_by_name(target_name);
+        const target_character = get_character(target_name);
 
         let percentage = 20;
         const extra_mana_spent = get_parameter('mana', parameters);
@@ -4220,7 +4211,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const target_character = get_character_by_name(target_name);
+        const target_character = get_character(target_name);
 
         // Find the buff
         let index = -1;
@@ -4251,7 +4242,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const target_character = get_character_by_name(target_name);
+        const target_character = get_character(target_name);
 
         add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
@@ -4271,7 +4262,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const target_character = get_character_by_name(target_name);
+        const target_character = get_character(target_name);
 
         add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_HOUR(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
@@ -4290,7 +4281,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const target_character = get_character_by_name(target_name);
+        const target_character = get_character(target_name);
 
         const source = character.name;
         add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(), Ordering(),
@@ -4364,7 +4355,7 @@ var Barbs = Barbs || (function () {
         const target_names = parameter.split(',');
         const target_characters = [];
         for (let i = 0; i < target_names.length; i++) {
-            const target_character = get_character_by_name(target_names[i].trim());
+            const target_character = get_character(target_names[i].trim());
             target_characters.push(target_character);
         }
 
@@ -4486,7 +4477,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const target_character = get_character_by_name(target_name);
+        const target_character = get_character(target_name);
 
         const source = character.name;
         add_persistent_effect(character, ability, parameters, target_character, Duration.SINGLE_USE(), Ordering(),
@@ -4713,8 +4704,7 @@ var Barbs = Barbs || (function () {
 
 
     function process_ability(msg) {
-        const character = get_character(msg);
-
+        const character = get_character_from_msg(msg);
         const pieces = msg.content.split(' ');
         const options = pieces.slice(2).join(' ');
         const option_pieces = options.split(';');
@@ -4866,7 +4856,7 @@ var Barbs = Barbs || (function () {
         const last_turn_id = state[STATE_NAME][LAST_TURN_ID];
         state[STATE_NAME][LAST_TURN_ID] = turn.id;
 
-        const current_character = get_character_by_name(current_name, /*ignore_failure=*/true);
+        const current_character = get_character(current_name, /*ignore_failure=*/true);
         if (current_character === null) {
             return;
         }
@@ -4900,7 +4890,7 @@ var Barbs = Barbs || (function () {
                 return;
             }
 
-            const previous_character = get_character_by_name(previous_name, /*ignore_failure=*/true);
+            const previous_character = get_character(previous_name, /*ignore_failure=*/true);
             if (previous_character === null) {
                 return;
             }
@@ -4975,7 +4965,7 @@ var Barbs = Barbs || (function () {
     // Basic setup and message handling
 
 
-    const subcommand_handlers = {
+    const request_processors = {
         'initiative': roll_initiative,
         'dmg': damage_reduction,
         'cr': roll_condition_resist,
@@ -5020,13 +5010,13 @@ var Barbs = Barbs || (function () {
 
             LOG.info('API call: who=%s, message="%s"'.format(msg.who, msg.content));
 
-            const sub_command = pieces[1];
-            if (!(sub_command in subcommand_handlers)) {
-                chat(msg, 'unknown barbs subcommand %s'.format(sub_command));
+            const request = pieces[1];
+            if (!(request in request_processors)) {
+                chat(msg, 'unknown barbs request %s'.format(request));
                 return;
             }
 
-            const processor = subcommand_handlers[sub_command];
+            const processor = request_processors[request];
 
             try {
                 processor(msg);
