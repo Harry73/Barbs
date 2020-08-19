@@ -458,7 +458,7 @@ var BarbsComponents = BarbsComponents || (function () {
         UNBLOCKABLE_CHANCE: '%s% chance to be unblockable, chance: [[d100cs>%s]]',
 
         BLINDED_CHANCE: '%s% chance to Blind, chance: [[d100cs>%s]], CR: [[1d100]]',
-        BURN_CHANCE: '%s% chance to inflict Burn 20, chance: [[d100cs>%s]], CR: [[1d100]]',
+        BURN_CHANCE: function(x) { return '%s% chance to inflict Burn ' + x + ', chance: [[d100cs>%s]], CR: [[1d100]]' },
         CONFUSED_CHANCE: '%s% chance to Confuse, chance: [[d100cs>%s]], CR: [[1d100]]',
         CRIPPLED_CHANCE: '%s% chance to Crippled, chance: [[d100cs>%s]], CR: [[1d100]]',
         FEAR_CHANCE: '%s% chance to Fear, chance: [[d100cs>%s]], CR: [[1d100]]',
@@ -500,7 +500,7 @@ var BarbsComponents = BarbsComponents || (function () {
         'unblockable chance:': HiddenStat.UNBLOCKABLE_CHANCE,
 
         'blinded chance': HiddenStat.BLINDED_CHANCE,
-        'burn chance:': HiddenStat.BURN_CHANCE,
+        'burn [0-9]* chance:': HiddenStat.BURN_CHANCE,
         'confused chance': HiddenStat.CONFUSED_CHANCE,
         'crippled chance:': HiddenStat.CRIPPLED_CHANCE,
         'fear chance': HiddenStat.FEAR_CHANCE,
@@ -8984,6 +8984,7 @@ var BarbsComponents = BarbsComponents || (function () {
         'axe': ItemType.AXE,
         'scythe': ItemType.AXE,
         'warhammer': ItemType.BLUNT,
+        'mace': ItemType.BLUNT,
         'shortbow': ItemType.BOW,
         'longbow': ItemType.BOW,
         'bullets': ItemType.BULLETS,
@@ -9528,7 +9529,8 @@ var BarbsComponents = BarbsComponents || (function () {
                 for (let j = 0; j < affix_keys.length; j++) {
                     const affix_key = affix_keys[j];
                     const affix_constructor = AFFIX_CONSTRUCTORS[affix_key];
-                    if (part.startsWith(affix_key)) {
+                    const regex = new RegExp('^' + affix_key + '.*');
+                    if (regex.test(part)) {
                         identified_part = true;
 
                         const effect = affix_constructor(character, item_name, part, original_part);
@@ -9777,7 +9779,20 @@ var BarbsComponents = BarbsComponents || (function () {
                 return null;
             }
 
-            return create_effect(stat, bonus, roll_type);
+            if (Object.prototype.toString.call(stat) === '[object Function]') {
+                // This is for something like "burn 20 chance"
+                const amount = part.split(':')[0].split(' ')[1];
+                const num_amount = parse_int(amount);
+                if (Number.isNaN(num_amount)) {
+                    Item.LOGGER.error('In item "%s", in stat affix "%s", amount %s is not a number'.format(
+                        item_name, part, amount));
+                    return null;
+                }
+
+                return create_effect(stat(num_amount), bonus, roll_type);
+            } else {
+                return create_effect(stat, bonus, roll_type);
+            }
         }
 
         static effect_affix(item_name, part, create_effect) {
