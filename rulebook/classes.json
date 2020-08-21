@@ -720,9 +720,10 @@
             "Frozen  Arena"
         ],
         "api": {
-            "description": "The API will not track stacks of Frostbite. When you consume stacks of Frostbite during an attack by specifying \"frostbite\" as an option.",
+            "description": "The API will not track stacks of Frostbite. When you consume stacks of Frostbite during an attack by specifying \"frostbite\" as an option. This should be sufficient for most cases. If, however, you need to calculate damage with frostbite after a roll, you can add \"Frostbite\" as a class ability to your character sheet. Specify frostbite stacks as a parameter, like normal. Also specify the original rolled amount with the \"dmg\" parameter. On a roll, the API will calculate damage based on the given damage value, frostbite stacks, and your normal bonuses.",
             "examples": [
-                "frostbite <number of stacks to consume>"
+                "frostbite <number of stacks to consume>",
+                "dmg <previously rolled damage value>"
             ]
         }
     },

@@ -232,7 +232,7 @@ var Barbs = Barbs || (function () {
 
 
     function get_roll_with_items_and_effects(character) {
-        assert_not_null(character, 'get_roll_with_items_and_effects() character');
+        assert_type(character, 'Character', 'get_roll_with_items_and_effects() character');
 
         const roll = new Roll(character, RollType.ALL);
 
@@ -1761,7 +1761,7 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function cryomancer_frostbite(roll, roll_time, parameter) {
+    function cryomancer_frostbite_arbitrary(roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
         }
@@ -2076,7 +2076,7 @@ var Barbs = Barbs || (function () {
         'daggerspell_marked': new ArbitraryParameter(daggerspell_marked, Ordering()),
         'draconic_pact': new ArbitraryParameter(dragoncaller_draconic_pact, Ordering()),
         'empowered': new ArbitraryParameter(daggerspell_ritual_dagger, Ordering()),
-        'frostbite': new ArbitraryParameter(cryomancer_frostbite, Ordering()),
+        'frostbite': new ArbitraryParameter(cryomancer_frostbite_arbitrary, Ordering()),
         'juggernaut': new ArbitraryParameter(juggernaut_what_doesnt_kill_you, Ordering()),
         'pinpoint': new ArbitraryParameter(pinpoint_monk_precision_pummeling, Ordering(85)),
         'pursued': new ArbitraryParameter(assassin_pursue_mark, Ordering()),
@@ -2750,6 +2750,22 @@ var Barbs = Barbs || (function () {
         roll_3.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
         roll_crit(roll_3, parameters, function (crit_section) {
             do_roll(character, '%s (15 ft)'.format(ability.name), roll_3, parameters, crit_section, /*do_finalize=*/true);
+        });
+    }
+
+
+    function cryomancer_frostbite(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+
+        const dmg = get_parameter('dmg', parameters);
+        if (dmg === null) {
+            chat(character, 'Missing parameter "dmg"');
+            return;
+        }
+
+        roll.add_damage(dmg, Damage.ICE);
+        roll_crit(roll, parameters, function (crit_section) {
+            do_roll(character, ability.name, roll, parameters, crit_section);
         });
     }
 
@@ -4539,6 +4555,7 @@ var Barbs = Barbs || (function () {
             'Flash Freeze': print_ability_description,
             'Freezing Wind': print_ability_description,
             'Frozen Arena': print_ability_description,
+            'Frostbite': cryomancer_frostbite,
             'Glacial Crash': cryomancer_glacial_crash,
             'Heart of Ice': print_ability_description,
             'Hypothermia': print_ability_description,
