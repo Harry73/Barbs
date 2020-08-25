@@ -525,44 +525,66 @@ var Barbs = Barbs || (function () {
     function damage_reduction(msg) {
         const character = get_character_from_msg(msg);
 
-        const damage_types = [
-            Damage.PHYSICAL, Damage.PSYCHIC, Damage.FIRE, Damage.WATER, Damage.EARTH, Damage.AIR, Damage.ICE,
-            Damage.LIGHTNING, Damage.LIGHT, Damage.DARK
-        ];
+        let damage_strings = remove_empty(msg.content.split(' ')).slice(2);
 
-        let damages_taken = remove_empty(msg.content.split(' '));
-        assert(damages_taken.length === damage_types.length + 2, 'Wrong number of parameters for "!barbs dmg" ' +
-            'command, expected %s, got %s', damage_types.length + 2, damages_taken.length);
-        damages_taken = damages_taken.slice(2);
-
-        const penetrations = [];
-        damages_taken.forEach(function(damage_string, index, this_) {
-            if (damage_string.includes('|')) {
-                const parts = trim_all(damage_string.split('|'));
-                this_[index] = parts[0];
-                penetrations.push(parts[1]);
-            } else {
-                penetrations.push('0');
+        // Pick apart the damage strings, e.g. "light:5|5" into the damage type, damage taken, and
+        // penetration on the damage.
+        const damages_taken = {}
+        const penetrations = {};
+        for (let i = 0; i < damage_strings.length; i++) {
+            const damage_string = damage_strings[i];
+            if (!damage_string.includes(':')) {
+                continue;
             }
-        });
 
-        for (let i = 0; i < damages_taken.length; i++) {
-            const given_value = damages_taken[i];
-            assert_numeric(given_value, 'Non-numeric value "%s" for %s damage type', given_value, damage_types[i]);
+            const pieces = trim_all(damage_string.split(':'));
+            const damage_type = get_damage_from_type(pieces[0]);
+            if (damage_type === null) {
+                LOG.warn('what is this damage type %s'.format(pieces[0]));
+                continue;
+            }
 
-            const penetration = penetrations[i];
-            assert_numeric(penetration, 'Non-numeric penetration value "%s" for %s damage type', penetration,
-                           damage_types[i]);
+            const values = pieces[1];
+            if (values === '') {
+                continue;
+            }
+
+            if (values.includes('|')) {
+                const parts = trim_all(values.split('|'));
+                damages_taken[damage_type] = parts[0] || 0;
+                penetrations[damage_type] = parts[1] || 0;
+            } else {
+                damages_taken[damage_type] = values
+            }
+        }
+
+        // Check given damages are numeric
+        let types = Object.keys(damages_taken);
+        for (let i = 0; i < types.length; i++) {
+            const type = types[i];
+            const given_value = damages_taken[type];
+            assert_numeric(given_value, 'Non-numeric value "%s" for %s damage type', given_value, type);
+        }
+
+        // Check given penetrations are numeric
+        types = Object.keys(penetrations);
+        for (let i = 0; i < types.length; i++) {
+            const type = types[i];
+            const penetration = penetrations[type];
+            assert_numeric(penetration, 'Non-numeric penetration value "%s" for %s damage type', penetration, type);
         }
 
         const roll = get_roll_with_items_and_effects(character);
         let total_ac = eval(get_stat_roll_modifier(character, roll, Stat.AC));
         const base_mr = eval(get_stat_roll_modifier(character, roll, Stat.MAGIC_RESIST));
 
+        // Reduce given damages by relevant stats, with stats decreased by penetrations
         const reduced_damages = {};
-        for (let i = 0; i < damages_taken.length; i++) {
-            const damage_value = damages_taken[i];
-            const damage_type = damage_types[i];
+        types = Object.keys(damages_taken);
+        for (let i = 0; i < types.length; i++) {
+            const damage_type = types[i];
+            const damage_value = damages_taken[damage_type];
+            const penetration_value = eval(penetrations[damage_type]) || 0;
 
             if (eval(damage_value) <= 0) {
                 continue;
@@ -571,7 +593,7 @@ var Barbs = Barbs || (function () {
             if (damage_type === Damage.PHYSICAL) {
                 total_ac = Math.max(0, total_ac);
 
-                let pen = eval(penetrations[i]);
+                let pen = penetration_value;
                 pen = Math.max(0, pen);
                 pen = Math.min(100, pen);
 
@@ -590,7 +612,7 @@ var Barbs = Barbs || (function () {
                 if (damage_type in roll.magic_resists) {
                     total_mr += roll.magic_resists[damage_type];
                 }
-                total_mr -= eval(penetrations[i]);
+                total_mr -= penetration_value;
                 total_mr = Math.max(0, total_mr);
                 total_mr = Math.min(100, total_mr);
 
@@ -598,17 +620,19 @@ var Barbs = Barbs || (function () {
             }
         }
 
+        // Build the roll and calculate the total
         let result = '&{template:Barbs} {{name=Damage Reduction}} '
         let total = 0;
-        const reduced_keys = Object.keys(reduced_damages);
-        for (let i = 0; i < reduced_keys.length; i++) {
-            const damage_type = reduced_keys[i];
+        types = Object.keys(reduced_damages);
+        for (let i = 0; i < types.length; i++) {
+            const damage_type = types[i];
             const damage_value = reduced_damages[damage_type];
             result = result + '{{%s=[[round(%s)]]}}'.format(damage_type, damage_value);
             total = total + Math.max(0, Math.round(eval(damage_value)));
         }
         result = result + '{{total=[[%s]]}}'.format(total);
 
+        LOG.info('Damage: ' + result);
         chat(character, result);
     }
 
@@ -2589,10 +2613,10 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const target_names = parameter.split(',');
+        const target_names = remove_empty(trim_all(parameter.split(',')));
         const target_characters = [];
         for (let i = 0; i < target_names.length; i++) {
-            const target_character = get_character(target_names[i].trim());
+            const target_character = get_character(target_names[i]);
             target_characters.push(target_character);
         }
 
@@ -2938,11 +2962,11 @@ var Barbs = Barbs || (function () {
 
         const minor_action = get_parameter('minor', parameters);
         if (minor_action !== null) {
-            const target_names = minor_action.split(',');
+            const target_names = remove_empty(trim_all(minor_action.split(',')));
             const target_characters = [];
             const official_names = []
             for (let i = 0; i < target_names.length; i++) {
-                const target_character = get_character(target_names[i].trim());
+                const target_character = get_character(target_names[i]);
                 target_characters.push(target_character);
                 official_names.push(target_character.name);
             }
@@ -3009,11 +3033,11 @@ var Barbs = Barbs || (function () {
 
         const minor_action = get_parameter('minor', parameters);
         if (minor_action !== null) {
-            const target_names = minor_action.split(',');
+            const target_names = remove_empty(trim_all(minor_action.split(',')));
             const target_characters = [];
             const official_names = []
             for (let i = 0; i < target_names.length; i++) {
-                const target_character = get_character(target_names[i].trim());
+                const target_character = get_character(target_names[i]);
                 target_characters.push(target_character);
                 official_names.push(target_character.name);
             }
@@ -3076,11 +3100,11 @@ var Barbs = Barbs || (function () {
 
         const minor_action = get_parameter('minor', parameters);
         if (minor_action !== null) {
-            const target_names = minor_action.split(',');
+            const target_names = remove_empty(trim_all(minor_action.split(',')));
             const target_characters = [];
             const official_names = []
             for (let i = 0; i < target_names.length; i++) {
-                const target_character = get_character(target_names[i].trim());
+                const target_character = get_character(target_names[i]);
                 target_characters.push(target_character);
                 official_names.push(target_character.name);
             }
@@ -3150,11 +3174,11 @@ var Barbs = Barbs || (function () {
         const targets = get_parameter('targets', parameters);
         assert(targets !== null, '"targets" parameter is required');
 
-        const target_names = targets.split(',');
+        const target_names = remove_empty(trim_all(targets.split(',')));
         const target_characters = [];
         const effects = ['<p>The following characters have flying Movement Speed and cleanse one condition:</p>'];
         for (let i = 0; i < target_names.length; i++) {
-            const target_character = get_character(target_names[i].trim());
+            const target_character = get_character(target_names[i]);
             target_characters.push(target_character);
             effects.push('<li>%s</li>'.format(target_character.name));
         }
@@ -3197,11 +3221,11 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const target_names = targets.split(',');
+        const target_names = remove_empty(trim_all(targets.split(',')));
         const target_characters = [];
         const effects = ['<p>The following characters gain true sight and 50% %s:</p>'.format(choice_string)];
         for (let i = 0; i < target_names.length; i++) {
-            const target_character = get_character(target_names[i].trim());
+            const target_character = get_character(target_names[i]);
             target_characters.push(target_character);
             effects.push('<li>%s</li>'.format(target_character.name));
         }
@@ -3296,7 +3320,7 @@ var Barbs = Barbs || (function () {
                 chat(character, '"conditions" parameter is missing');
             }
 
-            const conditions_list = conditions_paramater.split(',');
+            const conditions_list = remove_empty(trim_all(conditions_paramater.split(',')));
             if (conditions_list.length !== 2) {
                 chat(character, 'Select 2 conditions');
                 return;
@@ -3309,9 +3333,9 @@ var Barbs = Barbs || (function () {
 
                 for (let i = 0; i < 2; i++) {
                     if (conditions_list[i].toLowerCase().includes('curse')){
-                        roll.add_effect(conditions_list[i].trim() + ': [[1d100]] [[1d100]]');
+                        roll.add_effect(conditions_list[i] + ': [[1d100]] [[1d100]]');
                     } else {
-                        roll.add_effect(conditions_list[i].trim() + ': [[1d100]]');
+                        roll.add_effect(conditions_list[i] + ': [[1d100]]');
                     }
                 }
 
@@ -3331,7 +3355,7 @@ var Barbs = Barbs || (function () {
             chat(character, '"conditions" parameter is missing');
         }
 
-        const conditions_list = conditions_paramater.split(',');
+        const conditions_list = remove_empty(trim_all(conditions_paramater.split(',')));
         if (conditions_list.length !== 2) {
             chat(character, 'Select 2 conditions');
             return;
@@ -3343,9 +3367,9 @@ var Barbs = Barbs || (function () {
 
         for (let i = 0; i < 2; i++) {
             if (conditions_list[i].toLowerCase().includes('curse')){
-                roll.add_effect(conditions_list[i].trim() + ': [[1d100]] [[1d100]]');
+                roll.add_effect(conditions_list[i] + ': [[1d100]] [[1d100]]');
             } else {
-                roll.add_effect(conditions_list[i].trim() + ': [[1d100]]');
+                roll.add_effect(conditions_list[i] + ': [[1d100]]');
             }
         }
 
@@ -4368,10 +4392,10 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const target_names = parameter.split(',');
+        const target_names = remove_empty(trim_all(parameter.split(',')));
         const target_characters = [];
         for (let i = 0; i < target_names.length; i++) {
-            const target_character = get_character(target_names[i].trim());
+            const target_character = get_character(target_names[i]);
             target_characters.push(target_character);
         }
 
