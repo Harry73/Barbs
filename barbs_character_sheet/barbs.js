@@ -1668,7 +1668,7 @@ var Barbs = Barbs || (function () {
         const effects_section = effects_section_format.format(effects.join(''));
         const msg = roll_format.format(roll_title, damage_section, crit_section, combo_section, effects_section);
 
-        LOG.info('Roll: ' + msg);
+        LOG.info('format_and_send_roll() - roll: ' + msg);
         chat(character, msg);
     }
 
@@ -5219,7 +5219,7 @@ var Barbs = Barbs || (function () {
                 return;
             }
 
-            LOG.info('API call: who=%s, message="%s"'.format(msg.who, msg.content));
+            LOG.info('handle_input() - API call: who=%s, message="%s"'.format(msg.who, msg.content));
 
             const request = pieces[1];
             if (!(request in request_processors)) {
@@ -5240,7 +5240,7 @@ var Barbs = Barbs || (function () {
             }
 
         } else if (record_messages_) {
-            LOG.info('Regular message: ' + JSON.stringify(msg));
+            LOG.info('handle_input() - regular message: ' + JSON.stringify(msg));
             handle_non_api_message(msg);
         }
     }
