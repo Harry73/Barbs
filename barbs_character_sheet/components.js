@@ -166,7 +166,7 @@ var BarbsComponents = BarbsComponents || (function () {
             sendChat('API', string);
         }
     }
-    LOG.level = LogLevel.DEBUG;
+    LOG.level = LogLevel.INFO;
 
 
     // ################################################################################################################
