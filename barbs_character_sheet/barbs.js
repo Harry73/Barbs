@@ -54,6 +54,15 @@ var Barbs = Barbs || (function () {
 
     let persistent_effects = [];
 
+    // TODO: I think we would be better served by always hanging onto messages. We can keep a circular buffer of them
+    //  so we always have the ~20 most recent. Then it would also be possible for a
+    //  "!barbs sum <roll name>;<roll name> ..." kind of command to exist.
+    //  Although, then we'd need some other way to track the number of messages sent to be able to calculate a
+    //  fully automated total.
+    let record_messages_ = false;
+    let sent_messages_ = [];
+    let received_messages_ = [];
+
 
     // ################################################################################################################
     // Functional
@@ -72,6 +81,13 @@ var Barbs = Barbs || (function () {
     function raw_chat(sender, message, handler) {
         assert_not_null(sender, 'raw_chat() sender');
         assert_not_null(message, 'raw_chat() message');
+
+        if (handler === undefined || handler === null) {
+            const message_name = message.match(/{{name=.*?}}/g);
+            if (message_name !== null) {
+                sent_messages_.push(message_name[0]);
+            }
+        }
 
         sendChat(sender, message, handler);
     }
@@ -3853,8 +3869,14 @@ var Barbs = Barbs || (function () {
             const roll = new Roll(character, RollType.MAGIC);
             roll.add_damage('5d8', Damage.ICE);
             roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
+
+            const modified_ability = {
+                'name': ability.name + ' ' + String.fromCharCode(65 + i),
+                'tags': ability.tags,
+            };
+
             roll_crit(roll, parameters, function (crit_section) {
-                do_roll(character, ability, roll, parameters, crit_section);
+                do_roll(character, modified_ability, roll, parameters, crit_section);
             });
         }
     }
@@ -4790,6 +4812,13 @@ var Barbs = Barbs || (function () {
             return;
         }
 
+        record_messages_ = false;
+        sent_messages_ = [];
+        received_messages_ = [];
+        if (get_parameter('sum_all', parameters) !== null) {
+            record_messages_ = true;
+        }
+
         const processor = abilities_processors[class_name][ability_name];
         processor(character, ability, parameters);
     }
@@ -5003,6 +5032,123 @@ var Barbs = Barbs || (function () {
 
 
     // ################################################################################################################
+    // Methods for processing non-API call messages
+
+
+    function handle_non_api_message(msg) {
+        let message_name = msg.content.match(/{{name=.*?}}/g);
+        if (message_name === null) {
+            LOG.debug('handle_non_api_message() - other message has no name');
+            return;
+        }
+        message_name = message_name[0];
+
+        let match = null;
+        for (let i = 0; i < sent_messages_.length; i++) {
+            if (sent_messages_[i] === message_name) {
+                match = i;
+            }
+        }
+
+        if (match === null) {
+            LOG.debug('handle_non_api_message() - other message does not match recorded messages');
+            return;
+        }
+
+        received_messages_.push(msg);
+
+        if (received_messages_.length === sent_messages_.length) {
+            // Order is important here, we have to turn off message recording first because we're about to send
+            // a message.
+            record_messages_ = false;
+
+            calculate_and_send_total(msg);
+            sent_messages_ = [];
+            received_messages_ = [];
+        } else {
+            LOG.debug('handle_non_api_message() - still waiting for more messages');
+        }
+    }
+
+
+    function calculate_and_send_total(last_msg) {
+        const character = get_character(last_msg.who, /*ignore_failure=*/true);
+        if (character === null) {
+            return;
+        }
+
+        // Get the damage values from each message and add them up on a per-type basis into total_damages
+        const total_damages = {};
+        for (let i = 0; i < received_messages_.length; i++) {
+            const message_damages = get_damages_from_message(received_messages_[i]);
+            const types = Object.keys(message_damages);
+            for (let j = 0; j < types.length; j++) {
+                const type = types[j];
+                const message_damage = message_damages[type];
+
+                if (type in total_damages) {
+                    total_damages[type] += message_damage;
+                } else {
+                    total_damages[type] = message_damage;
+                }
+            }
+        }
+
+        // Build the roll and calculate the total
+        let result = '&{template:Barbs} {{name=Total Damage}}'
+        let total = 0;
+
+        const types = Object.keys(total_damages);
+        for (let i = 0; i < types.length; i++) {
+            const type = types[i];
+            const damage_value = total_damages[type];
+            result = result + ' {{%s=[[%s]]}}'.format(type, damage_value);
+            total += damage_value;
+        }
+        result = result + '{{total=[[%s]]}}'.format(total);
+
+        LOG.info('Total damage: ' + result);
+        chat(character, result);
+    }
+
+
+    function get_damages_from_message(msg) {
+        const parts = msg.content.match(/{{[A-Za-z]*=.*?}}/g);
+        if (parts === null) {
+            LOG.debug('No damage parts in the message');
+            return {};
+        }
+
+        const damages = {};
+
+        // These look like this:
+        //     {{physical=$[[0]]}} {{light=$[[4]]}}
+        // For each part, we have to identify the damage type and the "placeholder index." The placeholder index will
+        // tell us where to look in the messages inline roll for the actual value of the roll.
+        for (let i = 0; i < parts.length; i++) {
+            LOG.debug('get_damages_from_message() - processing part ' + parts[i]);
+            let part = parts[i];
+            part = part.slice(2, part.length - 2);  // cut off the braces
+
+            const pieces = part.split('=');
+            const type = get_damage_from_type(pieces[0]);
+            if (type === null) {
+                LOG.debug('get_damages_from_message() - unknown damage type "%s"'.format(pieces[0]));
+                continue;  // the "type" in the part is not one of the damage types, skip this part
+            }
+
+            let index = pieces[1];
+            index = index.slice(3, index.length - 2);  // cut off the dollar sign and brackets
+            index = parse_int(index);
+
+            // Use the index in the message content to find the roll total in the message's roll results
+            damages[type] = msg.inlinerolls[index].results.total;
+        }
+
+        return damages;
+    }
+
+    // ################################################################################################################
     // Basic setup and message handling
 
 
@@ -5068,6 +5214,10 @@ var Barbs = Barbs || (function () {
                     throw err;
                 }
             }
+
+        } else if (record_messages_) {
+            LOG.info('received: ' + JSON.stringify(msg));
+            handle_non_api_message(msg);
         }
 
         // TODO: There are some abilities, like something in Demon Hunter, where we'd like to get back the result of a

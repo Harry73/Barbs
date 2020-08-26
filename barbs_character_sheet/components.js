@@ -166,7 +166,7 @@ var BarbsComponents = BarbsComponents || (function () {
             sendChat('API', string);
         }
     }
-    LOG.level = LogLevel.INFO;
+    LOG.level = LogLevel.DEBUG;
 
 
     // ################################################################################################################
@@ -9444,7 +9444,7 @@ var BarbsComponents = BarbsComponents || (function () {
             });
 
             for (let i = 0; i < parts.length; i++) {
-                Item.LOGGER.debug('construct_item(), handling part ' + parts[i]);
+                Item.LOGGER.debug('construct_item() - handling part ' + parts[i]);
                 const original_part = parts[i];
                 const part = parts[i].toLowerCase().replace(/[()]/g, '');
 
@@ -9493,7 +9493,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
                         scaler = ItemScaler.OTHER(scaling_stat, damage_type);
                     }
-                    Item.LOGGER.trace('construct_item(), handled base damage part');
+                    Item.LOGGER.trace('construct_item() - handled base damage part');
                     continue;
 
                 } else if (part.startsWith('type')) {
@@ -9521,7 +9521,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     }
 
                     item_type = temp_item_type;
-                    Item.LOGGER.trace('construct_item(), handled item type part');
+                    Item.LOGGER.trace('construct_item() - handled item type part');
                     continue;
                 }
 
@@ -9535,7 +9535,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
                         const effect = affix_constructor(character, item_name, part, original_part);
                         if (effect !== null) {
-                            Item.LOGGER.trace('construct_item(), handled "%s" part on item %s'.format(
+                            Item.LOGGER.trace('construct_item() - handled "%s" part on item %s'.format(
                                 affix_key, item_name));
                             effects.push(effect);
                             break;
@@ -9565,7 +9565,8 @@ var BarbsComponents = BarbsComponents || (function () {
             }
 
             const item = new Item(item_name, item_type, slot, base_damage, scaler, effects);
-            Item.LOGGER.debug('Constructed item, name=%s, type=%s, slot=%s'.format(item.name, item.type, item.slot));
+            Item.LOGGER.debug('construct_item() - constructed item, name=%s, type=%s, slot=%s'.format(
+                item.name, item.type, item.slot));
             return item;
         }
 
