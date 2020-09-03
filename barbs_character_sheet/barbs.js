@@ -21,6 +21,7 @@ var Barbs = Barbs || (function () {
     const HiddenStat = BarbsComponents.HiddenStat;
     const Skill = BarbsComponents.Skill;
     const conditions = BarbsComponents.conditions;
+    const crowd_control_conditions = BarbsComponents.crowd_control_conditions;
     const classes = BarbsComponents.classes;
     const Damage = BarbsComponents.Damage;
     const get_damage_from_type = BarbsComponents.get_damage_from_type;
@@ -530,11 +531,17 @@ var Barbs = Barbs || (function () {
         let total_cr = eval(get_stat_roll_modifier(character, roll, Stat.CONDITION_RESIST));
 
         const condition = msg.content.split(' ').slice(2).join(' ');
-        if (condition !== 'general' && condition.toLowerCase().replace(/[()]/g, '') in roll.condition_resists) {
-            total_cr += roll.condition_resists[condition.toLowerCase().replace(/[()]/g, '')];
+        const cleaned_condition = condition.toLowerCase().replace(/[()]/g, '');
+        if (condition !== 'general' && cleaned_condition in roll.condition_resists) {
+            total_cr += roll.condition_resists[cleaned_condition];
         }
 
-        chat(character, percent_format.format(condition + ' Condition Resist', 'CR', total_cr, Math.min(101, total_cr)));
+        if (crowd_control_conditions.includes(condition)) {
+            total_cr += roll.crowd_control_resist;
+        }
+
+        chat(character, percent_format.format(condition + ' Condition Resist', 'CR', total_cr,
+                                              Math.min(101, total_cr)));
     }
 
 
@@ -2412,6 +2419,75 @@ var Barbs = Barbs || (function () {
         });
 
         print_ability_description(character, ability);
+    }
+
+
+    function arcane_archer_persistent_hunter(character, ability, parameters) {
+        add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
+                              RollType.ALL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
+                roll.add_stat_bonus(Stat.CONDITION_RESIST, 30);
+                roll.add_crowd_control_resist(30);
+                return true;
+            });
+
+        print_ability_description(character, ability);
+    }
+
+
+    function arcane_archer_surefire_shot(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('7d8', Damage.PHYSICAL);
+        add_scale_damage(character, roll, parameters);
+
+        // Get number of buffs on character
+        let num_buffs = 0;
+        for (let i = 0; i < persistent_effects.length; i++) {
+            const effect = persistent_effects[i];
+            if (effect.target === character.name && effect.effect_type === EffectType.BUFF) {
+                num_buffs += 1;
+            }
+        }
+
+        roll.add_hidden_stat(HiddenStat.ACCURACY, 20 * num_buffs);
+        roll.add_hidden_stat(HiddenStat.RANGE, 40 * num_buffs);
+
+        const sacrifice = get_parameter('sacrifice', parameters);
+        if (sacrifice !== null) {
+            roll.add_multiplier(0.5, Damage.PHYSICAL, character.name);
+            roll.add_effect('Cannot be blocked');
+        }
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function arcane_archer_swelling_shot(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('9d8', Damage.PHYSICAL);
+        add_scale_damage(character, roll, parameters);
+
+        // Get number of buffs on character
+        let num_buffs = 0;
+        for (let i = 0; i < persistent_effects.length; i++) {
+            const effect = persistent_effects[i];
+            if (effect.target === character.name && effect.effect_type === EffectType.BUFF) {
+                num_buffs += 1;
+            }
+        }
+
+        roll.add_effect('%s ft square AOE'.format(25 + 10 * num_buffs));
+
+        const sacrifice = get_parameter('sacrifice', parameters);
+        if (sacrifice !== null) {
+            roll.add_multiplier(0.5, Damage.PHYSICAL, character.name);
+            roll.add_effect('On hit Crippled [[d100]]');
+        }
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -4590,6 +4666,9 @@ var Barbs = Barbs || (function () {
         'Arcane Archer': {
             'Broadhead Arrow': arcane_archer_broadhead_arrow,
             'Elusive Hunter': arcane_archer_elusive_hunter,
+            'Persistent Hunter': arcane_archer_persistent_hunter,
+            'Surefire Shot': arcane_archer_surefire_shot,
+            'Swelling Shot': arcane_archer_swelling_shot,
         },
         'Arcanist': {
             'Magic Dart': arcanist_magic_dart,

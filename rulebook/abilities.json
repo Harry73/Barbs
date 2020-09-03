@@ -998,7 +998,11 @@
             "conditional",
             "modal",
             "cleanse"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -1021,7 +1025,13 @@
             "bow",
             "crossbow",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "If you sacrificed a buff this turn, add the \"sacrifice\" parameter. The number of buffs you have is accounted for automatically.",
+            "examples": [
+                "sacrifice"
+            ]
+        }
     },
     {
         "type": "ability",
@@ -1047,7 +1057,13 @@
             "conditional",
             "condition",
             "Cripple"
-        ]
+        ],
+        "api": {
+            "description": "If you sacrified a buff this turn, add the \"sacrifice\" parameter. The number of buffs you have is accounted for automatically.",
+            "examples": [
+                "sacrifice"
+            ]
+        }
     },
     {
         "type": "ability",
@@ -9862,7 +9878,8 @@
             "conditional",
             "stance",
             "modal",
-            "block"
+            "block",
+            "field"
         ]
     },
     {

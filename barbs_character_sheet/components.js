@@ -454,6 +454,7 @@ var BarbsComponents = BarbsComponents || (function () {
         LETHALITY: '%s% lethality chance, chance: [[d100cs>%s]]',
         LIFESTEAL: '%s% lifesteal',
         MINION_LETHALITY: '%s% minion lethality chance, chance: [[d100cs>%s]]',
+        RANGE: '+%s ft range',
         REACH: '+%s ft reach',
         UNBLOCKABLE_CHANCE: '%s% chance to be unblockable, chance: [[d100cs>%s]]',
 
@@ -496,6 +497,7 @@ var BarbsComponents = BarbsComponents || (function () {
         'lethality:': HiddenStat.LETHALITY,
         'lifesteal:': HiddenStat.LIFESTEAL,
         'minion lethality': HiddenStat.MINION_LETHALITY,
+        'range': HiddenStat.RANGE,
         'reach:': HiddenStat.REACH,
         'unblockable chance:': HiddenStat.UNBLOCKABLE_CHANCE,
 
@@ -669,29 +671,47 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     const conditions = [
-        "Bleeding",
-        "Blinded",
-        "Burned",
-        "Charmed",
-        "Confused",
-        "Crippled",
-        "Cursed",
-        "Decreased Stats",
-        "Fear",
-        "Frozen",
-        "Helpless",
-        "Immobilized",
-        "Knocked Down (Prone)",
-        "Knocked Up (Airborne)",
-        "Paralyzed",
-        "Petrified",
-        "Poisoned",
-        "Silenced",
-        "Sleeping",
-        "Slowed",
-        "Stunned",
-        "Taunted",
-        "Weakened"
+        'Bleeding',
+        'Blinded',
+        'Burned',
+        'Charmed',
+        'Confused',
+        'Crippled',
+        'Cursed',
+        'Decreased Stats',
+        'Fear',
+        'Frozen',
+        'Helpless',
+        'Immobilized',
+        'Knocked Down (Prone)',
+        'Knocked Up (Airborne)',
+        'Paralyzed',
+        'Petrified',
+        'Poisoned',
+        'Silenced',
+        'Sleeping',
+        'Slowed',
+        'Stunned',
+        'Taunted',
+        'Weakened',
+    ];
+
+
+    const crowd_control_conditions = [
+        'Blinded',
+        'Confused',
+        'Crippled',
+        'Fear',
+        'Frozen',
+        'Immobilized',
+        'Knocked Down (Prone)',
+        'Knocked Up (Airborne)',
+        'Paralyzed',
+        'Petrified',
+        'Silenced',
+        'Slowed',
+        'Stunned',
+        'Taunted',
     ];
 
 
@@ -8595,6 +8615,7 @@ var BarbsComponents = BarbsComponents || (function () {
             this.hidden_stats = {};
 
             this.condition_resists = {};
+            this.crowd_control_resist = 0;
             this.magic_resists = {};
 
             this.skills = {};
@@ -8678,6 +8699,11 @@ var BarbsComponents = BarbsComponents || (function () {
             }
         }
 
+        add_crowd_control_resist(value) {
+            assert_not_null(value, 'add_crowd_control_resist() value');
+            this.crowd_control_resist += value;
+        }
+
         add_magic_resist(type, value) {
             assert_not_null(type, 'add_magic_resist() type');
             assert_not_null(value, 'add_magic_resist() value');
@@ -8690,18 +8716,22 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         add_initiative_bonus(bonus) {
+            assert_not_null(bonus, 'add_initiative_bonus() bonus');
             this.initiative_bonus += bonus;
         }
 
         add_concentration_bonus(bonus) {
+            assert_not_null(bonus, 'add_concentration_bonus() bonus');
             this.concentration_bonus += bonus;
         }
 
         add_buff_effectiveness(bonus) {
+            assert_not_null(bonus, 'add_buff_effectiveness() bonus');
             this.buff_effectiveness += bonus / 100;
         }
 
         add_enchant_effectiveness(bonus) {
+            assert_not_null(bonus, 'add_enchant_effectiveness() bonus');
             this.enchant_effectiveness += bonus / 100;
         }
 
@@ -10085,7 +10115,7 @@ var BarbsComponents = BarbsComponents || (function () {
         parse_int, trim_percent, trim_all, remove_empty,
         LOG,
         CHARACTER_NAME_VARIANTS,
-        Stat, HiddenStat, Skill, conditions, classes,
+        Stat, HiddenStat, Skill, conditions, crowd_control_conditions, classes,
         Damage, get_damage_from_type,
         RollType, RollTime, Roll,
         ItemType, ItemSlot, Item,
