@@ -4753,6 +4753,7 @@ var Barbs = Barbs || (function () {
             'Wild Swing': juggernaut_wild_swing,
             'Hostility': juggernaut_hostility,
             'Tachycardia': juggernaut_tachycardia,
+            'Blood for Vigor': print_ability_description,
         },
         'Ki Monk': {
             'Spirit Punch': ki_monk_spirit_punch,

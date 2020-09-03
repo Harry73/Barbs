@@ -5436,7 +5436,11 @@
         ],
         "tags": [
             "---"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
