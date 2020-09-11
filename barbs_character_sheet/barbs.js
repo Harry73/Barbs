@@ -952,6 +952,11 @@ var Barbs = Barbs || (function () {
 
 
     function make_handler_effective(target_character, handler, parameters, effectiveness) {
+        assert_type(target_character, 'Character', 'make_handler_effective() target_character');
+        assert_not_null(handler, 'make_handler_effective() handler');
+        assert_not_null(parameters, 'make_handler_effective() parameters');
+        assert_not_null(effectiveness, 'make_handler_effective() effectiveness');
+
         // Figure out what damage / multiplier this handler grants
         const fake_roll = new Roll(target_character, RollType.ALL);
         handler(target_character, fake_roll, parameters);
@@ -1237,7 +1242,7 @@ var Barbs = Barbs || (function () {
     // Iterate through effects of abilities (buffs, empowers, etc) that may last multiple turns and return a list of
     // applicable ones.
     function get_applicable_persistent_effects_to_roll(character, roll, roll_time, parameters) {
-        assert_not_null(character, 'get_applicable_persistent_effects_to_roll() character');
+        assert_type(character, 'Character', 'get_applicable_persistent_effects_to_roll() character');
         assert_not_null(roll, 'get_applicable_persistent_effects_to_roll() roll');
         assert_not_null(roll_time, 'get_applicable_persistent_effects_to_roll() roll_time');
         assert_not_null(parameters, 'get_applicable_persistent_effects_to_roll() parameters');
@@ -1486,6 +1491,7 @@ var Barbs = Barbs || (function () {
 
     function add_extras(character, ability, roll, roll_time, parameters, crit_section) {
         assert_not_null(character, 'add_extras() character');
+        assert_not_null(ability, 'add_extras() ability');
         assert_not_null(roll, 'add_extras() roll');
         assert_not_null(roll_time, 'add_extras() roll_time');
         assert_not_null(parameters, 'add_extras() parameters');
@@ -1497,6 +1503,7 @@ var Barbs = Barbs || (function () {
         const runnables = merge(runnables_1, runnables_2);
 
         for (let i = 0; i < runnables.length; i++) {
+            assert_not_null(runnables[i], 'add_extras() runnables[%s]'.format(i));
             if (!runnables[i].modified_handler()) {
                 LOG.warn('Problem adding effects at time ' + roll_time);
                 return false;
@@ -2146,6 +2153,7 @@ var Barbs = Barbs || (function () {
 
 
     function get_applicable_normal_arbitrary_parameter_handlers(ability, roll, roll_time, parameters) {
+        assert_not_null(ability, 'get_applicable_normal_arbitrary_parameter_handlers() ability');
         assert_type(roll, 'Roll', 'get_applicable_normal_arbitrary_parameter_handlers() roll');
         assert_starts_with(roll_time, 'roll_time', 'get_applicable_normal_arbitrary_parameter_handlers() roll_time');
         assert_not_null(parameters, 'get_applicable_normal_arbitrary_parameter_handlers() parameters');

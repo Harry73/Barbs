@@ -4531,6 +4531,7 @@
         "api": {
             "description": "There are two options with this ability. If you are boosting a weapon's damage, specify the \"choice first\" parameter. If you are decreasing a weapon's damage, specify \"choice second\".",
             "examples": [
+                "target <target name>",
                 "choice <first/second>"
             ]
         }

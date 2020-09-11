@@ -3,7 +3,7 @@
         "type": "buff",
         "name": "Hidden",
         "duration": "Until broken",
-        "description": "Enemies cannot track you for the purposes of targeting you. If you attack an enemy while Hidden, you will lose the Hidden buff, but your target cannot use a Reaction in response to the attack."
+        "description": "Enemies cannot track you for the purposes of targeting you. If you attack an enemy or use a spell while Hidden, you will lose the Hidden buff, but your target cannot use a Reaction in response to the action."
     },
     {
         "type": "buff",
