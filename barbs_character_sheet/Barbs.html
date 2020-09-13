@@ -1,54 +1,15 @@
 <div class="sheet-overall-wrapper">
     <!-- PC / NPC toggle -->
     <input class="sheet-is-npc" type="checkbox" name="attr_is_npc" value="1"><span class="sheet-is-npc-tab"></span>
-    <div style="float: right">
-        <input type="checkbox" name="attr_default_ro" class="sheet-ro-checkbox" value="1" /><span class="sheet-ro-label">y</span>
-        <!-- Modal template Should be placed as the first element immediately after the input checkbox to open it -->
-        <div class="sheet-ro-modal sheet-save-modal">
-            <div>
-                <!-- Modal Title and close button row -->
-                <div class="sheet-row sheet-ro-header sheet-border-bottom sheet-padb">
-                    <div class="sheet-col-3-4 sheet-ro-title">Default Roll Options</div>
-                    <div class="sheet-col-1-4 sheet-ro-close-wrapper">
-                        <input type="checkbox" name="attr_default_ro" class="sheet-ro-close-checkbox" value="1" />
-                        <span class="sheet-ro-close-label"></span>
-                    </div>
-                </div>
-                <!--Help text and copy of roll button-->
-                <div class="sheet-row sheet-padb">
-                    <div class="sheet-col-2-3 sheet-small-note">The settings here apply to any rolls set to use the default roll options</div>
-                </div>
-                <hr/>
-                <!-- Define options here -->
-                <div class="sheet-row sheet-checkbox-row">
-                    <div class="sheet-col-1-3 sheet-ro-optionlabel">Roll type</div>
-                    <div class="sheet-col-2-3 sheet-padl sheet-ro-option">
-                        <select name="attr_ro_default_rolltype">
-                            <option value="{{showadvroll=1}} {{roll2=[[ 1d20">Roll 2d20</option>
-                            <option value="{{noadvroll=1}}">Roll 1d20</option>
-                            <option value="?{Roll type?|Normal,&#123&#123noadvroll=1&#125&#125|Advantage,&#123&#123rollhasadv=1&#125&#125 &#123&#123roll2=[[1d20|Disadvantage,&#123&#123rollhasdisadv=1&#125&#125 &#123&#123roll2=[[1d20}">Prompt for adv/disadv</option>
-                            <option value="{{rollhasadv=1}} {{roll2=[[ 1d20">ALWAYS Advantage</option>
-                            <option value="{{rollhasdisadv=1}} {{roll2=[[ 1d20">ALWAYS Disadvantage</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <!-- close inner modal div -->
-        </div>
-        <!-- close outer modal div -->
-    </div>
 
 
     <div class="sheet-core-header sheet-padb">
         <div class="sheet-row">
             <div class="sheet-col-1-2 sheet-margin-top"><img src="https://i.imgur.com/9u8XLg7.png" alt="Barbs"></div>
+            <div class="sheet-col-1-4">&nbsp;</div>
             <div class="sheet-col-1-4 sheet-small-label sheet-center">
                 <input class="sheet-underlined sheet-center" type="text" name="attr_character_name">
                 <br/>Character Name
-            </div>
-            <div class="sheet-col-1-4 sheet-small-label sheet-center">
-                <input class="sheet-underlined sheet-center" type="text" name="attr_owner">
-                <br/>Owner
             </div>
         </div>
     </div>
