@@ -10116,7 +10116,7 @@ var BarbsComponents = BarbsComponents || (function () {
         LOG,
         CHARACTER_NAME_VARIANTS,
         Stat, HiddenStat, Skill, conditions, crowd_control_conditions, classes,
-        Damage, get_damage_from_type,
+        ElementalDamage, Damage, get_damage_from_type,
         RollType, RollTime, Roll,
         ItemType, ItemSlot, Item,
         Character,

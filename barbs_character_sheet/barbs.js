@@ -23,6 +23,7 @@ var Barbs = Barbs || (function () {
     const conditions = BarbsComponents.conditions;
     const crowd_control_conditions = BarbsComponents.crowd_control_conditions;
     const classes = BarbsComponents.classes;
+    const ElementalDamage = BarbsComponents.ElementalDamage;
     const Damage = BarbsComponents.Damage;
     const get_damage_from_type = BarbsComponents.get_damage_from_type;
     const RollType = BarbsComponents.RollType;
@@ -468,7 +469,17 @@ var Barbs = Barbs || (function () {
                 break;
 
             case Stat.MAGIC_RESIST.name:
-                chat(character, total_format.format('Total Magic Resist', 'Magic Resist', modifier));
+                let result = '&{template:Barbs} {{name=Magic Resists}} {{general=[[round(%s)]]}}'.format(modifier)
+                const keys = Object.keys(ElementalDamage);
+                for (let i = 0; i < keys.length; i++) {
+                    const type = ElementalDamage[keys[i]];
+                    if (type in roll.magic_resists) {
+                        const value = roll.magic_resists[type];
+                        result = result + ' {{%s=[[round(%s)]]}}'.format(type, value);
+                    }
+                }
+
+                chat(character, result);
                 break;
 
             case Stat.CONDITION_RESIST.name:
@@ -666,7 +677,7 @@ var Barbs = Barbs || (function () {
         // Proper concentration check
         const roll = get_roll_with_items_and_effects(character);
         const roll_string = 'd100+%s'.format(roll.concentration_bonus);
-        chat(msg, total_format.format('Concentration Check', 'Roll', roll_string));
+        chat(character, total_format.format('Concentration Check', 'Roll', roll_string));
 
         // Athletics: Pain Tolerance check, if the character has it
         const skills = character.get_skills();
@@ -5311,7 +5322,7 @@ var Barbs = Barbs || (function () {
 
             const request = pieces[1];
             if (!(request in request_processors)) {
-                chat(msg, 'unknown barbs request %s'.format(request));
+                raw_chat('API', 'unknown barbs request %s'.format(request));
                 return;
             }
 
