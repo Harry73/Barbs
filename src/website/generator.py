@@ -44,13 +44,21 @@ def _build_attributes(attributes):
     with open(os.path.join(HTML_TEMPLATES, 'attribute.html'), encoding='utf8') as f:
         attribute_template = f.read().strip()
 
+    colors = {
+        'Resources': '#BD68FF',  # purple
+        'Defenses': '#FFDF89',   # gold
+        'Damages': '#44ABFF',    # blue
+        'Mentals': '#FFA0FF',    # pink
+    }
+
     attribute_htmls = []
     for attribute in attributes:
         _debug('attribute', attribute)
         attribute_html = attribute_template.format(
             name=attribute['name'],
             name_and_tla='%s (%s)' % (attribute['name'], attribute['abbreviation']),
-            description=attribute['description']
+            description=attribute['description'],
+            color=colors[attribute['category']],
         )
         attribute_htmls.append(attribute_html)
 

@@ -8626,6 +8626,7 @@ var BarbsComponents = BarbsComponents || (function () {
             this.enchant_effectiveness = 1;
             this.split_buff_effectiveness = {};
             this.combo_chance = 0;
+            this.general_damge_reduction = 0;
 
             this.crit = false;
             this.crit_damage_mod = 2;
@@ -8751,6 +8752,11 @@ var BarbsComponents = BarbsComponents || (function () {
 
         add_combo_chance(bonus) {
             this.combo_chance += bonus;
+        }
+
+        add_general_damage_resistance(bonus) {
+            assert_not_null(bonus, 'add_general_damage_resistance() bonus');
+            this.general_damge_reduction += bonus;
         }
 
         add_skill_bonus(skill, bonus) {
@@ -9162,12 +9168,11 @@ var BarbsComponents = BarbsComponents || (function () {
             });
         }
 
-        static skill_effect(skill, mod) {
-            assert_not_null(skill, 'skill_effect() skill');
-            assert_not_null(mod, 'skill_effect() mod');
+        static general_damage_resistance(bonus) {
+            assert_not_null(bonus, 'general_damage_resistance() bonus');
 
             return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
-                roll.add_skill_bonus(skill, mod);
+                roll.add_general_damage_resistance(bonus);
             });
         }
 
@@ -9216,6 +9221,15 @@ var BarbsComponents = BarbsComponents || (function () {
 
             return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
                 roll.add_combo_chance(bonus);
+            });
+        }
+
+        static skill_effect(skill, mod) {
+            assert_not_null(skill, 'skill_effect() skill');
+            assert_not_null(mod, 'skill_effect() mod');
+
+            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+                roll.add_skill_bonus(skill, mod);
             });
         }
 
@@ -9345,6 +9359,13 @@ var BarbsComponents = BarbsComponents || (function () {
         },
         'combo chance': function(character, item_name, part) {
             return Item.irregular_stat_affix(item_name, part, 'combo chance', Effect.combo_chance);
+        },
+        'gdr': function(character, item_name, part) {
+            return Item.irregular_stat_affix(item_name, part, 'gdr', Effect.general_damage_resistance);
+        },
+        'general damage resist': function(character, item_name, part) {
+            return Item.irregular_stat_affix(item_name, part, 'general damage resist',
+                                             Effect.general_damage_resistance);
         },
         'damage': function(character, item_name, part) {
             return Item.damage_affix(item_name, part, Effect.roll_damage);
