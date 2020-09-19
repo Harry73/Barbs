@@ -1648,13 +1648,15 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function format_and_send_roll(character, roll_title, roll, rolls_per_type, crit_section, combo_section = '') {
+    function format_and_send_roll(character, roll_title, roll, rolls_per_type, crit_section, combo_section = '',
+                                  button_section='') {
         assert_not_null(character, 'format_and_send_roll() character');
         assert_not_null(roll_title, 'format_and_send_roll() roll_title');
         assert_not_null(roll, 'format_and_send_roll() roll');
         assert_not_null(rolls_per_type, 'format_and_send_roll() rolls_per_type');
         assert_not_null(crit_section, 'format_and_send_roll() crit_section');
         assert_not_null(combo_section, 'format_and_send_roll() combo_section');
+        assert_not_null(button_section, 'format_and_send_roll() button_section');
 
         let damage_section = '';
         Object.keys(rolls_per_type).forEach(function (type) {
@@ -1691,7 +1693,8 @@ var Barbs = Barbs || (function () {
         }
 
         const effects_section = effects_section_format.format(effects.join(''));
-        const msg = roll_format.format(roll_title, damage_section, crit_section, combo_section, effects_section);
+        const msg = roll_format.format(roll_title, damage_section, crit_section, combo_section, effects_section,
+                                       button_section);
 
         LOG.info('format_and_send_roll() - roll: ' + msg);
         chat(character, msg);
