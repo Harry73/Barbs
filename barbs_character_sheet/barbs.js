@@ -3070,6 +3070,7 @@ var Barbs = Barbs || (function () {
             // The summon acts as a separate character, so we make a fake one to be able to do rolls with. The critical
             // hit chance stat must at least be set for this to work properly.
             const dragon = new Character({'id': 'bronze_dragon'}, character.who);
+            dragon.name = short_name;
             dragon.stats[Stat.CRITICAL_HIT_CHANCE.name] = 0;
 
             if (major_action === 'breath') {
@@ -3141,6 +3142,7 @@ var Barbs = Barbs || (function () {
             // The summon acts as a separate character, so we make a fake one to be able to do rolls with. The critical
             // hit chance stat must at least be set for this to work properly.
             const dragon = new Character({'id': 'silver_dragon'}, character.who);
+            dragon.name = short_name;
             dragon.stats[Stat.CRITICAL_HIT_CHANCE.name] = 0;
 
             if (major_action === 'breath') {

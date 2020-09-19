@@ -8973,6 +8973,7 @@ var BarbsComponents = BarbsComponents || (function () {
         'brooch': ItemType.ACCESSORY,
         'necklace': ItemType.ACCESSORY,
         'choker': ItemType.ACCESSORY,
+        'pendant': ItemType.ACCESSORY,
         // Ring slot
         'ring': ItemType.ACCESSORY,
         'band': ItemType.ACCESSORY,
@@ -9611,7 +9612,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     }
                 }
             }
-            if (item_type === ItemType.UNKNOWN) {
+            if (item_type === ItemType.UNKNOWN && slot !== ItemSlot.MISCELLANEOUS) {
                 Item.LOGGER.warn('In item "%s", failed to guess the type'.format(item_name));
             }
 

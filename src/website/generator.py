@@ -228,7 +228,7 @@ def _build_pretty_table_ability(ability):
 
     top_row = [
         ' %s ' % ability['name'].strip(),
-        ' %s ' % ability['duration'].strip(),
+        ' %s ' % ability['action'].strip(),
         ' Cost: %s ' % ability['cost'].strip(),
         ' Range: %s ' % ability['range'].strip(),
         ' Duration: %s ' % ability['duration'].strip(),
