@@ -1501,7 +1501,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-
     function add_extras(character, ability, roll, roll_time, parameters, crit_section) {
         assert_not_null(character, 'add_extras() character');
         assert_not_null(ability, 'add_extras() ability');
@@ -1726,6 +1725,53 @@ var Barbs = Barbs || (function () {
 
 
     // ################################################################################################################
+    // Minions
+
+
+    function make_minion(character, name) {
+        assert_type(character, 'Character', 'make_minion() character');
+        assert_not_null(name, 'make_minion() name');
+
+        const id = name.replace(/\s+/g, '_').toLowerCase();
+
+        // The summon acts as a separate character, so we make a fake one to be able to do rolls with. The critical
+        // hit chance stat must at least be set for this to work properly. The name is also needed to create
+        // multipliers from the minion.
+        const minion = new Character({'id': id}, character.who);
+        minion.name = name;
+        minion.stats[Stat.CRITICAL_HIT_CHANCE.name] = 0;
+        return minion
+    }
+
+
+    function make_minion_roll(character, ability, parameters, minion, roll_type) {
+        assert_type(character, 'Character', 'make_minion_roll() character');
+        assert_not_null(ability, 'make_minion_roll() ability');
+        assert_not_null(parameters, 'make_minion_roll() parameters');
+        assert_type(minion, 'Character', 'make_minion_roll() minion');
+        assert_not_null(roll_type, 'make_minion_roll() roll_type');
+
+        const character_roll = new Roll(character, roll_type);
+        if (!add_extras(character, ability, character_roll, RollTime.DEFAULT, parameters, '')) {
+            return null;
+        }
+
+        const minion_roll = new Roll(minion, roll_type);
+        minion_roll.add_multiplier(character_roll.minion_damage / 100, Damage.ALL, character.name);
+
+        // Draconic Pact from Dragoncaller is weird because the source should be the summoner, not the minion doing
+        // the roll. So we'll deal with it here instead of making it an arbitrary parameter.
+        const draconic_pact = get_parameter('draconic_pact', parameters);
+        if (draconic_pact !== null) {
+            assert_numeric(draconic_pact, 'Non-numeric draconic_pact number "%s"', draconic_pact);
+            const pacts = parse_int(draconic_pact);
+            minion_roll.add_multiplier(pacts, Damage.ALL, character.name);
+        }
+
+        return minion_roll;
+    }
+
+    // ################################################################################################################
     // Class passives (usually) that may apply to anything
 
 
@@ -1853,17 +1899,6 @@ var Barbs = Barbs || (function () {
         if (empowered !== null && RollType.is_physical(roll.roll_type)) {
             roll.add_crit_damage_mod(100);
         }
-        return true;
-    }
-
-
-    function dragoncaller_draconic_pact(ability, roll, roll_time, parameter) {
-        if (roll_time !== RollTime.DEFAULT) {
-            return true;
-        }
-
-        const pacts = parse_int(parameter.split(' ')[1]);
-        roll.add_multiplier(pacts, Damage.ALL, roll.character.name);
         return true;
     }
 
@@ -2148,7 +2183,6 @@ var Barbs = Barbs || (function () {
         'choke_hold': new ArbitraryParameter(martial_artist_choke_hold_arbitrary, Ordering()),
         'concave': new ArbitraryParameter(mirror_mage_concave_mirror, Ordering()),
         'daggerspell_marked': new ArbitraryParameter(daggerspell_marked, Ordering()),
-        'draconic_pact': new ArbitraryParameter(dragoncaller_draconic_pact, Ordering()),
         'empowered': new ArbitraryParameter(daggerspell_ritual_dagger, Ordering()),
         'frostbite': new ArbitraryParameter(cryomancer_frostbite_arbitrary, Ordering()),
         'juggernaut': new ArbitraryParameter(juggernaut_what_doesnt_kill_you, Ordering()),
@@ -3072,14 +3106,10 @@ var Barbs = Barbs || (function () {
 
         const major_action = get_parameter('major', parameters);
         if (major_action !== null) {
-            // The summon acts as a separate character, so we make a fake one to be able to do rolls with. The critical
-            // hit chance stat must at least be set for this to work properly.
-            const dragon = new Character({'id': 'bronze_dragon'}, character.who);
-            dragon.name = short_name;
-            dragon.stats[Stat.CRITICAL_HIT_CHANCE.name] = 0;
+            const dragon = make_minion(character, short_name);
 
             if (major_action === 'breath') {
-                const roll = new Roll(dragon, RollType.MAGIC);
+                const roll = make_minion_roll(character, ability, parameters, dragon, RollType.MAGIC);
                 roll.add_damage('10d12', Damage.LIGHTNING);
 
                 roll_crit(ability, roll, parameters, function (crit_section) {
@@ -3087,7 +3117,7 @@ var Barbs = Barbs || (function () {
                 });
 
             } else if (major_action === 'claw') {
-                const roll = new Roll(dragon, RollType.PHYSICAL);
+                const roll = make_minion_roll(character, ability, parameters, dragon, RollType.PHYSICAL);
                 roll.add_damage('10d10', Damage.PHYSICAL);
 
                 roll_crit(ability, roll, parameters, function (crit_section) {
@@ -3144,14 +3174,10 @@ var Barbs = Barbs || (function () {
 
         const major_action = get_parameter('major', parameters);
         if (major_action !== null) {
-            // The summon acts as a separate character, so we make a fake one to be able to do rolls with. The critical
-            // hit chance stat must at least be set for this to work properly.
-            const dragon = new Character({'id': 'silver_dragon'}, character.who);
-            dragon.name = short_name;
-            dragon.stats[Stat.CRITICAL_HIT_CHANCE.name] = 0;
+            const dragon = make_minion(character, short_name);
 
             if (major_action === 'breath') {
-                const roll = new Roll(dragon, RollType.MAGIC);
+                const roll = make_minion_roll(character, ability, parameters, dragon, RollType.MAGIC);
                 roll.add_damage('12d8', Damage.ICE);
 
                 roll_crit(ability, roll, parameters, function (crit_section) {
@@ -3159,7 +3185,7 @@ var Barbs = Barbs || (function () {
                 });
 
             } else if (major_action === 'tail') {
-                const roll = new Roll(dragon, RollType.PHYSICAL);
+                const roll = make_minion_roll(character, ability, parameters, dragon, RollType.PHYSICAL);
                 roll.add_damage('8d10', Damage.PHYSICAL);
 
                 roll_crit(ability, roll, parameters, function (crit_section) {
@@ -3216,15 +3242,12 @@ var Barbs = Barbs || (function () {
 
         const major_action = get_parameter('major', parameters);
         if (major_action !== null) {
-            // The summon acts as a separate character, so we make a fake one to be able to do rolls with. The critical
-            // hit chance stat must at least be set for this to work properly.
-            const dragon = new Character({'id': 'gold_dragon'}, character.who);
-            dragon.stats[Stat.CRITICAL_HIT_CHANCE.name] = 0;
+            const dragon = make_minion(character, short_name);
 
             // There's only one option, but we're doing it like this so that this ability follows the same pattern as
             // other summons in this class.
             if (major_action === 'breath') {
-                const roll = new Roll(dragon, RollType.MAGIC);
+                const roll = make_minion_roll(character, ability, parameters, dragon, RollType.MAGIC);
                 roll.add_damage('10d12', Damage.FIRE);
                 roll.add_effect('Leaves behind a field of fire');
                 roll.add_hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 100);

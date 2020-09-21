@@ -8627,6 +8627,7 @@ var BarbsComponents = BarbsComponents || (function () {
             this.split_buff_effectiveness = {};
             this.combo_chance = 0;
             this.general_damge_reduction = 0;
+            this.minion_damage = 0;
 
             this.crit = false;
             this.crit_damage_mod = 2;
@@ -9169,14 +9170,6 @@ var BarbsComponents = BarbsComponents || (function () {
             });
         }
 
-        static general_damage_resistance(bonus) {
-            assert_not_null(bonus, 'general_damage_resistance() bonus');
-
-            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
-                roll.add_general_damage_resistance(bonus);
-            });
-        }
-
         static initiative_bonus(bonus) {
             assert_not_null(bonus, 'initiative_bonus() bonus');
 
@@ -9222,6 +9215,25 @@ var BarbsComponents = BarbsComponents || (function () {
 
             return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
                 roll.add_combo_chance(bonus);
+            });
+        }
+
+        static general_damage_resistance(bonus) {
+            assert_not_null(bonus, 'general_damage_resistance() bonus');
+
+            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+                roll.add_general_damage_resistance(bonus);
+            });
+        }
+
+        static minion_damage(bonus, applicable_roll_type) {
+            assert_not_null(bonus, 'minion_damage() bonus');
+            assert_not_null(applicable_roll_type, 'minion_damage(), applicable_roll_type');
+
+            return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
+                if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
+                    roll.minion_damage += bonus;
+                }
             });
         }
 
@@ -9387,7 +9399,10 @@ var BarbsComponents = BarbsComponents || (function () {
             return Item.effect_affix(item_name, original_part, Effect.crit_effect);
         },
         'crit damage mod': function(character, item_name, part) {
-            return Item.crit_damage_mod_affix(item_name, part);
+            return Item.value_and_roll_type_affix(item_name, part, 'crit damage mod', Effect.crit_damage_mod);
+        },
+        'minion damage': function(character, item_name, part) {
+            return Item.value_and_roll_type_affix(item_name, part, 'minion damage', Effect.minion_damage);
         },
     }
 
@@ -9764,39 +9779,41 @@ var BarbsComponents = BarbsComponents || (function () {
             return create_effect(character, value, damage_type, roll_type);
         }
 
-        static crit_damage_mod_affix(item_name, part) {
-            assert_not_null(item_name, 'crit_damage_mod_affix() item_name');
-            assert_not_null(part, 'crit_damage_mod_affix() part');
+        static value_and_roll_type_affix(item_name, part, stat_name, create_effect) {
+            assert_not_null(item_name, 'value_plus_roll_type_affix() item_name');
+            assert_not_null(part, 'value_plus_roll_type_affix() part');
+            assert_not_null(stat_name, 'value_plus_roll_type_affix() stat_name');
+            assert_not_null(create_effect, 'value_plus_roll_type_affix() create_effect');
 
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                Item.LOGGER.error('In item "%s", in crit damage mod affix "%s", expected one colon'.format(
-                    item_name, part));
+                Item.LOGGER.error('In item "%s", in %s affix "%s", expected one colon'.format(
+                    item_name, stat_name, part));
                 return null;
             }
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 2) {
-                Item.LOGGER.error('In item "%s", in crit damage mod affix "%s", '.format(item_name, part) +
+                Item.LOGGER.error('In item "%s", in %s affix "%s", '.format(item_name, stat_name, part) +
                                       'expected two space-separated pieces after colon');
                 return null;
             }
 
             let value = parse_int(trim_percent(pieces[0]));
             if (Number.isNaN(value)) {
-                Item.LOGGER.error('In item "%s", in crit damage mod affix "%s", value %s is not a number'.format(
-                    item_name, part, pieces[1]));
+                Item.LOGGER.error('In item "%s", in %s affix "%s", value %s is not a number'.format(
+                    item_name, stat_name, part, pieces[1]));
                 return null;
             }
 
             const roll_type = get_roll_type(pieces[1]);
             if (roll_type === null) {
-                Item.LOGGER.error('In item "%s", in crit damage mod affix "%s", unrecognized roll type %s'.format(
-                    item_name, part, pieces[1]));
+                Item.LOGGER.error('In item "%s", in %s affix "%s", unrecognized roll type %s'.format(
+                    item_name, stat_name, part, pieces[1]));
                 return null;
             }
 
-            return Effect.crit_damage_mod(value, roll_type);
+            return create_effect(value, roll_type);
         }
 
         static stat_affix(item_name, part, stat, create_effect) {

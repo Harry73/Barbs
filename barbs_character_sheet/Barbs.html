@@ -878,6 +878,16 @@
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Minion Damage</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_minion_damage" value="@{hidden_minion_damage}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_minion_damage" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
                         <div class="sheet-col-1-2 sheet-skill-name">Minion Lethality</div>
                         <div class="sheet-col-1-6">
                             <input type="number" name="attr_minion_lethality" value="@{hidden_minion_lethality}" disabled="disabled"/>
@@ -2980,6 +2990,7 @@
             {'attr': 'combo_chance', 'key': 'combo chance', 'equation': '0'},
             {'attr': 'crit_damage_mod', 'key': 'crit damage mod', 'equation': '0'},
             {'attr': 'lethality', 'key': 'lethality', 'equation': '0'},
+            {'attr': 'minion_damage', 'key': 'minion damage', 'equation': '0'},
             {'attr': 'minion_lethality', 'key': 'minion lethality', 'equation': '0'},
             {'attr': 'lifesteal', 'key': 'lifesteal', 'equation': '0'},
 
