@@ -1194,7 +1194,7 @@
                 </div>
             </div>
 
-            <h4 class="sheet-center">Specific Magic Resists</h4>
+            <h4 class="sheet-center">Damage Reduction Stats</h4>
             <div class="sheet-row sheet-padb">
                 <!-- left column -->
                 <div class="sheet-col-1-2 sheet-padr">
@@ -1203,6 +1203,34 @@
                         <div class="sheet-col-1-2 sheet-small-label">Stat</div>
                         <div class="sheet-col-1-6 sheet-center sheet-small-label">Value</div>
                         <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
+                    </div>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">General Damage Reduction</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_gdr" value="@{hidden_gdr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_gdr" value="0"/>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">AC</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_ac_dms" value="@{hidden_ac}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">General Magic Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_mr_dms" value="@{hidden_magic_resist}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
@@ -1234,16 +1262,6 @@
                         <div class="sheet-col-7-24">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_earth_mr" value="0"/>
-
-                    <div class="sheet-row sheet-skill-row">
-                        <div class="sheet-col-1-24">&nbsp;</div>
-                        <div class="sheet-col-1-2 sheet-skill-name">Air Magic Resist</div>
-                        <div class="sheet-col-1-6">
-                            <input type="number" name="attr_air_mr" value="@{hidden_air_mr}" disabled="disabled"/>
-                        </div>
-                        <div class="sheet-col-7-24">&nbsp;</div>
-                    </div>
-                    <input type="hidden" name="attr_hidden_air_mr" value="0"/>
                 </div>
 
                 <!-- right column -->
@@ -1254,6 +1272,16 @@
                         <div class="sheet-col-1-6 sheet-center sheet-small-label">Value</div>
                         <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
                     </div>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">Air Magic Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_air_mr" value="@{hidden_air_mr}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-7-24">&nbsp;</div>
+                    </div>
+                    <input type="hidden" name="attr_hidden_air_mr" value="0"/>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-24">&nbsp;</div>
@@ -1297,7 +1325,7 @@
                 </div>
             </div>
 
-            <h4 class="sheet-center">Specific Condition Resistances</h4>
+            <h4 class="sheet-center">Condition Resistances</h4>
             <div class="sheet-row sheet-padb">
                 <!-- left column -->
                 <div class="sheet-col-1-2 sheet-padr">
@@ -1306,6 +1334,19 @@
                         <div class="sheet-col-1-2 sheet-small-label">Stat</div>
                         <div class="sheet-col-1-6 sheet-center sheet-small-label">Value</div>
                         <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
+                    </div>
+
+                    <div class="sheet-row sheet-skill-row">
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-skill-name">General Condition Resist</div>
+                        <div class="sheet-col-1-6">
+                            <input type="number" name="attr_cr_cr" value="@{hidden_condition_resist}" disabled="disabled"/>
+                        </div>
+                        <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
+                        <div class="sheet-col-1-12">
+                            <button class="sheet-skill-roll" type="roll" name="roll_general_cr" value="!barbs cr $@{character_name}$ General"></button>
+                        </div>
+                        <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
 
                     <div class="sheet-row sheet-skill-row">
@@ -1461,6 +1502,16 @@
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_helpless_cr" value="0"/>
+                </div>
+
+                <!-- right column -->
+                <div class="sheet-col-1-2">
+                    <div class="sheet-row sheet-sub-header">
+                        <div class="sheet-col-1-24 sheet-center sheet-small-label">&nbsp;</div>
+                        <div class="sheet-col-1-2 sheet-small-label">Stat</div>
+                        <div class="sheet-col-1-6 sheet-center sheet-small-label">Value</div>
+                        <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
+                    </div>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
@@ -1475,16 +1526,6 @@
                         <div class="sheet-col-1-8 sheet-align-center">&nbsp;</div>
                     </div>
                     <input type="hidden" name="attr_hidden_immobilized_cr" value="0"/>
-                </div>
-
-                <!-- right column -->
-                <div class="sheet-col-1-2">
-                    <div class="sheet-row sheet-sub-header">
-                        <div class="sheet-col-1-24 sheet-center sheet-small-label">&nbsp;</div>
-                        <div class="sheet-col-1-2 sheet-small-label">Stat</div>
-                        <div class="sheet-col-1-6 sheet-center sheet-small-label">Value</div>
-                        <div class="sheet-col-7-24 sheet-center sheet-small-label">&nbsp;</div>
-                    </div>
 
                     <div class="sheet-row sheet-skill-row">
                         <div class="sheet-col-1-24 sheet-align-center">&nbsp;</div>
@@ -2973,7 +3014,8 @@
             {'attr': 'light_magic_pen', 'key': 'light magic pen', 'equation': '0'},
             {'attr': 'dark_magic_pen', 'key': 'dark magic pen', 'equation': '0'},
 
-            // Specific magic resist stats (abbreviated)
+            // Damage reduction stats (abbreviated)
+            {'attr': 'gdr', 'key': 'gdr', 'equation': '0'},
             {'attr': 'fire_mr', 'key': 'fire mr', 'equation': '0'},
             {'attr': 'water_mr', 'key': 'water mr', 'equation': '0'},
             {'attr': 'earth_mr', 'key': 'earth mr', 'equation': '0'},
@@ -2982,7 +3024,8 @@
             {'attr': 'lightning_mr', 'key': 'lightning mr', 'equation': '0'},
             {'attr': 'light_mr', 'key': 'light mr', 'equation': '0'},
             {'attr': 'dark_mr', 'key': 'dark mr', 'equation': '0'},
-            // Specific magic resist stats (full name)
+            // Damage reduction stats (full name)
+            {'attr': 'gdr', 'key': 'general damage reduction', 'equation': '0'},
             {'attr': 'fire_mr', 'key': 'fire magic resist', 'equation': '0'},
             {'attr': 'water_mr', 'key': 'water magic resist', 'equation': '0'},
             {'attr': 'earth_mr', 'key': 'earth magic resist', 'equation': '0'},

@@ -631,7 +631,7 @@ var Barbs = Barbs || (function () {
                 pen = Math.max(0, pen);
                 pen = Math.min(100, pen);
 
-                let damage_taken = '((%s)-(%s*%s))'.format(damage_value, total_ac, 1 - pen / 100);
+                let damage_taken = '(%s)-(%s*%s)'.format(damage_value, total_ac, 1 - pen / 100);
                 if (eval(damage_taken) < 0) {
                     damage_taken = '0';
                 }
@@ -650,9 +650,11 @@ var Barbs = Barbs || (function () {
                 total_mr = Math.max(0, total_mr);
                 total_mr = Math.min(100, total_mr);
 
-                reduced_damages[damage_type] = '((%s)*%s)'.format(damage_value, Math.max(0, 1 - total_mr / 100));
+                reduced_damages[damage_type] = '(%s)*%s'.format(damage_value, Math.max(0, 1 - total_mr / 100));
             }
         }
+
+        const gdr = Math.max(0, Math.min(100, roll.general_damge_reduction));
 
         // Build the roll and calculate the total
         let result = '&{template:Barbs} {{name=Damage Reduction}} '
@@ -660,7 +662,7 @@ var Barbs = Barbs || (function () {
         types = Object.keys(reduced_damages);
         for (let i = 0; i < types.length; i++) {
             const damage_type = types[i];
-            const damage_value = reduced_damages[damage_type];
+            const damage_value = '(%s)*%s'.format(reduced_damages[damage_type], (100 - gdr) / 100);
             result = result + '{{%s=[[round(%s)]]}}'.format(damage_type, damage_value);
             total = total + Math.max(0, Math.round(eval(damage_value)));
         }
