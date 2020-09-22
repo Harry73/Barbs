@@ -20,6 +20,7 @@ var Barbs = Barbs || (function () {
     const Stat = BarbsComponents.Stat;
     const HiddenStat = BarbsComponents.HiddenStat;
     const Skill = BarbsComponents.Skill;
+    const get_skill_by_name = BarbsComponents.get_skill_by_name;
     const conditions = BarbsComponents.conditions;
     const crowd_control_conditions = BarbsComponents.crowd_control_conditions;
     const classes = BarbsComponents.classes;
@@ -192,6 +193,8 @@ var Barbs = Barbs || (function () {
     // no matching character is found. If 'ignore_failure' is true, this method may return null if no matching
     // character is found.
     function get_character(name_to_find, ignore_failure = false) {
+        assert_not_null(name_to_find, 'get_character_from_msg() msg');
+
         const character_names = get_proper_character_names(name_to_find);
 
         let game_character_objects = [];
@@ -229,6 +232,8 @@ var Barbs = Barbs || (function () {
 
     // This method is ONLY for use at the very beginning of top-level request processor methods.
     function get_character_from_msg(msg) {
+        assert_not_null(msg, 'get_character_from_msg() msg');
+
         // We've allowing two patterns here:
         //   1) The character's name is explicitly passed in, surrounded by "$" to identify it. In this case,
         //       we pick out the name, remove it from the original message, and then run the processor.
@@ -292,8 +297,8 @@ var Barbs = Barbs || (function () {
 
 
     function get_stat_roll_modifier(character, roll, stat) {
-        assert_not_null(character, 'generate_stat_roll_modifier_from_items() character');
-        assert_not_null(roll, 'generate_stat_roll_modifier_from_items() roll');
+        assert_type(character, 'Character', 'generate_stat_roll_modifier_from_items() character');
+        assert_type(roll, 'Roll', 'generate_stat_roll_modifier_from_items() roll');
         assert_not_null(stat, 'generate_stat_roll_modifier_from_items() stat');
 
         const attribute = parse_int(getAttrByName(character.id, stat.attr_tla));
@@ -313,6 +318,8 @@ var Barbs = Barbs || (function () {
 
 
     function get_token(character) {
+        assert_type(character, 'Character', 'get_token() msg');
+
         /*
             [{
                 "_id":"-M6lgdQEUXiMKuXgZlLM",
@@ -376,6 +383,8 @@ var Barbs = Barbs || (function () {
 
 
     function roll_initiative(msg) {
+        assert_not_null(msg, 'roll_initiative() msg');
+
         const character = get_character_from_msg(msg);
         const roll = get_roll_with_items_and_effects(character);
         chat(character, '[[d100]]', function (results) {
@@ -420,6 +429,8 @@ var Barbs = Barbs || (function () {
 
 
     function roll_stat(msg) {
+        assert_not_null(msg, 'roll_stat() msg');
+
         const character = get_character_from_msg(msg);
         const stat = Stat[msg.content.split(' ')[2].toUpperCase()];
         const roll = get_roll_with_items_and_effects(character);
@@ -537,6 +548,8 @@ var Barbs = Barbs || (function () {
 
 
     function roll_condition_resist(msg) {
+        assert_not_null(msg, 'roll_condition_resist() msg');
+
         const character = get_character_from_msg(msg);
         const roll = get_roll_with_items_and_effects(character);
         let total_cr = eval(get_stat_roll_modifier(character, roll, Stat.CONDITION_RESIST));
@@ -557,6 +570,8 @@ var Barbs = Barbs || (function () {
 
 
     function damage_reduction(msg) {
+        assert_not_null(msg, 'damage_reduction() msg');
+
         const character = get_character_from_msg(msg);
 
         let damage_strings = remove_empty(msg.content.split(' ')).slice(2);
@@ -674,6 +689,8 @@ var Barbs = Barbs || (function () {
 
 
     function roll_concentration(msg) {
+        assert_not_null(msg, 'roll_concentration() msg');
+
         const character = get_character_from_msg(msg);
 
         // Proper concentration check
@@ -694,6 +711,8 @@ var Barbs = Barbs || (function () {
 
 
     function roll_skill(msg) {
+        assert_not_null(msg, 'roll_skill() msg');
+
         const character = get_character_from_msg(msg);
         const pieces = msg.content.split(' ');
         const points_in_skill = parse_int(pieces[pieces.length - 1]);
@@ -976,6 +995,10 @@ var Barbs = Barbs || (function () {
 
         // Edit the handler into something that grants the same damages and multipliers, but increased by 50%
         return function (char, roll, params) {
+            assert_type(char, 'Character', 'make_handler_effective() inner target_character');
+            assert_type(roll, 'Roll', 'make_handler_effective() inner handler');
+            assert_not_null(params, 'make_handler_effective() inner parameters');
+
             // Increase the number of damage dice for added damages by effectiveness
             const damage_types = Object.keys(fake_roll.damages);
             for (let i = 0; i < damage_types.length; i++) {
@@ -1089,7 +1112,8 @@ var Barbs = Barbs || (function () {
             // Increase skill bonus by effectiveness
             const skills = Object.keys(fake_roll.skills);
             for (let i = 0; i < skills.length; i++) {
-                const skill = Skill[skills[i].toUpperCase().replace(' ', '_').replace(':', '')];
+                const skill = get_skill_by_name(skills[i]);
+                assert_type(skill, 'SkillObject', 'make_handler_effective() inner skill')
                 const base_bonus = fake_roll.skills[skill.name];
                 roll.add_skill_bonus(skill, '(%s*(%s))'.format(effectiveness, base_bonus));
             }

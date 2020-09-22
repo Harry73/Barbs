@@ -666,6 +666,21 @@ var BarbsComponents = BarbsComponents || (function () {
     };
 
 
+    function get_skill_by_name(skill_name) {
+        assert_not_null(skill_name, 'get_skill_by_name() skill_name');
+
+        const keys = Object.keys(Skill);
+        for (let i = 0; i < keys.length; i++) {
+            const key = keys[i];
+            if (skill_name === Skill[key].name) {
+                return Skill[key];
+            }
+        }
+
+        return null;
+    }
+
+
     // ################################################################################################################
     // Conditions and classes from the rulebook files
 
@@ -9502,7 +9517,7 @@ var BarbsComponents = BarbsComponents || (function () {
             let item_type = ItemType.UNKNOWN;
             let base_damage = Effect.no_op_roll_effect();
             let scaler = ItemScaler.NONE;
-            let effects = [];
+            let affixes = [];
 
             // Order of these keys matters. Handle longer keys first because some keys start with the same
             // strings (e.g. crit damage and crit damage mod)
@@ -9600,11 +9615,11 @@ var BarbsComponents = BarbsComponents || (function () {
                     if (regex.test(part)) {
                         identified_part = true;
 
-                        const effect = affix_constructor(character, item_name, part, original_part);
-                        if (effect !== null) {
+                        const affix = affix_constructor(character, item_name, part, original_part);
+                        if (affix !== null) {
                             Item.LOGGER.trace('construct_item() - handled "%s" part on item %s'.format(
                                 affix_key, item_name));
-                            effects.push(effect);
+                            affixes.push(affix);
                             break;
                         }
                     }
@@ -9631,7 +9646,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Item.LOGGER.warn('In item "%s", failed to guess the type'.format(item_name));
             }
 
-            const item = new Item(item_name, item_type, slot, base_damage, scaler, effects);
+            const item = new Item(item_name, item_type, slot, base_damage, scaler, affixes);
             Item.LOGGER.debug('construct_item() - constructed item, name=%s, type=%s, slot=%s'.format(
                 item.name, item.type, item.slot));
             return item;
@@ -10154,7 +10169,7 @@ var BarbsComponents = BarbsComponents || (function () {
         parse_int, trim_percent, trim_all, remove_empty,
         LOG,
         CHARACTER_NAME_VARIANTS,
-        Stat, HiddenStat, Skill, conditions, crowd_control_conditions, classes,
+        Stat, HiddenStat, Skill, get_skill_by_name, conditions, crowd_control_conditions, classes,
         ElementalDamage, Damage, get_damage_from_type,
         RollType, RollTime, Roll,
         ItemType, ItemSlot, Item,
