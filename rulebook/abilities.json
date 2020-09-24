@@ -6277,7 +6277,7 @@
         "api": {
             "description": "If your dash's total displace is 20 ft, add the \"combo_bonus\" parameter to gain the extra combo chance from this ability. Otherwise, do not include the parameter.",
             "examples": [
-                "combo_chance"
+                "combo_bonus"
             ]
         }
     },
