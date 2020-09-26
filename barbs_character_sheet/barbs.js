@@ -31,6 +31,7 @@ var Barbs = Barbs || (function () {
     const RollTime = BarbsComponents.RollTime;
     const Roll = BarbsComponents.Roll;
     const ItemType = BarbsComponents.ItemType;
+    const ItemScalar = BarbsComponents.ItemScalar;
     const Item = BarbsComponents.Item;
     const Character = BarbsComponents.Character;
 
@@ -297,8 +298,8 @@ var Barbs = Barbs || (function () {
 
 
     function get_stat_roll_modifier(character, roll, stat) {
-        assert_type(character, 'Character', 'generate_stat_roll_modifier_from_items() character');
-        assert_type(roll, 'Roll', 'generate_stat_roll_modifier_from_items() roll');
+        assert_type(character, Character, 'generate_stat_roll_modifier_from_items() character');
+        assert_type(roll, Roll, 'generate_stat_roll_modifier_from_items() roll');
         assert_not_null(stat, 'generate_stat_roll_modifier_from_items() stat');
 
         const attribute = parse_int(getAttrByName(character.id, stat.attr_tla));
@@ -318,7 +319,7 @@ var Barbs = Barbs || (function () {
 
 
     function get_token(character) {
-        assert_type(character, 'Character', 'get_token() msg');
+        assert_type(character, Character, 'get_token() msg');
 
         /*
             [{
@@ -984,7 +985,7 @@ var Barbs = Barbs || (function () {
 
 
     function make_handler_effective(target_character, handler, parameters, effectiveness) {
-        assert_type(target_character, 'Character', 'make_handler_effective() target_character');
+        assert_type(target_character, Character, 'make_handler_effective() target_character');
         assert_not_null(handler, 'make_handler_effective() handler');
         assert_not_null(parameters, 'make_handler_effective() parameters');
         assert_not_null(effectiveness, 'make_handler_effective() effectiveness');
@@ -995,8 +996,8 @@ var Barbs = Barbs || (function () {
 
         // Edit the handler into something that grants the same damages and multipliers, but increased by 50%
         return function (char, roll, params) {
-            assert_type(char, 'Character', 'make_handler_effective() inner target_character');
-            assert_type(roll, 'Roll', 'make_handler_effective() inner handler');
+            assert_type(char, Character, 'make_handler_effective() inner target_character');
+            assert_type(roll, Roll, 'make_handler_effective() inner handler');
             assert_not_null(params, 'make_handler_effective() inner parameters');
 
             // Increase the number of damage dice for added damages by effectiveness
@@ -1113,7 +1114,7 @@ var Barbs = Barbs || (function () {
             const skills = Object.keys(fake_roll.skills);
             for (let i = 0; i < skills.length; i++) {
                 const skill = get_skill_by_name(skills[i]);
-                assert_type(skill, 'SkillObject', 'make_handler_effective() inner skill')
+                assert_type(skill, SkillObject, 'make_handler_effective() inner skill')
                 const base_bonus = fake_roll.skills[skill.name];
                 roll.add_skill_bonus(skill, '(%s*(%s))'.format(effectiveness, base_bonus));
             }
@@ -1131,12 +1132,12 @@ var Barbs = Barbs || (function () {
 
     function add_persistent_effect(caster, ability, parameters, target_character, duration, order, roll_type, roll_time,
                                    count, handler) {
-        assert_type(caster, 'Character', 'add_persistent_effect() caster');
+        assert_type(caster, Character, 'add_persistent_effect() caster');
         assert_not_null(ability, 'add_persistent_effect() ability');
         assert_not_null(parameters, 'add_persistent_effect() parameters');
-        assert_type(target_character, 'Character', 'add_persistent_effect() target_character');
-        assert_type(duration, 'Duration', 'add_persistent_effect() duration');
-        assert_type(order, 'Order', 'add_persistent_effect() order');
+        assert_type(target_character, Character, 'add_persistent_effect() target_character');
+        assert_type(duration, Duration, 'add_persistent_effect() duration');
+        assert_type(order, Order, 'add_persistent_effect() order');
         assert_starts_with(roll_type, 'roll_type', 'add_persistent_effect() roll_type');
         assert_starts_with(roll_time, 'roll_time', 'add_persistent_effect() roll_time');
         assert_not_null(handler, 'add_persistent_effect() handler');
@@ -1279,7 +1280,7 @@ var Barbs = Barbs || (function () {
     // Iterate through effects of abilities (buffs, empowers, etc) that may last multiple turns and return a list of
     // applicable ones.
     function get_applicable_persistent_effects_to_roll(character, roll, roll_time, parameters) {
-        assert_type(character, 'Character', 'get_applicable_persistent_effects_to_roll() character');
+        assert_type(character, Character, 'get_applicable_persistent_effects_to_roll() character');
         assert_not_null(roll, 'get_applicable_persistent_effects_to_roll() roll');
         assert_not_null(roll_time, 'get_applicable_persistent_effects_to_roll() roll_time');
         assert_not_null(parameters, 'get_applicable_persistent_effects_to_roll() parameters');
@@ -1391,7 +1392,7 @@ var Barbs = Barbs || (function () {
         const item_types = new Set();
         for (let i = 0; i < attack_weapons.length; i++) {
             const weapon = attack_weapons[i];
-            assert_type(weapon, 'Item', 'add_bonuses_from_skills() weapon');
+            assert_type(weapon, Item, 'add_bonuses_from_skills() weapon');
             item_types.add(weapon.type);
         }
 
@@ -1480,7 +1481,7 @@ var Barbs = Barbs || (function () {
         }
 
         if (max_damage_scaling !== null) {
-            assert_type(max_damage_scaling, 'ItemScaler', 'add_scale_damage() max_damage_scaling');
+            assert_type(max_damage_scaling, ItemScalar, 'add_scale_damage() max_damage_scaling');
             max_damage_scaling.handler(character, roll);
         }
     }
@@ -1753,7 +1754,7 @@ var Barbs = Barbs || (function () {
 
 
     function make_minion(character, name) {
-        assert_type(character, 'Character', 'make_minion() character');
+        assert_type(character, Character, 'make_minion() character');
         assert_not_null(name, 'make_minion() name');
 
         const id = name.replace(/\s+/g, '_').toLowerCase();
@@ -1769,10 +1770,10 @@ var Barbs = Barbs || (function () {
 
 
     function make_minion_roll(character, ability, parameters, minion, roll_type) {
-        assert_type(character, 'Character', 'make_minion_roll() character');
+        assert_type(character, Character, 'make_minion_roll() character');
         assert_not_null(ability, 'make_minion_roll() ability');
         assert_not_null(parameters, 'make_minion_roll() parameters');
-        assert_type(minion, 'Character', 'make_minion_roll() minion');
+        assert_type(minion, Character, 'make_minion_roll() minion');
         assert_not_null(roll_type, 'make_minion_roll() roll_type');
 
         const character_roll = new Roll(character, roll_type);
@@ -2228,7 +2229,7 @@ var Barbs = Barbs || (function () {
 
     function get_applicable_normal_arbitrary_parameter_handlers(ability, roll, roll_time, parameters) {
         assert_not_null(ability, 'get_applicable_normal_arbitrary_parameter_handlers() ability');
-        assert_type(roll, 'Roll', 'get_applicable_normal_arbitrary_parameter_handlers() roll');
+        assert_type(roll, Roll, 'get_applicable_normal_arbitrary_parameter_handlers() roll');
         assert_starts_with(roll_time, 'roll_time', 'get_applicable_normal_arbitrary_parameter_handlers() roll_time');
         assert_not_null(parameters, 'get_applicable_normal_arbitrary_parameter_handlers() parameters');
 
@@ -2260,7 +2261,7 @@ var Barbs = Barbs || (function () {
 
 
     function handle_takeover_arbitrary_parameters(ability, roll, roll_time, parameters, crit_section) {
-        assert_type(roll, 'Roll', 'handle_takeover_arbitrary_parameters() roll');
+        assert_type(roll, Roll, 'handle_takeover_arbitrary_parameters() roll');
         assert_starts_with(roll_time, 'roll_time', 'handle_takeover_arbitrary_parameters() roll_time');
         assert_not_null(parameters, 'handle_takeover_arbitrary_parameters() parameters');
         assert_not_null(crit_section, 'handle_takeover_arbitrary_parameters() crit_section');
@@ -5110,7 +5111,7 @@ var Barbs = Barbs || (function () {
 
         // Decrement durations for effects cast by the character who is currently up, and end any at zero.
         for (let i = 0; i < persistent_effects.length; i++) {
-            assert_type(persistent_effects[i].duration, 'Duration', 'do_turn_order_change() start duration');
+            assert_type(persistent_effects[i].duration, Duration, 'do_turn_order_change() start duration');
 
             if (persistent_effects[i].caster !== current_character.name) {
                 continue;
@@ -5143,7 +5144,7 @@ var Barbs = Barbs || (function () {
             }
 
             for (let i = 0; i < persistent_effects.length; i++) {
-                assert_type(persistent_effects[i].duration, 'Duration', 'do_turn_order_change() end duration');
+                assert_type(persistent_effects[i].duration, Duration, 'do_turn_order_change() end duration');
 
                 if (persistent_effects[i].caster !== previous_character.name) {
                     continue;

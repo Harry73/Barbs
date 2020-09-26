@@ -46,8 +46,8 @@ var BarbsComponents = BarbsComponents || (function () {
         assert_not_null(type, 'assert_type() type, ' + message);
 
         assert('_type' in object, 'AssertionError: %s, no _type member in object %s', message, JSON.stringify(object));
-        assert(type === object._type, 'AssertionError: %s, wrong object type, expected=%s, actual=%s', message, type,
-               object._type);
+        assert(object instanceof type, 'AssertionError: %s, wrong object type, expected=%s, actual=%s', message, type,
+               object.constructor.name);
     }
 
 
@@ -9091,44 +9091,44 @@ var BarbsComponents = BarbsComponents || (function () {
     };
 
 
-    class ItemScaler {
+    class ItemScalar {
         constructor(stat, handler) {
-            assert_not_null(handler, 'ItemScaler::new() handler');
+            assert_not_null(handler, 'ItemScalar::new() handler');
 
-            this._type = 'ItemScaler';
+            this._type = 'ItemScalar';
             this.stat = stat;
             this.handler = handler;
         }
     }
 
-    ItemScaler.MELEE = new ItemScaler(Stat.MELEE_DAMAGE, function (character, roll) {
-        assert_not_null(character, 'ItemScaler::MELEE character');
-        assert_not_null(roll, 'ItemScaler::MELEE roll');
+    ItemScalar.MELEE = new ItemScalar(Stat.MELEE_DAMAGE, function (character, roll) {
+        assert_not_null(character, 'ItemScalar::MELEE character');
+        assert_not_null(roll, 'ItemScalar::MELEE roll');
 
         roll.add_damage(character.get_stat(Stat.MELEE_DAMAGE), Damage.PHYSICAL);
     });
 
-    ItemScaler.RANGED_FINE = new ItemScaler(Stat.RANGED_FINE_DAMAGE, function (character, roll) {
-        assert_not_null(character, 'ItemScaler::RANGED_FINE character');
-        assert_not_null(roll, 'ItemScaler::RANGED_FINE roll');
+    ItemScalar.RANGED_FINE = new ItemScalar(Stat.RANGED_FINE_DAMAGE, function (character, roll) {
+        assert_not_null(character, 'ItemScalar::RANGED_FINE character');
+        assert_not_null(roll, 'ItemScalar::RANGED_FINE roll');
 
         roll.add_damage(character.get_stat(Stat.RANGED_FINE_DAMAGE), Damage.PHYSICAL);
     });
 
     // This one has to be called with a parameter to create the function
-    ItemScaler.OTHER = function(stat, damage_type) {
-        assert_not_null(stat, 'ItemScaler::OTHER stat');
-        assert_not_null(damage_type, 'ItemScaler::OTHER damage_type');
+    ItemScalar.OTHER = function(stat, damage_type) {
+        assert_not_null(stat, 'ItemScalar::OTHER stat');
+        assert_not_null(damage_type, 'ItemScalar::OTHER damage_type');
 
-        return new ItemScaler(stat, function (character, roll) {
-            assert_not_null(character, 'ItemScaler::OTHER character');
-            assert_not_null(roll, 'ItemScaler::OTHER roll');
+        return new ItemScalar(stat, function (character, roll) {
+            assert_not_null(character, 'ItemScalar::OTHER character');
+            assert_not_null(roll, 'ItemScalar::OTHER roll');
 
             roll.add_damage(character.get_stat(stat), damage_type);
         });
     };
 
-    ItemScaler.NONE = new ItemScaler(null, function() {});
+    ItemScalar.NONE = new ItemScalar(null, function() {});
 
 
     class Effect {
@@ -9486,7 +9486,7 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(type, 'Item::new() type ' + name);
             assert_not_null(slot, 'Item::new() slot ' + name);
             assert_not_null(base_damage, 'Item::new() base_damage ' + name);
-            assert_type(damage_scaling, 'ItemScaler', 'Item::new() damage_scaling ' + name);
+            assert_type(damage_scaling, ItemScalar, 'Item::new() damage_scaling ' + name);
             assert_not_null(effects, 'Item::new() effects ' + name);
 
             this._type = 'Item';
@@ -9516,7 +9516,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
             let item_type = ItemType.UNKNOWN;
             let base_damage = Effect.no_op_roll_effect();
-            let scaler = ItemScaler.NONE;
+            let scalar = ItemScalar.NONE;
             let affixes = [];
 
             // Order of these keys matters. Handle longer keys first because some keys start with the same
@@ -9564,7 +9564,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     base_damage = Effect.roll_damage(damage, damage_type, roll_type);
 
                     if (pieces[2] === 'none') {
-                        scaler = ItemScaler.NONE;
+                        scalar = ItemScalar.NONE;
                     } else {
                         const scaling_stat = get_stat_for_attribute(pieces[2]);
                         if (scaling_stat === null) {
@@ -9573,7 +9573,7 @@ var BarbsComponents = BarbsComponents || (function () {
                             continue;
                         }
 
-                        scaler = ItemScaler.OTHER(scaling_stat, damage_type);
+                        scalar = ItemScalar.OTHER(scaling_stat, damage_type);
                     }
                     Item.LOGGER.trace('construct_item() - handled base damage part');
                     continue;
@@ -9646,7 +9646,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 Item.LOGGER.warn('In item "%s", failed to guess the type'.format(item_name));
             }
 
-            const item = new Item(item_name, item_type, slot, base_damage, scaler, affixes);
+            const item = new Item(item_name, item_type, slot, base_damage, scalar, affixes);
             Item.LOGGER.debug('construct_item() - constructed item, name=%s, type=%s, slot=%s'.format(
                 item.name, item.type, item.slot));
             return item;
@@ -10172,7 +10172,7 @@ var BarbsComponents = BarbsComponents || (function () {
         Stat, HiddenStat, Skill, get_skill_by_name, conditions, crowd_control_conditions, classes,
         ElementalDamage, Damage, get_damage_from_type,
         RollType, RollTime, Roll,
-        ItemType, ItemSlot, Item,
+        ItemType, ItemSlot, ItemScalar, Item,
         Character,
     };
 })();
