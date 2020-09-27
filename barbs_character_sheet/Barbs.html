@@ -1777,6 +1777,27 @@
                     </div>
                 </fieldset>
             </div>
+
+            <h4 class="sheet-center">Create Buffs / Effects</h4>
+            <div class="sheet-row">
+                <div class="sheet-row sheet-sub-header">
+                    <div class="sheet-col-1-6 sheet-center sheet-small-label">&nbsp;</div>
+                    <div class="sheet-col-19-24 sheet-center sheet-small-label">Options</div>
+                    <div class="sheet-col-1-24 sheet-center sheet-small-label">Use</div>
+                </div>
+
+                <div class="sheet-row sheet-skill-row">
+                    <div class="sheet-col-1-6">
+                        <input type="text" class="sheet-center sheet-bold" value="Effect Creator" disabled="disabled"/>
+                    </div>
+                    <div class="sheet-col-19-24">
+                        <input type="text" name="attr_effect_creator" value=""/>
+                    </div>
+                    <div class="sheet-col-1-24">
+                        <button class="sheet-skill-roll" type="roll" name="roll_item" value="!barbs create_effect $@{character_name}$ @{effect_creator}"></button>
+                    </div>
+                </div>
+            </div>
         </div>
 
 

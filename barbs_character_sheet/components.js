@@ -45,19 +45,19 @@ var BarbsComponents = BarbsComponents || (function () {
         assert_not_null(object, 'assert_type() object, ' + message);
         assert_not_null(type, 'assert_type() type, ' + message);
 
-        assert('_type' in object, 'AssertionError: %s, no _type member in object %s', message, JSON.stringify(object));
         assert(object instanceof type, 'AssertionError: %s, wrong object type, expected=%s, actual=%s', message, type,
                object.constructor.name);
     }
 
 
-    function assert_starts_with(string, prefix, message) {
-        assert_not_null(string, 'assert_starts_with() string');
-        assert_not_null(prefix, 'assert_starts_with() prefix');
-        assert_not_null(message, 'assert_starts_with() message');
+    function assert_enum(string, type, message) {
+        assert_not_null(message, 'assert_enum() message');
+        assert_not_null(string, 'assert_enum() string, ' + message);
+        assert_not_null(type, 'assert_enum() type, ' + message);
 
-        assert(string.startsWith(prefix), 'AssertionError: %s, expected string "%s" to start with "%s"', message,
-               string, prefix);
+        assert('PREFIX' in type, 'AssertionError: %s, no PREFIX member in enum %s', message, JSON.stringify(type));
+        assert(string.startsWith(type.PREFIX), 'AssertionError: %s, expected string "%s" to start with "%s"', message,
+               string, type.PREFIX);
     }
 
 
@@ -346,7 +346,7 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(attr_tla, 'StatObject::new() attr_tla');
             assert_not_null(formula, 'StatObject::new() formula');
 
-            this._type = 'stat';
+            this._type = 'StatObject';
             this.name = name;
             this.attr_tla = attr_tla;
             this.formula = formula;
@@ -8570,6 +8570,7 @@ var BarbsComponents = BarbsComponents || (function () {
         }
     }
 
+    RollType.PREFIX = 'roll_type';
     RollType.PHYSICAL = 'roll_type_physical';
     RollType.PSYCHIC = 'roll_type_psychic';
     RollType.MAGIC = 'roll_type_magic';
@@ -8609,6 +8610,8 @@ var BarbsComponents = BarbsComponents || (function () {
     // applied before we do the crit roll.
     //
     const RollTime = {
+        PREFIX: 'roll_time',
+
         // Indicates that the effect can be applied before we roll for crit. This is the case for most effects.
         DEFAULT: 'roll_time_default',
         // Indicates that the effect should only be applied after we know whether or not a roll was a crit
@@ -8959,6 +8962,18 @@ var BarbsComponents = BarbsComponents || (function () {
     // Items
 
 
+    const EffectType = {
+        PREFIX: 'effect_type',
+
+        ARROW: 'effect_type_arrow',
+        BUFF: 'effect_type_buff',
+        ENCHANTMENT: 'effect_type_enchantment',
+        EMPOWER: 'effect_type_empower',
+        POTION: 'effect_type_potion',
+        UNKNOWN: 'effect_type_unknown',
+    };
+
+
     const ItemType = {
         UNKNOWN: 'unknown',
 
@@ -8981,6 +8996,7 @@ var BarbsComponents = BarbsComponents || (function () {
         UNARMED: 'unarmed',
         WAND: 'wand',
     };
+
 
     const ITEM_TYPE_KEYWORDS = {
         // Heck slot
@@ -9093,6 +9109,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
     class ItemScalar {
         constructor(stat, handler) {
+            // ItemScalar.NONE gives null, so we can't really assert on stat
             assert_not_null(handler, 'ItemScalar::new() handler');
 
             this._type = 'ItemScalar';
@@ -9131,12 +9148,67 @@ var BarbsComponents = BarbsComponents || (function () {
     ItemScalar.NONE = new ItemScalar(null, function() {});
 
 
+    const DurationType = {
+        HARD: 'duration_type_hard',
+        SOFT: 'duration_type_soft',
+        INFINITE: 'duration_type_infinite',
+        SINGLE: 'duration_type_single',
+    };
+
+
+    class Duration {
+        constructor(duration_type, length) {
+            this._type = 'Duration';
+            this.duration_type = duration_type;
+            this.length = length;
+        }
+
+        single_use() {
+            return this.duration_type === DurationType.SINGLE;
+        }
+
+        // Hard durations end at the end of a turn.
+        static HARD(length) {
+            return new Duration(DurationType.HARD, length + 0.5);
+        }
+
+        // Soft durations end at the start of a turn.
+        static SOFT(length) {
+            return new Duration(DurationType.SOFT, length);
+        }
+
+        // Some effects have effectively indefinite duration. We'll just use 9999 to represent this.
+        static INFINITE() {
+            return new Duration(DurationType.INFINITE, 9999);
+        }
+
+        // Single use durations last until they are applied to an attack once.
+        static SINGLE_USE() {
+            return new Duration(DurationType.SINGLE, 5);
+        }
+
+        // One round is 10 seconds. An effect that lasts one minute should last for the given turn until the end of
+        // the 5th turn from when it was cast.
+        static ONE_MINUTE() {
+            return this.HARD(5);
+        }
+
+        // One round is 10 seconds. An effect that lasts one hour should last for the given turn until the end of the
+        // 59th turn from when it was cast.
+        static ONE_HOUR() {
+            return this.HARD(59);
+        }
+    }
+
+
+    // TODO: An "Effect" is really an "Affix". Hopefully merge this with the Affix class at some point down the road,
+    //  and then we can skip the jump through the Effect class to get to modifying a roll
     class Effect {
         constructor(roll_time, roll_type, effect) {
             this._type = 'Effect';
             this.roll_time = roll_time;
             this.roll_type = roll_type;
-            this.apply = effect;
+            this.apply = effect;  // effect is a function that takes only a roll
         }
 
         static no_op_roll_effect() {
@@ -9371,53 +9443,53 @@ var BarbsComponents = BarbsComponents || (function () {
 
     const AFFIX_CONSTRUCTORS = {
         'initiative': function(character, item_name, part) {
-            return Item.irregular_stat_affix(item_name, part, 'initiative', Effect.initiative_bonus);
+            return Affix.irregular_stat_affix(item_name, part, 'initiative', Effect.initiative_bonus);
         },
         'concentration': function(character, item_name, part) {
-            return Item.irregular_stat_affix(item_name, part, 'concentration', Effect.concentration_bonus);
+            return Affix.irregular_stat_affix(item_name, part, 'concentration', Effect.concentration_bonus);
         },
         'buff effectiveness': function(character, item_name, part) {
-            return Item.irregular_stat_affix(item_name, part, 'buff effectiveness', Effect.buff_effectiveness);
+            return Affix.irregular_stat_affix(item_name, part, 'buff effectiveness', Effect.buff_effectiveness);
         },
         'enchant effectiveness': function(character, item_name, part) {
-            return Item.irregular_stat_affix(item_name, part, 'enchant effectiveness', Effect.enchant_effectiveness);
+            return Affix.irregular_stat_affix(item_name, part, 'enchant effectiveness', Effect.enchant_effectiveness);
         },
         'split buff effectiveness': function(character, item_name, part) {
-            return Item.split_buff_effectiveness_affix(item_name, part);
+            return Affix.split_buff_effectiveness_affix(item_name, part);
         },
         'combo chance': function(character, item_name, part) {
-            return Item.irregular_stat_affix(item_name, part, 'combo chance', Effect.combo_chance);
+            return Affix.irregular_stat_affix(item_name, part, 'combo chance', Effect.combo_chance);
         },
         'gdr': function(character, item_name, part) {
-            return Item.irregular_stat_affix(item_name, part, 'gdr', Effect.general_damage_resistance);
+            return Affix.irregular_stat_affix(item_name, part, 'gdr', Effect.general_damage_resistance);
         },
         'general damage resist': function(character, item_name, part) {
-            return Item.irregular_stat_affix(item_name, part, 'general damage resist',
-                                             Effect.general_damage_resistance);
+            return Affix.irregular_stat_affix(item_name, part, 'general damage resist',
+                                              Effect.general_damage_resistance);
         },
         'damage': function(character, item_name, part) {
-            return Item.damage_affix(item_name, part, Effect.roll_damage);
+            return Affix.damage_affix(item_name, part, Effect.roll_damage);
         },
         'multiplier': function(character, item_name, part) {
-            return Item.multiplier_affix(character, item_name, part, Effect.roll_multiplier);
+            return Affix.multiplier_affix(character, item_name, part, Effect.roll_multiplier);
         },
         'effect': function(character, item_name, part, original_part) {
-            return Item.effect_affix(item_name, original_part, Effect.roll_effect);
+            return Affix.effect_affix(item_name, original_part, Effect.roll_effect);
         },
         'crit damage': function(character, item_name, part) {
-            return Item.damage_affix(item_name, part, Effect.crit_damage);
+            return Affix.damage_affix(item_name, part, Effect.crit_damage);
         },
         'crit multiplier': function(character, item_name, part) {
-            return Item.multiplier_affix(character, item_name, part, Effect.crit_multiplier);
+            return Affix.multiplier_affix(character, item_name, part, Effect.crit_multiplier);
         },
         'crit effect': function(character, item_name, part, original_part) {
-            return Item.effect_affix(item_name, original_part, Effect.crit_effect);
+            return Affix.effect_affix(item_name, original_part, Effect.crit_effect);
         },
         'crit damage mod': function(character, item_name, part) {
-            return Item.value_and_roll_type_affix(item_name, part, 'crit damage mod', Effect.crit_damage_mod);
+            return Affix.value_and_roll_type_affix(item_name, part, 'crit damage mod', Effect.crit_damage_mod);
         },
         'minion damage': function(character, item_name, part) {
-            return Item.value_and_roll_type_affix(item_name, part, 'minion damage', Effect.minion_damage);
+            return Affix.value_and_roll_type_affix(item_name, part, 'minion damage', Effect.minion_damage);
         },
     }
 
@@ -9425,25 +9497,25 @@ var BarbsComponents = BarbsComponents || (function () {
     Object.keys(Stat).forEach(function (key) {
         const stat = Stat[key];
         AFFIX_CONSTRUCTORS[stat.name.toLowerCase().replace(/_/g, ' ') + ':'] = function (character, item_name, part) {
-            return Item.stat_affix(item_name, part, stat, Effect.stat_effect);
+            return Affix.stat_affix(item_name, part, stat, Effect.stat_effect);
         }
     });
 
     // Add stat acronyms to affix constructors
     Object.keys(STAT_ACROS).forEach(function (acronym) {
         AFFIX_CONSTRUCTORS[acronym] = function(character, item_name, part) {
-            return Item.stat_affix(item_name, part, STAT_ACROS[acronym], Effect.stat_effect);
+            return Affix.stat_affix(item_name, part, STAT_ACROS[acronym], Effect.stat_effect);
         }
     });
 
     // Add hidden stats and crit hidden stats to affix constructors
     Object.keys(HIDDEN_STAT_ACROS).forEach(function (acronym) {
         AFFIX_CONSTRUCTORS[acronym] = function(character, item_name, part) {
-            return Item.stat_affix(item_name, part, HIDDEN_STAT_ACROS[acronym], Effect.hidden_stat);
+            return Affix.stat_affix(item_name, part, HIDDEN_STAT_ACROS[acronym], Effect.hidden_stat);
         }
 
         AFFIX_CONSTRUCTORS['crit ' + acronym] = function(character, item_name, part) {
-            return Item.stat_affix(item_name, part, HIDDEN_STAT_ACROS[acronym], Effect.crit_hidden_stat);
+            return Affix.stat_affix(item_name, part, HIDDEN_STAT_ACROS[acronym], Effect.crit_hidden_stat);
         }
     });
 
@@ -9451,7 +9523,7 @@ var BarbsComponents = BarbsComponents || (function () {
     Object.keys(Skill).forEach(function (key) {
         const skill = Skill[key];
         AFFIX_CONSTRUCTORS[skill.name.toLowerCase()] = function(character, item_name, part) {
-            return Item.skill_affix(item_name, part, function(bonus) {
+            return Affix.skill_affix(item_name, part, function(bonus) {
                 return Effect.skill_effect(skill, bonus);
             });
         };
@@ -9461,7 +9533,7 @@ var BarbsComponents = BarbsComponents || (function () {
     Object.keys(ElementalDamage).forEach(function (key) {
         const type = ElementalDamage[key];
         const handler = function(character, item_name, part) {
-            return Item.magic_resist_affix(item_name, part, type);
+            return Affix.magic_resist_affix(item_name, part, type);
         };
         AFFIX_CONSTRUCTORS[type + ' mr'] = handler;
         AFFIX_CONSTRUCTORS[type + ' magic resist'] = handler;
@@ -9471,7 +9543,7 @@ var BarbsComponents = BarbsComponents || (function () {
     conditions.forEach(function (condition) {
         condition = condition.toLowerCase().replace(/[()]/g, '');
         const handler = function (character, item_name, part) {
-            return Item.condition_resist_affix(item_name, part, condition);
+            return Affix.condition_resist_affix(item_name, part, condition);
         };
         AFFIX_CONSTRUCTORS[condition + ' cr'] = handler;
         AFFIX_CONSTRUCTORS[condition + ' condition resist'] = handler;
@@ -9512,123 +9584,13 @@ var BarbsComponents = BarbsComponents || (function () {
             parts = remove_empty(parts);
 
             const item_name = parts[0];
-            parts = parts.slice(1);
+            const affix_strings = parts.slice(1);
 
-            let item_type = ItemType.UNKNOWN;
-            let base_damage = Effect.no_op_roll_effect();
-            let scalar = ItemScalar.NONE;
-            let affixes = [];
-
-            // Order of these keys matters. Handle longer keys first because some keys start with the same
-            // strings (e.g. crit damage and crit damage mod)
-            const affix_keys = Object.keys(AFFIX_CONSTRUCTORS).sort(function(a, b) {
-                return b.length - a.length;
-            });
-
-            for (let i = 0; i < parts.length; i++) {
-                Item.LOGGER.debug('construct_item() - handling part ' + parts[i]);
-                const original_part = parts[i];
-                const part = parts[i].toLowerCase().replace(/[()]/g, '');
-
-                // Check for base damage definition
-                if (part.startsWith('base')) {
-                    let pieces = part.split(':');
-                    if (pieces.length !== 2) {
-                        Item.LOGGER.error('In item "%s", in base damage "%s", expected one colon'.format(
-                            item_name, part));
-                        continue;
-                    }
-
-                    pieces = pieces[1].trim().split(' ');
-                    if (pieces.length !== 3) {
-                        Item.LOGGER.error('In item "%s", in base damage "%s", expected three space-separated pieces ' +
-                                              'after colon'.format(item_name, part));
-                        continue;
-                    }
-
-                    const damage = pieces[0];
-                    const damage_type = get_damage_from_type(pieces[1]);
-                    if (damage_type === null) {
-                        Item.LOGGER.error('In item "%s", in base damage "%s", unrecognized damage type %s'.format(
-                            item_name, part, pieces[1]));
-                        continue;
-                    }
-
-                    const roll_type = guess_applicable_roll_type_from_damage(damage_type);
-                    if (roll_type === null) {
-                        Item.LOGGER.error('In item "%s", in base damage "%s", '.format(item_name, part) +
-                                              'damage type should not be "all_magic" or "all"');
-                        continue;
-                    }
-
-                    base_damage = Effect.roll_damage(damage, damage_type, roll_type);
-
-                    if (pieces[2] === 'none') {
-                        scalar = ItemScalar.NONE;
-                    } else {
-                        const scaling_stat = get_stat_for_attribute(pieces[2]);
-                        if (scaling_stat === null) {
-                            Item.LOGGER.error('In item "%s", in base damage "%s", unrecognized attribute acronym "%s"'.format(
-                                item_name, part, pieces[2]));
-                            continue;
-                        }
-
-                        scalar = ItemScalar.OTHER(scaling_stat, damage_type);
-                    }
-                    Item.LOGGER.trace('construct_item() - handled base damage part');
-                    continue;
-
-                } else if (part.startsWith('type')) {
-
-                    let pieces = part.split(':');
-                    if (pieces.length !== 2) {
-                        Item.LOGGER.error('In item "%s", in item type "%s", expected one colon'.format(
-                            item_name, part));
-                        continue;
-                    }
-
-                    const given_string = pieces[1].trim();
-                    let temp_item_type = null;
-                    const item_types = Object.keys(ItemType);
-                    for (let j = 0; j < item_types.length; j++) {
-                        if (ItemType[item_types[j]].toLowerCase() === given_string) {
-                            temp_item_type = ItemType[item_types[j]];
-                        }
-                    }
-
-                    if (temp_item_type === null) {
-                        Item.LOGGER.error('In item "%s", in item type "%s", unrecognized type %s'.format(
-                           item_name, part, given_string));
-                       continue;
-                    }
-
-                    item_type = temp_item_type;
-                    Item.LOGGER.trace('construct_item() - handled item type part');
-                    continue;
-                }
-
-                let identified_part = false;
-                for (let j = 0; j < affix_keys.length; j++) {
-                    const affix_key = affix_keys[j];
-                    const affix_constructor = AFFIX_CONSTRUCTORS[affix_key];
-                    const regex = new RegExp('^' + affix_key + '.*');
-                    if (regex.test(part)) {
-                        identified_part = true;
-
-                        const affix = affix_constructor(character, item_name, part, original_part);
-                        if (affix !== null) {
-                            Item.LOGGER.trace('construct_item() - handled "%s" part on item %s'.format(
-                                affix_key, item_name));
-                            affixes.push(affix);
-                            break;
-                        }
-                    }
-                }
-
-                if (!identified_part) {
-                    Item.LOGGER.error('In item "%s", no known handler for affix "%s"'.format(item_name, part));
-                }
-            }
+            const results = Affix.process_affixes(character, item_name, affix_strings);
+            let item_type = results['item_type'];
+            const base_damage = results['base_damage'];
+            const scalar = results['scalar'];
+            const affixes = results['affixes'];
 
             // If the item type wasn't specified, take a guess based on a bunch of common keywords
             if (item_type === ItemType.UNKNOWN) {
@@ -9642,6 +9604,8 @@ var BarbsComponents = BarbsComponents || (function () {
                     }
                 }
             }
+
+            // If the item type is still unknown, oh well
             if (item_type === ItemType.UNKNOWN && slot !== ItemSlot.MISCELLANEOUS) {
                 Item.LOGGER.warn('In item "%s", failed to guess the type'.format(item_name));
             }
@@ -9652,6 +9616,269 @@ var BarbsComponents = BarbsComponents || (function () {
             return item;
         }
 
+    }
+
+
+    class Affix {
+        static LOGGER = LOG;
+
+        static process_affixes(character, identifier, affix_strings) {
+            assert_type(character, Character, 'process_affixes() character');
+            assert_not_null(identifier, 'process_affixes() identifier');
+            assert_not_null(affix_strings, 'process_affixes() affix_strings');
+
+            let base_damage = Effect.no_op_roll_effect();
+            let scalar = ItemScalar.NONE;
+            let item_type = ItemType.UNKNOWN;
+            let effect_type = EffectType.UNKNOWN;
+            let duration = null;
+            let affixes = [];
+
+            // Order of these keys matters. Handle longer keys first because some keys start with the same
+            // strings (e.g. crit damage and crit damage mod)
+            const affix_keys = Object.keys(AFFIX_CONSTRUCTORS).sort(function(a, b) {
+                return b.length - a.length;
+            });
+
+            for (let i = 0; i < affix_strings.length; i++) {
+                Affix.LOGGER.debug('process_affixes() - handling part ' + affix_strings[i]);
+                const original_part = affix_strings[i];
+                const part = affix_strings[i].toLowerCase().replace(/[()]/g, '');
+
+                // Check for base damage definition
+                if (part.startsWith('base')) {
+                    const results = Affix.handle_base_damage(identifier, part);
+                    if (results !== null) {
+                        base_damage = results['base_damage'];
+                        scalar = results['scalar'];
+                    }
+                    continue;
+
+                } else if (part.startsWith('type')) {
+                    let result = Affix.handle_item_type(identifier, part);
+                    if (result !== null) {
+                        item_type = result;
+                        continue;
+                    }
+
+                    result = Affix.handle_effect_type(identifier, part);
+                    if (result !== null) {
+                        effect_type = result;
+                    }
+                    continue;
+
+                } else if (part.startsWith('duration')) {
+                    let result = Affix.handle_duration(identifier, part);
+                    if (result !== null) {
+                        duration = result;
+                    }
+                    continue;
+                }
+
+                let identified_part = false;
+                for (let j = 0; j < affix_keys.length; j++) {
+                    const affix_key = affix_keys[j];
+                    const affix_constructor = AFFIX_CONSTRUCTORS[affix_key];
+                    const regex = new RegExp('^' + affix_key + '.*');
+                    if (regex.test(part)) {
+                        identified_part = true;
+
+                        const affix = affix_constructor(character, identifier, part, original_part);
+                        if (affix !== null) {
+                            Affix.LOGGER.trace('process_affixes() - handled "%s" part on item %s'.format(
+                                affix_key, identifier));
+                            affixes.push(affix);
+                            break;
+                        }
+                    }
+                }
+
+                if (!identified_part) {
+                    Affix.LOGGER.error('In "%s", no known handler for affix "%s"'.format(identifier, part));
+                }
+            }
+
+            return {
+                'base_damage': base_damage,
+                'scalar': scalar,
+                'item_type': item_type,
+                'effect_type': effect_type,
+                'duration': duration,
+                'affixes': affixes,
+            };
+        }
+
+        static handle_base_damage(identifier, part) {
+            assert_not_null(identifier, 'handle_base_damage() identifier');
+            assert_not_null(part, 'handle_base_damage() part');
+
+            let pieces = part.split(':');
+            if (pieces.length !== 2) {
+                Affix.LOGGER.error('In "%s", in base damage "%s", expected one colon'.format(identifier, part));
+                return null;
+            }
+
+            pieces = pieces[1].trim().split(' ');
+            if (pieces.length !== 3) {
+                Affix.LOGGER.error('In "%s", in base damage "%s", expected three space-separated pieces ' +
+                                      'after colon'.format(identifier, part));
+                return null;
+            }
+
+            const damage = pieces[0];
+            const damage_type = get_damage_from_type(pieces[1]);
+            if (damage_type === null) {
+                Affix.LOGGER.error('In "%s", in base damage "%s", unrecognized damage type %s'.format(
+                    identifier, part, pieces[1]));
+                return null;
+            }
+
+            const roll_type = guess_applicable_roll_type_from_damage(damage_type);
+            if (roll_type === null) {
+                Affix.LOGGER.error('In "%s", in base damage "%s", '.format(identifier, part) +
+                                       'damage type should not be "all_magic" or "all"');
+                return null;
+            }
+
+            const base_damage = Effect.roll_damage(damage, damage_type, roll_type);
+            let scalar = ItemScalar.NONE;
+
+            if (pieces[2] !== 'none') {
+                const scaling_stat = get_stat_for_attribute(pieces[2]);
+                if (scaling_stat === null) {
+                    Affix.LOGGER.error('In "%s", in base damage "%s", unrecognized attribute acronym "%s"'.format(
+                        identifier, part, pieces[2]));
+                    return null;
+                }
+
+                scalar = ItemScalar.OTHER(scaling_stat, damage_type);
+            }
+
+            Affix.LOGGER.trace('process_affixes() - handled base damage part');
+            return {
+                'base_damage': base_damage,
+                'scalar': scalar,
+            };
+        }
+
+        static handle_item_type(identifier, part) {
+            assert_not_null(identifier, 'handle_item_type() identifier');
+            assert_not_null(part, 'handle_item_type() part');
+
+            let pieces = part.split(':');
+            if (pieces.length !== 2) {
+                Affix.LOGGER.error('In "%s", in item type "%s", expected one colon'.format(identifier, part));
+                return null;
+            }
+
+            const given_string = pieces[1].trim();
+            let item_type = null;
+            const item_types = Object.keys(ItemType);
+            for (let j = 0; j < item_types.length; j++) {
+                if (ItemType[item_types[j]].toLowerCase() === given_string) {
+                    item_type = ItemType[item_types[j]];
+                }
+            }
+
+            if (item_type === null) {
+                Affix.LOGGER.error('In "%s", in item type "%s", unrecognized type %s'.format(
+                    identifier, part, given_string));
+                return null;
+            }
+
+            Affix.LOGGER.trace('process_affixes() - handled item type part');
+            return item_type;
+        }
+
+        static handle_effect_type(identifier, part) {
+            assert_not_null(identifier, 'handle_effect_type() identifier');
+            assert_not_null(part, 'handle_effect_type() part');
+
+            let pieces = part.split(':');
+            if (pieces.length !== 2) {
+                Affix.LOGGER.error('In "%s", in effect type "%s", expected one colon'.format(identifier, part));
+                return null;
+            }
+
+            const given_string = pieces[1].trim();
+            let effect_type = null;
+            const effect_types = Object.keys(EffectType);
+            for (let j = 0; j < effect_types.length; j++) {
+                if (EffectType[effect_type[j]].toLowerCase() === given_string) {
+                    effect_type = ItemType[effect_type[j]];
+                }
+            }
+
+            if (effect_type === null) {
+                Affix.LOGGER.error('In "%s", in effect type "%s", unrecognized type %s'.format(
+                    identifier, part, given_string));
+                return null;
+            }
+
+            Affix.LOGGER.trace('process_affixes() - handled effect type part');
+            return effect_type;
+        }
+
+        static handle_duration(identifier, part) {
+            assert_not_null(identifier, 'handle_duration() identifier');
+            assert_not_null(part, 'handle_duration() part');
+
+            let pieces = part.split(':');
+            if (pieces.length !== 2) {
+                Affix.LOGGER.error('In "%s", in duration "%s", expected one colon'.format(identifier, part));
+                return null;
+            }
+
+            const duration_string = pieces[1].trim();
+            if (duration_string === 'infinite') {
+                return Duration.INFINITE();
+            } else if (duration_string === 'one minute') {
+                return Duration.ONE_MINUTE();
+            } else if (duration_string === 'one hour') {
+                return Duration.ONE_HOUR();
+            } else if (duration_string.includes('single')) {
+                return Duration.SINGLE_USE();
+            } else if (duration_string.includes('hard')) {
+                pieces = duration_string.split(' ');
+
+                if (pieces.length !== 2) {
+                    Affix.LOGGER.error('In "%s", in hard duration affix "%s", '.format(identifier, part) +
+                                           'expected two space-separated pieces after colon');
+                    return null;
+                }
+
+                const value = parse_int(pieces[0]);
+                if (Number.isNaN(value)) {
+                    Affix.LOGGER.error('In "%s", in hard duration "%s", value %s is not a number'.format(
+                        identifier, part, part, pieces[0]));
+                    return null;
+                }
+
+                return Duration.HARD(value);
+
+            } else if (duration_string.includes('soft')) {
+                pieces = duration_string.split(' ');
+
+                if (pieces.length !== 2) {
+                    Affix.LOGGER.error('In "%s", in soft duration affix "%s", '.format(identifier, part) +
+                                           'expected two space-separated pieces after colon');
+                    return null;
+                }
+
+                const value = parse_int(pieces[0]);
+                if (Number.isNaN(value)) {
+                    Affix.LOGGER.error('In "%s", in soft duration "%s", value %s is not a number'.format(
+                        identifier, part, part, pieces[0]));
+                    return null;
+                }
+
+                return Duration.SOFT(value);
+            }
+
+            Affix.LOGGER.error('In "%s", in duration "%s" is unrecognized'.format(identifier, part));
+            return null;
+        }
+
         static irregular_stat_affix(item_name, part, stat_name, create_effect) {
             assert_not_null(item_name, 'irregular_stat_affix() item_name');
             assert_not_null(part, 'irregular_stat_affix() part');
@@ -9660,19 +9887,19 @@ var BarbsComponents = BarbsComponents || (function () {
 
             const pieces = part.split(':');
             if (pieces.length !== 2) {
-                Item.LOGGER.error('In item "%s", in secondary stat affix "%s", expected one colon'.format(
+                Affix.LOGGER.error('In "%s", in secondary stat affix "%s", expected one colon'.format(
                     item_name, part));
                 return null;
             }
 
             const bonus = parse_int(pieces[1].trim());
             if (Number.isNaN(bonus)) {
-                Item.LOGGER.error('In item "%s", in secondary stat affix "%s", value %s is not a number'.format(
+                Affix.LOGGER.error('In "%s", in secondary stat affix "%s", value %s is not a number'.format(
                     item_name, part, pieces[1]));
                 return null;
             }
 
-            Item.LOGGER.trace('construct_item(), handled %s part'.format(stat_name));
+            Affix.LOGGER.trace('process_affixes(), handled %s part'.format(stat_name));
             return create_effect(bonus);
         }
 
@@ -9682,7 +9909,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
             const pieces = part.split(':');
             if (pieces.length < 2) {
-                Item.LOGGER.error('In item "%s", in secondary stat affix "%s", expected at least one colon'.format(
+                Affix.LOGGER.error('In "%s", in secondary stat affix "%s", expected at least one colon'.format(
                     item_name, part));
                 return null;
             }
@@ -9691,12 +9918,12 @@ var BarbsComponents = BarbsComponents || (function () {
             try {
                 dict = JSON.parse(dict);
             } catch (e) {
-                Item.LOGGER.error('In item "%s", in split buff effectiveness affix "%s", value %s is not json'.format(
+                Affix.LOGGER.error('In "%s", in split buff effectiveness affix "%s", value %s is not json'.format(
                     item_name, part, dict));
                 return null;
             }
 
-            Item.LOGGER.trace('construct_item(), handled split buff effectiveness part');
+            Affix.LOGGER.trace('process_affixes(), handled split buff effectiveness part');
             return Effect.split_buff_effectiveness(dict);
         }
 
@@ -9707,7 +9934,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
             const pieces = part.split(':');
             if (pieces.length !== 3) {
-                Item.LOGGER.error('In item "%s", in skill affix "%s", expected two colons'.format(item_name, part));
+                Affix.LOGGER.error('In "%s", in skill affix "%s", expected two colons'.format(item_name, part));
                 return null;
             }
 
@@ -9722,13 +9949,13 @@ var BarbsComponents = BarbsComponents || (function () {
 
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                Item.LOGGER.error('In item "%s", in damage affix "%s", expected one colon'.format(item_name, part));
+                Affix.LOGGER.error('In "%s", in damage affix "%s", expected one colon'.format(item_name, part));
                 return null;
             }
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 3) {
-                Item.LOGGER.error('In item "%s", in damage affix "%s", '.format(item_name, part) +
+                Affix.LOGGER.error('In "%s", in damage affix "%s", '.format(item_name, part) +
                                       'expected three space-separated pieces after colon');
                 return null;
             }
@@ -9736,14 +9963,14 @@ var BarbsComponents = BarbsComponents || (function () {
             const damage = pieces[0];
             const damage_type = get_damage_from_type(pieces[1]);
             if (damage_type === null) {
-                Item.LOGGER.error('In item "%s", in damage affix "%s", unrecognized damage type %s'.format(
+                Affix.LOGGER.error('In "%s", in damage affix "%s", unrecognized damage type %s'.format(
                     item_name, part, pieces[1]));
                 return null;
             }
 
             const roll_type = get_roll_type(pieces[2]);
             if (roll_type === null) {
-                Item.LOGGER.error('In item "%s", in damage affix "%s", unrecognized roll type %s'.format(
+                Affix.LOGGER.error('In "%s", in damage affix "%s", unrecognized roll type %s'.format(
                     item_name, part, pieces[2]));
                 return null;
             }
@@ -9759,34 +9986,34 @@ var BarbsComponents = BarbsComponents || (function () {
 
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                Item.LOGGER.error('In item "%s", in multiplier affix "%s", expected one colon'.format(item_name, part));
+                Affix.LOGGER.error('In "%s", in multiplier affix "%s", expected one colon'.format(item_name, part));
                 return null;
             }
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 3) {
-                Item.LOGGER.error('In item "%s", in multiplier affix "%s", '.format(item_name, part) +
+                Affix.LOGGER.error('In "%s", in multiplier affix "%s", '.format(item_name, part) +
                                       'expected three space-separated pieces after colon');
                 return null;
             }
 
             const value = parse_int(trim_percent(pieces[0])) / 100;
             if (Number.isNaN(value)) {
-                Item.LOGGER.error('In item "%s", in multiplier affix "%s", value %s is not a number'.format(
+                Affix.LOGGER.error('In "%s", in multiplier affix "%s", value %s is not a number'.format(
                     item_name, part, pieces[1]));
                 return null;
             }
 
             const damage_type = get_damage_from_type(pieces[1]);
             if (damage_type === null) {
-                Item.LOGGER.error('In item "%s", in multiplier affix "%s", unrecognized multiplier damage type %s'.format(
+                Affix.LOGGER.error('In "%s", in multiplier affix "%s", unrecognized multiplier damage type %s'.format(
                     item_name, part, pieces[1]));
                 return null;
             }
 
             const roll_type = get_roll_type(pieces[2]);
             if (roll_type === null) {
-                Item.LOGGER.error('In item "%s", in multiplier affix "%s", unrecognized roll type %s'.format(
+                Affix.LOGGER.error('In "%s", in multiplier affix "%s", unrecognized roll type %s'.format(
                     item_name, part, pieces[2]));
                 return null;
             }
@@ -9802,28 +10029,28 @@ var BarbsComponents = BarbsComponents || (function () {
 
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                Item.LOGGER.error('In item "%s", in %s affix "%s", expected one colon'.format(
+                Affix.LOGGER.error('In "%s", in %s affix "%s", expected one colon'.format(
                     item_name, stat_name, part));
                 return null;
             }
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 2) {
-                Item.LOGGER.error('In item "%s", in %s affix "%s", '.format(item_name, stat_name, part) +
+                Affix.LOGGER.error('In "%s", in %s affix "%s", '.format(item_name, stat_name, part) +
                                       'expected two space-separated pieces after colon');
                 return null;
             }
 
             let value = parse_int(trim_percent(pieces[0]));
             if (Number.isNaN(value)) {
-                Item.LOGGER.error('In item "%s", in %s affix "%s", value %s is not a number'.format(
+                Affix.LOGGER.error('In "%s", in %s affix "%s", value %s is not a number'.format(
                     item_name, stat_name, part, pieces[1]));
                 return null;
             }
 
             const roll_type = get_roll_type(pieces[1]);
             if (roll_type === null) {
-                Item.LOGGER.error('In item "%s", in %s affix "%s", unrecognized roll type %s'.format(
+                Affix.LOGGER.error('In "%s", in %s affix "%s", unrecognized roll type %s'.format(
                     item_name, stat_name, part, pieces[1]));
                 return null;
             }
@@ -9839,27 +10066,27 @@ var BarbsComponents = BarbsComponents || (function () {
 
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                Item.LOGGER.error('In item "%s", in stat affix "%s", expected one colon'.format(item_name, part));
+                Affix.LOGGER.error('In "%s", in stat affix "%s", expected one colon'.format(item_name, part));
                 return null;
             }
 
             pieces = pieces[1].trim().split(' ');
             if (pieces.length !== 2) {
-                Item.LOGGER.error('In item "%s", in stat affix "%s", '.format(item_name, part) +
+                Affix.LOGGER.error('In "%s", in stat affix "%s", '.format(item_name, part) +
                                       'expected two space-separated pieces after colon');
                 return null;
             }
 
             const bonus = parse_int(trim_percent(pieces[0]));
             if (Number.isNaN(bonus)) {
-                Item.LOGGER.error('In item "%s", in stat affix "%s", value %s is not a number'.format(
+                Affix.LOGGER.error('In "%s", in stat affix "%s", value %s is not a number'.format(
                     item_name, part, pieces[0]));
                 return null;
             }
 
             const roll_type = get_roll_type(pieces[1]);
             if (roll_type === null) {
-                Item.LOGGER.error('In item "%s", in stat affix "%s", unrecognized roll type %s'.format(
+                Affix.LOGGER.error('In "%s", in stat affix "%s", unrecognized roll type %s'.format(
                     item_name, part, pieces[1]));
                 return null;
             }
@@ -9869,7 +10096,7 @@ var BarbsComponents = BarbsComponents || (function () {
                 const amount = part.split(':')[0].split(' ')[1];
                 const num_amount = parse_int(amount);
                 if (Number.isNaN(num_amount)) {
-                    Item.LOGGER.error('In item "%s", in stat affix "%s", amount %s is not a number'.format(
+                    Affix.LOGGER.error('In "%s", in stat affix "%s", amount %s is not a number'.format(
                         item_name, part, amount));
                     return null;
                 }
@@ -9887,7 +10114,7 @@ var BarbsComponents = BarbsComponents || (function () {
 
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                Item.LOGGER.error('In item "%s", in effect affix "%s", expected one colon'.format(item_name, part));
+                Affix.LOGGER.error('In "%s", in effect affix "%s", expected one colon'.format(item_name, part));
                 return null;
             }
 
@@ -9895,7 +10122,7 @@ var BarbsComponents = BarbsComponents || (function () {
             const effect_text = pieces.slice(0, pieces.length - 1).join(' ');
             const roll_type = get_roll_type(pieces.slice(-1)[0].toLowerCase());
             if (roll_type === null) {
-                Item.LOGGER.error('In item "%s", in effect affix "%s", unrecognized roll type %s'.format(
+                Affix.LOGGER.error('In "%s", in effect affix "%s", unrecognized roll type %s'.format(
                     item_name, part, pieces[1]));
                 return null;
             }
@@ -9910,13 +10137,13 @@ var BarbsComponents = BarbsComponents || (function () {
 
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                Item.LOGGER.error('In item "%s", in MR affix "%s", expected one colon'.format(item_name, part));
+                Affix.LOGGER.error('In "%s", in MR affix "%s", expected one colon'.format(item_name, part));
                 return null;
             }
 
             const value = parse_int(trim_percent(pieces[1]));
             if (Number.isNaN(value)) {
-                Item.LOGGER.error('In item "%s", in MR affix "%s", value %s is not a number'.format(
+                Affix.LOGGER.error('In "%s", in MR affix "%s", value %s is not a number'.format(
                     item_name, part, pieces[1]));
                 return null;
             }
@@ -9931,13 +10158,13 @@ var BarbsComponents = BarbsComponents || (function () {
 
             let pieces = part.split(':');
             if (pieces.length !== 2) {
-                Item.LOGGER.error('In item "%s", in CR affix "%s", expected one colon'.format(item_name, part));
+                Affix.LOGGER.error('In "%s", in CR affix "%s", expected one colon'.format(item_name, part));
                 return null;
             }
 
             const value = parse_int(trim_percent(pieces[1]));
             if (Number.isNaN(value)) {
-                Item.LOGGER.error('In item "%s", in CR affix "%s", value %s is not a number'.format(
+                Affix.LOGGER.error('In "%s", in CR affix "%s", value %s is not a number'.format(
                     item_name, part, pieces[1]));
                 return null;
             }
@@ -10165,14 +10392,16 @@ var BarbsComponents = BarbsComponents || (function () {
 
 
     return {
-        assert, assert_not_null, assert_type, assert_starts_with, assert_numeric,
+        assert, assert_not_null, assert_type, assert_enum, assert_numeric,
         parse_int, trim_percent, trim_all, remove_empty,
         LOG,
         CHARACTER_NAME_VARIANTS,
-        Stat, HiddenStat, Skill, get_skill_by_name, conditions, crowd_control_conditions, classes,
+        Stat, HiddenStat,
+        SkillObject, Skill, get_skill_by_name,
+        conditions, crowd_control_conditions, classes,
         ElementalDamage, Damage, get_damage_from_type,
         RollType, RollTime, Roll,
-        ItemType, ItemSlot, ItemScalar, Item,
+        EffectType, ItemType, ItemSlot, ItemScalar, Duration, Item, Affix,
         Character,
     };
 })();

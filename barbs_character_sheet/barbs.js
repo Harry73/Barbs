@@ -9,7 +9,7 @@ var Barbs = Barbs || (function () {
     const assert = BarbsComponents.assert;
     const assert_not_null = BarbsComponents.assert_not_null;
     const assert_type = BarbsComponents.assert_type;
-    const assert_starts_with = BarbsComponents.assert_starts_with;
+    const assert_enum = BarbsComponents.assert_enum;
     const assert_numeric = BarbsComponents.assert_numeric;
     const parse_int = BarbsComponents.parse_int;
     const trim_percent = BarbsComponents.trim_percent;
@@ -19,6 +19,7 @@ var Barbs = Barbs || (function () {
     const CHARACTER_NAME_VARIANTS = BarbsComponents.CHARACTER_NAME_VARIANTS;
     const Stat = BarbsComponents.Stat;
     const HiddenStat = BarbsComponents.HiddenStat;
+    const SkillObject = BarbsComponents.SkillObject;
     const Skill = BarbsComponents.Skill;
     const get_skill_by_name = BarbsComponents.get_skill_by_name;
     const conditions = BarbsComponents.conditions;
@@ -30,9 +31,12 @@ var Barbs = Barbs || (function () {
     const RollType = BarbsComponents.RollType;
     const RollTime = BarbsComponents.RollTime;
     const Roll = BarbsComponents.Roll;
+    const EffectType = BarbsComponents.EffectType;
     const ItemType = BarbsComponents.ItemType;
     const ItemScalar = BarbsComponents.ItemScalar;
+    const Duration = BarbsComponents.Duration;
     const Item = BarbsComponents.Item;
+    const Affix = BarbsComponents.Affix;
     const Character = BarbsComponents.Character;
 
 
@@ -256,7 +260,7 @@ var Barbs = Barbs || (function () {
 
 
     function get_roll_with_items_and_effects(character) {
-        assert_type(character, 'Character', 'get_roll_with_items_and_effects() character');
+        assert_type(character, Character, 'get_roll_with_items_and_effects() character');
 
         const roll = new Roll(character, RollType.ALL);
 
@@ -923,65 +927,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-    const DurationType = {
-        HARD: 'duration_type_hard',
-        SOFT: 'duration_type_soft',
-        INFINITE: 'duration_type_infinite',
-        SINGLE: 'duration_type_single',
-    };
-
-
-    class Duration {
-        constructor(duration_type, length) {
-            this._type = 'Duration';
-            this.duration_type = duration_type;
-            this.length = length;
-        }
-
-        single_use() {
-            return this.duration_type === DurationType.SINGLE;
-        }
-
-        // Hard durations end at the end of a turn.
-        static HARD(length) {
-            return new Duration(DurationType.HARD, length + 0.5);
-        }
-
-        // Soft durations end at the start of a turn.
-        static SOFT(length) {
-            return new Duration(DurationType.SOFT, length);
-        }
-
-        // Some effects have effectively indefinite duration. We'll just use 9999 to represent this.
-        static INFINITE() {
-            return new Duration(DurationType.INFINITE, 9999);
-        }
-
-        // Single use durations last until they are applied to an attack once.
-        static SINGLE_USE() {
-            return new Duration(DurationType.SINGLE, 5);
-        }
-
-        // One round is 10 seconds. An effect that lasts one minute should last for the given turn until the end of
-        // the 5th turn from when it was cast.
-        static ONE_MINUTE() {
-            return this.HARD(5);
-        }
-
-        // One round is 10 seconds. An effect that lasts one hour should last for the given turn until the end of the
-        // 59th turn from when it was cast.
-        static ONE_HOUR() {
-            return this.HARD(59);
-        }
-    }
-
-
-    const EffectType = {
-        BUFF: 'effect_type_buff',
-        ENCHANTMENT: 'effect_type_enchantment',
-        EMPOWER: 'effect_type_empower',
-        UNKNOWN: 'effect_type_unknown',
-    };
 
 
     function make_handler_effective(target_character, handler, parameters, effectiveness) {
@@ -1138,8 +1083,9 @@ var Barbs = Barbs || (function () {
         assert_type(target_character, Character, 'add_persistent_effect() target_character');
         assert_type(duration, Duration, 'add_persistent_effect() duration');
         assert_type(order, Order, 'add_persistent_effect() order');
-        assert_starts_with(roll_type, 'roll_type', 'add_persistent_effect() roll_type');
-        assert_starts_with(roll_time, 'roll_time', 'add_persistent_effect() roll_time');
+        assert_enum(roll_type, RollType, 'add_persistent_effect() roll_type');
+        assert_enum(roll_time, RollTime, 'add_persistent_effect() roll_time');
+        assert_numeric(count, 'add_persistent_effect() count');
         assert_not_null(handler, 'add_persistent_effect() handler');
 
         // See if this effect already exists on the character. Effects generally should not be stackable.
@@ -1148,39 +1094,6 @@ var Barbs = Barbs || (function () {
             if (persistent_effect.name === ability['name'] && persistent_effect.target === target_character.name) {
                 assert(false, 'Effect "%s" is already present on %s', ability['name'], target_character.name);
             }
-        }
-
-        // Figure out the caster's buff or enchant effectiveness
-        const roll = new Roll(caster, RollType.ALL);
-        if (!add_extras(caster, ability, roll, RollTime.DEFAULT, parameters, '')) {
-            chat(caster, 'Error calculating buff/enchant effectiveness for ability %s'.format(ability.name));
-            return;
-        }
-
-        let effectiveness = 1;
-        if ('tags' in ability) {
-            if (ability.tags.includes('buff')) {
-                effectiveness = roll.buff_effectiveness;
-
-                const target_short_name = target_character.name.toLowerCase().split(' ')[0];
-                if (target_short_name in roll.split_buff_effectiveness) {
-                    effectiveness += roll.split_buff_effectiveness[target_short_name] / 100;
-                } else if ('default' in roll.split_buff_effectiveness) {
-                    effectiveness += roll.split_buff_effectiveness['default'] / 100;
-                }
-
-            } else if (ability.tags.includes('enchant')) {
-                effectiveness = roll.enchant_effectiveness;
-            }
-        }
-
-        // Continue to allow effectiveness to be specified as a parameter
-        // TODO: stop supporting this?
-        let effectiveness_string = get_parameter('effectiveness', parameters);
-        if (effectiveness_string !== null) {
-            effectiveness_string = trim_percent(effectiveness_string);
-            effectiveness += parse_int(effectiveness_string) / 100;
-            assert_numeric(effectiveness, 'Non-numeric effectiveness "%s"', effectiveness_string);
         }
 
         // Determine type of the effect, e.g. buff, enchant, other
@@ -1193,6 +1106,55 @@ var Barbs = Barbs || (function () {
             } else if (ability.tags.includes('empower')) {
                 effect_type = EffectType.EMPOWER;
             }
+        }
+
+        inner_add_persistent_effect(caster, ability['name'], parameters, target_character, duration, order,
+                                    roll_type, roll_time, count, effect_type, handler);
+    }
+
+    function inner_add_persistent_effect(caster, effect_name, parameters, target_character, duration, order, roll_type,
+                                         roll_time, count, effect_type, handler) {
+        assert_type(caster, Character, 'inner_add_persistent_effect() caster');
+        assert_not_null(effect_name, 'inner_add_persistent_effect() effect_name');
+        assert_not_null(parameters, 'inner_add_persistent_effect() parameters');
+        assert_type(target_character, Character, 'inner_add_persistent_effect() target_character');
+        assert_type(duration, Duration, 'inner_add_persistent_effect() duration');
+        assert_type(order, Order, 'inner_add_persistent_effect() order');
+        assert_enum(roll_type, RollType, 'inner_add_persistent_effect() roll_type');
+        assert_enum(roll_time, RollTime, 'inner_add_persistent_effect() roll_time');
+        assert_numeric(count, 'inner_add_persistent_effect() count');
+        assert_enum(effect_type, EffectType, 'inner_add_persistent_effect() effect_type');
+        assert_not_null(handler, 'inner_add_persistent_effect handler');
+
+        // Figure out the caster's buff or enchant effectiveness
+        const roll = new Roll(caster, RollType.ALL);
+        if (!add_extras(caster, ability, roll, RollTime.DEFAULT, parameters, '')) {
+            chat(caster, 'Error calculating buff/enchant effectiveness for ability %s'.format(ability.name));
+            return;
+        }
+
+        let effectiveness = 1;
+        if (effect_type === EffectType.BUFF) {
+            effectiveness = roll.buff_effectiveness;
+
+            const target_short_name = target_character.name.toLowerCase().split(' ')[0];
+            if (target_short_name in roll.split_buff_effectiveness) {
+                effectiveness += roll.split_buff_effectiveness[target_short_name] / 100;
+            } else if ('default' in roll.split_buff_effectiveness) {
+                effectiveness += roll.split_buff_effectiveness['default'] / 100;
+            }
+
+        } else if (effect_type === EffectType.ENCHANTMENT) {
+            effectiveness = roll.enchant_effectiveness;
+        }
+
+        // Continue to allow effectiveness to be specified as a parameter
+        // TODO: stop supporting this?
+        let effectiveness_string = get_parameter('effectiveness', parameters);
+        if (effectiveness_string !== null) {
+            effectiveness_string = trim_percent(effectiveness_string);
+            effectiveness += parse_int(effectiveness_string) / 100;
+            assert_numeric(effectiveness, 'Non-numeric effectiveness "%s"', effectiveness_string);
         }
 
         // Check if adding this effect is putting the target character over their buff limit and issue a warning if so.
@@ -1212,7 +1174,7 @@ var Barbs = Barbs || (function () {
 
         const effect = {
             'caster': caster.name,
-            'name': ability['name'],
+            'name': effect_name,
             'target': target_character.name,
             'duration': duration,
             'ordering': order,
@@ -1226,6 +1188,46 @@ var Barbs = Barbs || (function () {
 
         LOG.info('Added persistent effect %s'.format(JSON.stringify(effect)));
         persistent_effects.push(effect);
+    }
+
+
+    function create_persistent_effect(msg) {
+        const character = get_character_from_msg(msg);
+        const pieces = msg.content.split(' ');
+        const effect_string = pieces.slice(2).join(' ');
+
+        const parts = effect_string.split(';');
+        if (parts.length < 2) {
+            chat(character, 'Missing name for the effect or any actual behavior');
+            return;
+        }
+
+        const effect_name = parts[0];
+        const affix_strings = parts.slice(1);
+        const results = Affix.process_affixes(character, effect_name, affix_strings);
+        const effect_type = results['effect_type'];
+        let duration = results['duration'];
+        const affixes = results['affixes'];
+
+        if (effect_type === EffectType.ARROW || effect_type === EffectType.EMPOWER) {
+            duration = Duration.SINGLE_USE();
+        }
+        if (duration === null) {
+            raw_chat('API', 'Duration must be specified');
+            return;
+        }
+
+        for (let i = 0; i < affixes.length; i++) {
+            const affix = affixes[i];
+
+            const handler = function (char, roll, parameters) {
+                affix.apply(roll);
+                return true;
+            };
+
+            inner_add_persistent_effect(character, effect_name, /*parameters=*/'', character, duration, Ordering(),
+                                        affix.roll_type, affix.roll_time, /*count=*/1, effect_type, handler);
+        }
     }
 
 
@@ -2230,7 +2232,7 @@ var Barbs = Barbs || (function () {
     function get_applicable_normal_arbitrary_parameter_handlers(ability, roll, roll_time, parameters) {
         assert_not_null(ability, 'get_applicable_normal_arbitrary_parameter_handlers() ability');
         assert_type(roll, Roll, 'get_applicable_normal_arbitrary_parameter_handlers() roll');
-        assert_starts_with(roll_time, 'roll_time', 'get_applicable_normal_arbitrary_parameter_handlers() roll_time');
+        assert_enum(roll_time, RollTime, 'get_applicable_normal_arbitrary_parameter_handlers() roll_time');
         assert_not_null(parameters, 'get_applicable_normal_arbitrary_parameter_handlers() parameters');
 
         // Apply arbitrary parameter handlers, and return false if one fails
@@ -2262,7 +2264,7 @@ var Barbs = Barbs || (function () {
 
     function handle_takeover_arbitrary_parameters(ability, roll, roll_time, parameters, crit_section) {
         assert_type(roll, Roll, 'handle_takeover_arbitrary_parameters() roll');
-        assert_starts_with(roll_time, 'roll_time', 'handle_takeover_arbitrary_parameters() roll_time');
+        assert_enum(roll_time, RollTime, 'handle_takeover_arbitrary_parameters() roll_time');
         assert_not_null(parameters, 'handle_takeover_arbitrary_parameters() parameters');
         assert_not_null(crit_section, 'handle_takeover_arbitrary_parameters() crit_section');
 
@@ -2300,7 +2302,7 @@ var Barbs = Barbs || (function () {
     function check_items(msg) {
         const errors = [];
 
-        // Temporarily change Item's logger to something that lets us save the error messages.
+        // Temporarily change Item and Affix's loggers to something that lets us save the error messages.
         class Collector {
             static trace() {
             }
@@ -2318,6 +2320,7 @@ var Barbs = Barbs || (function () {
             }
         }
         Item.LOGGER = Collector;
+        Affix.LOGGER = Collector;
 
         // Getting the character constructs items under the hood, so this is good enough to check for errors
         const character = get_character_from_msg(msg);
@@ -2332,6 +2335,7 @@ var Barbs = Barbs || (function () {
 
         // Revert the logger hack
         Item.LOGGER = LOG;
+        Affix.LOGGER = LOG;
     }
 
 
@@ -5338,6 +5342,7 @@ var Barbs = Barbs || (function () {
         'stat': roll_stat,
         'skill': roll_skill,
         'rest': take_rest,
+        'create_effect': create_persistent_effect,
         'list_effects': list_persistent_effects,
         'remove_effect': remove_persistent_effect,
         'check_items': check_items,
