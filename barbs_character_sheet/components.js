@@ -9825,9 +9825,9 @@ var BarbsComponents = BarbsComponents || (function () {
             const duration_string = pieces[1].trim();
             if (duration_string === 'infinite') {
                 return Duration.INFINITE();
-            } else if (duration_string === 'one minute') {
+            } else if (duration_string === 'one minute' || duration_string === '1 minute') {
                 return Duration.ONE_MINUTE();
-            } else if (duration_string === 'one hour') {
+            } else if (duration_string === 'one hour' || duration_string === '1 hour') {
                 return Duration.ONE_HOUR();
             } else if (duration_string.includes('single')) {
                 return Duration.SINGLE_USE();
