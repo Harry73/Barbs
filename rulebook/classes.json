@@ -960,7 +960,10 @@
             "Dragonflight",
             "Summon Gold Dragon",
             "Gold Dragon Breath",
-            "Dragonsight"
+            "Dragonsight",
+            "Dragonstorm",
+            "Dragonform",
+            "Dragonblood"
         ],
         "api": {
             "description": "For a summoned creature's attack ability, add the 'draconic_pact' parameter with the number of pacts you have. The API will add in the increased damage based on this.",
@@ -1114,7 +1117,10 @@
             "Aperantos Capulus",
             "Actus Noctis Erebeae",
             "Supplementum Pro Armationem",
-            "Armis Cantamen"
+            "Armis Cantamen",
+            "Circulus Pilorum Plagius",
+            "Tastrape Hyper Dynamen",
+            "Erebus Alium Patis"
         ],
         "api": {
             "description": "Use the \"spell\" parameter to specify what spell you are absorbing with ME. The absorbed spell's effects will be applied to future rolls accordingly. Only KB is supported currently. Use the \"conditions\" parameter, followed by a comma-separated list, to specify which conditions you are applying via KB. The API will roll a d100 for each condition, or two d100s for the \"curse\" condition. Use the \"dispel\" parameter to end ME.",
