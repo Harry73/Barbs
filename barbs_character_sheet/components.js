@@ -9664,7 +9664,10 @@ var BarbsComponents = BarbsComponents || (function () {
                     result = Affix.handle_effect_type(identifier, part);
                     if (result !== null) {
                         effect_type = result;
+                    } else {
+                        Item.LOGGER.error('In "%s", in type "%s", unrecognized type'.format(identifier, part));
                     }
+
                     continue;
 
                 } else if (part.startsWith('duration')) {
@@ -9772,22 +9775,17 @@ var BarbsComponents = BarbsComponents || (function () {
             }
 
             const given_string = pieces[1].trim();
-            let item_type = null;
+            let type = null;
             const item_types = Object.keys(ItemType);
-            for (let j = 0; j < item_types.length; j++) {
-                if (ItemType[item_types[j]].toLowerCase() === given_string) {
-                    item_type = ItemType[item_types[j]];
+            for (let i = 0; i < item_types.length; i++) {
+                const item_type = item_types[i];
+                if (ItemType[item_type].toLowerCase() === given_string) {
+                    type = ItemType[item_type];
                 }
             }
 
-            if (item_type === null) {
-                Affix.LOGGER.error('In "%s", in item type "%s", unrecognized type %s'.format(
-                    identifier, part, given_string));
-                return null;
-            }
-
             Affix.LOGGER.trace('process_affixes() - handled item type part');
-            return item_type;
+            return type;
         }
 
         static handle_effect_type(identifier, part) {
@@ -9801,22 +9799,17 @@ var BarbsComponents = BarbsComponents || (function () {
             }
 
             const given_string = pieces[1].trim();
-            let effect_type = null;
+            let type = null;
             const effect_types = Object.keys(EffectType);
-            for (let j = 0; j < effect_types.length; j++) {
-                if (EffectType[effect_type[j]].toLowerCase() === given_string) {
-                    effect_type = ItemType[effect_type[j]];
+            for (let i = 0; i < effect_types.length; i++) {
+                const effect_type = effect_types[i];
+                if (effect_type.toLowerCase() === given_string) {
+                    type = EffectType[effect_type];
                 }
             }
 
-            if (effect_type === null) {
-                Affix.LOGGER.error('In "%s", in effect type "%s", unrecognized type %s'.format(
-                    identifier, part, given_string));
-                return null;
-            }
-
             Affix.LOGGER.trace('process_affixes() - handled effect type part');
-            return effect_type;
+            return type;
         }
 
         static handle_duration(identifier, part) {

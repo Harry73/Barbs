@@ -1108,14 +1108,14 @@ var Barbs = Barbs || (function () {
             }
         }
 
-        inner_add_persistent_effect(caster, ability['name'], parameters, target_character, duration, order,
+        inner_add_persistent_effect(caster, ability, parameters, target_character, duration, order,
                                     roll_type, roll_time, count, effect_type, handler);
     }
 
-    function inner_add_persistent_effect(caster, effect_name, parameters, target_character, duration, order, roll_type,
+    function inner_add_persistent_effect(caster, ability, parameters, target_character, duration, order, roll_type,
                                          roll_time, count, effect_type, handler) {
         assert_type(caster, Character, 'inner_add_persistent_effect() caster');
-        assert_not_null(effect_name, 'inner_add_persistent_effect() effect_name');
+        assert_not_null(ability, 'inner_add_persistent_effect() ability');
         assert_not_null(parameters, 'inner_add_persistent_effect() parameters');
         assert_type(target_character, Character, 'inner_add_persistent_effect() target_character');
         assert_type(duration, Duration, 'inner_add_persistent_effect() duration');
@@ -1174,7 +1174,7 @@ var Barbs = Barbs || (function () {
 
         const effect = {
             'caster': caster.name,
-            'name': effect_name,
+            'name': ability.name,
             'target': target_character.name,
             'duration': duration,
             'ordering': order,
@@ -1196,7 +1196,9 @@ var Barbs = Barbs || (function () {
         const pieces = msg.content.split(' ');
         const effect_string = pieces.slice(2).join(' ');
 
-        const parts = effect_string.split(';');
+        let parts = effect_string.split(';');
+        parts = trim_all(parts);
+        parts = remove_empty(parts);
         if (parts.length < 2) {
             chat(character, 'Missing name for the effect or any actual behavior');
             return;
@@ -1217,6 +1219,11 @@ var Barbs = Barbs || (function () {
             return;
         }
 
+        const fake_ability = {
+            'name': effect_name,
+            'tags': [],
+        }
+
         for (let i = 0; i < affixes.length; i++) {
             const affix = affixes[i];
 
@@ -1225,9 +1232,11 @@ var Barbs = Barbs || (function () {
                 return true;
             };
 
-            inner_add_persistent_effect(character, effect_name, /*parameters=*/'', character, duration, Ordering(),
+            inner_add_persistent_effect(character, fake_ability, /*parameters=*/'', character, duration, Ordering(),
                                         affix.roll_type, affix.roll_time, /*count=*/1, effect_type, handler);
         }
+
+        chat(character, 'Created effect %s on %s'.format(fake_ability.name, character.name));
     }
 
 
