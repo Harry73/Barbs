@@ -10468,6 +10468,27 @@
     },
     {
         "type": "ability",
+        "name": "Scatter as Shadows",
+        "class": "Voidwalker",
+        "branch": "Abyss",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "60 mana",
+        "range": "Touch",
+        "duration": "Instant",
+        "description": [
+            "You send allies in different directions as an emergency evasive maneuver. You and any number of allies in range each teleport up to 2000 ft in random directions (corrected slightly to avoid barriers). Upon arrival to their destinations, each entity may select an empty space within 50 ft to appear in, immediately becoming Hidden upon arrival. When you cast this spell, you leave behind a field of hazy blackness for 1 minute, which obscures line of sight and prevents spellcasting within it. You may cast this spell as a reaction by spending 30 additional mana; if you do, this spell cannot be countered."
+        ],
+        "tags": [
+            "Spell",
+            "dark",
+            "conjuration",
+            "teleport",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Blacklands",
         "class": "Voidwalker",
         "branch": "Hollow",
@@ -10515,6 +10536,26 @@
     },
     {
         "type": "ability",
+        "name": "Dissipate",
+        "class": "Voidwalker",
+        "branch": "Hollow",
+        "tier": 3,
+        "action": "1 Reaction",
+        "cost": "50 mana",
+        "range": "100 ft",
+        "duration": "Instant",
+        "description": [
+            "You banish an enemy's spell to the Ethereal Realm. As a reaction to a target in range casting a spell, you may counter that spell. When a spell is countered in this way, its effects are stored in the Ethereal Realm. During your next long rest after casting this spell, you may briefly visit the Ethereal Realm. If you visit the Ethereal Realm while spell effects are stored due to the effects of this spell, you may choose to temporarily learn how to cast those spells; for the next 24 hours, you may cast those spells a single time each. You may leave spells stored in the Ethereal Realm for as long as you wish."
+        ],
+        "tags": [
+            "Spell",
+            "dark",
+            "defensive",
+            "counterspell"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Veil of Darkness",
         "class": "Voidwalker",
         "branch": "Nothingness",
@@ -10556,6 +10597,27 @@
             "conjuration",
             "defensive",
             "illusions"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Shadow Split",
+        "class": "Voidwalker",
+        "branch": "Nothingness",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "50 mana",
+        "range": "Touch",
+        "duration": "1 hour",
+        "description": [
+            "You split an entity's shadow from their physical form. For any number of target allies in range, create a Shadow that is a physical copy of them. Shadows have 1 health and 30 ft move speed. A Shadow is mentally linked to the original entity, and the original entity controls its actions through mental commands as long as it is on the same plane (this works across the Ethereal Realm's boundary as well). The original entity has full sensory input from the Shadow. The Shadow cannot use class abilities, and makes skill checks the original entity is capable of at half effectiveness. When you cast this spell, you may spend an additional 10 mana to have all original entity targets become invisible for 1 minute."
+        ],
+        "tags": [
+            "Spell",
+            "dark",
+            "conjuration",
+            "divination",
+            "modal"
         ]
     },
     {
