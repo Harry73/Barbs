@@ -11,6 +11,14 @@ var BarbsComponents = BarbsComponents || (function () {
         return a;
     };
 
+    function capitalize(str) {
+        str = str.toLowerCase().split(' ');
+        for (let i = 0; i < str.length; i++) {
+            str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+        }
+        return str.join(' ');
+    }
+
 
     // ################################################################################################################
     // Assertions
@@ -447,6 +455,8 @@ var BarbsComponents = BarbsComponents || (function () {
     }
 
 
+    // TODO: this is getting pretty ugly. Make a proper "HiddenStatObject" class that stores the roll text, affix
+    //  description, and affix acronyms.
     const HiddenStat = {
         ACCURACY: '%s% accuracy',
         BUFF_STRIP: 'Strip %s buff(s) from the target',
@@ -529,6 +539,86 @@ var BarbsComponents = BarbsComponents || (function () {
         'light magic pen:': HiddenStat.LIGHT_MAGIC_PENETRATION,
         'dark magic pen:': HiddenStat.DARK_MAGIC_PENETRATION,
     };
+
+
+    function hidden_stat_description(hidden_stat) {
+        assert_not_null(hidden_stat, 'hidden_stat_description() hidden_stat');
+
+        if (hidden_stat === HiddenStat.ACCURACY) {
+            return '+%s% accuracy';
+        } else if (hidden_stat === HiddenStat.BUFF_STRIP) {
+            return 'Strip %s buff(s)';
+        } else if (hidden_stat === HiddenStat.FORCED_MOVEMENT) {
+            return 'Push target %s ft';
+        } else if (hidden_stat === HiddenStat.LETHALITY) {
+            return '+%s% lethalithy chance';
+        } else if (hidden_stat === HiddenStat.LIFESTEAL) {
+            return '+%s% lifesteal';
+        } else if (hidden_stat === HiddenStat.MINION_LETHALITY) {
+            return '+%s% minion lethality';
+        } else if (hidden_stat === HiddenStat.RANGE) {
+            return '+%s ft range';
+        } else if (hidden_stat === HiddenStat.REACH) {
+            return '+%s ft reach';
+        } else if (hidden_stat === HiddenStat.UNBLOCKABLE_CHANCE) {
+            return '+%s% unblockable chance';
+        } else if (hidden_stat === HiddenStat.BLINDED_CHANCE) {
+            return '+%s% Blind chance';
+        } else if (hidden_stat.includes('chance to inflict Burn')) {
+            // HiddenStat.BURN_CHANCE is a weirdo function
+            return '+%s% Burn chance';
+        } else if (hidden_stat === HiddenStat.CONFUSED_CHANCE) {
+            return '+%s% Confuse chance';
+        } else if (hidden_stat === HiddenStat.CRIPPLED_CHANCE) {
+            return '+%s% Cripple chance';
+        } else if (hidden_stat === HiddenStat.FEAR_CHANCE) {
+            return '+%s% Fear chance';
+        } else if (hidden_stat === HiddenStat.FROZEN_CHANCE) {
+            return '+%s% Freeze chance';
+        } else if (hidden_stat === HiddenStat.IMMOBILIZE_CHANCE) {
+            return '+%s% Immobilize chance';
+        } else if (hidden_stat === HiddenStat.PARALYZED_CHANCE) {
+            return '+%s% Paralyze chance';
+        } else if (hidden_stat === HiddenStat.PETRIFIED_CHANCE) {
+            return '+%s% Petrify chance';
+        } else if (hidden_stat === HiddenStat.REDUCE_EVASION) {
+            return '+%s% Reduce Evasion chance';
+        } else if (hidden_stat === HiddenStat.REDUCE_CR) {
+            return '+%s% Reduce CR chance';
+        } else if (hidden_stat === HiddenStat.REDUCE_AC) {
+            return '+%s% Reduce AC chance';
+        } else if (hidden_stat === HiddenStat.SILENCED_CHANCE) {
+            return '+%s% Silence chance';
+        } else if (hidden_stat === HiddenStat.SLOWED_CHANCE) {
+            return '+%s% Slow chance';
+        } else if (hidden_stat === HiddenStat.STUNNED_CHANCE) {
+            return '+%s% Stun chance';
+        } else if (hidden_stat === HiddenStat.TAUNTED_CHANCE) {
+            return '+%s% Taunt chance';
+        } else if (hidden_stat === HiddenStat.AC_PENETRATION) {
+            return '+%s% AC pen';
+        } else if (hidden_stat === HiddenStat.GENERAL_MAGIC_PENETRATION) {
+            return '+%s% general magic pen';
+        } else if (hidden_stat === HiddenStat.FIRE_MAGIC_PENETRATION) {
+            return '+%s% fire magic pen';
+        } else if (hidden_stat === HiddenStat.WATER_MAGIC_PENETRATION) {
+            return '+%s% water magic pen';
+        } else if (hidden_stat === HiddenStat.EARTH_MAGIC_PENETRATION) {
+            return '+%s% earth magic pen';
+        } else if (hidden_stat === HiddenStat.AIR_MAGIC_PENETRATION) {
+            return '+%s% air magic pen';
+        } else if (hidden_stat === HiddenStat.ICE_MAGIC_PENETRATION) {
+            return '+%s% ice magic pen';
+        } else if (hidden_stat === HiddenStat.LIGHTNING_MAGIC_PENETRATION) {
+            return '+%s% lightning magic pen';
+        } else if (hidden_stat === HiddenStat.LIGHT_MAGIC_PENETRATION) {
+            return '+%s% light magic pen';
+        } else if (hidden_stat === HiddenStat.DARK_MAGIC_PENETRATION) {
+            return '+%s% dark magic pen';
+        }
+
+        assert(false, 'Unknown hidden stat "%s"', hidden_stat);
+    }
 
 
     // ################################################################################################################
@@ -9204,15 +9294,16 @@ var BarbsComponents = BarbsComponents || (function () {
     // TODO: An "Effect" is really an "Affix". Hopefully merge this with the Affix class at some point down the road,
     //  and then we can skip the jump through the Effect class to get to modifying a roll
     class Effect {
-        constructor(roll_time, roll_type, effect) {
+        constructor(description, roll_time, roll_type, effect) {
             this._type = 'Effect';
+            this.description = description;
             this.roll_time = roll_time;
             this.roll_type = roll_type;
             this.apply = effect;  // effect is a function that takes only a roll
         }
 
         static no_op_roll_effect() {
-            return new Effect(RollTime.DEFAULT, RollType.ALL, function () {});
+            return new Effect('no op', RollTime.DEFAULT, RollType.ALL, function () {});
         }
 
         static stat_effect(stat, mod, applicable_roll_type) {
@@ -9220,7 +9311,9 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(mod, 'stat_effect() mod');
             assert_not_null(applicable_roll_type, 'stat_effect() applicable_roll_type');
 
-            return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
+            const stat_name = capitalize(stat.name.replace(/_/g, ' '));
+            const description = '+%s %s'.format(mod, stat_name);
+            return new Effect(description, RollTime.DEFAULT, applicable_roll_type, function (roll) {
                 if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     roll.add_stat_bonus(stat, mod);
                 }
@@ -9232,7 +9325,8 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(hidden_stat, 'hidden_stat() stat');
             assert_not_null(applicable_roll_type, 'hidden_stat() applicable_roll_type');
 
-            return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
+            const description = hidden_stat_description(hidden_stat).format(value);
+            return new Effect(description, RollTime.DEFAULT, applicable_roll_type, function (roll) {
                 if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     roll.add_hidden_stat(hidden_stat, value);
                 }
@@ -9243,7 +9337,8 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(condition, 'condition_resist() condition');
             assert_not_null(value, 'condition_resist() value');
 
-            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+            const description = '+%s %s CR'.format(value, condition);
+            return new Effect(description, RollTime.DEFAULT, RollType.ALL, function (roll) {
                 roll.add_condition_resist(condition.toLowerCase().replace(/[()]/g, ''), value);
             });
         }
@@ -9252,7 +9347,8 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(type, 'magic_resist() type');
             assert_not_null(value, 'magic_resist() value');
 
-            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+            const description = '+%s %s MR'.format(value, type);
+            return new Effect(description, RollTime.DEFAULT, RollType.ALL, function (roll) {
                 roll.add_magic_resist(type, value);
             });
         }
@@ -9260,7 +9356,8 @@ var BarbsComponents = BarbsComponents || (function () {
         static initiative_bonus(bonus) {
             assert_not_null(bonus, 'initiative_bonus() bonus');
 
-            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+            const description = '+%s initiative'.format(bonus);
+            return new Effect(description, RollTime.DEFAULT, RollType.ALL, function (roll) {
                 roll.add_initiative_bonus(bonus);
             });
         }
@@ -9268,7 +9365,8 @@ var BarbsComponents = BarbsComponents || (function () {
         static concentration_bonus(bonus) {
             assert_not_null(bonus, 'concentration_bonus() bonus');
 
-            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+            const description = '+%s concentration checks'.format(bonus);
+            return new Effect(description, RollTime.DEFAULT, RollType.ALL, function (roll) {
                 roll.add_concentration_bonus(bonus);
             });
         }
@@ -9276,7 +9374,8 @@ var BarbsComponents = BarbsComponents || (function () {
         static buff_effectiveness(bonus) {
             assert_not_null(bonus, 'buff_effectiveness() bonus');
 
-            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+            const description = '+%s buff effectiveness'.format(bonus);
+            return new Effect(description, RollTime.DEFAULT, RollType.ALL, function (roll) {
                 roll.add_buff_effectiveness(bonus);
             });
         }
@@ -9284,7 +9383,8 @@ var BarbsComponents = BarbsComponents || (function () {
         static enchant_effectiveness(bonus) {
             assert_not_null(bonus, 'enchant_effectiveness() bonus');
 
-            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+            const description = '+%s enchant effectiveness'.format(bonus);
+            return new Effect(description, RollTime.DEFAULT, RollType.ALL, function (roll) {
                 roll.add_enchant_effectiveness(bonus);
             });
         }
@@ -9292,7 +9392,8 @@ var BarbsComponents = BarbsComponents || (function () {
         static split_buff_effectiveness(dict) {
             assert_not_null(dict, 'split_buff_effectiveness() dict');
 
-            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+            const description = 'split buff effectiveness';
+            return new Effect(description, RollTime.DEFAULT, RollType.ALL, function (roll) {
                 roll.set_split_buff_effectiveness(dict);
             });
         }
@@ -9300,7 +9401,8 @@ var BarbsComponents = BarbsComponents || (function () {
         static combo_chance(bonus) {
             assert_not_null(bonus, 'combo_chance() bonus');
 
-            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+            const description = '+%s combo chance'.format(bonus);
+            return new Effect(description, RollTime.DEFAULT, RollType.ALL, function (roll) {
                 roll.add_combo_chance(bonus);
             });
         }
@@ -9308,7 +9410,8 @@ var BarbsComponents = BarbsComponents || (function () {
         static general_damage_resistance(bonus) {
             assert_not_null(bonus, 'general_damage_resistance() bonus');
 
-            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+            const description = '+%s% GDR'.format(bonus);
+            return new Effect(description, RollTime.DEFAULT, RollType.ALL, function (roll) {
                 roll.add_general_damage_resistance(bonus);
             });
         }
@@ -9317,7 +9420,8 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(bonus, 'minion_damage() bonus');
             assert_not_null(applicable_roll_type, 'minion_damage(), applicable_roll_type');
 
-            return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
+            const description = '+%s% minion damage'.format(bonus);
+            return new Effect(description, RollTime.DEFAULT, applicable_roll_type, function (roll) {
                 if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     roll.minion_damage += bonus;
                 }
@@ -9325,10 +9429,11 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         static skill_effect(skill, mod) {
-            assert_not_null(skill, 'skill_effect() skill');
+            assert_type(skill, SkillObject, 'skill_effect() skill');
             assert_not_null(mod, 'skill_effect() mod');
 
-            return new Effect(RollTime.DEFAULT, RollType.ALL, function (roll) {
+            const description = '+%s %s'.format(mod, skill.name);
+            return new Effect(description, RollTime.DEFAULT, RollType.ALL, function (roll) {
                 roll.add_skill_bonus(skill, mod);
             });
         }
@@ -9338,7 +9443,8 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(dmg_type, 'roll_damage(), dmg_type');
             assert_not_null(applicable_roll_type, 'roll_damage(), applicable_roll_type');
 
-            return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
+            const description = '%s %s dmg'.format(dmg, dmg_type);
+            return new Effect(description, RollTime.DEFAULT, applicable_roll_type, function (roll) {
                 if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     if (/[Uu]/.test(dmg)) {
                         const monk_mastery = roll.character.get_monk_dice();
@@ -9355,7 +9461,8 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(dmg_type, 'roll_multiplier() dmg_type');
             assert_not_null(applicable_roll_type, 'roll_multiplier() applicable_roll_type');
 
-            return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
+            const description = '+%s% %s dmg'.format(value * 100, dmg_type);
+            return new Effect(description, RollTime.DEFAULT, applicable_roll_type, function (roll) {
                 if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     roll.add_multiplier(value, dmg_type, character.name);
                 }
@@ -9366,7 +9473,7 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(effect, 'roll_effect() effect');
             assert_not_null(applicable_roll_type, 'roll_effect() applicable_roll_type');
 
-            return new Effect(RollTime.DEFAULT, applicable_roll_type, function (roll) {
+            return new Effect(effect, RollTime.DEFAULT, applicable_roll_type, function (roll) {
                 if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     roll.add_effect(effect);
                 }
@@ -9378,7 +9485,8 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(hidden_stat, 'crit_hidden_stat() stat');
             assert_not_null(applicable_roll_type, 'crit_hidden_stat() applicable_roll_type');
 
-            return new Effect(RollTime.POST_CRIT, applicable_roll_type, function (roll) {
+            const description = 'On crit: ' + hidden_stat_description(hidden_stat).format(value);
+            return new Effect(description, RollTime.POST_CRIT, applicable_roll_type, function (roll) {
                 if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     if (roll.should_apply_crit && roll.crit) {
                         roll.add_hidden_stat(hidden_stat, value);
@@ -9392,7 +9500,8 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(dmg_type, 'crit_damage() dmg_type');
             assert_not_null(applicable_roll_type, 'crit_damage() applicable_roll_type');
 
-            return new Effect(RollTime.POST_CRIT, applicable_roll_type, function (roll) {
+            const description = 'On crit: %s %s dmg'.format(dmg, dmg_type);
+            return new Effect(description, RollTime.POST_CRIT, applicable_roll_type, function (roll) {
                 if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     if (roll.should_apply_crit && roll.crit) {
                         roll.add_damage(dmg, dmg_type);
@@ -9406,7 +9515,8 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(dmg_type, 'crit_multiplier() dmg_type');
             assert_not_null(applicable_roll_type, 'crit_multiplier() applicable_roll_type');
 
-            return new Effect(RollTime.POST_CRIT, applicable_roll_type, function (roll) {
+            const description = 'On crit: +%s% %s dmg'.format(value * 100, dmg_type);
+            return new Effect(description, RollTime.POST_CRIT, applicable_roll_type, function (roll) {
                 if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     if (roll.should_apply_crit && roll.crit) {
                         roll.add_multiplier(value, dmg_type, character.name);
@@ -9419,7 +9529,8 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(effect, 'crit_effect() effect');
             assert_not_null(applicable_roll_type, 'crit_effect() applicable_roll_type');
 
-            return new Effect(RollTime.POST_CRIT, applicable_roll_type, function (roll) {
+            const description = 'On crit: %s'.format(effect);
+            return new Effect(description, RollTime.POST_CRIT, applicable_roll_type, function (roll) {
                 if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     if (roll.should_apply_crit && roll.crit) {
                         roll.add_effect(effect);
@@ -9432,7 +9543,8 @@ var BarbsComponents = BarbsComponents || (function () {
             assert_not_null(amount, 'crit_damage_mod() amount');
             assert_not_null(applicable_roll_type, 'crit_damage_mod() applicable_roll_type');
 
-            return new Effect(RollTime.DEFAULT, RollType.PHYSICAL, function (roll) {
+            const description = '+%s% crit damage'.format(amount);
+            return new Effect(description, RollTime.DEFAULT, RollType.PHYSICAL, function (roll) {
                 if (RollType.is_type(applicable_roll_type, roll.roll_type)) {
                     roll.add_crit_damage_mod(amount);
                 }

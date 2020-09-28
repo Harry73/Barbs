@@ -175,6 +175,40 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function collect_logs(handler) {
+        assert_not_null(handler, 'collect_logs() handler');
+
+        // Temporarily change Item and Affix's loggers to something that lets us save the error messages.
+        const errors = [];
+        class Collector {
+            static trace() {
+            }
+            static debug() {
+            }
+            static info() {
+            }
+            static warn(string) {
+                assert_not_null(string, 'warn() string');
+                errors.push(string);
+            }
+            static error(string) {
+                assert_not_null(string, 'error() string');
+                errors.push(string);
+            }
+        }
+        Item.LOGGER = Collector;
+        Affix.LOGGER = Collector;
+
+        handler();
+
+        // Revert the logger hack
+        Item.LOGGER = LOG;
+        Affix.LOGGER = LOG;
+
+        return errors;
+    }
+
+
     // ################################################################################################################
     // Character lookup
 
@@ -927,8 +961,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-
-
     function make_handler_effective(target_character, handler, parameters, effectiveness) {
         assert_type(target_character, Character, 'make_handler_effective() target_character');
         assert_not_null(handler, 'make_handler_effective() handler');
@@ -1206,7 +1238,20 @@ var Barbs = Barbs || (function () {
 
         const effect_name = parts[0];
         const affix_strings = parts.slice(1);
-        const results = Affix.process_affixes(character, effect_name, affix_strings);
+        let results = null;
+
+        const errors = collect_logs(function() {
+            results = Affix.process_affixes(character, effect_name, affix_strings);
+        });
+
+        // If there were any errors processing affixes, log them and then fail creating the effect
+        if (errors.length > 0) {
+            for (let i = 0; i < errors.length; i++) {
+                raw_chat('API', errors[i]);
+            }
+            return;
+        }
+
         const effect_type = results['effect_type'];
         let duration = results['duration'];
         const affixes = results['affixes'];
@@ -1219,13 +1264,13 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const fake_ability = {
-            'name': effect_name,
-            'tags': [],
-        }
-
         for (let i = 0; i < affixes.length; i++) {
             const affix = affixes[i];
+
+            const fake_ability = {
+                'name': '%s (%s)'.format(effect_name, affix.description),
+                'tags': [],
+            }
 
             const handler = function (char, roll, parameters) {
                 affix.apply(roll);
@@ -1236,7 +1281,7 @@ var Barbs = Barbs || (function () {
                                         affix.roll_type, affix.roll_time, /*count=*/1, effect_type, handler);
         }
 
-        chat(character, 'Created effect %s on %s'.format(fake_ability.name, character.name));
+        chat(character, 'Created effect %s on %s'.format(effect_name, character.name));
     }
 
 
@@ -2309,30 +2354,11 @@ var Barbs = Barbs || (function () {
 
 
     function check_items(msg) {
-        const errors = [];
-
-        // Temporarily change Item and Affix's loggers to something that lets us save the error messages.
-        class Collector {
-            static trace() {
-            }
-            static debug() {
-            }
-            static info() {
-            }
-            static warn(string) {
-                assert_not_null(string, 'warn() string');
-                errors.push(string);
-            }
-            static error(string) {
-                assert_not_null(string, 'error() string');
-                errors.push(string);
-            }
-        }
-        Item.LOGGER = Collector;
-        Affix.LOGGER = Collector;
-
-        // Getting the character constructs items under the hood, so this is good enough to check for errors
-        const character = get_character_from_msg(msg);
+        let character = null;
+        const errors = collect_logs(function() {
+            // Getting the character constructs items under the hood, so this is good enough to check for errors
+            character = get_character_from_msg(msg);
+        });
 
         if (errors.length > 0) {
             for (let i = 0; i < errors.length; i++) {
@@ -2341,10 +2367,6 @@ var Barbs = Barbs || (function () {
         } else {
             raw_chat('API', 'Items for %s are correct.'.format(character.name));
         }
-
-        // Revert the logger hack
-        Item.LOGGER = LOG;
-        Affix.LOGGER = LOG;
     }
 
 
