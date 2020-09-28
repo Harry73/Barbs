@@ -3597,7 +3597,7 @@ var Barbs = Barbs || (function () {
             add_persistent_effect(character, ability, parameters, character, Duration.INFINITE(), Ordering(),
                                   RollType.MAGIC, RollTime.DEFAULT, 1, function (char, roll, parameters) {
                 roll.add_damage('6d8', Damage.ICE);
-                roll.add_damage('6d8', Damage.DARK);
+                roll.add_damage('5d10', Damage.DARK);
 
                 for (let i = 0; i < 2; i++) {
                     if (conditions_list[i].toLowerCase().includes('curse')){
@@ -3631,7 +3631,7 @@ var Barbs = Barbs || (function () {
 
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('6d8', Damage.ICE);
-        roll.add_damage('6d8', Damage.DARK);
+        roll.add_damage('5d10', Damage.DARK);
 
         for (let i = 0; i < 2; i++) {
             if (conditions_list[i].toLowerCase().includes('curse')){
