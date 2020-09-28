@@ -3900,6 +3900,28 @@
     },
     {
         "type": "ability",
+        "name": "Leaping Crush",
+        "class": "Destroyer",
+        "branch": "Raze",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "55 stamina",
+        "range": "20 ft",
+        "duration": "Instant",
+        "description": [
+            "You leap towards enemies and cause destruction on a large scale. Dash up to 30 ft (can dash vertically) to an empty space, then deal 8d10 physical damage to all enemies in range, knocking all enemies hit up into the air."
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "blunt weapon",
+            "AOE",
+            "square",
+            "Knock Up"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Slam",
         "class": "Destroyer",
         "branch": "Sunder",
@@ -3973,6 +3995,28 @@
     },
     {
         "type": "ability",
+        "name": "Willbreaker",
+        "class": "Destroyer",
+        "branch": "Sunder",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "50 stamina",
+        "range": "Melee",
+        "duration": "1 minute",
+        "description": [
+            "You break an enemy with overpowering strength. Deal 8d10 physical damage to a target in range, inflicting them with a condition that prevents them from using reactions to dash away from or block your attacks for the duration."
+        ],
+        "tags": [
+            "Attack",
+            "melee",
+            "physical",
+            "single-target",
+            "blunt weapon",
+            "condition"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Demolish",
         "class": "Destroyer",
         "branch": "Teardown",
@@ -4028,6 +4072,23 @@
         "duration": "Instant",
         "description": [
             "You reduce parts of the ground to flat earth, or create a ditch. Create a shockwave centered on you that causes all spaces within range to be depressed downwards by 20 ft."
+        ],
+        "tags": [
+            "Terrain destruction"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Groundbreaker",
+        "class": "Destroyer",
+        "branch": "Teardown",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "50 stamina",
+        "range": "Battlefield",
+        "duration": "Instant",
+        "description": [
+            "You destroy the ground in a wide area. All spaces within range become difficult terrain. When you cast this ability, up to 5 constructs, buildings, vehicles, or destructible terrain objects that you can see are destroyed. You may need to make a Blunt Weapons check for larger or armored targets, and some objects aren't destructible at all (such as hills or mountains)."
         ],
         "tags": [
             "Terrain destruction"
