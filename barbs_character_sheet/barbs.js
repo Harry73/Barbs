@@ -1277,7 +1277,7 @@ var Barbs = Barbs || (function () {
                 return true;
             };
 
-            inner_add_persistent_effect(character, fake_ability, /*parameters=*/'', character, duration, Ordering(),
+            inner_add_persistent_effect(character, fake_ability, /*parameters=*/[], character, duration, Ordering(),
                                         affix.roll_type, affix.roll_time, /*count=*/1, effect_type, handler);
         }
 

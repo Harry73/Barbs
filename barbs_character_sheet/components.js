@@ -8640,22 +8640,28 @@ var BarbsComponents = BarbsComponents || (function () {
     //
     class RollType {
         static is_type(roll_type, expected_type) {
-            return roll_type === expected_type || roll_type === RollType.ALL;
+            assert_enum(roll_type, RollType, 'RollType::is_type() roll_type');
+            assert_enum(expected_type, RollType, 'RollType::is_type() expected_type');
+            return roll_type === expected_type || roll_type === RollType.ALL || expected_type === RollType.ALL;
         }
 
         static is_physical(roll_type) {
+            assert_enum(roll_type, RollType, 'RollType::is_physical() roll_type');
             return this.is_type(roll_type, RollType.PHYSICAL);
         }
 
-        static is_pyschic(roll_type) {
+        static is_psychic(roll_type) {
+            assert_enum(roll_type, RollType, 'RollType::is_psychic() roll_type');
             return this.is_type(roll_type, RollType.PSYCHIC);
         }
 
         static is_magic(roll_type) {
+            assert_enum(roll_type, RollType, 'RollType::is_magic() roll_type');
             return this.is_type(roll_type, RollType.MAGIC);
         }
 
         static is_healing(roll_type) {
+            assert_enum(roll_type, RollType, 'RollType::is_healing() roll_type');
             return this.is_type(roll_type, RollType.HEALING);
         }
     }
@@ -10084,7 +10090,7 @@ var BarbsComponents = BarbsComponents || (function () {
         }
 
         static multiplier_affix(character, item_name, part, create_effect) {
-            assert_not_null(character, 'multiplier_affix() character');
+            assert_type(character, Character, 'multiplier_affix() character');
             assert_not_null(item_name, 'multiplier_affix() item_name');
             assert_not_null(part, 'multiplier_affix() part');
             assert_not_null(create_effect, 'multiplier_affix() create_effect');
@@ -10416,7 +10422,6 @@ var BarbsComponents = BarbsComponents || (function () {
                 this.skills[name] = ap;
             }
 
-            LOG.info(JSON.stringify(this.skills));
             return this.skills;
         }
 
