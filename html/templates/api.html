@@ -35,6 +35,7 @@
             <a href="#What Items Apply When">What Items Apply When</a>
             <a href="#Auto Attacks">Auto-attacks</a>
             <a href="#Defining an Item">Defining an Item</a>
+            <a href="#Creating custom effects">Creating Custom Effects</a>
         </div>
         <a href="#Class Abilities">Class Abilities</a>
         <div class="sidenav-subsection">
@@ -613,6 +614,46 @@
             </ul>
             <br>
 
+            <a id="Creating custom effects"><h3>Creating custom buffs, potions effects, enchantments, and empowers</h3></a>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;At the bottom of the Class Abilities tab, there a place to create custom effects on your character.
+                The rules for specifying a custom effect are nearly identical to how you define an item. Specify a name
+                for the effect, followed by a semi-colon. Each effect that you want the custom effect to have should be
+                appended afterwards in a semi-colon-separated list. Custom effects use the same syntax as item affixes.
+                All of the same affixes that you can define on an item can also be used for a custom effect.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Custom effects can also be created from every row in the Inventory tab. The only difference is that
+                the name and affixes are separate. Put the name of the effect in the "Name" column and the affixes in
+                the "Description" column. </p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;There are a few special affixes for custom effects.
+                You should specify both of these under most circumstances.</p>
+            <br>
+
+            <ul>
+                <li>Effect type - <span class="monospace">type: &lt;effect type&gt;</span>
+                    <ul>
+                        <li>"effect type" must be one of the following: arrow, buff, enchantment, empower, potion, unknown.
+                            If no type is specified, the type defaults to "unknown."</li>
+                    </ul>
+                </li>
+
+                <li>Effect duration - <span class="monospace">duration: &lt;duration info&gt;</span>
+                    <ul>
+                        <li>Duration <b>must</b> be specified for effects with the following types: buff, enchantment,
+                        potion, and unknown. The duration of an arrow or empower is assumed to be a single usage, unless
+                        otherwise specified. There are a few ways to specify durations:</li>
+                    </ul>
+                    <br>
+                    <ul>
+                        <li><span class="monospace">duration: infinite</span> - The effect will last forever, or until it is manually removed.</li>
+                        <li><span class="monospace">duration: 1 minute</span> - The effect will last for 1 minute in combat, or 6 rounds.</li>
+                        <li><span class="monospace">duration: 1 hour</span> - The effect will last for 1 hour in combat, or 60 rounds.</li>
+                        <li><span class="monospace">single</span> - The effect will be applied to the next attack, and then will be removed.</li>
+                        <li><span class="monospace">&lt;N&gt; hard</span> - A "hard" duration will last "N" rounds and end at the <b>end</b> of your turn.</li>
+                        <li><span class="monospace">&lt;N&gt; soft</span> - A "soft" duration will last "N" rounds and end at the <b>start</b> of your turn.</li>
+                    </ul>
+                </li>
+            </ul>
+            <br>
+
         </article>
 
         <article>
@@ -655,28 +696,31 @@
             <a id="Pure API">
                 <h2>Pure Barbs API Usage</h2>
             </a>
-            <p&nbsp;&nbsp;&nbsp;&nbsp;Most of the time, you should be going through your character sheet to do things. If you are looking to
-                make a macro, though, the macro will make API calls directly. For these kinds of purposes, the pure API
-                commands and usages are described here. Fields in &lt;angled brackets&gt; are placeholders, and should be
-                filled out with some real value when making actual API calls.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Most of the time, you should be going through your character sheet to do things. If you are
+                looking to make a macro, though, the macro will make API calls directly. For these kinds of purposes,
+                the pure API commands and usages are described here. Fields in &lt;angled brackets&gt; are placeholders, and
+                should be filled out with some real value when making actual API calls.</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;For all commands, the character name can optionally be included, wrapped in dollar signs
                 (e.g. <span class="monospace">$Ren Nightside$</span>. It does not matter where in the request the
                 character name is included, only that it follows <span class="monospace">!barbs &lt;command&gt;</span>.
                 If the character name is not specified, who you are speaking as in chat is used to determine what
                 character to use to make rolls.</p>
             <br>
+
             <h3>Initiative</h3>
             <ul>
                 <li><span class="monospace">!barbs initiative $&lt;character_name&gt;$</span></li>
             </ul>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;Initiative is straightforward.</p>
             <br>
+
             <h3>Concentration</h3>
             <ul>
                 <li><span class="monospace">!barbs concentration $&lt;character_name&gt;$</span></li>
             </ul>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;Concentration is straightforward.</p>
             <br>
+
             <h3>Take Damage</h3>
             <ul>
                 <li><span class="monospace">!barbs dmg $&lt;character_name&gt;$ physical:&lt;physical damage and pen&gt; psychic:&lt;psychic damage and pen&gt; fire:&lt;fire damage and pen&gt; water:&lt;water damage and pen&gt; earth:&lt;earth damage and pen&gt; air:&lt;air damage and pen&gt; ice:&lt;ice damage and pen&gt; lightning:&lt;lightning damage and pen&gt; light:&lt;light damage and pen&gt; dark:&lt;dark damage and pen&gt;</span></li>
@@ -686,6 +730,7 @@
                 For example, "50" indicates you are taking 50 damage with no pen. "50|20" indicates that you are
                 taking 50 damage with 20 AC pen or 20% MR pen, depending on the damage type.</p>
             <br>
+
             <h3>Condition Resist</h3>
             <ul>
                 <li><span class="monospace">!barbs cr $&lt;character_name&gt;$ &lt;condition&gt;</span></li>
@@ -694,6 +739,7 @@
                 <a href="/#Conditions">conditions listed in the rulebook</a>. If you are not resisting a particular
                 condition, this field should be "General".</p>
             <br>
+
             <h3>Stat</h3>
             <ul>
                 <li><span class="monospace">!barbs stat $&lt;character_name&gt;$ &lt;stat&gt;</span></li>
@@ -702,6 +748,7 @@
                 character sheet. Replace spaces and slashes in the stat's name with underscores. Capitalization
                 does not matter.</p>
             <br>
+
             <h3>Skills</h3>
             <ul>
                 <li><span class="monospace">!barbs skill $&lt;character_name&gt;$ &lt;skill name&gt; &lt;AP in the skill&gt;</span></li>
@@ -712,12 +759,23 @@
                 be the number of AP you have invested into this skill. This is NOT your rank or bonus (though rank has
                 a 1-1 relationship with AP investment).</p>
             <br>
+
+            <h3>Create Effects</h3>
+            <ul>
+                <li><span class="monospace">!barbs create_effects $&lt;character_name&gt;$ &lt;effect construction args&gt;</span></li>
+            </ul>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;The "effect construction args" field should follow the rules laid out in the
+                <a href="#Creating custom effects">Creating custom effects section</a>. Describe the effect with a name,
+                followed by its affixes, semicolon-separated.</p>
+            <br>
+
             <h3>List Effects</h3>
             <ul>
                 <li><span class="monospace">!barbs list_effects $&lt;character_name&gt;$</span></li>
             </ul>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;List effects is straightforward.</p>
             <br>
+
             <h3>Remove Effect</h3>
             <ul>
                 <li><span class="monospace">!barbs remove_effect $&lt;character_name&gt;$ &lt;effect name&gt;</span></li>
@@ -728,16 +786,18 @@
                 field is usually the name of the class ability that generated the effect. Spaces in both the character
                 name and effect name are permitted. Capitalization for the character name and effect name do matter.</p>
             <br>
+
             <h3>Item Auto-attack</h3>
             <ul>
                 <li><span class="monospace">!barbs item $&lt;character_name&gt;$ &lt;item slot&gt; &lt;item construction args&gt;|&lt;attack parameters&gt;</span></li>
             </ul>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;The "item slot" should be <span class="monospace">main_hand</span> or
                 <span class="monospace">offhand</span>. The "item construction args" field should follow the rules
-                laid out in the <a href="#Items">Items section</a>. Describe the item as a "construct", followed by
-                its affixes, semicolon-separated. The "attack parameters" field follows the normal
+                laid out in the <a href="#Items">Items section</a>. Describe the item with a name, followed by its
+                affixes, semicolon-separated. The "attack parameters" field follows the normal
                 <a href="#Parameters">pattern for parameters</a>, just semicolon-separate each parameter.</p>
             <br>
+
             <h3>Class Abilities</h3>
             <ul>
                 <li><span class="monospace">!barbs ability $&lt;character_name&gt;$ &lt;class name&gt;;&lt;ability name&gt;;&lt;ability parameters&gt;</span></li>
