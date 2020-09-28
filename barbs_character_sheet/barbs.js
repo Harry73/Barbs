@@ -1288,28 +1288,73 @@ var Barbs = Barbs || (function () {
     function list_persistent_effects(msg) {
         const character = get_character_from_msg(msg);
 
-        let effects = '';
-        let callback_options = [];
+        const effects_on_character = [];
         for (let i = 0; i < persistent_effects.length; i++) {
             if (persistent_effects[i].target === character.name) {
-                if (persistent_effects[i].effectiveness === 1) {
-                    effects = effects + '<li>%s</li>'.format(persistent_effects[i].name);
-                } else {
-                    effects = effects + '<li>%s (%sx)</li>'.format(persistent_effects[i].name,
-                                                                   persistent_effects[i].effectiveness);
-                }
-                callback_options.push(persistent_effects[i].name);
+                effects_on_character.push(persistent_effects[i]);
             }
         }
 
-        let format = '&{template:Barbs} {{name=Effects on %s}} {{effects=%s}}';
+        // Alphabetize effects
+        effects_on_character.sort(function(a, b) {
+            if (a.name < b.name) {
+                return -1;
+            }
+            if (a.name > b.name) {
+                return 1;
+            }
+            return 0;
+        });
+
+        let buffs_text = '';
+        let enchants_text = '';
+        let potions_text = '';
+        let effects_text = '';
+        let callback_options = [];
+        for (let i = 0; i < effects_on_character.length; i++) {
+            const effect = effects_on_character[i];
+
+            let effect_text = '';
+            if (effect.effectiveness === 1) {
+                effect_text = '<li>%s</li>'.format(effect.name);
+            } else {
+                effect_text = '<li>%s (%sx)</li>'.format(effect.name, effect.effectiveness);
+            }
+
+            if (effect.effect_type === EffectType.BUFF) {
+                buffs_text += effect_text;
+            } else if (effect.effect_type === EffectType.ENCHANTMENT) {
+                enchants_text += effect_text;
+            } else if (effect.effect_type === EffectType.POTION) {
+                potions_text += effect_text;
+            } else {
+                effects_text += effect_text;
+            }
+
+            callback_options.push(effect.name);
+        }
+
+        let output_text = '&{template:Barbs} {{name=Effects on %s}}'.format(character.name);
+        if (buffs_text !== '') {
+            output_text += ' {{buffs=%s}}'.format(buffs_text);
+        }
+        if (enchants_text !== '') {
+            output_text += ' {{enchants=%s}}'.format(enchants_text);
+        }
+        if (potions_text !== '') {
+            output_text += ' {{potions=%s}}'.format(potions_text);
+        }
+        if (effects_text !== '') {
+            output_text += ' {{effects=%s}}'.format(effects_text);
+        }
+
         if (callback_options.length > 0) {
             callback_options = callback_options.join('|').replace(/\'/g, '&#39;');
+            const button_text = " {{button=<a href='!barbs remove_effect $%s$ ?{Remove which effect?|%s}'>Remove Effect</a>}}";
 
-            format += " {{button=<a href='!barbs remove_effect $%s$ ?{Remove which effect?|%s}'>Remove Effect</a>}}";
-            chat(character, format.format(character.name, effects, character.name, callback_options));
+            chat(character, output_text + button_text.format(character.name, callback_options));
         } else {
-            chat(character, format.format(character.name, '<li>None</li>'));
+            chat(character, output_text + ' {{effects=<li>None</li>}}');
         }
     }
 
