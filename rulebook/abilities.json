@@ -1006,6 +1006,26 @@
     },
     {
         "type": "ability",
+        "name": "Unyielding Hunter",
+        "class": "Arcane Archer",
+        "branch": "Focus",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 mana",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You become secure in your advantage over prey. Gain 50% increased AC against melee attacks and 100% increased AC against ranged attacks. Additionally, while this buff is active, any buffs on you have a 40% chance to ignore buff stripping. If you would have one or more buffs stripped off of you, you may sacrifice this buff as a free reaction instead to prevent the buff strip."
+        ],
+        "tags": [
+            "Buff",
+            "self-target",
+            "conditional",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Surefire Shot",
         "class": "Arcane Archer",
         "branch": "Shooting",
@@ -1067,6 +1087,28 @@
     },
     {
         "type": "ability",
+        "name": "Stream Shot",
+        "class": "Arcane Archer",
+        "branch": "Shooting",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "50 stamina",
+        "range": "140 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire many arrows as your power increases. Deal 6d8 physical damage to a target in range, then repeat this attack for every buff you have (you may choose new targets with each attack). If you sacrificed a buff this turn, this attack gains +50% increased physical damage and pushes targets back 20 ft."
+        ],
+        "tags": [
+            "Attack",
+            "ranged",
+            "single-target",
+            "multi-target",
+            "conditional",
+            "forced movement"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Broadhead Arrow",
         "class": "Arcane Archer",
         "branch": "Vigor",
@@ -1109,6 +1151,27 @@
             "modal",
             "condition",
             "Bleed"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Bruiser Arrow",
+        "class": "Arcane Archer",
+        "branch": "Vigor",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 mana",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You augment your attacks to wear enemies down. Your bow and crossbow attacks gain, \"On Hit: Inflict 10% Physical Vulnerability, stacking\" for the duration. Also, your attacks with bows and crossbows have a 25% chance to cause targets to lose their next Major Action. You may sacrifice this buff as a free action; if you do, your next attack with a bow or crossbow inflicts 50% Physical Vulnerability and causes the target to lose their next Major Action."
+        ],
+        "tags": [
+            "Buff",
+            "self-target",
+            "modal",
+            "condition",
+            "Vulnerability"
         ]
     },
     {
