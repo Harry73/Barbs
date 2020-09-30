@@ -112,7 +112,7 @@
         "name": "Manalith",
         "description": "The manaliths are made of pure mana, solidified and brought to life. No one knows whether they evolved naturally or were created by mages of ancient times. The mana that makes up their lifeblood seeps through their veins and empowers their spells. They dwell in temples throughout the world, secluded from the rest of society.",
         "traits": {
-            "Casting": "The manalith can, once per day, cast a spell without consuming any mana., after rolling damage/effects",
+            "Casting": "The manalith can, once per day, cast a spell without consuming any mana, after rolling damage/effects",
             "Penetration": "The manalith can, one per day, have a spell ignore an enemy's Magic Defense, after rolling damage"
         }
     },
