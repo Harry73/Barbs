@@ -503,7 +503,11 @@
             "conjuration",
             "forced movement",
             "concentration"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -3918,7 +3922,11 @@
             "AOE",
             "square",
             "Knock Up"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -3969,7 +3977,11 @@
             "blunt weapon",
             "on hit",
             "armor shred"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -3991,7 +4003,11 @@
             "single-target",
             "blunt weapon",
             "lethality"
-        ]
+        ],
+        "api": {
+            "description": "You will have to roll for Lethality on this manually.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4013,7 +4029,11 @@
             "single-target",
             "blunt weapon",
             "condition"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4030,7 +4050,11 @@
         ],
         "tags": [
             "Terrain destruction"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4075,7 +4099,11 @@
         ],
         "tags": [
             "Terrain destruction"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4092,7 +4120,11 @@
         ],
         "tags": [
             "Terrain destruction"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4192,7 +4224,16 @@
             "Spell",
             "transmutation",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "To apply the transformation from this ability to yourself, use only the \"transform\" parameter. You should un-equip your main hand and offhand weapons while transformed. If you perform Bronze/Silver/Gold dragon attacks, specify the color of the dragon as a parameter and then the same parameters you would normally specify for the Summon Bronze/Silver/Gold Dragon abilities. The rolls will be performed as you, rather than via a minion.",
+            "examples": [
+                "transform",
+                "bronze; major: claw; minor: Faust, Ren",
+                "silver; major: tail; minor: Faust, Ren",
+                "gold; major: breath; minor: Faust, Ren"
+            ]
+        }
     },
     {
         "type": "ability",
@@ -4308,7 +4349,11 @@
             "summoning",
             "conjuration",
             "concentration"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4410,7 +4455,13 @@
             "utility",
             "buff",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "Use the \"target\" parameter to specify which ally to cast the buff on. The API will create the buff on the target, but the buff does not have any actual effect in the API.",
+            "examples": [
+                "target: Janatris"
+            ]
+        }
     },
     {
         "type": "ability",

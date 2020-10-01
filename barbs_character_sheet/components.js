@@ -1629,6 +1629,48 @@ var BarbsComponents = BarbsComponents || (function () {
                         "modal",
                         "cleanse"
                     ]
+                },
+                "Unyielding Hunter": {
+                    "name": "Unyielding Hunter",
+                    "class": "Arcane Archer",
+                    "description": [
+                        "You become secure in your advantage over prey. Gain 50% increased AC against melee attacks and 100% increased AC against ranged attacks. Additionally, while this buff is active, any buffs on you have a 40% chance to ignore buff stripping. If you would have one or more buffs stripped off of you, you may sacrifice this buff as a free reaction instead to prevent the buff strip."
+                    ],
+                    "tags": [
+                        "buff",
+                        "self-target",
+                        "conditional",
+                        "modal"
+                    ]
+                },
+                "Stream Shot": {
+                    "name": "Stream Shot",
+                    "class": "Arcane Archer",
+                    "description": [
+                        "You fire many arrows as your power increases. Deal 6d8 physical damage to a target in range, then repeat this attack for every buff you have (you may choose new targets with each attack). If you sacrificed a buff this turn, this attack gains +50% increased physical damage and pushes targets back 20 ft."
+                    ],
+                    "tags": [
+                        "attack",
+                        "ranged",
+                        "single-target",
+                        "multi-target",
+                        "conditional",
+                        "forced movement"
+                    ]
+                },
+                "Bruiser Arrow": {
+                    "name": "Bruiser Arrow",
+                    "class": "Arcane Archer",
+                    "description": [
+                        "You augment your attacks to wear enemies down. Your bow and crossbow attacks gain, \"On Hit: Inflict 10% Physical Vulnerability, stacking\" for the duration. Also, your attacks with bows and crossbows have a 25% chance to cause targets to lose their next Major Action. You may sacrifice this buff as a free action; if you do, your next attack with a bow or crossbow inflicts 50% Physical Vulnerability and causes the target to lose their next Major Action."
+                    ],
+                    "tags": [
+                        "buff",
+                        "self-target",
+                        "modal",
+                        "condition",
+                        "vulnerability"
+                    ]
                 }
             }
         },
@@ -3641,7 +3683,8 @@ var BarbsComponents = BarbsComponents || (function () {
                         "condition",
                         "taunt",
                         "gain ac",
-                        "gain mr"
+                        "gain mr",
+                        "buff"
                     ]
                 },
                 "Flatten": {
@@ -3649,6 +3692,46 @@ var BarbsComponents = BarbsComponents || (function () {
                     "class": "Destroyer",
                     "description": [
                         "You reduce parts of the ground to flat earth, or create a ditch. Create a shockwave centered on you that causes all spaces within range to be depressed downwards by 20 ft."
+                    ],
+                    "tags": [
+                        "terrain destruction"
+                    ]
+                },
+                "Leaping Crush": {
+                    "name": "Leaping Crush",
+                    "class": "Destroyer",
+                    "description": [
+                        "You leap towards enemies and cause destruction on a large scale. Dash up to 30 ft (can dash vertically) to an empty space, then deal 8d10 physical damage to all enemies in range, knocking all enemies hit up into the air."
+                    ],
+                    "tags": [
+                        "attack",
+                        "physical",
+                        "blunt weapon",
+                        "aoe",
+                        "square",
+                        "knock up"
+                    ]
+                },
+                "Willbreaker": {
+                    "name": "Willbreaker",
+                    "class": "Destroyer",
+                    "description": [
+                        "You break an enemy with overpowering strength. Deal 8d10 physical damage to a target in range, inflicting them with a condition that prevents them from using reactions to dash away from or block your attacks for the duration."
+                    ],
+                    "tags": [
+                        "attack",
+                        "melee",
+                        "physical",
+                        "single-target",
+                        "blunt weapon",
+                        "condition"
+                    ]
+                },
+                "Groundbreaker": {
+                    "name": "Groundbreaker",
+                    "class": "Destroyer",
+                    "description": [
+                        "You destroy the ground in a wide area. All spaces within range become difficult terrain. When you cast this ability, up to 5 constructs, buildings, vehicles, or destructible terrain objects that you can see are destroyed. You may need to make a Blunt Weapons check for larger or armored targets, and some objects aren't destructible at all (such as hills or mountains)."
                     ],
                     "tags": [
                         "terrain destruction"
@@ -3796,6 +3879,44 @@ var BarbsComponents = BarbsComponents || (function () {
                     "class": "Dragoncaller",
                     "description": [
                         "You invoke the supernatural vision of the dragon. An ally in range gains a buff that grants them true sight and your choice of +50% Accuracy, +50% Armor Penetration, or +50% Magic Penetration for the duration. When you cast this spell, you may target an additional ally for each Dragon you control."
+                    ],
+                    "tags": [
+                        "spell",
+                        "utility",
+                        "buff",
+                        "conditional"
+                    ]
+                },
+                "Dragonstorm": {
+                    "name": "Dragonstorm",
+                    "class": "Dragoncaller",
+                    "description": [
+                        "You conjure a portal to a starry world of dragons. Create a portal in an empty space in range. At the beginning of each of your turns for the duration, a random dragon will emerge from the portal as one of your minions. Each dragon summoned this way has a duration of 1 minute. Only the portal created by this spell is maintained by concentration; breaking concentration will not cause the dragons summoned by it to be dispelled. You may only concentrate on one instance of this spell at a time. You may only cast this spell a number of times per day equal to the number of Draconic Pacts you have established."
+                    ],
+                    "tags": [
+                        "spell",
+                        "summoning",
+                        "conjuration",
+                        "concentration"
+                    ]
+                },
+                "Dragonform": {
+                    "name": "Dragonform",
+                    "class": "Dragoncaller",
+                    "description": [
+                        "You transform yourself into a dragon. You become a colored dragon of your choice (choosing between bronze, silver, and gold) and your stats undergo the following changes: +300 maximum and current health; +30 AC; +30% MR; +30% EV; +30% CR; your size becomes Large; you gain 60 ft flying speed. Additionally you gain all of the abilities of the color of dragon you transformed into (this includes breath attacks, melee attacks, and buff/debuff abilities). While transformed in this way, you cannot cast weapon abilities. When the additional health provided by this transformation is depleted, this transformation immediately ends. You may only cast this spell a number of times per day equal to the number of Draconic Pacts you have established."
+                    ],
+                    "tags": [
+                        "spell",
+                        "transmutation",
+                        "conditional"
+                    ]
+                },
+                "Dragonblood": {
+                    "name": "Dragonblood",
+                    "class": "Dragoncaller",
+                    "description": [
+                        "You invoke the ancient lineage of the dragon. An ally in range gains a buff that grants them the following: immunity to Charm, Confusion, Fear, Taunt, and any condition that causes them to lose actions; Downed health is increased to 200; +30 to all Interaction, Magic, and Observation skill checks; protection from scrying magic. This buff cannot be stripped and is not lost upon entering a Downed state. You may only cast this spell a number of times per day equal to the number of Draconic Pacts you have established."
                     ],
                     "tags": [
                         "spell",
@@ -4179,16 +4300,16 @@ var BarbsComponents = BarbsComponents || (function () {
                     "name": "Krystalline Basileia",
                     "class": "Evangelist",
                     "description": [
-                        "You cause an explosion of ice shards and dark energy. Deal 6d8 ice magic damage and 6d8 dark magic damage to all enemies in a 65 ft square centered on a space in range, then choose two additional effects from the following list:",
+                        "You cause an explosion of ice shards and dark energy. Deal 6d8 ice magic damage and 5d10 dark magic damage to all enemies in a 65 ft square centered on a space in range, then choose two additional effects from the following list:",
                         "<ul>",
                         "<li>Inflict Frozen for 1 minute</li>",
                         "<li>Inflict Slowed for 1 minute</li>",
                         "<li>Inflict Blinded for 1 minute</li>",
                         "<li>Inflict 2 curses</li>",
                         "</ul>",
-                        "Instead of choosing two effects from the above list, you may instead have this spell deal an additional 4d8 magic damage of either ice or dark.",
+                        "Instead of choosing two effects from the above list, you may instead have this spell deal an additional 4d8 ice or 3d10 dark magic damage.",
                         "<br>",
-                        "If you absorb this spell with Magia Erebea, you may have it be cast when you release Magia Erebea as long as it was absorbed for at least 2 turns. If you do release the spell in this way, you may select 3 conditions from the above list, or have the spell deal an additional 6d8 magic damage of either ice or dark."
+                        "If you absorb this spell with Magia Erebea, you may have it be cast when you release Magia Erebea as long as it was absorbed for at least 2 turns. If you do release the spell in this way, you may select 3 conditions from the above list, or have the spell deal an additional 6d8 ice or 5d10 dark magic damage."
                     ],
                     "tags": [
                         "spell",
@@ -4211,13 +4332,13 @@ var BarbsComponents = BarbsComponents || (function () {
                     "name": "Iaculatio Orcus",
                     "class": "Evangelist",
                     "description": [
-                        "You cause spears of ice and darkness to fire from your hands in a wide arc. Deal 16d8 magic damage to all enemies in a 60 ft cone in front of you; the type of magic damage dealt and additional effects are dependant on each enemy's distance from you as follows:",
+                        "You cause spears of ice and darkness to fire from your hands in a wide arc. Deal magic damage to all enemies in a 60 ft cone in front of you; the type of magic damage dealt and additional effects are dependant on each enemy's distance from you as follows:",
                         "<ul>",
-                        "<li>Within 10 ft: 4d8 ice magic damage and 12d8 dark magic damage, and the attack has 30% Lethality</li>",
-                        "<li>11 to 20 ft: 6d8 ice magic damage and 10d8 dark magic damage, and inflict a 30% Weaken</li>",
-                        "<li>21 to 40 ft: 8d8 ice magic damage and 8d8 dark magic damage</li>",
-                        "<li>41 to 50 ft: 10d8 ice magic damage and 6d8 dark magic damage, and inflict Slowed</li>",
-                        "<li>51 to 60 ft: 12d8 ice magic damage and 4d8 dark magic damage, and inflict Frozen</li>",
+                        "<li>Within 10 ft: 4d8 ice magic damage and 12d10 dark magic damage, and the attack has 30% Lethality</li>",
+                        "<li>11 to 20 ft: 6d8 ice magic damage and 10d10 dark magic damage, and inflict a 30% Weaken</li>",
+                        "<li>21 to 40 ft: 8d8 ice magic damage and 8d10 dark magic damage</li>",
+                        "<li>41 to 50 ft: 10d8 ice magic damage and 6d10 dark magic damage, and inflict Slowed</li>",
+                        "<li>51 to 60 ft: 12d8 ice magic damage and 4d10 dark magic damage, and inflict Frozen</li>",
                         "</ul>",
                         "<br>",
                         "If you absorb this spell with Magia Erebea, you may have it be cast when you release Magia Erebea as long as it was absorbed for at least 2 turns. If you do release the spell in this way, the cone's range extends to 120 ft, and the above list's effect ranges change to within 20 ft, 21 to 40, 41 to 80, 81 to 100, and 101 to 120 respectively."
@@ -4243,7 +4364,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "name": "Ensis Exsequens",
                     "class": "Evangelist",
                     "description": [
-                        "You conjure a sword of ice and darkness to cut down enemies. When you cast this spell, create and equip a Sword of Conviction in your main hand. The Sword deals 6d8 ice magic damage and 6d8 dark magic damage to all enemies within 20 ft whenever you make an attack with it. Additionally, it has 50% Lethality against minions and ignores magical barriers. This spell can be absorbed via Magia Erebea as a free Major Action even after the Sword has been deployed as long as it still has at least 20 seconds of its Duration left. If you are under the effects of Magia Erebea, the sword gains your passive's on-hit effects. You may have up to 2 Swords active at a time, with the second Sword occupying your off hand, allowing you to make standard off hand weapon attacks with the same effects as the main hand Sword."
+                        "You conjure a sword of ice and darkness to cut down enemies. When you cast this spell, create and equip a Sword of Conviction in your main hand. The Sword deals 6d8 ice magic damage and 5d10 dark magic damage to all enemies within 20 ft whenever you make an attack with it. Additionally, it has 50% Lethality against minions and ignores magical barriers. This spell can be absorbed via Magia Erebea as a free Major Action even after the Sword has been deployed as long as it still has at least 20 seconds of its Duration left. If you are under the effects of Magia Erebea, the sword gains your passive's on-hit effects. You may have up to 2 Swords active at a time, with the second Sword occupying your off hand, allowing you to make standard off hand weapon attacks with the same effects as the main hand Sword."
                     ],
                     "tags": [
                         "spell",
@@ -4349,7 +4470,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "description": [
                         "You reconfigure the mana which flows wildly through you. You may only cast this ability while under the effects of Magia Erebea. Magia Erebea gains the following effects until you release it:",
                         "<ul>",
-                        "<li>Maximum health loss per turn increases to 20</li>",
+                        "<li>Maximum health loss per turn increases by 10</li>",
                         "<li>Your unarmed and weapon attacks gain the absorbed spell's damage dice and conditions as on-hit damage and conditions, in a similar manner as your spells do</li>",
                         "<li>Your move speed doubles and your Move Actions are teleports</li>",
                         "<li>Your single-target attacks ignore AC, MR, and Evasion</li>",
@@ -4369,6 +4490,50 @@ var BarbsComponents = BarbsComponents || (function () {
                         "conditional",
                         "modal",
                         "negate damage"
+                    ]
+                },
+                "Circulus Pilorum Plagius": {
+                    "name": "Circulus Pilorum Plagius",
+                    "class": "Evangelist",
+                    "description": [
+                        "You release a pulse of magical energy to ruin enemy forces across the battlefield. Deal 10d8 ice magic damage to all enemies in range. For every 10 health that your maximum health has been reduced by Magia Erebea, this spell deals an additional 3d10 dark magic damage. If you are missing at least 100 maximum health due to Magia Erebea, this spell cannot be countered, and its damage cannot be prevented in any way. If you are missing at least 300 health due to Magia Erebea, this spell has 100% Lethality, and deals double damage to any enemy who is Lethality immune. When you cast this spell, you may concentrate on it if Magia Erebea is active; if you do, you may cast this spell once per turn without paying its mana cost. Concentration on this spell ends if Magia Erebea ends."
+                    ],
+                    "tags": [
+                        "spell",
+                        "conjuration",
+                        "destruction",
+                        "dark",
+                        "ice",
+                        "conditional",
+                        "lethality",
+                        "concentration"
+                    ]
+                },
+                "Tastrape Hyper Dynamen": {
+                    "name": "Tastrape Hyper Dynamen",
+                    "class": "Evangelist",
+                    "description": [
+                        "You overcharge the mana flowing through you. You may only cast this ability while under the effects of Magia Erebea. Magia Erebea gains the following effects until you release it:",
+                        "<ul>",
+                        "<li>Maximum health loss per turn increases by 20</li>",
+                        "<li>You gain an additional Major Action at the beginning of each turn</li>",
+                        "<li>Your spell attacks deal double damage</li>",
+                        "<li>Your spells have their ranges doubled</li>",
+                        "</ul>"
+                    ],
+                    "tags": [
+                        "conditional"
+                    ]
+                },
+                "Erebus Alium Patis": {
+                    "name": "Erebus Alium Patis",
+                    "class": "Evangelist",
+                    "description": [
+                        "You cause another to become corrupted by the magic that binds you. A target in range has their maximum health reduced by a percentage equal to the percentage maximum health you are missing due to Magia Erebea. The target can only restore their maximum health through a long rest; the effect of this spell is not considered a condition. While a target's maximum health is reduced in this way, if you are Downed within their sight, they are also Downed."
+                    ],
+                    "tags": [
+                        "spell",
+                        "conditional"
                     ]
                 }
             }
@@ -7772,7 +7937,8 @@ var BarbsComponents = BarbsComponents || (function () {
                         "conditional",
                         "stance",
                         "modal",
-                        "block"
+                        "block",
+                        "field"
                     ]
                 },
                 "Phantom Thief": {
@@ -8071,6 +8237,47 @@ var BarbsComponents = BarbsComponents || (function () {
                         "conjuration",
                         "defensive",
                         "illusions"
+                    ]
+                },
+                "Scatter as Shadows": {
+                    "name": "Scatter as Shadows",
+                    "class": "Voidwalker",
+                    "description": [
+                        "You send allies in different directions as an emergency evasive maneuver. You and any number of allies in range each teleport up to 2000 ft in random directions (corrected slightly to avoid barriers). Upon arrival to their destinations, each entity may select an empty space within 50 ft to appear in, immediately becoming Hidden upon arrival. When you cast this spell, you leave behind a field of hazy blackness for 1 minute, which obscures line of sight and prevents spellcasting within it. You may cast this spell as a reaction by spending 30 additional mana; if you do, this spell cannot be countered."
+                    ],
+                    "tags": [
+                        "spell",
+                        "dark",
+                        "conjuration",
+                        "teleport",
+                        "modal"
+                    ]
+                },
+                "Dissipate": {
+                    "name": "Dissipate",
+                    "class": "Voidwalker",
+                    "description": [
+                        "You banish an enemy's spell to the Ethereal Realm. As a reaction to a target in range casting a spell, you may counter that spell. When a spell is countered in this way, its effects are stored in the Ethereal Realm. During your next long rest after casting this spell, you may briefly visit the Ethereal Realm. If you visit the Ethereal Realm while spell effects are stored due to the effects of this spell, you may choose to temporarily learn how to cast those spells; for the next 24 hours, you may cast those spells a single time each. You may leave spells stored in the Ethereal Realm for as long as you wish."
+                    ],
+                    "tags": [
+                        "spell",
+                        "dark",
+                        "defensive",
+                        "counterspell"
+                    ]
+                },
+                "Shadow Split": {
+                    "name": "Shadow Split",
+                    "class": "Voidwalker",
+                    "description": [
+                        "You split an entity's shadow from their physical form. For any number of target allies in range, create a Shadow that is a physical copy of them. Shadows have 1 health and 30 ft move speed. A Shadow is mentally linked to the original entity, and the original entity controls its actions through mental commands as long as it is on the same plane (this works across the Ethereal Realm's boundary as well). The original entity has full sensory input from the Shadow. The Shadow cannot use class abilities, and makes skill checks the original entity is capable of at half effectiveness. When you cast this spell, you may spend an additional 10 mana to have all original entity targets become invisible for 1 minute."
+                    ],
+                    "tags": [
+                        "spell",
+                        "dark",
+                        "conjuration",
+                        "divination",
+                        "modal"
                     ]
                 }
             }

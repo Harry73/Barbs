@@ -1877,6 +1877,7 @@ var Barbs = Barbs || (function () {
         assert_type(minion, Character, 'make_minion_roll() minion');
         assert_not_null(roll_type, 'make_minion_roll() roll_type');
 
+        // Figuring out a character's minion damage
         const character_roll = new Roll(character, roll_type);
         if (!add_extras(character, ability, character_roll, RollTime.DEFAULT, parameters, '')) {
             return null;
@@ -1987,7 +1988,9 @@ var Barbs = Barbs || (function () {
             return true;
         }
 
-        roll.add_multiplier(1, Damage.ALL, roll.character.name);
+        // Assassinate is a pure "double resulting damage." That is different from a normal multiplier. I'm putting in
+        // a screwy source so that this counts as a pure double.
+        roll.add_multiplier(1, Damage.ALL, 'dummy_source');
         return true;
     }
 
@@ -3139,6 +3142,79 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function destroyer_slam(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('4d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll, parameters);
+        roll.add_effect('Inflict Physical Vulnerability equal to 10% + X%, where X is the target\'s current Physical Vulnerability CR:[[1d100]]');
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function destroyer_mortal_strike(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d10', Damage.PHYSICAL);
+        roll.add_effect('Shred 25% AC [[d100]]');
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function destroyer_execute(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('6d10', Damage.PHYSICAL);
+        roll.add_effect('Lethality equal to target\'s missing health after this damage');
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function destroyer_willbreaker(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('8d10', Damage.PHYSICAL);
+        roll.add_effect('Inflict condition that prevents reactions to dash away from or block your attacks [[d100]]');
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function destroyer_whirlwind(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d10', Damage.PHYSICAL);
+        roll.add_effect('Targets with full health take double damage');
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function destroyer_rampage(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('6d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll, parameters);
+        roll.add_effect('Knock targets prone');
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function destroyer_leaping_crush(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('8d10', Damage.PHYSICAL);
+        roll.add_effect('Knock up enemies [[d100]]');
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
     function destroyer_challenge(character, ability, parameters) {
         let num_targets = get_parameter('targets', parameters);
         let buff = get_parameter('buff', parameters);
@@ -3173,7 +3249,7 @@ var Barbs = Barbs || (function () {
 
             const msg = roll_format.format(
                 ability.name, /*damage_section=*/'', /*crit_section=*/'', /*combo_section=*/'',
-                /*effects_section=*/effects_section_format.format('<p>Gain %s% AC and MR.</p>'.format(buff)));
+                /*effects_section=*/effects_section_format.format('<p>Gain %s% AC and MR.</p>'.format(10 * buff)));
             chat(character, msg);
 
         } else {
@@ -3182,51 +3258,53 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function destroyer_rampage(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('6d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll, parameters);
-        roll.add_effect('Knock targets prone');
+    function _dragoncaller_make_roll(character, ability, parameters, minion_name, roll_type, is_self) {
+        assert_type(character, Character, '_dragoncaller_make_roll() character');
+        assert_not_null(ability, '_dragoncaller_make_roll() ability');
+        assert_not_null(parameters, '_dragoncaller_make_roll() parameters');
+        assert_not_null(minion_name, '_dragoncaller_make_roll() minion_name');
+        assert_enum(roll_type, RollType, '_dragoncaller_make_roll() roll_type');
+        assert_not_null(is_self, '_dragoncaller_make_roll() is_self');
 
-        roll_crit(ability, roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
+        if (is_self) {
+            // Character is doing the roll, via Dragonform
+            const roll = new Roll(character, roll_type)
+            return [character, roll];
+
+        } else {
+            // Minion is doing the roll
+            const dragon = make_minion(character, minion_name);
+            const roll = make_minion_roll(character, ability, parameters, dragon, roll_type);
+            return [dragon, roll];
+        }
     }
 
 
-    function destroyer_slam(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('4d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll, parameters);
-        roll.add_effect('Inflict Physical Vulnerability equal to 10% + X%, where X is the target\'s current Physical Vulnerability CR:[[1d100]]');
-
-        roll_crit(ability, roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
-    function dragoncaller_summon_bronze_dragon(character, ability, parameters) {
+    function dragoncaller_summon_bronze_dragon(character, ability, parameters, is_self = false) {
         const short_name = 'Bronze Dragon';
 
         const major_action = get_parameter('major', parameters);
         if (major_action !== null) {
-            const dragon = make_minion(character, short_name);
-
             if (major_action === 'breath') {
-                const roll = make_minion_roll(character, ability, parameters, dragon, RollType.MAGIC);
+                const results = _dragoncaller_make_roll(character, ability, parameters, short_name,
+                                                        RollType.MAGIC, is_self);
+                const char = results[0];
+                const roll = results[1];
                 roll.add_damage('10d12', Damage.LIGHTNING);
 
                 roll_crit(ability, roll, parameters, function (crit_section) {
-                    do_roll(dragon, ability, roll, parameters, crit_section);
+                    do_roll(char, ability, roll, parameters, crit_section);
                 });
 
             } else if (major_action === 'claw') {
-                const roll = make_minion_roll(character, ability, parameters, dragon, RollType.PHYSICAL);
+                const results = _dragoncaller_make_roll(character, ability, parameters, short_name,
+                                                        RollType.PHYSICAL, is_self);
+                const char = results[0];
+                const roll = results[1];
                 roll.add_damage('10d10', Damage.PHYSICAL);
 
                 roll_crit(ability, roll, parameters, function (crit_section) {
-                    do_roll(dragon, ability, roll, parameters, crit_section);
+                    do_roll(char, ability, roll, parameters, crit_section);
                 });
 
             } else {
@@ -3274,27 +3352,31 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function dragoncaller_summon_silver_dragon(character, ability, parameters) {
+    function dragoncaller_summon_silver_dragon(character, ability, parameters, is_self = false) {
         const short_name = 'Silver Dragon';
 
         const major_action = get_parameter('major', parameters);
         if (major_action !== null) {
-            const dragon = make_minion(character, short_name);
-
             if (major_action === 'breath') {
-                const roll = make_minion_roll(character, ability, parameters, dragon, RollType.MAGIC);
+                const results = _dragoncaller_make_roll(character, ability, parameters, short_name,
+                                                        RollType.MAGIC, is_self);
+                const char = results[0];
+                const roll = results[1];
                 roll.add_damage('12d8', Damage.ICE);
 
                 roll_crit(ability, roll, parameters, function (crit_section) {
-                    do_roll(dragon, ability, roll, parameters, crit_section);
+                    do_roll(char, ability, roll, parameters, crit_section);
                 });
 
             } else if (major_action === 'tail') {
-                const roll = make_minion_roll(character, ability, parameters, dragon, RollType.PHYSICAL);
+                const results = _dragoncaller_make_roll(character, ability, parameters, short_name,
+                                                        RollType.PHYSICAL, is_self);
+                const char = results[0];
+                const roll = results[1];
                 roll.add_damage('8d10', Damage.PHYSICAL);
 
                 roll_crit(ability, roll, parameters, function (crit_section) {
-                    do_roll(dragon, ability, roll, parameters, crit_section);
+                    do_roll(char, ability, roll, parameters, crit_section);
                 });
 
             } else {
@@ -3342,23 +3424,24 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function dragoncaller_summon_gold_dragon(character, ability, parameters) {
+    function dragoncaller_summon_gold_dragon(character, ability, parameters, is_self = false) {
         const short_name = 'Gold Dragon';
 
         const major_action = get_parameter('major', parameters);
         if (major_action !== null) {
-            const dragon = make_minion(character, short_name);
-
             // There's only one option, but we're doing it like this so that this ability follows the same pattern as
             // other summons in this class.
             if (major_action === 'breath') {
-                const roll = make_minion_roll(character, ability, parameters, dragon, RollType.MAGIC);
+                const results = _dragoncaller_make_roll(character, ability, parameters, short_name,
+                                                        RollType.MAGIC, is_self);
+                const char = results[0];
+                const roll = results[1];
                 roll.add_damage('10d12', Damage.FIRE);
                 roll.add_effect('Leaves behind a field of fire');
                 roll.add_hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 100);
 
                 roll_crit(ability, roll, parameters, function (crit_section) {
-                    do_roll(dragon, ability, roll, parameters, crit_section);
+                    do_roll(char, ability, roll, parameters, crit_section);
                 });
 
             } else {
@@ -3438,6 +3521,35 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function dragoncaller_dragonform(character, ability, parameters) {
+        const transform = get_parameter('transform', parameters);
+        const bronze = get_parameter('bronze', parameters);
+        const silver = get_parameter('silver', parameters);
+        const gold = get_parameter('gold', parameters);
+
+        if (transform !== null) {
+            add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(),
+                                  Ordering(), RollType.ALL, RollTime.DEFAULT, 1, function (char, roll) {
+                    roll.add_stat_bonus(Stat.HEALTH, 300);
+                    roll.add_stat_bonus(Stat.AC, 30);
+                    roll.add_stat_bonus(Stat.MAGIC_RESIST, 30);
+                    roll.add_stat_bonus(Stat.EVASION, 30);
+                    roll.add_stat_bonus(Stat.CONDITION_RESIST, 30);
+                    return true;
+                });
+
+            print_ability_description(character, ability);
+
+        } else if (bronze !== null) {
+            dragoncaller_summon_bronze_dragon(character, ability, parameters, /*self=*/true);
+        } else if (silver !== null) {
+            dragoncaller_summon_silver_dragon(character, ability, parameters, /*self=*/true);
+        } else if (gold !== null) {
+            dragoncaller_summon_gold_dragon(character, ability, parameters, /*self=*/true);
+        }
+    }
+
+
     function dragoncaller_dragonflight(character, ability, parameters) {
         const targets = get_parameter('targets', parameters);
         assert(targets !== null, '"targets" parameter is required');
@@ -3513,6 +3625,22 @@ var Barbs = Barbs || (function () {
         const msg = roll_format.format(ability.name, /*damage_section=*/'', /*crit_section=*/'', /*combo_section=*/'',
                                        effects_section);
         chat(character, msg);
+    }
+
+
+    function dragoncaller_dragonblood(character, ability, parameters) {
+        const target = get_parameter('target', parameters);
+        assert(target !== null, '"target" parameter is required');
+
+        const target_character = get_character(target.trim());
+
+        // The API isn't going to do anything for this, but we'll create it for buff-tracking purposes
+        add_persistent_effect(character, ability, parameters, target_character, Duration.HARD(6 * 60),
+                              Ordering(), RollType.ALL, RollTime.DEFAULT, 1, function () {
+                return true;
+            });
+
+        print_ability_description(character, ability);
     }
 
 
@@ -4875,20 +5003,31 @@ var Barbs = Barbs || (function () {
             'Essence Scatter': print_ability_description,
         },
         'Destroyer': {
-            'Challenge': destroyer_challenge,
-            'Rampage': destroyer_rampage,
             'Slam': destroyer_slam,
+            'Mortal Strike': destroyer_mortal_strike,
+            'Execute': destroyer_execute,
+            'Willbreaker': destroyer_willbreaker,
+            'Whirlwind': destroyer_whirlwind,
+            'Rampage': destroyer_rampage,
+            'Leaping Crush': destroyer_leaping_crush,
+            'Demolish': print_ability_description,
+            'Challenge': destroyer_challenge,
+            'Flatten': print_ability_description,
+            'Groundbreaker': print_ability_description,
         },
         'Dragoncaller': {
             'Summon Bronze Dragon': dragoncaller_summon_bronze_dragon,
             'Summon Silver Dragon': dragoncaller_summon_silver_dragon,
             'Summon Gold Dragon': dragoncaller_summon_gold_dragon,
+            'Dragonstorm': print_ability_description,
             'Bronze Dragon Breath': dragoncaller_bronze_dragon_breath,
             'Silver Dragon Breath': dragoncaller_silver_dragon_breath,
             'Gold Dragon Breath': dragoncaller_gold_dragon_breath,
+            'Dragonform': dragoncaller_dragonform,
             'Dragonfear': print_ability_description,
             'Dragonflight': dragoncaller_dragonflight,
             'Dragonsight': dragoncaller_dragonsight,
+            'Dragonblood': dragoncaller_dragonblood,
         },
         'Dynamancer': {
             'Spark Bolt': dynamancer_spark_bolt,
@@ -4907,7 +5046,7 @@ var Barbs = Barbs || (function () {
             'Wild Swing': juggernaut_wild_swing,
             'Hostility': juggernaut_hostility,
             'Tachycardia': juggernaut_tachycardia,
-            'Blood for Vigor': print_ability_description,
+            'Blood For Vigor': print_ability_description,
         },
         'Ki Monk': {
             'Spirit Punch': ki_monk_spirit_punch,
