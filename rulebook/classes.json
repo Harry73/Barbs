@@ -1701,7 +1701,10 @@
             "Morning Frost",
             "Cold Shoulder",
             "Annul",
-            "Glacial Gust"
+            "Glacial Gust",
+            "Impenetrable Mist",
+            "Mist Screen",
+            "Cold Snap"
         ],
         "api": {
             "description": "The API will not do anything for this passive. You should track it by hand.",

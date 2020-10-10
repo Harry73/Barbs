@@ -7032,6 +7032,30 @@
     },
     {
         "type": "ability",
+        "name": "Impenetrable Mist",
+        "class": "Mistguard",
+        "branch": "Haze",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "40 mana",
+        "range": "20 ft",
+        "duration": "1 minute",
+        "description": [
+            "You weave a protective mist around your party. All spaces within range become a Mist field. Within this field, AOE effects that at least partially hit it are completely blocked. While you concentrate on this spell, you may spend 20 mana as a free reaction, if you do, block an attack on yourself or an ally."
+        ],
+        "tags": [
+            "Spell",
+            "ice",
+            "defensive",
+            "block",
+            "AOE block",
+            "field",
+            "modal",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Silver Armor",
         "class": "Mistguard",
         "branch": "Murk",
@@ -7071,6 +7095,27 @@
             "ice",
             "defensive",
             "counterspell"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Mist Screen",
+        "class": "Mistguard",
+        "branch": "Murk",
+        "tier": 3,
+        "action": "1 Reaction",
+        "cost": "35 mana",
+        "range": "Self",
+        "duration": "Instant",
+        "description": [
+            "You call upon the mists to protect you. As a reaction to an attack targetting you, block the attack. This spell costs 5 less mana for each condition the attacker has."
+        ],
+        "tags": [
+            "Spell",
+            "ice",
+            "defensive",
+            "block",
+            "conditional"
         ]
     },
     {
@@ -7118,6 +7163,31 @@
             "AOE",
             "cone",
             "forced movement"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Cold Snap",
+        "class": "Mistguard",
+        "branch": "Vapor",
+        "tier": 3,
+        "action": "1 Major Action",
+        "cost": "50 mana",
+        "range": "Battlefield",
+        "duration": "Instant",
+        "description": [
+            "You cause a sudden drop in temperature which damages enemy flesh. Deal 13d8 to all enemies in range, and inflict a -5 Move Speed condition which stacks. Each stack of this condition counts as an individual, distinct condition for the purposes of your Eerie Mists passive, but otherwise this condition is treated as normal. When you cast this spell, you may choose to concentrate on it; if you do, you may cast it once per turn as a free action for 25 mana."
+        ],
+        "tags": [
+            "Spell",
+            "ice",
+            "destruction",
+            "defensive",
+            "condition",
+            "attack",
+            "multi-target",
+            "modal",
+            "concentration"
         ]
     },
     {
