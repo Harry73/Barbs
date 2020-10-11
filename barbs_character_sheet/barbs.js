@@ -929,9 +929,11 @@ var Barbs = Barbs || (function () {
         }
     }
 
+
     function Ordering(val = 50) {
         return new Order(val);
     }
+
 
     // Merge two lists based on ordering
     function merge(left, right) {
@@ -1143,6 +1145,7 @@ var Barbs = Barbs || (function () {
         inner_add_persistent_effect(caster, ability, parameters, target_character, duration, order,
                                     roll_type, roll_time, count, effect_type, handler);
     }
+
 
     function inner_add_persistent_effect(caster, ability, parameters, target_character, duration, order, roll_type,
                                          roll_time, count, effect_type, handler) {
@@ -1897,6 +1900,7 @@ var Barbs = Barbs || (function () {
 
         return minion_roll;
     }
+
 
     // ################################################################################################################
     // Class passives (usually) that may apply to anything
@@ -3215,6 +3219,7 @@ var Barbs = Barbs || (function () {
         });
     }
 
+
     function destroyer_challenge(character, ability, parameters) {
         let num_targets = get_parameter('targets', parameters);
         let buff = get_parameter('buff', parameters);
@@ -4097,17 +4102,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function mistguard_deep_snow(character, ability, parameters) {
-        const roll = new Roll(character, RollType.MAGIC);
-        roll.add_damage('7d8', Damage.ICE);
-        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
-
-        roll_crit(ability, roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
     function mirror_mage_helix_beam(character, ability, parameters) {
         // Add this in to get the arbitrary takeover handler to get called
         parameters.push('helix_beam');
@@ -4261,6 +4255,155 @@ var Barbs = Barbs || (function () {
                 do_roll(character, modified_ability, roll, parameters, crit_section);
             });
         }
+    }
+
+
+    function mistguard_cold_snap(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('13d8', Damage.ICE);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
+        roll.add_effect('-5 Move Speed, stacking [[d100]]');
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function mistguard_deep_snow(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('7d8', Damage.ICE);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function mistguard_glacial_gust(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('9d8', Damage.ICE);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.ICE);
+        roll.add_effect('Push targets back to edge of cone');
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function mistguard_silver_armor(character, ability, parameters) {
+        add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
+                              RollType.ALL, RollTime.DEFAULT, 1, function (character, roll) {
+            roll.add_stat_bonus(Stat.AC, 40);
+            roll.add_stat_bonus(Stat.MAGIC_RESIST, 40);
+            // 60% critical strike resistance
+            return true;
+        });
+
+        print_ability_description(character, ability);
+    }
+
+
+    function night_lord_decoy(character, ability, parameters) {
+        // This isn't really an attack, so not using a proper roll
+        const effects = [
+            'Taunt all enemies in sight [[d100]]',
+            'Charm all Taunted enemies [[d100]]',
+        ];
+
+        const effects_section = effects_section_format.format(effects.join(''));
+        const msg = roll_format.format(ability.name, /*damage_section=*/'', /*crit_section=*/'', /*combo_section=*/'',
+                                       effects_section, /*button_section=*/'');
+
+        LOG.info('night_lord_decoy() - roll: ' + msg);
+        chat(character, msg);
+    }
+
+
+    function night_lord_flashbang(character, ability, parameters) {
+        // This isn't an attack, so not using a proper roll
+        const effects = [
+            'Blind all enemies in range [[d100]]',
+            'Knock Prone all enemies in range [[d100]]',
+        ];
+
+        const effects_section = effects_section_format.format(effects.join(''));
+        const msg = roll_format.format(ability.name, /*damage_section=*/'', /*crit_section=*/'', /*combo_section=*/'',
+                                       effects_section, /*button_section=*/'');
+
+        LOG.info('night_lord_flashbang() - roll: ' + msg);
+        chat(character, msg);
+    }
+
+
+    function night_lord_larceny(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_effect('Drain [[6d6]] health');
+        roll.add_effect('Strip 1 buff for each 6 rolled [[d100]]');
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function night_lord_lockbreaker(character, ability, parameters) {
+        add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
+                              RollType.ALL, RollTime.DEFAULT, 1, function () {
+            return true;
+        });
+
+        print_ability_description(character, ability);
+    }
+
+
+    function night_lord_quickstep(character, ability, parameters) {
+        add_persistent_effect(character, ability, parameters, character, Duration.HARD(1), Ordering(),
+                              RollType.ALL, RollTime.DEFAULT, 1, function (character, roll) {
+            roll.add_stat_multiplier(Stat.MOVEMENT_SPEED, 1);
+            return true;
+        });
+
+        print_ability_description(character, ability);
+    }
+
+
+    function night_lord_robbery(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_effect('Drain [[6d6]] stamina or mana');
+        roll.add_effect('Drained target forgets last ability used');
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function night_lord_thief_toolbelt(character, ability, parameters) {
+        const parameter = get_parameter('targets', parameters);
+        if (parameter === null) {
+            chat(character, '"targets" parameter, the list of affected players, is missing');
+            return;
+        }
+
+        const target_names = remove_empty(trim_all(parameter.split(',')));
+        const target_characters = [];
+        for (let i = 0; i < target_names.length; i++) {
+            const target_character = get_character(target_names[i]);
+            target_characters.push(target_character);
+        }
+
+        for (let i = 0; i < target_characters.length; i++) {
+            const target_character = target_characters[i];
+            add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(), Ordering(),
+                                  RollType.ALL, RollTime.DEFAULT, 1, function () {
+                return true;
+            });
+        }
+
+        print_ability_description(character, ability);
     }
 
 
@@ -5074,8 +5217,26 @@ var Barbs = Barbs || (function () {
             'Scatter Shards': mirror_mage_scatter_shards,
         },
         'Mistguard': {
+            'Annul': print_ability_description,
+            'Cold Shoulder': print_ability_description,
+            'Cold Snap': mistguard_cold_snap,
             'Deep Snow': mistguard_deep_snow,
+            'Glacial Gust': mistguard_glacial_gust,
+            'Impenetrable Mist': print_ability_description,
+            'Mist Screen': print_ability_description,
             'Morning Frost': print_ability_description,
+            'Silver Armor': mistguard_silver_armor,
+        },
+        'Night Lord': {
+            'Burglary': print_ability_description,
+            'Decoy': night_lord_decoy,
+            'Flashbang': night_lord_flashbang,
+            'Nothing Sacred': print_ability_description,
+            'Larceny': night_lord_larceny,
+            'Lockbreaker': night_lord_lockbreaker,
+            'Quickstep': night_lord_quickstep,
+            'Robbery': night_lord_robbery,
+            'Thief Toolbelt': night_lord_thief_toolbelt,
         },
         'Noxomancer': {
             'Darkbomb': noxomancer_darkbomb,

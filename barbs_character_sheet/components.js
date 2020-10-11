@@ -5814,6 +5814,55 @@ var BarbsComponents = BarbsComponents || (function () {
                         "cone",
                         "forced movement"
                     ]
+                },
+                "Impenetrable Mist": {
+                    "name": "Impenetrable Mist",
+                    "class": "Mistguard",
+                    "description": [
+                        "You weave a protective mist around your party. All spaces within range become a Mist field. Within this field, AOE effects that at least partially hit it are completely blocked. While you concentrate on this spell, you may spend 20 mana as a free reaction, if you do, block an attack on yourself or an ally."
+                    ],
+                    "tags": [
+                        "spell",
+                        "ice",
+                        "defensive",
+                        "block",
+                        "aoe block",
+                        "field",
+                        "modal",
+                        "concentration"
+                    ]
+                },
+                "Mist Screen": {
+                    "name": "Mist Screen",
+                    "class": "Mistguard",
+                    "description": [
+                        "You call upon the mists to protect you. As a reaction to an attack targetting you, block the attack. This spell costs 5 less mana for each condition the attacker has."
+                    ],
+                    "tags": [
+                        "spell",
+                        "ice",
+                        "defensive",
+                        "block",
+                        "conditional"
+                    ]
+                },
+                "Cold Snap": {
+                    "name": "Cold Snap",
+                    "class": "Mistguard",
+                    "description": [
+                        "You cause a sudden drop in temperature which damages enemy flesh. Deal 13d8 to all enemies in range, and inflict a -5 Move Speed condition which stacks. Each stack of this condition counts as an individual, distinct condition for the purposes of your Eerie Mists passive, but otherwise this condition is treated as normal. When you cast this spell, you may choose to concentrate on it; if you do, you may cast it once per turn as a free action for 25 mana."
+                    ],
+                    "tags": [
+                        "spell",
+                        "ice",
+                        "destruction",
+                        "defensive",
+                        "condition",
+                        "attack",
+                        "multi-target",
+                        "modal",
+                        "concentration"
+                    ]
                 }
             }
         },
@@ -5962,6 +6011,39 @@ var BarbsComponents = BarbsComponents || (function () {
                         "buff strip",
                         "conditional",
                         "mark"
+                    ]
+                },
+                "Lockbreaker": {
+                    "name": "Lockbreaker",
+                    "class": "Night Lord",
+                    "description": [
+                        "You become impossible to lock down. For the duration, you ignore physical bindings and the effects of crowd control conditions on yourself. Enemies within 20 ft are treated as having all conditions you have for the duration, and you are treated as having all buffs those same enemies have for the duration."
+                    ],
+                    "tags": [
+                        "buff"
+                    ]
+                },
+                "Robbery": {
+                    "name": "Robbery",
+                    "class": "Night Lord",
+                    "description": [
+                        "You steal power. Drain 6d6 stamina or mana from a target in range. A target whose stamina or mana is drained in this manner is marked, forgetting the last ability they cast until their next long rest. A target cannot be affected by this mark more than once."
+                    ],
+                    "tags": [
+                        "attack",
+                        "single-target",
+                        "conditional",
+                        "mark"
+                    ]
+                },
+                "Thief Toolbelt": {
+                    "name": "Thief Toolbelt",
+                    "class": "Night Lord",
+                    "description": [
+                        "You and your allies quickly adapt to tool use. For the duration, you and all allies in range gain a buff that allows them to perform the Item Use action as a reaction. When you cast this ability, you and all allies may perform the Item Use action as a free reaction."
+                    ],
+                    "tags": [
+                        "buff"
                     ]
                 }
             }

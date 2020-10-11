@@ -1,3 +1,9 @@
+import os
+
+CURRENT_PATH = os.getcwd()
+DATA_PATH = os.path.join(CURRENT_PATH, 'data')
+
+
 open_div = '            <div class="sheet-inventory-page">\n'
 close_div = '            </div>\n\n'
 
@@ -41,7 +47,7 @@ def main():
 
         html += close_div
 
-    with open('../../data/inventory.html', 'w') as f:
+    with open(os.path.join(DATA_PATH, 'inventory.html'), 'w') as f:
         f.write(html)
 
 

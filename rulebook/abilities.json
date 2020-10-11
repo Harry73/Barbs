@@ -7006,7 +7006,11 @@
             "ice",
             "defensive",
             "modal"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7028,7 +7032,11 @@
             "modal",
             "condition",
             "Frozen"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7052,7 +7060,11 @@
             "field",
             "modal",
             "concentration"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7075,7 +7087,11 @@
             "gain AC",
             "gain MR",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "Using this ability will increase AC and MR, but you have to remember that they are non-penetrable. Critical strike resistance is not handled by the API.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7095,7 +7111,11 @@
             "ice",
             "defensive",
             "counterspell"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7108,7 +7128,7 @@
         "range": "Self",
         "duration": "Instant",
         "description": [
-            "You call upon the mists to protect you. As a reaction to an attack targetting you, block the attack. This spell costs 5 less mana for each condition the attacker has."
+            "You call upon the mists to protect you. As a reaction to an attack targeting you, block the attack. This spell costs 5 less mana for each condition the attacker has."
         ],
         "tags": [
             "Spell",
@@ -7116,7 +7136,11 @@
             "defensive",
             "block",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7139,7 +7163,11 @@
             "attack",
             "multi-target",
             "field"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7163,7 +7191,11 @@
             "AOE",
             "cone",
             "forced movement"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7176,7 +7208,7 @@
         "range": "Battlefield",
         "duration": "Instant",
         "description": [
-            "You cause a sudden drop in temperature which damages enemy flesh. Deal 13d8 to all enemies in range, and inflict a -5 Move Speed condition which stacks. Each stack of this condition counts as an individual, distinct condition for the purposes of your Eerie Mists passive, but otherwise this condition is treated as normal. When you cast this spell, you may choose to concentrate on it; if you do, you may cast it once per turn as a free action for 25 mana."
+            "You cause a sudden drop in temperature which damages enemy flesh. Deal 13d8 ice magic damage to all enemies in range, and inflict a -5 Move Speed condition which stacks. Each stack of this condition counts as an individual, distinct condition for the purposes of your Eerie Mists passive, but otherwise this condition is treated as normal. When you cast this spell, you may choose to concentrate on it; if you do, you may cast it once per turn as a free action for 25 mana."
         ],
         "tags": [
             "Spell",
@@ -7188,7 +7220,11 @@
             "multi-target",
             "modal",
             "concentration"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7280,7 +7316,11 @@
         "tags": [
             "Dash",
             "buff"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7299,7 +7339,11 @@
             "Field",
             "condition",
             "Silence"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7316,7 +7360,11 @@
         ],
         "tags": [
             "Buff"
-        ]
+        ],
+        "api": {
+            "description": "Track the effects of this ability manually. The API will create the buff for tracking purposes, but the buff will not do anything API-wise.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7334,7 +7382,11 @@
         "tags": [
             "Attack",
             "single-target"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7355,7 +7407,11 @@
             "buff strip",
             "conditional",
             "mark"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7375,7 +7431,11 @@
             "single-target",
             "conditional",
             "mark"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7395,7 +7455,11 @@
             "Blind",
             "Knock Prone",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7417,7 +7481,11 @@
             "Charm",
             "conditional",
             "dash"
-        ]
+        ],
+        "api": {
+            "description": "The API will do rolls for the conditions when you summon the totem. Beyond that, manage the totem manually.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7434,7 +7502,13 @@
         ],
         "tags": [
             "Buff"
-        ]
+        ],
+        "api": {
+            "description": "The list of allies affected by this ability must be specified with the \"targets\" parameter in a space-separated list. You can just use the first name of each ally. The API creates the buff on characters for tracking purposes, but the buff does not do anything API-wise.",
+            "examples": [
+                "targets <ally name> <ally name> ..."
+            ]
+        }
     },
     {
         "type": "ability",
