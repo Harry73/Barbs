@@ -7303,6 +7303,23 @@
     },
     {
         "type": "ability",
+        "name": "Lockbreaker",
+        "class": "Night Lord",
+        "branch": "Breach",
+        "tier": 3,
+        "action": "1 Minor Action",
+        "cost": "35 stamina",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You become impossible to lock down. For the duration, you ignore physical bindings and the effects of crowd control conditions on yourself. Enemies within 20 ft are treated as having all conditions you have for the duration, and you are treated as having all buffs those same enemies have for the duration."
+        ],
+        "tags": [
+            "Buff"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Burglary",
         "class": "Night Lord",
         "branch": "Loot",
@@ -7336,6 +7353,26 @@
             "Attack",
             "single-target",
             "buff strip",
+            "conditional",
+            "mark"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Robbery",
+        "class": "Night Lord",
+        "branch": "Loot",
+        "tier": 3,
+        "action": "1 Minor Action",
+        "cost": "40 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You steal power. Drain 6d6 stamina or mana from a target in range. A target whose stamina or mana is drained in this manner is marked, forgetting the last ability they cast until their next long rest. A target cannot be affected by this mark more than once."
+        ],
+        "tags": [
+            "Attack",
+            "single-target",
             "conditional",
             "mark"
         ]
@@ -7380,6 +7417,23 @@
             "Charm",
             "conditional",
             "dash"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Thief Toolbelt",
+        "class": "Night Lord",
+        "branch": "Perplex",
+        "tier": 3,
+        "action": "1 Minor Action",
+        "cost": "40 stamina",
+        "range": "Battlefield",
+        "duration": "1 minute",
+        "description": [
+            "You and your allies quickly adapt to tool use. For the duration, you and all allies in range gain a buff that allows them to perform the Item Use action as a reaction. When you cast this ability, you and all allies may perform the Item Use action as a free reaction."
+        ],
+        "tags": [
+            "Buff"
         ]
     },
     {
