@@ -3040,7 +3040,13 @@
             "lose MR",
             "no block",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "If you are using an empowered weapon, add the \"empowered\" parameter for the extra MR reduction.",
+            "examples": [
+                "empowered"
+            ]
+        }
     },
     {
         "type": "ability",

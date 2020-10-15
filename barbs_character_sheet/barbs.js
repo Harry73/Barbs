@@ -3088,17 +3088,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function daggerspell_fadeaway_slice(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('4d4', Damage.PHYSICAL);
-        add_scale_damage(character, roll, parameters);
-
-        roll_crit(ability, roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
     function daggerspell_exposing_tear(character, ability, parameters) {
         const type = get_parameter('type', parameters);
         assert(type !== null, '"type" parameter is required');
@@ -3109,6 +3098,17 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.MAGIC);
         roll.add_damage('8d8', magic_type);
         roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), magic_type);
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function daggerspell_fadeaway_slice(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('4d4', Damage.PHYSICAL);
+        add_scale_damage(character, roll, parameters);
 
         roll_crit(ability, roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -3130,6 +3130,25 @@ var Barbs = Barbs || (function () {
         });
 
         print_ability_description(character, ability);
+    }
+
+
+    function daggerspell_shieldbreaker(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('6d4', Damage.PHYSICAL);
+        add_scale_damage(character, roll, parameters);
+        roll.add_effect('Cannot be blocked by spells or magic effects');
+
+        const empowered = get_parameter('empowered', parameters);
+        if (empowered !== null) {
+            roll.add_effect('-40% MR [[d100]]');
+        } else {
+            roll.add_effect('-20% MR [[d100]]');
+        }
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -5137,9 +5156,10 @@ var Barbs = Barbs || (function () {
             'Ice Spear': cryomancer_ice_spear,
         },
         'Daggerspell': {
-            'Fadeaway Slice': daggerspell_fadeaway_slice,
             'Exposing Tear': daggerspell_exposing_tear,
+            'Fadeaway Slice': daggerspell_fadeaway_slice,
             'Hidden Blade': daggerspell_hidden_blade,
+            'Shieldbreaker': daggerspell_shieldbreaker,
         },
         'Demon Hunter': {
             // TODO May want a "marked" parameter for Essence Scatter
