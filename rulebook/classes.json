@@ -2479,6 +2479,33 @@
     },
     {
         "type": "class",
+        "name": "Vastwood Knight",
+        "preview": "A class that can only be taken by Dryads. Vastwood Knights swear loyalty to the queen of the city of Vastwood on the continent of Kraithan. They act as emissaries in foreign courts and advance state objectives out in the field.",
+        "num_requirements": 3,
+        "requirements": [
+            "Interaction: Leadership Rank A or Interaction: Persuasion Rank A",
+            "Interaction: Intent Rank A or Observation: Listen Rank A",
+            "Knowledge: Culture Rank A or Knowledge: Nature Rank A"
+        ],
+        "all_reqs_known": true,
+        "flavor_text": "\"Steel yourselves, my knights. I will ask much of you, and I know you are equal to your duties.\"",
+        "description": "The Vastwood Knights are a group of awakened Dryads who have sworn fealty to the queen of Vastwood. Well versed in duels of both physical and verbal nature, the duties of the Vastwood Knight are twofold. Firstly, they are emissaries for the nation of Vastwood. They are frequently asked to parley with foreign powers, establish alliances, and denounce corruption. Secondly, they are arbiters of the queen's will. Acting as elite warriors and mages, they complete specialized tasks for the queen in the interest of national security and espionage in faraway lands. Vastwood Knights enjoy special benefits when they operate in forests and in foreign courts, and their abilities are designed to exploit their traits as awakened Dryads. Each ability in the class has its uses both in and out of combat, and they all can be used with either stamina or mana. Ultimately, the class provides extra utility and assurance in both political and combat encounters.",
+        "branches": {
+            "Envoy": "The Envoy branch provides options for pointed investigation and aggression in court and on the battlefield.",
+            "Diplomat": "The Diplomat branch provides options for defense during courtly debates and fierce battles.",
+            "Consul": "The Consul branch provides options for utility both in and out of combat."
+        },
+        "passive": {
+            "Vastwood Sovereignty": "When you are in a forest or in a court of a governing body, you gain the following benefits: you may reroll any rolled dice once and take the better result; your skill checks' modifiers are ignored if negative and 50% increased if positive; your abilities' damage dice upgrade by one dice size, up to a limit of d20. While outside a forest or governing body, you may activate this passive to gain its benefits for an hour, and you may do this once per short rest."
+        },
+        "abilities": [
+            "Swordpoint Diplomacy",
+            "Natural Precognition",
+            "Wallflower Espionage"
+        ]
+    },
+    {
+        "type": "class",
         "name": "Venomist",
         "preview": "A mage that has learned to integrate a lifestyle of crafting toxins with their study of water spells, inflicting poisonous conditions with magic.",
         "num_requirements": 3,

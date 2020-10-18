@@ -10678,6 +10678,78 @@
     },
     {
         "type": "ability",
+        "name": "Wallflower Espionage",
+        "class": "Vastwood Knight",
+        "branch": "Consul",
+        "tier": 1,
+        "action": "1 Minor Action",
+        "cost": "25 stamina or mana",
+        "range": "200 ft",
+        "duration": "1 minute",
+        "description": [
+            "You use nature to keep an eye on things. If you are in combat, summon a Wallflower in an empty space in range that you can see. The Wallflower has 1 health and lasts for the duration. The Wallflower provides line of sight for you and your allies, and enemies within sight of the Wallflower do not gain the benefits of Hidden, invisibility, or obfuscating illusion magic. If the Wallflower is destroyed and Vastwood Sovereignty is active, you may concentrate on this ability; if you do, break concentration at the beginning of your next turn, and recast this ability as a free action at no cost.",
+            "<br>",
+            "If you are not in combat, summon a Wallflower in any location within range regardless of line of sight. The Wallflower transmits visual and auditory information to you telepathically for the duration. Entities treat the Wallflower as part of the area's natural or decorative flora. If Vastwood Sovereignty is active or the Wallflower exists somewhere where Vastwood Sovereignty would be active, you may concentrate on this ability; if you do, its duration is extended until you break concentration."
+        ],
+        "tags": [
+            "Modal",
+            "totem",
+            "conditional",
+            "concentration"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Natural Precognition",
+        "class": "Vastwood Knight",
+        "branch": "Diplomat",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "30 stamina or mana",
+        "range": "50 ft",
+        "duration": "1 minute",
+        "description": [
+            "You become supernaturally sensitive to subtle changes in the nature of your enemies' attack patterns and quickly adapt. If you are in combat, choose AC, EV, or MR; you and all allies in range gain a buff that allows you to ignore negative defenses of the type you choose caused by armor, and the buff grants +30 AC, +30% EV, or +30% MR respectively for the duration.",
+            "<br>",
+            "If you are not in combat, you may cast this ability as a reaction to any statement you hear that you doubt. You learn whether that statement was fact or fiction automatically, and you discern a free additional hint from your target's reaction, whether by accidental admission or subtle signals that give them away.",
+            "<br>",
+            "This ability costs half stamina/mana when Vastwood Sovereignty is active."
+        ],
+        "tags": [
+            "Modal",
+            "buff",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Swordpoint Diplomacy",
+        "class": "Vastwood Knight",
+        "branch": "Envoy",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "30 stamina or mana",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You carry the weight of steel in your words and actions. If you are in combat, deal 6d10 physical damage to a target in range; the target is then marked until the end of the encounter, and must choose between granting physical and magical attacks against it +20% increased damage or +10% critical strike chance; the effects of this mark can stack and enables critical strike chance for magical attacks.",
+            "<br>",
+            "If you are not in combat, you may cast this ability during any interaction where you are acquiring information via threat of violence or war, regardless of whether those threats are direct or subtle. For the rest of the current encounter, you may make Interaction: Leadership and Interaction: Persuasion checks in place of Interaction: Deception and Interaction: Intimidation checks, and you may add your highest Weapons category skill check modifier to your rolls. If negotiations during the current encounter fail and give way to an immediate combat encounter, all enemies skip their first turn in combat.",
+            "<br>",
+            "This ability costs half stamina/mana when Vastwood Sovereignty is active."
+        ],
+        "tags": [
+            "Modal",
+            "attack",
+            "physical",
+            "single-target",
+            "melee",
+            "mark",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Dimension Door",
         "class": "Voidwalker",
         "branch": "Abyss",

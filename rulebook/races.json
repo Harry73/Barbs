@@ -68,7 +68,8 @@
         "description": "The dryads are a group of intelligent plant humanoids. They have green, fibrous skin with a waxy protective covering, and they are hairless; instead, they have numerous leaves and branches all over their body",
         "traits": {
             "Roots": "The dryad is immune to knockups, knockdowns, pushes, and pulls.",
-            "Treeform": "The dryad can turn into a regular tree as a method of disguise. The appearance and height of the tree is up to the dryad. Treeform requires concentration."
+            "Treeform": "The dryad can turn into a regular tree as a method of disguise. The appearance and height of the tree is up to the dryad. Treeform requires concentration.",
+            "Nature Mastery": "The awakened dryad can, as a major action, summon flora in an empty space they can see, or alter flora they can see within a single space. The number of spaces affected is increased by making a skill check when using this trait."
         }
     },
     {
