@@ -786,17 +786,33 @@ var Barbs = Barbs || (function () {
         const bonus = 5 * points_in_skill;
 
         const attribute = character.get_attribute(skill.scaling_attr_tla);
-        let roll_string = 'd100+%s+%s'.format(bonus, attribute);
+        let bonus_string = '%s+%s'.format(bonus, attribute);
 
         const roll = get_roll_with_items_and_effects(character);
         if (skill.name in roll.skills) {
-            roll_string += '+%s'.format(roll.skills[skill.name]);
+            bonus_string += '+%s'.format(roll.skills[skill.name]);
         }
         if (Skill.ALL.name in roll.skills) {
-            roll_string += '+%s'.format(roll.skills[Skill.ALL.name]);
+            bonus_string += '+%s'.format(roll.skills[Skill.ALL.name]);
         }
-        roll_string = 'round(%s)'.format(roll_string);
 
+        // Some abilities just love to be little stupid snowflakes. Deal with them here.
+        assert_numeric(bonus_string, 'Skill bonus "%s" is non-numeric', bonus_string);
+        for (let i = 0; i < persistent_effects.length; i++) {
+            if (persistent_effects[i].target !== character.name) {
+                continue;
+            }
+
+            if (persistent_effects[i].name === 'Vastwood Sovereignty') {
+                if (eval(bonus_string) < 0) {
+                    bonus_string = '0';
+                } else {
+                    bonus_string = '(1.5*(%s))'.format(bonus_string);
+                }
+            }
+        }
+
+        const roll_string = 'round(d100+%s)'.format(bonus_string);
         chat(character, total_format.format(skill_name, 'Roll', roll_string));
     }
 
