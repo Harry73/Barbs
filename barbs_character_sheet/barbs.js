@@ -922,6 +922,15 @@ var Barbs = Barbs || (function () {
     // Most effects don't care about when they are applied to a roll. But some want to be applied specifically after
     // others. This allows effects to have some desired ordering.
     //
+    // Ordering 50 is the default. Things that use non-default orders are listed below, as they may be dependent on
+    // each other.
+    //    * Order 10 (default timing)   : Arcanist - Magic Primer
+    //    * Order 50 ------------------ : DEFAULT
+    //    * Order 85 (default timing)   : Pinpoint Monk - Precision Pummeling
+    //    * Order 90 (post-crit timing) : Assassin - Sharpen
+    //    * Order 95 (post-crit timing) : Vastwood Knight - Vastwood Sovereignty
+    //    * Order 99 (post-crit timing) : Sniper - Distance Shooter
+    //
     class Order {
         constructor(val) {
             this._type = 'Order';
@@ -2822,7 +2831,7 @@ var Barbs = Barbs || (function () {
             // on the fact that persistent effects are added to rolls last and that "Ordering 90" will occur after
             // other effects that add damage to rolls.
             Object.keys(roll.damages).forEach(function (dmg_type) {
-                roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d4/g, 'd6';
+                roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d4/g, 'd6');
             });
             return true;
         });
@@ -4607,7 +4616,8 @@ var Barbs = Barbs || (function () {
 
     function sniper_distance_shooter(character, ability, parameters) {
         add_persistent_effect(character, ability, parameters, character, Duration.SINGLE_USE(), Ordering(99),
-                              RollType.PHYSICAL, RollTime.POST_CRIT, 1, function (character, roll, parameters) {
+                              RollType.PHYSICAL, RollTime.POST_CRIT, 1,
+                              function (character, roll, parameters) {
             const parameter = get_parameter('distance', parameters);
             if (parameter === null) {
                 chat(character, '"distance" parameter is missing');
@@ -4620,10 +4630,10 @@ var Barbs = Barbs || (function () {
                 return false;
             }
 
-            // Because this effect has an ordering of "99", the distance shooter rolls will be sent after the
-            // base roll. Distance shooter damage will always be calculated after the base roll so that it can cope
-            // with multiple distances. Multipliers from the original roll are copied into a new roll per given
-            // distance.
+            // Because this effect has an ordering of "99" and post-crit timing, all other effects should have been
+            // accounted for in the base roll by the time we get here. Distance shooter damage will always be
+            // calculated after the base roll so that it can cope with multiple distances. Multipliers from the
+            // original roll are copied into a new roll per given distance.
             for (let i = 0; i < distances.length; i++) {
                 const distance_roll = new Roll(character, RollType.PHYSICAL);
                 distance_roll.add_damage(2 * parse_int(distances[i]) / 5, Damage.PHYSICAL);
@@ -4950,9 +4960,10 @@ var Barbs = Barbs || (function () {
         do_roll(character, ability, roll, parameters, '');
     }
 
-    function vastwood_knight_sovereignity(character, ability, parameters) {
-        add_persistent_effect(character, ability, parameters, character, Duration.ONE_HOUR(), Ordering(1000),
-                              RollType.ALL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
+
+    function vastwood_knight_sovereignty(character, ability, parameters) {
+        add_persistent_effect(character, ability, parameters, character, Duration.ONE_HOUR(), Ordering(95),
+                              RollType.ALL, RollTime.POST_CRIT, 1, function (character, roll, parameters) {
             Object.keys(roll.damages).forEach(function (dmg_type) {
                 roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d12/g, 'd20');
                 roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d10/g, 'd12');
@@ -4964,7 +4975,8 @@ var Barbs = Barbs || (function () {
         });
         print_ability_description(character, ability);
     }
-	
+
+
     function warrior_charge(character, ability, parameters) {
         const parameter = get_parameter('targets', parameters);
         if (parameter === null) {
@@ -5337,7 +5349,7 @@ var Barbs = Barbs || (function () {
             'Snatch and Grab': thief_snatch_and_grab,
         },
         'Vastwood Knight': {
-            'Vastwood Sovereignity' : vastwood_knight_sovereignity,
+            'Vastwood Sovereignty': vastwood_knight_sovereignty,
         },
         'Voidwalker': {
             'Blacklands': print_ability_description,

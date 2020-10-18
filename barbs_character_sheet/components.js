@@ -5836,7 +5836,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "name": "Mist Screen",
                     "class": "Mistguard",
                     "description": [
-                        "You call upon the mists to protect you. As a reaction to an attack targetting you, block the attack. This spell costs 5 less mana for each condition the attacker has."
+                        "You call upon the mists to protect you. As a reaction to an attack targeting you, block the attack. This spell costs 5 less mana for each condition the attacker has."
                     ],
                     "tags": [
                         "spell",
@@ -5850,7 +5850,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "name": "Cold Snap",
                     "class": "Mistguard",
                     "description": [
-                        "You cause a sudden drop in temperature which damages enemy flesh. Deal 13d8 to all enemies in range, and inflict a -5 Move Speed condition which stacks. Each stack of this condition counts as an individual, distinct condition for the purposes of your Eerie Mists passive, but otherwise this condition is treated as normal. When you cast this spell, you may choose to concentrate on it; if you do, you may cast it once per turn as a free action for 25 mana."
+                        "You cause a sudden drop in temperature which damages enemy flesh. Deal 13d8 ice magic damage to all enemies in range, and inflict a -5 Move Speed condition which stacks. Each stack of this condition counts as an individual, distinct condition for the purposes of your Eerie Mists passive, but otherwise this condition is treated as normal. When you cast this spell, you may choose to concentrate on it; if you do, you may cast it once per turn as a free action for 25 mana."
                     ],
                     "tags": [
                         "spell",
@@ -8222,6 +8222,67 @@ var BarbsComponents = BarbsComponents || (function () {
                         "organics",
                         "augmentation",
                         "minion"
+                    ]
+                }
+            }
+        },
+        "Vastwood Knight": {
+            "type": "class",
+            "name": "Vastwood Knight",
+            "description": "The Vastwood Knights are a group of awakened Dryads who have sworn fealty to the queen of Vastwood. Well versed in duels of both physical and verbal nature, the duties of the Vastwood Knight are twofold. Firstly, they are emissaries for the nation of Vastwood. They are frequently asked to parley with foreign powers, establish alliances, and denounce corruption. Secondly, they are arbiters of the queen's will. Acting as elite warriors and mages, they complete specialized tasks for the queen in the interest of national security and espionage in faraway lands. Vastwood Knights enjoy special benefits when they operate in forests and in foreign courts, and their abilities are designed to exploit their traits as awakened Dryads. Each ability in the class has its uses both in and out of combat, and they all can be used with either stamina or mana. Ultimately, the class provides extra utility and assurance in both political and combat encounters.",
+            "passive": {
+                "Vastwood Sovereignty": "When you are in a forest or in a court of a governing body, you gain the following benefits: you may reroll any rolled dice once and take the better result; your skill checks' modifiers are ignored if negative and 50% increased if positive; your abilities' damage dice upgrade by one dice size, up to a limit of d20. While outside a forest or governing body, you may activate this passive to gain its benefits for an hour, and you may do this once per short rest."
+            },
+            "abilities": {
+                "Swordpoint Diplomacy": {
+                    "name": "Swordpoint Diplomacy",
+                    "class": "Vastwood Knight",
+                    "description": [
+                        "You carry the weight of steel in your words and actions. If you are in combat, deal 6d10 physical damage to a target in range; the target is then marked until the end of the encounter, and must choose between granting physical and magical attacks against it +20% increased damage or +10% critical strike chance; the effects of this mark can stack and enables critical strike chance for magical attacks.",
+                        "<br>",
+                        "If you are not in combat, you may cast this ability during any interaction where you are acquiring information via threat of violence or war, regardless of whether those threats are direct or subtle. For the rest of the current encounter, you may make Interaction: Leadership and Interaction: Persuasion checks in place of Interaction: Deception and Interaction: Intimidation checks, and you may add your highest Weapons category skill check modifier to your rolls. If negotiations during the current encounter fail and give way to an immediate combat encounter, all enemies skip their first turn in combat.",
+                        "<br>",
+                        "This ability costs half stamina/mana when Vastwood Sovereignty is active."
+                    ],
+                    "tags": [
+                        "modal",
+                        "attack",
+                        "physical",
+                        "single-target",
+                        "melee",
+                        "mark",
+                        "conditional"
+                    ]
+                },
+                "Natural Precognition": {
+                    "name": "Natural Precognition",
+                    "class": "Vastwood Knight",
+                    "description": [
+                        "You become supernaturally sensitive to subtle changes in the nature of your enemies' attack patterns and quickly adapt. If you are in combat, choose AC, EV, or MR; you and all allies in range gain a buff that allows you to ignore negative defenses of the type you choose caused by armor, and the buff grants +30 AC, +30% EV, or +30% MR respectively for the duration.",
+                        "<br>",
+                        "If you are not in combat, you may cast this ability as a reaction to any statement you hear that you doubt. You learn whether that statement was fact or fiction automatically, and you discern a free additional hint from your target's reaction, whether by accidental admission or subtle signals that give them away.",
+                        "<br>",
+                        "This ability costs half stamina/mana when Vastwood Sovereignty is active."
+                    ],
+                    "tags": [
+                        "modal",
+                        "buff",
+                        "conditional"
+                    ]
+                },
+                "Wallflower Espionage": {
+                    "name": "Wallflower Espionage",
+                    "class": "Vastwood Knight",
+                    "description": [
+                        "You use nature to keep an eye on things. If you are in combat, summon a Wallflower in an empty space in range that you can see. The Wallflower has 1 health and lasts for the duration. The Wallflower provides line of sight for you and your allies, and enemies within sight of the Wallflower do not gain the benefits of Hidden, invisibility, or obfuscating illusion magic. If the Wallflower is destroyed and Vastwood Sovereignty is active, you may concentrate on this ability; if you do, break concentration at the beginning of your next turn, and recast this ability as a free action at no cost.",
+                        "<br>",
+                        "If you are not in combat, summon a Wallflower in any location within range regardless of line of sight. The Wallflower transmits visual and auditory information to you telepathically for the duration. Entities treat the Wallflower as part of the area's natural or decorative flora. If Vastwood Sovereignty is active or the Wallflower exists somewhere where Vastwood Sovereignty would be active, you may concentrate on this ability; if you do, its duration is extended until you break concentration."
+                    ],
+                    "tags": [
+                        "modal",
+                        "totem",
+                        "conditional",
+                        "concentration"
                     ]
                 }
             }
