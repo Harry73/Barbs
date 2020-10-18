@@ -2822,7 +2822,7 @@ var Barbs = Barbs || (function () {
             // on the fact that persistent effects are added to rolls last and that "Ordering 90" will occur after
             // other effects that add damage to rolls.
             Object.keys(roll.damages).forEach(function (dmg_type) {
-                roll.damages[dmg_type] = roll.damages[dmg_type].replace('d4', 'd6');
+                roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d4/g, 'd6';
             });
             return true;
         });
@@ -4950,7 +4950,21 @@ var Barbs = Barbs || (function () {
         do_roll(character, ability, roll, parameters, '');
     }
 
-
+    function vastwood_knight_sovereignity(character, ability, parameters) {
+        add_persistent_effect(character, ability, parameters, character, Duration.ONE_HOUR(), Ordering(1000),
+                              RollType.ALL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
+            Object.keys(roll.damages).forEach(function (dmg_type) {
+                roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d12/g, 'd20');
+                roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d10/g, 'd12');
+                roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d8/g, 'd10');
+                roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d6/g, 'd8');
+                roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d4/g, 'd6');
+            });
+            return true;
+        });
+        print_ability_description(character, ability);
+    }
+	
     function warrior_charge(character, ability, parameters) {
         const parameter = get_parameter('targets', parameters);
         if (parameter === null) {
@@ -5321,6 +5335,9 @@ var Barbs = Barbs || (function () {
             'Phantom Thief': thief_phantom_thief,
             'Purloin Powers': print_ability_description,
             'Snatch and Grab': thief_snatch_and_grab,
+        },
+        'Vastwood Knight': {
+            'Vastwood Sovereignity' : vastwood_knight_sovereignity,
         },
         'Voidwalker': {
             'Blacklands': print_ability_description,
