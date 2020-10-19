@@ -6,9 +6,11 @@
         "description": "This school of alchemy focuses on the alteration of material objects. Instead of fundamentally changing what the object is, you can change the natural properties of the object, while maintaining some of its original properties",
         "attribute": "Intelligence",
         "rank_notes": {
-            "Untrained": "You cannot perform Augmentation Alchemy",
-            "Rank F": "You can perform Augmentation Alchemy from basic blueprints",
-            "Rank A": "You can perform Augmentation Alchemy from class abilities without penalties"
+            "Untrained": "You cannot perform augmentation alchemy",
+            "Rank F": "You can perform augmentation alchemy from basic blueprints",
+            "Rank A": "You can perform augmentation alchemy from class abilities without penalties",
+            "Rank 5": "You can create basic blueprints out of your augmentation alchemy class abilities",
+            "Rank 1": "You can perform two augmentations simultaneously on a single object if they have the same cast time"
         }
     },
     {
@@ -18,8 +20,11 @@
         "description": "This school of alchemy focuses on the creation of constructs, like robots and golems, that are technically non-living bodies powered by magic. Constructs lack any intelligence whatsoever, but aren't limited physically the same way organics are",
         "attribute": "Intelligence",
         "rank_notes": {
-            "Untrained": "You cannot perform Construct Alchemy",
-            "Rank F": "You can perform Construct Alchemy from basic blueprints"
+            "Untrained": "You cannot perform construct alchemy",
+            "Rank F": "You can perform construct alchemy from basic blueprints",
+            "Rank A": "You can perform construct alchemy from class abilities without penalties",
+            "Rank 5": "You can create basic blueprints out of your construct alchemy class abilities",
+            "Rank 1": "The products of your construct alchemy have doubled duration"
         }
     },
     {
@@ -29,9 +34,11 @@
         "description": "This school of alchemy focuses on the creation of organic life, like homunculi and chimera. These creatures are intelligent and don't require magical input to operate, but have more realistic physical limitations",
         "attribute": "Intelligence",
         "rank_notes": {
-            "Untrained": "You cannot perform Organics Alchemy",
-            "Rank F": "You can perform Organics Alchemy from basic blueprints",
-            "Rank A": "You can perform Organics Alchemy from class abilities without penalties"
+            "Untrained": "You cannot perform organics alchemy",
+            "Rank F": "You can perform organics alchemy from basic blueprints",
+            "Rank A": "You can perform organics alchemy from class abilities without penalties",
+            "Rank 5": "You can create basic blueprints out of your organics alchemy class abilities",
+            "Rank 1": "The products of your organics alchemy have doubled health"
         }
     },
     {
@@ -41,8 +48,11 @@
         "description": "This school of alchemy focuses on the transformation of material objects. Instead of simply altering the properties of an object, you change things into completely different objects entirely",
         "attribute": "Intelligence",
         "rank_notes": {
-            "Untrained": "You cannot perform Transmutation Alchemy",
-            "Rank F": "You can perform Transmutation Alchemy from basic blueprints"
+            "Untrained": "You cannot perform transmutation alchemy",
+            "Rank F": "You can perform transmutation alchemy from basic blueprints",
+            "Rank A": "You can perform transmutation alchemy from class abilities without penalties",
+            "Rank 5": "You can create basic blueprints out of your transmutation alchemy class abilities",
+            "Rank 1": "You can perform two transmutations simultaneously on a single entity if they have the same cast time"
         }
     },
     {
@@ -54,7 +64,9 @@
         "rank_notes": {
             "Untrained": "You cannot wear cloth armor",
             "Rank F": "You can wear normal and magic cloth armor",
-            "Rank A": "You can wear rare and unique cloth armor"
+            "Rank A": "You can wear rare and unique cloth armor",
+            "Rank 5": "You ignore negative implicit stats from cloth armor",
+            "Rank 1": "Implicit MR and CR from cloth armor are 50% more effective for you"
         }
     },
     {
@@ -66,7 +78,9 @@
         "rank_notes": {
             "Untrained": "You cannot wear heavy armor",
             "Rank F": "You can wear normal and magic heavy armor",
-            "Rank A": "You can wear rare and unique heavy armor"
+            "Rank A": "You can wear rare and unique heavy armor",
+            "Rank 5": "You ignore negative implicit stats from heavy armor",
+            "Rank 1": "Implicit AC from heavy armor is 50% more effective for you"
         }
     },
     {
@@ -78,7 +92,9 @@
         "rank_notes": {
             "Untrained": "You cannot wear light armor",
             "Rank F": "You can wear normal and magic light armor",
-            "Rank A": "You can wear rare and unique light armor"
+            "Rank A": "You can wear rare and unique light armor",
+            "Rank 5": "You ignore negative implicit stats from light armor",
+            "Rank 1": "Implicit EV from light armor is 50% more effective for you"
         }
     },
     {
@@ -90,7 +106,9 @@
         "rank_notes": {
             "Untrained": "You cannot equip shields",
             "Rank F": "You can equip mundane and magic shields in your offhand",
-            "Rank A": "You can equip rare and unique shields in your offhand"
+            "Rank A": "You can equip rare and unique shields in your offhand",
+            "Rank 5": "You ignore negative implicit stats from shields",
+            "Rank 1": "Implicit positive stats from shields are 50% more effective for you"
         }
     },
     {
@@ -101,7 +119,10 @@
         "attribute": "Appeal",
         "rank_notes": {
             "Untrained": "You automatically fail Acting checks",
-            "Rank F": "You can perform Acting checks"
+            "Rank F": "You can perform Acting checks",
+            "Rank A": "You can create original acting routines and plays and market your acting skills for sale easily, and you can lead an actor's troupe",
+            "Rank 5": "You can augment illusion and summoning spells with Acting checks",
+            "Rank 1": "Your original acting routines and plays sell twice as well and are always culturally significant"
         }
     },
     {
@@ -113,7 +134,9 @@
         "rank_notes": {
             "Untrained": "You automatically fail Dancing checks",
             "Rank F": "You can perform Dancing checks",
-            "Rank A": "You can infuse magic into dances and perform improvised physical arts with dances"
+            "Rank A": "You can create original dancing routines and market your dancing skills for sale easily, and you can lead a dancer's troupe",
+            "Rank 5": "You can augment buff and defensive spells with Dancing checks",
+            "Rank 1": "Your original dancing routines sell twice as well and are always culturally significant"
         }
     },
     {
@@ -124,7 +147,10 @@
         "attribute": "Appeal",
         "rank_notes": {
             "Untrained": "You automatically fail Illustration checks",
-            "Rank F": "You can perform Illustration checks"
+            "Rank F": "You can perform Illustration checks",
+            "Rank A": "You can create original illustrations and market your illustration skills for sale easily, and you can start an art school",
+            "Rank 5": "You can augment conjuration and divination spells with Illustration checks",
+            "Rank 1": "Your original illustrations sell twice as well and are always culturally significant"
         }
     },
     {
@@ -135,7 +161,10 @@
         "attribute": "Appeal",
         "rank_notes": {
             "Untrained": "You automatically fail Literature checks",
-            "Rank F": "You can perform Literature checks"
+            "Rank F": "You can perform Literature checks",
+            "Rank A": "You can create original, fictional, written works and market your literature skills for sale easily, and you can start a creative writing college",
+            "Rank 5": "You can augment control and enchantment spells with Literature checks",
+            "Rank 1": "Your original written works sell twice as well and are always culturally significant"
         }
     },
     {
@@ -146,7 +175,10 @@
         "attribute": "Appeal",
         "rank_notes": {
             "Untrained": "You automatically fail Music checks",
-            "Rank F": "You can perform Music checks"
+            "Rank F": "You can perform Music checks",
+            "Rank A": "You can create original music and market your musical skills for sale easily, and you can start a band, orchestra, or other troupe of musicians",
+            "Rank 5": "You can augment destruction and restoration spells with Music checks",
+            "Rank 1": "Your original music sells twice as well and is always cultural significant"
         }
     },
     {
@@ -157,7 +189,10 @@
         "attribute": "Appeal",
         "rank_notes": {
             "Untrained": "You automatically fail Sculpture checks",
-            "Rank F": "You can perform Sculpture checks"
+            "Rank F": "You can perform Sculpture checks",
+            "Rank A": "You can create original sculptures and market your sculpture skills for sale easily, and you can start a sculptor's school",
+            "Rank 5": "You can augment condition and utility spelsl with Sculpture checks",
+            "Rank 1": "Your original sculptures sell twice as well and are always culturally significant"
         }
     },
     {
@@ -168,7 +203,10 @@
         "attribute": "Dexterity",
         "rank_notes": {
             "Untrained": "You automatically fail Balance checks",
-            "Rank F": "You can perform Balance checks"
+            "Rank F": "You can perform Balance checks",
+            "Rank A": "You can balance on impossibly small, narrow, or slanted surfaces",
+            "Rank 5": "You ignore difficult terrain",
+            "Rank 1": "You cannot be Knocked Prone"
         }
     },
     {
@@ -179,7 +217,10 @@
         "attribute": "Agility",
         "rank_notes": {
             "Untrained": "You automatically fail Climbing checks",
-            "Rank F": "You can perform Climbing checks"
+            "Rank F": "You can perform Climbing checks",
+            "Rank A": "You can climb impossibly sheer or smooth surfaces",
+            "Rank 5": "You can carry another entity of the same size or smaller while climbing without difficulty",
+            "Rank 1": "You take no fall damage from a failed Climbing check"
         }
     },
     {
@@ -190,7 +231,10 @@
         "attribute": "Dexterity",
         "rank_notes": {
             "Untrained": "You automatically fail Flexibility checks",
-            "Rank F": "You can perform Flexibility checks"
+            "Rank F": "You can perform Flexibility checks",
+            "Rank A": "You can bend and stretch in impossible ways and fit into spaces that are 1/4th of your size",
+            "Rank 5": "You ignore half of a blunt weapon's implicit percent chance to inflict crowd control conditions on you",
+            "Rank 1": "AOE attacks allow you to use up to half of your EV"
         }
     },
     {
@@ -201,7 +245,10 @@
         "attribute": "Strength",
         "rank_notes": {
             "Untrained": "You automatically fail Force checks",
-            "Rank F": "You can perform Force checks"
+            "Rank F": "You can perform Force checks",
+            "Rank A": "You can perform seemingly impossible feats of strength with Force checks",
+            "Rank 5": "Your grapples and pushes cannot fail to an opposing skill check",
+            "Rank 1": "The range of throwing weapons is doubled for you"
         }
     },
     {
@@ -213,6 +260,7 @@
         "rank_notes": {
             "Untrained": "You automatically fail Movement checks",
             "Rank F": "You can perform Movement checks",
+            "Rank A": "You can crawl, shimmy, and otherwise move in ways that would normally be slow at your regular move speed",
             "Rank 5": "You can sprint at twice your movement speed",
             "Rank 1": "You can maintain a full speed run indefinitely while unburdened"
         }
@@ -225,7 +273,10 @@
         "attribute": "Composure",
         "rank_notes": {
             "Untrained": "You automatically fail Pain Tolerance checks",
-            "Rank F": "You can perform Pain Tolerance checks"
+            "Rank F": "You can perform Pain Tolerance checks",
+            "Rank A": "Pain cannot cause you to lose consciousness",
+            "Rank 5": "You only lose half your concentration on a failed Pain Tolerance check, rounded up",
+            "Rank 1": "Your Downed Health is doubled"
         }
     },
     {
@@ -236,7 +287,10 @@
         "attribute": "Wisdom",
         "rank_notes": {
             "Untrained": "You cannot use your pet in combat",
-            "Rank F": "You can command your pet in combat"
+            "Rank F": "You can command your pet in combat",
+            "Rank A": "Your pet can use improvised physical arts",
+            "Rank 5": "Your pet can use items and wear armor",
+            "Rank 1": "Command Actions targetting your pet are minor actions"
         }
     },
     {
@@ -247,7 +301,10 @@
         "attribute": "Agility",
         "rank_notes": {
             "Untrained": "You cannot ride animals at full speed",
-            "Rank F": "You can mount and ride common animals at full speed"
+            "Rank F": "You can mount and ride common animals at full speed",
+            "Rank A": "You can mount and ride exotic animals at full speed",
+            "Rank 5": "Mounts have doubled move speed while you ride them",
+            "Rank 1": "Mounts can contribute to your defenses while you ride them"
         }
     },
     {
@@ -258,7 +315,10 @@
         "attribute": "Wisdom",
         "rank_notes": {
             "Untrained": "You cannot tame animals",
-            "Rank F": "You can tame common animals"
+            "Rank F": "You can tame common animals",
+            "Rank A": "You can domesticate common animals to become your dedicated pets",
+            "Rank 5": "You can tame exotic animals and monsters",
+            "Rank 1": "You can domesticate exotic animals and monsters to become your dedicated pets"
         }
     },
     {
@@ -269,7 +329,10 @@
         "attribute": "Toughness",
         "rank_notes": {
             "Untrained": "You automatically fail Blocking checks",
-            "Rank F": "You can perform Blocking checks to reduce incoming damage further"
+            "Rank F": "You can perform Blocking checks as reactions to reduce incoming physical damage by 50%",
+            "Rank A": "You can enter a blocking stance as a move action, reducing incoming physical damage by 50% automatically without the need for a reaction",
+            "Rank 5": "You can block magic damage",
+            "Rank 1": "Entering blocking stance is a minor action for you"
         }
     },
     {
@@ -280,7 +343,10 @@
         "attribute": "Reflex",
         "rank_notes": {
             "Untrained": "You automatically fail Dodging checks",
-            "Rank F": "You can perform Dodging checks"
+            "Rank F": "You can perform Dodging checks",
+            "Rank A": "You can enter a dodging stance as a move action to gain +10% EV",
+            "Rank 5": "Entering dodging stance is a major action and provides +30% EV",
+            "Rank 1": "Entering dodging stance is a minor action and provides +50% EV"
         }
     },
     {
@@ -291,7 +357,10 @@
         "attribute": "Agility",
         "rank_notes": {
             "Untrained": "You automatically fail Grappling checks",
-            "Rank F": "You can perform Grappling checks"
+            "Rank F": "You can perform Grappling checks",
+            "Rank A": "Your grapples never fail",
+            "Rank 5": "Your throws have doubled distance",
+            "Rank 1": "Your holds are unbreakable by physical means"
         }
     },
     {
@@ -302,7 +371,10 @@
         "attribute": "Fortitude",
         "rank_notes": {
             "Untrained": "You cannot performing Trapping checks in combat",
-            "Rank F": "You can perform Trapping checks in combat as a Major Action"
+            "Rank F": "You can perform Trapping checks in combat as a Major Action",
+            "Rank A": "You can perform Trapping checks on traps you don't control",
+            "Rank 5": "Trapping checks are a minor action for you",
+            "Rank 1": "Your trap deployment range is doubled"
         }
     },
     {
@@ -313,7 +385,10 @@
         "attribute": "Toughness",
         "rank_notes": {
             "Untrained": "You cannot craft heavy armor",
-            "Rank F": "You can craft heavy armor from recipes"
+            "Rank F": "You can craft normal and magic heavy armor",
+            "Rank A": "You can craft rare and unique heavy armor",
+            "Rank 5": "You can craft heavy armor in 4 hours",
+            "Rank 1": "You can craft heavy armor in 2 hours"
         }
     },
     {
@@ -324,7 +399,10 @@
         "attribute": "Resistance",
         "rank_notes": {
             "Untrained": "You automatically fail Artificing checks",
-            "Rank F": "You can perform Artificing checks to craft items up to magic rarity"
+            "Rank F": "You can craft normal and magic magical weapons",
+            "Rank A": "You can craft rare and unique magical weapons",
+            "Rank 5": "You can craft magical weapons in 2 hours",
+            "Rank 1": "You can craft magical weapons in 1 hour"
         }
     },
     {
@@ -335,7 +413,10 @@
         "attribute": "Appeal",
         "rank_notes": {
             "Untrained": "You automatically fail Cooking checks",
-            "Rank F": "You can perform Cooking checks and cook delicacies"
+            "Rank F": "You can perform Cooking checks and cook delicacies",
+            "Rank A": "You can cook delicacies in 30 minutes",
+            "Rank 5": "Your delicacies' buffs cannot be stripped",
+            "Rank 1": "Your delicacies can impart up to two separate buffs at a single time for those who eat them"
         }
     },
     {
@@ -346,7 +427,10 @@
         "attribute": "Resistance",
         "rank_notes": {
             "Untrained": "You cannot enchant items",
-            "Rank F": "You can enchant items up to magic rarity"
+            "Rank F": "You can enchant items up to magic rarity",
+            "Rank A": "You can enchant items up to rare rarity",
+            "Rank 5": "Enchanting takes 4 hours for you",
+            "Rank 1": "Enchanting takes 2 hours for you"
         }
     },
     {
@@ -357,7 +441,10 @@
         "attribute": "Reflex",
         "rank_notes": {
             "Untrained": "You cannot craft fine weapons",
-            "Rank F": "You can craft fine weapons up to magic rarity"
+            "Rank F": "You can craft normal and magic fine weapons",
+            "Rank A": "You can craft rare and unique fine weapons",
+            "Rank 5": "You can craft fine weapons in 2 hours",
+            "Rank 1": "You can craft fine weapons in 1 hour"
         }
     },
     {
@@ -368,7 +455,10 @@
         "attribute": "Precision",
         "rank_notes": {
             "Untrained": "You cannot perform Forgery checks",
-            "Rank F": "You can create forged written documents and blueprints"
+            "Rank F": "You can create forged written documents and blueprints",
+            "Rank A": "You can create forged weapons and armor",
+            "Rank 5": "You can create forged accessories, jewelry, and money",
+            "Rank 1": "You can create forged art"
         }
     },
     {
@@ -379,7 +469,10 @@
         "attribute": "Toughness",
         "rank_notes": {
             "Untrained": "You cannot craft heavy weapons",
-            "Rank F": "You can craft heavy weapons up to magic rarity"
+            "Rank F": "You can craft normal and magic heavy weapons",
+            "Rank A": "You can craft rare and unique heavy weapons",
+            "Rank 5": "You can craft heavy weapons in 2 hours",
+            "Rank 1": "You can craft heavy weapons in 1 hour"
         }
     },
     {
@@ -390,7 +483,10 @@
         "attribute": "Fortitude",
         "rank_notes": {
             "Untrained": "You cannot craft jewelry",
-            "Rank F": "You can craft jewelry up to magic rarity"
+            "Rank F": "You can craft normal and magic jewelry",
+            "Rank A": "You can craft rare and unique jewelry",
+            "Rank 5": "You can craft jewelry in 2 hours",
+            "Rank 1": "You can craft jewelry in 1 hour"
         }
     },
     {
@@ -401,7 +497,10 @@
         "attribute": "Reflex",
         "rank_notes": {
             "Untrained": "You cannot craft light armor",
-            "Rank F": "You can craft light armor up to magic rarity"
+            "Rank F": "You can craft normal and magic light armor",
+            "Rank A": "You can craft rare and unique light armor",
+            "Rank 5": "You can craft light armor in 4 hours",
+            "Rank 1": "You can craft light armor in 2 hours"
         }
     },
     {
@@ -425,8 +524,11 @@
         "description": "Potion Crafting allows you to make any number of invigorating concoctions. Because the nature of all of these items can have abnormal side effects if not properly prepared, you need to be tough willed to create potions",
         "attribute": "Fortitude",
         "rank_notes": {
-            "Untrained": "You cannot craft potions.Rank F",
-            "Rank A": "Successful poison crafting produces 2 vials of poison"
+            "Untrained": "You cannot craft potions.",
+            "Rank F": "You can craft potions",
+            "Rank A": "Successful potion crafting produces 2 vials of potion",
+            "Rank 5": "Potions you make have doubled effectiveness",
+            "Rank 1": "You can make potions with two effects"
         }
     },
     {
@@ -437,7 +539,10 @@
         "attribute": "Reflex",
         "rank_notes": {
             "Untrained": "You cannot craft ranged weapons",
-            "Rank F": "You can craft ranged weapons up to magic rarity"
+            "Rank F": "You can craft normal and magic ranged weapons",
+            "Rank A": "You can craft rare and unique ranged weapons",
+            "Rank 5": "You can craft ranged weapons in 2 hours",
+            "Rank 1": "You can craft ranged weapons in 1 hour"
         }
     },
     {
@@ -448,7 +553,10 @@
         "attribute": "Precision",
         "rank_notes": {
             "Untrained": "You cannot craft shortblades",
-            "Rank F": "You can craft shortblades up to magic rarity"
+            "Rank F": "You can craft normal and magic shortblades",
+            "Rank A": "You can craft rare and unique shortblades",
+            "Rank 5": "You can craft shortblades in 2 hours",
+            "Rank 1": "You can craft shortblades in 1 hour"
         }
     },
     {
@@ -459,7 +567,10 @@
         "attribute": "Resistance",
         "rank_notes": {
             "Untrained": "You cannot craft cloth armor",
-            "Rank F": "You can craft cloth armor up to magic rarity"
+            "Rank F": "You can craft normal and magic cloth armor",
+            "Rank A": "You can craft rare and unique cloth armor",
+            "Rank 5": "You can craft cloth armor in 4 hours",
+            "Rank 1": "You can craft cloth armor in 2 hours"
         }
     },
     {
