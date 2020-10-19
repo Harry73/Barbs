@@ -46,8 +46,11 @@ var Barbs = Barbs || (function () {
 
     const STATE_NAME = 'Barbs';
     const LAST_TURN_ID = 'last_turn_id';
+    const MESSAGE_LOG = 'message_log';
+    const MESSAGE_LOG_INDEX = 'message_log_index';
+    const MESSAGE_LOG_SIZE = 20;
 
-    const initiative_format = '&{template:5eDefault} {{title=Initiative}} {{subheader=%s}} {{rollname=Initiative}} {{roll=[[%s+%s+%s]]}}';
+    const initiative_format = '&{template:5eDefault} {{name=Initiative}} {{title=Initiative}} {{subheader=%s}} {{rollname=Initiative}} {{roll=[[%s+%s+%s]]}}';
     const total_format = '&{template:default} {{name=%s}} {{%s=[[%s]]}}';
     const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
     const percent_format = '&{template:default} {{name=%s}} {{%s (%s%)=[[1d100cs>[[100-(%s)+1]]]]}}';
@@ -62,11 +65,6 @@ var Barbs = Barbs || (function () {
 
     let persistent_effects = [];
 
-    // TODO: I think we would be better served by always hanging onto messages. We can keep a circular buffer of them
-    //  so we always have the ~20 most recent. Then it would also be possible for a
-    //  "!barbs sum <roll name>;<roll name> ..." kind of command to exist.
-    //  Although, then we'd need some other way to track the number of messages sent to be able to calculate a
-    //  fully automated total.
     let record_messages_ = false;
     let sent_messages_ = [];
     let received_messages_ = [];
@@ -275,7 +273,7 @@ var Barbs = Barbs || (function () {
 
         // We've allowing two patterns here:
         //   1) The character's name is explicitly passed in, surrounded by "$" to identify it. In this case,
-        //       we pick out the name, remove it from the original message, and then run the processor.
+        //       we pick out the name and remove it from the original message.
         const match = msg.content.match(/\$.*?\$( ?)/);
         if (match !== null) {
             msg.content = msg.content.replace(match[0], '');
@@ -283,8 +281,7 @@ var Barbs = Barbs || (function () {
             return get_character(character_name);
         }
 
-        //   2) The character's name is not provided. We will attempt to deduce it based on who spoke the
-        //       message.
+        //   2) The character's name is not provided. We will attempt to deduce it based on who spoke the message.
         return get_character(msg.who);
     }
 
@@ -5655,9 +5652,28 @@ var Barbs = Barbs || (function () {
 
 
     // ################################################################################################################
-    // Methods for processing non-API call messages
+    // Methods for processing non-API-call messages and calls that rely on a message backlog
 
 
+    // Hang onto all named messages in a circular buffer
+    function record_message(msg) {
+        let message_name = msg.content.match(/{{name=.*?}}/g);
+        if (message_name === null) {
+            LOG.debug('record_message() - other message has no name');
+            return;
+        }
+
+        let message_log_index = state[STATE_NAME][MESSAGE_LOG_INDEX];
+        state[STATE_NAME][MESSAGE_LOG][message_log_index] = msg;
+        message_log_index = message_log_index + 1;
+        if (message_log_index === MESSAGE_LOG_SIZE) {
+            message_log_index = 0;
+        }
+        state[STATE_NAME][MESSAGE_LOG_INDEX] = message_log_index;
+    }
+
+
+    // Additionally store messages for the "sum_all" parameter
     function handle_non_api_message(msg) {
         let message_name = msg.content.match(/{{name=.*?}}/g);
         if (message_name === null) {
@@ -5771,6 +5787,180 @@ var Barbs = Barbs || (function () {
         return damages;
     }
 
+
+    function reconstruct_roll_result_string(msg) {
+        /* Example of what the API gets as a roll message. We want the content string, but with the placeholders filled
+           in and with the actual results of rolls.
+
+        {
+            "content":" {{name=Piercing Shot}} {{physical=$[[0]]}}{{light=$[[4]]}} {{crit_value=$[[1]]}} {{crit_cutoff=$[[2]]}} {{crit_chance=10}} {{modified_crit=$[[3]]}}  {{effects=<li>20% accuracy</li>}} ",
+            "inlinerolls":[
+                {
+                    "expression":"round(((5d8+5)*(1))*2)",
+                    "results":{
+                        "resultType":"sum",
+                        "rolls":[
+                            {"expr":"round(((","type":"M"},
+                            {"dice":5,"results":[{"v":5},{"v":8},{"v":6},{"v":2},{"v":5}],"sides":8,"type":"R"},
+                            {"expr":"+5)*(1))*2)","type":"M"}
+                        ],
+                        "total":62,
+                        "type":"V"
+                    },
+                    "rollid":"-MK1JTxrQZymicxtRWLt",
+                    "signature":"1a57fb986ad76839434f0959e91b3b13ad0303ccbce28a11e32edf34a5331d377edac3887b2fe126ca9994e16206bbbcf497b455bab867257b21bd8ccb891809"
+                },
+                {
+                    "expression":"96",
+                    "results":{
+                        "resultType":"M",
+                        "rolls":[
+                            {"expr":96,"type":"M"}
+                            ],
+                        "total":96,
+                        "type":"V"
+                    },
+                    "signature":false
+                },
+                {
+                    "expression":"91",
+                    "results":{
+                        "resultType":"M",
+                        "rolls":[
+                            {"expr":91,"type":"M"}
+                            ],
+                        "total":91,
+                        "type":"V"
+                    },
+                    "signature":false
+                },
+                {
+                    "expression":"96-91",
+                    "results":{
+                        "resultType":"M",
+                        "rolls":[
+                            {"expr":"96-91","type":"M"}
+                        ],
+                        "total":5,
+                        "type":"V"
+                    },
+                    "signature":false
+                },
+                {
+                    "expression":"round(((4d10)*(1))*2)",
+                    "results":{
+                        "resultType":"sum",
+                        "rolls":[
+                            {"expr":"round(((","type":"M"},
+                            {"dice":4,"results":[{"v":5},{"v":8},{"v":10},{"v":5}],"sides":10,"type":"R"},
+                            {"expr":")*(1))*2)","type":"M"}
+                        ],
+                        "total":56,
+                        "type":"V"
+                    },
+                    "rollid":"-MK1JTxw-Q4aL9vfcufD",
+                    "signature":"345a73bb90faa043a45ad27311e3bc2376ac00b7509d2ee05f83a82e3e3343547cf26add3804c7a085cc9e1fdc7a7d08f1204a55d2d88cde1417cf6527c3b4b4"
+                }
+            ],
+            "playerid":"API",
+            "rolltemplate":"Barbs",
+            "type":"general",
+            "who":"Hoshiko Nightside"
+        }
+        */
+
+        let full_result_string = msg.content;
+        const rolls = msg.inlinerolls;
+
+        for (let i = 0; i < rolls.length; i++) {
+            const roll_results = rolls[i].results.rolls;
+            let roll_string = '';
+            for (let j = 0; j < roll_results.length; j++) {
+                const roll_result = roll_results[j];
+                if ('expr' in roll_result) {
+                    roll_string += roll_result['expr'];
+                } else if ('dice' in roll_result) {
+                    const roll_values = [];
+                    for (let k = 0; k < roll_result['dice']; k++) {
+                        roll_values.push(roll_result['results'][k]['v']);
+                    }
+                    roll_string += roll_values.join('+');
+                } else {
+                    assert(false, 'roll20 inlinerolls in message have unexpected content %s',
+                           JSON.stringify(roll_results));
+                }
+            }
+
+            const placeholder = '$[[%s]]'.format(i);
+            const replacement_string = '[[%s]]'.format(roll_string);
+            full_result_string = full_result_string.replace(placeholder, replacement_string);
+        }
+
+        return full_result_string.trim();
+    }
+
+
+    function reroll(msg) {
+        const character = get_character_from_msg(msg);
+        const pieces = msg.content.split(' ').slice(2).join(' ').split('|');
+        assert(pieces.length === 3, 'Wrong number of bar-separated pieces in reroll message');
+
+        const message_name = pieces[0];
+        const substring = pieces[1];
+        const replacement_string = pieces[2];
+
+        // Rotate message log so that index is 0, the oldest message is at index 0, and everything is in order
+        const message_log_index = state[STATE_NAME][MESSAGE_LOG_INDEX];
+        const message_log = state[STATE_NAME][MESSAGE_LOG];
+        for (let i = 0; i < message_log_index; i++) {
+            message_log.push(message_log.shift());
+        }
+        state[STATE_NAME][MESSAGE_LOG_INDEX] = 0;
+
+        // Look through the message log, newest first, for a message with matching name by the same character
+        for (let i = MESSAGE_LOG_SIZE - 1; i >= 0; i--) {
+            const historical_message = message_log[i];
+            if (historical_message === '') {
+                continue;
+            }
+
+            const historical_message_character = get_character(historical_message.who, /*ignore_failure=*/true);
+            if (historical_message_character === null) {
+                LOG.trace('reroll() - no character for message ' + i);
+                continue;
+            }
+            if (character.name !== historical_message_character.name) {
+                LOG.trace('reroll() - wrong character for message ' + i);
+                continue;
+            }
+
+            const historical_message_name = historical_message.content.match(/{{name=.*?}}/g);
+            if (historical_message_name === null) {
+                LOG.trace('reroll() - no name for message ' + i);
+                continue;
+            }
+
+            if (!historical_message_name[0].includes(message_name)) {
+                continue;
+            }
+
+            const historical_result_string = reconstruct_roll_result_string(historical_message);
+            if (!historical_result_string.includes(substring)) {
+                continue;
+            }
+
+            const revised_roll = '&{template:%s} %s'.format(
+                historical_message['rolltemplate'], historical_result_string.replace(substring, replacement_string));
+            LOG.info('reroll() - roll: %s'.format(revised_roll));
+            chat(character, revised_roll);
+            return;
+        }
+
+        raw_chat('API', 'Did not find prior message with name "%s" and roll string "%s"'.format(
+            message_name, substring));
+    }
+
+
     // ################################################################################################################
     // Basic setup and message handling
 
@@ -5789,12 +5979,15 @@ var Barbs = Barbs || (function () {
         'check_items': check_items,
         'item': roll_item,
         'ability': process_ability,
+        'reroll': reroll,
     };
 
 
     function handle_input(msg) {
-        // Regular API call
+        record_message(msg);
+
         if (msg.content.startsWith('!')) {
+            // Regular API call
             if (msg.content === '!ct next') {
                 // A masterful hack. CombatTracker is an API script that will update the turn order when a player
                 // clicks a button to say their turn is done. As this is the API modifying the turn order, it does
@@ -5849,12 +6042,23 @@ var Barbs = Barbs || (function () {
     const register_event_handlers = function () {
         // Set up permanent state
         if (!(STATE_NAME in state)) {
-            LOG.info('Created initial Barbs state');
             state[STATE_NAME] = {};
+            LOG.info('Created Barbs initial state');
         }
         if (!(LAST_TURN_ID in state[STATE_NAME])) {
-            LOG.info('Created Barbs last turn id state');
             state[STATE_NAME][LAST_TURN_ID] = '';
+            LOG.info('Created Barbs last turn id state');
+        }
+        if (!(MESSAGE_LOG in state[STATE_NAME])) {
+            state[STATE_NAME][MESSAGE_LOG] = [];
+            for (let i = 0; i < MESSAGE_LOG_SIZE; i++ ) {
+                state[STATE_NAME][MESSAGE_LOG].push('');
+            }
+            LOG.info('Created Barbs message log state');
+        }
+        if (!(MESSAGE_LOG_INDEX in state[STATE_NAME])) {
+            state[STATE_NAME][MESSAGE_LOG_INDEX] = 0;
+            LOG.info('Created Barbs message log index state');
         }
 
         // TODO: If we want to maintain persistent effects through API restarts, we would have to reconstruct handlers.
