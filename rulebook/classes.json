@@ -2496,7 +2496,7 @@
             "Consul": "The Consul branch provides options for utility both in and out of combat."
         },
         "passive": {
-            "Vastwood Sovereignty": "When you are in a forest or in a court of a governing body, you gain the following benefits: you may reroll any rolled dice once and take the better result; your skill checks' modifiers are ignored if negative and 50% increased if positive; your abilities' damage dice upgrade by one dice size, up to a limit of d20. While outside a forest or governing body, you may activate this passive to gain its benefits for an hour, and you may do this once per short rest."
+            "Vastwood Sovereignty": "When you are in a forest or in a court of a governing body, you gain the following benefits: you may reroll any rolled dice once and take the better result; your skill checks' modifiers are ignored if negative and 50% increased if positive; your abilities' damage dice upgrade by one dice size, up to a limit of d20. While outside a forest or governing body, you may activate this passive as a major action to gain its benefits for an hour, and you may do this once per short rest."
         },
         "abilities": [
             "Swordpoint Diplomacy",
