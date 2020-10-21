@@ -856,9 +856,12 @@ var Barbs = Barbs || (function () {
             const stamina_regen = eval(get_stat_roll_modifier(character, roll, Stat.STAMINA_REGENERATION));
             const mana_regen = eval(get_stat_roll_modifier(character, roll, Stat.MANA_REGENERATION));
 
-            const health_regenerated = Math.min(max_health - current_health, max_health * health_regen / 100);
-            const stamina_regenerated = Math.min(max_stamina - current_stamina, max_stamina * stamina_regen / 100);
-            const mana_regenerated = Math.min(max_mana - current_mana, max_mana * mana_regen / 100);
+            const health_regenerated = Math.round(Math.min(max_health - current_health,
+                                                           max_health * health_regen / 100));
+            const stamina_regenerated = Math.round(Math.min(max_stamina - current_stamina,
+                                                            max_stamina * stamina_regen / 100));
+            const mana_regenerated = Math.round(Math.min(max_mana - current_mana,
+                                                         max_mana * mana_regen / 100));
 
             const new_health = current_health + health_regenerated;
             const new_stamina = current_stamina + stamina_regenerated;
