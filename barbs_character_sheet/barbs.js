@@ -5755,6 +5755,8 @@ var Barbs = Barbs || (function () {
 
 
     function get_damages_from_message(msg) {
+        assert_not_null(msg, 'get_damages_from_message() msg');
+
         const parts = msg.content.match(/{{[A-Za-z]*=.*?}}/g);
         if (parts === null) {
             LOG.debug('No damage parts in the message');
@@ -5791,7 +5793,7 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function reconstruct_roll_result_string(msg) {
+    function reconstruct_roll_result_string(msg, handle_dice) {
         /* Example of what the API gets as a roll message. We want the content string, but with the placeholders filled
            in and with the actual results of rolls.
 
@@ -5819,7 +5821,7 @@ var Barbs = Barbs || (function () {
                         "resultType":"M",
                         "rolls":[
                             {"expr":96,"type":"M"}
-                            ],
+                        ],
                         "total":96,
                         "type":"V"
                     },
@@ -5831,7 +5833,7 @@ var Barbs = Barbs || (function () {
                         "resultType":"M",
                         "rolls":[
                             {"expr":91,"type":"M"}
-                            ],
+                        ],
                         "total":91,
                         "type":"V"
                     },
@@ -5872,6 +5874,9 @@ var Barbs = Barbs || (function () {
         }
         */
 
+        assert_not_null(msg, 'reconstruct_roll_result_string(), msg');
+        assert_not_null(handle_dice, 'reconstruct_roll_result_string(), handle_dice');
+
         let full_result_string = msg.content;
         const rolls = msg.inlinerolls;
 
@@ -5882,12 +5887,10 @@ var Barbs = Barbs || (function () {
                 const roll_result = roll_results[j];
                 if ('expr' in roll_result) {
                     roll_string += roll_result['expr'];
+
                 } else if ('dice' in roll_result) {
-                    const roll_values = [];
-                    for (let k = 0; k < roll_result['dice']; k++) {
-                        roll_values.push(roll_result['results'][k]['v']);
-                    }
-                    roll_string += roll_values.join('+');
+                    roll_string += handle_dice(roll_result);
+
                 } else {
                     assert(false, 'roll20 inlinerolls in message have unexpected content %s',
                            JSON.stringify(roll_results));
@@ -5903,14 +5906,10 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function reroll(msg) {
-        const character = get_character_from_msg(msg);
-        const pieces = msg.content.split(' ').slice(2).join(' ').split('|');
-        assert(pieces.length === 3, 'Wrong number of bar-separated pieces in reroll message');
-
-        const message_name = pieces[0];
-        const substring = pieces[1];
-        const replacement_string = pieces[2];
+    function inner_reroll(character, message_name, handle_matching_message) {
+        assert_type(character, Character, 'inner_reroll(), character');
+        assert_not_null(message_name, 'inner_reroll(), message_name');
+        assert_not_null(handle_matching_message, 'inner_reroll(), handle_matching_message');
 
         // Rotate message log so that index is 0, the oldest message is at index 0, and everything is in order
         const message_log_index = state[STATE_NAME][MESSAGE_LOG_INDEX];
@@ -5927,6 +5926,7 @@ var Barbs = Barbs || (function () {
                 continue;
             }
 
+            // Check that the requester matches the character that sent the past message
             const historical_message_character = get_character(historical_message.who, /*ignore_failure=*/true);
             if (historical_message_character === null) {
                 LOG.trace('reroll() - no character for message ' + i);
@@ -5937,30 +5937,99 @@ var Barbs = Barbs || (function () {
                 continue;
             }
 
-            const historical_message_name = historical_message.content.match(/{{name=.*?}}/g);
+            // Check that the past message name matches the given name
+            let historical_message_name = historical_message.content.match(/{{name=.*?}}/g);
             if (historical_message_name === null) {
                 LOG.trace('reroll() - no name for message ' + i);
                 continue;
             }
 
-            if (!historical_message_name[0].includes(message_name)) {
+            historical_message_name = historical_message_name[0];
+            if (!historical_message_name.toLowerCase().includes(message_name.toLowerCase())) {
                 continue;
             }
 
-            const historical_result_string = reconstruct_roll_result_string(historical_message);
-            if (!historical_result_string.includes(substring)) {
+            // We have a matching message. Do something with it to create the re-roll message
+            const revised_roll = handle_matching_message(historical_message);
+            if (revised_roll === null) {
                 continue;
             }
 
-            const revised_roll = '&{template:%s} %s'.format(
-                historical_message['rolltemplate'], historical_result_string.replace(substring, replacement_string));
-            LOG.info('reroll() - roll: %s'.format(revised_roll));
-            chat(character, revised_roll);
-            return;
+            // Append "(Re-roll)" to the name in the re-roll message
+            historical_message_name = historical_message_name.substring(2, historical_message_name.length - 2);
+            return revised_roll.replace(new RegExp(historical_message_name),
+                                        '%s (Re-roll)'.format(historical_message_name));
         }
 
-        raw_chat('API', 'Did not find prior message with name "%s" and roll string "%s"'.format(
-            message_name, substring));
+        return null;
+    }
+
+
+    function reroll(msg) {
+        assert_not_null(msg, 'reroll(), msg');
+
+        const character = get_character_from_msg(msg);
+        const pieces = msg.content.split(' ');
+        assert(pieces.length >= 3, 'Too few space-separated pieces in reroll message');
+        const reroll_type = pieces[2];
+
+        let message_name = null;
+        let revised_roll = null;
+
+        if (reroll_type === 'average') {
+            message_name = pieces.slice(3).join(' ');
+            revised_roll = inner_reroll(character, message_name, function (historical_message) {
+                const historical_result_string = reconstruct_roll_result_string(historical_message, function (roll_result) {
+                    const dice_sides = roll_result['sides'];
+                    const roll_values = [];
+                    for (let k = 0; k < roll_result['dice']; k++) {
+                        const roll_value = roll_result['results'][k]['v'];
+                        if (roll_value < (dice_sides + 1) / 2) {
+                            roll_values.push('d%s'.format(dice_sides));
+                        } else {
+                            roll_values.push(roll_value);
+                        }
+                    }
+                    return roll_values.join('+');
+                });
+
+                return '&{template:%s} %s'.format(historical_message['rolltemplate'], historical_result_string);
+            });
+
+        } else if (reroll_type === 'substitution') {
+            const parts = pieces.slice(3).join(' ').split('|');
+            assert(parts.length === 3, 'Wrong number of bar-separated pieces in substitution reroll message');
+            message_name = parts[0];
+            const substring = parts[1];
+            const replacement_string = parts[2];
+
+            revised_roll = inner_reroll(character, message_name, function (historical_message) {
+                const historical_result_string = reconstruct_roll_result_string(historical_message, function (roll_result) {
+                    const roll_values = [];
+                    for (let k = 0; k < roll_result['dice']; k++) {
+                        roll_values.push(roll_result['results'][k]['v']);
+                    }
+                    return roll_values.join('+');
+                });
+
+                if (!historical_result_string.includes(substring)) {
+                    return null;
+                }
+
+                return '&{template:%s} %s'.format(historical_message['rolltemplate'],
+                                                  historical_result_string.replace(substring, replacement_string));
+            });
+
+        } else {
+            assert(false, 'Unrecognized reroll type "%s", expected "average" or "substitution"', reroll_type);
+        }
+
+        if (revised_roll !== null) {
+            LOG.info('reroll() - roll: %s'.format(revised_roll));
+            chat(character, revised_roll);
+        } else {
+            raw_chat('API', 'Did not find prior message matching name "%s"'.format(message_name));
+        }
     }
 
 
