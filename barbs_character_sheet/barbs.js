@@ -4980,15 +4980,60 @@ var Barbs = Barbs || (function () {
     function vastwood_knight_sovereignty(character, ability, parameters) {
         add_persistent_effect(character, ability, parameters, character, Duration.ONE_HOUR(), Ordering(95),
                               RollType.ALL, RollTime.POST_CRIT, 1, function (character, roll, parameters) {
-            Object.keys(roll.damages).forEach(function (dmg_type) {
+            // Damage dice upgrade one size
+            const dmg_types = Object.keys(roll.damages);
+            for (let i = 0; i < dmg_types.length; i++) {
+                const dmg_type = dmg_types[i];
                 roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d12/g, 'd20');
                 roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d10/g, 'd12');
                 roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d8/g, 'd10');
                 roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d6/g, 'd8');
                 roll.damages[dmg_type] = roll.damages[dmg_type].replace(/d4/g, 'd6');
-            });
+            }
+
+            // Any rolls can be re-rolled, and you take the higher. So convert NdM into N instances of 2dMd1,
+            // added together
+            for (let i = 0; i < dmg_types.length; i++) {
+                const dmg_type = dmg_types[i];
+
+                let dmg_pieces = split_string(roll.damages[dmg_type], '+');
+                dmg_pieces = split_array(dmg_pieces, '-');
+                dmg_pieces = split_array(dmg_pieces, '*');
+                dmg_pieces = split_array(dmg_pieces, '/');
+                dmg_pieces = split_array(dmg_pieces, '^');
+                dmg_pieces = split_array(dmg_pieces, '(');
+                dmg_pieces = split_array(dmg_pieces, ')');
+
+                let revised_dmg = '';
+                for (let j = 0; j < dmg_pieces.length; j++) {
+                    let dmg_piece = dmg_pieces[j];
+                    if (!dmg_piece.includes('d')) {
+                        revised_dmg += dmg_piece;
+
+                    } else {
+                        let count = dmg_piece.split('d')[0];
+                        if (count === '') {
+                            count = 0;
+                        } else {
+                            count = parse_int(count);
+                        }
+                        const die = dmg_piece.split('d')[1];
+
+                        const temp = [];
+                        for (let k = 0; k < count; k++) {
+                            temp.push('2d%sd1'.format(die));
+                        }
+                        const revised_piece = '(%s)'.format(temp.join('+'));
+                        revised_dmg += revised_piece;
+                    }
+                }
+
+                roll.damages[dmg_type] = revised_dmg;
+            }
+
             return true;
         });
+
         print_ability_description(character, ability);
     }
 
