@@ -10804,7 +10804,7 @@
         "range": "Touch",
         "duration": "Instant",
         "description": [
-            "You send allies in different directions as an emergency evasive maneuver. You and any number of allies in range each teleport up to 2000 ft in random directions (corrected slightly to avoid barriers). Upon arrival to their destinations, each entity may select an empty space within 50 ft to appear in, immediately becoming Hidden upon arrival. When you cast this spell, you leave behind a field of hazy blackness for 1 minute, which obscures line of sight and prevents spellcasting within it. You may cast this spell as a reaction by spending 30 additional mana; if you do, this spell cannot be countered."
+            "You send allies in different directions as an emergency evasive maneuver. You and any number of allies in range each teleport up to 2000 ft in random directions (corrected slightly to avoid barriers). Upon arrival to their destinations, each entity may select an empty space within 50 ft to appear in, immediately becoming Hidden upon arrival. When you cast this spell, you leave behind a 25 ft square field of hazy blackness for 1 minute, which obscures line of sight and prevents spellcasting within it. You may cast this spell as a reaction by spending 30 additional mana; if you do, this spell cannot be countered."
         ],
         "tags": [
             "Spell",
