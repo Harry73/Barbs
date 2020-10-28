@@ -1292,21 +1292,43 @@ var Barbs = Barbs || (function () {
             return;
         }
 
+        // Attempt to organize affixes by roll type and time to minimize the number of actual effects we create
+        const organized_affixes = {};
         for (let i = 0; i < affixes.length; i++) {
             const affix = affixes[i];
+            const key = affix.roll_type + affix.roll_time;
 
-            const fake_ability = {
-                'name': '%s (%s)'.format(effect_name, affix.description),
-                'tags': [],
+            if (!(key in organized_affixes)) {
+                organized_affixes[key] = [];
             }
 
+            organized_affixes[key].push(affix);
+        }
+
+        const keys = Object.keys(organized_affixes);
+        for (let i = 0; i < keys.length; i++) {
+            const key = keys[i];
+            const affixes = organized_affixes[key];
+
+            let name = effect_name;
+            for (let j = 0; j < affixes.length; j++) {
+                name += ' (%s)'.format(affixes[j].description);
+            }
+
+            const fake_ability = {
+                'name': name,
+                'tags': [],
+            };
+
             const handler = function (char, roll, parameters) {
-                affix.apply(roll);
+                for (let j = 0; j < affixes.length; j++) {
+                    affixes[j].apply(roll);
+                }
                 return true;
             };
 
             inner_add_persistent_effect(character, fake_ability, /*parameters=*/[], character, duration, Ordering(),
-                                        affix.roll_type, affix.roll_time, /*count=*/1, effect_type, handler);
+                                        affixes[0].roll_type, affixes[0].roll_time, /*count=*/1, effect_type, handler);
         }
 
         chat(character, 'Created effect %s on %s'.format(effect_name, character.name));
