@@ -942,6 +942,7 @@ var Barbs = Barbs || (function () {
     // each other.
     //    * Order 10 (default timing)   : Arcanist - Magic Primer
     //    * Order 50 ------------------ : DEFAULT
+    //    * Order 80 (default timing)   : Enchanter - Perpetual Runology
     //    * Order 85 (default timing)   : Pinpoint Monk - Precision Pummeling
     //    * Order 90 (post-crit timing) : Assassin - Sharpen
     //    * Order 95 (post-crit timing) : Vastwood Knight - Vastwood Sovereignty
@@ -2100,6 +2101,16 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function enchanter_perpetual_runology(ability, roll, roll_time, parameter) {
+        if (roll_time !== RollTime.DEFAULT) {
+            return true;
+        }
+
+        roll.enchant_effectiveness = roll.enchant_effectiveness / 2;
+        return true;
+    }
+
+
     function juggernaut_what_doesnt_kill_you(ability, roll, roll_time, parameter) {
         if (roll_time !== RollTime.DEFAULT) {
             return true;
@@ -2368,6 +2379,7 @@ var Barbs = Barbs || (function () {
         'juggernaut': new ArbitraryParameter(juggernaut_what_doesnt_kill_you, Ordering()),
         'pinpoint': new ArbitraryParameter(pinpoint_monk_precision_pummeling, Ordering(85)),
         'pursued': new ArbitraryParameter(assassin_pursue_mark, Ordering()),
+        'enchanter': new ArbitraryParameter(enchanter_perpetual_runology, Ordering(80)),
         'spotting': new ArbitraryParameter(sniper_spotter, Ordering()),
         'stance': new ArbitraryParameter(thief_stance, Ordering()),
         'tide': new ArbitraryParameter(aquamancer_tide, Ordering()),

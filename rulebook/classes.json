@@ -1090,7 +1090,13 @@
             "Inscribe Book",
             "Bless Equipment",
             "Sphere of Safety"
-        ]
+        ],
+        "api": {
+            "description": "If you want an enchantment to continue after you break concentration, remove the current effect. Then re-cast the original ability an provide the \"enchanter\" parameter.",
+            "examples": [
+                "enchanter"
+            ]
+        }
     },
     {
         "type": "class",
