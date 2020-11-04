@@ -4900,7 +4900,7 @@ var Barbs = Barbs || (function () {
 
         add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
-            roll.add_stat_bonus(Stat.EVASION, 40);
+            roll.add_stat_multiplier(Stat.EVASION, 0.4);
             roll.add_stat_multiplier(Stat.AC, 0.4);
             return true;
         });
