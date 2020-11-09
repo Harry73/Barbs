@@ -5491,6 +5491,10 @@ var Barbs = Barbs || (function () {
                 'name': class_passive_name,
                 'description': [clazz['passive'][class_passive_name]],
                 'class': clazz['name'],
+                'action': 'N/A',
+                'cost': 'N/A',
+                'range': 'N/A',
+                'duration': 'N/A',
             };
         }
 
