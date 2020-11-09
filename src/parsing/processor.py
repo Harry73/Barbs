@@ -90,7 +90,7 @@ def process_data_file():
         f.write("ALL: new SkillObject('All', ''),\n")
 
     # Merge classes and abilities lists and dump to a file for the API
-    ability_keys_to_remove = ['type', 'branch', 'tier', 'action', 'cost', 'range', 'duration', 'api']
+    ability_keys_to_remove = ['type', 'branch', 'tier', 'api']
     class_keys_to_remove = [
         'preview', 'num_requirements', 'requirements', 'all_reqs_known', 'flavor_text', 'branches', 'api',
     ]

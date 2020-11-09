@@ -5468,16 +5468,9 @@ var Barbs = Barbs || (function () {
     };
 
 
-    function process_ability(msg) {
-        const character = get_character_from_msg(msg);
-        const pieces = msg.content.split(' ');
-        const options = pieces.slice(2).join(' ');
-        const option_pieces = options.split(';');
-        const class_name = option_pieces[0];
-        const ability_name = option_pieces[1];
-        let parameters = option_pieces.slice(2);
-        parameters = trim_all(parameters);
-        parameters = remove_empty(parameters);
+    function get_ability(class_name, ability_name) {
+        assert_not_null(class_name, 'get_ability(), class_name');
+        assert_not_null(ability_name, 'get_ability(), ability_name');
 
         // Get the ability or passive info from master class list
         if (!(class_name in classes)) {
@@ -5504,8 +5497,25 @@ var Barbs = Barbs || (function () {
         if (ability === null) {
             raw_chat('API', 'Unrecognized passive or ability "%s" for class "%s", wrong spelling?'.format(
                 ability_name, clazz.name));
-            return;
+            return null;
         }
+
+        return ability;
+    }
+
+
+    function process_ability(msg) {
+        const character = get_character_from_msg(msg);
+        const pieces = msg.content.split(' ');
+        const options = pieces.slice(2).join(' ');
+        const option_pieces = options.split(';');
+        const class_name = option_pieces[0];
+        const ability_name = option_pieces[1];
+        let parameters = option_pieces.slice(2);
+        parameters = trim_all(parameters);
+        parameters = remove_empty(parameters);
+
+        const ability = get_ability(class_name, ability_name);
 
         // See if we have a processor for this class + ability combo
         if (!(class_name in abilities_processors) || !(ability_name in abilities_processors[class_name])) {
@@ -5523,6 +5533,35 @@ var Barbs = Barbs || (function () {
 
         const processor = abilities_processors[class_name][ability_name];
         processor(character, ability, parameters);
+    }
+
+
+    function info_block(msg) {
+        const character = get_character_from_msg(msg);
+        const pieces = msg.content.split(' ');
+        const options = pieces.slice(2).join(' ');
+        const option_pieces = options.split(';');
+        const class_name = option_pieces[0];
+        const ability_name = option_pieces[1];
+
+        const ability = get_ability(class_name, ability_name);
+
+        // Borrowing the 5e info block format
+        const adjusted_format = [
+            '&{template:5eDefault}',
+            '{{spell=1}}',
+            '{{abilityshowinfoblock=1}}',
+            '{{abilityshowdesc=1}}',
+            '{{title=%s}}'.format(ability['name']),
+            '{{subheader=%s}}'.format(ability['class']),
+            '{{abilitycasttime=%s}}'.format(ability['action']),
+            '{{abilitycost=%s}}'.format(ability['cost']),
+            '{{abilityrange=%s}}'.format(ability['range']),
+            '{{abilityduration=%s}}'.format(ability['duration']),
+            '{{abilitydescription=%s}}'.format(ability['description']),
+        ];
+
+        chat(character, adjusted_format.join(' '));
     }
 
 
@@ -6130,6 +6169,7 @@ var Barbs = Barbs || (function () {
         'check_items': check_items,
         'item': roll_item,
         'ability': process_ability,
+        'info': info_block,
         'reroll': reroll,
     };
 

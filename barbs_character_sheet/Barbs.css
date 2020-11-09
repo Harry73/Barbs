@@ -807,6 +807,30 @@ img.sheet-icon {
     vertical-align: middle;
 }
 
+button[type="roll"].sheet-info-button:before {
+    content: " ";
+}
+
+button[type="roll"].sheet-info-button:hover {
+    background-image: url(https://i.imgur.com/ukcEthN.png), linear-gradient(#F3F3F3, #E6E6E6);
+    background-position: center center;
+}
+
+button[type="roll"].sheet-info-button {
+    background-image: url(https://i.imgur.com/ukcEthN.png), -webkit-linear-gradient(top, #fff, #e6e6e6);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 25px 25px;
+    height: 25px;
+    /*
+     * Setting content to empty string above drops width's normal inheritance. Buttons are usually sheet-col-1-24,
+     * so we'll use that explicit width here.
+     */
+    width: 13.7188px;
+    padding: 0 5px!important;
+    border: 1px solid black;
+}
+
 
 /* Death save checkboxes - FAIL */
 
@@ -896,7 +920,8 @@ input.sheet-death-save-success:checked + span.sheet-death-save-success-tab::befo
 
 .sheet-skill-roll {
     padding: 0 5px!important;
-    height: 29px;
+    border: 1px solid black;
+    height: 25px;
 }
 
 .sheet-skill-name {

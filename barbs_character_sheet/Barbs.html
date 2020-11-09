@@ -1768,7 +1768,9 @@
                         <div class="sheet-col-23-24">
                             <input type="text" placeholder="&nbsp;&nbsp;&nbsp;&nbsp;ability parameters and options" name="attr_ability_options"/>
                         </div>
-                        <div class="sheet-col-1-24">&nbsp;</div>
+                        <div class="sheet-col-1-24">
+                            <button class="sheet-info-button" type="roll" name="roll_class_ability" value="!barbs info $@{character_name}$ @{class_name};@{ability_name}"></button>
+                        </div>
                     </div>
 
                     <!-- add some separation between abilities -->
@@ -4118,10 +4120,6 @@
             {{/subheader2}}
         </div>
 
-        {{#emote}}
-        <p class="sheet-rt-emote">{{character_name}} {{emote}}</p>
-        {{/emote}}
-
         <div class="sheet-main-content">
             <!--Weapon based attacks-->
             {{#attack}}
@@ -4153,24 +4151,31 @@
             {{/rollWasCrit() attackadv}}
 
             <!--Spellcasting-->
-            {{#spellshowinfoblock}}
+            {{#abilityshowinfoblock}}
             <div class="sheet-row sheet-padb">
-                <div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-right-dotted"><span class="sheet-rt-key">Class</span>
-                    <br/><span class="sheet-rt-value">{{spellgainedfrom}}</span></div>
-                <div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-left-dotted"><span class="sheet-rt-key">Comp.</span>
-                    <br/><span class="sheet-rt-value">{{spellcomponents}}</span></div>
+                <div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-right-dotted">
+                    <span class="sheet-rt-key">Cast Time</span>
+                    <br/>
+                    <span class="sheet-rt-value">{{abilitycasttime}}</span>
+                </div>
+                <div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-left-dotted">
+                    <span class="sheet-rt-key">Cost</span>
+                    <br/>
+                    <span class="sheet-rt-value">{{abilitycost}}</span>
+                </div>
                 <div class="sheet-col-1 sheet-border-top-dotted"></div>
-                <div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-right-dotted"><span class="sheet-rt-key">Cast Time</span>
-                    <br/><span class="sheet-rt-value">{{spellcasttime}}</span></div>
-                <div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-left-dotted"><span class="sheet-rt-key">Duration</span>
-                    <br/><span class="sheet-rt-value">{{spellduration}}</span></div>
-                <div class="sheet-col-1 sheet-border-top-dotted"></div>
-                <div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-right-dotted"><span class="sheet-rt-key">Target/AoE</span>
-                    <br/><span class="sheet-rt-value">{{spelltarget}}</span></div>
-                <div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-left-dotted"><span class="sheet-rt-key">Range</span>
-                    <br/><span class="sheet-rt-value">{{spellrange}}</span></div>
+                <div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-right-dotted">
+                    <span class="sheet-rt-key">Range</span>
+                    <br/>
+                    <span class="sheet-rt-value">{{abilityrange}}</span>
+                </div>
+                <div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center sheet-border-left-dotted">
+                    <span class="sheet-rt-key">Duration</span>
+                    <br/>
+                    <span class="sheet-rt-value">{{abilityduration}}</span>
+                </div>
             </div>
-            {{/spellshowinfoblock}}
+            {{/abilityshowinfoblock}}
 
             {{#spellshowattack}}
             <div class="sheet-row">
@@ -4232,12 +4237,12 @@
             </div>
             {{/spellshowsavethrow}}
 
-            {{#spellshowdesc}}
+            {{#abilityshowdesc}}
             <div class="sheet-row">
-                <div class="sheet-col-1 sheet-padl sheet-padr sheet-rt-key">Spell Description</div>
-                <div class="sheet-col-1 sheet-padl sheet-padr sheet-rt-value">{{spelldescription}}</div>
+                <div class="sheet-col-1 sheet-padl sheet-padr sheet-rt-key">Description</div>
+                <div class="sheet-col-1 sheet-padl sheet-padr sheet-rt-value">{{abilitydescription}}</div>
             </div>
-            {{/spellshowdesc}}
+            {{/abilityshowdesc}}
 
             {{#spellshowhigherlvl}}
             <div class="sheet-row">
@@ -4474,12 +4479,12 @@
 
             <!-- END roll option templates -->
             <!-- Class action additions -->
-            {{#showclassactions}} {{#allprops() showclassactions character_name save title subheader subheaderright subheader2 subheaderright2 rollname roll rolladv emote deathsave weapon attack attackadv damage critdamage spell spellshowinfoblock spellshowdesc spelldescription spellshowhigherlvl spellhigherlevel spellshowattack spellattack spellshowattackadv spellattackadv spellshowsavethrow spellsavedc spellsavestat spellsavesuccess spellshowhealing spellhealing spellshowdamage spelldamage spellcancrit spellcritdamage spellshoweffects spelleffect spellcasttime spellduration spelltarget spellrange spellgainedfrom spellcomponents ability roll1 roll2 simple showadvroll noadvroll rollhasadv rollhasdisadv math weapondamage weaponcritdamage debug}}
+            {{#showclassactions}} {{#allprops() showclassactions character_name save title subheader subheaderright subheader2 subheaderright2 rollname roll rolladv deathsave weapon attack attackadv damage critdamage spell abilityshowinfoblock abilityshowdesc abilitydescription spellshowhigherlvl spellhigherlevel spellshowattack spellattack spellshowattackadv spellattackadv spellshowsavethrow spellsavedc spellsavestat spellsavesuccess spellshowhealing spellhealing spellshowdamage spelldamage spellcancrit spellcritdamage spellshoweffects spelleffect abilitycasttime spellduration abilityrange abilityduration spellgainedfrom abilitycost ability roll1 roll2 simple showadvroll noadvroll rollhasadv rollhasdisadv math weapondamage weaponcritdamage debug}}
             <div class="sheet-row">
                 <div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">{{key}}</div>
                 <div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{value}}</div>
             </div>
-            {{/allprops() showclassactions character_name save title subheader subheaderright subheader2 subheaderright2 rollname roll rolladv emote deathsave weapon attack attackadv damage critdamage spell spellshowinfoblock spellshowdesc spelldescription spellshowhigherlvl spellhigherlevel spellshowattack spellattack spellshowattackadv spellattackadv spellshowsavethrow spellsavedc spellsavestat spellsavesuccess spellshowhealing spellhealing spellshowdamage spelldamage spellcancrit spellcritdamage spellshoweffects spelleffect spellcasttime spellduration spelltarget spellrange spellgainedfrom spellcomponents ability roll1 roll2 simple showadvroll noadvroll rollhasadv rollhasdisadv math weapondamage weaponcritdamage debug}} {{/showclassactions}}
+            {{/allprops() showclassactions character_name save title subheader subheaderright subheader2 subheaderright2 rollname roll rolladv deathsave weapon attack attackadv damage critdamage spell abilityshowinfoblock abilityshowdesc abilitydescription spellshowhigherlvl spellhigherlevel spellshowattack spellattack spellshowattackadv spellattackadv spellshowsavethrow spellsavedc spellsavestat spellsavesuccess spellshowhealing spellhealing spellshowdamage spelldamage spellcancrit spellcritdamage spellshoweffects spelleffect abilitycasttime spellduration abilityrange abilityduration spellgainedfrom abilitycost ability roll1 roll2 simple showadvroll noadvroll rollhasadv rollhasdisadv math weapondamage weaponcritdamage debug}} {{/showclassactions}}
             <!--Multi attack-->
             {{#multiattack}}
             <!--Attack 1-->
@@ -4593,12 +4598,12 @@
             </div>
             {{/rollWasCrit() mattack5adv}} {{/multiattack}}
             <!--Outputall-->
-            {{#outputall}} {{#allprops() outputall title subheader subheaderright subheader2 subheaderright2 emote weapon spell ability save deathsave}}
+            {{#outputall}} {{#allprops() outputall title subheader subheaderright subheader2 subheaderright2 weapon spell ability save deathsave}}
             <div class="sheet-row">
                 <div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">{{key}}</div>
                 <div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{value}}</div>
             </div>
-            {{/allprops() outputall title subheader subheaderright subheader2 subheaderright2 emote weapon spell ability save deathsave}} {{/outputall}}
+            {{/allprops() outputall title subheader subheaderright subheader2 subheaderright2 weapon spell ability save deathsave}} {{/outputall}}
             <!--DEBUG-->
             {{#debug}} {{#allprops()}}
             <div class="sheet-row">
