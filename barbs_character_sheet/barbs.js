@@ -5473,10 +5473,7 @@ var Barbs = Barbs || (function () {
         assert_not_null(ability_name, 'get_ability(), ability_name');
 
         // Get the ability or passive info from master class list
-        if (!(class_name in classes)) {
-            raw_chat('API', 'Unrecognized class "%s", wrong spelling?'.format(class_name));
-            return;
-        }
+        assert(class_name in classes, 'Unrecognized class "%s", wrong spelling?', class_name);
 
         const clazz = classes[class_name];
         const class_abilities = clazz['abilities'];
@@ -5498,12 +5495,8 @@ var Barbs = Barbs || (function () {
             };
         }
 
-        if (ability === null) {
-            raw_chat('API', 'Unrecognized passive or ability "%s" for class "%s", wrong spelling?'.format(
-                ability_name, clazz.name));
-            return null;
-        }
-
+        assert(ability !== null, 'Unrecognized passive or ability "%s" for class "%s", wrong spelling?',
+               ability_name, clazz.name);
         return ability;
     }
 
