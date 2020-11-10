@@ -2520,6 +2520,8 @@ var Barbs = Barbs || (function () {
         parameters.push('skip_applying_weapons');
         add_item_to_roll(item, roll, RollTime.DEFAULT);
 
+        initiate_sum_all(parameters);
+
         roll_crit(item, roll, parameters, function (crit_section) {
             add_item_to_roll(item, roll, RollTime.POST_CRIT);
             do_roll(character, item, roll, parameters, crit_section);
@@ -2593,12 +2595,6 @@ var Barbs = Barbs || (function () {
         roll_crit(ability, roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
         });
-    }
-
-
-    function aquamancer_draught_of_vigor(character, ability, parameters) {
-        // NOTE: It's a "pick two of these effects" case
-        chat(character, 'Not yet implemented');
     }
 
 
@@ -2817,6 +2813,17 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function assassin_focus(character, ability, parameters) {
+        add_persistent_effect(character, ability, parameters, character, Duration.SINGLE_USE(), Ordering(),
+                              RollType.ALL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
+                roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, 30);
+                return true;
+            });
+
+        print_ability_description(character, ability);
+    }
+
+
     function assassin_massacre(character, ability, parameters) {
         const parameter = get_parameter('division', parameters);
         if (parameter === null) {
@@ -2907,17 +2914,6 @@ var Barbs = Barbs || (function () {
         add_persistent_effect(character, modified_name, parameters, character, Duration.SINGLE_USE(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
             roll.add_effect('Hidden');
-            return true;
-        });
-
-        print_ability_description(character, ability);
-    }
-
-
-    function assassin_focus(character, ability, parameters) {
-        add_persistent_effect(character, ability, parameters, character, Duration.SINGLE_USE(), Ordering(),
-                              RollType.ALL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
-            roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, 30);
             return true;
         });
 
@@ -3224,80 +3220,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function destroyer_slam(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('4d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll, parameters);
-        roll.add_effect('Inflict Physical Vulnerability equal to 10% + X%, where X is the target\'s current Physical Vulnerability CR:[[1d100]]');
-
-        roll_crit(ability, roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
-    function destroyer_mortal_strike(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('5d10', Damage.PHYSICAL);
-        roll.add_effect('Shred 25% AC [[d100]]');
-        roll_crit(ability, roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
-    function destroyer_execute(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('6d10', Damage.PHYSICAL);
-        roll.add_effect('Lethality equal to target\'s missing health after this damage');
-        roll_crit(ability, roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
-    function destroyer_willbreaker(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('8d10', Damage.PHYSICAL);
-        roll.add_effect('Inflict condition that prevents reactions to dash away from or block your attacks [[d100]]');
-        roll_crit(ability, roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
-    function destroyer_whirlwind(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('5d10', Damage.PHYSICAL);
-        roll.add_effect('Targets with full health take double damage');
-        roll_crit(ability, roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
-    function destroyer_rampage(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('6d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll, parameters);
-        roll.add_effect('Knock targets prone');
-
-        roll_crit(ability, roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
-    function destroyer_leaping_crush(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('8d10', Damage.PHYSICAL);
-        roll.add_effect('Knock up enemies [[d100]]');
-        roll_crit(ability, roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
     function destroyer_challenge(character, ability, parameters) {
         let num_targets = get_parameter('targets', parameters);
         let buff = get_parameter('buff', parameters);
@@ -3338,6 +3260,80 @@ var Barbs = Barbs || (function () {
         } else {
             chat(character, '"targets" or "buff" parameter should be specified');
         }
+    }
+
+
+    function destroyer_execute(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('6d10', Damage.PHYSICAL);
+        roll.add_effect('Lethality equal to target\'s missing health after this damage');
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function destroyer_leaping_crush(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('8d10', Damage.PHYSICAL);
+        roll.add_effect('Knock up enemies [[d100]]');
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function destroyer_mortal_strike(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d10', Damage.PHYSICAL);
+        roll.add_effect('Shred 25% AC [[d100]]');
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function destroyer_rampage(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('6d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll, parameters);
+        roll.add_effect('Knock targets prone');
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function destroyer_slam(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('4d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll, parameters);
+        roll.add_effect('Inflict Physical Vulnerability equal to 10% + X%, where X is the target\'s current Physical Vulnerability CR:[[1d100]]');
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function destroyer_whirlwind(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d10', Damage.PHYSICAL);
+        roll.add_effect('Targets with full health take double damage');
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function destroyer_willbreaker(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('8d10', Damage.PHYSICAL);
+        roll.add_effect('Inflict condition that prevents reactions to dash away from or block your attacks [[d100]]');
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -3763,6 +3759,89 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function evangelist_anthos_pagetou_khilion_eton(character, ability, parameters) {
+        let count = 1;
+        if (get_parameter('me', parameters) !== null) {
+            count = 2;
+        }
+
+        let num_enemies = get_parameter('enemies', parameters);
+        assert(num_enemies !== null, '"enemies" parameter is required');
+        num_enemies = parse_int(num_enemies);
+        if (Number.isNaN(num_enemies)) {
+            chat(character, 'Value given for "enemies" parameter must be numeric');
+            return;
+        }
+
+        let secret_roll = '';
+        for (let i = 0; i < num_enemies; i++) {
+            secret_roll += '[[%sd6]]'.format(count);
+        }
+
+        hidden_roll(secret_roll, function (value_strings) {
+            const effects = [];
+            for (let i = 0; i < value_strings.length; i++) {
+                const value_string = value_strings[i];
+                const values = value_string.split('+');
+                const effect_format = '<li>CR: [[d100]]<br/>Flower rolls: %s<br/>%s</li>';
+
+                // Figure out what effect this would have, assuming the enemy fails the CR check
+                let flower_effect = '';
+                if (values.includes('1') || values.includes('2')) {
+                    flower_effect = 'Cursed, Slowed, Confused';
+                } else if (values.includes('3') || values.includes('4')) {
+                    flower_effect = 'May not move away from flower';
+                } else if (values.includes('5') || values.includes('6')) {
+                    flower_effect = 'Must use Move Action to move towards flower';
+                }
+
+                // Build the flower rolls string
+                const revised_values = [];
+                for (let j = 0; j < values.length; j++) {
+                    revised_values.push('[[%s]]'.format(values[j]));
+                }
+                const flower_rolls = revised_values.join(' ');
+
+                effects.push(effect_format.format(flower_rolls, flower_effect));
+            }
+
+            const msg = roll_format.format(ability.name, /*damage_section=*/'', /*crit_section=*/'',
+                                           /*combo_section=*/'', effects_section_format.format(effects.join('<br>')));
+            chat(character, msg);
+        });
+    }
+
+
+    function evangelist_krystalline_basileia(character, ability, parameters) {
+        const conditions_paramater = get_parameter('conditions', parameters);
+        if (conditions_paramater === null) {
+            chat(character, '"conditions" parameter is missing');
+        }
+
+        const conditions_list = remove_empty(trim_all(conditions_paramater.split(',')));
+        if (conditions_list.length !== 2) {
+            chat(character, 'Select 2 conditions');
+            return;
+        }
+
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('6d8', Damage.ICE);
+        roll.add_damage('5d10', Damage.DARK);
+
+        for (let i = 0; i < 2; i++) {
+            if (conditions_list[i].toLowerCase().includes('curse')){
+                roll.add_effect(conditions_list[i] + ': [[1d100]] [[1d100]]');
+            } else {
+                roll.add_effect(conditions_list[i] + ': [[1d100]]');
+            }
+        }
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
     function evangelist_magia_erebea(character, ability, parameters) {
         // Allows you to dispel an active Magia Erebea
         const dispel = get_parameter('dispel', parameters);
@@ -3828,86 +3907,43 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function evangelist_krystalline_basileia(character, ability, parameters) {
-        const conditions_paramater = get_parameter('conditions', parameters);
-        if (conditions_paramater === null) {
-            chat(character, '"conditions" parameter is missing');
-        }
+    function juggernaut_hostility(character, ability, parameters) {
+        const concentration = get_parameter('conc', parameters);
 
-        const conditions_list = remove_empty(trim_all(conditions_paramater.split(',')));
-        if (conditions_list.length !== 2) {
-            chat(character, 'Select 2 conditions');
-            return;
-        }
+        add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
+                              RollType.PHYSICAL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
+                if (concentration !== null) {
+                    roll.add_hidden_stat(HiddenStat.LIFESTEAL, 25);
+                } else {
+                    roll.add_hidden_stat(HiddenStat.LIFESTEAL, 15);
+                }
 
-        const roll = new Roll(character, RollType.MAGIC);
-        roll.add_damage('6d8', Damage.ICE);
-        roll.add_damage('5d10', Damage.DARK);
+                return true;
+            });
 
-        for (let i = 0; i < 2; i++) {
-            if (conditions_list[i].toLowerCase().includes('curse')){
-                roll.add_effect(conditions_list[i] + ': [[1d100]] [[1d100]]');
-            } else {
-                roll.add_effect(conditions_list[i] + ': [[1d100]]');
-            }
-        }
-
-        roll_crit(ability, roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
+        print_ability_description(character, ability);
     }
 
 
-    function evangelist_anthos_pagetou_khilion_eton(character, ability, parameters) {
-        let count = 1;
-        if (get_parameter('me', parameters) !== null) {
-            count = 2;
-        }
+    function juggernaut_tachycardia(character, ability, parameters) {
+        add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
+                              RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
+                roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 30);
 
-        let num_enemies = get_parameter('enemies', parameters);
-        assert(num_enemies !== null, '"enemies" parameter is required');
-        num_enemies = parse_int(num_enemies);
-        if (Number.isNaN(num_enemies)) {
-            chat(character, 'Value given for "enemies" parameter must be numeric');
-            return;
-        }
+                if (RollType.is_physical(roll.roll_type)) {
+                    roll.add_hidden_stat(HiddenStat.REACH, 5);
+                }
+                roll.add_hidden_stat(HiddenStat.AC_PENETRATION, 50);
 
-        let secret_roll = '';
-        for (let i = 0; i < num_enemies; i++) {
-            secret_roll += '[[%sd6]]'.format(count);
-        }
-
-        hidden_roll(secret_roll, function (value_strings) {
-            const effects = [];
-            for (let i = 0; i < value_strings.length; i++) {
-                const value_string = value_strings[i];
-                const values = value_string.split('+');
-                const effect_format = '<li>CR: [[d100]]<br/>Flower rolls: %s<br/>%s</li>';
-
-                // Figure out what effect this would have, assuming the enemy fails the CR check
-                let flower_effect = '';
-                if (values.includes('1') || values.includes('2')) {
-                    flower_effect = 'Cursed, Slowed, Confused';
-                } else if (values.includes('3') || values.includes('4')) {
-                    flower_effect = 'May not move away from flower';
-                } else if (values.includes('5') || values.includes('6')) {
-                    flower_effect = 'Must use Move Action to move towards flower';
+                const parameter = get_parameter('low_health', parameters);
+                if (parameter !== null) {
+                    roll.add_multiplier(1, Damage.PHYSICAL, character.name);
                 }
 
-                // Build the flower rolls string
-                const revised_values = [];
-                for (let j = 0; j < values.length; j++) {
-                    revised_values.push('[[%s]]'.format(values[j]));
-                }
-                const flower_rolls = revised_values.join(' ');
+                return true;
+            });
 
-                effects.push(effect_format.format(flower_rolls, flower_effect));
-            }
-
-            const msg = roll_format.format(ability.name, /*damage_section=*/'', /*crit_section=*/'',
-                                           /*combo_section=*/'', effects_section_format.format(effects.join('<br>')));
-            chat(character, msg);
-        });
+        print_ability_description(character, ability);
     }
 
 
@@ -3920,68 +3956,6 @@ var Barbs = Barbs || (function () {
 
         roll_crit(ability, roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
-    function juggernaut_hostility(character, ability, parameters) {
-        const concentration = get_parameter('conc', parameters);
-
-        add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
-                              RollType.PHYSICAL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
-            if (concentration !== null) {
-                roll.add_hidden_stat(HiddenStat.LIFESTEAL, 25);
-            } else {
-                roll.add_hidden_stat(HiddenStat.LIFESTEAL, 15);
-            }
-
-            return true;
-        });
-
-        print_ability_description(character, ability);
-    }
-
-
-    function juggernaut_tachycardia(character, ability, parameters) {
-        add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
-                              RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
-            roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 30);
-
-            if (RollType.is_physical(roll.roll_type)) {
-                roll.add_hidden_stat(HiddenStat.REACH, 5);
-            }
-            roll.add_hidden_stat(HiddenStat.AC_PENETRATION, 50);
-
-            const parameter = get_parameter('low_health', parameters);
-            if (parameter !== null) {
-                roll.add_multiplier(1, Damage.PHYSICAL, character.name);
-            }
-
-            return true;
-        });
-
-        print_ability_description(character, ability);
-    }
-
-
-    function ki_monk_spirit_punch(character, ability, parameters) {
-        const monk_dice = character.get_monk_dice();
-
-        hidden_roll('[[4d%s]]'.format(monk_dice), function (value_strings) {
-            const physical_damage = value_strings[0];
-            const roll = new Roll(character, RollType.PHYSICAL);
-            roll.add_damage(physical_damage, Damage.PHYSICAL);
-            add_scale_damage(character, roll, parameters);
-            roll.add_effect('Gain [[%s]] Ki'.format(physical_damage));
-
-            const spent_ki = get_parameter('ki', parameters);
-            if (spent_ki !== null) {
-                roll.add_damage('4d%s'.format(monk_dice), Damage.PSYCHIC);
-            }
-
-            roll_crit(ability, roll, parameters, function (crit_section) {
-                do_roll(character, ability, roll, parameters, crit_section);
-            });
         });
     }
 
@@ -4015,6 +3989,39 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function ki_monk_find_center(character, ability, parameters) {
+        const monk_dice = character.get_monk_dice();
+        const roll = '<li>Gain Ki: [[3d%s]]</li>'.format(monk_dice);
+
+        const effects_section = effects_section_format.format(roll);
+        const msg = roll_format.format(ability.name, /*damage_section=*/'', /*crit_section=*/'', /*combo_section=*/'',
+                                       effects_section);
+        chat(character, msg);
+    }
+
+
+    function ki_monk_spirit_punch(character, ability, parameters) {
+        const monk_dice = character.get_monk_dice();
+
+        hidden_roll('[[4d%s]]'.format(monk_dice), function (value_strings) {
+            const physical_damage = value_strings[0];
+            const roll = new Roll(character, RollType.PHYSICAL);
+            roll.add_damage(physical_damage, Damage.PHYSICAL);
+            add_scale_damage(character, roll, parameters);
+            roll.add_effect('Gain [[%s]] Ki'.format(physical_damage));
+
+            const spent_ki = get_parameter('ki', parameters);
+            if (spent_ki !== null) {
+                roll.add_damage('4d%s'.format(monk_dice), Damage.PSYCHIC);
+            }
+
+            roll_crit(ability, roll, parameters, function (crit_section) {
+                do_roll(character, ability, roll, parameters, crit_section);
+            });
+        });
+    }
+
+
     function ki_monk_spirit_shotgun(character, ability, parameters) {
         const monk_dice = character.get_monk_dice();
 
@@ -4030,17 +4037,6 @@ var Barbs = Barbs || (function () {
         roll_crit(ability, roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
         });
-    }
-
-
-    function ki_monk_find_center(character, ability, parameters) {
-        const monk_dice = character.get_monk_dice();
-        const roll = '<li>Gain Ki: [[3d%s]]</li>'.format(monk_dice);
-
-        const effects_section = effects_section_format.format(roll);
-        const msg = roll_format.format(ability.name, /*damage_section=*/'', /*crit_section=*/'', /*combo_section=*/'',
-                                       effects_section);
-        chat(character, msg);
     }
 
 
@@ -4544,20 +4540,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function pyromancer_magma_spray(character, ability, parameters) {
-        const roll = new Roll(character, RollType.MAGIC);
-        roll.add_damage('4d12', Damage.FIRE);
-        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.FIRE);
-        roll.add_effect('Hit enemies 15 ft from you are inflicted with Burn X, where X is equal to the amount of damage rolled CR:[[1d100]]');
-        roll.add_effect('-5% Fire MR CR:[[1d100]]');
-        roll.add_effect('+5% Fire Vulnerability CR:[[1d100]]');
-
-        roll_crit(ability, roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
     function pyromancer_devour_in_flames(character, ability, parameters) {
         const roll = new Roll(character, RollType.MAGIC);
 
@@ -4574,11 +4556,25 @@ var Barbs = Barbs || (function () {
         roll_crit(ability, roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section, /*do_finalize=*/true,
                     /*last_minute_handler=*/function(r) {
-                        r.add_effect('Fire magic damage multiplier: ' + eval(r.get_multiplier_string(Damage.FIRE)));
-                    });
+                    r.add_effect('Fire magic damage multiplier: ' + eval(r.get_multiplier_string(Damage.FIRE)));
+                });
         });
 
         print_ability_description(character, ability);
+    }
+
+
+    function pyromancer_magma_spray(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('4d12', Damage.FIRE);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.FIRE);
+        roll.add_effect('Hit enemies 15 ft from you are inflicted with Burn X, where X is equal to the amount of damage rolled CR:[[1d100]]');
+        roll.add_effect('-5% Fire MR CR:[[1d100]]');
+        roll.add_effect('+5% Fire Vulnerability CR:[[1d100]]');
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -4787,9 +4783,9 @@ var Barbs = Barbs || (function () {
     function soldier_double_time(character, ability, parameters) {
         add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
-            roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 20);
-            return true;
-        });
+                roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 20);
+                return true;
+            });
 
         print_ability_description(character, ability);
     }
@@ -4799,6 +4795,18 @@ var Barbs = Barbs || (function () {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('4d10', Damage.PHYSICAL);
         add_scale_damage(character, roll, parameters);
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function soldier_shield_bash(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('4d6', Damage.PHYSICAL);
+        add_scale_damage(character, roll, parameters);
+        roll.add_effect('If you roll 18 on damage dice, also Stun target');
 
         roll_crit(ability, roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
@@ -5129,18 +5137,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function warlord_hookshot(character, ability, parameters) {
-        const roll = new Roll(character, RollType.PHYSICAL);
-        roll.add_damage('5d10', Damage.PHYSICAL);
-        add_scale_damage(character, roll, parameters);
-        roll.add_effect('Pull target 20 ft towards you');
-
-        roll_crit(ability, roll, parameters, function (crit_section) {
-            do_roll(character, ability, roll, parameters, crit_section);
-        });
-    }
-
-
     function warrior_fight_me(character, ability, parameters) {
         const target = get_parameter('target', parameters);
         if (target === null) {
@@ -5157,6 +5153,18 @@ var Barbs = Barbs || (function () {
         do_roll(character, ability, roll, parameters, '');
         print_ability_description(character, ability);
 
+    }
+
+
+    function warlord_hookshot(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('5d10', Damage.PHYSICAL);
+        add_scale_damage(character, roll, parameters);
+        roll.add_effect('Pull target 20 ft towards you');
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
     }
 
 
@@ -5219,72 +5227,67 @@ var Barbs = Barbs || (function () {
 
     const abilities_processors = {
         'Air Duelist': {
-            'Arc of Air': air_duelist_arc_of_air,
             'Cutting Winds': air_duelist_cutting_winds,
             'Mistral Bow': air_duelist_mistral_bow,
+            'Arc of Air': air_duelist_arc_of_air,
         },
         'Aquamancer': {
-            'Baptize': aquamancer_baptize,
             'Tidal Wave': aquamancer_tidal_wave,
-            'Draught of Vigor': aquamancer_draught_of_vigor,
+            'Baptize': aquamancer_baptize,
         },
         'Arcane Archer': {
+            'Surefire Shot': arcane_archer_surefire_shot,
+            'Swelling Shot': arcane_archer_swelling_shot,
             'Broadhead Arrow': arcane_archer_broadhead_arrow,
             'Elusive Hunter': arcane_archer_elusive_hunter,
             'Persistent Hunter': arcane_archer_persistent_hunter,
-            'Surefire Shot': arcane_archer_surefire_shot,
-            'Swelling Shot': arcane_archer_swelling_shot,
         },
         'Arcanist': {
             'Magic Dart': arcanist_magic_dart,
             'Magic Primer': arcanist_magic_primer,
         },
         'Assassin': {
-            'Backstab': assassin_backstab,
-            'Focus': assassin_focus,
-            'Haste': print_ability_description,
-            'Massacre': assassin_massacre,
-            'Pursue': print_ability_description,
-            'Sharpen': assassin_sharpen,
-            'Skyfall': assassin_skyfall,
             'Vanish': assassin_vanish,
+            'Pursue': print_ability_description,
+            'Focus': assassin_focus,
+            'Sharpen': assassin_sharpen,
+            'Haste': print_ability_description,
+            'Backstab': assassin_backstab,
+            'Skyfall': assassin_skyfall,
+            'Massacre': assassin_massacre,
         },
         'Captain': {
-            'Inspirational Speech': captain_inspirational_speech,
             'Blitzkrieg': captain_blitzkrieg,
+            'Inspirational Speech': captain_inspirational_speech,
         },
         'Champion': {
-            'Disarming Blow': champion_disarming_blow,
             'Master of Arms': champion_master_of_arms,
-            'Piercing Blow': champion_piercing_blow,
-            'Skull Bash': champion_skull_bash,
             'Slice and Dice': champion_slice_and_dice,
+            'Skull Bash': champion_skull_bash,
+            'Piercing Blow': champion_piercing_blow,
+            'Disarming Blow': champion_disarming_blow,
         },
         'Conjurer': {
             'Web': print_ability_description,
         },
         'Cryomancer': {
+            'Frostbite': cryomancer_frostbite,
+            'Ice Spear': cryomancer_ice_spear,
+            'Glacial Crash': cryomancer_glacial_crash,
             'Aurora Beam': cryomancer_aurora_beam,
-            'Extinguish': print_ability_description,
             'Flash Freeze': print_ability_description,
             'Freezing Wind': print_ability_description,
-            'Frozen Arena': print_ability_description,
-            'Frostbite': cryomancer_frostbite,
-            'Glacial Crash': cryomancer_glacial_crash,
-            'Heart of Ice': print_ability_description,
             'Hypothermia': print_ability_description,
+            'Heart of Ice': print_ability_description,
             'Ice Crafting': print_ability_description,
-            'Ice Spear': cryomancer_ice_spear,
+            'Extinguish': print_ability_description,
+            'Frozen Arena': print_ability_description,
         },
         'Daggerspell': {
-            'Exposing Tear': daggerspell_exposing_tear,
             'Fadeaway Slice': daggerspell_fadeaway_slice,
-            'Hidden Blade': daggerspell_hidden_blade,
             'Shieldbreaker': daggerspell_shieldbreaker,
-        },
-        'Demon Hunter': {
-            // TODO May want a "marked" parameter for Essence Scatter
-            'Essence Scatter': print_ability_description,
+            'Exposing Tear': daggerspell_exposing_tear,
+            'Hidden Blade': daggerspell_hidden_blade,
         },
         'Destroyer': {
             'Slam': destroyer_slam,
@@ -5317,9 +5320,15 @@ var Barbs = Barbs || (function () {
             'Spark Bolt': dynamancer_spark_bolt,
         },
         'Enchanter': {
-            'Mint Coinage': print_ability_description,
             'Modify Weapon': enchanter_modify_weapon,
+            'Bless Equipment': print_ability_description,
             'Reconstruct Barrier': print_ability_description,
+            'Rebuild Floor': print_ability_description,
+            'Secure Building': print_ability_description,
+            'Sphere of Safety': print_ability_description,
+            'Mint Coinage': print_ability_description,
+            'Enhance Vehicle': print_ability_description,
+            'Inscribe Book': print_ability_description,
         },
         'Evangelist': {
             'Magia Erebea': evangelist_magia_erebea,
@@ -5329,24 +5338,28 @@ var Barbs = Barbs || (function () {
         'Juggernaut': {
             'Wild Swing': juggernaut_wild_swing,
             'Hostility': juggernaut_hostility,
-            'Tachycardia': juggernaut_tachycardia,
             'Blood For Vigor': print_ability_description,
+            'Tachycardia': juggernaut_tachycardia,
         },
         'Ki Monk': {
             'Spirit Punch': ki_monk_spirit_punch,
             'Drain Punch': ki_monk_drain_punch,
             'Spirit Shotgun': ki_monk_spirit_shotgun,
             'Find Center': ki_monk_find_center,
+            'Find Stability': print_ability_description,
+            'Find Solace': print_ability_description,
+            'Find Strength': print_ability_description,
         },
         'Lightning Duelist': {
-            'Arc Lightning': lightning_duelist_arc_lightning,
             'Blade Storm': lightning_duelist_blade_storm,
-            'Shock Tendrils': lightning_duelist_shock_tendrils,
             'Shocking Parry': lightning_duelist_shocking_parry,
+            'Shock Tendrils': lightning_duelist_shock_tendrils,
+            'Arc Lightning': lightning_duelist_arc_lightning,
             'Sword of Lightning': lightning_duelist_sword_of_lightning,
         },
         'Luxomancer': {
             'Light Touch': luxomancer_light_touch,
+            'Dancing Lights': print_ability_description,
         },
         'Martial Artist': {
             'Choke Hold': martial_artist_choke_hold,
@@ -5358,26 +5371,26 @@ var Barbs = Barbs || (function () {
             'Scatter Shards': mirror_mage_scatter_shards,
         },
         'Mistguard': {
-            'Annul': print_ability_description,
-            'Cold Shoulder': print_ability_description,
-            'Cold Snap': mistguard_cold_snap,
             'Deep Snow': mistguard_deep_snow,
             'Glacial Gust': mistguard_glacial_gust,
-            'Impenetrable Mist': print_ability_description,
+            'Cold Snap': mistguard_cold_snap,
+            'Silver Armor': mistguard_silver_armor,
+            'Annul': print_ability_description,
             'Mist Screen': print_ability_description,
             'Morning Frost': print_ability_description,
-            'Silver Armor': mistguard_silver_armor,
+            'Cold Shoulder': print_ability_description,
+            'Impenetrable Mist': print_ability_description,
         },
         'Night Lord': {
-            'Burglary': print_ability_description,
-            'Decoy': night_lord_decoy,
-            'Flashbang': night_lord_flashbang,
-            'Nothing Sacred': print_ability_description,
-            'Larceny': night_lord_larceny,
-            'Lockbreaker': night_lord_lockbreaker,
             'Quickstep': night_lord_quickstep,
-            'Robbery': night_lord_robbery,
+            'Nothing Sacred': print_ability_description,
+            'Lockbreaker': night_lord_lockbreaker,
+            'Flashbang': night_lord_flashbang,
+            'Decoy': night_lord_decoy,
             'Thief Toolbelt': night_lord_thief_toolbelt,
+            'Burglary': print_ability_description,
+            'Larceny': night_lord_larceny,
+            'Robbery': night_lord_robbery,
         },
         'Noxomancer': {
             'Darkbomb': noxomancer_darkbomb,
@@ -5389,67 +5402,76 @@ var Barbs = Barbs || (function () {
         },
         'Pyromancer': {
             'Banefire': pyromancer_banefire,
+            'Devour In Flames': pyromancer_devour_in_flames,
             'Magma Spray': pyromancer_magma_spray,
             'Pyroblast': print_ability_description,
-            'Devour In Flames': pyromancer_devour_in_flames,
         },
         'Sentinel': {
             'Crossguard Guillotine': sentinel_crossguard_guillotine,
-            'Parallel Shields': print_ability_description,
             'Bladeshield Arc': sentinel_bladeshield_arc,
-            'Rapid Shields': print_ability_description,
-            'Chain Drag': print_ability_description,
             'Giga Drill Break': sentinel_giga_drill_break,
+            'Parallel Shields': print_ability_description,
+            'Rapid Shields': print_ability_description,
+            'Absorption Barrier': print_ability_description,
+            'Grand Guardian': print_ability_description,
+            'Chain Rush': print_ability_description,
+            'Chain Drag': print_ability_description,
         },
         'Sniper': {
-            'Analytical Shooter': sniper_analytical_shooter,
-            'Distance Shooter': sniper_distance_shooter,
-            'Kill Shot': sniper_kill_shot,
             'Piercing Shot': sniper_piercing_shot,
-            'Precision Shooter': sniper_precision_shooter,
+            'Kill Shot': sniper_kill_shot,
             'Shrapnel Shot': sniper_shrapnel_shot,
-            'Swift Shot': sniper_swift_shot,
+            'Distance Shooter': sniper_distance_shooter,
+            'Precision Shooter': sniper_precision_shooter,
+            'Analytical Shooter': sniper_analytical_shooter,
+            'Professional Shooter': print_ability_description,
             'Swift Sprint': print_ability_description,
+            'Swift Shot': sniper_swift_shot,
         },
         'Soldier': {
+            'Fleetfoot Blade': soldier_fleetfoot_blade,
+            'Steadfast Strikes': soldier_steadfast_strikes,
             'Biding Blade': soldier_biding_blade,
+            'Intercept': print_ability_description,
+            'Shield Bash': soldier_shield_bash,
+            'Protective Sweep': print_ability_description,
+            'Long Live The King': print_ability_description,
             'Dodge Roll': print_ability_description,
             'Double Time': soldier_double_time,
-            'Fleetfoot Blade': soldier_fleetfoot_blade,
-            'Intercept': print_ability_description,
-            'Steadfast Strikes': soldier_steadfast_strikes,
-            'Protective Sweep': print_ability_description,
-
+            'Tactical Withdrawal': print_ability_description,
         },
         'Summoner': {
             'Summon Ascarion Beast': summoner_summon_ascarion_beast,
+            'Summon Vilyrian Spellmaster': print_ability_description,
             'Summon Unseen Servant': print_ability_description,
             'Summon Estian Wayfinder': print_ability_description,
-            'Summon Vilyrian Spellmaster': print_ability_description,
+            "Summon Xat'hul Charmspirit": print_ability_description,
             'Summon Watcher': print_ability_description,
         },
         'Symbiote': {
-            'Empower Soul': symbiote_empower_soul,
-            'Power Spike': symbiote_power_spike,
-            'Strengthen Body': symbiote_strengthen_body,
-            'Strengthen Mind': symbiote_strengthen_mind,
             'Strengthen Soul': symbiote_strengthen_soul,
+            'Empower Soul': symbiote_empower_soul,
+            'Embolden Soul': print_ability_description,
+            'Strengthen Body': symbiote_strengthen_body,
+            'Embolden Body': print_ability_description,
+            'Power Spike': symbiote_power_spike,
+            'Strengthen Mind': symbiote_strengthen_mind,
         },
         'Thief': {
-            'Charm and Disarm': print_ability_description,
             'Cloak and Dagger': thief_cloak_and_dagger,
+            'Snatch and Grab': thief_snatch_and_grab,
+            'Charm and Disarm': print_ability_description,
+            'Purloin Powers': print_ability_description,
             'Infiltrate': print_ability_description,
             'Phantom Thief': thief_phantom_thief,
-            'Purloin Powers': print_ability_description,
-            'Snatch and Grab': thief_snatch_and_grab,
         },
         'Vastwood Knight': {
             'Vastwood Sovereignty': vastwood_knight_sovereignty,
         },
         'Voidwalker': {
-            'Blacklands': print_ability_description,
             'Dimension Door': print_ability_description,
             'Void Portal': print_ability_description,
+            'Blacklands': print_ability_description,
             'Shadowstep': print_ability_description,
         },
         'Warlord': {
@@ -5457,13 +5479,13 @@ var Barbs = Barbs || (function () {
             'Weapon Swap: Roll': print_ability_description,
         },
         'Warrior': {
-            '"Charge!"': warrior_charge,
-            'Cut Down': warrior_cut_down,
-            '"Fight Me!"': warrior_fight_me,
-            'Reinforce Armor': warrior_reinforce_armor,  // TODO this could do more
-            'Shields Up': print_ability_description,
             'Warleader': warrior_warleader,
+            'Cut Down': warrior_cut_down,
+            'Shields Up': print_ability_description,
+            'Reinforce Armor': warrior_reinforce_armor,
             'Take Cover': print_ability_description,
+            '"Charge!"': warrior_charge,
+            '"Fight Me!"': warrior_fight_me,
         },
     };
 
@@ -5521,12 +5543,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        record_messages_ = false;
-        sent_messages_ = [];
-        received_messages_ = [];
-        if (get_parameter('sum_all', parameters) !== null) {
-            record_messages_ = true;
-        }
+        initiate_sum_all(parameters);
 
         const processor = abilities_processors[class_name][ability_name];
         processor(character, ability, parameters);
@@ -5604,6 +5621,10 @@ var Barbs = Barbs || (function () {
         assert_not_null(handler, 'wait_for_turn_order_change() handler');
 
         const turn = get_current_turn();
+        if (turn === undefined || turn === null) {
+            return;  // turn order probably disappeared while we were waiting
+        }
+
         if (turn.id === state[STATE_NAME][LAST_TURN_ID]) {
             setTimeout(function () {
                 wait_for_turn_order_change(handler);
@@ -5771,6 +5792,18 @@ var Barbs = Barbs || (function () {
 
     // ################################################################################################################
     // Methods for processing non-API-call messages and calls that rely on a message backlog
+
+
+    function initiate_sum_all(parameters) {
+        assert_not_null('initiate_sum_all() parameters');
+
+        record_messages_ = false;
+        sent_messages_ = [];
+        received_messages_ = [];
+        if (get_parameter('sum_all', parameters) !== null) {
+            record_messages_ = true;
+        }
+    }
 
 
     // Hang onto all named messages in a circular buffer

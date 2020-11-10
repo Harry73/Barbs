@@ -4703,7 +4703,11 @@
             "utility",
             "modal",
             "concentration"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4743,7 +4747,11 @@
             "Spell",
             "enchantment",
             "utility"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4846,7 +4854,11 @@
             "Spell",
             "enchantment",
             "utility"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4908,7 +4920,11 @@
             "major ritual",
             "modal",
             "concentration"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4932,7 +4948,11 @@
             "major ritual",
             "modal",
             "concentration"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -4951,7 +4971,11 @@
             "Spell",
             "enchantment",
             "defensive"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5906,7 +5930,11 @@
         ],
         "tags": [
             "Conditional"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5924,7 +5952,11 @@
         "tags": [
             "Cleanse",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -5942,7 +5974,11 @@
         "tags": [
             "Modal",
             "heal"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -6372,7 +6408,11 @@
             "modal",
             "minor ritual",
             "major ritual"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -8884,7 +8924,11 @@
             "ally-target",
             "conditional",
             "modal"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -8907,7 +8951,11 @@
             "conditional",
             "modal",
             "dash"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -8926,7 +8974,11 @@
             "Buff",
             "concentration",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -8966,7 +9018,11 @@
             "pull",
             "conditional",
             "shield"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -9109,7 +9165,11 @@
         "tags": [
             "Self-target",
             "bow"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -9373,7 +9433,11 @@
             "Block",
             "AOE",
             "shield"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -9394,7 +9458,11 @@
             "modal",
             "variable stamina cost",
             "redirect"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -9560,7 +9628,11 @@
             "Dash",
             "conditional",
             "action denial"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -9630,7 +9702,7 @@
             "minion"
         ],
         "api": {
-            "description": "The API will only print this ability's description. The summon's aura will have to be factored in manually.",
+            "description": "The API will only print this ability's description. The summon's aura can be simulated with the Miscellaneous item slot.",
             "examples": []
         }
     },
@@ -9651,7 +9723,11 @@
             "Spell",
             "summoning",
             "minion"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description. The summon's aura can be simulated with the Miscellaneous item slot.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -9672,7 +9748,7 @@
             "minion"
         ],
         "api": {
-            "description": "The API will only print this ability's description. The summon's aura will have to be factored in manually.",
+            "description": "The API will only print this ability's description. The summon's aura can be simulated with the Miscellaneous item slot.",
             "examples": []
         }
     },
@@ -9740,7 +9816,7 @@
             "counterspell"
         ],
         "api": {
-            "description": "The API will only print this ability's description. The summon's aura will have to be factored in manually.",
+            "description": "The API will only print this ability's description. The summon's aura can be simulated with the Miscellaneous item slot.",
             "examples": []
         }
     },
@@ -9941,7 +10017,11 @@
             "Spell",
             "buff",
             "concentration"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -10117,7 +10197,11 @@
             "Spell",
             "buff",
             "concentration"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
