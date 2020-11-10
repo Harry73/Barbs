@@ -4860,8 +4860,10 @@
         "duration": "1 minute",
         "description": [
             "You rebuild a wall or door with runes of locking or breaking. Choose one:",
-            "Target wall in range becomes unbreakable, and all windows and doors in that wall become magically locked.",
-            "Target wall in range crumbles and weakens to become easily breakable, and all windows and doors in that wall become unlocked.",
+            "<ul>",
+            "<li>Target wall in range becomes unbreakable, and all windows and doors in that wall become magically locked.</li>",
+            "<li>Target wall in range crumbles and weakens to become easily breakable, and all windows and doors in that wall become unlocked.</li>",
+            "</ul>",
             "After choosing an effect, you may choose to spend 1 minute to cast this spell as a minor ritual, extending the duration to 1 hour, or you may spend 10 minutes to cast this spell as a major ritual, extending the duration to 24 hours."
         ],
         "tags": [

@@ -61,7 +61,7 @@ var Barbs = Barbs || (function () {
     const combo_section_format = '{{combo_chance=%s}} {{combo=[[d100cs>%s]]}}';
     const effects_section_format = '{{effects=%s}}';
 
-    const ability_block_format = '&{template:5eDefault} {{spell=1}} {{title=%s}} {{subheader=%s}} 0 {{spellshowdesc=1}} {{spelldescription=%s }} 0 0 0 0 0 0 0';
+    const ability_block_format = '&{template:5eDefault} {{spell=1}} {{title=%s}} {{subheader=%s}} 0 {{abilityshowdesc=1}} {{abilitydescription=%s }} 0 0 0 0 0 0 0';
 
     let persistent_effects = [];
 
@@ -5555,7 +5555,7 @@ var Barbs = Barbs || (function () {
             '{{abilitycost=%s}}'.format(ability['cost']),
             '{{abilityrange=%s}}'.format(ability['range']),
             '{{abilityduration=%s}}'.format(ability['duration']),
-            '{{abilitydescription=%s}}'.format(ability['description']),
+            '{{abilitydescription=%s}}'.format(ability['description'].join('')),
         ];
 
         chat(character, adjusted_format.join(' '));
