@@ -3114,10 +3114,8 @@
         ],
         "tags": [
             "Spell",
-            "destruction",
-            "attack",
-            "single-target",
-            "dash"
+            "enchantment",
+            "utility"
         ]
     },
     {
@@ -3346,7 +3344,7 @@
         "range": "Self",
         "duration": "1 minute",
         "description": [
-            "You infuse your sword with dark magic energy. For the spell's duration, when you hit a target with a greatsword attack, deal an additional 2d12 dark magic damage on hit."
+            "You infuse your sword with dark magic energy. For the spell's duration, when you hit a target with a greatsword attack, deal an additional 2d10 dark magic damage on hit."
         ],
         "tags": [
             "Spell",
@@ -3391,7 +3389,7 @@
         "range": "Self",
         "duration": "1 minute",
         "description": [
-            "You don magically conjured dark armor. Whenever a cursed enemy targets you with an attack, they take 2d12 dark magic damage for each curse on them, gain a 25% chance to miss with their attack (even for attacks that cannot be evaded) for each curse on them, and are dragged 10 ft towards you for each curse on them. For each curse you inflict that is expunged while this ability is active, you gain a stack of Darkness. Each stack of darkness increases your physical and dark magic damage by 25%, up to a limit of 20 stacks."
+            "You don magically conjured dark armor. Whenever a cursed enemy targets you with an attack, they take 2d10 dark magic damage for each curse on them, gain a 25% chance to miss with their attack (even for attacks that cannot be evaded) for each curse on them, and are dragged 10 ft towards you for each curse on them. For each curse you inflict that is expunged while this ability is active, you gain a stack of Darkness. Each stack of darkness increases your physical and dark magic damage by 25%, up to a limit of 20 stacks."
         ],
         "tags": [
             "Spell",
@@ -3417,7 +3415,7 @@
         "range": "20 ft",
         "duration": "Instant",
         "description": [
-            "You fire a wave of dark, cursed energy. Deal 3d12 dark magic damage and apply a stack of Curse to all enemies in a 20 ft cone in front of you."
+            "You fire a wave of dark, cursed energy. Deal 3d10 dark magic damage and apply a stack of Curse to all enemies in a 20 ft cone in front of you."
         ],
         "tags": [
             "Spell",
@@ -3440,7 +3438,7 @@
         "range": "40 ft",
         "duration": "Instant",
         "description": [
-            "You fire a series of dark missiles. Deal 3d12 dark magic damage and apply a stack of Curse to up to 3 targets in range. If the target is Cursed, this spell cannot miss and ignores MR."
+            "You fire a series of dark missiles. Deal 3d10 dark magic damage and apply a stack of Curse to up to 3 targets in range. If the target is Cursed, this spell cannot miss and ignores MR."
         ],
         "tags": [
             "Spell",
@@ -3465,7 +3463,7 @@
         "range": "40 ft",
         "duration": "Instant",
         "description": [
-            "You wrap a target in dark energy. Deal 3d12 dark magic damage to a target in range and inflict Immobilize. While a target is Immobilized by this ability, it takes d12 dark magic damage at the beginning of each of its turns, gains a stack of Curse, and cannot have its Curse stacks expunged, except by your abilities or by a free action you can take at any time."
+            "You wrap a target in dark energy. Deal 3d10 dark magic damage to a target in range and inflict Immobilize. While a target is Immobilized by this ability, it takes d10 dark magic damage at the beginning of each of its turns, gains a stack of Curse, and cannot have its Curse stacks expunged, except by your abilities or by a free action you can take at any time."
         ],
         "tags": [
             "Spell",
@@ -6124,7 +6122,7 @@
         "range": "Self",
         "duration": "1 minute",
         "description": [
-            "You envelop your blade in lightning magic energy. For the spell's duration, when you hit a target with a rapier attack, deal an additional 2d8 lightning magic damage on hit."
+            "You envelop your blade in lightning magic energy. For the spell's duration, when you hit a target with a rapier attack, deal an additional 2d12 lightning magic damage on hit."
         ],
         "tags": [
             "Spell",
@@ -6173,7 +6171,7 @@
         "range": "Self",
         "duration": "1 minute",
         "description": [
-            "You don magically conjured lightning armor. Whenever an adjacent enemy targets you with an attack, they are inflicted with a stack of Paralysis and take 2d8 lightning magic damage. Whenever you take damage, you may freely dash up to your speed in any direction. While this ability is active, you gain a stack of Lightning on every physical damage hit. You expend all stacks of Lightning when you cast a lightning spell attack, increasing lightning magic damage by 10% for each stack of Lightning expended this way, up to a limit of 20 stacks."
+            "You don magically conjured lightning armor. Whenever an adjacent enemy targets you with an attack, they are inflicted with a stack of Paralysis and take 2d12 lightning magic damage. Whenever you take damage, you may freely dash up to your speed in any direction. While this ability is active, you gain a stack of Lightning on every physical damage hit. You expend all stacks of Lightning when you cast a lightning spell attack, increasing lightning magic damage by 10% for each stack of Lightning expended this way, up to a limit of 20 stacks."
         ],
         "tags": [
             "Spell",
@@ -6198,7 +6196,7 @@
         "range": "20 ft",
         "duration": "Instant",
         "description": [
-            "You release tendril of energy in front of you. Deal 3d8 lightning magic damage to all enemy targets in a 20 ft line. Then at the end of your turn, this spell deals 3d8 damage to all targets in a 20 ft line with random direction."
+            "You release tendril of energy in front of you. Deal 3d12 lightning magic damage to all enemy targets in a 20 ft line. Then at the end of your turn, this spell deals 3d12 damage to all targets in a 20 ft line with random direction."
         ],
         "tags": [
             "Spell",
@@ -6209,7 +6207,7 @@
             "random"
         ],
         "api": {
-            "description": "The additional 3d8 at the end of your turn will not occur automatically. Just use the ability again to calculate this extra damage.",
+            "description": "The additional 3d12 at the end of your turn will not occur automatically. Just use the ability again to calculate this extra damage.",
             "examples": []
         }
     },
@@ -6224,7 +6222,7 @@
         "range": "20 ft",
         "duration": "1 minute",
         "description": [
-            "You summon a ball of energy that erratically flies around attacking enemies. Summon a Ball Lightning object in an empty space in range. When summoned, it deals 4d8 lightning magic damage to all adjacent enemies. At the beginning of each of your turns, it travels 20 ft in a random direction (stopping when it hits a space it can't enter), then discharges, dealing 2d8 lightning magic damage to all adjacent targets."
+            "You summon a ball of energy that erratically flies around attacking enemies. Summon a Ball Lightning object in an empty space in range. When summoned, it deals 4d12 lightning magic damage to all adjacent enemies. At the beginning of each of your turns, it travels 20 ft in a random direction (stopping when it hits a space it can't enter), then discharges, dealing 2d12 lightning magic damage to all adjacent targets."
         ],
         "tags": [
             "Spell",
@@ -6248,7 +6246,7 @@
         "range": "100 ft",
         "duration": "Instant",
         "description": [
-            "You call down a mighty bolt of thunder. Deal 8d8 lightning magic damage to all entities in a 20 ft square. Until the beginning of your next turn, random lightning strikes occur every turn in the target square, dealing 4d8 lightning magic damage to entities struck."
+            "You call down a mighty bolt of thunder. Deal 8d12 lightning magic damage to all entities in a 20 ft square. Until the beginning of your next turn, random lightning strikes occur every turn in the target square, dealing 4d12 lightning magic damage to entities struck."
         ],
         "tags": [
             "Spell",
@@ -6270,7 +6268,7 @@
         "range": "40 ft",
         "duration": "1 round",
         "description": [
-            "You release a powerful bolt of lightning that bounces between targets. Deal 6d8 lightning magic damage to a target in range, marking them until the end of your next turn. Dealing physical damage to the marked target with a rapier causes a lightning bolt to fire from their bodies, dealing 6d8 lightning magic damage to them and cleansing their mark, as well as dealing 6d8 lightning magic damage to another random enemy within 40 ft and marking them until the end of your next turn."
+            "You release a powerful bolt of lightning that bounces between targets. Deal 6d12 lightning magic damage to a target in range, marking them until the end of your next turn. Dealing physical damage to the marked target with a rapier causes a lightning bolt to fire from their bodies, dealing 6d12 lightning magic damage to them and cleansing their mark, as well as dealing 6d12 lightning magic damage to another random enemy within 40 ft and marking them until the end of your next turn."
         ],
         "tags": [
             "Spell",
