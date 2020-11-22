@@ -10786,6 +10786,28 @@
     },
     {
         "type": "ability",
+        "name": "Ambient Amelioration",
+        "class": "Vastwood Knight",
+        "branch": "Consul",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "50 stamina or mana",
+        "range": "50 ft",
+        "duration": "Instant",
+        "description": [
+            "You draw upon nature to heal and sustain. If you are in combat, you and all allies in range heal for Xd20, where X is the number of entities targetted by this ability. Additionally, each target is cleansed of a condition of their choice.",
+            "<br>",
+            "If you are not in combat, grant a buff to all allies in range that lasts for 24 hours and imparts the following effects: you need no food, water, air, or sleep; you cannot be charmed; your mind cannot be read."
+        ],
+        "tags": [
+            "Modal",
+            "heal",
+            "conditional",
+            "cleanse"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Natural Precognition",
         "class": "Vastwood Knight",
         "branch": "Diplomat",
@@ -10805,6 +10827,25 @@
             "Modal",
             "buff",
             "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Blessing of the Vastwoods",
+        "class": "Vastwood Knight",
+        "branch": "Diplomat",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "35 stamina or mana",
+        "range": "50 ft",
+        "duration": "6 hours",
+        "description": [
+            "You protect your allies by evoking your connecting to the Vastwoods. For the duration, you and all allies in range gain the following benefits: when rolling Initative, gain shielding equal to 10% of maximum health; you cannot be surprised; if magic is used to scry you, you can block it, and you learn the magical signature of the caster.",
+            "<br>",
+            "This ability costs half stamina/mana when Vastwood Sovereignty is active."
+        ],
+        "tags": [
+            "Conditional"
         ]
     },
     {
@@ -10832,6 +10873,32 @@
             "melee",
             "mark",
             "conditional"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Keen Eyed Inquisition",
+        "class": "Vastwood Knight",
+        "branch": "Envoy",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "40 stamina or mana",
+        "range": "50 ft",
+        "duration": "1 minute",
+        "description": [
+            "You scope out an area or person and look for clues or weaknesses. If you are in combat, deal 8d10 physical damage to a target in range. Then, you may concentrate for the duration; if you do, you may repeat this attack without paying its stamina/mana cost while you are concentrating on this ability. When you use this attack while concentrating on this ability, it has +5% critical strike chance for each time you have attacked with this ability within the current cast.",
+            "<br>",
+            "If you are not in combat, for the duration, you may make Interaction: Intent and Observation: Listen checks in place of Observation: Search and Observation: Tracking checks, and you may add your highest Athletics category skill check modifier to your rolls. Additionally, you can see the magical signatures of any entities that have been in the area within the last 24 hours.",
+            "<br>",
+            "This ability costs half stamina/mana when Vastwood Sovereignty is active."
+        ],
+        "tags": [
+            "Modal",
+            "attack",
+            "physical",
+            "ranged",
+            "conditional",
+            "concentration"
         ]
     },
     {
