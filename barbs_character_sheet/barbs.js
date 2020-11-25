@@ -53,7 +53,7 @@ var Barbs = Barbs || (function () {
     const initiative_format = '&{template:5eDefault} {{name=Initiative}} {{title=Initiative}} {{subheader=%s}} {{rollname=Initiative}} {{roll=[[%s+%s+%s]]}}';
     const total_format = '&{template:default} {{name=%s}} {{%s=[[%s]]}}';
     const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
-    const percent_format = '&{template:default} {{name=%s}} {{%s (%s%)=[[1d100cs>[[round(100-(%s)+1)]]]]}}';
+    const percent_format = '&{template:default} {{name=%s}} {{%s (%s%)=[[1d100cs>[[100-round(%s)+1)]]]]}}';
 
     const roll_format = '&{template:Barbs} {{name=%s}} %s %s %s %s %s';
     const damage_section_format = '{{%s=[[%s]]}}';
@@ -5795,7 +5795,7 @@ var Barbs = Barbs || (function () {
 
 
     function initiate_sum_all(parameters) {
-        assert_not_null('initiate_sum_all() parameters');
+        assert_not_null(parameters, 'initiate_sum_all() parameters');
 
         record_messages_ = false;
         sent_messages_ = [];
