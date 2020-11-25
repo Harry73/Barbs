@@ -53,7 +53,7 @@ var Barbs = Barbs || (function () {
     const initiative_format = '&{template:5eDefault} {{name=Initiative}} {{title=Initiative}} {{subheader=%s}} {{rollname=Initiative}} {{roll=[[%s+%s+%s]]}}';
     const total_format = '&{template:default} {{name=%s}} {{%s=[[%s]]}}';
     const regen_format = '&{template:default} {{name=%s}} {{%s=[[round([[%s]]*[[(%s)/100]])]]}}';
-    const percent_format = '&{template:default} {{name=%s}} {{%s (%s%)=[[1d100cs>[[100-(%s)+1]]]]}}';
+    const percent_format = '&{template:default} {{name=%s}} {{%s (%s%)=[[1d100cs>[[round(100-(%s)+1)]]]]}}';
 
     const roll_format = '&{template:Barbs} {{name=%s}} %s %s %s %s %s';
     const damage_section_format = '{{%s=[[%s]]}}';
@@ -516,7 +516,7 @@ var Barbs = Barbs || (function () {
                 break;
 
             case Stat.MAGIC_RESIST.name:
-                let result = '&{template:Barbs} {{name=Magic Resists}} {{general=[[round(%s)]]}}'.format(modifier)
+                let result = '&{template:Barbs} {{name=Magic Resists}} {{general=[[round(%s)]]}}'.format(modifier);
                 const keys = Object.keys(ElementalDamage);
                 for (let i = 0; i < keys.length; i++) {
                     const type = ElementalDamage[keys[i]];
