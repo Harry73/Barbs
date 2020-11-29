@@ -6482,6 +6482,25 @@
     },
     {
         "type": "ability",
+        "name": "Warrior of Light",
+        "class": "Luxomancer",
+        "branch": "Gleam",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "15 mana",
+        "range": "100 ft",
+        "duration": "1 minute",
+        "description": [
+            "You provide a blessing of light to a champion. For the duration, a target in range gains, \"On Hit: Deal 4d10 light magic damage\" and +20% accuracy. Additionally, light healing spells on that target have +50% increased effectiveness."
+        ],
+        "tags": [
+            "Spell",
+            "light",
+            "buff"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Lightbolt",
         "class": "Luxomancer",
         "branch": "Luminosity",
@@ -6503,6 +6522,29 @@
     },
     {
         "type": "ability",
+        "name": "Beam of Light",
+        "class": "Luxomancer",
+        "branch": "Luminosity",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "25 mana",
+        "range": "100 ft",
+        "duration": "Instant",
+        "description": [
+            "You fire a beam of powerful light. Deal 6d10 light magic damage to all enemies in a line AOE. You may spend 10 mana banked by your Guiding Light passive when you cast this spell; if you do, it ignores MR."
+        ],
+        "tags": [
+            "Spell",
+            "attack",
+            "light",
+            "destruction",
+            "AOE",
+            "line",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Light Touch",
         "class": "Luxomancer",
         "branch": "Radiance",
@@ -6518,7 +6560,8 @@
             "Spell",
             "light",
             "restoration",
-            "conditional"
+            "conditional",
+            "single-target"
         ],
         "api": {
             "description": "If you are casting the ability at touch range, set the \"touch\" parameter to yes. Otherwise set it to no.",
@@ -6526,6 +6569,26 @@
                 "touch: yes"
             ]
         }
+    },
+    {
+        "type": "ability",
+        "name": "Healing Surge",
+        "class": "Luxomancer",
+        "branch": "Radiance",
+        "tier": 2,
+        "action": "1 Major Action",
+        "cost": "No cost",
+        "range": "100 ft",
+        "duration": "Instant",
+        "description": [
+            "You release pent up healing energy. Spend all of your banked Guiding Light mana and distribute health equal to the amount of mana spent this way amongst any number of targets in range in any way you choose."
+        ],
+        "tags": [
+            "Spell",
+            "light",
+            "restoration",
+            "multi-target"
+        ]
     },
     {
         "type": "ability",

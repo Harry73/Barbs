@@ -1552,7 +1552,10 @@
         "abilities": [
             "Lightbolt",
             "Light Touch",
-            "Dancing Lights"
+            "Dancing Lights",
+            "Beam of Light",
+            "Healing Surge",
+            "Warrior of Light"
         ],
         "api": {
             "description": "This passive will not be supported by the API. Track Healing Mana by hand.",
