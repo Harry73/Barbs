@@ -7414,6 +7414,24 @@
     },
     {
         "type": "ability",
+        "name": "Single Track Mind",
+        "class": "Night Lord",
+        "branch": "Breach",
+        "tier": 4,
+        "action": "1 Minor Action",
+        "cost": "60 stamina",
+        "range": "Self",
+        "duration": "1 hour",
+        "description": [
+            "You pursue your goals with precision and finesse. Choose any single location. For the duration, you reroll all skill checks that you make that involve attempting to reach the chosen location, always taking the better result. You may consume 20 minutes of this buff's duration; if you do, a novel opportunity presents itself to assist you in arriving at your chosen location or to pull you out of danger."
+        ],
+        "tags": [
+            "Concentration",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Burglary",
         "class": "Night Lord",
         "branch": "Loot",
@@ -7482,6 +7500,24 @@
             "description": "No special notes.",
             "examples": []
         }
+    },
+    {
+        "type": "ability",
+        "name": "Heist",
+        "class": "Night Lord",
+        "branch": "Loot",
+        "tier": 4,
+        "action": "1 Minor Action",
+        "cost": "No cost",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You steal expert knowledge. For the duration, once per turn, you may cast an ability that you saw cast within the last round as if you knew the ability. You pay any action and resource costs for that ability as normal, except you may spend stamina instead of other resources if you wish."
+        ],
+        "tags": [
+            "Concentration",
+            "conditional"
+        ]
     },
     {
         "type": "ability",
@@ -7555,6 +7591,23 @@
                 "targets <ally name> <ally name> ..."
             ]
         }
+    },
+    {
+        "type": "ability",
+        "name": "Quick Fingers",
+        "class": "Night Lord",
+        "branch": "Perplex",
+        "tier": 4,
+        "action": "1 Minor Action",
+        "cost": "80 stamina",
+        "range": "Self",
+        "duration": "1 minute",
+        "description": [
+            "You work at blindingly fast speeds. For the duration, once per round, activate this ability after performing any action; if you do, you gain a 50% chance to reset the action type spent."
+        ],
+        "tags": [
+            "Concentration"
+        ]
     },
     {
         "type": "ability",
