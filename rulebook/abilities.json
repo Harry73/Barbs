@@ -2969,6 +2969,28 @@
     },
     {
         "type": "ability",
+        "name": "Absorption Well",
+        "class": "Daggerspell",
+        "branch": "Acumen",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "60 mana",
+        "range": "60 ft",
+        "duration": "Instant",
+        "description": [
+            "You use powerful magic to harm enemies and make use of their spells. Deal 12d8 magic damage of a chosen type to all enemies in a 25 ft square AOE centered on a space in range, leaving behind a field in the affected spaces for 30 seconds. In this field, spells cast by other entities count towards your Ritual Dagger passive."
+        ],
+        "tags": [
+            "Spell",
+            "destruction",
+            "attack",
+            "AOE",
+            "square",
+            "field"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Fadeaway Slice",
         "class": "Daggerspell",
         "branch": "Finesse",
@@ -3050,6 +3072,33 @@
     },
     {
         "type": "ability",
+        "name": "Heartpiercer",
+        "class": "Daggerspell",
+        "branch": "Finesse",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "40 stamina",
+        "range": "Melee",
+        "duration": "Instant",
+        "description": [
+            "You strike at center mass with deadly precision. Deal 8d4 physical damage to a target in range. This attack gains additional effects based on how much empowerment damage you inflict from your Ritual Dagger passive:",
+            "<ul>",
+            "<li>20 damage - This attack has +100% physical damage</li>",
+            "<li>40 damage - This attack has +100% critical damage modifier</li>",
+            "<li>50 damage - This attack is guaranteed to critically strike</li>",
+            "<ul>"
+        ],
+        "tags": [
+            "Attack",
+            "physical",
+            "melee",
+            "shortblade",
+            "single-target",
+            "conditional"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Hidden Blade",
         "class": "Daggerspell",
         "branch": "Guile",
@@ -3115,6 +3164,25 @@
         "tags": [
             "Spell",
             "enchantment",
+            "utility"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Wanted: Dead or Alive",
+        "class": "Daggerspell",
+        "branch": "Guile",
+        "tier": 4,
+        "action": "1 Major Action",
+        "cost": "50 mana",
+        "range": "10 ft",
+        "duration": "24 hours",
+        "description": [
+            "You invoke a trickster's luck in finding your mark. When you cast this spell, stab a high quality portrait of a person with your dagger. You immediately learn where that person is and what goal their mind is primarily focused on. You also learn one exploitable weakness of theirs, if one exists. For the duration, any skill checks you make towards finding that person have +30. You may not cast this spell more than once on a single entity."
+        ],
+        "tags": [
+            "Spell",
+            "divination",
             "utility"
         ]
     },
@@ -7507,7 +7575,7 @@
         "class": "Night Lord",
         "branch": "Loot",
         "tier": 4,
-        "action": "1 Minor Action",
+        "action": "Free Action",
         "cost": "No cost",
         "range": "Self",
         "duration": "1 minute",

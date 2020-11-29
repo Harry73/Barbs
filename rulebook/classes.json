@@ -760,7 +760,10 @@
             "Exposing Tear",
             "Hidden Blade",
             "Invisibility",
-            "Rogue's Anlace"
+            "Rogue's Anlace",
+            "Heartpiercer",
+            "Absorption Well",
+            "Wanted: Dead or Alive"
         ],
         "api": {
             "description": "If your next attack is empowered, you must specify the \"empowered\" parameter along with the amount of mana spent for the empower. The API will halve it appropriately. The \"empowered\" parameter will also affect other abilities in this class, where applicable.",
