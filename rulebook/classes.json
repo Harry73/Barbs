@@ -271,12 +271,28 @@
     {
         "type": "class",
         "name": "Archaeomancer",
-        "preview": "A mage that specializes in the magical school of Utilities. As a mid-tier practitioner, this class has the highest number of raw utility spells, and acts as a magical Swiss army knife of spell for any situation.",
+        "preview": "A mage that specializes in the magical school of Utilities. As a mid-tier practitioner, this class has the highest number of raw utility spells, and acts as a magical Swiss army knife of spells for any situation.",
         "num_requirements": 2,
         "requirements": [
-            "Armor Mastery: Cloth Rank A"
+            "Armor Mastery: Cloth Rank A",
+            "Magic: Utility Rank A"
         ],
-        "all_reqs_known": false
+        "all_reqs_known": true,
+        "flavor_text": "A good mage has a spell for every problem like a good carpenter has a hammer for every nail. A great mage comes up with those spells on the spot as if he knew them all along.",
+        "description": "The Archaeomancer is an entry level mage that has begun to mastery the art of utility magic. The magical school of Utilities is a varied and flexible one; a variety of spells are available to make any given situation easier to handle. For the average person, knowing a few utility spells can make life much easier. For an adventuring party, this class provides a host of abilities that can assist with dungeon delving, investigations, and navigating social situations. Spells in this class are divided by their scale of effect, but overall the types of effects available are almost haphazardly diverse; an experienced player will make generous use of their skills to augment these spells as needed, to truly become the jack-of-all-trades that an Archaeomancer tends to be.",
+        "branches": {
+            "Small Scale": "The Small Scale branch provides options for personal utilities that usually benefit one or two people or small objects",
+            "Medium Scale": "The Medium Scale branch provides options for utiliities affecting multiple people or larger objects",
+            "Large Scale": "The Large Scale branch provides options for utilities affecting large groups, rooms, buildings, and vehicles"
+        },
+        "passive": {
+            "Depth of Knowledge": "After completing a short rest, choose a tier 1 and a tier 2 utility spell that you know; you may cast each of those spells once without paying their mana costs. Additionally, after completing a long rest, choose a tier 3 and a tier 4 utility spell that you know; you may cast each of those spells once without paying their mana costs."
+        },
+        "abilities": [
+            "Arcane Lock",
+            "Skill Boost",
+            "Echoes of the Past"
+        ]
     },
     {
         "type": "class",

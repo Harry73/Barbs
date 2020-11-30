@@ -1326,6 +1326,71 @@
     },
     {
         "type": "ability",
+        "name": "Echoes of the Past",
+        "class": "Archaeomancer",
+        "branch": "Large Scale",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "30 mana",
+        "range": "Self",
+        "duration": "Instant",
+        "description": [
+            "You glimpse into the past. You see magical images of the entities that were in the room you are currently in and what they were doing in the past hour. You may spend 1 minute to cast this spell as a minor ritual; if you do, you see what occurred in the past 6 hours. You may spend 10 minutes to cast this spell as a major ritual; if you do, you see what occurred in the past 24 hours."
+        ],
+        "tags": [
+            "Spell",
+            "utility",
+            "divination",
+            "modal",
+            "minor ritual",
+            "major ritual"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Skill Boost",
+        "class": "Archaeomancer",
+        "branch": "Medium Scale",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "20 mana",
+        "range": "20 ft",
+        "duration": "1 hour",
+        "description": [
+            "You improve the natural skills of your party. Choose one:",
+            "<ul>",
+            "<li>Up to 5 targets in range gain +20 to all skill checks for the duration</li>",
+            "<li>One target in range gains +40 to all skill checks for the duration</li>",
+            "<ul>"
+        ],
+        "tags": [
+            "Spell",
+            "utility",
+            "buff",
+            "modal"
+        ]
+    },
+    {
+        "type": "ability",
+        "name": "Arcane Lock",
+        "class": "Archaeomancer",
+        "branch": "Small Scale",
+        "tier": 1,
+        "action": "1 Major Action",
+        "cost": "15 mana",
+        "range": "Touch",
+        "duration": "24 hours",
+        "description": [
+            "You place a magical lock on a closed door. Target door in range becomes magically locked except to you and any entities of your choosing While locked this way, you are magically alerted when someone tries to tamper with the lock, and you see a mental image of the entity doing so."
+        ],
+        "tags": [
+            "Spell",
+            "utility",
+            "enchantment"
+        ]
+    },
+    {
+        "type": "ability",
         "name": "Backstab",
         "class": "Assassin",
         "branch": "Execution",
