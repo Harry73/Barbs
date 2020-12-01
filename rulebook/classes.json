@@ -292,7 +292,11 @@
             "Arcane Lock",
             "Skill Boost",
             "Echoes of the Past"
-        ]
+        ],
+        "api": {
+            "description": "The API will not track this passive for your. Manage spells costs yourself.",
+            "examples": []
+        }
     },
     {
         "type": "class",

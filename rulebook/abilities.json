@@ -1344,7 +1344,11 @@
             "modal",
             "minor ritual",
             "major ritual"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -1368,7 +1372,14 @@
             "utility",
             "buff",
             "modal"
-        ]
+        ],
+        "api": {
+            "description": "Use the \"targets\" parameter to specify who will be affected by this ability. If you only specify 1 target, the buff will automatically give +40 instead of +20.",
+            "examples": [
+                "targets: Hoshiko, Rossa",
+                "targets: Rossa"
+            ]
+        }
     },
     {
         "type": "ability",
@@ -1387,7 +1398,11 @@
             "Spell",
             "utility",
             "enchantment"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -3052,7 +3067,11 @@
             "AOE",
             "square",
             "field"
-        ]
+        ],
+        "api": {
+            "description": "No special notes. Don't forget about the field left behind by the field, and track mana spent for Ritual Dagger yourself.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -3160,7 +3179,13 @@
             "shortblade",
             "single-target",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "Specify the mana amount empowering your attack with the \"empower\" parameter. The API will apply effect appropriate based on how much you specify.",
+            "examples": [
+                "empower: 40"
+            ]
+        }
     },
     {
         "type": "ability",
@@ -3249,7 +3274,11 @@
             "Spell",
             "divination",
             "utility"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description. Add a +30 to relevant skill checks manually.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -6562,7 +6591,13 @@
             "Spell",
             "light",
             "buff"
-        ]
+        ],
+        "api": {
+            "description": "Specify the target ally with the \"target\", parameter. The ally's first name is sufficient. The extra effectiveness of light healing spells should be handled manually.",
+            "examples": [
+                "target <ally name>"
+            ]
+        }
     },
     {
         "type": "ability",
@@ -6583,7 +6618,11 @@
             "light",
             "destruction",
             "single-target"
-        ]
+        ],
+        "api": {
+            "description": "No special notes.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -6606,7 +6645,13 @@
             "AOE",
             "line",
             "modal"
-        ]
+        ],
+        "api": {
+            "description": "Add the \"guiding_light\" parameter if you are spending Guiding Light mana.",
+            "examples": [
+                "guiding_light"
+            ]
+        }
     },
     {
         "type": "ability",
@@ -6653,7 +6698,11 @@
             "light",
             "restoration",
             "multi-target"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7623,8 +7672,13 @@
         ],
         "tags": [
             "Concentration",
-            "modal"
-        ]
+            "modal",
+            "buff"
+        ],
+        "api": {
+            "description": "Handle re-rolls for this ability manually, i.e. just do skill checks twice for re-rolls. The API will create the buff for tracking purposes, but the buff will not do anything API-wise.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7713,7 +7767,11 @@
         "tags": [
             "Concentration",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "The API will only print this ability's description. To use a stolen ability, temporarily add it to your character sheet.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
@@ -7803,7 +7861,11 @@
         ],
         "tags": [
             "Concentration"
-        ]
+        ],
+        "api": {
+            "description": "The API simply will roll a d2 when you use this ability. Track action economy yourself.",
+            "examples": []
+        }
     },
     {
         "type": "ability",

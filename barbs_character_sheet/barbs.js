@@ -287,6 +287,49 @@ var Barbs = Barbs || (function () {
 
 
     // ################################################################################################################
+    // Parameter helpers
+
+
+    function get_parameter(parameter, parameters) {
+        assert_not_null(parameter, 'get_parameter() parameter');
+        assert_not_null(parameters, 'get_parameter() parameters');
+
+        for (let i = 0; i < parameters.length; i++) {
+            if (parameters[i].includes(parameter)) {
+                return parameters[i].split(' ').slice(1).join(' ');
+            }
+        }
+
+        return null;
+    }
+
+
+    function get_target_characters(parameter_key, parameters) {
+        assert_not_null(parameter_key, 'get_target_characters() parameter_key');
+        assert_not_null(parameters, 'get_target_characters() parameters');
+
+        const parameter = get_parameter(parameter_key, parameters);
+        assert(parameter !== null, '"%s" parameter, the target player(s), is required', parameter_key);
+
+        const target_names = remove_empty(trim_all(parameter.split(',')));
+        const target_characters = [];
+        for (let i = 0; i < target_names.length; i++) {
+            const target_character = get_character(target_names[i]);
+            target_characters.push(target_character);
+        }
+
+        return target_characters;
+    }
+
+
+    function get_target_character(parameter_key, parameters) {
+        const target_characters = get_target_characters(parameter_key, parameters);
+        assert(target_characters.length === 1, 'Expected exactly 1 target player for "%s" parameter', parameter_key);
+        return target_characters[0];
+    }
+
+
+    // ################################################################################################################
     // Non-attack rolls
 
 
@@ -1522,20 +1565,6 @@ var Barbs = Barbs || (function () {
     }
 
 
-    function get_parameter(parameter, parameters) {
-        assert_not_null(parameter, 'get_parameter() parameter');
-        assert_not_null(parameters, 'get_parameter() parameters');
-
-        for (let i = 0; i < parameters.length; i++) {
-            if (parameters[i].includes(parameter)) {
-                return parameters[i].split(' ').slice(1).join(' ');
-            }
-        }
-
-        return null;
-    }
-
-
     function add_bonuses_from_skills(character, roll, attack_weapons) {
         assert_not_null(character, 'check_skills() character');
         assert_not_null(roll, 'check_skills() roll');
@@ -2096,7 +2125,8 @@ var Barbs = Barbs || (function () {
         }
 
         const mana_spent = parts[1];
-        roll.add_damage(Math.round(mana_spent / 2), Damage.PHYSICAL);
+        assert_numeric(mana_spent, 'Non-numeric value "%s" for "empowered" parameter', mana_spent);
+        roll.add_damage(Math.round(parse_int(mana_spent) / 2), Damage.PHYSICAL);
         return true;
     }
 
@@ -2788,6 +2818,29 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function archaeomancer_skill_boost(character, ability, parameters) {
+        const target_characters = get_target_characters('targets', parameters);
+
+        let bonus;
+        if (target_characters.length === 1) {
+            bonus = 40;
+        } else {
+            bonus = 20;
+        }
+
+        for (let i = 0; i < target_characters.length; i++) {
+            const target_character = target_characters[i];
+            add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_HOUR(), Ordering(),
+                                  RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
+                    roll.add_skill_bonus(Skill.ALL, bonus);
+                    return true;
+                });
+        }
+
+        print_ability_description(character, ability);
+    }
+
+
     function assassin_backstab(character, ability, parameters) {
         const parameter = get_parameter('hidden', parameters);
 
@@ -3160,6 +3213,17 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function daggerspell_absorption_well(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('12d8', Damage.PHYSICAL);
+        add_scale_damage(character, roll, parameters);
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
     function daggerspell_fadeaway_slice(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('4d4', Damage.PHYSICAL);
@@ -3199,6 +3263,33 @@ var Barbs = Barbs || (function () {
             roll.add_effect('-40% MR [[d100]]');
         } else {
             roll.add_effect('-20% MR [[d100]]');
+        }
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function daggerspell_heartpiercer(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('8d4', Damage.PHYSICAL);
+        add_scale_damage(character, roll, parameters);
+
+        let empowered = get_parameter('empowered', parameters);
+        if (empowered !== null) {
+            assert_numeric(empowered, 'Non-numeric value "%s" for "empowered" parameter', empowered);
+            empowered = parse_int(empowered);
+
+            if (empowered >= 20) {
+                roll.add_multiplier(1, Damage.PHYSICAL, character.name);
+            }
+            if (empowered >= 40) {
+                roll.add_crit_damage_mod(100);
+            }
+            if (empowered >= 50) {
+                roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, 1000);
+            }
         }
 
         roll_crit(ability, roll, parameters, function (crit_section) {
@@ -3708,10 +3799,7 @@ var Barbs = Barbs || (function () {
 
 
     function dragoncaller_dragonblood(character, ability, parameters) {
-        const target = get_parameter('target', parameters);
-        assert(target !== null, '"target" parameter is required');
-
-        const target_character = get_character(target.trim());
+        const target_character = get_target_character('target', parameters);
 
         // The API isn't going to do anything for this, but we'll create it for buff-tracking purposes
         add_persistent_effect(character, ability, parameters, target_character, Duration.HARD(6 * 60),
@@ -3724,13 +3812,7 @@ var Barbs = Barbs || (function () {
 
 
     function enchanter_modify_weapon(character, ability, parameters) {
-        const target_name = get_parameter('target', parameters);
-        if (target_name === null) {
-            chat(character, '"target" parameter is missing');
-            return;
-        }
-
-        const target_character = get_character(target_name);
+        const target_character = get_target_character('target', parameters);
         const choice = get_parameter('choice', parameters);
         if (choice === null) {
             chat(character, '"choice {first/second}" parameter is missing');
@@ -4107,6 +4189,33 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function luxomancer_lightbolt(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('4d10', Damage.LIGHT);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.LIGHT);
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
+    function luxomancer_beam_of_light(character, ability, parameters) {
+        const roll = new Roll(character, RollType.MAGIC);
+        roll.add_damage('6d10', Damage.LIGHT);
+        roll.add_damage(character.get_stat(Stat.MAGIC_DAMAGE), Damage.LIGHT);
+
+        const touch = get_parameter('guiding_light', parameters);
+        if (touch !== null) {
+            roll.add_effect('Ignore MR');
+        }
+
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+
+
     function luxomancer_light_touch(character, ability, parameters) {
         const touch = get_parameter('touch', parameters);
         if (touch === null) {
@@ -4124,6 +4233,20 @@ var Barbs = Barbs || (function () {
         roll_crit(ability, roll, parameters, function (crit_section) {
             do_roll(character, ability, roll, parameters, crit_section);
         });
+    }
+
+
+    function luxomancer_warrior_of_light(character, ability, parameters) {
+        const target_character = get_target_character('target', parameters);
+
+        add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(), Ordering(),
+                              RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
+                roll.add_damage('4d10', Damage.LIGHT);
+                roll.add_hidden_stat(HiddenStat.ACCURACY, 20);
+                return true;
+            });
+
+        print_ability_description(character, ability);
     }
 
 
@@ -4433,6 +4556,16 @@ var Barbs = Barbs || (function () {
     }
 
 
+    function night_lord_single_track_mind(character, ability, parameters) {
+        add_persistent_effect(character, ability, parameters, character, Duration.ONE_HOUR(), Ordering(),
+                              RollType.ALL, RollTime.DEFAULT, 1, function () {
+                return true;
+            });
+
+        print_ability_description(character, ability);
+    }
+
+
     function night_lord_quickstep(character, ability, parameters) {
         add_persistent_effect(character, ability, parameters, character, Duration.HARD(1), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (character, roll) {
@@ -4478,6 +4611,21 @@ var Barbs = Barbs || (function () {
         }
 
         print_ability_description(character, ability);
+    }
+
+
+    function night_lord_quick_fingers(character, ability, parameters) {
+        // This isn't an attack, so not using a proper roll
+        const effects = [
+            'Reset action on a 2: [[d2]]',
+        ];
+
+        const effects_section = effects_section_format.format(effects.join(''));
+        const msg = roll_format.format(ability.name, /*damage_section=*/'', /*crit_section=*/'', /*combo_section=*/'',
+                                       effects_section, /*button_section=*/'');
+
+        LOG.info('night_lord_quick_fingers() - roll: ' + msg);
+        chat(character, msg);
     }
 
 
@@ -4847,13 +4995,7 @@ var Barbs = Barbs || (function () {
 
 
     function symbiote_empower_soul(character, ability, parameters) {
-        const target_name = get_parameter('target', parameters);
-        if (target_name === null) {
-            chat(character, '"target" parameter is missing');
-            return;
-        }
-
-        const target_character = get_character(target_name);
+        const target_name = get_target_character('target', parameters);
 
         let percentage = 20;
         const extra_mana_spent = get_parameter('mana', parameters);
@@ -4879,13 +5021,7 @@ var Barbs = Barbs || (function () {
             return;
         }
 
-        const target_name = get_parameter('target', parameters);
-        if (target_name === null) {
-            chat(character, '"target" parameter is missing');
-            return;
-        }
-
-        const target_character = get_character(target_name);
+        const target_character = get_target_character('target', parameters);
 
         // Find the buff
         let index = -1;
@@ -4910,13 +5046,7 @@ var Barbs = Barbs || (function () {
 
 
     function symbiote_strengthen_body(character, ability, parameters) {
-        const target_name = get_parameter('target', parameters);
-        if (target_name === null) {
-            chat(character, '"target" parameter is missing');
-            return;
-        }
-
-        const target_character = get_character(target_name);
+        const target_character = get_target_character('target', parameters);
 
         add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
@@ -4930,13 +5060,7 @@ var Barbs = Barbs || (function () {
 
 
     function symbiote_strengthen_mind(character, ability, parameters) {
-        const target_name = get_parameter('target', parameters);
-        if (target_name === null) {
-            chat(character, '"target" parameter is missing');
-            return;
-        }
-
-        const target_character = get_character(target_name);
+        const target_character = get_target_character('target', parameters);
 
         add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_HOUR(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
@@ -4949,13 +5073,7 @@ var Barbs = Barbs || (function () {
 
 
     function symbiote_strengthen_soul(character, ability, parameters) {
-        const target_name = get_parameter('target', parameters);
-        if (target_name === null) {
-            chat(character, '"target" parameter is missing');
-            return;
-        }
-
-        const target_character = get_character(target_name);
+        const target_character = get_target_character('target', parameters);
 
         const source = character.name;
         add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(), Ordering(),
@@ -5081,18 +5199,7 @@ var Barbs = Barbs || (function () {
 
 
     function warrior_charge(character, ability, parameters) {
-        const parameter = get_parameter('targets', parameters);
-        if (parameter === null) {
-            chat(character, '"targets" parameter, the list of affected players, is missing');
-            return;
-        }
-
-        const target_names = remove_empty(trim_all(parameter.split(',')));
-        const target_characters = [];
-        for (let i = 0; i < target_names.length; i++) {
-            const target_character = get_character(target_names[i]);
-            target_characters.push(target_character);
-        }
+        const target_characters = get_target_characters('targets', parameters);
 
         const source = character.name;
         for (let i = 0; i < target_characters.length; i++) {
@@ -5143,7 +5250,6 @@ var Barbs = Barbs || (function () {
             chat(character, '"target" parameter is missing');
             return;
         }
-
 
         const number = target.split(', ');
         const roll = new Roll(character, RollType.PHYSICAL);
@@ -5206,13 +5312,7 @@ var Barbs = Barbs || (function () {
 
 
     function warrior_warleader(character, ability, parameters) {
-        const target_name = get_parameter('target', parameters);
-        if (target_name === null) {
-            chat(character, '"target" parameter, the affected player, is missing');
-            return;
-        }
-
-        const target_character = get_character(target_name);
+        const target_character = get_target_character('target', parameters);
 
         const source = character.name;
         add_persistent_effect(character, ability, parameters, target_character, Duration.SINGLE_USE(), Ordering(),
@@ -5245,6 +5345,11 @@ var Barbs = Barbs || (function () {
         'Arcanist': {
             'Magic Dart': arcanist_magic_dart,
             'Magic Primer': arcanist_magic_primer,
+        },
+        'Archaeomancer': {
+            'Arcane Lock': print_ability_description,
+            'Skill Boost': archaeomancer_skill_boost,
+            'Echoes of the Past': print_ability_description,
         },
         'Assassin': {
             'Vanish': assassin_vanish,
@@ -5286,8 +5391,11 @@ var Barbs = Barbs || (function () {
         'Daggerspell': {
             'Fadeaway Slice': daggerspell_fadeaway_slice,
             'Shieldbreaker': daggerspell_shieldbreaker,
+            'Heartpiercer': daggerspell_heartpiercer,
             'Exposing Tear': daggerspell_exposing_tear,
+            'Absorption Well': daggerspell_absorption_well,
             'Hidden Blade': daggerspell_hidden_blade,
+            'Wanted: Dead or Alive': print_ability_description,
         },
         'Destroyer': {
             'Slam': destroyer_slam,
@@ -5358,8 +5466,12 @@ var Barbs = Barbs || (function () {
             'Sword of Lightning': lightning_duelist_sword_of_lightning,
         },
         'Luxomancer': {
+            'Lightbolt': luxomancer_lightbolt,
+            'Beam of Light': luxomancer_beam_of_light,
             'Light Touch': luxomancer_light_touch,
+            'Healing Surge': print_ability_description,
             'Dancing Lights': print_ability_description,
+            'Warrior of Light': luxomancer_warrior_of_light,
         },
         'Martial Artist': {
             'Choke Hold': martial_artist_choke_hold,
@@ -5385,12 +5497,15 @@ var Barbs = Barbs || (function () {
             'Quickstep': night_lord_quickstep,
             'Nothing Sacred': print_ability_description,
             'Lockbreaker': night_lord_lockbreaker,
+            'Single Track Mind': night_lord_single_track_mind,
             'Flashbang': night_lord_flashbang,
             'Decoy': night_lord_decoy,
             'Thief Toolbelt': night_lord_thief_toolbelt,
+            'Quick Fingers': night_lord_quick_fingers,
             'Burglary': print_ability_description,
             'Larceny': night_lord_larceny,
             'Robbery': night_lord_robbery,
+            'Heist': print_ability_description,
         },
         'Noxomancer': {
             'Darkbomb': noxomancer_darkbomb,

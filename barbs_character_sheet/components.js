@@ -1992,6 +1992,72 @@ var BarbsComponents = BarbsComponents || (function () {
                 }
             }
         },
+        "Archaeomancer": {
+            "type": "class",
+            "name": "Archaeomancer",
+            "description": "The Archaeomancer is an entry level mage that has begun to mastery the art of utility magic. The magical school of Utilities is a varied and flexible one; a variety of spells are available to make any given situation easier to handle. For the average person, knowing a few utility spells can make life much easier. For an adventuring party, this class provides a host of abilities that can assist with dungeon delving, investigations, and navigating social situations. Spells in this class are divided by their scale of effect, but overall the types of effects available are almost haphazardly diverse; an experienced player will make generous use of their skills to augment these spells as needed, to truly become the jack-of-all-trades that an Archaeomancer tends to be.",
+            "passive": {
+                "Depth of Knowledge": "After completing a short rest, choose a tier 1 and a tier 2 utility spell that you know; you may cast each of those spells once without paying their mana costs. Additionally, after completing a long rest, choose a tier 3 and a tier 4 utility spell that you know; you may cast each of those spells once without paying their mana costs."
+            },
+            "abilities": {
+                "Arcane Lock": {
+                    "name": "Arcane Lock",
+                    "class": "Archaeomancer",
+                    "action": "1 Major Action",
+                    "cost": "15 mana",
+                    "range": "Touch",
+                    "duration": "24 hours",
+                    "description": [
+                        "You place a magical lock on a closed door. Target door in range becomes magically locked except to you and any entities of your choosing While locked this way, you are magically alerted when someone tries to tamper with the lock, and you see a mental image of the entity doing so."
+                    ],
+                    "tags": [
+                        "spell",
+                        "utility",
+                        "enchantment"
+                    ]
+                },
+                "Skill Boost": {
+                    "name": "Skill Boost",
+                    "class": "Archaeomancer",
+                    "action": "1 Major Action",
+                    "cost": "20 mana",
+                    "range": "20 ft",
+                    "duration": "1 hour",
+                    "description": [
+                        "You improve the natural skills of your party. Choose one:",
+                        "<ul>",
+                        "<li>Up to 5 targets in range gain +20 to all skill checks for the duration</li>",
+                        "<li>One target in range gains +40 to all skill checks for the duration</li>",
+                        "<ul>"
+                    ],
+                    "tags": [
+                        "spell",
+                        "utility",
+                        "buff",
+                        "modal"
+                    ]
+                },
+                "Echoes of the Past": {
+                    "name": "Echoes of the Past",
+                    "class": "Archaeomancer",
+                    "action": "1 Major Action",
+                    "cost": "30 mana",
+                    "range": "Self",
+                    "duration": "Instant",
+                    "description": [
+                        "You glimpse into the past. You see magical images of the entities that were in the room you are currently in and what they were doing in the past hour. You may spend 1 minute to cast this spell as a minor ritual; if you do, you see what occurred in the past 6 hours. You may spend 10 minutes to cast this spell as a major ritual; if you do, you see what occurred in the past 24 hours."
+                    ],
+                    "tags": [
+                        "spell",
+                        "utility",
+                        "divination",
+                        "modal",
+                        "minor ritual",
+                        "major ritual"
+                    ]
+                }
+            }
+        },
         "Assassin": {
             "type": "class",
             "name": "Assassin",
@@ -3520,10 +3586,67 @@ var BarbsComponents = BarbsComponents || (function () {
                     ],
                     "tags": [
                         "spell",
+                        "enchantment",
+                        "utility"
+                    ]
+                },
+                "Heartpiercer": {
+                    "name": "Heartpiercer",
+                    "class": "Daggerspell",
+                    "action": "1 Major Action",
+                    "cost": "40 stamina",
+                    "range": "Melee",
+                    "duration": "Instant",
+                    "description": [
+                        "You strike at center mass with deadly precision. Deal 8d4 physical damage to a target in range. This attack gains additional effects based on how much empowerment damage you inflict from your Ritual Dagger passive:",
+                        "<ul>",
+                        "<li>20 damage - This attack has +100% physical damage</li>",
+                        "<li>40 damage - This attack has +100% critical damage modifier</li>",
+                        "<li>50 damage - This attack is guaranteed to critically strike</li>",
+                        "<ul>"
+                    ],
+                    "tags": [
+                        "attack",
+                        "physical",
+                        "melee",
+                        "shortblade",
+                        "single-target",
+                        "conditional"
+                    ]
+                },
+                "Absorption Well": {
+                    "name": "Absorption Well",
+                    "class": "Daggerspell",
+                    "action": "1 Major Action",
+                    "cost": "60 mana",
+                    "range": "60 ft",
+                    "duration": "Instant",
+                    "description": [
+                        "You use powerful magic to harm enemies and make use of their spells. Deal 12d8 magic damage of a chosen type to all enemies in a 25 ft square AOE centered on a space in range, leaving behind a field in the affected spaces for 30 seconds. In this field, spells cast by other entities count towards your Ritual Dagger passive."
+                    ],
+                    "tags": [
+                        "spell",
                         "destruction",
                         "attack",
-                        "single-target",
-                        "dash"
+                        "aoe",
+                        "square",
+                        "field"
+                    ]
+                },
+                "Wanted: Dead or Alive": {
+                    "name": "Wanted: Dead or Alive",
+                    "class": "Daggerspell",
+                    "action": "1 Major Action",
+                    "cost": "50 mana",
+                    "range": "10 ft",
+                    "duration": "24 hours",
+                    "description": [
+                        "You invoke a trickster's luck in finding your mark. When you cast this spell, stab a high quality portrait of a person with your dagger. You immediately learn where that person is and what goal their mind is primarily focused on. You also learn one exploitable weakness of theirs, if one exists. For the duration, any skill checks you make towards finding that person have +30. You may not cast this spell more than once on a single entity."
+                    ],
+                    "tags": [
+                        "spell",
+                        "divination",
+                        "utility"
                     ]
                 }
             }
@@ -3804,7 +3927,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "range": "20 ft",
                     "duration": "Instant",
                     "description": [
-                        "You fire a wave of dark, cursed energy. Deal 3d12 dark magic damage and apply a stack of Curse to all enemies in a 20 ft cone in front of you."
+                        "You fire a wave of dark, cursed energy. Deal 3d10 dark magic damage and apply a stack of Curse to all enemies in a 20 ft cone in front of you."
                     ],
                     "tags": [
                         "spell",
@@ -3824,7 +3947,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "range": "40 ft",
                     "duration": "Instant",
                     "description": [
-                        "You fire a series of dark missiles. Deal 3d12 dark magic damage and apply a stack of Curse to up to 3 targets in range. If the target is Cursed, this spell cannot miss and ignores MR."
+                        "You fire a series of dark missiles. Deal 3d10 dark magic damage and apply a stack of Curse to up to 3 targets in range. If the target is Cursed, this spell cannot miss and ignores MR."
                     ],
                     "tags": [
                         "spell",
@@ -3846,7 +3969,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "range": "40 ft",
                     "duration": "Instant",
                     "description": [
-                        "You wrap a target in dark energy. Deal 3d12 dark magic damage to a target in range and inflict Immobilize. While a target is Immobilized by this ability, it takes d12 dark magic damage at the beginning of each of its turns, gains a stack of Curse, and cannot have its Curse stacks expunged, except by your abilities or by a free action you can take at any time."
+                        "You wrap a target in dark energy. Deal 3d10 dark magic damage to a target in range and inflict Immobilize. While a target is Immobilized by this ability, it takes d10 dark magic damage at the beginning of each of its turns, gains a stack of Curse, and cannot have its Curse stacks expunged, except by your abilities or by a free action you can take at any time."
                     ],
                     "tags": [
                         "spell",
@@ -3906,7 +4029,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "range": "Self",
                     "duration": "1 minute",
                     "description": [
-                        "You infuse your sword with dark magic energy. For the spell's duration, when you hit a target with a greatsword attack, deal an additional 2d12 dark magic damage on hit."
+                        "You infuse your sword with dark magic energy. For the spell's duration, when you hit a target with a greatsword attack, deal an additional 2d10 dark magic damage on hit."
                     ],
                     "tags": [
                         "spell",
@@ -3945,7 +4068,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "range": "Self",
                     "duration": "1 minute",
                     "description": [
-                        "You don magically conjured dark armor. Whenever a cursed enemy targets you with an attack, they take 2d12 dark magic damage for each curse on them, gain a 25% chance to miss with their attack (even for attacks that cannot be evaded) for each curse on them, and are dragged 10 ft towards you for each curse on them. For each curse you inflict that is expunged while this ability is active, you gain a stack of Darkness. Each stack of darkness increases your physical and dark magic damage by 25%, up to a limit of 20 stacks."
+                        "You don magically conjured dark armor. Whenever a cursed enemy targets you with an attack, they take 2d10 dark magic damage for each curse on them, gain a 25% chance to miss with their attack (even for attacks that cannot be evaded) for each curse on them, and are dragged 10 ft towards you for each curse on them. For each curse you inflict that is expunged while this ability is active, you gain a stack of Darkness. Each stack of darkness increases your physical and dark magic damage by 25%, up to a limit of 20 stacks."
                     ],
                     "tags": [
                         "spell",
@@ -6136,7 +6259,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "range": "20 ft",
                     "duration": "Instant",
                     "description": [
-                        "You release tendril of energy in front of you. Deal 3d8 lightning magic damage to all enemy targets in a 20 ft line. Then at the end of your turn, this spell deals 3d8 damage to all targets in a 20 ft line with random direction."
+                        "You release tendril of energy in front of you. Deal 3d12 lightning magic damage to all enemy targets in a 20 ft line. Then at the end of your turn, this spell deals 3d12 damage to all targets in a 20 ft line with random direction."
                     ],
                     "tags": [
                         "spell",
@@ -6155,7 +6278,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "range": "20 ft",
                     "duration": "1 minute",
                     "description": [
-                        "You summon a ball of energy that erratically flies around attacking enemies. Summon a Ball Lightning object in an empty space in range. When summoned, it deals 4d8 lightning magic damage to all adjacent enemies. At the beginning of each of your turns, it travels 20 ft in a random direction (stopping when it hits a space it can't enter), then discharges, dealing 2d8 lightning magic damage to all adjacent targets."
+                        "You summon a ball of energy that erratically flies around attacking enemies. Summon a Ball Lightning object in an empty space in range. When summoned, it deals 4d12 lightning magic damage to all adjacent enemies. At the beginning of each of your turns, it travels 20 ft in a random direction (stopping when it hits a space it can't enter), then discharges, dealing 2d12 lightning magic damage to all adjacent targets."
                     ],
                     "tags": [
                         "spell",
@@ -6176,7 +6299,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "range": "100 ft",
                     "duration": "Instant",
                     "description": [
-                        "You call down a mighty bolt of thunder. Deal 8d8 lightning magic damage to all entities in a 20 ft square. Until the beginning of your next turn, random lightning strikes occur every turn in the target square, dealing 4d8 lightning magic damage to entities struck."
+                        "You call down a mighty bolt of thunder. Deal 8d12 lightning magic damage to all entities in a 20 ft square. Until the beginning of your next turn, random lightning strikes occur every turn in the target square, dealing 4d12 lightning magic damage to entities struck."
                     ],
                     "tags": [
                         "spell",
@@ -6195,7 +6318,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "range": "40 ft",
                     "duration": "1 round",
                     "description": [
-                        "You release a powerful bolt of lightning that bounces between targets. Deal 6d8 lightning magic damage to a target in range, marking them until the end of your next turn. Dealing physical damage to the marked target with a rapier causes a lightning bolt to fire from their bodies, dealing 6d8 lightning magic damage to them and cleansing their mark, as well as dealing 6d8 lightning magic damage to another random enemy within 40 ft and marking them until the end of your next turn."
+                        "You release a powerful bolt of lightning that bounces between targets. Deal 6d12 lightning magic damage to a target in range, marking them until the end of your next turn. Dealing physical damage to the marked target with a rapier causes a lightning bolt to fire from their bodies, dealing 6d12 lightning magic damage to them and cleansing their mark, as well as dealing 6d12 lightning magic damage to another random enemy within 40 ft and marking them until the end of your next turn."
                     ],
                     "tags": [
                         "spell",
@@ -6236,7 +6359,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "range": "Self",
                     "duration": "1 minute",
                     "description": [
-                        "You envelop your blade in lightning magic energy. For the spell's duration, when you hit a target with a rapier attack, deal an additional 2d8 lightning magic damage on hit."
+                        "You envelop your blade in lightning magic energy. For the spell's duration, when you hit a target with a rapier attack, deal an additional 2d12 lightning magic damage on hit."
                     ],
                     "tags": [
                         "spell",
@@ -6275,7 +6398,7 @@ var BarbsComponents = BarbsComponents || (function () {
                     "range": "Self",
                     "duration": "1 minute",
                     "description": [
-                        "You don magically conjured lightning armor. Whenever an adjacent enemy targets you with an attack, they are inflicted with a stack of Paralysis and take 2d8 lightning magic damage. Whenever you take damage, you may freely dash up to your speed in any direction. While this ability is active, you gain a stack of Lightning on every physical damage hit. You expend all stacks of Lightning when you cast a lightning spell attack, increasing lightning magic damage by 10% for each stack of Lightning expended this way, up to a limit of 20 stacks."
+                        "You don magically conjured lightning armor. Whenever an adjacent enemy targets you with an attack, they are inflicted with a stack of Paralysis and take 2d12 lightning magic damage. Whenever you take damage, you may freely dash up to your speed in any direction. While this ability is active, you gain a stack of Lightning on every physical damage hit. You expend all stacks of Lightning when you cast a lightning spell attack, increasing lightning magic damage by 10% for each stack of Lightning expended this way, up to a limit of 20 stacks."
                     ],
                     "tags": [
                         "spell",
@@ -6331,7 +6454,8 @@ var BarbsComponents = BarbsComponents || (function () {
                         "spell",
                         "light",
                         "restoration",
-                        "conditional"
+                        "conditional",
+                        "single-target"
                     ]
                 },
                 "Dancing Lights": {
@@ -6352,6 +6476,59 @@ var BarbsComponents = BarbsComponents || (function () {
                         "modal",
                         "minor ritual",
                         "major ritual"
+                    ]
+                },
+                "Beam of Light": {
+                    "name": "Beam of Light",
+                    "class": "Luxomancer",
+                    "action": "1 Major Action",
+                    "cost": "25 mana",
+                    "range": "100 ft",
+                    "duration": "Instant",
+                    "description": [
+                        "You fire a beam of powerful light. Deal 6d10 light magic damage to all enemies in a line AOE. You may spend 10 mana banked by your Guiding Light passive when you cast this spell; if you do, it ignores MR."
+                    ],
+                    "tags": [
+                        "spell",
+                        "attack",
+                        "light",
+                        "destruction",
+                        "aoe",
+                        "line",
+                        "modal"
+                    ]
+                },
+                "Healing Surge": {
+                    "name": "Healing Surge",
+                    "class": "Luxomancer",
+                    "action": "1 Major Action",
+                    "cost": "No cost",
+                    "range": "100 ft",
+                    "duration": "Instant",
+                    "description": [
+                        "You release pent up healing energy. Spend all of your banked Guiding Light mana and distribute health equal to the amount of mana spent this way amongst any number of targets in range in any way you choose."
+                    ],
+                    "tags": [
+                        "spell",
+                        "light",
+                        "restoration",
+                        "multi-target"
+                    ]
+                },
+                "Warrior of Light": {
+                    "name": "Warrior of Light",
+                    "class": "Luxomancer",
+                    "action": "1 Major Action",
+                    "cost": "15 mana",
+                    "range": "100 ft",
+                    "duration": "1 minute",
+                    "description": [
+                        "You provide a blessing of light to a champion. For the duration, a target in range gains, \"On Hit: Deal 4d10 light magic damage\" and +20% accuracy. Additionally, light healing spells on that target have +50% increased effectiveness."
+                    ],
+                    "tags": [
+                        "spell",
+                        "light",
+                        "buff"
                     ]
                 }
             }
@@ -7254,6 +7431,51 @@ var BarbsComponents = BarbsComponents || (function () {
                     ],
                     "tags": [
                         "buff"
+                    ]
+                },
+                "Single Track Mind": {
+                    "name": "Single Track Mind",
+                    "class": "Night Lord",
+                    "action": "1 Minor Action",
+                    "cost": "60 stamina",
+                    "range": "Self",
+                    "duration": "1 hour",
+                    "description": [
+                        "You pursue your goals with precision and finesse. Choose any single location. For the duration, you reroll all skill checks that you make that involve attempting to reach the chosen location, always taking the better result. You may consume 20 minutes of this buff's duration; if you do, a novel opportunity presents itself to assist you in arriving at your chosen location or to pull you out of danger."
+                    ],
+                    "tags": [
+                        "concentration",
+                        "modal",
+                        "buff"
+                    ]
+                },
+                "Quick Fingers": {
+                    "name": "Quick Fingers",
+                    "class": "Night Lord",
+                    "action": "1 Minor Action",
+                    "cost": "80 stamina",
+                    "range": "Self",
+                    "duration": "1 minute",
+                    "description": [
+                        "You work at blindingly fast speeds. For the duration, once per round, activate this ability after performing any action; if you do, you gain a 50% chance to reset the action type spent."
+                    ],
+                    "tags": [
+                        "concentration"
+                    ]
+                },
+                "Heist": {
+                    "name": "Heist",
+                    "class": "Night Lord",
+                    "action": "Free Action",
+                    "cost": "No cost",
+                    "range": "Self",
+                    "duration": "1 minute",
+                    "description": [
+                        "You steal expert knowledge. For the duration, once per turn, you may cast an ability that you saw cast within the last round as if you knew the ability. You pay any action and resource costs for that ability as normal, except you may spend stamina instead of other resources if you wish."
+                    ],
+                    "tags": [
+                        "concentration",
+                        "conditional"
                     ]
                 }
             }
@@ -10045,6 +10267,64 @@ var BarbsComponents = BarbsComponents || (function () {
                         "totem",
                         "conditional",
                         "concentration"
+                    ]
+                },
+                "Keen Eyed Inquisition": {
+                    "name": "Keen Eyed Inquisition",
+                    "class": "Vastwood Knight",
+                    "action": "1 Major Action",
+                    "cost": "40 stamina or mana",
+                    "range": "50 ft",
+                    "duration": "1 minute",
+                    "description": [
+                        "You scope out an area or person and look for clues or weaknesses. If you are in combat, deal 8d10 physical damage to a target in range. Then, you may concentrate for the duration; if you do, you may repeat this attack without paying its stamina/mana cost while you are concentrating on this ability. When you use this attack while concentrating on this ability, it has +5% critical strike chance for each time you have attacked with this ability within the current cast.",
+                        "<br>",
+                        "If you are not in combat, for the duration, you may make Interaction: Intent and Observation: Listen checks in place of Observation: Search and Observation: Tracking checks, and you may add your highest Athletics category skill check modifier to your rolls. Additionally, you can see the magical signatures of any entities that have been in the area within the last 24 hours.",
+                        "<br>",
+                        "This ability costs half stamina/mana when Vastwood Sovereignty is active."
+                    ],
+                    "tags": [
+                        "modal",
+                        "attack",
+                        "physical",
+                        "ranged",
+                        "conditional",
+                        "concentration"
+                    ]
+                },
+                "Blessing of the Vastwoods": {
+                    "name": "Blessing of the Vastwoods",
+                    "class": "Vastwood Knight",
+                    "action": "1 Major Action",
+                    "cost": "35 stamina or mana",
+                    "range": "50 ft",
+                    "duration": "6 hours",
+                    "description": [
+                        "You protect your allies by evoking your connecting to the Vastwoods. For the duration, you and all allies in range gain the following benefits: when rolling Initative, gain shielding equal to 10% of maximum health; you cannot be surprised; if magic is used to scry you, you can block it, and you learn the magical signature of the caster.",
+                        "<br>",
+                        "This ability costs half stamina/mana when Vastwood Sovereignty is active."
+                    ],
+                    "tags": [
+                        "conditional"
+                    ]
+                },
+                "Ambient Amelioration": {
+                    "name": "Ambient Amelioration",
+                    "class": "Vastwood Knight",
+                    "action": "1 Major Action",
+                    "cost": "50 stamina or mana",
+                    "range": "50 ft",
+                    "duration": "Instant",
+                    "description": [
+                        "You draw upon nature to heal and sustain. If you are in combat, you and all allies in range heal for Xd20, where X is the number of entities targetted by this ability. Additionally, each target is cleansed of a condition of their choice.",
+                        "<br>",
+                        "If you are not in combat, grant a buff to all allies in range that lasts for 24 hours and imparts the following effects: you need no food, water, air, or sleep; you cannot be charmed; your mind cannot be read."
+                    ],
+                    "tags": [
+                        "modal",
+                        "heal",
+                        "conditional",
+                        "cleanse"
                     ]
                 }
             }
