@@ -467,6 +467,7 @@ var BarbsComponents = BarbsComponents || (function () {
         RANGE: '+%s ft range',
         REACH: '+%s ft reach',
         UNBLOCKABLE_CHANCE: '%s% chance to be unblockable, chance: [[d100cs>%s]]',
+        VULNERABILITY: 'Inflict %s vulnerability',
 
         BLINDED_CHANCE: '%s% chance to Blind, chance: [[d100cs>%s]], CR: [[1d100]]',
         BURN_CHANCE: function(x) { return '%s% chance to inflict Burn ' + x + ', chance: [[d100cs>%s]], CR: [[1d100]]' },
@@ -510,6 +511,7 @@ var BarbsComponents = BarbsComponents || (function () {
         'range': HiddenStat.RANGE,
         'reach:': HiddenStat.REACH,
         'unblockable chance:': HiddenStat.UNBLOCKABLE_CHANCE,
+        'vulnerability': HiddenStat.VULNERABILITY,
 
         'blinded chance': HiddenStat.BLINDED_CHANCE,
         'burn [0-9]* chance:': HiddenStat.BURN_CHANCE,
@@ -12169,7 +12171,9 @@ var BarbsComponents = BarbsComponents || (function () {
         'minion damage': function(character, item_name, part) {
             return Affix.value_and_roll_type_affix(item_name, part, 'minion damage', Effect.minion_damage);
         },
-    }
+        // Allow range as a way to record it, but it doesn't do anything
+        'weapon_range': function() { return null; },
+    };
 
     // Add stat bonus definitions to affix constructors
     Object.keys(Stat).forEach(function (key) {
@@ -12293,7 +12297,6 @@ var BarbsComponents = BarbsComponents || (function () {
                 item.name, item.type, item.slot));
             return item;
         }
-
     }
 
 

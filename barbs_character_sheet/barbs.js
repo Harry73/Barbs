@@ -1384,6 +1384,12 @@ var Barbs = Barbs || (function () {
     }
 
 
+    // TODO: make something to fix JS's stupid way of printing floats for list_effects
+    function decimal_round(string) {
+        return string;
+    }
+
+
     function list_persistent_effects(msg) {
         const character = get_character_from_msg(msg);
 
@@ -1417,7 +1423,7 @@ var Barbs = Barbs || (function () {
             if (effect.effectiveness === 1) {
                 effect_text = '<li>%s</li>'.format(effect.name);
             } else {
-                effect_text = '<li>%s (%sx)</li>'.format(effect.name, effect.effectiveness);
+                effect_text = '<li>%s (%sx)</li>'.format(effect.name, decimal_round(effect.effectiveness));
             }
 
             if (effect.effect_type === EffectType.BUFF) {
