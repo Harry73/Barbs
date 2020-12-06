@@ -836,6 +836,8 @@ var Barbs = Barbs || (function () {
             bonus_string += '+%s'.format(roll.skills[Skill.ALL.name]);
         }
 
+        let dice = 'd100';
+
         // Some abilities just love to be little stupid snowflakes. Deal with them here.
         assert_numeric(bonus_string, 'Skill bonus "%s" is non-numeric', bonus_string);
         for (let i = 0; i < persistent_effects.length; i++) {
@@ -849,10 +851,13 @@ var Barbs = Barbs || (function () {
                 } else {
                     bonus_string = '(1.5*(%s))'.format(bonus_string);
                 }
+
+                dice = '2d100d1';
             }
         }
 
-        const roll_string = 'round(d100+%s)'.format(bonus_string);
+        const roll_string = 'round(%s+%s)'.format(dice, bonus_string);
+
         chat(character, total_format.format(skill_name, 'Roll', roll_string));
     }
 
