@@ -1384,9 +1384,106 @@ var Barbs = Barbs || (function () {
     }
 
 
-    // TODO: make something to fix JS's stupid way of printing floats for list_effects
-    function decimal_round(string) {
-        return string;
+    // Helper to print floating-point numbers more nicely than JS does by default
+    function decimal_round(value) {
+        const str = '%s'.format(value);
+        if (!str.includes('.')) {
+            return str;
+        }
+
+        const float_component = str.split('.')[1];
+        if (float_component.length < 3) {
+            return str;
+        }
+
+        const chars = str.split('');
+        const ints = [];
+        let is_negative = false;
+        for (let i = 0; i < chars.length; i++) {
+            const char = chars[i];
+            if (char === '.') {
+                ints.push(char);
+            } else if (char === '-') {
+                is_negative = true;
+            } else {
+                ints.push(parseInt(char, 10));
+            }
+        }
+
+        // Look for a sequence of 3 zeros or 3 nines as a indicator that we can probably print this number better
+        // than plain old JS.
+        let zero_index = -1;
+        let nine_index = -1;
+        for (let i = 0; i < ints.length - 2; i++ ) {
+            if (ints[i] === 0 && ints[i + 1] === 0 && ints[i + 2] === 0) {
+                zero_index = i;
+                break;
+            }
+            if (ints[i] === 9 && ints[i + 1] === 9 && ints[i + 2] === 9) {
+                nine_index = i;
+                break;
+            }
+        }
+
+        // If there is no sequence of 3 zeros or 3 nines, we can't round this number nicely so just return what we got.
+        if (zero_index === -1 && nine_index === -1) {
+            return str;
+        }
+
+        function concat_ints(array) {
+            let merged = '';
+            for (let i = 0; i < array.length; i++) {
+                merged = "%s%s".format(merged, array[i]);
+            }
+
+            if (merged.endsWith('.')) {
+                merged = merged.slice(0, merged.length - 1);
+            }
+
+            if (is_negative) {
+                return '-' + merged;
+            }
+            return merged;
+        }
+
+        // If there is a sequence of 3 zeros, truncate the string at the first zero in the sequence
+        if (zero_index !== -1) {
+            const truncated = ints.slice(0, zero_index);
+            return concat_ints(truncated, is_negative);
+        }
+
+        // There must be a sequence of 3 nines. First truncate at the first nine in the sequence.
+        let truncated = ints.slice(0, nine_index);
+        // Then round up from the right to left
+        for (let i = truncated.length - 1; i >= 0; i--) {
+            const int = truncated[i];
+
+            // Skip over the decimal point
+            if (int === '.') {
+                continue;
+            }
+
+            // If we're at the front of the string...
+            if (i === 0) {
+                if (int !== 9) {
+                    truncated[i] += 1;
+                } else {
+                    truncated[i] = 0;
+                    truncated.unshift(1);
+                }
+                break;
+            }
+
+            // If we're not yet at the front of the string...
+            if (int !== 9) {
+                truncated[i] += 1;
+                break;
+            } else {
+                truncated[i] = 0;
+            }
+        }
+
+        return concat_ints(truncated, is_negative);
     }
 
 
