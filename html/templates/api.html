@@ -79,7 +79,7 @@
                 <li>On the left are your base Health, Stamina, Mana, and Speed. These are based primarily on your
                     attribute values. Item affixes will be reflected in these stats automatically.</li>
                 <li>
-                    The middle right has four buttons for rolls that don't fall into any other category.
+                    The middle right has several buttons for rolls that don't fall into any other category.
                     <ul>
                         <li class="padt">Initiative - An initiative roll is a d100 plus Agility, plus any bonuses
                             from items. This button performs this roll.</li>
@@ -152,16 +152,11 @@
                 a stat will also account for equipped items and class abilities. Rolling a stat like Health or Buff
                 Limit will print your boosted value for this stat. Rolling a stat like Critical Hit Chance will perform
                 a d100; a value greater than or equal to <span class="monospace">100 - Critical Hit Chance + 1</span>
-                would be a critical hit. Rolling a regeneration stat will show how much Health/Stamina/Mana you
+                would be a critical hit. Rolling a regeneration stat will show how much Health/Stamina/Mana you would
                 regenerate on a short rest.</p>
             <br>
             <p>Notable stats:</p>
             <ul>
-                <li>AC - Rolling the AC stat has the same effect as the <a href="#Take Damage">"Take Damage"</a>
-                    button on the Characteristics Tab.</li>
-                <li>Magic Resist - Rolling the Magic Resist stat has the same effect as the
-                    <a href="#Take Damage">"Take Damage"</a> button on the Characteristics Tab. The value shown on your
-                    character sheet is your general MR.</li>
                 <li>Condition Resist - Rolling the Condition Resist stat has the same effect as the
                     <a href="#Condition Resist">Condition Resist</a> button on the Characteristics Tab. The value shown
                     on your character sheet is your general CR.</li>
@@ -237,7 +232,7 @@
             <p>&nbsp;&nbsp;&nbsp;&nbsp;API requests include the character name, which the API uses to identify who sent
                 a request. If the character name is not present, the API falls back to who you are speaking as in
                 Roll20 chat as a means of identification.</p>
-            <p>If you need to specify a character for an ability, you can use their first name or their full name.
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;If you need to specify a character for an ability, you can use their first name or their full name.
                 A complete list of how each character can be identified
                 <a href="https://github.com/Harry73/Barbs/blob/bb0154e3cf720caacae990334ece9a5192d5410a/barbs_character_sheet/components.js#L159">can be found here</a>.</p>
             <br>
@@ -267,6 +262,7 @@
                 currently on your character, along with a button to let you select one to remove. If you need to remove
                 an effect, use this button and select the effect you want to remove. The API will send a message if the
                 effect was successfully removed.</p>
+            <br>
             <a id="Crit Rolls">
                 <h3>Crit Rolls</h3>
             </a>
@@ -647,9 +643,9 @@
                         <li><span class="monospace">duration: infinite</span> - The effect will last forever, or until it is manually removed.</li>
                         <li><span class="monospace">duration: 1 minute</span> - The effect will last for 1 minute in combat, or 6 rounds.</li>
                         <li><span class="monospace">duration: 1 hour</span> - The effect will last for 1 hour in combat, or 60 rounds.</li>
-                        <li><span class="monospace">single</span> - The effect will be applied to the next attack, and then will be removed.</li>
-                        <li><span class="monospace">&lt;N&gt; hard</span> - A "hard" duration will last "N" rounds and end at the <b>end</b> of your turn.</li>
-                        <li><span class="monospace">&lt;N&gt; soft</span> - A "soft" duration will last "N" rounds and end at the <b>start</b> of your turn.</li>
+                        <li><span class="monospace">duration: single</span> - The effect will be applied to the next attack, and then will be removed.</li>
+                        <li><span class="monospace">duration: &lt;N&gt; hard</span> - A "hard" duration will last "N" rounds and end at the <b>end</b> of your turn.</li>
+                        <li><span class="monospace">duration: &lt;N&gt; soft</span> - A "soft" duration will last "N" rounds and end at the <b>start</b> of your turn.</li>
                     </ul>
                 </li>
             </ul>
