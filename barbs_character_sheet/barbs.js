@@ -5472,6 +5472,7 @@ var Barbs = Barbs || (function () {
         'Captain': {
             'Blitzkrieg': captain_blitzkrieg,
             'Inspirational Speech': captain_inspirational_speech,
+            'Scramble': print_ability_description,
         },
         'Champion': {
             'Master of Arms': champion_master_of_arms,
@@ -6405,6 +6406,46 @@ var Barbs = Barbs || (function () {
 
 
     // ################################################################################################################
+    // Time management
+
+
+    function advance_time(msg) {
+        assert_not_null(msg, 'reroll(), msg');
+
+        const pieces = msg.content.split(' ');
+        assert(pieces.length >= 4, 'Too few space-separated pieces in reroll message');
+        const count = parse_int(pieces[2]);
+        const period = pieces[3];
+
+        let cycles = 0;
+        if (period.includes('minute')) {
+            cycles = count * 6;
+        } else if (period.includes('hour')) {
+            cycles = count * 60;
+        }
+
+        for (let i = 0; i < persistent_effects.length; i++) {
+            assert_type(persistent_effects[i].duration, Duration, 'advance_time() duration');
+
+            if (persistent_effects[i].duration.single_use()) {
+                continue;
+            }
+
+            persistent_effects[i].duration.length -= cycles;
+
+            if (persistent_effects[i].duration.length <= 0) {
+                LOG.info('Persistent effect "%s" on %s ended'.format(persistent_effects[i].name,
+                                                                     persistent_effects[i].target));
+                persistent_effects.splice(i, 1);
+                i--;
+            }
+        }
+
+        raw_chat('API', 'Advanced time by %s %s'.format(count, period));
+    }
+
+
+    // ################################################################################################################
     // Basic setup and message handling
 
 
@@ -6424,6 +6465,7 @@ var Barbs = Barbs || (function () {
         'ability': process_ability,
         'info': info_block,
         'reroll': reroll,
+        'advance_time': advance_time,
     };
 
 
