@@ -5324,17 +5324,37 @@ var Barbs = Barbs || (function () {
             chat('Missing option for parameter "defense", expected "AC", "MR", or "EV"');
             return true;            
         }
+        
+        
         const source = character.name;
         for (let i = 0; i < target_characters.length; i++) {
             const target_character = target_characters[i];
-            add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
+            add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
                 if (defense === 'AC'){
-                    roll.add_stat_bonus(Stat.AC, 30);                    
+                    const ac = get_stat_roll_modifier(target_character, roll, Stat.AC);
+                    log(ac)
+                    if (eval(ac) < 0) {
+                        roll.add_stat_bonus(Stat.AC, 30+eval(ac)*-1);
+                    } else {
+                        roll.add_stat_bonus(Stat.AC, 30); 
+                    }                  
                 } else if (defense === 'MR'){
-                    roll.add_stat_bonus(Stat.MAGIC_RESIST, 30); 
+                    const mr = get_stat_roll_modifier(target_character, roll, Stat.MAGIC_RESIST);
+                    log(mr)
+                    if (eval(mr) < 0) {
+                        roll.add_stat_bonus(Stat.MAGIC_RESIST, 30+eval(mr)*-1);
+                    } else {
+                        roll.add_stat_bonus(Stat.MAGIC_RESIST, 30); 
+                    }
                 } else if (defense === 'EV'){
-                    roll.add_stat_bonus(Stat.EVASION, 30); 
+                    const evasion = get_stat_roll_modifier(target_character, roll, Stat.EVASION);
+                    log(evasion)
+                    if (eval(evasion) < 0) {
+                        roll.add_stat_bonus(Stat.EVASION, 30+eval(evasion)*-1);
+                    } else {
+                        roll.add_stat_bonus(Stat.EVASION, 30); 
+                    }
                 }
 
                 return true;
