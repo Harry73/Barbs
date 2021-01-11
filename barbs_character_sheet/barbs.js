@@ -5305,7 +5305,44 @@ var Barbs = Barbs || (function () {
         print_ability_description(character, ability);
     }
 
+    function vastwood_knight_swordpoint_diplomacy(character, ability, parameters) {
+        const roll = new Roll(character, RollType.PHYSICAL);
+        roll.add_damage('6d10', Damage.PHYSICAL);
+        roll.add_effect('Target gains a mark, and must choose whether it grants attacks against it 20% increased damage or 10% critical strike chance');
+        add_scale_damage(character, roll, parameters);
 
+        roll_crit(ability, roll, parameters, function (crit_section) {
+            do_roll(character, ability, roll, parameters, crit_section);
+        });
+    }
+    
+    function vastwood_knight_natural_precognition(character, ability, parameters) {
+        const target_characters = get_target_characters('targets', parameters);
+        const defense = get_parameter('defense', parameters)
+        
+        if (defense !== 'AC' && defense !== 'MR' && defense !== 'EV') {
+            chat('Missing option for parameter "defense", expected "AC", "MR", or "EV"');
+            return true;            
+        }
+        const source = character.name;
+        for (let i = 0; i < target_characters.length; i++) {
+            const target_character = target_characters[i];
+            add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
+                              RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
+                if (defense === 'AC'){
+                    roll.add_stat_bonus(Stat.AC, 30);                    
+                } else if (defense === 'MR'){
+                    roll.add_stat_bonus(Stat.MAGIC_RESIST, 30); 
+                } else if (defense === 'EV'){
+                    roll.add_stat_bonus(Stat.EVASION, 30); 
+                }
+
+                return true;
+            });
+        }
+
+        print_ability_description(character, ability);
+    }
     function warrior_charge(character, ability, parameters) {
         const target_characters = get_target_characters('targets', parameters);
 
@@ -5691,6 +5728,8 @@ var Barbs = Barbs || (function () {
         },
         'Vastwood Knight': {
             'Vastwood Sovereignty': vastwood_knight_sovereignty,
+            'Swordpoint Diplomacy': vastwood_knight_swordpoint_diplomacy,
+            'Natural Precognition': vastwood_knight_natural_precognition,
         },
         'Voidwalker': {
             'Dimension Door': print_ability_description,
