@@ -33,6 +33,7 @@ var Barbs = Barbs || (function () {
     const Roll = BarbsComponents.Roll;
     const EffectType = BarbsComponents.EffectType;
     const ItemType = BarbsComponents.ItemType;
+    const ItemSlot = BarbsComponents.ItemSlot;
     const ItemScalar = BarbsComponents.ItemScalar;
     const Duration = BarbsComponents.Duration;
     const Item = BarbsComponents.Item;
@@ -62,6 +63,8 @@ var Barbs = Barbs || (function () {
     const effects_section_format = '{{effects=%s}}';
 
     const ability_block_format = '&{template:5eDefault} {{spell=1}} {{title=%s}} {{subheader=%s}} 0 {{abilityshowdesc=1}} {{abilitydescription=%s }} 0 0 0 0 0 0 0';
+
+    const ARMOR_SLOTS = [ItemSlot.HEAD, ItemSlot.BODY, ItemSlot.HANDS, ItemSlot.FEET];
 
     let persistent_effects = [];
 
@@ -498,10 +501,10 @@ var Barbs = Barbs || (function () {
 
             // Otherwise, add a new entry to the turn order
             turn_order.push({
-                                id: token.id,
-                                pr: initiative.toString(),
-                                custom: character.name
-                           });
+                id: token.id,
+                pr: initiative.toString(),
+                custom: character.name
+            });
             Campaign().set('turnorder', JSON.stringify(turn_order));
         });
     }
@@ -1045,7 +1048,7 @@ var Barbs = Barbs || (function () {
 
         // Figure out what damage / multiplier this handler grants
         const fake_roll = new Roll(target_character, RollType.ALL);
-        handler(target_character, fake_roll, parameters);
+        handler(target_character, fake_roll, parameters, effectiveness);
 
         // Edit the handler into something that grants the same damages and multipliers, but increased by 50%
         return function (char, roll, params) {
@@ -2687,7 +2690,7 @@ var Barbs = Barbs || (function () {
         });
 
         chat(character, ability_block_format.format(ability['name'], ability['class'],
-            ability['description'].join('\n')));
+                                                    ability['description'].join('\n')));
     }
 
 
@@ -2743,9 +2746,10 @@ var Barbs = Barbs || (function () {
                 if (persistent_effects[i].name === ability.name && persistent_effects[i].target === character.name) {
                     persistent_effects.splice(i, 1);
 
-                    ability.name = ability.name + ' (sacrificed)';
-                    add_persistent_effect(character, ability, parameters, character, Duration.SINGLE_USE(), Ordering(),
-                                          RollType.PHYSICAL, RollTime.DEFAULT, 1,
+                    const ability_copy = {...ability};
+                    ability_copy.name = ability.name + ' (sacrificed)';
+                    add_persistent_effect(character, ability_copy, parameters, character, Duration.SINGLE_USE(),
+                                          Ordering(), RollType.PHYSICAL, RollTime.DEFAULT, 1,
                                           function (char, roll, parameters) {
                         roll.add_multiplier(2, Damage.PHYSICAL, character.name);
                         roll.add_effect('Ignore 100% of target\'s AC');
@@ -2788,10 +2792,10 @@ var Barbs = Barbs || (function () {
     function arcane_archer_persistent_hunter(character, ability, parameters) {
         add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
-                roll.add_stat_bonus(Stat.CONDITION_RESIST, 30);
-                roll.add_crowd_control_resist(30);
-                return true;
-            });
+            roll.add_stat_bonus(Stat.CONDITION_RESIST, 30);
+            roll.add_crowd_control_resist(30);
+            return true;
+        });
 
         print_ability_description(character, ability);
     }
@@ -2940,9 +2944,9 @@ var Barbs = Barbs || (function () {
             const target_character = target_characters[i];
             add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_HOUR(), Ordering(),
                                   RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
-                    roll.add_skill_bonus(Skill.ALL, bonus);
-                    return true;
-                });
+                roll.add_skill_bonus(Skill.ALL, bonus);
+                return true;
+            });
         }
 
         print_ability_description(character, ability);
@@ -2977,9 +2981,9 @@ var Barbs = Barbs || (function () {
     function assassin_focus(character, ability, parameters) {
         add_persistent_effect(character, ability, parameters, character, Duration.SINGLE_USE(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
-                roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, 30);
-                return true;
-            });
+            roll.add_stat_bonus(Stat.CRITICAL_HIT_CHANCE, 30);
+            return true;
+        });
 
         print_ability_description(character, ability);
     }
@@ -3446,10 +3450,10 @@ var Barbs = Barbs || (function () {
 
             add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
                                   RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
-                    roll.add_stat_multiplier(Stat.AC, 0.1 * buff);
-                    roll.add_stat_bonus(Stat.MAGIC_RESIST, 10 * buff);
-                    return true;
-                });
+                roll.add_stat_multiplier(Stat.AC, 0.1 * buff);
+                roll.add_stat_bonus(Stat.MAGIC_RESIST, 10 * buff);
+                return true;
+            });
 
             const msg = roll_format.format(
                 ability.name, /*damage_section=*/'', /*crit_section=*/'', /*combo_section=*/'',
@@ -3691,10 +3695,10 @@ var Barbs = Barbs || (function () {
                 add_persistent_effect(character, modified_name, parameters, target_character, Duration.ONE_MINUTE(),
                                       Ordering(), RollType.ALL, RollTime.DEFAULT, count,
                                       function (char, roll, parameters) {
-                                          roll.add_stat_bonus(Stat.CONDITION_RESIST, 10 * count);
-                                          roll.add_hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 10 * count);
-                                          return true;
-                                      });
+                    roll.add_stat_bonus(Stat.CONDITION_RESIST, 10 * count);
+                    roll.add_hidden_stat(HiddenStat.GENERAL_MAGIC_PENETRATION, 10 * count);
+                    return true;
+                });
             }
 
             chat(character, 'Buffed ' + official_names.join(', '));
@@ -3756,9 +3760,9 @@ var Barbs = Barbs || (function () {
                 add_persistent_effect(character, modified_name, parameters, target_character, Duration.ONE_MINUTE(),
                                       Ordering(), RollType.ALL, RollTime.DEFAULT, count,
                                       function (char, roll, parameters) {
-                                          roll.add_multiplier(0.2 * count, Damage.ALL, short_name);
-                                          return true;
-                                      });
+                    roll.add_multiplier(0.2 * count, Damage.ALL, short_name);
+                    return true;
+                });
             }
 
             chat(character, 'Buffed ' + official_names.join(', '));
@@ -3808,13 +3812,13 @@ var Barbs = Barbs || (function () {
         if (transform !== null) {
             add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(),
                                   Ordering(), RollType.ALL, RollTime.DEFAULT, 1, function (char, roll) {
-                    roll.add_stat_bonus(Stat.HEALTH, 300);
-                    roll.add_stat_bonus(Stat.AC, 30);
-                    roll.add_stat_bonus(Stat.MAGIC_RESIST, 30);
-                    roll.add_stat_bonus(Stat.EVASION, 30);
-                    roll.add_stat_bonus(Stat.CONDITION_RESIST, 30);
-                    return true;
-                });
+                roll.add_stat_bonus(Stat.HEALTH, 300);
+                roll.add_stat_bonus(Stat.AC, 30);
+                roll.add_stat_bonus(Stat.MAGIC_RESIST, 30);
+                roll.add_stat_bonus(Stat.EVASION, 30);
+                roll.add_stat_bonus(Stat.CONDITION_RESIST, 30);
+                return true;
+            });
 
             print_ability_description(character, ability);
 
@@ -3846,8 +3850,8 @@ var Barbs = Barbs || (function () {
             // The buff itself doesn't do anything relevant to the API, but we'll create it for buff-tracking purposes
             add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(),
                                   Ordering(), RollType.ALL, RollTime.DEFAULT, 1, function () {
-                                      return true;
-                                  });
+                return true;
+            });
         }
 
         const effects_section = effects_section_format.format(effects.join(''));
@@ -3894,9 +3898,9 @@ var Barbs = Barbs || (function () {
             // The buff itself doesn't do anything relevant to the API, but we'll create it for buff-tracking purposes
             add_persistent_effect(character, revised_name, parameters, target_character, Duration.ONE_MINUTE(),
                                   Ordering(), RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
-                    roll.add_hidden_stat(choice, 50);
-                    return true;
-                });
+                roll.add_hidden_stat(choice, 50);
+                return true;
+            });
         }
 
         const effects_section = effects_section_format.format(effects.join(''));
@@ -3912,8 +3916,8 @@ var Barbs = Barbs || (function () {
         // The API isn't going to do anything for this, but we'll create it for buff-tracking purposes
         add_persistent_effect(character, ability, parameters, target_character, Duration.HARD(6 * 60),
                               Ordering(), RollType.ALL, RollTime.DEFAULT, 1, function () {
-                return true;
-            });
+            return true;
+        });
 
         print_ability_description(character, ability);
     }
@@ -4102,14 +4106,14 @@ var Barbs = Barbs || (function () {
 
         add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
                               RollType.PHYSICAL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
-                if (concentration !== null) {
-                    roll.add_hidden_stat(HiddenStat.LIFESTEAL, 25);
-                } else {
-                    roll.add_hidden_stat(HiddenStat.LIFESTEAL, 15);
-                }
+            if (concentration !== null) {
+                roll.add_hidden_stat(HiddenStat.LIFESTEAL, 25);
+            } else {
+                roll.add_hidden_stat(HiddenStat.LIFESTEAL, 15);
+            }
 
-                return true;
-            });
+            return true;
+        });
 
         print_ability_description(character, ability);
     }
@@ -4118,20 +4122,20 @@ var Barbs = Barbs || (function () {
     function juggernaut_tachycardia(character, ability, parameters) {
         add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
-                roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 30);
+            roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 30);
 
-                if (RollType.is_physical(roll.roll_type)) {
-                    roll.add_hidden_stat(HiddenStat.REACH, 5);
-                }
-                roll.add_hidden_stat(HiddenStat.AC_PENETRATION, 50);
+            if (RollType.is_physical(roll.roll_type)) {
+                roll.add_hidden_stat(HiddenStat.REACH, 5);
+            }
+            roll.add_hidden_stat(HiddenStat.AC_PENETRATION, 50);
 
-                const parameter = get_parameter('low_health', parameters);
-                if (parameter !== null) {
-                    roll.add_multiplier(1, Damage.PHYSICAL, character.name);
-                }
+            const parameter = get_parameter('low_health', parameters);
+            if (parameter !== null) {
+                roll.add_multiplier(1, Damage.PHYSICAL, character.name);
+            }
 
-                return true;
-            });
+            return true;
+        });
 
         print_ability_description(character, ability);
     }
@@ -4349,10 +4353,10 @@ var Barbs = Barbs || (function () {
 
         add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
-                roll.add_damage('4d10', Damage.LIGHT);
-                roll.add_hidden_stat(HiddenStat.ACCURACY, 20);
-                return true;
-            });
+            roll.add_damage('4d10', Damage.LIGHT);
+            roll.add_hidden_stat(HiddenStat.ACCURACY, 20);
+            return true;
+        });
 
         print_ability_description(character, ability);
     }
@@ -4399,9 +4403,9 @@ var Barbs = Barbs || (function () {
 
         add_persistent_effect(character, ability, parameters, character, Duration.SINGLE_USE(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (character, roll, parameters) {
-                    roll.add_combo_chance(30);
-                    return true;
-                });
+            roll.add_combo_chance(30);
+            return true;
+        });
 
         print_ability_description(character, ability);
     }
@@ -4667,8 +4671,8 @@ var Barbs = Barbs || (function () {
     function night_lord_single_track_mind(character, ability, parameters) {
         add_persistent_effect(character, ability, parameters, character, Duration.ONE_HOUR(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function () {
-                return true;
-            });
+            return true;
+        });
 
         print_ability_description(character, ability);
     }
@@ -4942,7 +4946,7 @@ var Barbs = Barbs || (function () {
                 distance_roll.copy_multipliers(roll);
                 const rolls_per_type = distance_roll.roll();
                 format_and_send_roll(character, '%s (%s ft)'.format(ability.name, distances[i]), distance_roll,
-                    rolls_per_type, '', '');
+                                     rolls_per_type, '', '');
             }
 
             return true;
@@ -5039,9 +5043,9 @@ var Barbs = Barbs || (function () {
     function soldier_double_time(character, ability, parameters) {
         add_persistent_effect(character, ability, parameters, character, Duration.ONE_MINUTE(), Ordering(),
                               RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
-                roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 20);
-                return true;
-            });
+            roll.add_stat_bonus(Stat.MOVEMENT_SPEED, 20);
+            return true;
+        });
 
         print_ability_description(character, ability);
     }
@@ -5227,7 +5231,6 @@ var Barbs = Barbs || (function () {
         });
 
         print_ability_description(character, ability);
-
     }
 
 
@@ -5305,6 +5308,7 @@ var Barbs = Barbs || (function () {
         print_ability_description(character, ability);
     }
 
+
     function vastwood_knight_swordpoint_diplomacy(character, ability, parameters) {
         const roll = new Roll(character, RollType.PHYSICAL);
         roll.add_damage('6d10', Damage.PHYSICAL);
@@ -5315,54 +5319,88 @@ var Barbs = Barbs || (function () {
             do_roll(character, ability, roll, parameters, crit_section);
         });
     }
-    
+
+
     function vastwood_knight_natural_precognition(character, ability, parameters) {
         const target_characters = get_target_characters('targets', parameters);
         const defense = get_parameter('defense', parameters)
-        
-        if (defense !== 'AC' && defense !== 'MR' && defense !== 'EV') {
-            chat('Missing option for parameter "defense", expected "AC", "MR", or "EV"');
-            return true;            
+
+        let stat;
+        if (defense === 'AC') {
+            stat = Stat.AC;
+        } else if (defense === 'MR') {
+            stat = Stat.MAGIC_RESIST;
+        } else if (defense === 'EV') {
+            stat = Stat.EVASION;
+        } else {
+            chat(character, '"defense" parameter must have one of the following values: "AC", "MR", or "EV"');
+            return;
         }
-        
-        
-        const source = character.name;
+
+        const ability_copy = {...ability};
+        ability_copy.name = '%s (%s)'.format(ability.name, defense);
+
         for (let i = 0; i < target_characters.length; i++) {
             const target_character = target_characters[i];
-            add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_MINUTE(), Ordering(),
-                              RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
-                if (defense === 'AC'){
-                    const ac = get_stat_roll_modifier(target_character, roll, Stat.AC);
-                    log(ac)
-                    if (eval(ac) < 0) {
-                        roll.add_stat_bonus(Stat.AC, 30+eval(ac)*-1);
-                    } else {
-                        roll.add_stat_bonus(Stat.AC, 30); 
-                    }                  
-                } else if (defense === 'MR'){
-                    const mr = get_stat_roll_modifier(target_character, roll, Stat.MAGIC_RESIST);
-                    log(mr)
-                    if (eval(mr) < 0) {
-                        roll.add_stat_bonus(Stat.MAGIC_RESIST, 30+eval(mr)*-1);
-                    } else {
-                        roll.add_stat_bonus(Stat.MAGIC_RESIST, 30); 
+            add_persistent_effect(character, ability_copy, parameters, target_character, Duration.ONE_MINUTE(),
+                                  Ordering(), RollType.ALL, RollTime.DEFAULT, 1,
+                                  function (char, roll, parameters, effectiveness) {
+                // We need to figure out how the character's stats will be modified by armor items and only remove the
+                // negative mods. We're going to apply effects from each armor-slot item to a fake roll, see what
+                // negative values get added to the fake roll, if any, and add those up. With the total, we'll add the
+                // opposite as a stat bonus, while being tricksy to negate buff effectiveness that may be applied
+                // later on. Then tack on the +30 as well, letting buff effectiveness do it's thing to that part.
+                //
+                let negative_mods = 0;
+                for (let i = 0; i < char.items.length; i++) {
+                    const item = char.items[i];
+                    if (item === null) {
+                        continue;
                     }
-                } else if (defense === 'EV'){
-                    const evasion = get_stat_roll_modifier(target_character, roll, Stat.EVASION);
-                    log(evasion)
-                    if (eval(evasion) < 0) {
-                        roll.add_stat_bonus(Stat.EVASION, 30+eval(evasion)*-1);
-                    } else {
-                        roll.add_stat_bonus(Stat.EVASION, 30); 
+
+                    if (!ARMOR_SLOTS.includes(item.slot)) {
+                        continue;
+                    }
+
+                    const analysis_roll = new Roll(char, RollType.ALL);
+                    for (let j = 0; j < item.effects.length; j++) {
+                        // Everything we care about should be applied at DEFAULT time.
+                        if (item.effects[j].roll_time === RollTime.DEFAULT) {
+                            item.effects[j].apply(analysis_roll);
+                        }
+                    }
+
+                    if (!(stat.name in analysis_roll.stats)) {
+                        continue;
+                    }
+
+                    // Tokenize the stat we care about. I think we can assume that anything in the analysis_roll bonus
+                    // is only integers added together, so just splitting on '+' is good enough.
+                    const stat_bonus_parts = analysis_roll.stats[stat.name].split('+');
+                    for (let j = 0; j < stat_bonus_parts.length; j++) {
+                        const bonus = parse_int(stat_bonus_parts[j]);
+                        if (bonus < 0) {
+                            negative_mods += bonus;
+                        }
                     }
                 }
 
+                // Add the opposite of the negative mods from armor, and add a multiplier to cancel buff effectiveness.
+                if (effectiveness === undefined || effectiveness === null) {
+                    effectiveness = 1;
+                }
+                roll.add_stat_bonus(stat, -1 * negative_mods * (1 / effectiveness));
+
+                // And add the +30 no matter what, subject to regular effectiveness
+                roll.add_stat_bonus(stat, 30);
                 return true;
             });
         }
 
         print_ability_description(character, ability);
     }
+
+
     function warrior_charge(character, ability, parameters) {
         const target_characters = get_target_characters('targets', parameters);
 
@@ -5423,7 +5461,6 @@ var Barbs = Barbs || (function () {
         }
         do_roll(character, ability, roll, parameters, '');
         print_ability_description(character, ability);
-
     }
 
 

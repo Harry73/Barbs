@@ -11136,7 +11136,14 @@
             "Modal",
             "buff",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "Specify all target characters, including yourself, with the \"targets\" parameter. Specify the stat to boost with the \"defense\" paramater. \"defense\" must a value of AC, MR, or EV.",
+            "examples": [
+                "targets: Faust, Hoshiko, Cordelia; defense: AC",
+                "targets: Faust, Janatris; defense: EV"
+            ]
+        }
     },
     {
         "type": "ability",
@@ -11182,7 +11189,11 @@
             "melee",
             "mark",
             "conditional"
-        ]
+        ],
+        "api": {
+            "description": "The API will perform the attack role. The mark must be tracked manually, though its effects can be added as parameters to other attacks.",
+            "examples": []
+        }
     },
     {
         "type": "ability",
