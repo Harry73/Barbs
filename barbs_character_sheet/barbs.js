@@ -5172,13 +5172,16 @@ var Barbs = Barbs || (function () {
 
 
     function symbiote_strengthen_mind(character, ability, parameters) {
-        const target_character = get_target_character('target', parameters);
+        const target_characters = get_target_characters('targets', parameters);
 
-        add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_HOUR(), Ordering(),
-                              RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
-            roll.add_skill_bonus(Skill.ALL, 30);
-            return true;
-        });
+        for (let i = 0; i < target_characters.length; i++) {
+            const target_character = target_characters[i];
+            add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_HOUR(), Ordering(),
+                                  RollType.ALL, RollTime.DEFAULT, 1, function (char, roll, parameters) {
+                roll.add_skill_bonus(Skill.ALL, 30);
+                return true;
+            });
+        }
 
         print_ability_description(character, ability);
     }
@@ -5358,7 +5361,7 @@ var Barbs = Barbs || (function () {
                         continue;
                     }
 
-                    if (!ARMOR_SLOTS.includes(item.slot) && !(item.type === (ItemType.SHIELD))) {
+                    if (!ARMOR_SLOTS.includes(item.slot) && item.type !== ItemType.SHIELD) {
                         continue;
                     }
 
