@@ -5358,7 +5358,7 @@ var Barbs = Barbs || (function () {
                         continue;
                     }
 
-                    if (!ARMOR_SLOTS.includes(item.slot)) {
+                    if (!ARMOR_SLOTS.includes(item.slot) && !(item.type === (ItemType.SHIELD))) {
                         continue;
                     }
 
