@@ -5403,7 +5403,37 @@ var Barbs = Barbs || (function () {
         print_ability_description(character, ability);
     }
 
-
+    function vastwood_knight_ambient_amelioration(character, ability, parameters) {
+        const number = get_parameter('number', parameters);
+        const mode = get_parameter('mode', parameters);
+        const target_characters = get_target_characters('targets', parameters);
+        
+        if (mode === 'heal') {
+            const roll = new Roll(character, RollType.HEALING);
+            roll.add_damage('%sd20'.format(number), Damage.HEALING);
+            roll.add_effect('Each target is cleansed of a condition of their choice');
+            roll_crit(ability, roll, parameters, function (crit_section) {
+                do_roll(character, ability, roll, parameters, crit_section);
+            }); 
+        } else if (mode === 'buff') {
+            const source = character.name;
+            for (let i = 0; i < target_characters.length; i++) {
+                const target_character = target_characters[i];
+                add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_HOUR(1), Ordering(), RollType.ALL, 
+                    RollTime.DEFAULT, 1, function (char, roll, parameters) {
+                    roll.add_effect('You need no food, water, air, or sleep; you cannot be charmed; your mind cannot be read.');
+                    return true;
+                    }
+                )
+            };
+            print_ability_description(character, ability);
+        } else {
+            chat('Unrecognized option for "mode" parameter, should be either "heal" or "buff"');
+            return true;
+        }
+        
+    }
+    
     function warrior_charge(character, ability, parameters) {
         const target_characters = get_target_characters('targets', parameters);
 
@@ -5790,6 +5820,7 @@ var Barbs = Barbs || (function () {
             'Vastwood Sovereignty': vastwood_knight_sovereignty,
             'Swordpoint Diplomacy': vastwood_knight_swordpoint_diplomacy,
             'Natural Precognition': vastwood_knight_natural_precognition,
+            'Ambient Amelioration': vastwood_knight_ambient_amelioration,
         },
         'Voidwalker': {
             'Dimension Door': print_ability_description,
