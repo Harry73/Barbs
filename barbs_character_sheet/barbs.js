@@ -5419,7 +5419,7 @@ var Barbs = Barbs || (function () {
             const source = character.name;
             for (let i = 0; i < target_characters.length; i++) {
                 const target_character = target_characters[i];
-                add_persistent_effect(character, ability, parameters, target_character, Duration.ONE_HOUR(1), Ordering(), RollType.ALL, 
+                add_persistent_effect(character, ability, parameters, target_character, Duration.INFINITE(1), Ordering(), RollType.ALL, 
                     RollTime.DEFAULT, 1, function (char, roll, parameters) {
                     roll.add_effect('You need no food, water, air, or sleep; you cannot be charmed; your mind cannot be read.');
                     return true;
