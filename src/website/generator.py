@@ -433,7 +433,7 @@ def _build_calendar():
                 month_header += '<th colspan="8">&nbsp;</th>'
                 break
 
-            month_anchor = href('/calendar?month=%s' % MONTHS[i].split(' ')[0], MONTHS[i])
+            month_anchor = href('/Barbs/Calendar?month=%s' % MONTHS[i].split(' ')[0], MONTHS[i])
             month_header += '<th colspan="7" class="table-header right">%s</th>' % month_anchor
             month_header += empty_th
 
@@ -471,7 +471,7 @@ def _build_calendar():
                             kwargs = {}
                             if 'birthday' in holidays_per_month[month][str(month_day)].lower():
                                 kwargs['fancy'] = 'class="green-link"'
-                            row += th % href('/calendar?month=%s' % month, month_day, **kwargs)
+                            row += th % href('/Barbs/Calendar?month=%s' % month, month_day, **kwargs)
 
                         else:
                             row += th % month_day
@@ -617,7 +617,7 @@ def _build_abilities_api(clazz, abilities):
         passive_examples_html = ''
 
     passive_ability_html = api_ability_template.format(
-        name=href('/#%s_%s' % (clazz['name'], passive_name), passive_name, title='Rulebook'),
+        name=href('/Barbs/Rulebook#%s_%s' % (clazz['name'], passive_name), passive_name, title='Rulebook'),
         description=passive_description,
         examples=passive_examples_html,
     )
@@ -642,7 +642,8 @@ def _build_abilities_api(clazz, abilities):
             ability_name = html.escape(ability['name'])
 
             api_ability_html = api_ability_template.format(
-                name=href('/#class_%s_ability_%s' % (clazz['name'], ability_name), ability_name, title='Rulebook'),
+                name=href('/Barbs/Rulebook#class_%s_ability_%s' % (clazz['name'], ability_name), ability_name,
+                          title='Rulebook'),
                 description=description,
                 examples=examples_html,
             )
