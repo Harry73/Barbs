@@ -3427,7 +3427,14 @@ var Barbs = Barbs || (function () {
         let num_targets = get_parameter('targets', parameters);
         let buff = get_parameter('buff', parameters);
 
-        if (num_targets !== null) {
+        if (num_targets !== null && buff !== null) {
+            chat(character, 'Challenge is a two-part ability. Specify only "targets" first, then specify only "buff" ' +
+                'with the number of enemies that got taunted.');
+
+        } else if (num_targets === null && buff === null) {
+            chat(character, '"targets" or "buff" parameter should be specified');
+
+        } else if (num_targets !== null) {
             // Do the CR roll for the taunts
             num_targets = parse_int(num_targets);
             assert(!Number.isNaN(num_targets), 'Value for "targets" parameter must be numeric');
@@ -3459,9 +3466,6 @@ var Barbs = Barbs || (function () {
                 ability.name, /*damage_section=*/'', /*crit_section=*/'', /*combo_section=*/'',
                 /*effects_section=*/effects_section_format.format('<p>Gain %s% AC and MR.</p>'.format(10 * buff)));
             chat(character, msg);
-
-        } else {
-            chat(character, '"targets" or "buff" parameter should be specified');
         }
     }
 
@@ -5403,6 +5407,7 @@ var Barbs = Barbs || (function () {
         print_ability_description(character, ability);
     }
 
+
     function vastwood_knight_ambient_amelioration(character, ability, parameters) {
         const number = get_parameter('number', parameters);
         const mode = get_parameter('mode', parameters);
@@ -5432,6 +5437,7 @@ var Barbs = Barbs || (function () {
             chat('Unrecognized option for "mode" parameter, should be either "heal" or "buff"');
         }
     }
+
 
     function warrior_charge(character, ability, parameters) {
         const target_characters = get_target_characters('targets', parameters);
