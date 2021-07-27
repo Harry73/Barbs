@@ -10326,7 +10326,8 @@ var BarbsComponents = BarbsComponents || (function () {
                         "modal",
                         "heal",
                         "conditional",
-                        "cleanse"
+                        "cleanse",
+                        "buff"
                     ]
                 }
             }

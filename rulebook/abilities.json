@@ -11112,7 +11112,8 @@
             "Modal",
             "heal",
             "conditional",
-            "cleanse"
+            "cleanse",
+            "buff"
         ]
     },
     {
