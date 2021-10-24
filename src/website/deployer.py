@@ -17,7 +17,7 @@ LOCAL_STYLE_SHEET = 'style.css'
 CALENDAR_LOCAL_STYLE_SHEET = '../style.css'
 REMOTE_STYLE_SHEET = "{{ url_for('static', filename='style.css') }}"
 
-INSTANCE_HOSTNAME = '3.82.252.244'
+INSTANCE_HOSTNAME = '44.197.215.141'
 INSTANCE_USER = 'ubuntu'
 KEY_FILE = 'barbs.pem'
 TIMEOUT_SEC = 60
@@ -94,7 +94,8 @@ def deploy(log):
         log('Restarting server')
         ssh_client.exec_command('pm2 restart barbs')
 
-    except Exception:
+    except Exception as e:
+        log(e)
         raise Exception('Failed uploading files, likely a network error. Regenerate files before re-uploading.')
     else:
         log('Updated website')
