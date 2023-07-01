@@ -15,9 +15,9 @@ GENERATED_STYLE_PATH = os.path.join(GENERATED_HTML_PATH, 'style.css')
 
 LOCAL_STYLE_SHEET = 'style.css'
 CALENDAR_LOCAL_STYLE_SHEET = '../style.css'
-REMOTE_STYLE_SHEET = "{{ url_for('static', filename='style.css') }}"
+REMOTE_STYLE_SHEET = "{{ url_for('static', filename='barbs/style.css') }}"
 
-INSTANCE_HOSTNAME = '44.197.215.141'
+INSTANCE_HOSTNAME = '3.222.117.14'
 INSTANCE_USER = 'ubuntu'
 KEY_FILE = 'barbs.pem'
 TIMEOUT_SEC = 60
@@ -83,16 +83,16 @@ def deploy(log):
         ssh_client.connect(hostname=INSTANCE_HOSTNAME, username=INSTANCE_USER, pkey=ssh_key, timeout=TIMEOUT_SEC)
 
         scp_client = scp.SCPClient(ssh_client.get_transport(), socket_timeout=TIMEOUT_SEC, progress=progress)
-        upload(scp_client, GENERATED_RULEBOOK_PATH, '/home/ubuntu/barbs/templates/rulebook.html', 'rulebook', log)
-        upload(scp_client, GENERATED_API_PATH, '/home/ubuntu/barbs/templates/api.html', 'api', log)
+        upload(scp_client, GENERATED_RULEBOOK_PATH, '/home/ubuntu/kouhai/templates/barbs/rulebook.html', 'rulebook', log)
+        upload(scp_client, GENERATED_API_PATH, '/home/ubuntu/kouhai/templates/barbs/api.html', 'api', log)
         for month_file in os.listdir(GENERATED_CALENDAR_PATH):
             generated_month_path = os.path.join(GENERATED_CALENDAR_PATH, month_file)
-            remote_month_path = '/home/ubuntu/barbs/templates/%s' % month_file
+            remote_month_path = '/home/ubuntu/kouhai/templates/barbs/%s' % month_file
             upload(scp_client, generated_month_path, remote_month_path, 'calendar month %s' % month_file, log)
-        upload(scp_client, GENERATED_STYLE_PATH, '/home/ubuntu/barbs/static/style.css', 'style sheets', log)
+        upload(scp_client, GENERATED_STYLE_PATH, '/home/ubuntu/kouhai/static/barbs/style.css', 'style sheets', log)
 
         log('Restarting server')
-        ssh_client.exec_command('pm2 restart barbs')
+        ssh_client.exec_command('pm2 restart kouhai')
 
     except Exception as e:
         log(e)
