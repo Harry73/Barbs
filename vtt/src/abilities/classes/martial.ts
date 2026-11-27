@@ -658,18 +658,21 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
     /* ---------- Sentinel ---------- */
 
     "Sentinel/Crossguard Guillotine": {
-        choices: [{ ...count("stacks", "Shield stacks spent (dual shields only)"), resource: "shield" }],
+        choices: [{ ...count("stacks", "Shield stacks spent"), resource: "shield", requires: "dualShields" as const }],
         attack: (ctx) => strike(Number(ctx.choices.stacks) ? `4d10 + ${Number(ctx.choices.stacks)}d10` : "4d10"),
-        notes: ["Blocks the attacks it reacts to. With dual shields and stacks spent, also hits enemies diagonal to the target."],
+        notes: (ctx) => [
+            "Blocks the attacks it reacts to.",
+            ...(Number(ctx.choices.stacks) ? ["Shield stacks spent: also hits enemies diagonal to the target."] : []),
+        ],
     },
     "Sentinel/Bladeshield Arc": {
-        choices: [{ ...count("stacks", "Shield stacks spent (dual shields only; range 10 ft)"), resource: "shield" }],
+        choices: [{ ...count("stacks", "Shield stacks spent (range becomes 10 ft)"), resource: "shield", requires: "dualShields" as const }],
         area: (ctx) => around(Number(ctx.choices.stacks) ? 10 : 5, "all"),
         attack: (ctx) => strike(Number(ctx.choices.stacks) ? `5d10 + ${Number(ctx.choices.stacks)}d10` : "5d10"),
         notes: ["As a reaction, it's an AOE block for the spaces it hits and your space."],
     },
     "Sentinel/Dual Shield Strike": {
-        choices: [{ ...count("stacks", "Shield stacks spent (dual shields only)"), resource: "shield" }],
+        choices: [{ ...count("stacks", "Shield stacks spent"), resource: "shield", requires: "dualShields" as const }],
         attack: (ctx) => strike(Number(ctx.choices.stacks) ? `6d10 + ${Number(ctx.choices.stacks)}d10` : "6d10"),
         notes: ["Dash up to 20 ft first. Half damage to an enemy behind the target (½). As a reaction, it interrupts the attack or spell."],
     },
@@ -1042,7 +1045,12 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
         notes: ["Then you may swap weapons in both hands.", BLOCK_NOTE],
     },
     "Sentinel/Parallel Shields": {
-        choices: [pick("mode", "Mode", { split: "One block per shield (you or adjacent allies)", layer: "Layer shields (dual shields, 1 Shield stack)" })],
+        choices: [
+            {
+                ...pick("mode", "Mode", { split: "One block per shield (you or adjacent allies)", layer: "Layer shields (1 Shield stack)" }),
+                optionRequires: { layer: "dualShields" as const },
+            },
+        ],
         self: (ctx) => (ctx.choices.mode === "layer" ? [blockSpec("Parallel Shields", 100)] : []),
         target: (ctx) => (ctx.choices.mode === "layer" ? [] : [blockSpec("Parallel Shields", 100)]),
         notes: (ctx) =>
@@ -1052,15 +1060,20 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
     },
     "Sentinel/Rapid Shields": {
         ...blockFor("Rapid Shields", () => 100),
-        notes: ["Blocks every hit of a multi-hit attack. For each hit blocked, you may autoattack the attacker as a free reaction (with each shield per hit if you expend a Shield stack).", BLOCK_NOTE],
+        notes: (ctx) => [
+            `Blocks every hit of a multi-hit attack. For each hit blocked, you may autoattack the attacker as a free reaction${
+                ctx.dualShields ? " (with each shield per hit if you expend a Shield stack)" : ""
+            }.`,
+            BLOCK_NOTE,
+        ],
     },
     "Sentinel/Absorption Barrier": {
         self: [blockSpec("Absorption Barrier", 100)],
         target: [blockSpec("Absorption Barrier", 100)],
         restore: (ctx) => (ctx.targets.length ? [{ resource: "stamina", formula: String(Math.min(30, 10 * ctx.targets.length)) }] : []),
-        notes: [
+        notes: (ctx) => [
             "Blocks all damage and effects of the AOE for you and the targeted adjacent allies; recover 10 stamina per ally protected (max 30).",
-            "With dual shields, expend a Shield stack to dash to any empty space you protected.",
+            ...(ctx.dualShields ? ["You may expend a Shield stack to dash to any empty space you protected."] : []),
             BLOCK_NOTE,
         ],
     },
@@ -1071,11 +1084,12 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
         notes: ["Blocks all effects of the incoming AOE for everyone within 5 ft.", BLOCK_NOTE],
     },
     "Sentinel/Grand Guardian": {
-        self: [
+        self: (ctx) => [
             {
                 category: "buff",
-                description:
-                    "<p>Once per round (twice with dual shields), freely block an attack on yourself or an adjacent ally as a free reaction. Gain a Shield stack at the end of each of your turns instead of from Perfect Shield.</p>",
+                description: `<p>${
+                    ctx.dualShields ? "Twice per round (dual shields)" : "Once per round (twice with dual shields)"
+                }, freely block an attack on yourself or an adjacent ally as a free reaction. Gain a Shield stack at the end of each of your turns instead of from Perfect Shield.</p>`,
                 modifiers: [note("Free block available this round (cast Rapid Shields or add a 100% block effect).")],
             },
         ],

@@ -2,12 +2,25 @@
  * The pre-use dialog for modal abilities: "choose one", optional extra costs, ritual casting, and so on.
  */
 import { activePassives, resourceValue } from "../passives/index.ts";
+import { meetsRequirement } from "../rules/hands.ts";
 import type { Choices } from "./context.ts";
 import type { ChoiceSpec } from "./types.ts";
 
 /** Fill in bound defaults and limits from the caster's passives (current stance, Spotting available). */
 export function bindChoices(actor: Actor.Implementation, choices: ChoiceSpec[]): ChoiceSpec[] {
-    return choices.map((c) => {
+    // Questions (and options) that depend on what you're holding are dropped when you aren't. A dropped question
+    // reads as its default (0, unchecked, or the first option) when the ability resolves.
+    const held = choices
+        .filter((c) => !c.requires || meetsRequirement(actor, c.requires))
+        .map((c) => {
+            if (!c.optionRequires || !c.options) return c;
+            const options = Object.fromEntries(
+                Object.entries(c.options).filter(([value]) => !c.optionRequires![value] || meetsRequirement(actor, c.optionRequires![value])),
+            );
+            const fallback = Object.keys(options)[0];
+            return { ...c, options, default: c.default !== undefined && String(c.default) in options ? c.default : fallback };
+        });
+    return held.map((c) => {
         if (c.state) {
             const value = activePassives(actor)
                 .map((p) => (p.automation.states?.some((s) => s.key === c.state) ? p.handle.state(c.state!) : null))

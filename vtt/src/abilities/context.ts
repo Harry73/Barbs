@@ -5,6 +5,7 @@
  * Buff effectiveness is deliberately not applied generically (the Roll20 API scaled every number and dice count it
  * could find, which was wrong as often as right). Each buff decides what scales, using ctx.scale() and ctx.dice().
  */
+import { isDualWieldingShields } from "../rules/hands.ts";
 import type { CreatureModel } from "../data/actor/creature.ts";
 import type { AbilityModel } from "../data/item/models.ts";
 import type { Dyn } from "./types.ts";
@@ -38,6 +39,8 @@ export interface UseContext {
     targets: Actor.Implementation[];
     /** How many buffs the caster has (Arcane Archer, Warrior). */
     buffs: number;
+    /** A shield in each hand (Sentinel). */
+    dualShields: boolean;
     /** Results of the ability's `rolls`, made once before anything else (random effects, variable hit counts). */
     rolls: Record<string, number>;
     /** The damage/healing roll, once it's happened. Null before the roll and for abilities without one. */
@@ -89,6 +92,7 @@ export function makeContext(
         stat: (key) => (actor?.system as unknown as CreatureModel | undefined)?.derived.stats[key].value ?? 0,
         targets: extra.targets ?? [],
         buffs: countBuffs(actor),
+        dualShields: isDualWieldingShields(actor),
         rolls: extra.rolls ?? {},
         result: extra.result ?? null,
     };

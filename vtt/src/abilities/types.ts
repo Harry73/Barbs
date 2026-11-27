@@ -1,3 +1,4 @@
+import type { HandRequirement } from "../rules/hands.ts";
 import type { DamageType, EffectCategory, ModifierRollType, ModifierType } from "../config.ts";
 import type { AttackResult } from "../rolls/attack.ts";
 import type { UseContext } from "./context.ts";
@@ -171,6 +172,10 @@ export interface ChoiceSpec {
     amount?: number;
     /** Default to the value of a passive state (e.g. the Thief's current stance). */
     state?: string;
+    /** Only ask when the caster is holding the right things (Sentinel's "if you are dual wielding shields"). */
+    requires?: HandRequirement;
+    /** For selects: options only offered when the caster meets a requirement. */
+    optionRequires?: Record<string, HandRequirement>;
 }
 
 export type CostResource = "health" | "stamina" | "mana";

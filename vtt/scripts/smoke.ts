@@ -193,6 +193,21 @@ try {
     trace = refl.traceBeam({ x: 0, y: 0 }, { x: 1, y: 0 }, 1000, 10, [faceLeft], { widthPerRedirect: 20 });
     assert.equal(trace.segments[1].width, 30, "Beam of Brilliance widens per redirect");
 
+    // Hands: a weapon or shield in each hand is dual wielding; shields in both is dual wielding shields.
+    const handRules = await vite.ssrLoadModule("/src/rules/hands.ts");
+    const holder: any = new StandIn();
+    const gear = (name: string, slot: string, category: string, damage = "1d8") =>
+        makeItem(name, "equipment", itemModels.EquipmentModel, { slot, equipped: true, weapon: { category, damage } });
+    holder.items = [gear("Sword", "mainHand", "longblade")];
+    assert.equal(handRules.isDualWielding(holder), false, "one weapon isn't dual wielding");
+    holder.items.push(gear("Buckler", "offhand", "shield", ""));
+    assert.equal(handRules.isDualWielding(holder), true, "a damage-less shield still counts as holding something");
+    assert.equal(handRules.isDualWieldingShields(holder), false, "sword and shield aren't dual shields");
+    holder.items = [gear("Shield A", "mainHand", "shield"), gear("Shield B", "offhand", "shield")];
+    assert.equal(handRules.isDualWieldingShields(holder), true, "two shields are dual shields");
+    holder.items = [gear("Greatsword", "twoHand", "longblade")];
+    assert.equal(handRules.isDualWielding(holder), false, "a two-hander isn't dual wielding");
+
     // Equip limits: one per slot, two rings, and two-handed fills both hands.
     const { equipConflict } = await vite.ssrLoadModule("/src/rules/equipment.ts");
     const helm = { name: "Helm", slot: "head" };

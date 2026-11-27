@@ -20,7 +20,7 @@ import { activePassives, adjustResource } from "../passives/index.ts";
 import type { PassiveDelta, RollInfo } from "../passives/types.ts";
 import { affected, placeArea, type AreaResult } from "./area.ts";
 import { getAutomation } from "./catalog.ts";
-import { askChoices, bindChoices } from "./choices.ts";
+import { askChoices, bindChoices, defaultChoices } from "./choices.ts";
 import { contextData, makeContext, resolve, type UseContext } from "./context.ts";
 import { buildEffectData, type EffectSource } from "./effects.ts";
 import type { AbilityAutomation, AttackSpec, Cost, CostResource, EffectSpec } from "./types.ts";
@@ -180,9 +180,12 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
 
     // 1. Choices (the ability's, then any its caster's passives add), and up-front random rolls
     const passiveChoices = passives.flatMap((p) => p.automation.abilityChoices?.({ actor, tags, abilityName: opts.title, className }, p.handle) ?? []);
-    const choiceSpecs = bindChoices(actor, [...(automation?.choices ?? []), ...passiveChoices]);
-    const choices = await askChoices(opts.title, choiceSpecs);
-    if (choices === null) return;
+    const allChoices = [...(automation?.choices ?? []), ...passiveChoices];
+    const choiceSpecs = bindChoices(actor, allChoices);
+    const asked = await askChoices(opts.title, choiceSpecs);
+    if (asked === null) return;
+    // Questions bindChoices dropped (dual-shield options when you aren't holding two) answer with their defaults.
+    const choices = { ...defaultChoices(allChoices), ...asked };
     const rolls: Record<string, number> = {};
     const rollNotes: string[] = [];
     for (const [key, formula] of Object.entries(automation?.rolls ?? {})) {
