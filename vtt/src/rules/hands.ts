@@ -47,3 +47,40 @@ export type HandRequirement = "dualWield" | "dualShields";
 export function meetsRequirement(actor: Actor.Implementation | null, requirement: HandRequirement): boolean {
     return requirement === "dualShields" ? isDualWieldingShields(actor) : isDualWielding(actor);
 }
+
+/**
+ * The weapon categories an ability expects, from its rulebook tags ("bow", "rapier", "unarmed"). A few tags name the
+ * weapon differently from the crafting categories. Empty when the tags don't name a weapon, or name one whose category
+ * isn't settled (Reaper's "scythe").
+ */
+const WEAPON_TAGS: Record<string, string> = {
+    axe: "axe",
+    blunt: "blunt",
+    bow: "bow",
+    crossbow: "crossbow",
+    longblade: "longblade",
+    greatsword: "longblade",
+    polearm: "polearm",
+    shield: "shield",
+    shortblade: "shortblade",
+    dagger: "shortblade",
+    rapier: "fine",
+    fine: "fine",
+    firearm: "bullets",
+    bullets: "bullets",
+    unarmed: "unarmed",
+};
+
+export function expectedWeaponCategories(tags: string[] | undefined): Set<string> {
+    return new Set((tags ?? []).map((t) => WEAPON_TAGS[t.toLowerCase()]).filter((c): c is string => !!c));
+}
+
+/**
+ * Does what's in hand satisfy an ability's weapon tags? Any one matching category is enough (Champion abilities list
+ * several). "Unarmed" is also satisfied by holding no weapon at all.
+ */
+export function holdsExpectedWeapon(expected: Set<string>, heldCategories: string[]): boolean {
+    if (!expected.size) return true;
+    if (expected.has("unarmed") && !heldCategories.length) return true;
+    return heldCategories.some((c) => expected.has(c));
+}

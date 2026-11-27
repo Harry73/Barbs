@@ -19,6 +19,8 @@ import type { UndoRecord } from "../chat/undo.ts";
 import { activePassives, adjustResource } from "../passives/index.ts";
 import type { PassiveDelta, RollInfo } from "../passives/types.ts";
 import { affected, placeArea, type AreaResult } from "./area.ts";
+import { expectedWeaponCategories, holdsExpectedWeapon } from "../rules/hands.ts";
+import { WEAPON_CATEGORIES } from "../config.ts";
 import { getAutomation } from "./catalog.ts";
 import { askChoices, bindChoices, defaultChoices } from "./choices.ts";
 import { contextData, makeContext, resolve, type UseContext } from "./context.ts";
@@ -96,7 +98,22 @@ function prepareAttack(
     if (scaling === "magic" && damage.length) builder.addStat("magicDamage", damage[0].type);
     if (scaling === "weapon" && !spec.includeWeapon) {
         if (weapon) builder.addWeaponScaling();
-        else builder.addNote("No weapon equipped, so no weapon scaling was added.");
+        else builder.addNote("No weapon held, so no weapon scaling was added.");
+    }
+    // The rulebook tags weapon abilities with what they're used with ("bow", "rapier"). Holding something else (or
+    // nothing) still rolls, but its weapon-type bonuses won't apply, so say so loudly instead of failing quietly.
+    if (rollType === "physical" && scaling === "weapon") {
+        const expected = expectedWeaponCategories(ctx.ability?.tags);
+        const held = [weapon, offWeapon]
+            .map((w) => (w?.system as unknown as EquipmentModel | undefined)?.weapon.category)
+            .filter((c): c is string => !!c);
+        if (!holdsExpectedWeapon(expected, held)) {
+            const names = [...expected].map((c) => (WEAPON_CATEGORIES as Record<string, string>)[c] ?? c).join(" or ");
+            const holding = [weapon, offWeapon].filter(Boolean).map((w) => w!.name).join(" and ") || "no weapon";
+            const warning = `${ctx.item?.name ?? "This ability"} is used with a ${names}, but you're holding ${holding}. Bonuses for ${names} attacks won't apply. (A weapon counts once it's equipped in a hand slot with a damage formula.)`;
+            builder.addNote(warning);
+            ui.notifications?.warn(warning);
+        }
     }
     if (spec.increase) builder.addMultiplier("all", ctx.item?.name ?? "Ability", spec.increase);
     if (spec.canCrit) builder.enableCrit();

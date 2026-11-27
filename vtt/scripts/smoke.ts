@@ -210,6 +210,16 @@ try {
     holder.items = [gear("Greatsword", "twoHand", "longblade")];
     assert.equal(handRules.isDualWielding(holder), false, "a two-hander isn't dual wielding");
 
+    // Weapon tags on abilities: what counts as holding the right weapon.
+    const sniper = handRules.expectedWeaponCategories(["Attack", "bow", "Ranged"]);
+    assert.deepEqual([...sniper], ["bow"]);
+    assert.equal(handRules.holdsExpectedWeapon(sniper, ["bow"]), true);
+    assert.equal(handRules.holdsExpectedWeapon(sniper, []), false, "no bow held");
+    assert.equal(handRules.holdsExpectedWeapon(handRules.expectedWeaponCategories(["rapier"]), ["fine"]), true, "a rapier is a fine weapon");
+    assert.equal(handRules.holdsExpectedWeapon(handRules.expectedWeaponCategories(["unarmed"]), []), true, "unarmed needs no weapon");
+    assert.equal(handRules.holdsExpectedWeapon(handRules.expectedWeaponCategories(["axe", "longblade"]), ["longblade"]), true, "any listed type will do");
+    assert.equal(handRules.expectedWeaponCategories(["Spell", "scythe"]).size, 0, "unsettled tags don't warn");
+
     // Picking weapons by hand for abilities.
     const attackMod = await vite.ssrLoadModule("/src/rolls/attack.ts");
     holder.items = [gear("Sword", "mainHand", "longblade"), gear("Dagger", "offhand", "shortblade", "1d4")];
