@@ -114,12 +114,18 @@ interface AttackOptions {
     rollType: RollType;
     /** The weapon used, if any. Lets weapon-specific modifiers ("bow attacks deal +2d8 air") apply. */
     weapon?: Item.Implementation | null;
+    /**
+     * The offhand weapon, when an ability is used dual wielding. Both weapons' effects apply, weapon-type checks
+     * pass if either matches, and scaling comes from whichever weapon's stat is higher.
+     */
+    offWeapon?: Item.Implementation | null;
 }
 
 export class AttackBuilder {
     readonly actor: Actor.Implementation;
     readonly rollType: RollType;
     readonly weapon: Item.Implementation | null;
+    readonly offWeapon: Item.Implementation | null;
 
     #damage = new Map<DamageKey, string[]>();
     #multipliers = new Map<MultiplierKey, SourceMultipliers>();
@@ -139,10 +145,16 @@ export class AttackBuilder {
     #bleedConvert: { percent: number; source: string }[] = [];
     #singleUse = new Set<ActiveEffect.Implementation>();
 
-    constructor(actor: Actor.Implementation, { rollType, weapon = null }: AttackOptions) {
+    constructor(actor: Actor.Implementation, { rollType, weapon = null, offWeapon = null }: AttackOptions) {
         this.actor = actor;
         this.rollType = rollType;
         this.weapon = weapon;
+        this.offWeapon = offWeapon && offWeapon.id !== weapon?.id ? offWeapon : null;
+    }
+
+    /** Every weapon this roll is made with: one normally, two when dual wielding. */
+    get weapons(): Item.Implementation[] {
+        return [this.weapon, this.offWeapon].filter((w): w is Item.Implementation => !!w);
     }
 
     get #creature(): CreatureModel {
@@ -276,21 +288,30 @@ export class AttackBuilder {
 
     /** Just the weapon's scaling stat, for abilities that deal their own dice "with" a weapon. */
     addWeaponScaling(): this {
-        const scaling = (this.weapon?.system as unknown as EquipmentModel | undefined)?.weapon.scaling;
-        if (scaling === "melee") this.addStat("meleeDamage", "physical");
-        else if (scaling === "rangedFine") this.addStat("rangedFineDamage", "physical");
-        return this;
+        // Dual wielding scales off whichever weapon's stat is higher (as the Roll20 API did).
+        const stats = this.weapons
+            .map((w) => (w.system as unknown as EquipmentModel).weapon.scaling)
+            .map((scaling) => (scaling === "melee" ? "meleeDamage" : scaling === "rangedFine" ? "rangedFineDamage" : null))
+            .filter((key): key is "meleeDamage" | "rangedFineDamage" => !!key);
+        if (!stats.length) return this;
+        const best = stats.reduce((a, b) => (this.#stat(b) > this.#stat(a) ? b : a));
+        return this.addStat(best, "physical");
     }
 
     #modifierApplies(modifier: RollModifierData): boolean {
         const rollType = modifier.rollType as ModifierRollType;
         if (rollType !== "all" && rollType !== this.rollType) return false;
         if (modifier.weapon) {
-            const category = (this.weapon?.system as unknown as EquipmentModel | undefined)?.weapon.category;
-            if (!category) return false;
-            if (modifier.weapon === "ranged") return RANGED_WEAPONS.includes(category);
-            if (modifier.weapon === "melee") return !RANGED_WEAPONS.includes(category);
-            if (category !== modifier.weapon) return false;
+            // With two weapons, a weapon-type modifier applies if either one matches.
+            const categories = this.weapons.map((w) => (w.system as unknown as EquipmentModel).weapon.category).filter(Boolean);
+            if (!categories.length) return false;
+            const matches = (category: string) =>
+                modifier.weapon === "ranged"
+                    ? RANGED_WEAPONS.includes(category)
+                    : modifier.weapon === "melee"
+                      ? !RANGED_WEAPONS.includes(category)
+                      : category === modifier.weapon;
+            if (!categories.some(matches)) return false;
         }
         return true;
     }
@@ -306,7 +327,7 @@ export class AttackBuilder {
         if (!(item instanceof Item) || item.type !== "equipment") return true;
         const equipment = item.system as unknown as EquipmentModel;
         if (!equipment.isWeapon) return true;
-        if (this.rollType === "physical") return item.id === this.weapon?.id;
+        if (this.rollType === "physical") return this.weapons.some((w) => w.id === item.id);
         return equipment.isHeldWeapon;
     }
 
@@ -546,6 +567,33 @@ export class AttackBuilder {
 }
 
 /** The weapon an actor attacks with by default: an equipped main-hand or two-handed weapon. */
+/** Which hand(s) an ability is used with: the main hand (default), the offhand, or both (dual wielding). */
+export type Hand = "main" | "off" | "dual";
+
+/** The offhand weapon, if one is held there. */
+export function offhandWeapon(actor: Actor.Implementation): Item.Implementation | null {
+    return (
+        actor.items.find((i) => {
+            const e = i.type === "equipment" ? (i.system as unknown as EquipmentModel) : null;
+            return !!e?.isHeldWeapon && e.slot === "offhand";
+        }) ?? null
+    );
+}
+
+/** A weapon in each hand, so the sheet offers Main / Off / Dual. */
+export function holdsTwoWeapons(actor: Actor.Implementation): boolean {
+    const main = mainWeapon(actor);
+    const off = offhandWeapon(actor);
+    return !!main && !!off && main.id !== off.id;
+}
+
+/** The weapon(s) an ability uses with the chosen hand. */
+export function weaponsFor(actor: Actor.Implementation, hand: Hand = "main"): { weapon: Item.Implementation | null; offWeapon: Item.Implementation | null } {
+    if (hand === "off") return { weapon: offhandWeapon(actor), offWeapon: null };
+    if (hand === "dual") return { weapon: mainWeapon(actor), offWeapon: offhandWeapon(actor) };
+    return { weapon: mainWeapon(actor), offWeapon: null };
+}
+
 export function mainWeapon(actor: Actor.Implementation): Item.Implementation | null {
     const held = actor.items.filter((i) => i.type === "equipment" && (i.system as unknown as EquipmentModel).isHeldWeapon);
     return (

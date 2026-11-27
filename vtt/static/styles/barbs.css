@@ -251,6 +251,24 @@
   text-align: right;
 }
 
+/* Main / Off / Dual buttons under physical abilities, when holding a weapon in each hand. */
+.barbs .abilities .hand-buttons {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.15rem;
+}
+
+.barbs .abilities .hand-buttons a {
+  padding: 0 0.4rem;
+  border: 1px solid var(--barbs-border);
+  border-radius: 4px;
+  font-size: var(--font-size-11, 11px);
+}
+
+.barbs .abilities .hand-buttons a:hover {
+  border-color: var(--barbs-accent);
+}
+
 /* Inventory: one heading row per equipment slot. */
 .barbs .inventory .inventory-section th {
   padding-top: 0.5rem;

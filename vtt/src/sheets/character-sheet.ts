@@ -14,6 +14,10 @@ import {
     type EquipmentSlot,
 } from "../config.ts";
 import { getAutomation } from "../abilities/catalog.ts";
+import { defaultChoices } from "../abilities/choices.ts";
+import { makeContext, resolve } from "../abilities/context.ts";
+import type { AbilityAutomation } from "../abilities/types.ts";
+import { holdsTwoWeapons, mainWeapon, offhandWeapon, type Hand } from "../rolls/attack.ts";
 import { adjustResource, baseComboChance, getPassiveAutomation, handle as passiveHandle, monkDie, setState } from "../passives/index.ts";
 import type { BarbsActor } from "../documents/actor.ts";
 import type { BarbsEffectModel } from "../data/effect.ts";
@@ -41,6 +45,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             rollSkill: BarbsCharacterSheet.#onRollSkill as ActionHandler,
             useAbility: BarbsCharacterSheet.#onUseAbility as ActionHandler,
             weaponAttack: BarbsCharacterSheet.#onWeaponAttack as ActionHandler,
+            dualWieldAttack: BarbsCharacterSheet.#onDualWieldAttack as ActionHandler,
             rollPercentStat: BarbsCharacterSheet.#onRollPercentStat as ActionHandler,
             rollInitiative: BarbsCharacterSheet.#onRollInitiative as ActionHandler,
             deathSave: BarbsCharacterSheet.#onDeathSave as ActionHandler,
@@ -132,6 +137,19 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             };
         });
 
+        // With a weapon in each hand, physical weapon abilities get Main / Off / Dual buttons.
+        const twoWeapons = holdsTwoWeapons(actor as unknown as Actor.Implementation);
+        const usesWeapon = (item: Item.Implementation, automation: AbilityAutomation | null) => {
+            if (!twoWeapons || !automation?.attack) return false;
+            try {
+                const ctx = makeContext(actor as unknown as Actor.Implementation, item, defaultChoices(automation.choices));
+                const attack = resolve(automation.attack, ctx);
+                return !!attack && attack.rollType === "physical" && (attack.scaling ?? "weapon") === "weapon";
+            } catch {
+                return false;
+            }
+        };
+
         // Group abilities under their class, with the class's AP investment and the tiers it unlocks.
         const abilityGroups = new Map<string, { name: string; investment: number; unlockedTier: number; abilities: unknown[] }>();
         for (const item of ofType("ability")) {
@@ -144,7 +162,8 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
                     .map(([tier]) => Number(tier)),
             );
             if (!abilityGroups.has(name)) abilityGroups.set(name, { name, investment, unlockedTier, abilities: [] });
-            abilityGroups.get(name)!.abilities.push({ item, system: a, automated: !!getAutomation(a.className, item.name) });
+            const automation = getAutomation(a.className, item.name, a.automationKey);
+            abilityGroups.get(name)!.abilities.push({ item, system: a, automated: !!automation, hands: usesWeapon(item as Item.Implementation, automation) });
         }
         const sortedAbilityGroups = [...abilityGroups.values()].sort((a, b) => a.name.localeCompare(b.name));
         for (const group of sortedAbilityGroups) {
@@ -174,7 +193,12 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
                 weaponSummary: e.isWeapon ? `${e.weapon.damage} ${e.weapon.damageType}` : "",
             };
         });
-        const heldWeapons = equipment.filter((e) => e.system.isHeldWeapon);
+        // Label the hand each weapon is in when there are two, so the buttons read Main hand / Offhand.
+        const mainId = mainWeapon(actor as unknown as Actor.Implementation)?.id;
+        const offId = offhandWeapon(actor as unknown as Actor.Implementation)?.id;
+        const heldWeapons = equipment
+            .filter((e) => e.system.isHeldWeapon)
+            .map((e) => ({ ...e, hand: twoWeapons ? (e.item.id === mainId ? "Main hand" : e.item.id === offId ? "Offhand" : "") : "" }));
 
         // One section per slot, in a fixed order, empty ones included so it's clear what's free. Equipped items
         // first, then by name.
@@ -231,6 +255,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
                 : null,
             shielding: actor.creature.shielding.value,
             heldWeapons,
+            twoWeapons,
             effects,
             enrichedBiography: await foundry.applications.ux.TextEditor.implementation.enrichHTML(
                 actor.creature.details.biography,
@@ -322,7 +347,11 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     static async #onUseAbility(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {
         const item = this.#itemFromElement(target);
-        if (item) await this.barbsActor.useAbility(item);
+        if (item) await this.barbsActor.useAbility(item, (target.dataset.hand as Hand | undefined) ?? "main");
+    }
+
+    static async #onDualWieldAttack(this: BarbsCharacterSheet) {
+        await this.barbsActor.dualWieldAttack();
     }
 
     static async #onWeaponAttack(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {

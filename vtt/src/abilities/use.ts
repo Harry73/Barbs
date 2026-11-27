@@ -13,7 +13,7 @@ import { CROWD_CONTROL } from "./helpers.ts";
 import type { CreatureModel } from "../data/actor/creature.ts";
 import type { AbilityModel, EquipmentModel } from "../data/item/models.ts";
 import { applyEffectToActor, applyHealingToActor, applyShieldingToActor } from "../effects/apply.ts";
-import { AttackBuilder, mainWeapon, type AttackResult } from "../rolls/attack.ts";
+import { AttackBuilder, mainWeapon, offhandWeapon, weaponsFor, type AttackResult, type Hand } from "../rolls/attack.ts";
 import { postCard, type CardContent } from "../chat/card.ts";
 import type { UndoRecord } from "../chat/undo.ts";
 import { activePassives, adjustResource } from "../passives/index.ts";
@@ -83,8 +83,12 @@ function prepareAttack(
     { skipSingleUse = false }: { skipSingleUse?: boolean } = {},
 ): AttackBuilder {
     const { rollType, scaling = rollType === "magic" ? "magic" : "weapon" } = spec;
-    const weapon = scaling === "weapon" ? mainWeapon(actor) : null;
-    const builder = new AttackBuilder(actor, { rollType, weapon });
+    const { weapon, offWeapon } = scaling === "weapon" ? weaponsFor(actor, ctx.hand) : { weapon: null, offWeapon: null };
+    const builder = new AttackBuilder(actor, { rollType, weapon, offWeapon });
+    if (scaling === "weapon" && ctx.hand === "off" && !weapon) builder.addNote("No offhand weapon held, so no weapon was used.");
+    if (offWeapon) {
+        builder.addNote(`Dual wielding ${weapon?.name ?? "nothing"} and ${offWeapon.name}: both weapons' effects apply, scaling from the better of the two.`);
+    }
     if (spec.includeWeapon) {
         if (!builder.addWeapon()) builder.addNote("No weapon equipped, so the weapon's own damage wasn't rolled.");
     }
@@ -170,6 +174,8 @@ export interface RunOptions {
     tags?: string[];
     /** Catalog key, so effect buttons can find the automation again ("Class/Ability" by default). */
     automationKey?: string;
+    /** Which hand(s) a physical ability is used with. Default: main hand. */
+    hand?: Hand;
 }
 
 export async function runAutomation(opts: RunOptions): Promise<void> {
@@ -193,7 +199,7 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
         rolls[key] = roll.total ?? 0;
         rollNotes.push(`Rolled ${key}: ${formula} = ${roll.total}`);
     }
-    const ctx = makeContext(actor, item, choices, undefined, { rolls });
+    const ctx = makeContext(actor, item, choices, undefined, { rolls, hand: opts.hand ?? "main" });
 
     // 2. Area. Remember who was targeted beforehand: an aimed line (Ice Spear) treats them as the main target.
     const preTargets = new Set([...(game.user?.targets ?? [])].map((t) => t.document.uuid));
@@ -493,7 +499,9 @@ export async function useAutomation(actor: Actor.Implementation, title: string, 
     await runAutomation({ actor, automation, title, img });
 }
 
-export async function useAbility(actor: Actor.Implementation, item: Item.Implementation): Promise<void> {
+const HAND_LABELS: Record<Hand, string> = { main: "", off: "Offhand", dual: "Dual wield" };
+
+export async function useAbility(actor: Actor.Implementation, item: Item.Implementation, hand: Hand = "main"): Promise<void> {
     const ability = item.system as unknown as AbilityModel;
     const description = await foundry.applications.ux.TextEditor.implementation.enrichHTML(ability.description, { relativeTo: item });
     await runAutomation({
@@ -502,7 +510,7 @@ export async function useAbility(actor: Actor.Implementation, item: Item.Impleme
         automation: getAutomation(ability.className, item.name, ability.automationKey),
         title: item.name,
         img: item.img ?? "",
-        subtitle: [ability.className, ability.branch, `Tier ${ability.tier}`].filter(Boolean).join(" · "),
+        subtitle: [ability.className, ability.branch, `Tier ${ability.tier}`, HAND_LABELS[hand]].filter(Boolean).join(" · "),
         meta: [
             { label: "Action", value: ability.action },
             { label: "Cost", value: ability.cost.text },
@@ -515,7 +523,20 @@ export async function useAbility(actor: Actor.Implementation, item: Item.Impleme
         className: ability.className,
         tags: ability.tags,
         automationKey: ability.automationKey || undefined,
+        hand,
     });
+}
+
+/** Dual wielding autoattack: one attack with each hand's weapon, each its own card (own crit, own mods). */
+export async function dualWieldAttack(actor: Actor.Implementation): Promise<void> {
+    const main = mainWeapon(actor);
+    const off = offhandWeapon(actor);
+    if (!main || !off || main.id === off.id) {
+        ui.notifications?.warn("Dual wielding needs a weapon in each hand.");
+        return;
+    }
+    await weaponAttack(actor, main);
+    await weaponAttack(actor, off);
 }
 
 function casterTokenUuid(actor: Actor.Implementation): string | undefined {

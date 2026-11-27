@@ -10,9 +10,14 @@
   <div class="barbs-actions">
     {{#each heldWeapons as |w|}}
     <button type="button" data-action="weaponAttack" data-item-id="{{w.item.id}}">
-      <img src="{{w.item.img}}" alt="" /> {{w.item.name}} <span class="hint">{{w.weaponSummary}}</span>
+      <img src="{{w.item.img}}" alt="" /> {{#if w.hand}}<span class="hint">{{w.hand}}:</span> {{/if}}{{w.item.name}} <span class="hint">{{w.weaponSummary}}</span>
     </button>
     {{/each}}
+    {{#if twoWeapons}}
+    <button type="button" data-action="dualWieldAttack" data-tooltip="Attack with each weapon (one card per weapon)">
+      <i class="fa-solid fa-hand-fist"></i> Dual wield
+    </button>
+    {{/if}}
   </div>
   {{else}}
   <p class="hint">No weapon held. Equip one in a hand slot on the Inventory tab.</p>

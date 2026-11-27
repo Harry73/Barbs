@@ -107,6 +107,13 @@ The **effects panel** in the top right shows the selected token's effects (or yo
 buffs, red for conditions, remaining duration as a badge. Hover for details, left-click to edit, right-click to
 remove. Effects that come from equipped items can't be removed there; unequip the item.
 
+**Hands.** Physical abilities use the main-hand weapon: its scaling, its effects, and its type for checks like "your
+next bow attack". With a weapon in each hand, physical weapon abilities get **Main / Off / Dual** buttons on the
+Abilities tab. Dual wielding rolls the ability once with both weapons' effects applied, scaling from whichever weapon's
+stat is higher, and weapon-type checks passing if either weapon matches (the Roll20 API's `dual_wield`). The Weapons
+section gets a **Dual wield** button that attacks with each weapon, one card per weapon. Holding a shield in each hand
+counts as dual wielding shields for the Sentinel's extra options, which only appear in dialogs when it's true.
+
 There's no to-hit roll in Barbs; dodging is the defender's call (Stats tab: roll Evasion).
 
 ## Passives

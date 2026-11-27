@@ -6,6 +6,7 @@
  * could find, which was wrong as often as right). Each buff decides what scales, using ctx.scale() and ctx.dice().
  */
 import { isDualWieldingShields } from "../rules/hands.ts";
+import type { Hand } from "../rolls/attack.ts";
 import type { CreatureModel } from "../data/actor/creature.ts";
 import type { AbilityModel } from "../data/item/models.ts";
 import type { Dyn } from "./types.ts";
@@ -41,6 +42,8 @@ export interface UseContext {
     buffs: number;
     /** A shield in each hand (Sentinel). */
     dualShields: boolean;
+    /** Which hand(s) the ability is used with: picked with the sheet's Main / Off / Dual buttons. */
+    hand: Hand;
     /** Results of the ability's `rolls`, made once before anything else (random effects, variable hit counts). */
     rolls: Record<string, number>;
     /** The damage/healing roll, once it's happened. Null before the roll and for abilities without one. */
@@ -56,6 +59,7 @@ export interface ContextData {
     targetUuids: string[];
     rolls: Record<string, number>;
     result: ResultSummary | null;
+    hand?: Hand;
 }
 
 export function buffEffectiveness(actor: Actor.Implementation): number {
@@ -74,7 +78,7 @@ export function makeContext(
     item: Item.Implementation | null,
     choices: Choices,
     effectiveness = actor ? buffEffectiveness(actor) : 1,
-    extra: Partial<Pick<UseContext, "targets" | "rolls" | "result">> = {},
+    extra: Partial<Pick<UseContext, "targets" | "rolls" | "result" | "hand">> = {},
 ): UseContext {
     const round1 = (n: number) => Math.round(n * 10) / 10;
     return {
@@ -93,6 +97,7 @@ export function makeContext(
         targets: extra.targets ?? [],
         buffs: countBuffs(actor),
         dualShields: isDualWieldingShields(actor),
+        hand: extra.hand ?? "main",
         rolls: extra.rolls ?? {},
         result: extra.result ?? null,
     };
@@ -107,6 +112,7 @@ export function contextData(ctx: UseContext): ContextData {
         targetUuids: ctx.targets.map((a) => a.uuid ?? "").filter(Boolean),
         rolls: ctx.rolls,
         result: ctx.result,
+        hand: ctx.hand,
     };
 }
 
@@ -120,6 +126,7 @@ export async function restoreContext(data: ContextData): Promise<UseContext | nu
         targets,
         rolls: data.rolls ?? {},
         result: data.result ?? null,
+        hand: data.hand ?? "main",
     });
 }
 

@@ -4,7 +4,8 @@ import {
     RESOURCE_REGEN,
     type AttributeKey,
 } from "../config.ts";
-import { useAbility, weaponAttack } from "../abilities/use.ts";
+import { dualWieldAttack, useAbility, weaponAttack } from "../abilities/use.ts";
+import type { Hand } from "../rolls/attack.ts";
 import type { CreatureModel } from "../data/actor/creature.ts";
 import type { SkillModel } from "../data/item/models.ts";
 
@@ -98,12 +99,17 @@ export class BarbsActor extends Actor {
     /*  Abilities and attacks                       */
     /* -------------------------------------------- */
 
-    async useAbility(item: Item.Implementation): Promise<void> {
-        await useAbility(this as unknown as Actor.Implementation, item);
+    async useAbility(item: Item.Implementation, hand: Hand = "main"): Promise<void> {
+        await useAbility(this as unknown as Actor.Implementation, item, hand);
     }
 
     async weaponAttack(item: Item.Implementation): Promise<void> {
         await weaponAttack(this as unknown as Actor.Implementation, item);
+    }
+
+    /** Attack with the weapon in each hand. */
+    async dualWieldAttack(): Promise<void> {
+        await dualWieldAttack(this as unknown as Actor.Implementation);
     }
 
     /* -------------------------------------------- */

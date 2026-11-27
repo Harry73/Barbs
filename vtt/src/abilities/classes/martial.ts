@@ -23,7 +23,7 @@ import {
     yesNo,
     burst,
 } from "../helpers.ts";
-import { mainWeapon } from "../../rolls/attack.ts";
+import { weaponsFor } from "../../rolls/attack.ts";
 import type { AbilityAutomation, AttackSpec, EffectSpec } from "../types.ts";
 
 /**
@@ -166,8 +166,10 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
 
     "Champion/Slice and Dice": {
         attack: (ctx) => {
-            const weapon = mainWeapon(ctx.actor)?.system as unknown as { weapon?: { category?: string } } | undefined;
-            const keepHigher = ["axe", "longblade"].includes(weapon?.weapon?.category ?? "");
+            // The weapon(s) for the chosen hand; dual wielding counts if either is an axe or sword.
+            const { weapon, offWeapon } = weaponsFor(ctx.actor, ctx.hand);
+            const categories = [weapon, offWeapon].map((w) => (w?.system as unknown as { weapon?: { category?: string } } | undefined)?.weapon?.category);
+            const keepHigher = categories.some((c) => ["axe", "longblade"].includes(c ?? ""));
             return strike(keepHigher ? bestOfTwo(5, 10) : "5d10");
         },
         notes: ["With an axe or sword, each die is rolled twice keeping the higher. Otherwise you may reroll dice and must take the second result."],

@@ -53,6 +53,13 @@
             <a data-action="editItem">{{entry.item.name}}</a>
             {{#if entry.automated}}<i class="fa-solid fa-bolt automated" data-tooltip="Automated: rolls and effects are handled"></i>{{/if}}
             <div class="branch">{{entry.system.branch}}</div>
+            {{#if entry.hands}}
+            <div class="hand-buttons">
+              <a data-action="useAbility" data-hand="main" data-tooltip="Use with your main hand weapon">Main</a>
+              <a data-action="useAbility" data-hand="off" data-tooltip="Use with your offhand weapon">Off</a>
+              <a data-action="useAbility" data-hand="dual" data-tooltip="Dual wield: both weapons' effects apply, scaling from the better one">Dual</a>
+            </div>
+            {{/if}}
           </td>
           <td>{{entry.system.tier}}</td>
           <td>{{entry.system.action}}</td>

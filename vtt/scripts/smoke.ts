@@ -197,7 +197,9 @@ try {
     const handRules = await vite.ssrLoadModule("/src/rules/hands.ts");
     const holder: any = new StandIn();
     const gear = (name: string, slot: string, category: string, damage = "1d8") =>
-        makeItem(name, "equipment", itemModels.EquipmentModel, { slot, equipped: true, weapon: { category, damage } });
+        Object.assign(makeItem(name, "equipment", itemModels.EquipmentModel, { slot, equipped: true, weapon: { category, damage } }), {
+            id: name,
+        });
     holder.items = [gear("Sword", "mainHand", "longblade")];
     assert.equal(handRules.isDualWielding(holder), false, "one weapon isn't dual wielding");
     holder.items.push(gear("Buckler", "offhand", "shield", ""));
@@ -207,6 +209,17 @@ try {
     assert.equal(handRules.isDualWieldingShields(holder), true, "two shields are dual shields");
     holder.items = [gear("Greatsword", "twoHand", "longblade")];
     assert.equal(handRules.isDualWielding(holder), false, "a two-hander isn't dual wielding");
+
+    // Picking weapons by hand for abilities.
+    const attackMod = await vite.ssrLoadModule("/src/rolls/attack.ts");
+    holder.items = [gear("Sword", "mainHand", "longblade"), gear("Dagger", "offhand", "shortblade", "1d4")];
+    assert.equal(attackMod.holdsTwoWeapons(holder), true, "sword and dagger are two weapons");
+    assert.equal(attackMod.weaponsFor(holder, "main").weapon.name, "Sword");
+    assert.equal(attackMod.weaponsFor(holder, "off").weapon.name, "Dagger");
+    const dual = attackMod.weaponsFor(holder, "dual");
+    assert.deepEqual([dual.weapon.name, dual.offWeapon.name], ["Sword", "Dagger"], "dual uses both");
+    holder.items = [gear("Sword", "mainHand", "longblade"), gear("Buckler", "offhand", "shield", "")];
+    assert.equal(attackMod.holdsTwoWeapons(holder), false, "a damage-less shield isn't a second weapon");
 
     // Equip limits: one per slot, two rings, and two-handed fills both hands.
     const { equipConflict } = await vite.ssrLoadModule("/src/rules/equipment.ts");
