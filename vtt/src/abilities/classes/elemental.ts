@@ -52,12 +52,10 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
     "Aeromancer/Vicious Cyclone": {
         choices: [count("extra", "Extra 20-mana steps (+5 ft each)")],
         cost: (ctx) => ({ resource: "mana", amount: 40 + 20 * Number(ctx.choices.extra) }),
-        area: (ctx) => square(15 + 5 * Number(ctx.choices.extra)),
+        // The cyclone stays: enemies starting their turn in it take 4d8 air.
+        area: (ctx) => ({ ...square(15 + 5 * Number(ctx.choices.extra)), zone: { events: ["tokenTurnStart"], damage: { formula: "4d8", type: "air" } } }),
         attack: spell("6d8", "air"),
-        notes: [
-            "Concentration. Enemies who start their turn in the cyclone take 4d8 air magic damage (not automated), " +
-                "and Knocked Up enemies stay Airborne.",
-        ],
+        notes: ["Concentration. Knocked Up enemies in the cyclone stay Airborne."],
     },
     "Aeromancer/Buffeting Storm": {
         target: (ctx) => [
@@ -230,10 +228,11 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
         target: [
             status("slowed", {
                 // Already slowed (or frostbitten) enemies are Frozen instead.
-                resolve: (target, spec) => (target.statuses.has("slowed") ? status("frozen", { cleanse: ["slowed"] }) : spec),
+                resolve: (target, spec) =>
+                    target.statuses.has("slowed") || target.statuses.has("frostbite") ? status("frozen", { cleanse: ["slowed"] }) : spec,
             }),
         ],
-        notes: ["Enemies with a Frostbite stack are also Frozen instead of Slowed (not tracked: shift-click and apply Frozen by hand)."],
+        notes: ["Enemies already Slowed or with a Frostbite stack are Frozen instead."],
     },
     "Cryomancer/Extinguish": {
         target: [status("silenced", { duration: "end of target's next turn" })],
@@ -318,9 +317,9 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
                 name: "Shadow Grasp",
                 dot: { formula: "1d10", type: "dark" },
                 description: "<p>Immobilized. Takes 1d10 dark magic damage and gains a Curse at the start of each turn; Curses can't be expunged.</p>",
+                triggers: [{ event: "turnStart", action: "grant", effect: status("cursed", { duration: "Endless" }) }],
             }),
         ],
-        notes: ["Apply a Curse at the start of each of its turns (not automated)."],
     },
     "Dark Duelist/Vampiric Slash": {
         attack: strike("5d12"),
@@ -686,9 +685,10 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
                 category: "condition",
                 dot: { formula: "3d10", type: "dark" },
                 description: "<p>Gains a Curse and takes 3d10 dark magic damage at the start of each turn. Curses can't expunge.</p>",
+                triggers: [{ event: "turnStart", action: "grant", effect: status("cursed", { duration: "Endless" }) }],
             },
         ],
-        notes: ["Concentration. Apply a Curse at the start of each of the target's turns (not automated)."],
+        notes: ["Concentration."],
     },
 
     /* ---------- Pyromancer ---------- */
@@ -918,7 +918,11 @@ function draughtEffect(key: string, scale: (n: number) => number, dice: (f: stri
         case "critDamage":
             return { ...base, modifiers: [{ type: "critDamage" as const, rollType: "all" as const, value: scale(100) }] };
         case "heal":
-            return { ...base, description: "<p>Heal 10 health at the beginning of each turn (not automated).</p>" };
+            return {
+                ...base,
+                triggers: [{ event: "turnStart" as const, action: "restore" as const, type: "health", value: scale(10) }],
+                description: "<p>Heal 10 health at the beginning of each turn.</p>",
+            };
         case "skills":
             return { ...base, changes: [{ key: "system.skillBonus", value: scale(20) }] };
         default:

@@ -71,6 +71,13 @@ function mintedCoin(choices: Record<string, unknown>): EffectSpec {
     };
 }
 
+/** Conditions for "+CR against a condition of your choice". */
+const CONDITION_CHOICES: Record<string, string> = {
+    slowed: "Slowed", crippled: "Crippled", immobilized: "Immobilized", prone: "Prone", stunned: "Stunned", frozen: "Frozen",
+    confused: "Confused", fear: "Fear", charmed: "Charmed", taunted: "Taunted", blind: "Blinded", silenced: "Silenced",
+    sleeping: "Sleeping", paralyzed: "Paralyzed", poisoned: "Poisoned", bleeding: "Bleeding", burned: "Burned", cursed: "Cursed",
+};
+
 export const SUPPORT: Record<string, AbilityAutomation> = {
     /* ---------- Abjurer ---------- */
 
@@ -292,10 +299,16 @@ export const SUPPORT: Record<string, AbilityAutomation> = {
         target: [{ name: "Waltz", category: "buff", cleanse: ["poisoned", "bleeding", "burned"] }],
     },
     "Dancer/Ballet": {
-        choices: [yesNo("combo", "Last Move Action included a Step 1 dance (-20 stamina)")],
         cost: (ctx) => ({ resource: "stamina", amount: ctx.choices.combo ? 0 : 20 }),
-        self: (ctx) => [{ category: "buff", maxStacks: 2, changes: [stat("conditionResist", ctx.scale(10))] }],
-        notes: ["Also +10% CR against a condition type of your choice (not automated)."],
+        // +10% CR, and another +10% against one condition of your choice.
+        choices: [yesNo("combo", "Last Move Action included a Step 1 dance (-20 stamina)"), pick("condition", "Extra CR against", CONDITION_CHOICES)],
+        self: (ctx) => [
+            {
+                category: "buff",
+                maxStacks: 2,
+                changes: [stat("conditionResist", ctx.scale(10)), { key: `system.conditionResistBonus.${String(ctx.choices.condition)}`, value: ctx.scale(10) }],
+            },
+        ],
     },
     "Dancer/Jive": {
         choices: [yesNo("combo", "Last Move Action included a Step 2 dance (-20 stamina)")],
@@ -404,7 +417,14 @@ export const SUPPORT: Record<string, AbilityAutomation> = {
                 case "necklaceHurt":
                     return [{ name: "Alter Jewelry (necklace)", category: "condition", dot: { formula: "30", type: "psychic" } }];
                 case "necklaceHeal":
-                    return [{ name: "Alter Jewelry (necklace)", category: "buff", description: "<p>Heal 30 health at the start of each turn (not automated).</p>" }];
+                    return [
+                        {
+                            name: "Alter Jewelry (necklace)",
+                            category: "buff",
+                            triggers: [{ event: "turnStart", action: "restore", type: "health", value: 30 }],
+                            description: "<p>Heal 30 health at the start of each turn.</p>",
+                        },
+                    ];
                 default:
                     return [{ name: "Alter Jewelry (ring)", category: "condition", description: "<p>Lose 40 mana and stamina at the start of each turn.</p>" }];
             }
@@ -508,7 +528,8 @@ export const SUPPORT: Record<string, AbilityAutomation> = {
                     const [, best] = options.reduce((a, b) => ((attrs?.[b[0]]?.total ?? -99) > (attrs?.[a[0]]?.total ?? -99) ? b : a));
                     return { ...spec, name: `Brain Barrier (${best})`, changes: [statPercent(best, ctx.scale(50))] };
                 },
-                description: `<p>${ctx.choices.boost ? 40 : 20}% general damage reduction against psychic damage (not automated).</p>`,
+                modifiers: [{ type: "incomingDamage", damageType: "psychic", value: ctx.choices.boost ? -40 : -20 }],
+                description: `<p>${ctx.choices.boost ? 40 : 20}% general damage reduction against psychic damage.</p>`,
             },
         ],
         notes: (ctx) => [`Up to ${ctx.choices.boost ? 2 : 1} allies. Paying the third resource too adds a third ally and 60% psychic GDR.`],
@@ -591,10 +612,15 @@ export const SUPPORT: Record<string, AbilityAutomation> = {
         notes: ["The target may consume 10 seconds of the duration to dash 30 ft as a minor action or reaction."],
     },
     "Symbiote/Bolster Body": {
-        choices: [yesNo("reaction", "Cast as a reaction (+10 mana)")],
         cost: (ctx) => ({ resource: "mana", amount: ctx.choices.reaction ? 40 : 30 }),
-        target: (ctx) => [{ category: "buff", changes: [stat("conditionResist", ctx.scale(20))] }],
-        notes: ["Also +20% CR against a condition of your choice (not automated)."],
+        choices: [yesNo("reaction", "Cast as a reaction (+10 mana)"), pick("condition", "Extra CR against", CONDITION_CHOICES)],
+        // +20% CR, and another +20% against one condition of your choice.
+        target: (ctx) => [
+            {
+                category: "buff",
+                changes: [stat("conditionResist", ctx.scale(20)), { key: `system.conditionResistBonus.${String(ctx.choices.condition)}`, value: ctx.scale(20) }],
+            },
+        ],
     },
     "Symbiote/Embolden Soul": {
         target: [{ category: "buff", description: "<p>Loses its Minor Action but gains an extra Major Action each turn. Makes a free attack when this ends.</p>" }],

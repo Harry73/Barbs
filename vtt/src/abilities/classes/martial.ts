@@ -854,12 +854,13 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
                 category: "condition",
                 duration: "start of your next turn",
                 resistible: false,
+                // Only the Soldier who marked them gets the bonus.
+                modifiers: [{ type: "incomingDamage", value: 50, conditions: "origin:attacker" }],
                 description: "<p>Loses its reaction and takes 50% increased damage from the Soldier's attacks.</p>",
             },
         ],
         notes: [
             "Dash adjacent to the target first. The mark ends early if you take damage or gain a condition, or you can end it to dash 30 ft.",
-            "Your attacks deal +50% damage to the marked target (not automated: it only applies to your attacks).",
         ],
     },
 
@@ -1135,6 +1136,8 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
                 description: `<p>${
                     ctx.dualShields ? "Twice per round (dual shields)" : "Once per round (twice with dual shields)"
                 }, freely block an attack on yourself or an adjacent ally as a free reaction. Gain a Shield stack at the end of each of your turns instead of from Perfect Shield.</p>`,
+                // A free block ready at the start of each of your turns (you can hand it to an adjacent ally by hand).
+                triggers: [{ event: "turnStart", action: "grant", effect: { ...blockSpec("Grand Guardian", 100), duration: "start of your next turn" } }],
                 modifiers: [note("Free block available this round (cast Rapid Shields or add a 100% block effect).")],
             },
         ],
@@ -1259,6 +1262,15 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
         notes: [
             "Cast it before applying the damage that would down you (it's a free reaction): that damage then leaves you at 1 health.",
             "At the end of your next turn your health drops to 0 and you're Downed with 70 Downed Health (by hand).",
+        ],
+    },
+    "Assassin/Bloodlust": {
+        self: [
+            {
+                category: "buff",
+                triggers: [{ event: "kill", action: "note", value: "Killing blow: your Move, Major, and Minor actions reset." }],
+                description: "<p>Dealing a killing blow on an enemy resets your Move, Major, and Minor actions.</p>",
+            },
         ],
     },
     "Assassin/Pursue": {
