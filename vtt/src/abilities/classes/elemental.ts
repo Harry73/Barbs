@@ -766,11 +766,12 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
             {
                 category: "buff",
                 modifiers: [{ type: "incomingEvasion", value: 40, conditions: "attacker:distance > 30" }],
+                triggers: [{ event: "attacked", conditions: "attacker:distance <= 5", action: "inflict", effect: status("frozen") }],
                 description:
                     "<p>Enemies moving within 30 ft become Slowed; adjacent enemies attacking you become Frozen; attacks from enemies more than 30 ft away grant you +40% evasion. Adjacent allies deal ice magic damage and inflict Frostbite on hit (once per turn). You may cast ice spells as a reaction.</p>",
             },
         ],
-        notes: ["The +40% Evasion against distant attackers is automatic. Slow on approach and Frozen on adjacent attackers are applied by hand for now."],
+        notes: ["The +40% Evasion against distant attackers and Frozen on adjacent attackers are automatic. Slow on approach is applied by hand for now."],
     },
     "Mistguard/Cold Shoulder": {
         area: around(20, "allies"),
@@ -809,24 +810,58 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
         self: [
             {
                 category: "buff",
+                triggers: [
+                    // Spell damage, so it adds your Magic Damage like any other dark spell.
+                    {
+                        event: "attacked",
+                        conditions: "attacker:status:cursed",
+                        action: "damage",
+                        type: "dark",
+                        value: "2d10 * @attacker.statuses.cursed + @stats.magicDamage.value",
+                    },
+                    { event: "attacked", conditions: "attacker:status:cursed", action: "note", value: "25% miss chance and a 10 ft drag towards you, per curse on the attacker." },
+                ],
                 description:
                     "<p>Cursed enemies attacking you take 2d10 dark magic damage per curse, get a 25% miss chance per curse, and are dragged 10 ft towards you per curse. Gain a Darkness stack (+25% physical and dark damage, max 20) whenever a curse you inflicted is expunged.</p>",
             },
         ],
-        attack: spell("2d10", "dark"),
-        notes: ["The damage here is one curse's worth of retaliation: when a cursed enemy attacks you, apply it once per curse on them."],
+        notes: ["Retaliation against Cursed attackers happens automatically when their attack is applied to you. Darkness stacks are tracked by hand."],
     },
     "Lightning Duelist/Lightning Coil Cuirass": {
         self: [
             {
                 category: "buff",
+                triggers: [
+                    {
+                        event: "attacked",
+                        conditions: "attacker:distance <= 5",
+                        action: "damage",
+                        type: "lightning",
+                        value: "2d12 + @stats.magicDamage.value",
+                    },
+                    { event: "attacked", conditions: "attacker:distance <= 5", action: "inflict", effect: status("paralyzed") },
+                    { event: "damaged", action: "note", value: "You may dash up to your speed in any direction." },
+                    // A Lightning stack per physical hit, spent by your next lightning spell for +10% each.
+                    {
+                        event: "hit",
+                        conditions: "roll:physical",
+                        action: "grant",
+                        effect: {
+                            name: "Lightning",
+                            category: "",
+                            singleUse: true,
+                            maxStacks: 20,
+                            duration: "Endless",
+                            modifiers: [{ type: "multiplier", rollType: "magic", damageType: "lightning", value: 10, conditions: "ability:tag:lightning" }],
+                            description: "<p>+10% lightning damage on your next lightning spell attack, per stack. All stacks are spent together.</p>",
+                        },
+                    },
+                ],
                 description:
                     "<p>Adjacent enemies attacking you gain a stack of Paralysis and take 2d12 lightning magic damage. Whenever you take damage, you may dash up to your speed. Gain a Lightning stack per physical hit; your next lightning spell attack expends them for +10% lightning damage each (max 20).</p>",
             },
         ],
-        target: [status("paralyzed")],
-        attack: spell("2d12", "lightning"),
-        notes: ["The damage and Paralysis here are the retaliation against one adjacent attacker: apply them when one attacks you."],
+        notes: ["Retaliation against adjacent attackers, and Lightning stacks from your physical hits, happen automatically."],
     },
     "Noxomancer/Treachery": {
         attack: spell("3d10", "dark", { scaling: "none" }),
