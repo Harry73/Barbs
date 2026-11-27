@@ -43,6 +43,7 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
             category: spec.category,
             singleUse: spec.singleUse ?? false,
             block: Math.max(0, Math.min(100, Math.round(spec.block ?? 0))),
+            endsWithCombat: !!spec.endsWithCombat,
             pulse: {
                 formula: spec.pulse?.formula ?? "",
                 damageType: spec.pulse?.type ?? "physical",
@@ -57,6 +58,7 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
                 chance: t.chance ?? 0,
                 oncePer: t.oncePer ?? "",
                 consume: !!t.consume,
+                check: t.check ?? "",
                 action: t.action,
                 value: String(t.value ?? ""),
                 type: t.type ?? "",

@@ -372,6 +372,10 @@ export const PENETRATION_STAT_KEYS = ["physical", "psychic", "allMagic", ...ELEM
 
 /** Rulebook skill names, and the key a per-skill bonus is stored under (`system.skillBonuses.<key>`). */
 export const SKILL_NAMES: string[] = (skillsJson as { name: string }[]).map((s) => s.name);
+/** Each rulebook skill's attribute name ("Toughness"), by lowercase skill name, for skills a character doesn't have. */
+export const SKILL_ATTRIBUTES: Record<string, string> = Object.fromEntries(
+    (skillsJson as { name: string; attribute: string }[]).map((s) => [s.name.toLowerCase(), s.attribute]),
+);
 export function skillKey(name: string): string {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }

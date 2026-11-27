@@ -59,6 +59,8 @@ export interface EffectSpec {
     singleUse?: boolean;
     /** Blocks the next attack on the bearer by this percent (100 = fully), then is used up. */
     block?: number;
+    /** Removed when combat ends ("until the end of combat"). */
+    endsWithCombat?: boolean;
     /** Reactions: "when you're attacked by an adjacent enemy, deal 2d12 lightning to them" (see src/triggers). */
     triggers?: TriggerSpec[];
     /** Damage the bearer deals to creatures within `radius` ft at the start of each of their turns (Fiery Temper). */
@@ -167,6 +169,8 @@ export interface TriggerSpec {
     oncePer?: "" | "turn" | "round" | "once";
     /** Delete the effect after it fires. */
     consume?: boolean;
+    /** A skill check that must succeed: "Armor Mastery: Shields vs @level / 2". */
+    check?: string;
     action: TriggerAction;
     value?: string | number;
     /** Resource for restore, damage type for damage. */

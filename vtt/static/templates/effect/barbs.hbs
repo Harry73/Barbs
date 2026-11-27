@@ -22,6 +22,13 @@
   </div>
 
   <div class="form-group">
+    <label>Ends with combat</label>
+    <div class="form-fields">
+      <input type="checkbox" name="system.endsWithCombat" {{checked barbs.endsWithCombat}} />
+    </div>
+    <p class="hint">Removed when the combat ends ("until the end of combat"), whatever its duration says.</p>
+  </div>
+  <div class="form-group">
     <label>Template</label>
     <div class="form-fields">
       <input type="checkbox" name="system.template" {{checked barbs.template}} />
@@ -98,7 +105,7 @@
   <table class="barbs-modifiers barbs-triggers">
     <thead>
       <tr>
-        <th>When</th><th>Conditions</th><th data-tooltip="Percent chance; blank = always">%</th><th>Limit</th><th data-tooltip="Remove this effect after it fires">Use up</th><th>Do</th>
+        <th>When</th><th>Conditions</th><th data-tooltip="Percent chance; blank = always">%</th><th>Limit</th><th data-tooltip="Remove this effect after it fires">Use up</th><th data-tooltip="A skill check that must succeed, e.g. Armor Mastery: Shields vs @level / 2">Check</th><th>Do</th>
         <th data-tooltip="Amount or text">Value</th><th data-tooltip="Resource (restore) or damage type">Type</th><th>Effect</th>
         <th><a data-action="addTrigger" data-tooltip="Add trigger"><i class="fa-solid fa-plus"></i></a></th>
       </tr>
@@ -111,6 +118,7 @@
         <td><input type="number" name="system.triggers.{{t.index}}.chance" value="{{#if t.chance}}{{t.chance}}{{/if}}" min="0" max="100" placeholder="—" /></td>
         <td><select name="system.triggers.{{t.index}}.oncePer">{{selectOptions @root.onceChoices selected=t.oncePer}}</select></td>
         <td><input type="checkbox" name="system.triggers.{{t.index}}.consume" {{checked t.consume}} /></td>
+        <td><input type="text" name="system.triggers.{{t.index}}.check" value="{{t.check}}" placeholder="Skill vs DC" /></td>
         <td><select name="system.triggers.{{t.index}}.action">{{selectOptions @root.actionChoices selected=t.action}}</select></td>
         <td><input type="text" name="system.triggers.{{t.index}}.value" value="{{t.value}}" placeholder="5, 2d12, text" /></td>
         <td><input type="text" name="system.triggers.{{t.index}}.type" value="{{t.type}}" placeholder="stamina, lightning" /></td>

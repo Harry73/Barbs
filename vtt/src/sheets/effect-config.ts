@@ -232,7 +232,7 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
 
     static async #onAddTrigger(this: BarbsEffectConfig) {
         const triggers = this.#currentTriggers();
-        triggers.push({ event: "hit", conditions: "", chance: 0, oncePer: "", consume: false, action: "restore", value: "", type: "stamina", effect: "", effectData: null });
+        triggers.push({ event: "hit", conditions: "", chance: 0, oncePer: "", consume: false, check: "", action: "restore", value: "", type: "stamina", effect: "", effectData: null });
         await this.submit({ updateData: { system: { triggers } } } as never);
     }
 

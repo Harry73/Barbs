@@ -1,4 +1,4 @@
-import { skillKey } from "../config.ts";
+import { SKILL_ATTRIBUTES, attributeKeyFromName, skillKey } from "../config.ts";
 import {
     ATTRIBUTES,
     RESOURCE_KEYS,
@@ -59,20 +59,37 @@ export class BarbsActor extends Actor {
 
     /** Skill check: d100 + 5 per skill point + the skill's attribute. */
     async rollSkill(item: Item.Implementation): Promise<void> {
-        const skill = item.system as unknown as SkillModel;
-        const attr = ATTRIBUTES[skill.attribute as AttributeKey];
+        await this.skillCheck(item.name);
+    }
+
+    /**
+     * Roll a skill check by name, optionally against a DC, posting the roll. A skill the character doesn't have rolls
+     * with no rank (just the attribute and bonuses). Returns whether it met the DC (true when there's no DC).
+     */
+    async skillCheck(name: string, { dc, flavor }: { dc?: number; flavor?: string } = {}): Promise<boolean> {
+        const item = this.items.find((i) => i.type === "skill" && i.name.toLowerCase() === name.toLowerCase());
+        const skill = item?.system as unknown as SkillModel | undefined;
+        const attribute = (skill?.attribute ?? attributeKeyFromName(SKILL_ATTRIBUTES[name.toLowerCase()] ?? "") ?? "str") as AttributeKey;
+        const attr = ATTRIBUTES[attribute];
         const d = this.creature.derived;
         const bonus = d.skillBonus ? " + @skillBonus[effects]" : "";
         // Gear can add to one skill ("+10 Stealth: Sneak"), on top of bonuses to every skill.
-        const specific = d.skillBonuses?.[skillKey(item.name)] ?? 0;
-        const roll = new Roll(
-            `1d100 + @rank[rank ${skill.rank}] + @${skill.attribute}[${attr.abbreviation}]${bonus}${specific ? " + @specific[gear]" : ""}`,
-            { ...this.getRollData(), rank: skill.rankBonus, specific },
-        );
+        const specific = d.skillBonuses?.[skillKey(item?.name ?? name)] ?? 0;
+        const rank = skill ? ` + @rank[rank ${skill.rank}]` : "";
+        const roll = await new Roll(`1d100${rank} + @${attribute}[${attr.abbreviation}]${bonus}${specific ? " + @specific[gear]" : ""}`, {
+            ...this.getRollData(),
+            rank: skill?.rankBonus ?? 0,
+            specific,
+        }).evaluate();
+        const passed = dc === undefined || (roll.total ?? 0) >= dc;
         await roll.toMessage({
             speaker: this.speaker,
-            flavor: `${item.name} check (rank ${skill.rank})`,
+            flavor:
+                `${item?.name ?? name} check${skill ? ` (rank ${skill.rank})` : " (untrained)"}` +
+                (dc !== undefined ? ` vs DC ${dc}: ${passed ? "<strong>success</strong>" : "failure"}` : "") +
+                (flavor ? ` (${flavor})` : ""),
         });
+        return passed;
     }
 
     /** Death saves are a flat d100 subtracted from Downed Health (Patch 1.3). */

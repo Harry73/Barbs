@@ -224,6 +224,10 @@ the effect (Long Live The King), or reflect a percent back at the attacker (Self
 use `incoming:lethal` and `attacked`, and values `@incoming.damage`. Any trigger can be limited to firing only once,
 or set to use up its effect when it fires.
 
+A trigger can also require a skill check: its Check field, like `Armor Mastery: Shields vs @level / 2`, rolls that
+check for the bearer (untrained skills roll with no rank) and only goes on if it meets the DC. Effects can be set to
+**end with combat**, removed when the combat they were gained in ends.
+
 Stat buffs use the core Changes tab instead, in the "initial" phase. The Stats tab shows every one of these, laid out
 like the Roll20 sheet's: core stats, then misc combat stats, multipliers, penetration, damage reduction, and condition
 resistances. Use these for always-on gear affixes; use roll modifiers for conditional ones ("bow attacks", "on hit"). Its key field is a searchable picker over every key below

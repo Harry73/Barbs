@@ -43,6 +43,8 @@ export interface TriggerData {
     oncePer: "" | "turn" | "round" | "once";
     /** Delete the effect after the trigger fires (one-shot reactions). */
     consume: boolean;
+    /** A skill check that must succeed: "Armor Mastery: Shields vs @level / 2". Blank = none. */
+    check: string;
     action: TriggerAction;
     /** Amount (restore, damage) or text (note). Formulas see @self, @other, and @target/@attacker. */
     value: string;
@@ -99,6 +101,8 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
              * (Battle Fervor, granted on hit). Templates are always inactive.
              */
             template: new fields.BooleanField({ initial: false }),
+            /** Removed when the combat it was gained in ends ("until the end of combat"). */
+            endsWithCombat: new fields.BooleanField({ initial: false }),
             triggers: new fields.ArrayField(
                 new fields.SchemaField({
                     event: new fields.StringField({ required: true, choices: Object.keys(TRIGGER_EVENTS), initial: "hit" }),
@@ -106,6 +110,7 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
                     chance: new fields.NumberField({ required: true, integer: true, min: 0, max: 100, initial: 0 }),
                     oncePer: new fields.StringField({ required: true, blank: true, choices: ["", "turn", "round", "once"], initial: "" }),
                     consume: new fields.BooleanField({ initial: false }),
+                    check: new fields.StringField({ required: true, blank: true, initial: "" }),
                     action: new fields.StringField({ required: true, choices: Object.keys(TRIGGER_ACTIONS), initial: "restore" }),
                     value: new fields.StringField({ required: true, blank: true, initial: "" }),
                     type: new fields.StringField({ required: true, blank: true, initial: "" }),
@@ -134,6 +139,7 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
     declare dot: { formula: string; damageType: string };
     declare modifiers: RollModifierData[];
     declare template: boolean;
+    declare endsWithCombat: boolean;
     declare triggers: TriggerData[];
 
     /**

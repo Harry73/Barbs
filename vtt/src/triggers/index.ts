@@ -79,10 +79,24 @@ export async function fireTriggers(bearer: Actor.Implementation | null | undefin
                 lastFired.set(key, now);
             }
             if (!(await passesChance(trigger))) continue;
+            if (!(await passesCheck(bearer, effect, trigger))) continue;
             await runAction(bearer, effect, trigger, role, ctx);
             if (trigger.consume) await consumeEffect(effect);
         }
     }
+}
+
+/**
+ * A trigger's skill-check gate ("Armor Mastery: Shields vs @level / 2"): the bearer rolls it, against a DC formula
+ * over their own roll data, and the trigger only goes on if it succeeds.
+ */
+async function passesCheck(bearer: Actor.Implementation, effect: ActiveEffect.Implementation, trigger: TriggerData): Promise<boolean> {
+    const text = trigger.check?.trim();
+    if (!text) return true;
+    const [skill, dcFormula] = text.split(/\s+vs\.?\s+/i);
+    const dc = Math.round(evaluateNumber(dcFormula ?? "0", { ...bearer.getRollData(), self: actorData(bearer) }));
+    const roller = bearer as unknown as { skillCheck?: (name: string, o: { dc: number; flavor: string }) => Promise<boolean> };
+    return (await roller.skillCheck?.(skill.trim(), { dc, flavor: effect.name ?? "" })) ?? false;
 }
 
 async function passesChance(trigger: TriggerData): Promise<boolean> {
@@ -150,6 +164,7 @@ export async function resolveIncomingDamage(
                 lastFired.set(key, now);
             }
             if (!(await passesChance(trigger))) continue;
+            if (!(await passesCheck(target, effect, trigger))) continue;
             const data = { ...formulaData(target, role, ctx), incoming: { damage: result.total } };
             const value = evaluateNumber(trigger.value, data);
             const label = `${effect.name}`;

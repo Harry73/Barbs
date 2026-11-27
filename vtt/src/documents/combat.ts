@@ -86,6 +86,17 @@ export function registerCombatTriggers(): void {
     };
     Hooks.on("combatStart", (combat: Combat) => void fire(combat, "combatStart"));
     Hooks.on("deleteCombat", (combat: Combat) => {
-        if (combat.started) void fire(combat, "combatEnd");
+        if (!combat.started) return;
+        void (async () => {
+            await fire(combat, "combatEnd");
+            if (!game.users?.activeGM?.isSelf) return;
+            // "Until the end of combat" effects go now.
+            for (const combatant of combat.combatants) {
+                const actor = combatant.actor as Actor.Implementation | null;
+                if (!actor) continue;
+                const ending = [...actor.effects].filter((e) => (e.system as unknown as { endsWithCombat?: boolean }).endsWithCombat);
+                if (ending.length) await actor.deleteEmbeddedDocuments("ActiveEffect", ending.map((e) => e.id!) as never);
+            }
+        })();
     });
 }
