@@ -221,6 +221,32 @@ try {
     holder.items = [gear("Sword", "mainHand", "longblade"), gear("Buckler", "offhand", "shield", "")];
     assert.equal(attackMod.holdsTwoWeapons(holder), false, "a damage-less shield isn't a second weapon");
 
+    // The Stats tab folds always-on roll modifiers into stat rows and describes the rest.
+    const { summarizeRollBonuses, bonusTotal } = await vite.ssrLoadModule("/src/sheets/roll-bonuses.ts");
+    const dagger = gear("Dagger", "mainHand", "shortblade", "1d4");
+    const ring = Object.assign(gear("Ring", "ring", "", ""), { documentName: "Item" });
+    Object.assign(dagger, { documentName: "Item" });
+    const fx = (name: string, parent: any, modifiers: object[], singleUse = false) => ({
+        name,
+        parent,
+        active: true,
+        system: { singleUse, modifiers: modifiers.map((m) => ({ rollType: "all", damageType: "all", weapon: "", onCrit: false, ...m })) },
+    });
+    const bearer: any = {
+        allApplicableEffects: () => [
+            fx("Keen Edge", dagger, [{ type: "critChance", rollType: "physical", value: "10" }]),
+            fx("Ring of Fire", ring, [{ type: "multiplier", damageType: "fire", value: "15" }, { type: "penetration", value: "10" }]),
+            fx("Rapid Fire", null, [{ type: "critChance", rollType: "physical", weapon: "bow", value: "20" }]),
+        ],
+    };
+    const rb = summarizeRollBonuses(bearer);
+    assert.equal(bonusTotal(rb, "multiplier.fire"), 15, "always-on multiplier folds into its row");
+    assert.equal(bonusTotal(rb, "penetration.physical"), 10, "all-penetration counts for armor...");
+    assert.equal(bonusTotal(rb, "penetration.allMagic"), 10, "...and every element");
+    assert.equal(bonusTotal(rb, "critChance"), 0, "weapon mods and bow-only bonuses aren't always-on");
+    assert.equal(rb.other.length, 2, "they're listed as conditional instead");
+    assert.match(rb.other.join("\n"), /attacks with Dagger/);
+
     // Equip limits: one per slot, two rings, and two-handed fills both hands.
     const { equipConflict } = await vite.ssrLoadModule("/src/rules/equipment.ts");
     const helm = { name: "Helm", slot: "head" };

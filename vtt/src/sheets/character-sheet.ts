@@ -22,6 +22,7 @@ import {
 } from "../config.ts";
 import { getAutomation } from "../abilities/catalog.ts";
 import { damageBucketLabel } from "../effects/change-keys.ts";
+import { bonusSources, bonusTotal, summarizeRollBonuses, type RollBonusSummary } from "./roll-bonuses.ts";
 import { defaultChoices } from "../abilities/choices.ts";
 import { makeContext, resolve } from "../abilities/context.ts";
 import type { AbilityAutomation } from "../abilities/types.ts";
@@ -126,15 +127,23 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
         const rollableStats = new Set(["evasion", "conditionResist"]);
         const overrides = (actor.creature as unknown as { overrides: Record<string, number | null> }).overrides ?? {};
-        const stats = STAT_KEYS.map((key) => ({
-            key,
-            ...STATS[key],
-            ...system.stats[key],
-            rollable: rollableStats.has(key),
-            override: overrides[key] ?? "",
-        }));
+        // Roll modifiers from gear and buffs that apply to every roll count towards the stats they boost.
+        const rollBonuses = summarizeRollBonuses(actor as unknown as Actor.Implementation);
+        const stats = STAT_KEYS.map((key) => {
+            const mods = bonusTotal(rollBonuses, key);
+            return {
+                key,
+                ...STATS[key],
+                ...system.stats[key],
+                rollable: rollableStats.has(key),
+                override: overrides[key] ?? "",
+                mods,
+                modSources: bonusSources(rollBonuses, key),
+                total: system.stats[key].value + mods,
+            };
+        });
 
-        const statSections = this.#statSections();
+        const statSections = this.#statSections(rollBonuses);
 
         const skills = ofType("skill").map((item) => {
             const s = item.system as unknown as SkillModel;
@@ -374,10 +383,16 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
      * Everything else gear and buffs can change, grouped like the Roll20 sheet's Stats tab: misc combat stats, damage
      * multipliers, penetration, damage reduction, and condition resistances. Read-only: effects set them.
      */
-    #statSections() {
+    #statSections(rb: RollBonusSummary) {
         const d = this.barbsActor.creature.derived;
         const pct = (v: number) => `${v > 0 ? "+" : ""}${v}%`;
         const row = (label: string, value: number, text = pct(value), hint?: string) => ({ label, value, text, hint, zero: !value });
+        // A stat bucket plus the always-on roll modifiers for it, with a tooltip naming where it comes from.
+        const withMods = (label: string, base: number, key: string, format = pct, hint?: string) => {
+            const total = base + bonusTotal(rb, key);
+            const sources = bonusSources(rb, key, { label: "Changes", value: base });
+            return row(label, total, format(total), [hint, sources].filter(Boolean).join(" — ") || undefined);
+        };
         const conditions = STATUSES.filter((st) => st.category === "condition");
         const cr = d.stats.conditionResist.value;
         const mr = d.stats.magicResist.value;
@@ -388,7 +403,8 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
                 rows: [
                     ...Object.entries(COMBAT_STATS).map(([key, c]) => {
                         const v = d.combat?.[key as keyof typeof COMBAT_STATS] ?? 0;
-                        return row(c.label, v, c.unit === "%" ? pct(v) : `${v > 0 ? "+" : ""}${v}${c.unit}`, c.hint);
+                        const format = (x: number) => (c.unit === "%" ? pct(x) : `${x > 0 ? "+" : ""}${x}${c.unit}`);
+                        return withMods(c.label, v, `combat.${key}`, format, c.hint);
                     }),
                     row("Initiative Bonus", d.initiativeBonus, `${d.initiativeBonus > 0 ? "+" : ""}${d.initiativeBonus}`),
                     row("Buff Effectiveness", d.buffEffectiveness),
@@ -398,12 +414,12 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             },
             {
                 label: "Damage Multipliers",
-                rows: MULTIPLIER_STAT_KEYS.map((k) => row(damageBucketLabel(k), d.damageMultiplier?.[k] ?? 0)),
+                rows: MULTIPLIER_STAT_KEYS.map((k) => withMods(damageBucketLabel(k), d.damageMultiplier?.[k] ?? 0, `multiplier.${k}`)),
             },
             {
                 label: "Penetration",
                 rows: PENETRATION_STAT_KEYS.map((k) =>
-                    row(k === "physical" ? "Armor (AC)" : k === "allMagic" ? "General magic" : damageBucketLabel(k), d.penetration?.[k] ?? 0),
+                    withMods(k === "physical" ? "Armor (AC)" : k === "allMagic" ? "General magic" : damageBucketLabel(k), d.penetration?.[k] ?? 0, `penetration.${k}`),
                 ),
             },
             {
@@ -435,6 +451,9 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             ...(skills.length
                 ? [{ label: "Skill Bonuses", rows: skills.map((x) => row(x.name, x.bonus, `${x.bonus > 0 ? "+" : ""}${x.bonus}`)) }]
                 : []),
+            // Everything that only applies sometimes (a weapon's own mods, "bow attacks", on crit, next roll) or isn't
+            // a stat at all (on-hit damage, statuses), spelled out.
+            ...(rb.other.length ? [{ label: "Conditional & On-hit Bonuses", rows: [], lines: rb.other, wide: true }] : []),
         ];
     }
 
