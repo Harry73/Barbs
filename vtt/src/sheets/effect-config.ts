@@ -63,6 +63,8 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
             const templates = [...siblings].filter((e) => (e.system as unknown as { template?: boolean }).template && e.id !== this.document.id).map((e) => e.name);
             Object.assign(partContext, {
                 barbs: system,
+                // Templates never apply themselves, so their own triggers never run; say so where it's set up.
+                templateWithTriggers: !!(system as unknown as { template?: boolean }).template && (system.triggers ?? []).length > 0,
                 maxStacks: maxStacks >= 999 ? "" : maxStacks,
                 modifiers: system.modifiers.map((m, index) => ({ ...m, index })),
                 triggers: (system.triggers ?? []).map((t, index) => ({ ...t, index, inline: !!t.effectData })),

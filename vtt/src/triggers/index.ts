@@ -250,11 +250,16 @@ function grantedEffectData(effect: ActiveEffect.Implementation, trigger: Trigger
     const parent = effect.parent as {
         effects?: { find(fn: (e: ActiveEffect.Implementation) => boolean): ActiveEffect.Implementation | undefined };
     } | null;
-    const template = parent?.effects?.find(
-        (e) => e.name === trigger.effect && !!(e.system as unknown as BarbsEffectModel).template,
-    );
+    // The Effect column names the template; if it's blank, accept the name typed into Value.
+    const name = (trigger.effect || trigger.value || "").trim();
+    const template = parent?.effects?.find((e) => e.name === name && !!(e.system as unknown as BarbsEffectModel).template);
     if (!template) {
-        ui.notifications?.warn(`${effect.name}: no template effect named "${trigger.effect}" on ${(effect.parent as { name?: string })?.name}.`);
+        const where = (effect.parent as { name?: string })?.name ?? "this item";
+        ui.notifications?.warn(
+            name
+                ? `${effect.name}: there's no template effect named "${name}" on ${where}. Make one (an effect with Template ticked) next to this one.`
+                : `${effect.name}: pick the template effect to grant in the trigger's Effect column.`,
+        );
         return null;
     }
     const data = template.toObject() as Record<string, unknown>;

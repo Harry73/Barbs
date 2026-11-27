@@ -93,6 +93,12 @@
   </table>
 
   <h4>Triggers</h4>
+  {{#if templateWithTriggers}}
+  <p class="notice warning">
+    <i class="fa-solid fa-triangle-exclamation"></i> This effect is a <strong>Template</strong>, so it's never active and these
+    triggers won't run. Put the triggers on a separate, regular effect on the same item, and have them grant this one.
+  </p>
+  {{/if}}
   <p class="hint">
     When something happens, do something. Conditions work as for modifiers: "you're attacked/hit/damaged" see the
     attack (<code>attack:…</code>, <code>attacker:…</code>, <code>attacker:distance</code>), "you hit"/"you down"
@@ -120,7 +126,7 @@
         <td><input type="checkbox" name="system.triggers.{{t.index}}.consume" {{checked t.consume}} /></td>
         <td><input type="text" name="system.triggers.{{t.index}}.check" value="{{t.check}}" placeholder="Skill vs DC" /></td>
         <td><select name="system.triggers.{{t.index}}.action">{{selectOptions @root.actionChoices selected=t.action}}</select></td>
-        <td><input type="text" name="system.triggers.{{t.index}}.value" value="{{t.value}}" placeholder="5, 2d12, text" /></td>
+        <td><input type="text" name="system.triggers.{{t.index}}.value" value="{{t.value}}" placeholder="5, 2d12, text" data-tooltip="Restore/damage: an amount (formula). Reminder: the text. Grant/inflict: leave blank and pick the Effect (or type the template's name here)." /></td>
         <td><input type="text" name="system.triggers.{{t.index}}.type" value="{{t.type}}" placeholder="stamina, lightning" /></td>
         <td>
           {{#if t.inline}}<span class="hint" data-tooltip="Defined by the ability">built in</span>
