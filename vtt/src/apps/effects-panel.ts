@@ -54,6 +54,10 @@ export class EffectsPanel extends HandlebarsApplicationMixin(ApplicationV2) {
         const effects = [];
         for (const effect of actor?.allApplicableEffects() ?? []) {
             if (!effect.active) continue;
+            // Gear's enchantments and affixes are always on and never interesting mid-fight; the Effects tab still
+            // lists them (in its collapsed Equipment section).
+            const parent = effect.parent as Item.Implementation | null;
+            if (parent?.documentName === "Item" && parent.type === "equipment") continue;
             const system = effect.system as unknown as BarbsEffectModel;
             const source = effect.parent !== actor ? effect.parent?.name : null;
             const remaining = (effect.duration as { label?: string }).label;
