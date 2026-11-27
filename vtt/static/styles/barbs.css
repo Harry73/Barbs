@@ -288,6 +288,18 @@
   border-color: var(--barbs-accent);
 }
 
+/* Effects tab: gear's effects in their own collapsed section. */
+.barbs details.equipment-effects {
+  margin-top: 0.75rem;
+}
+
+.barbs details.equipment-effects > summary {
+  cursor: pointer;
+  font-weight: bold;
+  border-bottom: 1px solid var(--barbs-border);
+  padding-bottom: 0.15rem;
+}
+
 /* Inventory: one heading row per equipment slot. */
 .barbs .inventory .inventory-section th {
   padding-top: 0.5rem;

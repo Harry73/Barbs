@@ -235,12 +235,17 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             return {
                 effect,
                 source: effect.parent === actor ? "" : effect.parent?.name,
+                fromEquipment: effect.parent !== actor && (effect.parent as Item | null)?.type === "equipment",
                 category: system.category,
                 summary,
                 inactive: !effect.active,
                 duration: (effect.duration as { label?: string }).label ?? "",
             };
         });
+        // Gear's effects (enchantments, affixes) are always there and rarely interesting, so they get their own
+        // section, collapsed unless you open it.
+        const equipmentEffects = effects.filter((e) => e.fromEquipment);
+        const otherEffects = effects.filter((e) => !e.fromEquipment);
 
         return {
             ...context,
@@ -267,7 +272,10 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             shielding: actor.creature.shielding.value,
             heldWeapons,
             twoWeapons,
-            effects,
+            effects: otherEffects,
+            equipmentEffects,
+            equipmentEffectsOpen: this.#equipmentEffectsOpen,
+            activeEquipmentEffects: equipmentEffects.filter((e) => !e.inactive).length,
             enrichedBiography: await foundry.applications.ux.TextEditor.implementation.enrichHTML(
                 actor.creature.details.biography,
                 { relativeTo: actor, secrets: actor.isOwner },
@@ -282,8 +290,14 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
         return partContext as never;
     }
 
+    /** Whether the Effects tab's Equipment section is open; remembered across re-renders, closed by default. */
+    #equipmentEffectsOpen = false;
+
     protected override async _onRender(context: never, options: never): Promise<void> {
         await super._onRender(context, options);
+        this.element.querySelector<HTMLDetailsElement>("details.equipment-effects")?.addEventListener("toggle", (event) => {
+            this.#equipmentEffectsOpen = (event.currentTarget as HTMLDetailsElement).open;
+        });
         // Passive states (Thief stance, tide) are edited inline on the passive item.
         for (const select of this.element.querySelectorAll<HTMLSelectElement>("select[data-passive-state]")) {
             select.addEventListener("change", (event) => {
