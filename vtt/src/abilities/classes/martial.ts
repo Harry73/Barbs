@@ -1284,6 +1284,50 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
         ],
         notes: ["Move an equal distance towards the target. Attack one marked target at a time for the crit bonus to count."],
     },
+    "Thief/Smokescreen": {
+        choices: [STANCE({ none: "Neither", hit: "Hit Stance", run: "Run Stance (as a reaction: blocks AOEs until your next turn)" })],
+        // Allies are Hidden while in the smoke; enemies inside are easier to hit and to hurt with magic.
+        area: {
+            ...square(35, "all"),
+            zone: [
+                {
+                    events: ["tokenEnter", "tokenExit", "tokenTurnStart"],
+                    affects: "allies",
+                    effect: status("hidden", { name: "Smokescreen (hidden)", duration: "Endless" }),
+                    whileInside: true,
+                },
+                {
+                    events: ["tokenEnter", "tokenExit", "tokenTurnStart"],
+                    affects: "enemies",
+                    effect: {
+                        name: "Smokescreen",
+                        category: "condition",
+                        duration: "Endless",
+                        resistible: false,
+                        changes: [stat("evasion", -50), stat("magicResist", -50)],
+                        description: "<p>-50% Evasion and -50% MR inside the smoke.</p>",
+                    },
+                    whileInside: true,
+                },
+            ],
+        },
+        notes: (ctx) => [
+            "Enemies can't see through the smoke; you and your allies can. It suppresses overlapping enemy fields and can be blown away by strong wind.",
+            ...(ctx.choices.stance === "run" ? ["Cast as a reaction in Run Stance: the smoke blocks AOE attacks and effects in its spaces until the start of your next turn."] : []),
+        ],
+    },
+    "Night Lord/Nothing Sacred": {
+        area: {
+            ...around(20, "all"),
+            zone: {
+                events: ["tokenEnter", "tokenExit", "tokenTurnStart"],
+                affects: "all",
+                effect: status("silenced", { name: "Nothing Sacred", duration: "Endless", resistible: false }),
+                whileInside: true,
+            },
+        },
+        notes: ["Dispel all defensive spells within range. Inside the field you auto-succeed at unlocking things."],
+    },
     "Thief/Charm and Disarm": {
         choices: [yesNo("hit", "In Hit Stance and stealing armor (Confusion lasts longer)")],
         target: (ctx) => [status("confused", { duration: ctx.choices.hit ? "end of target's next turn" : "start of target's next turn" })],

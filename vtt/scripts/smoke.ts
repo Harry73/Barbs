@@ -432,7 +432,12 @@ try {
                 }
                 resolve(automation.notes, ctx);
                 for (const r of resolve(automation.restore, ctx) ?? []) assert.ok(formulaShape.test(r.formula), `${where}: odd restore formula`);
-                const effectSpecs = [...(resolve(automation.self, ctx) ?? []), ...(resolve(automation.target, ctx) ?? [])];
+                // Effects nested in zones and triggers get built at runtime, so validate them here too.
+                const areaSpec = resolve(automation.area, ctx);
+                const zoneEffects = (areaSpec?.zone ? [areaSpec.zone].flat() : []).flatMap((z: any) => (z.effect ? [z.effect] : []));
+                const topLevel = [...(resolve(automation.self, ctx) ?? []), ...(resolve(automation.target, ctx) ?? []), ...zoneEffects];
+                const triggerEffects = topLevel.flatMap((e: any) => (e.triggers ?? []).flatMap((t: any) => (t.effect ? [t.effect] : [])));
+                const effectSpecs = [...topLevel, ...triggerEffects];
                 for (const spec of effectSpecs) {
                     // Chance-based resolvers can skip a target (null); check every redirect count until one applies.
                     let resolved = spec;

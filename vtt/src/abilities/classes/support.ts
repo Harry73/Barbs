@@ -193,9 +193,17 @@ export const SUPPORT: Record<string, AbilityAutomation> = {
                 : [{ name: "Web (attached)", category: "buff", duration: "start of your next turn", description: "<p>Can't fall or be pushed further from the surface.</p>" }],
     },
     "Conjurer/Fog": {
-        area: square(35, "all"),
-        target: [status("blind", { name: "Fog", duration: "end of your next turn", resistible: false })],
-        notes: ["Only other entities are Blinded: you and your allies see through it. If it would end, you may recast it as a free reaction."],
+        // Enemies are Blinded while they're in the fog; you and your allies see through it.
+        area: {
+            ...square(35, "enemies"),
+            zone: {
+                events: ["tokenEnter", "tokenExit", "tokenTurnStart"],
+                effect: status("blind", { name: "Fog", duration: "Endless", resistible: false }),
+                whileInside: true,
+                duration: "end of your next turn",
+            },
+        },
+        notes: ["If it would end, you may recast it as a free reaction."],
     },
 
     /* ---------- Controller ---------- */

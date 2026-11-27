@@ -56,7 +56,7 @@ interface UndoSocketMessage {
 }
 
 interface GMSocketMessage {
-    type: "summon" | "dismiss" | "deleteEffect";
+    type: "summon" | "dismiss" | "deleteEffect" | "createRegion";
     payload: unknown;
 }
 
@@ -75,6 +75,10 @@ async function performGM(message: GMSocketMessage): Promise<void> {
     if (message.type === "summon") await createSummon(message.payload as never);
     if (message.type === "dismiss") await dismissSummon(message.payload as string);
     if (message.type === "deleteEffect") await ((await fromUuid(message.payload as string)) as ActiveEffect.Implementation | null)?.delete();
+    if (message.type === "createRegion") {
+        const { sceneId, data } = message.payload as { sceneId: string; data: Record<string, unknown> };
+        await game.scenes?.get(sceneId)?.createEmbeddedDocuments("Region", [data as never]);
+    }
 }
 
 async function perform<T extends RequestType>(actor: Actor.Implementation, type: T, payload: Requests[T]): Promise<void> {
@@ -157,7 +161,7 @@ export function registerSocket(): void {
     game.socket?.on(CHANNEL, async (message: SocketMessage | UndoSocketMessage | GMSocketMessage) => {
         // Exactly one client (the active GM) handles each relayed request.
         if (!game.user?.isActiveGM) return;
-        if (message.type === "summon" || message.type === "dismiss" || message.type === "deleteEffect") return performGM(message as GMSocketMessage);
+        if (["summon", "dismiss", "deleteEffect", "createRegion"].includes(message.type)) return performGM(message as GMSocketMessage);
         if (message.type === "undo") {
             const chat = game.messages?.get(message.messageId) as ChatMessage.Implementation | undefined;
             if (chat) await performUndo(chat);

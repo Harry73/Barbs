@@ -6,6 +6,7 @@
  */
 import { BarbsActiveEffect } from "./documents/active-effect.ts";
 import { registerConcentrationHooks } from "./concentration.ts";
+import { registerZones } from "./zones.ts";
 import { ABILITY_AUTOMATION } from "./abilities/catalog.ts";
 import { EffectsPanel } from "./apps/effects-panel.ts";
 import { registerChatListeners } from "./chat/card.ts";
@@ -34,6 +35,7 @@ Hooks.once("init", () => {
     CONFIG.Actor.documentClass = BarbsActor as never;
     CONFIG.Combat.documentClass = BarbsCombat as never;
     CONFIG.ActiveEffect.documentClass = BarbsActiveEffect as never;
+    registerZones();
     Object.assign(CONFIG.Actor.dataModels, { character: CharacterModel, npc: NpcModel });
     Object.assign(CONFIG.Item.dataModels, {
         skill: SkillModel,

@@ -197,6 +197,26 @@ export interface AreaSpec {
     affects?: "enemies" | "allies" | "all";
     /** Extra line width per redirect off a mirror, in feet (Beam of Brilliance). */
     widthPerRedirect?: number;
+    /** Leave the area on the map as a zone that acts on creatures in it (see src/zones.ts). Several = several behaviors. */
+    zone?: ZoneSpec | ZoneSpec[];
+}
+
+/** A lasting area: what happens to creatures that enter, leave, or start/end their turn in it. */
+export interface ZoneSpec {
+    events: ("tokenEnter" | "tokenExit" | "tokenTurnStart" | "tokenTurnEnd")[];
+    /** Default: the area's `affects`. */
+    affects?: "enemies" | "allies" | "all";
+    /** Rolled like one of the caster's spells (their Magic Damage and multipliers apply). */
+    damage?: { formula: string; type: DamageType };
+    /** Applied on each event (CR roll if it's a condition). */
+    effect?: EffectSpec;
+    /** The effect comes off when they leave (an aura-like field). Needs tokenExit among the events. */
+    whileInside?: boolean;
+    note?: string;
+    /** Movement through it costs double. */
+    difficultTerrain?: boolean;
+    /** How long the zone lasts, if not the ability's duration ("1 hour" for Tidal Wave's shallow water). */
+    duration?: string;
 }
 
 export interface ChoiceSpec {

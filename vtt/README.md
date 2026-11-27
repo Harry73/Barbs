@@ -236,6 +236,14 @@ concentration check, or by being Downed, ends all of them. A concentrating creat
 Concentration check button (DC twice the damage; Pain Tolerance if they have it, otherwise d100 + Focus, plus
 Concentration Bonus). Recasting an ability you're already concentrating on continues the same concentration.
 
+**Zones** (`src/zones.ts`): an ability whose area has a `zone` leaves it on the map as a Region with a "Barbs zone"
+behavior, which reacts when tokens enter, leave, or start/end their turn inside: damage (rolled like one of the
+caster's spells), an effect (CR roll for conditions; "while inside" effects come off on leaving), and reminders. A
+zone can also be difficult terrain, through core's movement cost behavior. It lasts as long as a "Zone: <ability>"
+effect on the caster (the ability's duration, a zone's own duration, or the caster's concentration), and deleting
+that effect, or undoing the cast, removes the region. Whirlpool, Tidal Wave, Fog, Smokescreen, and Nothing Sacred
+use zones. (The "zone" behavior type is declared in `system.json`, so adding it needed a Foundry restart.)
+
 Stat buffs use the core Changes tab instead, in the "initial" phase. The Stats tab shows every one of these, laid out
 like the Roll20 sheet's: core stats, then misc combat stats, multipliers, penetration, damage reduction, and condition
 resistances. Use these for always-on gear affixes; use roll modifiers for conditional ones ("bow attacks", "on hit"). Its key field is a searchable picker over every key below

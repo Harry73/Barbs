@@ -71,6 +71,9 @@
           "description"
         ]
       }
+    },
+    "RegionBehavior": {
+      "zone": {}
     }
   },
   "packs": [

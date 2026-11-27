@@ -24,6 +24,8 @@ export interface AreaResult {
     /** Summon IDs of mirrors the beam dispelled. */
     dispelled?: string[];
     notes?: string[];
+    /** The placed area's region data, for zones that stay on the map. */
+    regionData?: Record<string, unknown>;
 }
 
 /** The caster's mirror totems on the current scene. */
@@ -185,8 +187,11 @@ export async function placeArea(
 
     const placed = region.shapes[0];
     const center = origin === "caster" ? caster!.center : { x: placed.x, y: placed.y };
-    return finish(
-        candidates.filter((t) => region.polygonTree.testPoint(t.center)),
-        center,
-    );
+    return {
+        ...finish(
+            candidates.filter((t) => region.polygonTree.testPoint(t.center)),
+            center,
+        ),
+        regionData: (region as unknown as { toObject(): Record<string, unknown> }).toObject(),
+    };
 }

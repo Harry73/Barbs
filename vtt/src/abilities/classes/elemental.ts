@@ -158,9 +158,9 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
         ],
     },
     "Aquamancer/Tidal Wave": {
-        area: square(30),
+        // The shallow water it leaves behind is difficult terrain for an hour.
+        area: { ...square(30), zone: { events: [], difficultTerrain: true, duration: "1 hour" } },
         attack: spell("8d6", "water"),
-        notes: ["Leaves shallow water (difficult terrain) in the affected spaces for 1 hour."],
     },
     "Aquamancer/Washout": {
         choices: [count("mana", "Mana spent on the countered spell")],
@@ -779,13 +779,17 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
         notes: ["When an enemy enters or leaves an ally's aura, roll d100: 50 or less and they're Frozen."],
     },
     "Aquamancer/Whirlpool": {
-        area: square(35),
-        attack: spell("10d6", "water"),
-        target: [status("immobilized")],
-        notes: [
-            "At the start of each enemy's turn in the whirlpool: Immobilized, 10d6 water magic damage, and pulled to the center. In the center 15 ft square instead: 15d6 and drowning (25% chance to die at the end of their turn).",
-            "This card is one round's worth; re-roll it each round for the enemies inside. Move it up to 20 ft with a Major Action at no cost.",
-        ],
+        // Stays on the map: each enemy starting their turn in it is Immobilized and takes 10d6 water.
+        area: {
+            ...square(35),
+            zone: {
+                events: ["tokenTurnStart"],
+                damage: { formula: "10d6", type: "water" },
+                effect: status("immobilized", { duration: "end of target's next turn" }),
+                note: "Pulled to the center. In the center 15 ft square instead: 15d6 water (add 5d6 by hand) and drowning (25% chance to die at the end of their turn).",
+            },
+        },
+        notes: ["Move it up to 20 ft with a Major Action at no cost (drag the region)."],
     },
     "Aquamancer/Fountain of Purity": {
         choices: [count("extra", "Extra fountains (30 mana each)", 4)],

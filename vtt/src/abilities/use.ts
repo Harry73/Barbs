@@ -374,6 +374,66 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
         selfNotes.push(`Recovered ${gained} ${resource} (${roll.formula} = ${roll.total}).`);
     }
     // Summons are created by the GM; the card's undo dismisses them.
+    // Zones: the placed area stays on the map as a Region with a "Barbs zone" behavior (see zones.ts), for as long
+    // as a "Zone: <ability>" effect on the caster lasts.
+    const zones = area?.zone ? [area.zone].flat() : [];
+    if (zones.length && areaResult?.regionData && canvas?.scene) {
+        const key = foundry.utils.randomID();
+        const casterToken = (actor.getActiveTokens(true) as Token.Implementation[])[0];
+        const regionData = foundry.utils.deepClone(areaResult.regionData);
+        delete regionData._id;
+        const actions = Object.keys((CONFIG.Token as unknown as { movement: { actions: Record<string, unknown> } }).movement.actions);
+        const behaviors: Record<string, unknown>[] = zones.flatMap((zone) => [
+            ...(zone.events.length
+                ? [
+                      {
+                          name: opts.title,
+                          type: "zone",
+                          system: {
+                              events: zone.events,
+                              zoneKey: key,
+                              casterUuid: actor.uuid,
+                              affects: zone.affects ?? area?.affects ?? "enemies",
+                              casterDisposition: casterToken?.document.disposition ?? 0,
+                              damageFormula: zone.damage?.formula ?? "",
+                              damageType: zone.damage?.type ?? "physical",
+                              effectData: zone.effect ? buildEffectData(zone.effect, source) : null,
+                              whileInside: !!zone.whileInside,
+                              note: zone.note ?? "",
+                              abilityName: opts.title,
+                          },
+                      },
+                  ]
+                : []),
+            ...(zone.difficultTerrain
+                ? [{ name: "Difficult terrain", type: "modifyMovementCost", system: { difficulties: Object.fromEntries(actions.map((a) => [a, 2])) } }]
+                : []),
+        ]);
+        Object.assign(regionData, {
+            name: `${opts.title} (${actor.name})`,
+            visibility: CONST.REGION_VISIBILITY.ALWAYS,
+            displayMeasurements: false,
+            behaviors,
+            flags: { [SYSTEM_ID]: { zoneKey: key } },
+        });
+        const { requestGM } = await import("../socket.ts");
+        await requestGM("createRegion", { sceneId: canvas.scene.id, data: regionData });
+        const duration = zones.find((z) => z.duration)?.duration;
+        const lifetime = buildEffectData(
+            {
+                name: `Zone: ${opts.title}`,
+                category: "",
+                ...(duration ? { duration } : {}),
+                description: "<p>The zone stays on the map while this lasts. Delete this to remove it.</p>",
+            },
+            source,
+        );
+        foundry.utils.setProperty(lifetime, `flags.${SYSTEM_ID}.zone`, { key });
+        const applied = await applyEffectToActor(actor, lifetime, { announce: false });
+        if (applied) undo.createdEffects!.push(applied.effect.uuid ?? "");
+        selfNotes.push(`Placed ${opts.title} as a zone. It lasts as long as the "Zone: ${opts.title}" effect on ${actor.name}.`);
+    }
+
     const summon = resolve(automation?.summon, ctx);
     if (summon) {
         const summonId = foundry.utils.randomID();
@@ -580,6 +640,21 @@ export async function postPulse(
         { actorUuid: actor.uuid ?? "", removedEffects: result.consumedEffects, passiveDeltas: result.passiveDeltas },
         { targets: targets.map((t) => t.document.uuid ?? "").filter(Boolean) },
     );
+}
+
+/**
+ * A zone's damage (Whirlpool's 10d6 water each turn): rolled like one of the caster's spells, with their Magic Damage
+ * and multipliers, but without using up their "next attack" buffs.
+ */
+export async function rollZoneDamage(
+    caster: Actor.Implementation,
+    formula: string,
+    type: AttackSpec["damage"][number]["type"],
+): Promise<{ hits: AttackResult["hits"][number]["totals"][]; penetration: AttackResult["penetration"] }> {
+    const spec: AttackSpec = { rollType: type === "physical" ? "physical" : "magic", damage: [{ formula, type }] };
+    const ctx = makeContext(caster, null, {});
+    const result = await prepareAttack(caster, spec, ctx, spec.damage, { skipSingleUse: true, area: true }).evaluate({});
+    return { hits: result.hits.map((h) => h.totals), penetration: result.penetration };
 }
 
 /** Mirror Mage's Alter Course: attacks they redirect deal +50% damage per redirect. */
