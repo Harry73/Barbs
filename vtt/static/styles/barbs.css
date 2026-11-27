@@ -296,8 +296,8 @@
   color: var(--barbs-accent);
 }
 
-/* The effect config's change key dropdown (replaces core's text box). */
-.barbs .tab.changes .key select {
+/* The effect config's searchable change key picker (replaces core's text box). */
+.barbs .tab.changes .key .barbs-key-search {
   width: 100%;
 }
 

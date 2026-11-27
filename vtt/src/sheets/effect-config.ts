@@ -77,35 +77,111 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
     }
 
     /**
-     * Core renders each change's key as free text, and nobody remembers `system.stats.conditionResist.bonus`. Swap
-     * it for a dropdown of every key Barbs creatures understand. A key that isn't in the list (typed by hand, or from
-     * an older version) stays selectable as-is, so opening the sheet never changes an effect.
+     * Core renders each change's key as free text, and nobody remembers `system.stats.conditionResist.bonus`. Swap it
+     * for a searchable picker over every key Barbs creatures understand: type any words from the label, group, or
+     * key ("fire pen", "stun cr") and pick from the menu. The real key rides along in a hidden input.
+     *
+     * A key that isn't in the list (typed by hand, or from an older version) shows as-is and is kept, so opening the
+     * sheet never changes an effect. Typing a full `system.` path and pressing Enter sets a custom key.
      */
+    /** Listeners the key pickers put on the document; replaced each render and dropped on close. */
+    #pickerListeners: AbortController | null = null;
+
     protected override async _onRender(context: never, options: never): Promise<void> {
         await super._onRender(context, options);
-        const groups = changeKeyGroups();
-        const known = new Set(groups.flatMap((g) => g.keys.map((k) => k.key)));
+        this.#pickerListeners?.abort();
+        this.#pickerListeners = new AbortController();
+        const entries = changeKeyGroups().flatMap((g) =>
+            g.keys.map((k) => ({ identifier: k.key, label: `${k.label} (${g.label})`, search: `${k.label} ${g.label} ${k.key}`.toLowerCase() })),
+        );
+        const labels = new Map(entries.map((e) => [e.identifier, e.label]));
         for (const input of this.element.querySelectorAll<HTMLInputElement>('.tab.changes input[name$=".key"]')) {
-            const select = document.createElement("select");
-            select.name = input.name;
-            select.disabled = input.disabled;
-            const add = (parent: HTMLElement, value: string, label: string) => {
-                const option = document.createElement("option");
-                option.value = value;
-                option.textContent = label;
-                option.selected = value === input.value;
-                parent.append(option);
-            };
-            add(select, "", "Choose what to change...");
-            if (input.value && !known.has(input.value)) add(select, input.value, `${input.value} (custom)`);
-            for (const group of groups) {
-                const optgroup = document.createElement("optgroup");
-                optgroup.label = group.label;
-                for (const { key, label } of group.keys) add(optgroup, key, label);
-                select.append(optgroup);
-            }
-            input.replaceWith(select);
+            this.#makeKeyPicker(input, entries, labels);
         }
+    }
+
+    protected override _onClose(options: never): void {
+        super._onClose(options);
+        this.#pickerListeners?.abort();
+        this.#pickerListeners = null;
+    }
+
+    #makeKeyPicker(
+        original: HTMLInputElement,
+        entries: { identifier: string; label: string; search: string }[],
+        labels: Map<string, string>,
+    ): void {
+        const hidden = document.createElement("input");
+        hidden.type = "hidden";
+        hidden.name = original.name;
+        hidden.value = original.value;
+
+        const search = document.createElement("input");
+        search.type = "text";
+        search.className = "barbs-key-search";
+        search.disabled = original.disabled;
+        search.placeholder = "Search: AC, fire pen, stun CR...";
+        const shown = () => (hidden.value ? (labels.get(hidden.value) ?? hidden.value) : "");
+        search.value = shown();
+        search.dataset.tooltip = hidden.value;
+
+        const Autocomplete = foundry.applications.ux.Autocomplete as unknown as {
+            implementation: new (options: { onSelect: (identifier: string) => void }) => {
+                activate(target: HTMLElement, entries: { identifier: string; label: string }[]): void;
+                select(increment?: number): void;
+                dismiss(): void;
+                element: HTMLElement | null;
+            };
+        };
+        const choose = (key: string) => {
+            hidden.value = key;
+            search.value = shown();
+            search.dataset.tooltip = key;
+        };
+        const menu = new Autocomplete.implementation({ onSelect: choose });
+        const refresh = () => {
+            // Every word typed has to appear somewhere in the label, group, or key. Empty search lists everything.
+            const words = search.value.toLowerCase().split(/\s+/).filter(Boolean);
+            const typingFresh = search.value !== shown();
+            const matches = typingFresh ? entries.filter((e) => words.every((w) => e.search.includes(w))) : entries;
+            if (!matches.length) return menu.dismiss();
+            menu.activate(search, matches);
+            // Highlight the best match while searching, so Enter picks it.
+            if (typingFresh) menu.select(0);
+        };
+        search.addEventListener("focus", () => {
+            search.select();
+            refresh();
+        });
+        search.addEventListener("click", refresh);
+        search.addEventListener("input", refresh);
+        search.addEventListener("keydown", (event) => {
+            // Enter on a menu entry is handled by the menu before this runs. Otherwise Enter would submit (and
+            // close) the sheet, so swallow it, unless it's a full path typed by hand for a key the list doesn't have.
+            if (event.key !== "Enter") return;
+            event.preventDefault();
+            if (search.value.trim().startsWith("system.")) choose(search.value.trim());
+            else search.value = shown();
+            menu.dismiss();
+        });
+        // Leaving without picking puts the current choice back.
+        search.addEventListener("blur", () => {
+            setTimeout(() => {
+                if (document.activeElement !== search) search.value = shown();
+            }, 200);
+        });
+        // Clicking anywhere else closes the menu.
+        document.body.addEventListener(
+            "click",
+            (event) => {
+                const target = event.target as Node;
+                if (target === search || menu.element?.contains(target)) return;
+                if ((ui as unknown as { autocomplete?: unknown }).autocomplete === menu) menu.dismiss();
+            },
+            { signal: this.#pickerListeners!.signal },
+        );
+
+        original.replaceWith(hidden, search);
     }
 
     #currentModifiers(): RollModifierData[] {

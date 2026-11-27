@@ -171,8 +171,9 @@ Multipliers are grouped by effect: modifiers from the same effect add, different
 
 Stat buffs use the core Changes tab instead, in the "initial" phase. The Stats tab shows every one of these, laid out
 like the Roll20 sheet's: core stats, then misc combat stats, multipliers, penetration, damage reduction, and condition
-resistances. Use these for always-on gear affixes; use roll modifiers for conditional ones ("bow attacks", "on hit"). Its key field is a dropdown of every key below
-(`src/effects/change-keys.ts`), so you don't need to remember the paths:
+resistances. Use these for always-on gear affixes; use roll modifiers for conditional ones ("bow attacks", "on hit"). Its key field is a searchable picker over every key below
+(`src/effects/change-keys.ts`): type any words from the label or group ("fire pen", "stun cr") and pick from the menu,
+so you don't need to remember the paths. A full `system.` path plus Enter sets a key that isn't listed:
 
 | Key | Meaning |
 |---|---|
