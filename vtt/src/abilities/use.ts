@@ -309,6 +309,10 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
     const heal = resolve(automation?.heal, ctx);
     if (attack) {
         ({ result, tiers } = await rollAttack(actor, attack, ctx, rollInfo, tags.includes("combo"), !!area));
+        if (result.rollType !== "healing") {
+            const { fireTriggers } = await import("../triggers/index.ts");
+            await fireTriggers(actor, "attack", { options: new Set(result.rollOptions), sourceName: opts.title });
+        }
     } else if (heal) {
         const builder = new AttackBuilder(actor, { rollType: "healing" });
         builder.addDamage(heal.formula, "healing");
@@ -633,6 +637,8 @@ export async function weaponAttack(actor: Actor.Implementation, item: Item.Imple
     builder.setFacts({ targets });
     builder.applyEffects().applyPassives({ targets, tags: [], abilityName: null, className: null, choices: {} });
     const result = await builder.evaluate();
+    const { fireTriggers } = await import("../triggers/index.ts");
+    await fireTriggers(actor, "attack", { options: new Set(result.rollOptions), sourceName: item.name });
     await postCard(
         actor,
         { title: item.name, subtitle: "Weapon attack", img: item.img ?? "", result },

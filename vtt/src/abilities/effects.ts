@@ -51,6 +51,18 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
             },
             dot: { formula: spec.dot?.formula ?? "", damageType: spec.dot?.type ?? "physical" },
             changes: (spec.changes ?? []).map((c) => ({ key: c.key, type: c.type ?? "add", value: String(c.value), phase: "initial" })),
+            triggers: (spec.triggers ?? []).map((t) => ({
+                event: t.event,
+                conditions: t.conditions ?? "",
+                chance: t.chance ?? 0,
+                oncePer: t.oncePer ?? "",
+                action: t.action,
+                value: String(t.value ?? ""),
+                type: t.type ?? "",
+                effect: "",
+                // The granted/inflicted effect, built now with the same source (caster, effectiveness).
+                effectData: t.effect ? buildEffectData(t.effect, source) : null,
+            })),
             modifiers: (spec.modifiers ?? []).map((m) => ({
                 type: m.type,
                 rollType: m.rollType ?? "all",

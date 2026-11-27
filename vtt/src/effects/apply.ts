@@ -309,6 +309,8 @@ export async function applyDamageToActor(
         lifesteal,
         notes: extraNotes = [],
         attackContext,
+        triggerDepth = 0,
+        attackerUuid,
     }: {
         trueDamage?: boolean;
         attack?: boolean;
@@ -320,6 +322,10 @@ export async function applyDamageToActor(
         notes?: string[];
         /** Who's attacking and the attack's facts, for the defender's "incoming" modifiers. */
         attackContext?: AttackContext;
+        /** For damage dealt by a trigger: how deep the trigger chain is (see triggers/index.ts). */
+        triggerDepth?: number;
+        /** Who dealt the damage, when there's no attack context. */
+        attackerUuid?: string;
     } = {},
 ): Promise<void> {
     const creature = target.system as unknown as CreatureModel;
@@ -393,6 +399,7 @@ export async function applyDamageToActor(
         rows.push(`<li>${hits.length > 1 ? `Hit ${index + 1}: ` : ""}${parts || "no damage"}</li>`);
     });
 
+    const wasDowned = target.statuses.has(STATUS_DOWNED);
     const { notes: healthNotes, undo } = await updateHealth(target, total);
     const notes = [...notes0, ...healthNotes];
     (undo.removedEffects ??= []).push(...blockUndo);
@@ -410,6 +417,17 @@ export async function applyDamageToActor(
             `<ul>${rows.join("")}</ul>${notes.map((n) => `<p>${n}</p>`).join("")}`,
         undo,
     );
+
+    // Triggers: the target reacts to taking damage, and the attacker to downing them.
+    if (total > 0) {
+        const { fireTriggers } = await import("../triggers/index.ts");
+        const dealerUuid = attackContext?.attackerUuid ?? attackerUuid;
+        const dealer = dealerUuid ? ((await fromUuid(dealerUuid)) as Actor.Implementation | null) : null;
+        await fireTriggers(target, "damaged", { other: dealer, attack: attackContext, depth: triggerDepth, sourceName });
+        if (!wasDowned && target.statuses.has(STATUS_DOWNED) && dealer) {
+            await fireTriggers(dealer, "kill", { other: target, depth: triggerDepth, sourceName });
+        }
+    }
 
     // Lifesteal heals the attacker for a share of what actually landed (after defenses), as its own undoable heal.
     if (lifesteal && total > 0) {

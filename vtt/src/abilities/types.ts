@@ -1,4 +1,5 @@
 import type { HandRequirement } from "../rules/hands.ts";
+import type { TriggerAction, TriggerEvent } from "../config.ts";
 import type { DamageType, EffectCategory, ModifierRollType, ModifierType } from "../config.ts";
 import type { AttackResult } from "../rolls/attack.ts";
 import type { UseContext } from "./context.ts";
@@ -58,6 +59,8 @@ export interface EffectSpec {
     singleUse?: boolean;
     /** Blocks the next attack on the bearer by this percent (100 = fully), then is used up. */
     block?: number;
+    /** Reactions: "when you're attacked by an adjacent enemy, deal 2d12 lightning to them" (see src/triggers). */
+    triggers?: TriggerSpec[];
     /** Damage the bearer deals to creatures within `radius` ft at the start of each of their turns (Fiery Temper). */
     pulse?: { formula: string; type: DamageType; radius: number; affects?: "enemies" | "allies" | "all" };
     /** Damage taken at the start of each of the bearer's turns (Bleed, Burn, Poison, lingering spells). */
@@ -154,6 +157,19 @@ export interface AttackSpec {
      * { conditions: "target:type:demon", kind: "multiplier", percent: 100 }.
      */
     conditional?: { conditions: string; kind: "multiplier" | "penetration" | "lethality"; key?: string; percent: number }[];
+}
+
+/** A trigger in catalog form; `effect` is the granted or inflicted effect, built inline. */
+export interface TriggerSpec {
+    event: TriggerEvent;
+    conditions?: string;
+    chance?: number;
+    oncePer?: "" | "turn" | "round";
+    action: TriggerAction;
+    value?: string | number;
+    /** Resource for restore, damage type for damage. */
+    type?: string;
+    effect?: EffectSpec;
 }
 
 export interface AreaSpec {

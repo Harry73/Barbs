@@ -202,6 +202,22 @@ counts by id: `statuses.<id>`, `stacks.<effect>`, `marks.<effect or status>` (ef
 `types.<type>`. Anything that reads `@target` (or `@distance`) is worked out per target when damage is applied. Changes
 get `@self` through `BarbsActiveEffect`, which also evaluates the arithmetic core leaves as text for derived values.
 
+**Triggers** (`src/triggers/index.ts`): effects can react to events, as "when → if → do" rows on the Barbs tab.
+
+- When: you hit (each landed hit), you attack, you're attacked, you're hit (each landed hit), you take damage, you
+  down an enemy, start/end of your turn, combat starts/ends.
+- If: conditions (attacker-side events see the attack and `target:`; "you're attacked/hit/damaged" see the
+  defender's view: `attack:`, `attacker:`, `attacker:distance`, `origin:attacker`), an optional % chance, and an
+  optional once-per-turn/round limit.
+- Do: restore health/stamina/mana to yourself, grant yourself an effect, inflict an effect on the other creature
+  (rolling CR if it's a condition), damage the other creature, or post a reminder. Values are formulas with `@self`,
+  `@other` (also `@target` / `@attacker` by role), and `@hit.damage` on hits.
+
+Granted and inflicted effects are **template** effects on the same item or actor (tick "Template" on the Barbs tab;
+templates never apply by themselves), or inline in ability automation (`EffectSpec.triggers`). Trigger damage isn't
+an attack (no Evasion, blocks, or on-hit reactions), and chains stop two levels deep. Each action posts its own
+message with undo. Lightning Coil Cuirass, Accursed Armor, and Heart of Ice retaliate through triggers.
+
 Stat buffs use the core Changes tab instead, in the "initial" phase. The Stats tab shows every one of these, laid out
 like the Roll20 sheet's: core stats, then misc combat stats, multipliers, penetration, damage reduction, and condition
 resistances. Use these for always-on gear affixes; use roll modifiers for conditional ones ("bow attacks", "on hit"). Its key field is a searchable picker over every key below

@@ -13,11 +13,19 @@ import { activePassives, passivesOnTurnStart } from "../passives/index.ts";
 import type { DamageKey } from "../rules/damage-math.ts";
 
 export class BarbsCombat extends Combat {
+    protected override async _onEndTurn(...args: Parameters<Combat["_onEndTurn"]>): Promise<void> {
+        await super._onEndTurn(...args);
+        const { fireTriggers } = await import("../triggers/index.ts");
+        await fireTriggers(args[0].actor as Actor.Implementation | null, "turnEnd");
+    }
+
     protected override async _onStartTurn(...args: Parameters<Combat["_onStartTurn"]>): Promise<void> {
         await super._onStartTurn(...args);
         const actor = args[0].actor as Actor.Implementation | null;
         if (!actor) return;
         await passivesOnTurnStart(actor);
+        const { fireTriggers } = await import("../triggers/index.ts");
+        await fireTriggers(actor, "turnStart");
         await this.#frostbite(actor);
         const { postPulse } = await import("../abilities/use.ts");
         for (const effect of actor.allApplicableEffects()) {
@@ -64,4 +72,20 @@ export class BarbsCombat extends Combat {
             await applyEffectToActor(actor, data, { announce: false });
         }
     }
+}
+
+/**
+ * Combat start and end triggers. Foundry calls these hooks on every client; only the active GM's fires them, so each
+ * creature's triggers run once.
+ */
+export function registerCombatTriggers(): void {
+    const fire = async (combat: Combat, event: "combatStart" | "combatEnd") => {
+        if (!game.users?.activeGM?.isSelf) return;
+        const { fireTriggers } = await import("../triggers/index.ts");
+        for (const combatant of combat.combatants) await fireTriggers(combatant.actor as Actor.Implementation | null, event);
+    };
+    Hooks.on("combatStart", (combat: Combat) => void fire(combat, "combatStart"));
+    Hooks.on("deleteCombat", (combat: Combat) => {
+        if (combat.started) void fire(combat, "combatEnd");
+    });
 }

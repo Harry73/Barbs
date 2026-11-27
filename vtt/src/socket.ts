@@ -31,6 +31,10 @@ type Requests = {
         lifesteal?: { percent: number; attackerUuid: string };
         notes?: string[];
         attackContext?: AttackContext;
+        /** Damage dealt by a trigger (retaliation) rather than an attack: how deep the trigger chain is. */
+        triggerDepth?: number;
+        /** Who dealt it, when there's no attack context (trigger damage). */
+        attackerUuid?: string;
     };
     shielding: { amount: number; sourceName?: string };
     cleanse: { statuses: string[] };
@@ -78,7 +82,10 @@ async function perform<T extends RequestType>(actor: Actor.Implementation, type:
             const p = payload as Requests["damage"];
             return applyDamageToActor(actor, p.hits, p.penetration, p.sourceName, p.scale, {
                 trueDamage: p.trueDamage,
-                attack: true,
+                // Trigger damage (retaliation) isn't an attack: no blocks, no Evasion, no on-hit reactions.
+                attack: !p.triggerDepth,
+                triggerDepth: p.triggerDepth,
+                attackerUuid: p.attackerUuid,
                 unblockableChance: p.unblockableChance,
                 acReduction: p.acReduction,
                 lifesteal: p.lifesteal,

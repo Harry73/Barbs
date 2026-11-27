@@ -14,7 +14,7 @@ import { CharacterModel, NpcModel } from "./data/actor/creature.ts";
 import { BarbsEffectModel } from "./data/effect.ts";
 import { AbilityModel, ClassModel, EquipmentModel, PassiveModel, RaceModel, SkillModel } from "./data/item/models.ts";
 import { BarbsActor } from "./documents/actor.ts";
-import { BarbsCombat } from "./documents/combat.ts";
+import { BarbsCombat, registerCombatTriggers } from "./documents/combat.ts";
 import { BarbsCharacterSheet } from "./sheets/character-sheet.ts";
 import { BarbsEffectConfig } from "./sheets/effect-config.ts";
 import { BarbsItemSheet } from "./sheets/item-sheet.ts";
@@ -84,6 +84,7 @@ Hooks.once("init", () => {
     });
 
     registerChatListeners();
+    registerCombatTriggers();
     registerPassiveGranting();
     registerPassiveResets();
     registerConditionHooks();

@@ -4,10 +4,12 @@ import {
     MODIFIER_ROLL_TYPES,
     MODIFIER_TYPES,
     SYSTEM_ID,
+    TRIGGER_ACTIONS,
+    TRIGGER_EVENTS,
     WEAPON_CATEGORIES,
     WEAPON_FILTERS,
 } from "../config.ts";
-import type { RollModifierData } from "../data/effect.ts";
+import type { RollModifierData, TriggerData } from "../data/effect.ts";
 import { changeKeyGroups } from "../effects/change-keys.ts";
 
 const { ActiveEffectConfig } = foundry.applications.sheets;
@@ -28,6 +30,8 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
         actions: {
             addModifier: BarbsEffectConfig.#onAddModifier as ActionHandler,
             deleteModifier: BarbsEffectConfig.#onDeleteModifier as ActionHandler,
+            addTrigger: BarbsEffectConfig.#onAddTrigger as ActionHandler,
+            deleteTrigger: BarbsEffectConfig.#onDeleteTrigger as ActionHandler,
         },
     };
 
@@ -47,10 +51,22 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
     protected override async _preparePartContext(partId: string, context: never, options: never): Promise<never> {
         const partContext = (await super._preparePartContext(partId, context, options)) as unknown as Record<string, unknown>;
         if (partId === "barbs") {
-            const system = (this.document._source as unknown as { system: { category: string; singleUse: boolean; modifiers: RollModifierData[] } }).system;
+            const system = (
+                this.document._source as unknown as { system: { category: string; singleUse: boolean; modifiers: RollModifierData[]; triggers: TriggerData[] } }
+            ).system;
+            const maxStacks = Number(foundry.utils.getProperty(this.document._source, `flags.${SYSTEM_ID}.maxStacks`) ?? 1) || 1;
+            // Template effects next to this one, for grant/inflict triggers to pick from.
+            const siblings = ((this.document.parent as { effects?: Iterable<ActiveEffect.Implementation> } | null)?.effects ?? []) as Iterable<ActiveEffect.Implementation>;
+            const templates = [...siblings].filter((e) => (e.system as unknown as { template?: boolean }).template && e.id !== this.document.id).map((e) => e.name);
             Object.assign(partContext, {
                 barbs: system,
+                maxStacks: maxStacks >= 999 ? "" : maxStacks,
                 modifiers: system.modifiers.map((m, index) => ({ ...m, index })),
+                triggers: (system.triggers ?? []).map((t, index) => ({ ...t, index, inline: !!t.effectData })),
+                eventChoices: TRIGGER_EVENTS,
+                actionChoices: TRIGGER_ACTIONS,
+                onceChoices: { "": "Every time", turn: "Once per turn", round: "Once per round" },
+                templateChoices: Object.fromEntries([["", "—"], ...templates.map((n) => [n, n])]),
                 categoryChoices: EFFECT_CATEGORIES,
                 typeChoices: MODIFIER_TYPES,
                 rollTypeChoices: Object.fromEntries(MODIFIER_ROLL_TYPES.map((r) => [r, r.capitalize()])),
@@ -69,10 +85,22 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
     /** Form data arrives as { modifiers: { 0: {...}, 1: {...} } }; the schema wants an array. */
     protected override _processFormData(event: SubmitEvent | null, form: HTMLFormElement, formData: never) {
         const data = super._processFormData(event, form, formData) as Record<string, unknown>;
-        const system = data.system as { modifiers?: unknown } | undefined;
+        const system = data.system as { modifiers?: unknown; triggers?: unknown } | undefined;
         if (system?.modifiers && foundry.utils.getType(system.modifiers) === "Object") {
             system.modifiers = Object.values(system.modifiers as object);
         }
+        if (system?.triggers && foundry.utils.getType(system.triggers) === "Object") {
+            // Keep inline effect data (from ability automation) that the form doesn't show.
+            const current = (this.document._source as unknown as { system: { triggers: TriggerData[] } }).system.triggers ?? [];
+            system.triggers = Object.entries(system.triggers as Record<string, TriggerData>).map(([i, t]) => ({
+                ...t,
+                chance: Number(t.chance) || 0,
+                effectData: current[Number(i)]?.effectData ?? null,
+            }));
+        }
+        // "Max stacks" is a flag (blank = without limit, stored as a large number like other stacking effects).
+        const stacks = foundry.utils.getProperty(data, `flags.${SYSTEM_ID}.maxStacks`);
+        if (stacks !== undefined) foundry.utils.setProperty(data, `flags.${SYSTEM_ID}.maxStacks`, Number(stacks) > 0 ? Number(stacks) : 999);
         return data as never;
     }
 
@@ -195,6 +223,23 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
         const modifiers = this.#currentModifiers();
         modifiers.push({ type: "damage", rollType: "physical", damageType: "physical", weapon: "", value: "" });
         await this.submit({ updateData: { system: { modifiers } } } as never);
+    }
+
+    #currentTriggers(): TriggerData[] {
+        const data = this._processFormData(null, this.form!, new FormDataExtended(this.form!) as never) as { system?: { triggers?: TriggerData[] } };
+        return data.system?.triggers ?? [];
+    }
+
+    static async #onAddTrigger(this: BarbsEffectConfig) {
+        const triggers = this.#currentTriggers();
+        triggers.push({ event: "hit", conditions: "", chance: 0, oncePer: "", action: "restore", value: "", type: "stamina", effect: "", effectData: null });
+        await this.submit({ updateData: { system: { triggers } } } as never);
+    }
+
+    static async #onDeleteTrigger(this: BarbsEffectConfig, _event: PointerEvent, target: HTMLElement) {
+        const triggers = this.#currentTriggers();
+        triggers.splice(Number(target.closest<HTMLElement>("[data-trigger-index]")?.dataset.triggerIndex), 1);
+        await this.submit({ updateData: { system: { triggers } } } as never);
     }
 
     static async #onDeleteModifier(this: BarbsEffectConfig, _event: PointerEvent, target: HTMLElement) {

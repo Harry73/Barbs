@@ -21,6 +21,21 @@
     <p class="hint">Reduces the next attack applied to the bearer by this much (100 = fully blocked), then is removed. 0 = not a block.</p>
   </div>
 
+  <div class="form-group">
+    <label>Template</label>
+    <div class="form-fields">
+      <input type="checkbox" name="system.template" {{checked barbs.template}} />
+    </div>
+    <p class="hint">Never applies by itself: triggers on the same item or actor copy it onto someone ("grant Battle Fervor on hit").</p>
+  </div>
+  <div class="form-group">
+    <label>Max stacks</label>
+    <div class="form-fields">
+      <input type="number" name="flags.barbs.maxStacks" value="{{maxStacks}}" min="1" step="1" placeholder="no limit" />
+    </div>
+    <p class="hint">How many copies can be on one creature. 1 = a new one replaces the old; blank = no limit.</p>
+  </div>
+
   <h4>Roll modifiers</h4>
   <p class="hint">
     Applied when this effect's actor makes a matching roll. Stat changes (e.g. <code>system.stats.ac.bonus</code>)
@@ -65,6 +80,42 @@
         <td><input type="checkbox" name="system.modifiers.{{m.index}}.onCrit" {{checked m.onCrit}} /></td>
         <td><input type="text" name="system.modifiers.{{m.index}}.conditions" value="{{m.conditions}}" placeholder="always" /></td>
         <td><a data-action="deleteModifier" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a></td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <h4>Triggers</h4>
+  <p class="hint">
+    When something happens, do something. Conditions work as for modifiers: "you're attacked/hit/damaged" see the
+    attack (<code>attack:…</code>, <code>attacker:…</code>, <code>attacker:distance</code>), "you hit"/"you down"
+    see the target. Values are formulas with <code>@self</code>, <code>@other</code>, <code>@target</code> or
+    <code>@attacker</code>, and <code>@hit.damage</code> on hits. Grant/inflict copy a <em>template</em> effect from
+    the same item or actor.
+  </p>
+  <table class="barbs-modifiers barbs-triggers">
+    <thead>
+      <tr>
+        <th>When</th><th>Conditions</th><th data-tooltip="Percent chance; blank = always">%</th><th>Limit</th><th>Do</th>
+        <th data-tooltip="Amount or text">Value</th><th data-tooltip="Resource (restore) or damage type">Type</th><th>Effect</th>
+        <th><a data-action="addTrigger" data-tooltip="Add trigger"><i class="fa-solid fa-plus"></i></a></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each triggers as |t|}}
+      <tr data-trigger-index="{{t.index}}">
+        <td><select name="system.triggers.{{t.index}}.event">{{selectOptions @root.eventChoices selected=t.event}}</select></td>
+        <td><input type="text" name="system.triggers.{{t.index}}.conditions" value="{{t.conditions}}" placeholder="always" /></td>
+        <td><input type="number" name="system.triggers.{{t.index}}.chance" value="{{#if t.chance}}{{t.chance}}{{/if}}" min="0" max="100" placeholder="—" /></td>
+        <td><select name="system.triggers.{{t.index}}.oncePer">{{selectOptions @root.onceChoices selected=t.oncePer}}</select></td>
+        <td><select name="system.triggers.{{t.index}}.action">{{selectOptions @root.actionChoices selected=t.action}}</select></td>
+        <td><input type="text" name="system.triggers.{{t.index}}.value" value="{{t.value}}" placeholder="5, 2d12, text" /></td>
+        <td><input type="text" name="system.triggers.{{t.index}}.type" value="{{t.type}}" placeholder="stamina, lightning" /></td>
+        <td>
+          {{#if t.inline}}<span class="hint" data-tooltip="Defined by the ability">built in</span>
+          {{else}}<select name="system.triggers.{{t.index}}.effect">{{selectOptions @root.templateChoices selected=t.effect}}</select>{{/if}}
+        </td>
+        <td><a data-action="deleteTrigger" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a></td>
       </tr>
       {{/each}}
     </tbody>

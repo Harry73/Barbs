@@ -1,4 +1,14 @@
-import { EFFECT_CATEGORIES, MODIFIER_ROLL_TYPES, MODIFIER_TYPES, type ModifierRollType, type ModifierType } from "../config.ts";
+import {
+    EFFECT_CATEGORIES,
+    MODIFIER_ROLL_TYPES,
+    MODIFIER_TYPES,
+    TRIGGER_ACTIONS,
+    TRIGGER_EVENTS,
+    type ModifierRollType,
+    type ModifierType,
+    type TriggerAction,
+    type TriggerEvent,
+} from "../config.ts";
 import type { EquipmentModel } from "./item/models.ts";
 
 const fields = foundry.data.fields;
@@ -20,6 +30,26 @@ export interface RollModifierData {
      * src/rules/predicate.ts. Blank = always. Conditions on the target are checked per target when damage is applied.
      */
     conditions?: string;
+}
+
+/** Plain shape of one trigger: when something happens (and conditions hold), do something. See src/triggers. */
+export interface TriggerData {
+    event: TriggerEvent;
+    /** Predicate text, tested against the event (see src/triggers for what each event can see). */
+    conditions: string;
+    /** Percent chance it fires once the conditions hold. 0 or 100 = always. */
+    chance: number;
+    /** "turn" / "round": fires at most once per turn or round. Blank = every time. */
+    oncePer: "" | "turn" | "round";
+    action: TriggerAction;
+    /** Amount (restore, damage) or text (note). Formulas see @self, @other, and @target/@attacker. */
+    value: string;
+    /** Resource for restore (health/stamina/mana), damage type for damage. */
+    type: string;
+    /** For grant/inflict: the name of a template effect on the same item or actor. */
+    effect: string;
+    /** For grant/inflict from ability automation: the effect's data inline, instead of a template. */
+    effectData: object | null;
 }
 
 /**
@@ -62,6 +92,24 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
                 formula: new fields.StringField({ required: true, blank: true, initial: "" }),
                 damageType: new fields.StringField({ required: true, blank: true, initial: "physical" }),
             }),
+            /**
+             * A template effect never applies by itself: triggers on the same item or actor copy it onto someone
+             * (Battle Fervor, granted on hit). Templates are always inactive.
+             */
+            template: new fields.BooleanField({ initial: false }),
+            triggers: new fields.ArrayField(
+                new fields.SchemaField({
+                    event: new fields.StringField({ required: true, choices: Object.keys(TRIGGER_EVENTS), initial: "hit" }),
+                    conditions: new fields.StringField({ required: true, blank: true, initial: "" }),
+                    chance: new fields.NumberField({ required: true, integer: true, min: 0, max: 100, initial: 0 }),
+                    oncePer: new fields.StringField({ required: true, blank: true, choices: ["", "turn", "round"], initial: "" }),
+                    action: new fields.StringField({ required: true, choices: Object.keys(TRIGGER_ACTIONS), initial: "restore" }),
+                    value: new fields.StringField({ required: true, blank: true, initial: "" }),
+                    type: new fields.StringField({ required: true, blank: true, initial: "" }),
+                    effect: new fields.StringField({ required: true, blank: true, initial: "" }),
+                    effectData: new fields.ObjectField({ required: false, nullable: true, initial: null }),
+                }),
+            ),
             modifiers: new fields.ArrayField(
                 new fields.SchemaField({
                     type: new fields.StringField({ required: true, choices: Object.keys(MODIFIER_TYPES), initial: "damage" }),
@@ -82,11 +130,14 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
     declare pulse: { formula: string; damageType: string; radius: number; affects: "enemies" | "allies" | "all" };
     declare dot: { formula: string; damageType: string };
     declare modifiers: RollModifierData[];
+    declare template: boolean;
+    declare triggers: TriggerData[];
 
     /**
      * Effects on equipment only apply while it's equipped. Otherwise defer to core (expired effects are suppressed).
      */
     get isSuppressed(): boolean {
+        if (this.template) return true;
         const effect = this.parent as unknown as ActiveEffect.Implementation;
         const item = effect.parent;
         if (item instanceof Item && item.type === "equipment") {

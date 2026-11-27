@@ -5,7 +5,7 @@
  * Stats tab built only from changes would leave out most of what equipment does. Modifiers that apply to every roll
  * are folded into the matching stat row (with their sources); the rest are described as conditional bonuses.
  */
-import { INCOMING_MODIFIER_TYPES, MODIFIER_TYPES, WEAPON_CATEGORIES, WEAPON_FILTERS } from "../config.ts";
+import { INCOMING_MODIFIER_TYPES, MODIFIER_TYPES, TRIGGER_ACTIONS, TRIGGER_EVENTS, WEAPON_CATEGORIES, WEAPON_FILTERS } from "../config.ts";
 import type { BarbsEffectModel, RollModifierData } from "../data/effect.ts";
 import type { EquipmentModel } from "../data/item/models.ts";
 import { evaluateNumber, usesTarget } from "../rules/formula.ts";
@@ -61,6 +61,12 @@ export function summarizeRollBonuses(actor: Actor.Implementation): RollBonusSumm
     for (const effect of actor.allApplicableEffects()) {
         if (!effect.active) continue;
         const system = effect.system as unknown as BarbsEffectModel;
+        // Triggers are listed as what they do ("You're attacked (attacker:distance <= 5): damage the other creature 2d12").
+        for (const t of (system as unknown as { triggers?: { event: string; conditions: string; action: string; value: string; type: string; effect: string; effectData: { name?: string } | null }[] }).triggers ?? []) {
+            const what = t.action === "grant" || t.action === "inflict" ? (t.effectData?.name ?? t.effect) : [t.value, t.type].filter(Boolean).join(" ");
+            const when = `${TRIGGER_EVENTS[t.event as keyof typeof TRIGGER_EVENTS] ?? t.event}${t.conditions ? ` (${t.conditions})` : ""}`;
+            other.push(`${effect.name}: ${when}: ${(TRIGGER_ACTIONS[t.action as keyof typeof TRIGGER_ACTIONS] ?? t.action).toLowerCase()}${what ? ` ${what}` : ""}`);
+        }
         if (!system.modifiers?.length) continue;
         const parent = effect.parent as Item.Implementation | null;
         const fromItem = parent?.documentName === "Item";

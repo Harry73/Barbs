@@ -389,6 +389,10 @@ async function damageTarget(
             return out;
         });
     }
+    // The defender reacts to being attacked (Lightning Coil Cuirass, Accursed Armor) whether or not it lands.
+    const { fireTriggers } = await import("../triggers/index.ts");
+    const attacker = (await fromUuid(flags.actorUuid)) as Actor.Implementation | null;
+    await fireTriggers(target.actor, "attacked", { other: attacker, attack: attackContext(flags), sourceName: flags.sourceName });
     const evasion = await rollEvasion(flags, target, hits.length, skipEvasion);
     if (evasion.dodged.every(Boolean)) return false;
     hits = hits.map((hit, i) => (evasion.dodged[i] ? {} : hit));
@@ -416,6 +420,13 @@ async function damageTarget(
             notes: notes.length ? notes : undefined,
             attackContext: attackContext(flags),
         });
+    }
+    // Each landed hit: the attacker's on-hit reactions (Battle Fervor), then the defender's "when hit" ones.
+    const landed = hits.filter((hit, i) => !evasion.dodged[i] && Object.values(hit).some((v) => (v ?? 0) > 0));
+    for (const hit of landed) {
+        const damage = Object.values(hit).reduce((a, b) => a + (b ?? 0), 0);
+        await fireTriggers(attacker, "hit", { other: target.actor, options: domain, data: { hit: { damage } }, sourceName: flags.sourceName });
+        await fireTriggers(target.actor, "hitBy", { other: attacker, attack: attackContext(flags), data: { hit: { damage } }, sourceName: flags.sourceName });
     }
     return true;
 }

@@ -202,6 +202,31 @@ export const MODIFIER_TYPES = {
     incomingCR: "Incoming: Condition Resist (%)",
 } as const;
 
+/** When a trigger fires (see src/triggers). "other" is whoever is on the other side of the event. */
+export const TRIGGER_EVENTS = {
+    hit: "You hit (each landed hit)",
+    attack: "You attack",
+    attacked: "You're attacked",
+    hitBy: "You're hit (each landed hit)",
+    damaged: "You take damage",
+    kill: "You down an enemy",
+    turnStart: "Start of your turn",
+    turnEnd: "End of your turn",
+    combatStart: "Combat starts",
+    combatEnd: "Combat ends",
+} as const;
+export type TriggerEvent = keyof typeof TRIGGER_EVENTS;
+
+/** What a trigger does. */
+export const TRIGGER_ACTIONS = {
+    restore: "Restore resource to yourself",
+    grant: "Grant yourself an effect",
+    inflict: "Inflict an effect on the other creature",
+    damage: "Damage the other creature",
+    note: "Post a reminder",
+} as const;
+export type TriggerAction = keyof typeof TRIGGER_ACTIONS;
+
 /** Modifier types that only apply when the bearer is attacked, never to the bearer's own rolls. */
 export const INCOMING_MODIFIER_TYPES = new Set(["incomingDamage", "incomingAC", "incomingACPercent", "incomingEvasion", "incomingCR"]);
 export type ModifierType = keyof typeof MODIFIER_TYPES;
