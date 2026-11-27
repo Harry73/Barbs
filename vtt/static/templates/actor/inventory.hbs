@@ -11,7 +11,7 @@
       <tr class="inventory-section"><th colspan="6">{{section.label}}</th></tr>
       {{#each section.items as |entry|}}
       <tr data-item-id="{{entry.item.id}}">
-        <td><a data-action="toggleEquipped"><i class="fa-{{#if entry.system.equipped}}solid{{else}}regular{{/if}} fa-square-check"></i></a></td>
+        <td><a data-action="toggleEquipped" data-tooltip="{{#if entry.system.equipped}}Equipped: click to unequip{{else}}Not equipped: click to equip{{/if}}"><i class="{{#if entry.system.equipped}}fa-solid fa-square-check{{else}}fa-regular fa-square{{/if}}"></i></a></td>
         <td><a data-action="editItem">{{entry.item.name}}</a></td>
         <td>{{#if entry.weaponSummary}}<a data-action="weaponAttack" class="{{#unless entry.system.isHeldWeapon}}unheld{{/unless}}"
               data-tooltip="{{#if entry.system.isHeldWeapon}}Attack{{else}}Equip in a hand slot to attack{{/if}}"><i class="fa-solid fa-khanda"></i> {{entry.weaponSummary}}</a>{{/if}}</td>
