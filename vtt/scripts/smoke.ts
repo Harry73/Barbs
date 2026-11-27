@@ -79,6 +79,17 @@ try {
     assert.equal(system.stats.meleeDamage.value, -6, "stats use attribute totals");
     assert.equal(system.stats.buffLimit.value, 0, "buff limit at -10 COM");
 
+    // Every key the effect config's dropdown offers must land on a number effects can add into.
+    const { changeKeyGroups } = await vite.ssrLoadModule("/src/effects/change-keys.ts");
+    system.prepareBaseData();
+    for (const group of changeKeyGroups()) {
+        for (const { key } of group.keys) {
+            const value = foundry.utils.getProperty(actor, key);
+            assert.equal(typeof value, "number", `change key ${key} isn't a number bucket after prepareBaseData`);
+        }
+    }
+    system.prepareDerivedData();
+
     // Formula edge cases straight from the attribute descriptions.
     const { STATS } = await vite.ssrLoadModule("/src/config.ts");
     assert.equal(STATS.health.formula(-10), 1, "-10 VIT has a max health of 1");

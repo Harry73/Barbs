@@ -8,6 +8,7 @@ import {
     WEAPON_FILTERS,
 } from "../config.ts";
 import type { RollModifierData } from "../data/effect.ts";
+import { changeKeyGroups } from "../effects/change-keys.ts";
 
 const { ActiveEffectConfig } = foundry.applications.sheets;
 const { FormDataExtended } = foundry.applications.ux;
@@ -73,6 +74,38 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
             system.modifiers = Object.values(system.modifiers as object);
         }
         return data as never;
+    }
+
+    /**
+     * Core renders each change's key as free text, and nobody remembers `system.stats.conditionResist.bonus`. Swap
+     * it for a dropdown of every key Barbs creatures understand. A key that isn't in the list (typed by hand, or from
+     * an older version) stays selectable as-is, so opening the sheet never changes an effect.
+     */
+    protected override async _onRender(context: never, options: never): Promise<void> {
+        await super._onRender(context, options);
+        const groups = changeKeyGroups();
+        const known = new Set(groups.flatMap((g) => g.keys.map((k) => k.key)));
+        for (const input of this.element.querySelectorAll<HTMLInputElement>('.tab.changes input[name$=".key"]')) {
+            const select = document.createElement("select");
+            select.name = input.name;
+            select.disabled = input.disabled;
+            const add = (parent: HTMLElement, value: string, label: string) => {
+                const option = document.createElement("option");
+                option.value = value;
+                option.textContent = label;
+                option.selected = value === input.value;
+                parent.append(option);
+            };
+            add(select, "", "Choose what to change...");
+            if (input.value && !known.has(input.value)) add(select, input.value, `${input.value} (custom)`);
+            for (const group of groups) {
+                const optgroup = document.createElement("optgroup");
+                optgroup.label = group.label;
+                for (const { key, label } of group.keys) add(optgroup, key, label);
+                select.append(optgroup);
+            }
+            input.replaceWith(select);
+        }
     }
 
     #currentModifiers(): RollModifierData[] {

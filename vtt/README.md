@@ -157,7 +157,8 @@ Every ActiveEffect has Barbs data (Barbs tab in the effect config):
 
 Multipliers are grouped by effect: modifiers from the same effect add, different effects multiply.
 
-Stat buffs use the core Changes tab instead, in the "initial" phase:
+Stat buffs use the core Changes tab instead, in the "initial" phase. Its key field is a dropdown of every key below
+(`src/effects/change-keys.ts`), so you don't need to remember the paths:
 
 | Key | Meaning |
 |---|---|

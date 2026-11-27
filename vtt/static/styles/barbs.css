@@ -251,6 +251,11 @@
   text-align: right;
 }
 
+/* The effect config's change key dropdown (replaces core's text box). */
+.barbs .tab.changes .key select {
+  width: 100%;
+}
+
 /* ---------- Item sheets ---------- */
 
 /* The header stays put and the details scroll, so nothing ends up below the bottom of the window. */
