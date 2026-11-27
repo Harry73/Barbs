@@ -9,6 +9,7 @@ import type { CreatureModel } from "../data/actor/creature.ts";
 import type { BarbsEffectModel } from "../data/effect.ts";
 import { isEmptyUndo, snapshotEffect, UNDO_ROW, type RemovedEffect, type UndoRecord } from "../chat/undo.ts";
 import { applyHealthChange, reduceDamage, type DamageKey } from "../rules/damage-math.ts";
+import { incomingTotal, type AttackContext } from "./incoming.ts";
 
 /* -------------------------------------------- */
 /*  Durations                                   */
@@ -86,6 +87,8 @@ export interface ApplyEffectOptions {
     announce?: boolean;
     /** Less CR for this one roll (an attack's "reduce CR" affix). */
     resistPenalty?: number;
+    /** Who's inflicting it and the attack's facts, for the target's "incoming" CR modifiers. */
+    attackContext?: AttackContext;
 }
 
 /**
@@ -103,7 +106,7 @@ export interface AppliedEffect {
 export async function applyEffectToActor(
     target: Actor.Implementation,
     data: Record<string, unknown>,
-    { resistible = false, sourceName, announce = true, resistPenalty = 0 }: ApplyEffectOptions = {},
+    { resistible = false, sourceName, announce = true, resistPenalty = 0, attackContext }: ApplyEffectOptions = {},
 ): Promise<AppliedEffect | null> {
     const creature = target.system as unknown as CreatureModel;
     const name = String(data.name);
@@ -119,7 +122,9 @@ export async function applyEffectToActor(
     if (resistible) {
         // Gear can add CR against specific conditions (the Roll20 sheet's per-condition resistances).
         const specific = Math.max(0, ...((data.statuses as string[] | undefined) ?? []).map((id) => creature.derived.conditionResistBonus?.[id] ?? 0));
-        const resist = Math.max(0, creature.derived.stats.conditionResist.value + specific - resistPenalty);
+        const attacker = attackContext ? ((await fromUuid(attackContext.attackerUuid)) as Actor.Implementation | null) : null;
+        const incomingCR = attackContext ? incomingTotal(target, "incomingCR", attacker, attackContext).total : 0;
+        const resist = Math.max(0, creature.derived.stats.conditionResist.value + specific + incomingCR - resistPenalty);
         const roll = await new Roll("1d100").evaluate();
         const resisted = (roll.total ?? 101) <= resist;
         await roll.toMessage({
@@ -303,6 +308,7 @@ export async function applyDamageToActor(
         acReduction = 0,
         lifesteal,
         notes: extraNotes = [],
+        attackContext,
     }: {
         trueDamage?: boolean;
         attack?: boolean;
@@ -312,6 +318,8 @@ export async function applyDamageToActor(
         lifesteal?: { percent: number; attackerUuid: string };
         /** Lines to add to the damage message (the card's Evasion roll for a partly dodged attack). */
         notes?: string[];
+        /** Who's attacking and the attack's facts, for the defender's "incoming" modifiers. */
+        attackContext?: AttackContext;
     } = {},
 ): Promise<void> {
     const creature = target.system as unknown as CreatureModel;
@@ -343,13 +351,29 @@ export async function applyDamageToActor(
             await block.delete();
         }
     }
+    // The defender's "incoming" modifiers for this attack: AC against ranged attacks, more damage from the caster who
+    // marked them, and so on.
+    const attacker = attackContext ? ((await fromUuid(attackContext.attackerUuid)) as Actor.Implementation | null) : null;
+    const incoming = (type: string, filter?: (damageType: string) => boolean) =>
+        attackContext ? incomingTotal(target, type, attacker, attackContext, filter) : { total: 0, sources: [] };
+    const incomingAC = incoming("incomingAC");
+    const incomingACPercent = incoming("incomingACPercent");
+    const vulnerability = { ...d.vulnerability } as Record<string, number>;
+    const incomingSources: string[] = [...incomingAC.sources, ...incomingACPercent.sources];
+    for (const key of Object.keys(vulnerability)) {
+        // Vulnerability keys are damage types plus "all" and "magic"; incoming modifiers use "allMagic" for the latter.
+        const extra = incoming("incomingDamage", (t) => t === key || (key === "magic" && t === "allMagic"));
+        vulnerability[key] += extra.total;
+        incomingSources.push(...extra.sources);
+    }
+    if (incomingSources.length) notes0.push(`${target.name}'s defenses against this attack: ${incomingSources.join(", ")}.`);
     const defenses = {
         // An attack's "reduce AC" affix only lowers AC against that attack.
-        ac: Math.max(0, d.stats.ac.value - acReduction),
+        ac: Math.max(0, Math.round((d.stats.ac.value - acReduction + incomingAC.total) * (1 + incomingACPercent.total / 100))),
         magicResist: d.stats.magicResist.value,
         elementResist: d.elementResist,
         damageReduction: d.damageReduction,
-        vulnerability: d.vulnerability,
+        vulnerability: vulnerability as typeof d.vulnerability,
     };
     let total = 0;
     const rows: string[] = [];

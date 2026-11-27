@@ -58,6 +58,7 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
                 weapon: m.weapon ?? "",
                 value: String(m.value),
                 onCrit: !!m.onCrit,
+                conditions: m.conditions ?? "",
             })),
         },
         flags: {

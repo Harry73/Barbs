@@ -20,6 +20,7 @@ import { activePassives, adjustResource } from "../passives/index.ts";
 import type { PassiveDelta, RollInfo } from "../passives/types.ts";
 import { affected, placeArea, type AreaResult } from "./area.ts";
 import { expectedWeaponCategories, holdsExpectedWeapon } from "../rules/hands.ts";
+import { rollOptions } from "../rules/roll-options.ts";
 import { WEAPON_CATEGORIES } from "../config.ts";
 import { getAutomation } from "./catalog.ts";
 import { askChoices, bindChoices, defaultChoices } from "./choices.ts";
@@ -82,7 +83,7 @@ function prepareAttack(
     spec: AttackSpec,
     ctx: UseContext,
     damage = spec.damage,
-    { skipSingleUse = false }: { skipSingleUse?: boolean } = {},
+    { skipSingleUse = false, area = false }: { skipSingleUse?: boolean; area?: boolean } = {},
 ): AttackBuilder {
     const { rollType, scaling = rollType === "magic" ? "magic" : "weapon" } = spec;
     const { weapon, offWeapon } = scaling === "weapon" ? weaponsFor(actor, ctx.hand) : { weapon: null, offWeapon: null };
@@ -122,11 +123,21 @@ function prepareAttack(
     if (spec.maximize) builder.maximize();
     builder.ignoreDefenses({ ac: spec.ignoreAC, mr: spec.ignoreMR });
     if (spec.cannotMiss) builder.cannotMiss();
+    for (const c of spec.conditional ?? []) builder.addConditional({ ...c, key: c.key ?? "all", source: ctx.item?.name ?? "Ability" });
     if (spec.accuracy) builder.addAccuracy(spec.accuracy);
     if (spec.lethality) builder.addLethality(spec.lethality);
     if (spec.lifesteal) builder.addLifesteal(spec.lifesteal);
     if (spec.unblockable) builder.addUnblockable(spec.unblockable);
     if (skipSingleUse) builder.skipSingleUse();
+    // Tell conditions what this roll is (ability tags, class, hand, area, targets) before effects are folded in.
+    builder.setFacts({
+        tags: ctx.ability?.tags ?? [],
+        abilityName: ctx.item?.name ?? null,
+        className: ctx.ability?.className ?? null,
+        hand: ctx.hand,
+        area,
+        targets: ctx.targets,
+    });
     return builder.applyEffects();
 }
 
@@ -148,6 +159,7 @@ async function rollAttack(
     ctx: UseContext,
     info: PassiveRollInfo,
     combo: boolean,
+    area = false,
 ): Promise<{ result: AttackResult; tiers: TierResult[] }> {
     const finish = (builder: AttackBuilder) => {
         builder.applyPassives(info);
@@ -155,9 +167,9 @@ async function rollAttack(
         return builder;
     };
     if (!spec.tiers?.length) {
-        return { result: await finish(prepareAttack(actor, spec, ctx)).evaluate({ hits: spec.hits }), tiers: [] };
+        return { result: await finish(prepareAttack(actor, spec, ctx, spec.damage, { area })).evaluate({ hits: spec.hits }), tiers: [] };
     }
-    const builders = spec.tiers.map((tier) => ({ within: tier.within, builder: finish(prepareAttack(actor, spec, ctx, tier.damage)) }));
+    const builders = spec.tiers.map((tier) => ({ within: tier.within, builder: finish(prepareAttack(actor, spec, ctx, tier.damage, { area })) }));
     const tiers: TierResult[] = [];
     for (const { within, builder } of builders) tiers.push({ within, result: await builder.evaluate({ hits: spec.hits }) });
     // The "main" result carries everything for undo, summaries, and dice animations.
@@ -296,7 +308,7 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
     const attack = resolve(automation?.attack, ctx);
     const heal = resolve(automation?.heal, ctx);
     if (attack) {
-        ({ result, tiers } = await rollAttack(actor, attack, ctx, rollInfo, tags.includes("combo")));
+        ({ result, tiers } = await rollAttack(actor, attack, ctx, rollInfo, tags.includes("combo"), !!area));
     } else if (heal) {
         const builder = new AttackBuilder(actor, { rollType: "healing" });
         builder.addDamage(heal.formula, "healing");
@@ -443,6 +455,9 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
                     ? {
                           hits: tiers.length ? [] : result.hits.map((h) => h.totals),
                           bonus: tiers.length ? [] : result.hits.map((h) => h.distanceBonus),
+                          conditional: tiers.length ? [] : result.hits.map((h) => h.conditional),
+                          conditionalModifiers: result.conditional,
+                          rollOptions: result.rollOptions,
                           penetration: result.penetration,
                           trueDamage: !!attack?.trueDamage,
                           // Only attacks aimed at someone can be dodged: not areas, drains, or "can't miss".
@@ -457,11 +472,20 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
                               within: t.within,
                               hits: t.result.hits.map((h) => h.totals),
                               bonus: t.result.hits.map((h) => h.distanceBonus),
+                              conditional: t.result.hits.map((h) => h.conditional),
                           })),
                       }
                     : undefined,
             casterTokenUuid: casterTokenUuid(actor),
             crReduction: result?.crReduction,
+            attackOptions: rollOptions({
+                rollType: result?.rollType ?? (tags.includes("spell") ? "magic" : "physical"),
+                weapons: [],
+                tags,
+                abilityName: opts.title,
+                className,
+                area: !!area,
+            }),
             // Self-heals were already applied; don't offer to apply them again.
             healing: result?.rollType === "healing" && !heal?.self ? (result.totals.healing ?? 0) : undefined,
             shielding: shielding && !shielding.self ? shielding.amount : undefined,
@@ -498,7 +522,7 @@ export async function postPulse(
     const type = (pulse.damageType || "physical") as AttackSpec["damage"][number]["type"];
     const spec: AttackSpec = { rollType: type === "physical" ? "physical" : "magic", damage: [{ formula: pulse.formula, type }] };
     const ctx = makeContext(actor, null, {});
-    const result = await prepareAttack(actor, spec, ctx, spec.damage, { skipSingleUse: true }).evaluate({});
+    const result = await prepareAttack(actor, spec, ctx, spec.damage, { skipSingleUse: true, area: true }).evaluate({});
     await postCard(
         actor,
         {
@@ -514,6 +538,9 @@ export async function postPulse(
             damage: {
                 hits: result.hits.map((h) => h.totals),
                 bonus: result.hits.map((h) => h.distanceBonus),
+                conditional: result.hits.map((h) => h.conditional),
+                conditionalModifiers: result.conditional,
+                rollOptions: result.rollOptions,
                 penetration: result.penetration,
                 unblockableChance: result.unblockableChance,
                 // An aura hits everyone around the bearer: not a targeted attack, so no Evasion.
@@ -603,6 +630,7 @@ export async function weaponAttack(actor: Actor.Implementation, item: Item.Imple
     const targets = [...(game.user?.targets ?? [])].map((t) => t.actor).filter((a): a is Actor.Implementation => !!a);
     const builder = new AttackBuilder(actor, { rollType: "physical", weapon: item });
     builder.addWeapon();
+    builder.setFacts({ targets });
     builder.applyEffects().applyPassives({ targets, tags: [], abilityName: null, className: null, choices: {} });
     const result = await builder.evaluate();
     await postCard(
@@ -614,6 +642,9 @@ export async function weaponAttack(actor: Actor.Implementation, item: Item.Imple
             damage: {
                 hits: result.hits.map((h) => h.totals),
                 bonus: result.hits.map((h) => h.distanceBonus),
+                conditional: result.hits.map((h) => h.conditional),
+                conditionalModifiers: result.conditional,
+                rollOptions: result.rollOptions,
                 penetration: result.penetration,
                 unblockableChance: result.unblockableChance,
                 evadable: !result.cannotMiss,

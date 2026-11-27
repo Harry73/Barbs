@@ -15,6 +15,11 @@ export interface RollModifierData {
     value: string;
     /** Only on a crit ("On crit: 2d10 fire damage"). Damage and multipliers apply to each hit that crits. */
     onCrit?: boolean;
+    /**
+     * A predicate in text form ("target:type:demon", "weapon:bow | weapon:crossbow, !self:status:hidden"); see
+     * src/rules/predicate.ts. Blank = always. Conditions on the target are checked per target when damage is applied.
+     */
+    conditions?: string;
 }
 
 /**
@@ -65,6 +70,7 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
                     weapon: new fields.StringField({ required: true, blank: true, initial: "" }),
                     value: new fields.StringField({ required: true, blank: true, initial: "" }),
                     onCrit: new fields.BooleanField({ initial: false }),
+                    conditions: new fields.StringField({ required: true, blank: true, initial: "" }),
                 }),
             ),
         };

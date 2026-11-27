@@ -6,6 +6,7 @@
  */
 import { SYSTEM_ID } from "./config.ts";
 import type { DamageKey } from "./rules/damage-math.ts";
+import type { AttackContext } from "./effects/incoming.ts";
 import { getUndo, performUndo } from "./chat/undo.ts";
 import {
     applyDamageToActor,
@@ -29,6 +30,7 @@ type Requests = {
         acReduction?: number;
         lifesteal?: { percent: number; attackerUuid: string };
         notes?: string[];
+        attackContext?: AttackContext;
     };
     shielding: { amount: number; sourceName?: string };
     cleanse: { statuses: string[] };
@@ -81,6 +83,7 @@ async function perform<T extends RequestType>(actor: Actor.Implementation, type:
                 acReduction: p.acReduction,
                 lifesteal: p.lifesteal,
                 notes: p.notes,
+                attackContext: p.attackContext,
             });
         }
         case "healing": {

@@ -4,7 +4,7 @@
  * Cards carry everything the buttons need in flags, so applying damage or effects works from any client, any time
  * after the roll, without re-rolling or needing the caster's sheet open.
  */
-import { SYSTEM_ID } from "../config.ts";
+import { ELEMENTS, SYSTEM_ID } from "../config.ts";
 import { ABILITY_AUTOMATION, getAutomation } from "../abilities/catalog.ts";
 import { resolve, restoreContext, type ContextData } from "../abilities/context.ts";
 import { buildEffectData, type EffectSource } from "../abilities/effects.ts";
@@ -12,7 +12,18 @@ import { status as statusSpec } from "../abilities/helpers.ts";
 import type { EffectSpec } from "../abilities/types.ts";
 import type { UseContext } from "../abilities/context.ts";
 import type { CreatureModel } from "../data/actor/creature.ts";
-import { evaluateDistanceBonus, type AttackResult, type DistanceBonus, type OnHitStatus } from "../rolls/attack.ts";
+import {
+    evaluateDistanceBonus,
+    type AttackResult,
+    type ConditionalDamage,
+    type ConditionalModifier,
+    type DistanceBonus,
+    type OnHitStatus,
+} from "../rolls/attack.ts";
+import { isMagic } from "../rules/damage-math.ts";
+import { parsePredicate, testPredicate } from "../rules/predicate.ts";
+import { actorOptions } from "../rules/roll-options.ts";
+import { incomingTotal, type AttackContext } from "../effects/incoming.ts";
 import type { DamageKey } from "../rules/damage-math.ts";
 import { requestOnActor, requestUndo } from "../socket.ts";
 import { hideUndoIfNotAllowed, UNDO_BUTTON, type UndoRecord } from "./undo.ts";
@@ -39,15 +50,23 @@ export interface CardFlags {
         evasionReduction?: number;
         /** For this attack only: the target's AC is this much lower against its damage. */
         acReduction?: number;
+        /** Per-hit damage that only applies to targets meeting a condition, parallel to `hits`. */
+        conditional?: ConditionalDamage[][];
+        /** Multipliers and penetration that only apply to targets meeting a condition. */
+        conditionalModifiers?: ConditionalModifier[];
+        /** The attack's roll facts, for checking conditions against each target. */
+        rollOptions?: string[];
         /** Per-hit damage that depends on each target's distance (Distance Shooter), parallel to `hits`. */
         bonus?: DistanceBonus[][];
         /** Distance tiers: each target takes the first tier whose distance from the caster covers it. */
-        tiers?: { within: number; hits: Partial<Record<DamageKey, number>>[]; bonus?: DistanceBonus[][] }[];
+        tiers?: { within: number; hits: Partial<Record<DamageKey, number>>[]; bonus?: DistanceBonus[][]; conditional?: ConditionalDamage[][] }[];
     };
     /** The caster's token, for measuring distances to targets. */
     casterTokenUuid?: string;
     /** For this attack only: targets resist its conditions with this much less CR (equipment's reduce CR). */
     crReduction?: number;
+    /** The ability's facts (ability:tag:spell, area) for cards without an attack roll, for defenders' conditions. */
+    attackOptions?: string[];
     /** Shielding the targets gain. */
     shielding?: number;
     /** Stamina or mana drained from each target and given to the caster. */
@@ -246,7 +265,11 @@ async function rollEvasion(flags: CardFlags, target: Target, hitCount: number, s
     const none = { dodged: Array(hitCount).fill(false) as boolean[] };
     if (!damage?.evadable || skip || damage.trueDamage) return none;
     if (damage.cannotMissAgainst && target.actor.statuses.has(damage.cannotMissAgainst)) return none;
-    const evasion = (target.actor.system as unknown as CreatureModel).derived.stats.evasion.value;
+    // The defender's own conditional Evasion ("+40% against attackers more than 30 ft away") counts too.
+    const attacker = (await fromUuid(flags.actorUuid)) as Actor.Implementation | null;
+    const evasion =
+        (target.actor.system as unknown as CreatureModel).derived.stats.evasion.value +
+        incomingTotal(target.actor, "incomingEvasion", attacker, attackContext(flags)).total;
     const penalty = (damage.accuracy ?? 0) + (damage.evasionReduction ?? 0);
     const chance = Math.max(0, evasion - penalty);
     const rolls: number[] = [];
@@ -266,6 +289,25 @@ async function rollEvasion(flags: CardFlags, target: Target, hitCount: number, s
     return { dodged, note };
 }
 
+/** What a defender sees of this card's attack, for their "incoming" modifiers. */
+function attackContext(flags: CardFlags): AttackContext {
+    return { attackerUuid: flags.actorUuid, options: flags.damage?.rollOptions ?? flags.attackOptions ?? [] };
+}
+
+/** The attack's facts plus one target's, from the attacker's point of view, for conditions checked on Apply. */
+function targetDomain(flags: CardFlags, target: Target): Set<string> {
+    const out = [...(flags.damage?.rollOptions ?? []), ...actorOptions(target.actor, "target", flags.actorUuid)];
+    const distance = distanceFromCaster(flags, target);
+    if (distance !== null) out.push(`target:distance:${Math.round(distance)}`);
+    return new Set(out);
+}
+
+/** Does a "this target only" condition hold for this target? Blank conditions always do. */
+function targetMeets(flags: CardFlags, target: Target, conditions: string | undefined): boolean {
+    const predicate = parsePredicate(conditions);
+    return !predicate.length || testPredicate(predicate, targetDomain(flags, target));
+}
+
 /** Apply the card's damage to one target. Returns false if the target dodged every hit. */
 async function damageTarget(
     flags: CardFlags,
@@ -276,6 +318,7 @@ async function damageTarget(
     const perTarget = (target.tokenUuid && flags.targetScales?.[target.tokenUuid]) || 1;
     let hits = damage.hits;
     let bonus = damage.bonus;
+    let conditional = damage.conditional;
     if (damage.tiers?.length) {
         const tier = tierFor(flags, target);
         if (tier < 0) {
@@ -284,6 +327,31 @@ async function damageTarget(
         }
         hits = damage.tiers[tier].hits;
         bonus = damage.tiers[tier].bonus;
+        conditional = damage.tiers[tier].conditional;
+    }
+    // Bonuses that depend on the target ("+2d10 vs demons", "double damage to demons"), checked for this one.
+    const domain = targetDomain(flags, target);
+    const meets = (conditions: string) => testPredicate(parsePredicate(conditions), domain);
+    if (conditional?.some((c) => c.length)) {
+        hits = hits.map((hit, i) => {
+            const out = { ...hit };
+            for (const c of conditional![i] ?? []) if (meets(c.conditions)) out[c.type] = (out[c.type] ?? 0) + c.amount;
+            return out;
+        });
+    }
+    const conditionalMods = (damage.conditionalModifiers ?? []).filter((m) => meets(m.conditions));
+    const covers = (key: string, type: string) => key === "all" || key === type || (key === "allMagic" && isMagic(type as DamageKey));
+    for (const m of conditionalMods.filter((x) => x.kind === "multiplier")) {
+        // A separate source, so it multiplies with the attack's other multipliers (like any other effect's).
+        hits = hits.map((hit) =>
+            Object.fromEntries(Object.entries(hit).map(([type, amount]) => [type, covers(m.key, type) ? Math.round((amount ?? 0) * (1 + m.percent / 100)) : amount])),
+        );
+    }
+    let penetration = damage.penetration;
+    for (const m of conditionalMods.filter((x) => x.kind === "penetration")) {
+        penetration = { ...penetration };
+        const types: DamageKey[] = m.key === "all" ? ["physical", ...ELEMENTS] : m.key === "allMagic" ? [...ELEMENTS] : [m.key as DamageKey];
+        for (const t of types) penetration[t] = (penetration[t] ?? 0) + m.percent;
     }
     // Distance-based damage is measured for this target and added to each hit before defenses.
     if (bonus?.some((b) => b.length)) {
@@ -298,20 +366,29 @@ async function damageTarget(
     const evasion = await rollEvasion(flags, target, hits.length, skipEvasion);
     if (evasion.dodged.every(Boolean)) return false;
     hits = hits.map((hit, i) => (evasion.dodged[i] ? {} : hit));
+    // Lethality that only applies to some targets (Banishing Bolt against demons), rolled per landed hit.
+    const notes = evasion.note ? [evasion.note] : [];
+    for (const m of conditionalMods.filter((x) => x.kind === "lethality")) {
+        const rolls: number[] = [];
+        for (let i = 0; i < hits.length; i++) if (!evasion.dodged[i]) rolls.push((await new Roll("1d100").evaluate()).total ?? 101);
+        const lethal = rolls.some((r) => r <= m.percent);
+        notes.push(`${m.source}: ${m.percent}% Lethality, rolled ${rolls.join(", ")}${lethal ? ": <strong>LETHAL</strong> (dies unless immune; players are)" : ""}.`);
+    }
     // A reflected beam hits once per segment the target was on; "Apply as redirected" is one bounce.
     const redirectList = redirected ? [1] : (target.tokenUuid && flags.segments?.[target.tokenUuid]) || [0];
     for (const redirects of redirectList) {
         const alter = flags.alterCourse ? 1 + 0.5 * redirects : 1;
         await requestOnActor(target.actor, "damage", {
             hits: applySwap(hits, flags, redirects),
-            penetration: damage.penetration,
+            penetration,
             sourceName: redirects ? `${flags.sourceName} (redirect ${redirects}${flags.alterCourse ? `, +${50 * redirects}%` : ""})` : flags.sourceName,
             scale: (half ? 0.5 : perTarget) * alter,
             trueDamage: damage.trueDamage,
             unblockableChance: damage.unblockableChance,
             acReduction: damage.acReduction,
             lifesteal: damage.lifesteal ? { percent: damage.lifesteal, attackerUuid: flags.actorUuid } : undefined,
-            notes: evasion.note ? [evasion.note] : undefined,
+            notes: notes.length ? notes : undefined,
+            attackContext: attackContext(flags),
         });
     }
     return true;
@@ -348,11 +425,15 @@ async function applyTargetEffect(flags: CardFlags, target: Target, spec: EffectS
     const data = buildEffectData(resolved, source);
     // Shift-click skips the Condition Resist roll, for when the GM rules it can't be resisted.
     const resistible = !skipResist && (resolved.resistible ?? resolved.category === "condition");
-    await requestOnActor(actor, "effect", { data, options: { resistible, sourceName: flags.sourceName, resistPenalty: flags.crReduction } });
+    await requestOnActor(actor, "effect", {
+        data,
+        options: { resistible, sourceName: flags.sourceName, resistPenalty: flags.crReduction, attackContext: attackContext(flags) },
+    });
 }
 
 /** Apply an on-hit status from the attacker's buffs or gear (Accursed Blade's Curse, Serrated Arrow's Bleed). */
 async function applyOnHitStatus(flags: CardFlags, target: Target, onHit: OnHitStatus, skipResist: boolean): Promise<void> {
+    if (!targetMeets(flags, target, onHit.conditions)) return;
     const spec = (onHit.effect as EffectSpec | undefined) ?? statusSpec(onHit.id);
     const data = buildEffectData(spec, {
         className: "",
@@ -363,7 +444,12 @@ async function applyOnHitStatus(flags: CardFlags, target: Target, onHit: OnHitSt
     });
     await requestOnActor(target.actor, "effect", {
         data,
-        options: { resistible: !skipResist, sourceName: `${flags.sourceName} (${onHit.source})`, resistPenalty: flags.crReduction },
+        options: {
+            resistible: !skipResist,
+            sourceName: `${flags.sourceName} (${onHit.source})`,
+            resistPenalty: flags.crReduction,
+            attackContext: attackContext(flags),
+        },
     });
 }
 

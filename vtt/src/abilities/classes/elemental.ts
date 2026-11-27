@@ -765,11 +765,12 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
         self: [
             {
                 category: "buff",
+                modifiers: [{ type: "incomingEvasion", value: 40, conditions: "attacker:distance > 30" }],
                 description:
                     "<p>Enemies moving within 30 ft become Slowed; adjacent enemies attacking you become Frozen; attacks from enemies more than 30 ft away grant you +40% evasion. Adjacent allies deal ice magic damage and inflict Frostbite on hit (once per turn). You may cast ice spells as a reaction.</p>",
             },
         ],
-        notes: ["Aura effects (Slow on approach, Frozen on adjacent attackers, +40% evasion vs distant attacks) are applied by hand."],
+        notes: ["The +40% Evasion against distant attackers is automatic. Slow on approach and Frozen on adjacent attackers are applied by hand for now."],
     },
     "Mistguard/Cold Shoulder": {
         area: around(20, "allies"),

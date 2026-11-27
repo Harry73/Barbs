@@ -18,6 +18,8 @@ export interface ModifierSpec {
     value: string | number;
     /** Only on a crit. */
     onCrit?: boolean;
+    /** Predicate text, e.g. "target:type:demon" (see src/rules/predicate.ts). */
+    conditions?: string;
 }
 
 /** A core ActiveEffect change, e.g. { key: "system.stats.ac.bonus", value: 40 }. */
@@ -147,6 +149,11 @@ export interface AttackSpec {
     cannotMiss?: boolean;
     /** Can't miss targets with this status (Shadow Missiles against Cursed targets). */
     cannotMissAgainst?: string;
+    /**
+     * Bonuses that only apply to targets meeting conditions, checked per target on Apply: "double damage to demons" is
+     * { conditions: "target:type:demon", kind: "multiplier", percent: 100 }.
+     */
+    conditional?: { conditions: string; kind: "multiplier" | "penetration" | "lethality"; key?: string; percent: number }[];
 }
 
 export interface AreaSpec {

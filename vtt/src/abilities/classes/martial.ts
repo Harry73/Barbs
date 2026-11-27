@@ -24,6 +24,7 @@ import {
     burst,
 } from "../helpers.ts";
 import { weaponsFor } from "../../rolls/attack.ts";
+import { creatureTypes } from "../../rules/roll-options.ts";
 import type { AbilityAutomation, AttackSpec, EffectSpec } from "../types.ts";
 
 /**
@@ -292,7 +293,7 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
     /* ---------- Demon Hunter ---------- */
 
     "Demon Hunter/Banishing Bolt": {
-        choices: [yesNo("demonic", "Targets are of demonic origin (double damage, 30% Lethality)"), HUNTER("Expend 2 Hunter stacks (free action, ignores MR)")],
+        choices: [HUNTER("Expend 2 Hunter stacks (free action, ignores MR)")],
         cost: (ctx) => (ctx.choices.stacks ? null : { resource: "mana", amount: 40 }),
         area: square(35),
         attack: (ctx) => ({
@@ -301,8 +302,11 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
                 { formula: "6d8", type: "lightning" },
                 { formula: "5d10", type: "light" },
             ],
-            increase: ctx.choices.demonic ? 100 : 0,
-            lethality: ctx.choices.demonic ? 30 : 0,
+            // Demons (by creature type) take double damage and face 30% Lethality, checked per target.
+            conditional: [
+                { conditions: "target:type:demon", kind: "multiplier", percent: 100 },
+                { conditions: "target:type:demon", kind: "lethality", percent: 30 },
+            ],
             ignoreMR: !!ctx.choices.stacks,
         }),
         notes: [
@@ -310,10 +314,30 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
             "Leaves a banishment field for 1 minute: enemies have -20% MR and CR; expend it to cleanse 1 condition on every ally inside.",
         ],
     },
+    "Demon Hunter/Essence Scatter": {
+        target: [
+            {
+                name: "Essence Scatter (marked)",
+                category: "condition",
+                resistible: false,
+                duration: "end of your next turn",
+                // Only against the Demon Hunter who marked them, and only their spells.
+                modifiers: [
+                    { type: "incomingDamage", value: 50, conditions: "origin:attacker, attack:ability:tag:spell" },
+                    { type: "incomingCR", value: -20, conditions: "origin:attacker, attack:ability:tag:spell" },
+                ],
+                description: "<p>Takes 50% increased damage from the marking Demon Hunter's damaging spells, and has -20% CR against their condition spells.</p>",
+            },
+        ],
+        notes: [
+            "Counter the spell (undo its card), then apply the mark to the caster.",
+            "Countering a demon summon refreshes your reaction; countering a demonic caster refunds half the mana.",
+        ],
+    },
     "Demon Hunter/Demonbane Blast": {
-        choices: [yesNo("demonic", "Target is of demonic origin (double damage)"), HUNTER("Expend 2 Hunter stacks (free action, ignores AC)")],
+        choices: [HUNTER("Expend 2 Hunter stacks (free action, ignores AC)")],
         cost: (ctx) => (ctx.choices.stacks ? null : { resource: "stamina", amount: 30 }),
-        attack: (ctx) => strike("10d8", { increase: ctx.choices.demonic ? 100 : 0, ignoreAC: !!ctx.choices.stacks }),
+        attack: (ctx) => strike("10d8", { conditional: [{ conditions: "target:type:demon", kind: "multiplier" as const, percent: 100 }], ignoreAC: !!ctx.choices.stacks }),
         notes: ["The target loses 10% of its mana and stamina, then loses health equal to that (twice that if demonic)."],
     },
     "Demon Hunter/Lifesteal Elegy": {
@@ -323,12 +347,17 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
         ],
         cost: (ctx) => (ctx.choices.stacks ? null : { resource: "mana", amount: 50 }),
         area: around(30),
-        attack: (ctx) => (ctx.choices.mode === "light" ? { rollType: "magic", damage: [{ formula: "9d10", type: "light" }], ignoreMR: !!ctx.choices.stacks } : { rollType: "magic", damage: [{ formula: "10d8", type: "lightning" }], ignoreMR: !!ctx.choices.stacks }),
+        attack: (ctx) => ({
+            rollType: "magic",
+            damage: [ctx.choices.mode === "light" ? { formula: "9d10", type: "light" } : { formula: "10d8", type: "lightning" }],
+            ignoreMR: !!ctx.choices.stacks,
+            conditional: [{ conditions: "target:type:demon", kind: "multiplier" as const, percent: 100 }],
+        }),
         notes: (ctx) => [
             ctx.choices.mode === "light"
                 ? "Heal for half the damage dealt. If it hits 5+ enemies, cleanse 3 conditions on targets in range."
                 : "Your next attack deals extra light damage equal to half this spell's damage. If it hits 5+ enemies, inflict 2 stacks of Paralysis.",
-            "Demonic enemies take double damage and count as 3 enemies.",
+            "Demonic enemies take double damage (applied per target) and count as 3 enemies.",
         ],
     },
     "Demon Hunter/Consecrated Carnage": {
@@ -343,20 +372,28 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
         ],
     },
     "Demon Hunter/Soul Searing Light": {
-        choices: [yesNo("demonic", "Target is of demonic origin (double damage, 40% vulnerability)"), HUNTER("Expend 2 Hunter stacks (free action)")],
+        choices: [HUNTER("Expend 2 Hunter stacks (free action)")],
         cost: (ctx) => (ctx.choices.stacks ? null : { resource: "mana", amount: 50 }),
-        target: (ctx) => {
-            const dice = ctx.choices.demonic ? "8d8" : "4d8";
-            return [
-                {
-                    name: "Soul Searing Light",
-                    category: "condition",
-                    dot: { formula: dice, type: "light" },
-                    changes: [vulnerable("physical", ctx.choices.demonic ? 40 : 20)],
-                },
-                { name: "Soul Searing Light (lightning)", category: "condition", dot: { formula: dice, type: "lightning" }, resistible: false },
-            ];
-        },
+        // Demons (by creature type) take double the damage over time and 40% vulnerability instead of 20%.
+        target: [
+            {
+                name: "Soul Searing Light",
+                category: "condition",
+                dot: { formula: "4d8", type: "light" },
+                changes: [vulnerable("physical", 20)],
+                resolve: (target, spec) =>
+                    creatureTypes(target).includes("demon")
+                        ? { ...spec, dot: { formula: "8d8", type: "light" }, changes: [vulnerable("physical", 40)] }
+                        : spec,
+            },
+            {
+                name: "Soul Searing Light (lightning)",
+                category: "condition",
+                dot: { formula: "4d8", type: "lightning" },
+                resistible: false,
+                resolve: (target, spec) => (creatureTypes(target).includes("demon") ? { ...spec, dot: { formula: "8d8", type: "lightning" } } : spec),
+            },
+        ],
         notes: ["Apply both: the second is the lightning half of the damage over time."],
     },
     "Demon Hunter/Sanctifying Skewer": {
@@ -1132,11 +1169,13 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
         self: [
             {
                 category: "buff",
-                changes: [statPercent("ac", 50)],
+                modifiers: [
+                    { type: "incomingACPercent", value: 50, conditions: "attack:melee" },
+                    { type: "incomingACPercent", value: 100, conditions: "attack:ranged" },
+                ],
                 description: "<p>+50% AC against melee attacks, +100% against ranged ones. Buffs on you have a 40% chance to ignore buff stripping.</p>",
             },
         ],
-        notes: ["Applied as +50% AC. Against ranged attacks it's +100%: apply ranged damage with the AC doubled in mind (or ask the GM to treat AC as higher)."],
     },
     "Arcane Archer/Serrated Arrow": {
         choices: [pick("mode", "Use", { buff: "Gain the buff", sacrifice: "Sacrifice it: next attack converts 50% (ignores CR)" })],

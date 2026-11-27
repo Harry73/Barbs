@@ -5,7 +5,7 @@
  * Stats tab built only from changes would leave out most of what equipment does. Modifiers that apply to every roll
  * are folded into the matching stat row (with their sources); the rest are described as conditional bonuses.
  */
-import { MODIFIER_TYPES, WEAPON_CATEGORIES, WEAPON_FILTERS } from "../config.ts";
+import { INCOMING_MODIFIER_TYPES, MODIFIER_TYPES, WEAPON_CATEGORIES, WEAPON_FILTERS } from "../config.ts";
 import type { BarbsEffectModel, RollModifierData } from "../data/effect.ts";
 import type { EquipmentModel } from "../data/item/models.ts";
 
@@ -64,16 +64,20 @@ export function summarizeRollBonuses(actor: Actor.Implementation): RollBonusSumm
         const weapon = fromItem && parent!.type === "equipment" && (parent!.system as unknown as EquipmentModel).isWeapon ? parent : null;
         const source = fromItem ? `${effect.name} (${parent!.name})` : effect.name;
         for (const m of system.modifiers) {
+            // Incoming modifiers are about attacks on you, so the roll type and weapon filters don't apply to them.
+            const incoming = INCOMING_MODIFIER_TYPES.has(m.type);
             const conditions = [
-                ...(weapon ? [`attacks with ${weapon.name}`] : []),
-                ...(m.rollType !== "all" ? [`${m.rollType} rolls`] : []),
+                ...(weapon && !incoming ? [`attacks with ${weapon.name}`] : []),
+                ...(m.rollType !== "all" && !incoming ? [`${m.rollType} rolls`] : []),
                 ...(m.weapon ? [`${(WEAPON_CATEGORIES as Record<string, string>)[m.weapon] ?? (WEAPON_FILTERS as Record<string, string>)[m.weapon] ?? m.weapon} weapons`] : []),
                 ...(m.onCrit ? ["on crit"] : []),
                 ...(system.singleUse ? ["next roll only"] : []),
+                ...(m.conditions ? [`when ${m.conditions}`] : []),
             ];
             // Only physical rolls crit, so a physical-only crit bonus is as good as always-on.
             const critOnly = ["critChance", "critDamage"].includes(m.type) && m.rollType === "physical";
-            const unconditional = !weapon && !m.weapon && !m.onCrit && !system.singleUse && (m.rollType === "all" || critOnly);
+            const unconditional =
+                !weapon && !m.weapon && !m.onCrit && !m.conditions && !system.singleUse && !INCOMING_MODIFIER_TYPES.has(m.type) && (m.rollType === "all" || critOnly);
             const keys = statKeys(m);
             const value = Number(m.value) || 0;
             if (unconditional && keys.length && value) {

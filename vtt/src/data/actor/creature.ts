@@ -101,6 +101,11 @@ function defineCreatureSchema() {
             hair: new fields.StringField({ required: true, blank: true, initial: "" }),
             alignment: new fields.StringField({ required: true, blank: true, initial: "" }),
             languages: new fields.StringField({ required: true, blank: true, initial: "" }),
+            /**
+             * Comma-separated creature types ("demon", "undead, construct"), for conditions like "vs demons"
+             * (`target:type:demon`).
+             */
+            creatureTypes: new fields.StringField({ required: true, blank: true, initial: "" }),
             biography: new fields.HTMLField(),
         }),
     };

@@ -6,7 +6,9 @@
  * roll. The result is plain data the chat card can render and the "Apply" buttons can act on.
  */
 import { bleed, burn, poison } from "../abilities/helpers.ts";
-import { SYSTEM_ID } from "../config.ts";
+import { INCOMING_MODIFIER_TYPES, SYSTEM_ID } from "../config.ts";
+import { mentions, parsePredicate, testPredicate } from "../rules/predicate.ts";
+import { actorOptions, distanceBetween, rollOptions } from "../rules/roll-options.ts";
 import { ELEMENTS, RANGED_WEAPONS, STATUSES, type ModifierRollType, type RollType, type StatKey } from "../config.ts";
 import { snapshotEffect, type RemovedEffect } from "../chat/undo.ts";
 import { activePassives, adjustResource, baseComboChance, monkDie, setResource } from "../passives/index.ts";
@@ -61,6 +63,26 @@ export interface AttackHit {
     crit: CritResult | null;
     totals: Partial<Record<DamageKey, number>>;
     distanceBonus: DistanceBonus[];
+    /** Extra damage that only applies to targets meeting a condition ("+2d10 vs demons"), already rolled and scaled. */
+    conditional: ConditionalDamage[];
+}
+
+/** Damage from a modifier whose conditions depend on the target, resolved per target when damage is applied. */
+export interface ConditionalDamage {
+    conditions: string;
+    type: DamageKey;
+    amount: number;
+}
+
+/** A multiplier or penetration whose conditions depend on the target ("double damage to demons"). */
+export interface ConditionalModifier {
+    conditions: string;
+    /** Lethality is rolled per landed hit on targets that meet the conditions. */
+    kind: "multiplier" | "penetration" | "lethality";
+    /** Damage type, or "all" / "allMagic". */
+    key: string;
+    percent: number;
+    source: string;
 }
 
 /** One target's distance bonus for a hit. Deterministic for the usual formulas; dice would be rolled per target. */
@@ -79,6 +101,8 @@ export interface OnHitStatus {
      * vulnerability. Same shape as an ability EffectSpec (plain data, so it survives in card flags).
      */
     effect?: object;
+    /** Only for targets meeting these conditions (predicate text). */
+    conditions?: string;
 }
 
 export interface ComboResult {
@@ -125,6 +149,10 @@ export interface AttackResult {
     crReduction: number;
     /** For this attack only: the target's Evasion is this many points lower when dodging it. */
     evasionReduction: number;
+    /** Multipliers and penetration that depend on the target, applied per target. */
+    conditional: ConditionalModifier[];
+    /** The roll's facts (roll:, weapon:, ability:, self:), for conditions checked later against each target. */
+    rollOptions: string[];
 }
 
 interface AttackOptions {
@@ -172,6 +200,12 @@ export class AttackBuilder {
     #cannotMiss = false;
     #accuracy = 0;
     #lethality = 0;
+    /** What the roll is for, so conditions can see it. Set by setFacts() before applyEffects(). */
+    #facts: { tags?: string[]; abilityName?: string | null; className?: string | null; hand?: string; area?: boolean; targets?: Actor.Implementation[] } =
+        {};
+    /** Modifiers whose conditions depend on the target, resolved later. */
+    #deferredDamage: { conditions: string; type: DamageKey; formula: string }[] = [];
+    #conditional: ConditionalModifier[] = [];
     #lifesteal = 0;
     #unblockable = 0;
 
@@ -291,6 +325,47 @@ export class AttackBuilder {
         };
         for (const { handle, automation } of activePassives(this.actor)) automation.rollHook?.(this, full, handle);
         return this;
+    }
+
+    /** A multiplier, penetration, or lethality that only applies to targets meeting conditions ("vs demons"). */
+    addConditional(modifier: Omit<ConditionalModifier, "source"> & { source?: string }): this {
+        this.#conditional.push({ source: "Ability", ...modifier });
+        return this;
+    }
+
+    /** Describe the roll for conditions (ability tags, class, hand, whether it's an area, who's targeted). */
+    setFacts(facts: { tags?: string[]; abilityName?: string | null; className?: string | null; hand?: string; area?: boolean; targets?: Actor.Implementation[] }): this {
+        this.#facts = { ...this.#facts, ...facts };
+        return this;
+    }
+
+    /** The roll's own facts plus the roller's (`self:`). */
+    get rollOptions(): string[] {
+        return [
+            ...rollOptions({ rollType: this.rollType, weapons: this.weapons, ...this.#facts }),
+            ...actorOptions(this.actor, "self"),
+        ];
+    }
+
+    /** Facts for one target: the roll's, plus that target's (`target:`), from the roller's point of view. */
+    targetOptions(target: Actor.Implementation, base = this.rollOptions): Set<string> {
+        const out = [...base, ...actorOptions(target, "target", this.actor.uuid ?? undefined)];
+        const distance = distanceBetween(this.actor, target);
+        if (distance !== null) out.push(`target:distance:${distance}`);
+        return new Set(out);
+    }
+
+    /**
+     * Does a modifier's condition hold for this roll? Conditions on the target, for modifiers that can't wait until
+     * damage is applied (crit chance, lethality), must hold for every target. Returns "defer" for ones that can.
+     */
+    #conditionsHold(modifier: RollModifierData, base: string[]): boolean | "defer" {
+        const predicate = parsePredicate(modifier.conditions);
+        if (!predicate.length) return true;
+        if (!mentions(predicate, "target:")) return testPredicate(predicate, base);
+        if (!modifier.onCrit && ["damage", "multiplier", "penetration"].includes(modifier.type)) return "defer";
+        const targets = this.#facts.targets ?? [];
+        return targets.length > 0 && targets.every((t) => testPredicate(predicate, this.targetOptions(t, base)));
     }
 
     /** "This attack can't miss": no Evasion roll. */
@@ -422,6 +497,7 @@ export class AttackBuilder {
 
     applyEffects(): this {
         this.#applyStatBuckets();
+        let base: string[] | undefined;
         for (const effect of this.actor.allApplicableEffects()) {
             if (!effect.active || !this.#effectApplies(effect as ActiveEffect.Implementation)) continue;
             const system = effect.system as unknown as BarbsEffectModel;
@@ -429,14 +505,44 @@ export class AttackBuilder {
             let used = false;
             for (const modifier of system.modifiers ?? []) {
                 if (!this.#modifierApplies(modifier)) continue;
+                // Defender-side modifiers only matter when the bearer is attacked (see effects/incoming.ts).
+                if (INCOMING_MODIFIER_TYPES.has(modifier.type)) continue;
+                const holds = this.#conditionsHold(modifier, (base ??= this.rollOptions));
+                if (!holds) continue;
                 used = true;
+                if (holds === "defer") {
+                    this.#defer(modifier, effect.name);
+                    continue;
+                }
                 // "On crit:" modifiers wait until a hit actually crits.
-                if (modifier.onCrit) this.#onCrit.push({ modifier, source: effect.name, effect: effect as ActiveEffect.Implementation });
-                else this.#applyModifier(modifier, effect.name, effect as ActiveEffect.Implementation);
+                if (modifier.onCrit) {
+                    this.#onCrit.push({ modifier, source: effect.name, effect: effect as ActiveEffect.Implementation });
+                    continue;
+                }
+                // On-hit statuses with conditions on the target are offered only to targets that meet them.
+                const before = { statuses: this.#statuses.length, chance: this.#chanceStatuses.length };
+                this.#applyModifier(modifier, effect.name, effect as ActiveEffect.Implementation);
+                if (modifier.conditions && mentions(parsePredicate(modifier.conditions), "target:")) {
+                    for (const s of this.#statuses.slice(before.statuses)) s.conditions = modifier.conditions;
+                    for (const c of this.#chanceStatuses.slice(before.chance)) c.onHit.conditions = modifier.conditions;
+                }
             }
             if (used && system.singleUse) this.#singleUse.add(effect as ActiveEffect.Implementation);
         }
         return this;
+    }
+
+    /** Hold a target-dependent damage, multiplier, or penetration modifier until damage is applied. */
+    #defer(modifier: RollModifierData, source: string): void {
+        const conditions = modifier.conditions ?? "";
+        const number = Number(modifier.value) || 0;
+        if (modifier.type === "damage") {
+            this.#deferredDamage.push({ conditions, type: (modifier.damageType || "physical") as DamageKey, formula: modifier.value });
+        } else if (number) {
+            const kind = modifier.type as "multiplier" | "penetration";
+            this.#conditional.push({ conditions, kind, key: modifier.damageType || (kind === "penetration" ? "physical" : "all"), percent: number, source });
+        }
+        this.addNote(`${source}: ${modifier.type} ${modifier.value} when ${conditions} (checked per target).`);
     }
 
     /**
@@ -664,7 +770,14 @@ export class AttackBuilder {
                 formula: terms.join(" + "),
                 factor: multiplierFor((this.#convert ?? type) as DamageKey, multipliers) * (crit?.factor ?? 1),
             }));
-            results.push({ parts, crit, totals: hitTotals, distanceBonus });
+            const conditional: ConditionalDamage[] = [];
+            for (const d of this.#deferredDamage) {
+                const type = (this.#convert ?? d.type) as DamageKey;
+                const roll = (await new Roll(d.formula, rollData).evaluate({ maximize: this.#maximize })) as unknown as Roll;
+                rolls.push(roll);
+                conditional.push({ conditions: d.conditions, type, amount: finalDamage(roll.total ?? 0, multiplierFor(type, multipliers), crit?.factor ?? 1) });
+            }
+            results.push({ parts, crit, totals: hitTotals, distanceBonus, conditional });
         }
 
         // Serrated Arrow: part of the physical damage becomes a Bleed instead of landing up front.
@@ -773,6 +886,8 @@ export class AttackBuilder {
             acReduction: damaging ? this.#acReduction : 0,
             crReduction: this.#crReduction,
             evasionReduction: damaging ? this.#evasionReduction : 0,
+            conditional: this.#conditional,
+            rollOptions: this.rollOptions,
         };
     }
 }

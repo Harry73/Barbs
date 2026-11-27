@@ -193,7 +193,17 @@ export const MODIFIER_TYPES = {
     lifesteal: "Lifesteal (%)",
     unblockable: "Unblockable chance (%)",
     note: "Note",
+    // Defender side: modifiers on the bearer's own effects that change incoming attacks. Their conditions see the
+    // attack (attack:ranged, attack:ability:tag:spell), the attacker (attacker:distance > 30), and origin:attacker.
+    incomingDamage: "Incoming: damage taken (%)",
+    incomingAC: "Incoming: AC (flat)",
+    incomingACPercent: "Incoming: AC (%)",
+    incomingEvasion: "Incoming: Evasion (%)",
+    incomingCR: "Incoming: Condition Resist (%)",
 } as const;
+
+/** Modifier types that only apply when the bearer is attacked, never to the bearer's own rolls. */
+export const INCOMING_MODIFIER_TYPES = new Set(["incomingDamage", "incomingAC", "incomingACPercent", "incomingEvasion", "incomingCR"]);
 export type ModifierType = keyof typeof MODIFIER_TYPES;
 
 export const MODIFIER_ROLL_TYPES = ["all", ...ROLL_TYPES] as const;

@@ -176,6 +176,25 @@ Every ActiveEffect has Barbs data (Barbs tab in the effect config):
 
 Multipliers are grouped by effect: modifiers from the same effect add, different effects multiply.
 
+**Conditions** (`src/rules/predicate.ts`, modeled on PF2e's predicates) limit a roll modifier to situations: a text
+field where commas mean "and", `|` "or", `!` "not", and numbers compare. They're tested against "roll options",
+plain facts about the situation (`src/rules/roll-options.ts`):
+
+- the roll: `roll:physical`, `weapon:bow`, `weapon:ranged`, `ranged`/`melee`, `hand:dual`, `ability:tag:spell`,
+  `ability:class:sniper`, `area`, `in-combat`
+- the roller (`self:`) and each target (`target:`): `type:demon`, `status:prone`, `effect:rage`, `health:percent`,
+  `buffs`, `level`; plus `target:mark:<name>` for effects the roller put on the target, and `target:distance`
+
+Modifiers whose conditions mention the target are worked out per target when damage is applied ("double damage to
+demons" is a 100% multiplier with `target:type:demon`). Abilities can declare the same through `AttackSpec.conditional`.
+
+**Incoming** modifier types (damage taken, AC, AC %, Evasion, CR) sit on a defender's effects and change attacks
+against them. Their conditions see the attack as `attack:…`, the attacker as `attacker:…` (including
+`attacker:distance`), and `origin:attacker` when the effect came from the attacker ("from your spells"). Unyielding
+Hunter (`attack:ranged`), Heart of Ice (`attacker:distance > 30`), and Essence Scatter's mark use them.
+
+Creature types are a comma-separated field on every actor (Characteristics), read as `target:type:<type>`.
+
 Stat buffs use the core Changes tab instead, in the "initial" phase. The Stats tab shows every one of these, laid out
 like the Roll20 sheet's: core stats, then misc combat stats, multipliers, penetration, damage reduction, and condition
 resistances. Use these for always-on gear affixes; use roll modifiers for conditional ones ("bow attacks", "on hit"). Its key field is a searchable picker over every key below

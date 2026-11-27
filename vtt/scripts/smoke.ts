@@ -168,6 +168,20 @@ try {
 
     /* ---------- Durations ---------- */
 
+    // Predicates: the text syntax, and matching against roll options.
+    const pred = await vite.ssrLoadModule("/src/rules/predicate.ts");
+    const facts = new Set(["roll:physical", "weapon:bow", "target:type:demon", "target:health:percent:25", "self:status:hidden"]);
+    const holds = (text: string) => pred.testPredicate(pred.parsePredicate(text), facts);
+    assert.equal(holds(""), true, "no conditions always hold");
+    assert.equal(holds("target:type:demon"), true);
+    assert.equal(holds("Target:Type:Demon"), true, "case-insensitive");
+    assert.equal(holds("weapon:crossbow | weapon:bow"), true, "or");
+    assert.equal(holds("weapon:bow, !self:status:hidden"), false, "and + not");
+    assert.equal(holds("target:health:percent < 30"), true, "numeric comparison");
+    assert.equal(holds("target:health:percent >= 30"), false);
+    assert.equal(pred.mentions(pred.parsePredicate("roll:physical, target:type:demon"), "target:"), true);
+    assert.equal(pred.formatPredicate(pred.parsePredicate("a | b,!c, x<3")), "a | b, !c, x < 3", "round-trips");
+
     // Mirror reflections: a beam fired right at a mirror facing left bounces straight back; a convex mirror hit
     // from behind splits it in two; a twice-redirected beam dispels the third mirror it hits.
     const refl = await vite.ssrLoadModule("/src/rules/reflection.ts");
