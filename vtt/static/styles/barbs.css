@@ -424,8 +424,13 @@
 }
 
 .barbs .barbs-modifiers select,
-.barbs .barbs-modifiers input {
+.barbs .barbs-modifiers input:not([type="checkbox"]) {
   width: 100%;
+}
+
+/* Resizing the effect config grows its tabs, which scroll if they still don't fit. */
+.barbs.active-effect-config .window-content {
+  overflow: hidden;
 }
 
 /* ---------- Action cards ---------- */

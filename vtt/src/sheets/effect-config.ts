@@ -27,6 +27,9 @@ const coreTabs = (ActiveEffectConfig.TABS as unknown as { sheet: { tabs: object[
 export class BarbsEffectConfig extends ActiveEffectConfig {
     static override DEFAULT_OPTIONS = {
         classes: [SYSTEM_ID],
+        // Twice core's width: the modifier and trigger tables have a lot of columns.
+        position: { width: 1120 },
+        window: { resizable: true },
         actions: {
             addModifier: BarbsEffectConfig.#onAddModifier as ActionHandler,
             deleteModifier: BarbsEffectConfig.#onDeleteModifier as ActionHandler,
