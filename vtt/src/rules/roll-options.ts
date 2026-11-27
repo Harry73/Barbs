@@ -107,3 +107,57 @@ export function defenderOptions(
     if (attacker && effectOrigin && effectOrigin === attacker.uuid) out.push("origin:attacker");
     return new Set(out);
 }
+
+/** A creature's numbers for formulas (`@self`, `@target`, `@attacker`); see formula.ts. */
+export interface ActorData {
+    buffs: number;
+    conditions: number;
+    level: number;
+    health: { value: number; max: number; percent: number; missingPercent: number };
+    statuses: Record<string, number>;
+    stacks: Record<string, number>;
+    marks: Record<string, number>;
+    types: Record<string, number>;
+}
+
+/**
+ * Formula data for one creature. `observerUuid` fills `marks` with effects that observer put on it. Safe to call
+ * while the actor is being prepared (it only reads effects and source data).
+ */
+export function actorData(actor: Actor.Implementation | null | undefined, observerUuid?: string): ActorData {
+    const data: ActorData = {
+        buffs: 0,
+        conditions: 0,
+        level: 0,
+        health: { value: 0, max: 0, percent: 0, missingPercent: 0 },
+        statuses: {},
+        stacks: {},
+        marks: {},
+        types: {},
+    };
+    if (!actor) return data;
+    const bump = (record: Record<string, number>, key: string) => (record[key] = (record[key] ?? 0) + 1);
+    for (const type of creatureTypes(actor)) data.types[type] = 1;
+    for (const effect of actor.allApplicableEffects()) {
+        if (!effect.active) continue;
+        const category = (effect.system as unknown as { category?: string }).category;
+        if (category === "buff") data.buffs++;
+        if (category === "condition") data.conditions++;
+        const name = slug(effect.name ?? "");
+        if (name) bump(data.stacks, name);
+        const statuses = effect.statuses ?? [];
+        for (const status of statuses) bump(data.statuses, status);
+        if (observerUuid && foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.casterUuid`) === observerUuid) {
+            if (name) bump(data.marks, name);
+            for (const status of statuses) bump(data.marks, status);
+        }
+    }
+    const system = actor.system as unknown as CreatureModel | undefined;
+    const health = system?.derived?.resources?.health;
+    if (health?.max) {
+        const percent = Math.round((100 * health.value) / health.max);
+        data.health = { value: health.value, max: health.max, percent, missingPercent: 100 - percent };
+    }
+    if (typeof system?.derived?.level === "number") data.level = system.derived.level;
+    return data;
+}

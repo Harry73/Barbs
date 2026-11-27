@@ -39,6 +39,14 @@
     "Incoming" modifiers instead see <code>attack:…</code> (the attack's facts), <code>attacker:…</code>,
     <code>attacker:distance</code>, and <code>origin:attacker</code> (this effect came from the attacker).
   </p>
+  <p class="hint">
+    <strong>Values</strong> can be formulas: <code>20 * @self.buffs</code>, <code>50 * @target.marks.pursued</code>,
+    <code>2d10 * @target.statuses.cursed</code>, <code>@target.health.missingPercent</code>. <code>@self</code>,
+    <code>@target</code>, and (for incoming modifiers) <code>@attacker</code> have <code>buffs</code>,
+    <code>conditions</code>, <code>level</code>, <code>health.percent</code>, and counts like <code>statuses.cursed</code>,
+    <code>stacks.&lt;effect&gt;</code>, <code>marks.&lt;effect&gt;</code>. Anything reading <code>@target</code> is
+    worked out per target on Apply. Changes can use <code>@self</code> too.
+  </p>
   <table class="barbs-modifiers">
     <thead>
       <tr>
@@ -53,7 +61,7 @@
         <td><select name="system.modifiers.{{m.index}}.rollType">{{selectOptions @root.rollTypeChoices selected=m.rollType}}</select></td>
         <td><select name="system.modifiers.{{m.index}}.damageType">{{selectOptions @root.damageTypeChoices selected=m.damageType}}</select></td>
         <td><select name="system.modifiers.{{m.index}}.weapon">{{selectOptions @root.weaponChoices selected=m.weapon}}</select></td>
-        <td><input type="text" name="system.modifiers.{{m.index}}.value" value="{{m.value}}" placeholder="2d8, 25, text" /></td>
+        <td><input type="text" name="system.modifiers.{{m.index}}.value" value="{{m.value}}" placeholder="2d8, 25, 20 * @self.buffs" /></td>
         <td><input type="checkbox" name="system.modifiers.{{m.index}}.onCrit" {{checked m.onCrit}} /></td>
         <td><input type="text" name="system.modifiers.{{m.index}}.conditions" value="{{m.conditions}}" placeholder="always" /></td>
         <td><a data-action="deleteModifier" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a></td>

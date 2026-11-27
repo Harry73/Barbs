@@ -1260,7 +1260,17 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
                 description: "<p>Marked by an Assassin: +50% critical damage modifier on their attacks against this target, per mark.</p>",
             },
         ],
-        notes: ["Move an equal distance towards the target. Each mark gives +50% crit damage on your attacks against them (add it as a crit damage modifier when attacking)."],
+        // The Assassin's side: +50% crit damage per mark they put on whoever they're attacking.
+        self: [
+            {
+                name: "Pursuer",
+                category: "",
+                duration: "Endless",
+                modifiers: [{ type: "critDamage", rollType: "physical", value: "50 * @target.marks.pursued", conditions: "target:mark:pursued" }],
+                description: "<p>+50% critical damage modifier against each target, per Pursued mark you've put on them.</p>",
+            },
+        ],
+        notes: ["Move an equal distance towards the target. Attack one marked target at a time for the crit bonus to count."],
     },
     "Thief/Charm and Disarm": {
         choices: [yesNo("hit", "In Hit Stance and stealing armor (Confusion lasts longer)")],

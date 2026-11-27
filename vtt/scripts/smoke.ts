@@ -182,6 +182,15 @@ try {
     assert.equal(pred.mentions(pred.parsePredicate("roll:physical, target:type:demon"), "target:"), true);
     assert.equal(pred.formatPredicate(pred.parsePredicate("a | b,!c, x<3")), "a | b, !c, x < 3", "round-trips");
 
+    // Formula values: plain numbers skip the dice code; per-target formulas are recognized.
+    const formula = await vite.ssrLoadModule("/src/rules/formula.ts");
+    assert.equal(formula.evaluateNumber("25"), 25);
+    assert.equal(formula.evaluateNumber(-5), -5);
+    assert.equal(formula.evaluateNumber(""), 0);
+    assert.equal(formula.usesTarget("50 * @target.marks.pursued"), true);
+    assert.equal(formula.usesTarget("2 * floor(@distance / 5)"), true);
+    assert.equal(formula.usesTarget("20 * @self.buffs"), false);
+
     // Mirror reflections: a beam fired right at a mirror facing left bounces straight back; a convex mirror hit
     // from behind splits it in two; a twice-redirected beam dispels the third mirror it hits.
     const refl = await vite.ssrLoadModule("/src/rules/reflection.ts");

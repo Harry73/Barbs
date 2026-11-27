@@ -8,6 +8,8 @@
 import { INCOMING_MODIFIER_TYPES, MODIFIER_TYPES, WEAPON_CATEGORIES, WEAPON_FILTERS } from "../config.ts";
 import type { BarbsEffectModel, RollModifierData } from "../data/effect.ts";
 import type { EquipmentModel } from "../data/item/models.ts";
+import { evaluateNumber, usesTarget } from "../rules/formula.ts";
+import { actorData } from "../rules/roll-options.ts";
 
 export interface Contribution {
     source: string;
@@ -54,6 +56,8 @@ function describe(m: RollModifierData, conditions: string[]): string {
 export function summarizeRollBonuses(actor: Actor.Implementation): RollBonusSummary {
     const always = new Map<string, Contribution[]>();
     const other: string[] = [];
+    // Formula values ("20 * @self.buffs") are shown at their current value.
+    const data = { ...(actor.getRollData?.() ?? {}), self: actorData(actor) };
     for (const effect of actor.allApplicableEffects()) {
         if (!effect.active) continue;
         const system = effect.system as unknown as BarbsEffectModel;
@@ -77,9 +81,16 @@ export function summarizeRollBonuses(actor: Actor.Implementation): RollBonusSumm
             // Only physical rolls crit, so a physical-only crit bonus is as good as always-on.
             const critOnly = ["critChance", "critDamage"].includes(m.type) && m.rollType === "physical";
             const unconditional =
-                !weapon && !m.weapon && !m.onCrit && !m.conditions && !system.singleUse && !INCOMING_MODIFIER_TYPES.has(m.type) && (m.rollType === "all" || critOnly);
+                !weapon &&
+                !m.weapon &&
+                !m.onCrit &&
+                !m.conditions &&
+                !usesTarget(m.value) &&
+                !system.singleUse &&
+                !INCOMING_MODIFIER_TYPES.has(m.type) &&
+                (m.rollType === "all" || critOnly);
             const keys = statKeys(m);
-            const value = Number(m.value) || 0;
+            const value = evaluateNumber(m.value, data);
             if (unconditional && keys.length && value) {
                 for (const key of keys) {
                     const list = always.get(key) ?? [];

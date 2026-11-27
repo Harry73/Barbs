@@ -195,6 +195,13 @@ Hunter (`attack:ranged`), Heart of Ice (`attacker:distance > 30`), and Essence S
 
 Creature types are a comma-separated field on every actor (Characteristics), read as `target:type:<type>`.
 
+**Formula values** (`src/rules/formula.ts`): any number on a modifier or change can be a formula, like
+`20 * @self.buffs`, `50 * @target.marks.pursued`, or `2d10 * @target.statuses.cursed`. `@self`, `@target`, and (for
+incoming modifiers) `@attacker` carry `buffs`, `conditions`, `level`, `health.value/max/percent/missingPercent`, and
+counts by id: `statuses.<id>`, `stacks.<effect>`, `marks.<effect or status>` (effects the roller put on them), and
+`types.<type>`. Anything that reads `@target` (or `@distance`) is worked out per target when damage is applied. Changes
+get `@self` through `BarbsActiveEffect`, which also evaluates the arithmetic core leaves as text for derived values.
+
 Stat buffs use the core Changes tab instead, in the "initial" phase. The Stats tab shows every one of these, laid out
 like the Roll20 sheet's: core stats, then misc combat stats, multipliers, penetration, damage reduction, and condition
 resistances. Use these for always-on gear affixes; use roll modifiers for conditional ones ("bow attacks", "on hit"). Its key field is a searchable picker over every key below

@@ -6,7 +6,8 @@
 import { SYSTEM_ID } from "../config.ts";
 import type { BarbsEffectModel } from "../data/effect.ts";
 import { parsePredicate, testPredicate } from "../rules/predicate.ts";
-import { defenderOptions } from "../rules/roll-options.ts";
+import { evaluateNumber } from "../rules/formula.ts";
+import { actorData, defenderOptions } from "../rules/roll-options.ts";
 
 /** What the defender knows about an incoming attack: who's making it, and the attack's roll facts. */
 export interface AttackContext {
@@ -34,6 +35,9 @@ export function incomingTotal(
     const result: IncomingTotal = { total: 0, sources: [] };
     // The attacker's own facts come in as attacker:*, so drop the roller's self:* from the attack's options.
     const attackOptions = (attack?.options ?? []).filter((o) => !o.startsWith("self:") && o !== "in-combat");
+    // Values can be formulas over the defender (@self) and the attacker (@attacker).
+    let data: Record<string, unknown> | undefined;
+    const formulaData = () => (data ??= { ...defender.getRollData(), self: actorData(defender), attacker: actorData(attacker) });
     for (const effect of defender.allApplicableEffects()) {
         if (!effect.active) continue;
         const modifiers = (effect.system as unknown as BarbsEffectModel).modifiers ?? [];
@@ -43,7 +47,7 @@ export function incomingTotal(
         const domain = defenderOptions(defender, attacker, attackOptions, origin);
         for (const m of relevant) {
             if (!testPredicate(parsePredicate(m.conditions), domain)) continue;
-            const value = Number(m.value) || 0;
+            const value = evaluateNumber(m.value, formulaData());
             if (!value) continue;
             result.total += value;
             result.sources.push(`${effect.name} ${value > 0 ? "+" : ""}${value}`);

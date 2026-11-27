@@ -22,7 +22,8 @@ import {
 } from "../rolls/attack.ts";
 import { isMagic } from "../rules/damage-math.ts";
 import { parsePredicate, testPredicate } from "../rules/predicate.ts";
-import { actorOptions } from "../rules/roll-options.ts";
+import { actorData, actorOptions } from "../rules/roll-options.ts";
+import { evaluateNumber } from "../rules/formula.ts";
 import { incomingTotal, type AttackContext } from "../effects/incoming.ts";
 import type { DamageKey } from "../rules/damage-math.ts";
 import { requestOnActor, requestUndo } from "../socket.ts";
@@ -302,6 +303,18 @@ function targetDomain(flags: CardFlags, target: Target): Set<string> {
     return new Set(out);
 }
 
+/** Formula data for one target, from the attacker's side: their roll data, `@self`, `@target`, and `@distance`. */
+function targetFormulaData(flags: CardFlags, target: Target): Record<string, unknown> {
+    const attacker = fromUuidSync(flags.actorUuid) as Actor.Implementation | null;
+    const distance = distanceFromCaster(flags, target);
+    return {
+        ...(attacker?.getRollData() ?? {}),
+        self: actorData(attacker),
+        target: actorData(target.actor, flags.actorUuid),
+        ...(distance !== null ? { distance: Math.round(distance) } : {}),
+    };
+}
+
 /** Does a "this target only" condition hold for this target? Blank conditions always do. */
 function targetMeets(flags: CardFlags, target: Target, conditions: string | undefined): boolean {
     const predicate = parsePredicate(conditions);
@@ -335,11 +348,18 @@ async function damageTarget(
     if (conditional?.some((c) => c.length)) {
         hits = hits.map((hit, i) => {
             const out = { ...hit };
-            for (const c of conditional![i] ?? []) if (meets(c.conditions)) out[c.type] = (out[c.type] ?? 0) + c.amount;
+            for (const c of conditional![i] ?? []) {
+                if (!meets(c.conditions)) continue;
+                const amount = c.formula ? Math.max(0, Math.round(evaluateNumber(c.formula, formulaData) * (c.factor ?? 1))) : c.amount;
+                out[c.type] = (out[c.type] ?? 0) + amount;
+            }
             return out;
         });
     }
-    const conditionalMods = (damage.conditionalModifiers ?? []).filter((m) => meets(m.conditions));
+    const conditionalMods = (damage.conditionalModifiers ?? [])
+        .filter((m) => meets(m.conditions))
+        .map((m) => (m.formula ? { ...m, percent: evaluateNumber(m.formula, formulaData) } : m))
+        .filter((m) => m.percent);
     const covers = (key: string, type: string) => key === "all" || key === type || (key === "allMagic" && isMagic(type as DamageKey));
     for (const m of conditionalMods.filter((x) => x.kind === "multiplier")) {
         // A separate source, so it multiplies with the attack's other multipliers (like any other effect's).
@@ -354,12 +374,18 @@ async function damageTarget(
         for (const t of types) penetration[t] = (penetration[t] ?? 0) + m.percent;
     }
     // Distance-based damage is measured for this target and added to each hit before defenses.
+    // Damage that reads the distance or the target (Distance Shooter, "2d10 per curse on the target"), for this one.
+    const formulaData = targetFormulaData(flags, target);
     if (bonus?.some((b) => b.length)) {
         const distance = distanceFromCaster(flags, target);
-        if (distance === null) ui.notifications?.warn(`Can't measure the distance to ${target.actor.name}; no distance bonus.`);
+        const needsDistance = bonus.some((list) => list.some((b) => b.formula.includes("@distance")));
+        if (needsDistance && distance === null) ui.notifications?.warn(`Can't measure the distance to ${target.actor.name}; no distance bonus.`);
         hits = hits.map((hit, i) => {
             const out = { ...hit };
-            for (const b of bonus![i] ?? []) out[b.type] = (out[b.type] ?? 0) + (distance === null ? 0 : evaluateDistanceBonus(b, distance));
+            for (const b of bonus![i] ?? []) {
+                if (b.formula.includes("@distance") && distance === null) continue;
+                out[b.type] = (out[b.type] ?? 0) + evaluateDistanceBonus(b, distance ?? 0, formulaData);
+            }
             return out;
         });
     }

@@ -4,6 +4,7 @@
  * Unlike the Roll20 version, where the sheet forwarded every button press to a server-side API script, everything
  * here runs client-side: actors know their own stats, items, and effects and build rolls from them directly.
  */
+import { BarbsActiveEffect } from "./documents/active-effect.ts";
 import { ABILITY_AUTOMATION } from "./abilities/catalog.ts";
 import { EffectsPanel } from "./apps/effects-panel.ts";
 import { registerChatListeners } from "./chat/card.ts";
@@ -31,6 +32,7 @@ Hooks.once("init", () => {
     // Documents and data models
     CONFIG.Actor.documentClass = BarbsActor as never;
     CONFIG.Combat.documentClass = BarbsCombat as never;
+    CONFIG.ActiveEffect.documentClass = BarbsActiveEffect as never;
     Object.assign(CONFIG.Actor.dataModels, { character: CharacterModel, npc: NpcModel });
     Object.assign(CONFIG.Item.dataModels, {
         skill: SkillModel,

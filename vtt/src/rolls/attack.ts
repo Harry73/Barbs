@@ -8,7 +8,8 @@
 import { bleed, burn, poison } from "../abilities/helpers.ts";
 import { INCOMING_MODIFIER_TYPES, SYSTEM_ID } from "../config.ts";
 import { mentions, parsePredicate, testPredicate } from "../rules/predicate.ts";
-import { actorOptions, distanceBetween, rollOptions } from "../rules/roll-options.ts";
+import { actorData, actorOptions, distanceBetween, rollOptions } from "../rules/roll-options.ts";
+import { evaluateNumber, usesTarget } from "../rules/formula.ts";
 import { ELEMENTS, RANGED_WEAPONS, STATUSES, type ModifierRollType, type RollType, type StatKey } from "../config.ts";
 import { snapshotEffect, type RemovedEffect } from "../chat/undo.ts";
 import { activePassives, adjustResource, baseComboChance, monkDie, setResource } from "../passives/index.ts";
@@ -52,7 +53,7 @@ export interface CritResult {
  */
 export interface DistanceBonus {
     type: DamageKey;
-    /** Formula using @distance (feet). */
+    /** Formula using @distance (feet) and/or @target (see rules/formula.ts). */
     formula: string;
     factor: number;
 }
@@ -72,6 +73,10 @@ export interface ConditionalDamage {
     conditions: string;
     type: DamageKey;
     amount: number;
+    /** Set instead of a rolled amount when the formula reads the target (`@target`): evaluated per target. */
+    formula?: string;
+    /** The hit's multiplier and crit factor, for `formula`. */
+    factor?: number;
 }
 
 /** A multiplier or penetration whose conditions depend on the target ("double damage to demons"). */
@@ -82,12 +87,14 @@ export interface ConditionalModifier {
     /** Damage type, or "all" / "allMagic". */
     key: string;
     percent: number;
+    /** Set when the value reads the target (`@target`): evaluated per target instead of `percent`. */
+    formula?: string;
     source: string;
 }
 
 /** One target's distance bonus for a hit. Deterministic for the usual formulas; dice would be rolled per target. */
-export function evaluateDistanceBonus(bonus: DistanceBonus, distance: number): number {
-    const roll = new Roll(bonus.formula, { distance }).evaluateSync({ strict: false } as never);
+export function evaluateDistanceBonus(bonus: DistanceBonus, distance: number, data: Record<string, unknown> = {}): number {
+    const roll = new Roll(bonus.formula, { ...data, distance }).evaluateSync({ strict: false } as never);
     return Math.max(0, Math.round((roll.total ?? 0) * bonus.factor));
 }
 
@@ -360,10 +367,15 @@ export class AttackBuilder {
      * damage is applied (crit chance, lethality), must hold for every target. Returns "defer" for ones that can.
      */
     #conditionsHold(modifier: RollModifierData, base: string[]): boolean | "defer" {
+        const deferrable = !modifier.onCrit && ["damage", "multiplier", "penetration"].includes(modifier.type);
+        // A value that reads the target ("50 * @target.marks.pursued") waits for each target, if it can.
         const predicate = parsePredicate(modifier.conditions);
+        if (deferrable && usesTarget(modifier.value) && (!predicate.length || mentions(predicate, "target:") || testPredicate(predicate, base))) {
+            return "defer";
+        }
         if (!predicate.length) return true;
         if (!mentions(predicate, "target:")) return testPredicate(predicate, base);
-        if (!modifier.onCrit && ["damage", "multiplier", "penetration"].includes(modifier.type)) return "defer";
+        if (deferrable) return "defer";
         const targets = this.#facts.targets ?? [];
         return targets.length > 0 && targets.every((t) => testPredicate(predicate, this.targetOptions(t, base)));
     }
@@ -535,14 +547,35 @@ export class AttackBuilder {
     /** Hold a target-dependent damage, multiplier, or penetration modifier until damage is applied. */
     #defer(modifier: RollModifierData, source: string): void {
         const conditions = modifier.conditions ?? "";
-        const number = Number(modifier.value) || 0;
         if (modifier.type === "damage") {
             this.#deferredDamage.push({ conditions, type: (modifier.damageType || "physical") as DamageKey, formula: modifier.value });
-        } else if (number) {
+        } else {
             const kind = modifier.type as "multiplier" | "penetration";
-            this.#conditional.push({ conditions, kind, key: modifier.damageType || (kind === "penetration" ? "physical" : "all"), percent: number, source });
+            const key = modifier.damageType || (kind === "penetration" ? "physical" : "all");
+            const perTarget = usesTarget(modifier.value);
+            const percent = perTarget ? 0 : this.#number(modifier.value);
+            if (perTarget || percent) this.#conditional.push({ conditions, kind, key, percent, source, ...(perTarget ? { formula: modifier.value } : {}) });
         }
-        this.addNote(`${source}: ${modifier.type} ${modifier.value} when ${conditions} (checked per target).`);
+        this.addNote(`${source}: ${modifier.type} ${modifier.value}${conditions ? ` when ${conditions}` : ""} (worked out per target).`);
+    }
+
+    /** Formula data for this roll's values: roll data, `@self`, and `@target` when there's exactly one target. */
+    #formulaData?: Record<string, unknown>;
+    get formulaData(): Record<string, unknown> {
+        if (!this.#formulaData) {
+            const targets = this.#facts.targets ?? [];
+            this.#formulaData = {
+                ...this.actor.getRollData(),
+                self: actorData(this.actor),
+                ...(targets.length === 1 ? { target: actorData(targets[0], this.actor.uuid ?? undefined) } : {}),
+            };
+        }
+        return this.#formulaData;
+    }
+
+    /** A modifier's numeric value: a plain number, or a formula ("20 * @self.buffs"). */
+    #number(value: string | number): number {
+        return evaluateNumber(value, this.formulaData);
     }
 
     /**
@@ -550,7 +583,7 @@ export class AttackBuilder {
      * effect it lives on, for lasting debuffs that last as long as it does.
      */
     #applyModifier(modifier: RollModifierData, source: string, sourceEffect?: ActiveEffect.Implementation): void {
-        const number = Number(modifier.value) || 0;
+        const number = this.#number(modifier.value);
         switch (modifier.type) {
             case "damage":
                 this.addDamage(modifier.value, (modifier.damageType || "physical") as DamageKey);
@@ -690,7 +723,7 @@ export class AttackBuilder {
      * @param hits For "this attack repeats N times" abilities.
      */
     async evaluate({ hits = 1 }: { hits?: number } = {}): Promise<AttackResult> {
-        const rollData = this.actor.getRollData();
+        const rollData = this.formulaData;
         const rolls: Roll[] = [];
         const results: AttackHit[] = [];
         const totals: AttackResult["totals"] = {};
@@ -706,13 +739,13 @@ export class AttackBuilder {
             }
         }
 
-        // Terms that use @distance are set aside and applied per target (see DistanceBonus).
+        // Terms that read @distance or @target are set aside and worked out per target (see DistanceBonus).
         const distanceTerms = new Map<DamageKey, string[]>();
         for (const [type, terms] of this.#damage) {
-            const near = terms.filter((t) => t.includes("@distance"));
+            const near = terms.filter((t) => usesTarget(t));
             if (!near.length) continue;
             distanceTerms.set(type, near);
-            const rest = terms.filter((t) => !t.includes("@distance"));
+            const rest = terms.filter((t) => !usesTarget(t));
             if (rest.length) this.#damage.set(type, rest);
             else this.#damage.delete(type);
         }
@@ -743,7 +776,7 @@ export class AttackBuilder {
                     } else if (modifier.type === "multiplier") {
                         const key = (modifier.damageType || "all") as MultiplierKey;
                         const bySource = multipliers.get(key) ?? new Map<string, number>();
-                        bySource.set(source, (bySource.get(source) ?? 0) + (Number(modifier.value) || 0));
+                        bySource.set(source, (bySource.get(source) ?? 0) + this.#number(modifier.value));
                         multipliers.set(key, bySource);
                     } else if (!critApplied) {
                         this.#applyModifier(modifier, `${source} (on crit)`, effect);
@@ -773,6 +806,11 @@ export class AttackBuilder {
             const conditional: ConditionalDamage[] = [];
             for (const d of this.#deferredDamage) {
                 const type = (this.#convert ?? d.type) as DamageKey;
+                const factor = multiplierFor(type, multipliers) * (crit?.factor ?? 1);
+                if (usesTarget(d.formula)) {
+                    conditional.push({ conditions: d.conditions, type, amount: 0, formula: d.formula, factor });
+                    continue;
+                }
                 const roll = (await new Roll(d.formula, rollData).evaluate({ maximize: this.#maximize })) as unknown as Roll;
                 rolls.push(roll);
                 conditional.push({ conditions: d.conditions, type, amount: finalDamage(roll.total ?? 0, multiplierFor(type, multipliers), crit?.factor ?? 1) });
