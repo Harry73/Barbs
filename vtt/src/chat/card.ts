@@ -30,6 +30,10 @@ export interface CardFlags {
         lifesteal?: number;
         /** Reduces targets' Evasion for the Evade button, percent. */
         accuracy?: number;
+        /** For this attack only: the target's Evasion is this much lower when dodging (equipment's reduce evasion). */
+        evasionReduction?: number;
+        /** For this attack only: the target's AC is this much lower against its damage. */
+        acReduction?: number;
         /** Per-hit damage that depends on each target's distance (Distance Shooter), parallel to `hits`. */
         bonus?: DistanceBonus[][];
         /** Distance tiers: each target takes the first tier whose distance from the caster covers it. */
@@ -37,6 +41,8 @@ export interface CardFlags {
     };
     /** The caster's token, for measuring distances to targets. */
     casterTokenUuid?: string;
+    /** For this attack only: targets resist its conditions with this much less CR (equipment's reduce CR). */
+    crReduction?: number;
     /** Shielding the targets gain. */
     shielding?: number;
     /** Stamina or mana drained from each target and given to the caster. */
@@ -149,7 +155,7 @@ export async function postCard(
                 (flags.damage.tiers?.length ?? 0) > 0),
         trueDamage: !!flags.damage?.trueDamage,
         alterCourse: !!flags.alterCourse,
-        accuracy: flags.damage?.accuracy ?? 0,
+        accuracy: (flags.damage?.accuracy ?? 0) + (flags.damage?.evasionReduction ?? 0),
         shielding: flags.shielding,
         drain: flags.drain,
         scaledTargets: scales.some((s) => s !== 1),
@@ -290,6 +296,7 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
                         scale: (half ? 0.5 : perTarget) * alter,
                         trueDamage: flags.damage.trueDamage,
                         unblockable: flags.damage.unblockable,
+                        acReduction: flags.damage.acReduction,
                         lifesteal: flags.damage.lifesteal ? { percent: flags.damage.lifesteal, attackerUuid: flags.actorUuid } : undefined,
                     });
                 }
@@ -327,7 +334,7 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
                 const data = buildEffectData(resolved, source);
                 // Shift-click skips the Condition Resist roll, for when the GM rules it can't be resisted.
                 const resistible = !event.shiftKey && (resolved.resistible ?? resolved.category === "condition");
-                await requestOnActor(actor, "effect", { data, options: { resistible, sourceName } });
+                await requestOnActor(actor, "effect", { data, options: { resistible, sourceName, resistPenalty: flags.crReduction } });
             }
             break;
         }
@@ -355,7 +362,8 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
         }
         case "evade": {
             // Each target dodges with their Evasion minus the attack's Accuracy.
-            const accuracy = flags.damage?.accuracy ?? 0;
+            // Accuracy and an equipment's "reduce evasion" both come off the target's Evasion for this attack.
+            const accuracy = (flags.damage?.accuracy ?? 0) + (flags.damage?.evasionReduction ?? 0);
             for (const { actor } of targets) {
                 const evasion = (actor.system as unknown as CreatureModel).derived.stats.evasion.value;
                 const chance = Math.max(0, evasion - accuracy);
@@ -363,7 +371,7 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
                 const dodged = (roll.total ?? 101) <= chance;
                 await roll.toMessage({
                     speaker: ChatMessage.getSpeaker({ actor: actor as Actor.Stored }),
-                    flavor: `Evasion vs ${sourceName}: ${chance}%${accuracy ? ` (${evasion}% − ${accuracy}% accuracy)` : ""} — ${dodged ? "<strong>dodged</strong>" : "hit"}`,
+                    flavor: `Evasion vs ${sourceName}: ${chance}%${accuracy ? ` (${evasion}% − ${accuracy}% from the attack)` : ""} — ${dodged ? "<strong>dodged</strong>" : "hit"}`,
                 });
             }
             break;
@@ -382,7 +390,7 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
             for (const { actor } of targets) {
                 await requestOnActor(actor, "effect", {
                     data,
-                    options: { resistible: !event.shiftKey, sourceName: `${sourceName} (${onHit.source})` },
+                    options: { resistible: !event.shiftKey, sourceName: `${sourceName} (${onHit.source})`, resistPenalty: flags.crReduction },
                 });
             }
             break;

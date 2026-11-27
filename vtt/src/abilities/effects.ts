@@ -23,7 +23,7 @@ const UNLIMITED_STACKS = 999;
 export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<string, unknown> {
     const durationText = spec.duration ?? source.duration;
     // Turn-relative durations are resolved when applied, against the live combat (see applyEffectToActor).
-    const duration = isTurnDuration(durationText) ? null : parseDuration(durationText);
+    const duration = spec.durationData ?? (isTurnDuration(durationText) ? null : parseDuration(durationText));
     const maxStacks = spec.maxStacks === Infinity ? UNLIMITED_STACKS : (spec.maxStacks ?? 1);
     const effectivenessNote =
         spec.category === "buff" && source.effectiveness && source.effectiveness !== 1

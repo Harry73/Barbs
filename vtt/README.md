@@ -159,7 +159,7 @@ Every ActiveEffect has Barbs data (Barbs tab in the effect config):
 - **Pulse**: damage the bearer deals to creatures within a radius at the start of each of their turns (Fiery Temper).
   The combat tracker posts it as a card already targeting everyone in range.
 - **Roll modifiers**, applied when the effect's actor makes a matching roll: extra damage, damage multiplier %,
-  crit chance, crit damage %, penetration, accuracy, lethality, lifesteal, unblockable chance, on-hit statuses (optionally with a chance: `stunned 25`, or a DoT amount: `burned:10 30`), on-hit AC shred, CR or Evasion reduction, stacking vulnerability, buff strip and forced movement reminders, converting a
+  crit chance, crit damage %, penetration, accuracy, lethality, lifesteal, unblockable chance, on-hit statuses (optionally with a chance: `stunned 25`, or a DoT amount: `burned:10 30`), a lasting on-hit AC shred (for as long as the effect granting it lasts, like Serrated Arrow's 1 minute), "this attack only" reductions to the target's AC, CR, or Evasion (equipment's reduce AC/CR/evasion: nothing is left on the target), stacking vulnerability, buff strip and forced movement reminders, converting a
   percent of physical damage into Bleed (Serrated Arrow), or a note. Each can be limited to a roll type (physical,
   magic, psychic, healing) and a weapon category ("bow attacks deal +2d8 air"), or to any ranged / any melee weapon,
   and marked "On crit". On-crit damage and multipliers apply to each hit that crits; the rest apply once if any hit

@@ -117,6 +117,12 @@ export interface AttackResult {
     unblockable: boolean;
     /** Lethality: a hit that succeeds instantly kills the target. Null when the attack has none. */
     lethality: { chance: number; lethal: boolean[] } | null;
+    /** For this attack only: the target's AC is this much lower against its damage. */
+    acReduction: number;
+    /** For this attack only: the target's CR is this many points lower against its conditions. */
+    crReduction: number;
+    /** For this attack only: the target's Evasion is this many points lower when dodging it. */
+    evasionReduction: number;
 }
 
 interface AttackOptions {
@@ -156,7 +162,11 @@ export class AttackBuilder {
     /** On-hit statuses with a chance ("25% chance to Stun"), rolled when the attack is. */
     #chanceStatuses: { onHit: OnHitStatus; chance: number }[] = [];
     /** "On crit:" modifiers, applied to hits that crit. */
-    #onCrit: { modifier: RollModifierData; source: string }[] = [];
+    #onCrit: { modifier: RollModifierData; source: string; effect: ActiveEffect.Implementation }[] = [];
+    /** "This attack only" reductions to the target's defenses (equipment's reduce AC / CR / evasion). */
+    #acReduction = 0;
+    #crReduction = 0;
+    #evasionReduction = 0;
     #accuracy = 0;
     #lethality = 0;
     #lifesteal = 0;
@@ -412,16 +422,19 @@ export class AttackBuilder {
                 if (!this.#modifierApplies(modifier)) continue;
                 used = true;
                 // "On crit:" modifiers wait until a hit actually crits.
-                if (modifier.onCrit) this.#onCrit.push({ modifier, source: effect.name });
-                else this.#applyModifier(modifier, effect.name);
+                if (modifier.onCrit) this.#onCrit.push({ modifier, source: effect.name, effect: effect as ActiveEffect.Implementation });
+                else this.#applyModifier(modifier, effect.name, effect as ActiveEffect.Implementation);
             }
             if (used && system.singleUse) this.#singleUse.add(effect as ActiveEffect.Implementation);
         }
         return this;
     }
 
-    /** Fold one roll modifier into this roll. `source` names it in multipliers and notes. */
-    #applyModifier(modifier: RollModifierData, source: string): void {
+    /**
+     * Fold one roll modifier into this roll. `source` names it in multipliers and notes; `sourceEffect` is the
+     * effect it lives on, for lasting debuffs that last as long as it does.
+     */
+    #applyModifier(modifier: RollModifierData, source: string, sourceEffect?: ActiveEffect.Implementation): void {
         const number = Number(modifier.value) || 0;
         switch (modifier.type) {
             case "damage":
@@ -471,21 +484,7 @@ export class AttackBuilder {
                 break;
             }
             case "evShred":
-                if (number > 0) {
-                    this.#statuses.push({
-                        id: "",
-                        name: `Reduce Evasion ${number}%`,
-                        source,
-                        effect: {
-                            name: `Evasion reduced (-${number}%)`,
-                            category: "condition",
-                            statuses: ["decreased-stats"],
-                            changes: [{ key: "system.stats.evasion.bonus", value: -number }],
-                            duration: "1 minute",
-                            maxStacks: Infinity,
-                        },
-                    });
-                }
+                this.#evasionReduction += number;
                 break;
             case "buffStrip":
                 if (number > 0) this.addNote(`${source}: strip ${number} buff(s) from the target.`);
@@ -508,26 +507,35 @@ export class AttackBuilder {
             case "bleedConvert":
                 if (number > 0) this.#bleedConvert.push({ percent: number, source: source });
                 break;
-            case "shred":
-            case "crShred": {
+            case "shred": {
+                // A lasting AC shred (Serrated Arrow): the target's AC stays lower for as long as the effect granting
+                // it lasts (1 minute for Serrated Arrow), counted from the hit. Each hit stacks another. It's the
+                // rulebook's "Decreased Stats" condition, so the target resists it with CR.
                 if (number <= 0) break;
-                const ac = modifier.type === "shred";
-                const label = ac ? `${number} AC` : `${number}% CR`;
+                const duration = sourceEffect?._source.duration as { value?: number | null; units?: string; expiry?: string | null } | undefined;
                 this.#statuses.push({
                     id: "",
-                    name: `Shred ${label}`,
-                    source: source,
-                    // The rulebook's "Decreased Stats" condition: stacks, and the target resists it with CR.
+                    name: `Shred ${number} AC`,
+                    source,
                     effect: {
-                        name: `Shredded (-${label})`,
+                        name: `Shredded (-${number} AC)`,
                         category: "condition",
                         statuses: ["decreased-stats"],
-                        changes: [{ key: `system.stats.${ac ? "ac" : "conditionResist"}.bonus`, value: -number }],
+                        changes: [{ key: "system.stats.ac.bonus", value: -number }],
                         maxStacks: Infinity,
+                        ...(duration?.value ? { durationData: { value: duration.value, units: duration.units, expiry: duration.expiry ?? null } } : {}),
                     },
                 });
                 break;
             }
+            // "This attack only" reductions, the equipment affixes. Nothing is left on the target: they only
+            // change how this attack's damage, conditions, and dodge rolls are resolved.
+            case "acReduction":
+                this.#acReduction += number;
+                break;
+            case "crShred":
+                this.#crReduction += number;
+                break;
             case "vulnerability": {
                 const type = modifier.damageType || "all";
                 if (number > 0) {
@@ -610,7 +618,7 @@ export class AttackBuilder {
             if (crit?.isCrit && this.#onCrit.length) {
                 damage = new Map([...this.#damage].map(([k, v]) => [k, [...v]]));
                 multipliers = new Map([...this.#multipliers].map(([k, v]) => [k, new Map(v)]));
-                for (const { modifier, source } of this.#onCrit) {
+                for (const { modifier, source, effect } of this.#onCrit) {
                     if (modifier.type === "damage") {
                         const type = (this.#convert ?? (modifier.damageType || "physical")) as DamageKey;
                         damage.set(type, [...(damage.get(type) ?? []), `(${modifier.value})`]);
@@ -620,7 +628,7 @@ export class AttackBuilder {
                         bySource.set(source, (bySource.get(source) ?? 0) + (Number(modifier.value) || 0));
                         multipliers.set(key, bySource);
                     } else if (!critApplied) {
-                        this.#applyModifier(modifier, `${source} (on crit)`);
+                        this.#applyModifier(modifier, `${source} (on crit)`, effect);
                     }
                 }
                 if (!critApplied) this.addNote(`On crit: ${[...new Set(this.#onCrit.map((c) => c.source))].join(", ")}.`);
@@ -729,7 +737,10 @@ export class AttackBuilder {
                 );
             }
             if (this.#lifesteal) this.addNote(`Lifesteal ${this.#lifesteal}%: applying damage heals the attacker for that much of it.`);
+            if (this.#acReduction) this.addNote(`This attack: the target has ${this.#acReduction} less AC against it.`);
+            if (this.#evasionReduction) this.addNote(`This attack: the target has ${this.#evasionReduction}% less Evasion against it (use Evade).`);
         }
+        if (this.#crReduction) this.addNote(`This attack: the target has ${this.#crReduction}% less CR against its conditions.`);
 
         if (Object.keys(totals).some((t) => t === "psychic")) {
             this.addNote("Psychic damage: make a Psionics: Offensive check.");
@@ -753,6 +764,9 @@ export class AttackBuilder {
             lifesteal: damaging ? this.#lifesteal : 0,
             unblockable,
             lethality,
+            acReduction: damaging ? this.#acReduction : 0,
+            crReduction: this.#crReduction,
+            evasionReduction: damaging ? this.#evasionReduction : 0,
         };
     }
 }

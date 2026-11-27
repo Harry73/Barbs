@@ -48,6 +48,8 @@ export interface EffectSpec {
     category: EffectCategory;
     /** Defaults to the ability's duration. "Instant"/"Endless" mean no expiry. */
     duration?: string | TurnDuration;
+    /** Raw ActiveEffect duration data, copied from another effect (a lasting shred lasts as long as its buff). */
+    durationData?: { value: number; units?: string; expiry?: string | null };
     statuses?: string[];
     changes?: ChangeSpec[];
     modifiers?: ModifierSpec[];

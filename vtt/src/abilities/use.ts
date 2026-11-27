@@ -430,6 +430,8 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
                           unblockable: result.unblockable,
                           lifesteal: result.lifesteal,
                           accuracy: result.accuracy,
+                          evasionReduction: result.evasionReduction,
+                          acReduction: result.acReduction,
                           tiers: tiers.map((t) => ({
                               within: t.within,
                               hits: t.result.hits.map((h) => h.totals),
@@ -438,6 +440,7 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
                       }
                     : undefined,
             casterTokenUuid: casterTokenUuid(actor),
+            crReduction: result?.crReduction,
             // Self-heals were already applied; don't offer to apply them again.
             healing: result?.rollType === "healing" && !heal?.self ? (result.totals.healing ?? 0) : undefined,
             shielding: shielding && !shielding.self ? shielding.amount : undefined,
@@ -494,7 +497,10 @@ export async function postPulse(
                 unblockable: result.unblockable,
                 lifesteal: result.lifesteal,
                 accuracy: result.accuracy,
+                evasionReduction: result.evasionReduction,
+                acReduction: result.acReduction,
             },
+            crReduction: result.crReduction,
             casterTokenUuid: token.document.uuid ?? undefined,
             statuses: result.statuses,
         },
@@ -589,7 +595,10 @@ export async function weaponAttack(actor: Actor.Implementation, item: Item.Imple
                 unblockable: result.unblockable,
                 lifesteal: result.lifesteal,
                 accuracy: result.accuracy,
+                evasionReduction: result.evasionReduction,
+                acReduction: result.acReduction,
             },
+            crReduction: result.crReduction,
             casterTokenUuid: casterTokenUuid(actor),
             statuses: result.statuses,
         },

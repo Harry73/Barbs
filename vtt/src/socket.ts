@@ -26,6 +26,7 @@ type Requests = {
         scale?: number;
         trueDamage?: boolean;
         unblockable?: boolean;
+        acReduction?: number;
         lifesteal?: { percent: number; attackerUuid: string };
     };
     shielding: { amount: number; sourceName?: string };
@@ -76,6 +77,7 @@ async function perform<T extends RequestType>(actor: Actor.Implementation, type:
                 trueDamage: p.trueDamage,
                 attack: true,
                 unblockable: p.unblockable,
+                acReduction: p.acReduction,
                 lifesteal: p.lifesteal,
             });
         }

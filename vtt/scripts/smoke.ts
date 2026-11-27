@@ -247,6 +247,12 @@ try {
 
     const { ABILITY_AUTOMATION } = await vite.ssrLoadModule("/src/abilities/catalog.ts");
     const { buildEffectData } = await vite.ssrLoadModule("/src/abilities/effects.ts");
+    // A lasting shred copies its source buff's duration rather than the card's "Endless".
+    const shredData: any = buildEffectData(
+        { name: "Shredded", category: "condition", durationData: { value: 5, units: "rounds", expiry: "turnEnd" } },
+        { className: "", abilityName: "Serrated Arrow", img: "", duration: "Endless" },
+    );
+    assert.deepEqual(shredData.duration, { value: 5, units: "rounds", expiry: "turnEnd" }, "lasting shred keeps its buff's duration");
     const { BarbsEffectModel } = await vite.ssrLoadModule("/src/data/effect.ts");
     const rulebook = JSON.parse(
         fs.readFileSync(path.resolve(import.meta.dirname, "..", "..", "rulebook", "abilities.json"), "utf8"),

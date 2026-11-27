@@ -84,6 +84,8 @@ export interface ApplyEffectOptions {
     sourceName?: string;
     /** Post a chat message about it. Off for self-buffs, which the ability card already lists. */
     announce?: boolean;
+    /** Less CR for this one roll (an attack's "reduce CR" affix). */
+    resistPenalty?: number;
 }
 
 /**
@@ -101,7 +103,7 @@ export interface AppliedEffect {
 export async function applyEffectToActor(
     target: Actor.Implementation,
     data: Record<string, unknown>,
-    { resistible = false, sourceName, announce = true }: ApplyEffectOptions = {},
+    { resistible = false, sourceName, announce = true, resistPenalty = 0 }: ApplyEffectOptions = {},
 ): Promise<AppliedEffect | null> {
     const creature = target.system as unknown as CreatureModel;
     const name = String(data.name);
@@ -117,12 +119,12 @@ export async function applyEffectToActor(
     if (resistible) {
         // Gear can add CR against specific conditions (the Roll20 sheet's per-condition resistances).
         const specific = Math.max(0, ...((data.statuses as string[] | undefined) ?? []).map((id) => creature.derived.conditionResistBonus?.[id] ?? 0));
-        const resist = creature.derived.stats.conditionResist.value + specific;
+        const resist = Math.max(0, creature.derived.stats.conditionResist.value + specific - resistPenalty);
         const roll = await new Roll("1d100").evaluate();
         const resisted = (roll.total ?? 101) <= resist;
         await roll.toMessage({
             speaker,
-            flavor: `Condition Resist vs ${name} (${resist}%): ${resisted ? "<strong>resisted</strong>" : "failed"}`,
+            flavor: `Condition Resist vs ${name} (${resist}%${resistPenalty ? `, ${resistPenalty}% lowered by the attack` : ""}): ${resisted ? "<strong>resisted</strong>" : "failed"}`,
         });
         if (resisted) return null;
     }
@@ -298,8 +300,15 @@ export async function applyDamageToActor(
         trueDamage = false,
         attack = false,
         unblockable = false,
+        acReduction = 0,
         lifesteal,
-    }: { trueDamage?: boolean; attack?: boolean; unblockable?: boolean; lifesteal?: { percent: number; attackerUuid: string } } = {},
+    }: {
+        trueDamage?: boolean;
+        attack?: boolean;
+        unblockable?: boolean;
+        acReduction?: number;
+        lifesteal?: { percent: number; attackerUuid: string };
+    } = {},
 ): Promise<void> {
     const creature = target.system as unknown as CreatureModel;
     const d = creature.derived;
@@ -322,7 +331,8 @@ export async function applyDamageToActor(
         }
     }
     const defenses = {
-        ac: d.stats.ac.value,
+        // An attack's "reduce AC" affix only lowers AC against that attack.
+        ac: Math.max(0, d.stats.ac.value - acReduction),
         magicResist: d.stats.magicResist.value,
         elementResist: d.elementResist,
         damageReduction: d.damageReduction,
