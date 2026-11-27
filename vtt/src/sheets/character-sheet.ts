@@ -176,14 +176,15 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
         });
         const heldWeapons = equipment.filter((e) => e.system.isHeldWeapon);
 
-        // One section per slot, in a fixed order; equipped items first, then by name. Empty slots are left out.
+        // One section per slot, in a fixed order, empty ones included so it's clear what's free. Equipped items
+        // first, then by name.
         const inventory = INVENTORY_ORDER.map((slot) => ({
             slot,
             label: INVENTORY_HEADINGS[slot] ?? EQUIPMENT_SLOTS[slot],
             items: equipment
                 .filter((e) => (e.system.slot in EQUIPMENT_SLOTS ? e.system.slot : "none") === slot)
                 .sort((a, b) => Number(b.system.equipped) - Number(a.system.equipped) || a.item.name.localeCompare(b.item.name)),
-        })).filter((section) => section.items.length);
+        }));
 
         // allApplicableEffects() skips suppressed ones (unequipped gear), so walk item effects too.
         const allEffects = [...actor.effects, ...actor.items.contents.flatMap((i) => [...i.effects])];

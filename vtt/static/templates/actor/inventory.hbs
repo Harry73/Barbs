@@ -2,7 +2,6 @@
   <div class="barbs-toolbar">
     {{#if editable}}<button type="button" data-action="createItem" data-type="equipment"><i class="fa-solid fa-plus"></i> Add item</button>{{/if}}
   </div>
-  {{#if inventory.length}}
   <table class="barbs-table inventory">
     <thead>
       <tr><th>Equipped</th><th>Item</th><th>Weapon</th><th>Qty</th><th>Weight</th><th></th></tr>
@@ -20,11 +19,10 @@
         <td>{{entry.system.weight}}</td>
         <td>{{#if @root.editable}}<a data-action="deleteItem" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a>{{/if}}</td>
       </tr>
+      {{else}}
+      <tr class="inventory-empty"><td></td><td colspan="5" class="hint">Empty</td></tr>
       {{/each}}
     </tbody>
     {{/each}}
   </table>
-  {{else}}
-  <p class="hint">Nothing carried.</p>
-  {{/if}}
 </section>
