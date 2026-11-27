@@ -1,0 +1,28 @@
+<section class="tab {{tab.cssClass}}" data-group="primary" data-tab="inventory">
+  <div class="barbs-toolbar">
+    {{#if editable}}<button type="button" data-action="createItem" data-type="equipment"><i class="fa-solid fa-plus"></i> Add item</button>{{/if}}
+  </div>
+  {{#if equipment.length}}
+  <table class="barbs-table inventory">
+    <thead>
+      <tr><th>Equipped</th><th>Item</th><th>Slot</th><th>Weapon</th><th>Qty</th><th>Weight</th><th></th></tr>
+    </thead>
+    <tbody>
+      {{#each equipment as |entry|}}
+      <tr data-item-id="{{entry.item.id}}">
+        <td><a data-action="toggleEquipped"><i class="fa-{{#if entry.system.equipped}}solid{{else}}regular{{/if}} fa-square-check"></i></a></td>
+        <td><a data-action="editItem">{{entry.item.name}}</a></td>
+        <td>{{entry.slotLabel}}</td>
+        <td>{{#if entry.weaponSummary}}<a data-action="weaponAttack" class="{{#unless entry.system.isHeldWeapon}}unheld{{/unless}}"
+              data-tooltip="{{#if entry.system.isHeldWeapon}}Attack{{else}}Equip in a hand slot to attack{{/if}}"><i class="fa-solid fa-khanda"></i> {{entry.weaponSummary}}</a>{{/if}}</td>
+        <td>{{entry.system.quantity}}</td>
+        <td>{{entry.system.weight}}</td>
+        <td>{{#if @root.editable}}<a data-action="deleteItem" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a>{{/if}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{else}}
+  <p class="hint">Nothing carried.</p>
+  {{/if}}
+</section>

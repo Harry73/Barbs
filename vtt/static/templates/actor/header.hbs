@@ -1,0 +1,27 @@
+<header class="barbs-header">
+  <img class="profile" src="{{actor.img}}" alt="{{actor.name}}" data-action="editImage" data-edit="img" />
+  <div class="header-body">
+    <input class="actor-name" name="name" type="text" value="{{actor.name}}" placeholder="Name" />
+    <div class="header-summary">
+      <span class="level">Level {{system.level}}</span>
+      {{#if race}}
+        <a class="race" data-action="editItem" data-item-id="{{race.id}}">{{race.name}}</a>
+      {{else}}
+        <a class="race empty" data-action="openCompendium" data-pack="races">No race — drag one in</a>
+      {{/if}}
+    </div>
+    <div class="resources">
+      {{#each resources as |res|}}
+      <label class="resource resource-{{res.key}}">
+        <span class="resource-label">{{res.label}}</span>
+        <input type="number" name="system.resources.{{res.key}}.value" value="{{res.value}}" min="0" />
+        <span class="resource-max">/ {{res.max}}</span>
+      </label>
+      {{/each}}
+      <label class="resource resource-shielding" data-tooltip="Shielding absorbs damage before health">
+        <span class="resource-label">Shield</span>
+        <input type="number" name="system.shielding.value" value="{{shielding}}" min="0" />
+      </label>
+    </div>
+  </div>
+</header>

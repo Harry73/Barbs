@@ -1,0 +1,34 @@
+<section class="item-details">
+  <div class="barbs-grid">
+    <label>Class <input type="text" name="system.className" value="{{system.className}}" /></label>
+    <label>Branch <input type="text" name="system.branch" value="{{system.branch}}" /></label>
+    <label>Tier <input type="number" name="system.tier" value="{{system.tier}}" min="1" max="4" /></label>
+    <label>Action <input type="text" name="system.action" value="{{system.action}}" /></label>
+    <label>Range <input type="text" name="system.range" value="{{system.range}}" /></label>
+    <label>Duration <input type="text" name="system.duration" value="{{system.duration}}" /></label>
+    <label class="wide">Cost <input type="text" name="system.cost.text" value="{{system.cost.text}}" /></label>
+    <label>Auto-cost
+      <input type="number" name="system.cost.value" value="{{system.cost.value}}" min="0" />
+    </label>
+    <label>Resource
+      <select name="system.cost.resource">{{selectOptions costResourceChoices selected=system.cost.resource}}</select>
+    </label>
+  </div>
+  <h3>Description</h3>
+  {{#if editable}}
+  <prose-mirror name="system.description" value="{{system.description}}" toggled>{{{enrichedDescription}}}</prose-mirror>
+  {{else}}
+  <div class="description">{{{enrichedDescription}}}</div>
+  {{/if}}
+  {{#if automation}}
+  <h3><i class="fa-solid fa-bolt"></i> Automation</h3>
+  <ul class="automation">{{#each automation}}<li>{{this}}</li>{{/each}}</ul>
+  {{/if}}
+  {{#if system.tags.length}}
+  <p class="tags">{{#each system.tags as |tag|}}<span class="tag">{{tag}}</span>{{/each}}</p>
+  {{/if}}
+  {{#if system.notes}}
+  <h3>Roll20 API Notes</h3>
+  <div class="notes">{{{enrichedNotes}}}</div>
+  {{/if}}
+</section>

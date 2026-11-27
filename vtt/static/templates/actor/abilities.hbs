@@ -1,0 +1,71 @@
+<section class="tab {{tab.cssClass}}" data-group="primary" data-tab="abilities">
+  <div class="barbs-toolbar">
+    <button type="button" data-action="openCompendium" data-pack="abilities"><i class="fa-solid fa-book"></i> Browse abilities</button>
+  </div>
+
+  {{#if passives.length}}
+  <h3>Passives</h3>
+  {{#if monk}}<p class="hint">Monk mastery: dU = d{{monk.die}}, base combo chance {{monk.combo}}%.</p>{{/if}}
+  {{#each passives as |p|}}
+  <div class="passive" data-item-id="{{p.item.id}}">
+    <div class="passive-header">
+      <a data-action="editItem"><strong>{{p.item.name}}</strong></a> <span class="hint">{{p.className}}</span>
+    </div>
+    {{#if (or p.resources.length p.states.length p.actions.length)}}
+    <div class="passive-controls">
+      {{#each p.resources as |r|}}
+      <span class="passive-resource">
+        {{r.label}}
+        <a data-action="passiveResource" data-key="{{r.key}}" data-delta="-1"><i class="fa-solid fa-minus"></i></a>
+        <input type="number" data-passive-resource="{{r.key}}" value="{{r.value}}" min="0" />
+        <a data-action="passiveResource" data-key="{{r.key}}" data-delta="1"><i class="fa-solid fa-plus"></i></a>
+        {{#if r.max}}<span class="hint">/ {{r.max}}</span>{{/if}}
+      </span>
+      {{/each}}
+      {{#each p.states as |st|}}
+      <label class="passive-state">{{st.label}}
+        <select data-passive-state="{{st.key}}">{{selectOptions st.options selected=st.value}}</select>
+      </label>
+      {{/each}}
+      {{#each p.actions as |a|}}
+      <button type="button" data-action="passiveAction" data-key="{{a.key}}"><i class="{{#if a.icon}}{{a.icon}}{{else}}fa-solid fa-bolt{{/if}}"></i> {{a.label}}</button>
+      {{/each}}
+    </div>
+    {{/if}}
+    <details class="passive-description"><summary>Description</summary>{{{p.description}}}
+      {{#if p.notes.length}}<ul>{{#each p.notes}}<li>{{this}}</li>{{/each}}</ul>{{/if}}
+    </details>
+  </div>
+  {{/each}}
+  {{/if}}
+  {{#each abilityGroups as |group|}}
+  <div class="ability-group">
+    <h3>{{group.name}} <span class="hint">{{group.investment}} AP invested, tier {{group.unlockedTier}} unlocked</span></h3>
+    <table class="barbs-table abilities">
+      <thead>
+        <tr><th></th><th>Ability</th><th>Tier</th><th>Action</th><th>Cost</th><th>Range</th><th>Duration</th><th></th></tr>
+      </thead>
+      <tbody>
+        {{#each group.abilities as |entry|}}
+        <tr data-item-id="{{entry.item.id}}">
+          <td><a data-action="useAbility" data-tooltip="Use"><img src="{{entry.item.img}}" alt="" /></a></td>
+          <td>
+            <a data-action="editItem">{{entry.item.name}}</a>
+            {{#if entry.automated}}<i class="fa-solid fa-bolt automated" data-tooltip="Automated: rolls and effects are handled"></i>{{/if}}
+            <div class="branch">{{entry.system.branch}}</div>
+          </td>
+          <td>{{entry.system.tier}}</td>
+          <td>{{entry.system.action}}</td>
+          <td>{{entry.system.cost.text}}</td>
+          <td>{{entry.system.range}}</td>
+          <td>{{entry.system.duration}}</td>
+          <td>{{#if @root.editable}}<a data-action="deleteItem" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a>{{/if}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  {{else}}
+  <p class="hint">No abilities yet. Drag them in from the compendium; each costs AP equal to its tier.</p>
+  {{/each}}
+</section>

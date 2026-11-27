@@ -1,0 +1,27 @@
+<section class="tab {{tab.cssClass}}" data-group="primary" data-tab="skills">
+  <div class="barbs-toolbar">
+    <button type="button" data-action="openCompendium" data-pack="skills"><i class="fa-solid fa-book"></i> Browse skills</button>
+  </div>
+  {{#if skills.length}}
+  <table class="barbs-table skills">
+    <thead>
+      <tr><th></th><th>Skill</th><th>Attr</th><th>Points</th><th>Rank</th><th>Bonus</th><th></th></tr>
+    </thead>
+    <tbody>
+      {{#each skills as |skill|}}
+      <tr data-item-id="{{skill.item.id}}">
+        <td><a data-action="rollSkill" data-tooltip="Roll"><i class="fa-solid fa-dice-d20"></i></a></td>
+        <td><a data-action="editItem">{{skill.item.name}}</a></td>
+        <td>{{skill.attribute}}</td>
+        <td><input type="number" data-item-points value="{{skill.points}}" min="0" max="{{../skillMaxPoints}}" {{#unless ../editable}}disabled{{/unless}} /></td>
+        <td>{{skill.rank}}</td>
+        <td>{{numberFormat skill.modifier sign=true}}</td>
+        <td>{{#if ../editable}}<a data-action="deleteItem" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a>{{/if}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{else}}
+  <p class="hint">No skills yet. Drag skills in from the compendium as the character discovers them.</p>
+  {{/if}}
+</section>

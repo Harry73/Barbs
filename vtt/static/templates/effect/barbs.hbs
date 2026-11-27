@@ -1,0 +1,49 @@
+<section class="tab barbs-effect {{#if tab.active}}active{{/if}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+  <div class="form-group">
+    <label>Category</label>
+    <div class="form-fields">
+      <select name="system.category">{{selectOptions categoryChoices selected=barbs.category}}</select>
+    </div>
+    <p class="hint">Buffs count against Buff Limit. Conditions roll Condition Resist when applied from a card.</p>
+  </div>
+  <div class="form-group">
+    <label>Single use</label>
+    <div class="form-fields">
+      <input type="checkbox" name="system.singleUse" {{checked barbs.singleUse}} />
+    </div>
+    <p class="hint">Removed after the first roll it modifies, like Assassin's Focus.</p>
+  </div>
+  <div class="form-group">
+    <label>Block %</label>
+    <div class="form-fields">
+      <input type="number" name="system.block" value="{{barbs.block}}" min="0" max="100" step="1" />
+    </div>
+    <p class="hint">Reduces the next attack applied to the bearer by this much (100 = fully blocked), then is removed. 0 = not a block.</p>
+  </div>
+
+  <h4>Roll modifiers</h4>
+  <p class="hint">
+    Applied when this effect's actor makes a matching roll. Stat changes (e.g. <code>system.stats.ac.bonus</code>)
+    go on the Changes tab instead.
+  </p>
+  <table class="barbs-modifiers">
+    <thead>
+      <tr>
+        <th>Type</th><th>Roll</th><th>Damage type</th><th>Weapon</th><th>Value</th>
+        <th><a data-action="addModifier" data-tooltip="Add modifier"><i class="fa-solid fa-plus"></i></a></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each modifiers as |m|}}
+      <tr data-index="{{m.index}}">
+        <td><select name="system.modifiers.{{m.index}}.type">{{selectOptions @root.typeChoices selected=m.type}}</select></td>
+        <td><select name="system.modifiers.{{m.index}}.rollType">{{selectOptions @root.rollTypeChoices selected=m.rollType}}</select></td>
+        <td><select name="system.modifiers.{{m.index}}.damageType">{{selectOptions @root.damageTypeChoices selected=m.damageType}}</select></td>
+        <td><select name="system.modifiers.{{m.index}}.weapon">{{selectOptions @root.weaponChoices selected=m.weapon}}</select></td>
+        <td><input type="text" name="system.modifiers.{{m.index}}.value" value="{{m.value}}" placeholder="2d8, 25, text" /></td>
+        <td><a data-action="deleteModifier" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a></td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</section>

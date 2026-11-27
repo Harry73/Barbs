@@ -1,0 +1,56 @@
+<section class="tab {{tab.cssClass}}" data-group="primary" data-tab="main">
+  <div class="barbs-actions">
+    <button type="button" data-action="rollInitiative"><i class="fa-solid fa-bolt"></i> Initiative</button>
+    <button type="button" data-action="shortRest"><i class="fa-solid fa-mug-hot"></i> Short Rest</button>
+    <button type="button" data-action="longRest"><i class="fa-solid fa-bed"></i> Long Rest</button>
+  </div>
+
+  <h3>Weapons</h3>
+  {{#if heldWeapons.length}}
+  <div class="barbs-actions">
+    {{#each heldWeapons as |w|}}
+    <button type="button" data-action="weaponAttack" data-item-id="{{w.item.id}}">
+      <img src="{{w.item.img}}" alt="" /> {{w.item.name}} <span class="hint">{{w.weaponSummary}}</span>
+    </button>
+    {{/each}}
+  </div>
+  {{else}}
+  <p class="hint">No weapon held. Equip one in a hand slot on the Inventory tab.</p>
+  {{/if}}
+
+  <h3>Death Saves</h3>
+  <div class="barbs-row downed">
+    <label>Downed Health
+      <input type="number" name="system.downed.value" value="{{system.downed.value}}" min="0" max="{{system.downed.max}}" />
+      / {{system.downed.max}}
+    </label>
+    <button type="button" data-action="deathSave"><i class="fa-solid fa-skull"></i> Death Save</button>
+  </div>
+
+  <h3>Characteristics</h3>
+  <div class="barbs-grid details">
+    <label>Gender <input type="text" name="system.details.gender" value="{{system.details.gender}}" /></label>
+    <label>Age <input type="text" name="system.details.age" value="{{system.details.age}}" /></label>
+    <label>Height <input type="text" name="system.details.height" value="{{system.details.height}}" /></label>
+    <label>Weight <input type="text" name="system.details.weight" value="{{system.details.weight}}" /></label>
+    <label>Eyes <input type="text" name="system.details.eyes" value="{{system.details.eyes}}" /></label>
+    <label>Hair <input type="text" name="system.details.hair" value="{{system.details.hair}}" /></label>
+    <label>Alignment <input type="text" name="system.details.alignment" value="{{system.details.alignment}}" /></label>
+    <label class="wide">Languages <input type="text" name="system.details.languages" value="{{system.details.languages}}" /></label>
+  </div>
+
+  <h3>Classes</h3>
+  {{#if classes.length}}
+  <ul class="barbs-list">
+    {{#each classes as |item|}}
+    <li class="barbs-list-row" data-item-id="{{item.id}}">
+      <img src="{{item.img}}" alt="" />
+      <a class="name" data-action="editItem">{{item.name}}</a>
+      {{#if ../editable}}<a data-action="deleteItem" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a>{{/if}}
+    </li>
+    {{/each}}
+  </ul>
+  {{else}}
+  <p class="hint">Drag classes here from the <a data-action="openCompendium" data-pack="classes">Classes compendium</a>.</p>
+  {{/if}}
+</section>

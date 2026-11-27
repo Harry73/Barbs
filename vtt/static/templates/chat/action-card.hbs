@@ -1,0 +1,123 @@
+<div class="barbs-chat-card action-card">
+  <header>
+    <img src="{{img}}" alt="" />
+    <div>
+      <h3>{{title}}</h3>
+      {{#if subtitle}}<div class="subtitle">{{subtitle}}</div>{{/if}}
+    </div>
+  </header>
+
+  {{#if meta}}
+  <ul class="card-meta">
+    {{#each meta as |m|}}{{#if m.value}}<li><strong>{{m.label}}:</strong> {{m.value}}</li>{{/if}}{{/each}}
+  </ul>
+  {{/if}}
+
+  {{#if description}}
+  <details class="card-description">
+    <summary>Description</summary>
+    {{{description}}}
+  </details>
+  {{/if}}
+
+  {{#each tierSections as |tier|}}
+  <div class="card-tier">
+    <div class="tier-label">{{tier.label}}</div>
+    {{#each tier.hits as |hit|}}
+    <div class="card-damage">
+      {{#each hit.parts as |p|}}
+      <div class="dice-roll damage-part damage-{{p.type}}" data-action="expandRoll">
+        <div class="damage-header"><span class="label">{{p.label}}</span><span class="total">{{p.total}}</span></div>
+        <div class="dice-result">
+          <div class="dice-formula">{{p.formula}}{{#if p.math}} <span class="damage-math">→ {{p.math}}</span>{{/if}}</div>
+          {{{p.tooltip}}}
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    {{/each}}
+  </div>
+  {{/each}}
+  {{#if tierSections.length}}<p class="card-note">Apply damage gives each target the tier for its distance from you.</p>{{/if}}
+  {{#if trueDamage}}<p class="card-note">This damage ignores all defenses.</p>{{/if}}
+
+  {{#each hits as |hit|}}
+  <div class="card-damage">
+    {{#if hit.label}}<div class="hit-label">{{hit.label}}</div>{{/if}}
+    {{#each hit.parts as |p|}}
+    <div class="dice-roll damage-part damage-{{p.type}}" data-action="expandRoll">
+      <div class="damage-header">
+        <span class="label">{{p.label}}</span>
+        <span class="total">{{p.total}}</span>
+      </div>
+      <div class="dice-result">
+        <div class="dice-formula">{{p.formula}}{{#if p.math}} <span class="damage-math">→ {{p.math}}</span>{{/if}}</div>
+        {{{p.tooltip}}}
+      </div>
+    </div>
+    {{/each}}
+    {{#if hit.crit}}
+    <div class="dice-roll damage-part crit {{#if hit.crit.isCrit}}is-crit{{/if}}" data-action="expandRoll">
+      <div class="damage-header">
+        <span class="label">Crit ({{hit.crit.chance}}%, needs {{hit.crit.threshold}}+)</span>
+        <span class="total">{{hit.crit.total}}{{#if hit.crit.isCrit}} — CRIT ×{{hit.crit.factor}}{{/if}}</span>
+      </div>
+      <div class="dice-result">{{{hit.crit.tooltip}}}</div>
+    </div>
+    {{/if}}
+  </div>
+  {{/each}}
+  {{#if distanceBonus}}
+  <div class="card-note distance-bonus">
+    <strong>Distance bonus:</strong> {{distanceBonus}} per target, added on Apply.
+    {{#if distancePreview.length}}
+    <ul>{{#each distancePreview as |t|}}<li>{{t.name}}: {{#if t.amount}}{{t.distance}} ft → +{{t.amount}}{{else}}{{#if t.distance}}{{t.distance}} ft → +0{{else}}can't measure{{/if}}{{/if}}</li>{{/each}}</ul>
+    {{/if}}
+  </div>
+  {{/if}}
+  {{#if total}}<p class="card-total">Total before defenses: <strong>{{total}}</strong> (AC applies to each hit)</p>{{/if}}
+
+  {{#if consumed.length}}<p class="card-note">Consumed: {{#each consumed}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</p>{{/if}}
+  {{#if selfEffects.length}}<p class="card-note">Applied to self: {{#each selfEffects}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</p>{{/if}}
+  {{#if notes.length}}
+  <ul class="card-notes">{{#each notes}}<li>{{{this}}}</li>{{/each}}</ul>
+  {{/if}}
+
+  {{#if scaledTargets}}<p class="card-note">Damage is scaled per target (e.g. half past the first in the line) when applied to the area's targets.</p>{{/if}}
+
+  {{#if combo}}
+  <div class="dice-roll damage-part combo {{#if combo.success}}is-combo{{/if}}" data-action="expandRoll">
+    <div class="damage-header">
+      <span class="label">Combo ({{combo.chance}}%, needs {{combo.threshold}}+)</span>
+      <span class="total">{{combo.total}}{{#if combo.success}} — COMBO!{{/if}}</span>
+    </div>
+    <div class="dice-result">{{{combo.tooltip}}}</div>
+  </div>
+  {{/if}}
+
+  {{#if (or hasDamage hasHealing targetEffects.length extraEffects.length statuses.length shielding drain canUndo)}}
+  <div class="card-buttons">
+    <div class="apply-buttons">
+      {{#if hasDamage}}
+      <button type="button" data-card-action="damage"><i class="fa-solid fa-burst"></i> Apply damage</button>
+      <button type="button" class="half" data-card-action="halfDamage" data-tooltip="Apply half damage">½</button>
+      {{#if alterCourse}}<button type="button" class="half" data-card-action="redirected" data-tooltip="Apply as redirected once (Alter Course +50%)"><i class="fa-solid fa-share"></i></button>{{/if}}
+      <button type="button" class="half" data-card-action="redirectToAttacker" data-tooltip="Redirect back at the attacker (Glass Armor, Reflective Barrier)"><i class="fa-solid fa-reply"></i></button>
+      {{/if}}
+      {{#if hasHealing}}<button type="button" data-card-action="healing"><i class="fa-solid fa-heart"></i> Apply healing</button>{{/if}}
+      {{#if shielding}}<button type="button" data-card-action="shielding"><i class="fa-solid fa-shield-halved"></i> Apply {{shielding}} shielding</button>{{/if}}
+      {{#if drain}}<button type="button" data-card-action="drain"><i class="fa-solid fa-droplet"></i> Drain {{drain.amount}} {{drain.resource}}</button>{{/if}}
+      {{#each targetEffects as |e|}}
+      <button type="button" data-card-action="effect" data-index="{{e.index}}"><i class="fa-solid fa-person-rays"></i> Apply {{e.label}}</button>
+      {{/each}}
+      {{#each extraEffects as |e|}}
+      <button type="button" data-card-action="extra" data-index="{{e.index}}"><i class="fa-solid fa-person-rays"></i> Apply {{e.label}}</button>
+      {{/each}}
+      {{#each statuses as |s|}}
+      <button type="button" data-card-action="status" data-index="{{s.index}}" data-tooltip="On hit, from {{s.source}}"><i class="fa-solid fa-person-rays"></i> Apply {{s.name}}</button>
+      {{/each}}
+    </div>
+    {{#if canUndo}}{{{undoButton}}}{{/if}}
+  </div>
+  {{/if}}
+</div>

@@ -1,0 +1,20 @@
+<section class="tab {{tab.cssClass}}" data-group="primary" data-tab="stats">
+  <table class="barbs-table stats">
+    <thead>
+      <tr><th>Stat</th>{{#if isNpc}}<th data-tooltip="A fixed stat-block value replaces the attribute formula">Fixed</th>{{/if}}<th>Base</th><th>Bonus</th><th>Multiplier</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+      {{#each stats as |stat|}}
+      <tr>
+        <td>{{#if stat.rollable}}<a data-action="rollPercentStat" data-stat="{{stat.key}}" data-tooltip="Roll d100"><i class="fa-solid fa-dice-d20"></i> {{stat.label}}</a>{{else}}{{stat.label}}{{/if}}</td>
+        {{#if @root.isNpc}}<td><input type="number" name="system.overrides.{{stat.key}}" value="{{stat.override}}" placeholder="—" /></td>{{/if}}
+        <td>{{stat.base}}</td>
+        <td>{{#if stat.bonus}}{{numberFormat stat.bonus sign=true}}{{/if}}</td>
+        <td>{{#if stat.multiplier}}{{numberFormat stat.multiplier sign=true}}%{{/if}}</td>
+        <td class="value">{{stat.value}}{{stat.unit}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <p class="hint">Effects modify stats with changes to <code>system.stats.&lt;stat&gt;.bonus</code> or <code>.multiplier</code> (percent, summed).</p>
+</section>

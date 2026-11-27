@@ -1,0 +1,14 @@
+<div class="barbs-toolbar">
+  {{#if editable}}<button type="button" data-action="createEffect"><i class="fa-solid fa-plus"></i> Add effect</button>{{/if}}
+</div>
+<ul class="barbs-list">
+  {{#each effects as |effect|}}
+  <li class="barbs-list-row" data-effect-id="{{effect.id}}">
+    <img src="{{effect.img}}" alt="" />
+    <a class="name" data-action="editEffect">{{effect.name}}</a>
+    {{#if @root.editable}}<a data-action="deleteEffect" data-tooltip="Delete"><i class="fa-solid fa-trash"></i></a>{{/if}}
+  </li>
+  {{else}}
+  <li class="hint">No effects.</li>
+  {{/each}}
+</ul>

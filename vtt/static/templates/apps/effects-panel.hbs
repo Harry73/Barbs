@@ -1,0 +1,10 @@
+<aside>
+  {{#each effects as |e|}}
+  <div class="effect-item effect-{{e.category}}" data-action="effect" data-uuid="{{e.uuid}}">
+    <div class="icon" style="background-image: url('{{e.img}}')"
+         data-tooltip-html="{{e.tooltip}}" data-tooltip-direction="LEFT" data-tooltip-class="barbs barbs-effect-tooltip">
+      {{#if e.badge}}<span class="badge">{{e.badge}}</span>{{/if}}
+    </div>
+  </div>
+  {{/each}}
+</aside>

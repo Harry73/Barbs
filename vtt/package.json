@@ -1,0 +1,29 @@
+{
+  "name": "barbs-foundry",
+  "version": "0.1.0",
+  "description": "Barbs game system for Foundry VTT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build && npm run packs",
+    "build:code": "vite build",
+    "watch": "vite build --watch",
+    "packs": "node scripts/build-packs.ts",
+    "typecheck": "tsc --noEmit",
+    "smoke": "node scripts/smoke.ts",
+    "todo": "node scripts/todo.ts",
+    "clean": "rm -rf dist",
+    "link": "node scripts/link-foundry.ts"
+  },
+  "devDependencies": {
+    "@foundryvtt/foundryvtt-cli": "^3.0.5",
+    "@types/node": "^26.6.11",
+    "classic-level": "^3.0.0",
+    "fvtt-types": "^14.370.0-beta.20261107215328",
+    "typescript": "^6.0.3",
+    "vite": "^8.4.0"
+  },
+  "allowScripts": {
+    "classic-level@3.0.0": true
+  }
+}

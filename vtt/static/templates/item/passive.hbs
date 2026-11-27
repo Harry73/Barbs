@@ -1,0 +1,13 @@
+<section class="item-details">
+  <p class="hint">{{system.className}} passive. Granted automatically with the first ability in the class.</p>
+  <h3>Description</h3>
+  {{#if editable}}
+  <prose-mirror name="system.description" value="{{system.description}}" toggled>{{{enrichedDescription}}}</prose-mirror>
+  {{else}}
+  <div class="description">{{{enrichedDescription}}}</div>
+  {{/if}}
+  {{#if automation}}
+  <h3><i class="fa-solid fa-bolt"></i> Automation</h3>
+  <ul class="automation">{{#each automation}}<li>{{this}}</li>{{/each}}</ul>
+  {{/if}}
+</section>

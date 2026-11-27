@@ -1,0 +1,16 @@
+{
+  "TYPES": {
+    "Actor": {
+      "character": "Character",
+      "npc": "NPC"
+    },
+    "Item": {
+      "skill": "Skill",
+      "race": "Race",
+      "class": "Class",
+      "ability": "Ability",
+      "equipment": "Equipment",
+      "passive": "Passive"
+    }
+  }
+}

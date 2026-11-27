@@ -1,0 +1,24 @@
+<section class="item-details">
+  <div class="barbs-grid">
+    <label>Category <input type="text" name="system.category" value="{{system.category}}" /></label>
+    <label>Attribute
+      <select name="system.attribute">{{selectOptions attributeChoices selected=system.attribute}}</select>
+    </label>
+    <label>Points <input type="number" name="system.points" value="{{system.points}}" min="0" max="{{skillMaxPoints}}" /></label>
+    <label>Rank <span class="readout">{{system.rank}} ({{numberFormat system.rankBonus sign=true}})</span></label>
+  </div>
+  <h3>Description</h3>
+  {{#if editable}}
+  <prose-mirror name="system.description" value="{{system.description}}" toggled>{{{enrichedDescription}}}</prose-mirror>
+  {{else}}
+  <div class="description">{{{enrichedDescription}}}</div>
+  {{/if}}
+  {{#if system.rankNotes.length}}
+  <h3>Rank Breakpoints</h3>
+  <dl class="rank-notes">
+    {{#each system.rankNotes as |note|}}
+    <dt>{{note.rank}}</dt><dd>{{note.text}}</dd>
+    {{/each}}
+  </dl>
+  {{/if}}
+</section>

@@ -1,0 +1,154 @@
+{
+  "id": "barbs",
+  "title": "Barbs",
+  "description": "The Barbs (Bio Duality) d100 tabletop RPG.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14.370"
+  },
+  "authors": [
+    {
+      "name": "Ian Patel"
+    }
+  ],
+  "esmodules": [
+    "barbs.mjs"
+  ],
+  "styles": [
+    "styles/barbs.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "character": {
+        "htmlFields": [
+          "details.biography"
+        ]
+      },
+      "npc": {
+        "htmlFields": [
+          "details.biography"
+        ]
+      }
+    },
+    "Item": {
+      "skill": {
+        "htmlFields": [
+          "description"
+        ]
+      },
+      "race": {
+        "htmlFields": [
+          "description"
+        ]
+      },
+      "class": {
+        "htmlFields": [
+          "description",
+          "flavorText"
+        ]
+      },
+      "ability": {
+        "htmlFields": [
+          "description",
+          "notes"
+        ]
+      },
+      "equipment": {
+        "htmlFields": [
+          "description"
+        ]
+      },
+      "passive": {
+        "htmlFields": [
+          "description"
+        ]
+      }
+    }
+  },
+  "packs": [
+    {
+      "name": "skills",
+      "label": "Skills",
+      "path": "packs/skills",
+      "type": "Item",
+      "system": "barbs",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "races",
+      "label": "Races",
+      "path": "packs/races",
+      "type": "Item",
+      "system": "barbs",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "classes",
+      "label": "Classes",
+      "path": "packs/classes",
+      "type": "Item",
+      "system": "barbs",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "abilities",
+      "label": "Class Abilities",
+      "path": "packs/abilities",
+      "type": "Item",
+      "system": "barbs",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "equipment",
+      "label": "Sample Weapons",
+      "path": "packs/equipment",
+      "type": "Item",
+      "system": "barbs",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "Barbs Rulebook",
+      "sorting": "m",
+      "color": "#4a2c1d",
+      "packs": [
+        "skills",
+        "races",
+        "classes",
+        "abilities",
+        "equipment"
+      ]
+    }
+  ],
+  "grid": {
+    "distance": 5,
+    "units": "ft"
+  },
+  "primaryTokenAttribute": "resources.health",
+  "initiative": "1d100 + @agi + @initiativeBonus",
+  "socket": true
+}

@@ -4,8 +4,9 @@ __pycache__/
 data/
 html/generated/
 *.pem
-build/
 website.spec
-dist/
 todo.md
 token.txt
+node_modules/
+dist/
+build/

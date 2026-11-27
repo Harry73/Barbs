@@ -1,0 +1,31 @@
+<section class="tab {{tab.cssClass}}" data-group="primary" data-tab="effects">
+  <div class="barbs-toolbar">
+    {{#if editable}}<button type="button" data-action="createEffect"><i class="fa-solid fa-plus"></i> Add effect</button>{{/if}}
+  </div>
+  {{#if effects.length}}
+  <table class="barbs-table effects">
+    <thead>
+      <tr><th></th><th>Effect</th><th>Type</th><th>Source</th><th>Remaining</th><th></th></tr>
+    </thead>
+    <tbody>
+      {{#each effects as |entry|}}
+      <tr data-effect-id="{{entry.effect.id}}" {{#if entry.source}}data-parent-id="{{entry.effect.parent.id}}"{{/if}} class="{{#if entry.inactive}}disabled{{/if}}">
+        <td><img src="{{entry.effect.img}}" alt="" /></td>
+        <td><a data-action="editEffect">{{entry.effect.name}}</a>{{#if entry.summary}}<div class="branch">{{entry.summary}}</div>{{/if}}</td>
+        <td>{{entry.category}}</td>
+        <td>{{entry.source}}</td>
+        <td>{{entry.duration}}</td>
+        <td class="controls">
+          {{#if @root.editable}}
+          <a data-action="toggleEffect" data-tooltip="{{#if entry.effect.disabled}}Enable{{else}}Disable{{/if}}"><i class="fa-solid fa-{{#if entry.effect.disabled}}toggle-off{{else}}toggle-on{{/if}}"></i></a>
+          <a data-action="deleteEffect" data-tooltip="Delete"><i class="fa-solid fa-trash"></i></a>
+          {{/if}}
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{else}}
+  <p class="hint">No active effects. Conditions and buffs can also be toggled from the token HUD.</p>
+  {{/if}}
+</section>

@@ -1,0 +1,40 @@
+<section class="item-details">
+  <div class="barbs-grid">
+    <label>Slot
+      <select name="system.slot">{{selectOptions slotChoices selected=system.slot}}</select>
+    </label>
+    <label class="checkbox">Equipped <input type="checkbox" name="system.equipped" {{checked system.equipped}} /></label>
+    <label>Quantity <input type="number" name="system.quantity" value="{{system.quantity}}" min="0" /></label>
+    <label>Weight <input type="number" name="system.weight" value="{{system.weight}}" min="0" step="any" /></label>
+  </div>
+  <h3>Weapon</h3>
+  <div class="barbs-grid">
+    <label>Category
+      <select name="system.weapon.category">{{selectOptions weaponCategoryChoices selected=system.weapon.category}}</select>
+    </label>
+    <label>Damage <input type="text" name="system.weapon.damage" value="{{system.weapon.damage}}" placeholder="1d8" /></label>
+    <label>Damage type
+      <select name="system.weapon.damageType">{{selectOptions damageTypeChoices selected=system.weapon.damageType}}</select>
+    </label>
+    <label>Scaling
+      <select name="system.weapon.scaling">{{selectOptions weaponScalingChoices selected=system.weapon.scaling}}</select>
+    </label>
+    <label>Crit chance (%) <input type="number" name="system.weapon.critChance" value="{{system.weapon.critChance}}" /></label>
+    <label>Crit modifier (%) <input type="number" name="system.weapon.critModifier" value="{{system.weapon.critModifier}}" min="0" /></label>
+  </div>
+  <p class="hint">
+    Mods and enchantments (on-hit damage, crit bonuses, ...) go in Effects below. On a weapon, their roll modifiers
+    apply to attacks made with this weapon, and to your spells while it's held. Stat changes apply while equipped.
+  </p>
+  <h3>Description</h3>
+  {{#if editable}}
+  <prose-mirror name="system.description" value="{{system.description}}" toggled>{{{enrichedDescription}}}</prose-mirror>
+  {{else}}
+  <div class="description">{{{enrichedDescription}}}</div>
+  {{/if}}
+  <h3>Effects</h3>
+  {{#if (and effects.length (not system.equipped))}}
+  <p class="notice"><i class="fa-solid fa-triangle-exclamation"></i> Not equipped, so these effects are inactive.</p>
+  {{/if}}
+  {{> "systems/barbs/templates/item/effects-list.hbs"}}
+</section>

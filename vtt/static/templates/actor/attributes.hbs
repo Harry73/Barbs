@@ -1,0 +1,20 @@
+<section class="tab {{tab.cssClass}}" data-group="primary" data-tab="attributes">
+  <p class="hint">Attributes range from -10 to +20. Characters start at -10 and buy upward; every point spent is a level.</p>
+  <div class="attribute-groups">
+    {{#each attributeGroups as |attrs category|}}
+    <div class="attribute-group">
+      <h3>{{category}}</h3>
+      {{#each attrs as |attr|}}
+      <div class="attribute-row" data-tooltip="{{attr.description}}">
+        <a class="attribute-roll" data-action="rollAttribute" data-attribute="{{attr.key}}">
+          <i class="fa-solid fa-dice-d20"></i> {{attr.label}} <span class="abbr">({{attr.abbreviation}})</span>
+        </a>
+        <input type="number" name="system.attributes.{{attr.key}}.value" value="{{attr.value}}" min="-10" max="20" />
+        {{#if attr.bonus}}<span class="bonus">{{numberFormat attr.bonus sign=true}}</span>{{/if}}
+        <span class="total">= {{numberFormat attr.total sign=true}}</span>
+      </div>
+      {{/each}}
+    </div>
+    {{/each}}
+  </div>
+</section>

@@ -1,0 +1,7 @@
+<section class="tab {{tab.cssClass}}" data-group="primary" data-tab="notes">
+  {{#if editable}}
+  <prose-mirror name="system.details.biography" value="{{source.details.biography}}" toggled>{{{enrichedBiography}}}</prose-mirror>
+  {{else}}
+  {{{enrichedBiography}}}
+  {{/if}}
+</section>

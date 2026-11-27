@@ -1,0 +1,36 @@
+<section class="item-details">
+  <div class="barbs-grid">
+    <label>Abbreviation <input type="text" name="system.abbreviation" value="{{system.abbreviation}}" /></label>
+    <label class="checkbox">All requirements known
+      <input type="checkbox" name="system.allRequirementsKnown" {{checked system.allRequirementsKnown}} />
+    </label>
+  </div>
+  <p class="preview"><em>{{system.preview}}</em></p>
+
+  <h3>Requirements</h3>
+  <ul>{{#each system.requirements as |req|}}<li>{{req}}</li>{{/each}}</ul>
+
+  {{#if system.passive.name}}
+  <h3>Passive: {{system.passive.name}}</h3>
+  <div>{{{system.passive.description}}}</div>
+  {{/if}}
+
+  {{#if system.branches.length}}
+  <h3>Branches</h3>
+  <dl class="branches">
+    {{#each system.branches as |branch|}}
+    <dt>{{branch.name}}</dt><dd>{{{branch.description}}}</dd>
+    {{/each}}
+  </dl>
+  {{/if}}
+  <h3>Description</h3>
+  {{#if editable}}
+  <prose-mirror name="system.description" value="{{system.description}}" toggled>{{{enrichedDescription}}}</prose-mirror>
+  {{else}}
+  <div class="description">{{{enrichedDescription}}}</div>
+  {{/if}}
+  {{#if system.flavorText}}
+  <h3>Flavor</h3>
+  <blockquote class="flavor">{{{enrichedFlavor}}}</blockquote>
+  {{/if}}
+</section>

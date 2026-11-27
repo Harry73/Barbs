@@ -1,0 +1,14 @@
+<section class="item-details">
+  <h3>Description</h3>
+  {{#if editable}}
+  <prose-mirror name="system.description" value="{{system.description}}" toggled>{{{enrichedDescription}}}</prose-mirror>
+  {{else}}
+  <div class="description">{{{enrichedDescription}}}</div>
+  {{/if}}
+  <h3>Racial Traits</h3>
+  <dl class="traits">
+    {{#each system.traits as |trait|}}
+    <dt>{{trait.name}}</dt><dd>{{{trait.description}}}</dd>
+    {{/each}}
+  </dl>
+</section>

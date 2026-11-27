@@ -1,0 +1,618 @@
+/* Barbs system styles. Scoped under .barbs so nothing leaks into core UI. */
+
+.barbs {
+  --barbs-accent: #8b3a1e;
+  --barbs-muted: var(--color-text-secondary, #888);
+  --barbs-border: var(--color-border, rgba(127, 127, 127, 0.35));
+}
+
+.barbs .window-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.barbs .tab {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.barbs h3 {
+  margin: 0.75rem 0 0.25rem;
+  border-bottom: 1px solid var(--barbs-border);
+}
+
+.barbs .hint {
+  color: var(--barbs-muted);
+  font-size: var(--font-size-12, 12px);
+  font-weight: normal;
+}
+
+/* ---------- Header ---------- */
+
+.barbs .barbs-header {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.barbs .barbs-header .profile {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border: 1px solid var(--barbs-border);
+  border-radius: 4px;
+  cursor: pointer;
+  flex: none;
+}
+
+.barbs.item .barbs-header .profile {
+  width: 64px;
+  height: 64px;
+}
+
+.barbs .header-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.barbs .actor-name,
+.barbs .item-name {
+  font-size: var(--font-size-24, 24px);
+  height: auto;
+}
+
+.barbs .header-summary {
+  display: flex;
+  gap: 1rem;
+  color: var(--barbs-muted);
+}
+
+.barbs .header-summary .race.empty {
+  font-style: italic;
+}
+
+.barbs .resources {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.barbs .resource {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.barbs .resource input {
+  width: 4.5em;
+  text-align: right;
+}
+
+.barbs .resource-label {
+  font-weight: bold;
+}
+
+.barbs .resource-health .resource-label { color: #c0392b; }
+.barbs .resource-stamina .resource-label { color: #27ae60; }
+.barbs .resource-mana .resource-label { color: #2e86de; }
+
+/* ---------- Layout helpers ---------- */
+
+.barbs .barbs-actions,
+.barbs .barbs-toolbar,
+.barbs .barbs-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.25rem 0;
+}
+
+.barbs .barbs-toolbar {
+  justify-content: flex-end;
+}
+
+.barbs .barbs-actions button,
+.barbs .barbs-toolbar button {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.barbs .barbs-row.downed input {
+  width: 4.5em;
+}
+
+.barbs .barbs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.35rem 0.75rem;
+}
+
+.barbs .barbs-grid label {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--font-size-12, 12px);
+  color: var(--barbs-muted);
+}
+
+.barbs .barbs-grid label.wide {
+  grid-column: span 2;
+}
+
+.barbs .barbs-grid label.checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.barbs .readout {
+  color: var(--color-text-primary, inherit);
+  font-size: var(--font-size-14, 14px);
+  padding-top: 0.25rem;
+}
+
+/* ---------- Lists and tables ---------- */
+
+.barbs .barbs-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.barbs .barbs-list-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.15rem 0;
+}
+
+.barbs .barbs-list-row img,
+.barbs .barbs-table img {
+  width: 28px;
+  height: 28px;
+  border: none;
+  object-fit: cover;
+}
+
+.barbs .barbs-list-row .name {
+  flex: 1;
+}
+
+.barbs .barbs-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+.barbs .barbs-table th {
+  text-align: left;
+  font-size: var(--font-size-12, 12px);
+  color: var(--barbs-muted);
+  border-bottom: 1px solid var(--barbs-border);
+}
+
+.barbs .barbs-table td {
+  padding: 0.15rem 0.25rem;
+  border-bottom: 1px solid var(--barbs-border);
+  vertical-align: middle;
+}
+
+.barbs .barbs-table td input[type="number"] {
+  width: 3.5em;
+}
+
+.barbs .barbs-table .value {
+  font-weight: bold;
+}
+
+.barbs .barbs-table tr.disabled {
+  opacity: 0.5;
+}
+
+.barbs .barbs-table .branch {
+  font-size: var(--font-size-11, 11px);
+  color: var(--barbs-muted);
+}
+
+.barbs .barbs-table .controls {
+  white-space: nowrap;
+  text-align: right;
+}
+
+/* ---------- Attributes ---------- */
+
+.barbs .attribute-groups {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1.5rem;
+}
+
+.barbs .attribute-row {
+  display: grid;
+  grid-template-columns: 1fr 4em 3em 3.5em;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.1rem 0;
+}
+
+.barbs .attribute-row .abbr {
+  color: var(--barbs-muted);
+}
+
+.barbs .attribute-row .bonus {
+  color: var(--barbs-accent);
+  text-align: right;
+}
+
+.barbs .attribute-row .total {
+  font-weight: bold;
+  text-align: right;
+}
+
+/* ---------- Item sheets ---------- */
+
+.barbs .item-details dl {
+  margin: 0;
+}
+
+.barbs .item-details dt {
+  font-weight: bold;
+  margin-top: 0.35rem;
+}
+
+.barbs .item-details dd {
+  margin: 0 0 0 1rem;
+}
+
+.barbs .item-details prose-mirror {
+  min-height: 120px;
+}
+
+.barbs .tags .tag {
+  display: inline-block;
+  margin: 0 0.25rem 0.25rem 0;
+  padding: 0 0.4rem;
+  border: 1px solid var(--barbs-border);
+  border-radius: 8px;
+  font-size: var(--font-size-11, 11px);
+}
+
+.barbs .flavor {
+  font-style: italic;
+  color: var(--barbs-muted);
+}
+
+/* ---------- Chat cards ---------- */
+
+.barbs-chat-card header {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  border-bottom: 1px solid var(--barbs-border, rgba(127, 127, 127, 0.35));
+  margin-bottom: 0.25rem;
+}
+
+.barbs-chat-card header img {
+  width: 36px;
+  height: 36px;
+  border: none;
+}
+
+.barbs-chat-card h3 {
+  margin: 0;
+  border: none;
+}
+
+.barbs-chat-card .subtitle {
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+.barbs-chat-card .ability-meta {
+  list-style: none;
+  margin: 0 0 0.25rem;
+  padding: 0;
+  font-size: 12px;
+}
+
+/* ---------- Automation, weapons, effects ---------- */
+
+.barbs .automated {
+  color: var(--barbs-accent);
+  margin-left: 0.25rem;
+}
+
+.barbs .barbs-actions button img {
+  width: 20px;
+  height: 20px;
+  border: none;
+  vertical-align: middle;
+}
+
+.barbs .barbs-modifiers {
+  width: 100%;
+}
+
+.barbs .barbs-modifiers select,
+.barbs .barbs-modifiers input {
+  width: 100%;
+}
+
+/* ---------- Action cards ---------- */
+
+.barbs-chat-card .card-meta {
+  list-style: none;
+  margin: 0 0 0.25rem;
+  padding: 0;
+  font-size: 12px;
+}
+
+.barbs-chat-card .card-description {
+  font-size: 12px;
+  margin-bottom: 0.25rem;
+}
+
+.barbs-chat-card .card-damage {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0.25rem 0;
+}
+
+/* Each damage type is a core-style .dice-roll: the header is always visible, the dice expand on click. */
+.barbs-chat-card .damage-part {
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.barbs-chat-card .damage-part .damage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 2px 6px;
+}
+
+.barbs-chat-card .damage-part .total {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.barbs-chat-card .damage-part .dice-result {
+  padding: 0 4px 2px;
+  font-size: 12px;
+}
+
+.barbs-chat-card .damage-part .dice-formula {
+  display: none;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.6);
+  color: #000;
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+
+.barbs-chat-card .damage-part.expanded .dice-formula {
+  display: block;
+}
+
+.barbs-chat-card .damage-part .damage-math {
+  opacity: 0.8;
+}
+
+/* Damage type colors carried over from the Roll20 roll template. */
+.barbs-chat-card .damage-physical { background: #ffb27f; color: #000; }
+.barbs-chat-card .damage-psychic { background: #c0c0c0; color: #000; }
+.barbs-chat-card .damage-fire { background: #ff6868; color: #000; }
+.barbs-chat-card .damage-water { background: #5b82ef; color: #000; }
+.barbs-chat-card .damage-earth { background: #b58a6e; color: #000; }
+.barbs-chat-card .damage-air { background: #baffa5; color: #000; }
+.barbs-chat-card .damage-ice { background: #a3ffe9; color: #000; }
+.barbs-chat-card .damage-lightning { background: #fcf79f; color: #000; }
+.barbs-chat-card .damage-light { background: #ffffff; color: #000; }
+.barbs-chat-card .damage-dark { background: #000000; color: #fff; }
+.barbs-chat-card .damage-healing { background: #ff9bff; color: #000; }
+.barbs-chat-card .crit { background: #b20088; color: #fff; }
+.barbs-chat-card .damage-part .dice-tooltip { color: #000; }
+.barbs-chat-card .combo { background: #a472e5; color: #fff; }
+.barbs-chat-card .combo.is-combo { outline: 3px solid #3fb315; }
+.barbs-chat-card .crit.is-crit { outline: 3px solid #3fb315; }
+
+.barbs-chat-card .card-note,
+.barbs-chat-card .card-notes {
+  font-size: 12px;
+  margin: 0.25rem 0;
+}
+
+.barbs-chat-card .card-notes {
+  padding-left: 1rem;
+}
+
+/*
+ * Button row: Apply buttons share all the space on the left (wrapping if there are several), and the undo button is
+ * a small square pinned bottom right. Core sizes buttons via --button-size.
+ */
+.barbs-chat-card .card-buttons {
+  --button-size: 24px;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  margin-top: 0.25rem;
+}
+
+.barbs-chat-card .card-buttons .apply-buttons {
+  flex: 1 1 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.barbs-chat-card .card-buttons .apply-buttons button {
+  flex: 1 1 auto;
+  font-size: 12px;
+}
+
+.barbs-chat-card .card-buttons .apply-buttons button.half {
+  flex: 0 0 var(--button-size);
+  padding: 0;
+}
+
+.barbs-chat-card .hit-label {
+  font-size: 11px;
+  font-weight: bold;
+  opacity: 0.8;
+}
+
+.barbs-chat-card .card-total {
+  font-size: 12px;
+  margin: 0.25rem 0;
+}
+
+/* ---------- Effects panel (top right of the canvas) ---------- */
+
+#ui-right-column-1 {
+  position: relative;
+}
+
+#barbs-effects-panel {
+  position: absolute;
+  top: 1rem;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  max-height: calc(100% - 165px);
+  overflow-y: auto;
+  pointer-events: initial;
+  padding: 4px;
+}
+
+#barbs-effects-panel .effect-item .icon {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: rgba(0, 0, 0, 0.55);
+  border: 1px solid var(--color-cool-4, #555);
+  border-radius: 4px;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+#barbs-effects-panel .effect-buff .icon {
+  border-color: #3fb315;
+}
+
+#barbs-effects-panel .effect-condition .icon {
+  border-color: #c0392b;
+}
+
+#barbs-effects-panel .effect-item .badge {
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 0 3px;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 14px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.75);
+  border-top-left-radius: 4px;
+}
+
+.barbs-effect-tooltip {
+  max-width: 320px;
+  text-align: left;
+}
+
+.barbs-effect-tooltip h4 {
+  margin: 0 0 0.25rem;
+}
+
+.barbs-effect-tooltip p {
+  margin: 0 0 0.25rem;
+}
+
+.barbs .notice {
+  padding: 0.25rem 0.5rem;
+  border-left: 3px solid #e0a030;
+  background: rgba(224, 160, 48, 0.12);
+}
+
+.barbs .barbs-table a.unheld {
+  opacity: 0.45;
+}
+
+/* ---------- Undo ---------- */
+
+.barbs-chat-card .card-buttons .barbs-undo {
+  flex: 0 0 var(--button-size);
+  width: var(--button-size);
+  padding: 0;
+  font-size: 11px;
+}
+
+/*
+ * Undone messages: struck through and dimmed, with a note at the bottom that stays readable. text-decoration doesn't
+ * carry into flex children (the header with the ability name, damage rows), so set it on every element.
+ */
+.barbs-chat-card.reverted > *:not(.undone-note) {
+  opacity: 0.6;
+}
+
+.barbs-chat-card.reverted *:not(.undone-note) {
+  text-decoration: line-through;
+}
+
+.barbs-chat-card .undone-note {
+  margin: 0.25rem 0 0;
+  font-size: 11px;
+  font-style: italic;
+}
+
+.barbs-chat-card .card-tier {
+  margin: 0.25rem 0;
+}
+
+.barbs-chat-card .tier-label {
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* ---------- Passives ---------- */
+
+.barbs .resource-shielding .resource-label { color: #8e9aaf; }
+
+.barbs .passive {
+  border: 1px solid var(--barbs-border);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.barbs .passive-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  margin: 0.25rem 0;
+}
+
+.barbs .passive-resource input {
+  width: 3.5em;
+  text-align: center;
+}
+
+.barbs .passive-controls button {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.barbs .passive-description {
+  font-size: 12px;
+}
