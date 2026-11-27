@@ -23,7 +23,7 @@ import {
     yesNo,
 } from "../helpers.ts";
 import type { DamageType } from "../../config.ts";
-import type { AbilityAutomation } from "../types.ts";
+import type { AbilityAutomation, ChangeSpec, EffectSpec } from "../types.ts";
 
 const RITUAL = pick("ritual", "Casting", { normal: "Normal", minor: "Minor ritual (1 minute)", major: "Major ritual (10 minutes)" });
 
@@ -39,6 +39,36 @@ function psionCost(base: number, extra: number, ctx: { choices: Record<string, u
         costs.push({ resource: second === first ? (first === "mana" ? "stamina" : "mana") : second, amount: extra });
     }
     return costs;
+}
+
+/** Mint Coinage's inscriptions: what holding the coin does, as stat changes where it has numbers. */
+const COIN_FACES: Record<string, { label: string; text: string; changes?: ChangeSpec[] }> = {
+    message: { label: "Telepathic message", text: "A telepathic message of up to 100 words or 10 images, heard/seen by anyone who picks the coin up." },
+    access: { label: "Access point", text: "The Enchanter can telepathically communicate freely with whoever holds the coin." },
+    tracker: { label: "Tracker", text: "The Enchanter always knows where the coin is, and if/when it changes owners." },
+    storage: { label: "Storage (+1 buff and concentration limit)", text: "+1 Buff Limit and +1 Concentration Limit.", changes: [stat("buffLimit", 1), stat("concentrationLimit", 1)] },
+    restorative: {
+        label: "Restorative (+5% regeneration)",
+        text: "+5% health, mana, and stamina regeneration.",
+        changes: [stat("healthRegen", 5), stat("manaRegen", 5), stat("staminaRegen", 5)],
+    },
+    luck: { label: "Luck (+5 skill checks)", text: "+5 to all skill checks.", changes: [{ key: "system.skillBonus", value: 5 }] },
+};
+const COIN_FACES_CHOICES = Object.fromEntries(Object.entries(COIN_FACES).map(([key, face]) => [key, face.label]));
+
+/** The effect on whoever holds a Mint Coinage coin: both faces' inscriptions in one effect. */
+function mintedCoin(choices: Record<string, unknown>): EffectSpec {
+    const faces = [String(choices.face), String(choices.back)]
+        .filter((key, index, all) => key in COIN_FACES && all.indexOf(key) === index)
+        .map((key) => COIN_FACES[key]);
+    return {
+        name: `Minted Coin (${faces.map((f) => f.label.replace(/ \(.*\)$/, "")).join(" / ")})`,
+        img: "icons/commodities/currency/coin-embossed-star-gold.webp",
+        // An enchanted item, not a buff: it doesn't count against Buff Limit, and Downed doesn't remove it.
+        category: "",
+        changes: faces.flatMap((f) => f.changes ?? []),
+        description: faces.map((f) => `<p>${f.text}</p>`).join(""),
+    };
 }
 
 export const SUPPORT: Record<string, AbilityAutomation> = {
@@ -327,6 +357,20 @@ export const SUPPORT: Record<string, AbilityAutomation> = {
 
     /* ---------- Enchanter ---------- */
 
+    "Enchanter/Mint Coinage": {
+        choices: [
+            pick("holder", "Who holds the coin", { self: "You", target: "Targeted creature" }),
+            pick("face", "Inscription", COIN_FACES_CHOICES),
+            pick("back", "Opposite face (+5 mana)", { none: "Nothing", ...COIN_FACES_CHOICES }),
+        ],
+        cost: (ctx) => ({ resource: "mana", amount: ctx.choices.back === "none" || ctx.choices.back === ctx.choices.face ? 10 : 15 }),
+        self: (ctx) => (ctx.choices.holder === "target" ? [] : [mintedCoin(ctx.choices)]),
+        target: (ctx) => (ctx.choices.holder === "target" ? [mintedCoin(ctx.choices)] : []),
+        notes: (ctx) => [
+            ctx.choices.holder === "target" ? "The coin's effect goes on whoever you apply it to: they're holding it." : "You're holding the coin.",
+            "A creature only benefits from one Mint Coinage coin at a time: a new coin replaces the old one. If the coin changes hands, delete the effect and apply it to the new holder.",
+        ],
+    },
     "Enchanter/Modify Weapon": {
         choices: [pick("mode", "Choose", { strengthen: "On hit: 4d10 physical", weaken: "-50% physical damage while equipped" })],
         target: (ctx) =>
