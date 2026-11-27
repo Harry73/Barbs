@@ -10,6 +10,7 @@
   <div class="passive" data-item-id="{{p.item.id}}">
     <div class="passive-header">
       <a data-action="editItem"><strong>{{p.item.name}}</strong></a> <span class="hint">{{p.className}}</span>
+      {{#if @root.editable}}<a class="passive-delete" data-action="deleteItem" data-tooltip="Remove this passive"><i class="fa-solid fa-trash"></i></a>{{/if}}
     </div>
     {{#if (or p.resources.length p.states.length p.actions.length)}}
     <div class="passive-controls">

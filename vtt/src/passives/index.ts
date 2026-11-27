@@ -134,15 +134,50 @@ export async function backfillPassives(): Promise<void> {
         const classes = new Set(
             actor.items.filter((i) => i.type === "ability").map((i) => (i.system as unknown as AbilityModel).className).filter(Boolean),
         );
-        for (const className of classes) await ensurePassive(actor as Actor.Implementation, className);
+        // Passives removed by hand stay removed, even though the class's abilities are still there.
+        const removed = removedPassives(actor as Actor.Implementation);
+        for (const className of classes) if (!removed.includes(className)) await ensurePassive(actor as Actor.Implementation, className);
     }
 }
 
-/** Grant passives when an ability is added to an actor, on the client that added it. */
+/** Classes whose passive was removed by hand while the character still had abilities in them. */
+function removedPassives(actor: Actor.Implementation): string[] {
+    return (foundry.utils.getProperty(actor, `flags.${SYSTEM_ID}.removedPassives`) as string[] | undefined) ?? [];
+}
+
+const abilitiesIn = (actor: Actor.Implementation, className: string) =>
+    actor.items.filter((i) => i.type === "ability" && (i.system as unknown as AbilityModel).className === className);
+
+/**
+ * Passives follow the class's abilities: granted with the first, removed with the last, on the client that made the
+ * change. A passive deleted by hand while abilities remain is remembered, so loading the world doesn't bring it back;
+ * adding another ability of that class grants it again.
+ */
 export function registerPassiveGranting(): void {
-    Hooks.on("createItem", (item: Item.Implementation, _options: unknown, userId: string) => {
+    Hooks.on("createItem", async (item: Item.Implementation, _options: unknown, userId: string) => {
         if (userId !== game.user?.id || item.type !== "ability" || !(item.parent instanceof Actor)) return;
-        void ensurePassive(item.parent as Actor.Implementation, (item.system as unknown as AbilityModel).className);
+        const actor = item.parent as Actor.Implementation;
+        const className = (item.system as unknown as AbilityModel).className;
+        const removed = removedPassives(actor);
+        if (removed.includes(className)) await actor.setFlag(SYSTEM_ID as never, "removedPassives" as never, removed.filter((c) => c !== className) as never);
+        await ensurePassive(actor, className);
+    });
+    Hooks.on("deleteItem", async (item: Item.Implementation, _options: unknown, userId: string) => {
+        if (userId !== game.user?.id || !(item.parent instanceof Actor)) return;
+        const actor = item.parent as Actor.Implementation;
+        if (item.type === "ability") {
+            const className = (item.system as unknown as AbilityModel).className;
+            if (!className || abilitiesIn(actor, className).length) return;
+            const passives = actor.items.filter((i) => i.type === "passive" && (i.system as unknown as PassiveModel).className === className);
+            if (!passives.length) return;
+            await actor.deleteEmbeddedDocuments("Item", passives.map((p) => p.id!) as never);
+            ui.notifications?.info(`${actor.name} no longer has any ${className} abilities, so loses ${passives.map((p) => p.name).join(", ")}.`);
+        } else if (item.type === "passive") {
+            const className = (item.system as unknown as PassiveModel).className;
+            if (!className || !abilitiesIn(actor, className).length) return;
+            const removed = removedPassives(actor);
+            if (!removed.includes(className)) await actor.setFlag(SYSTEM_ID as never, "removedPassives" as never, [...removed, className] as never);
+        }
     });
 }
 

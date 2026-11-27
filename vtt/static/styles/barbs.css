@@ -715,3 +715,14 @@
   font-weight: bold;
   border-color: var(--barbs-accent);
 }
+
+/* The passive's remove button sits at the far right of its header. */
+.barbs .passive .passive-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.barbs .passive .passive-header .passive-delete {
+  margin-left: auto;
+}
