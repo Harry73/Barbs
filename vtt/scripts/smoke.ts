@@ -232,6 +232,31 @@ try {
     assert.ok(equipConflict("mainHand", [{ name: "Greatsword", slot: "twoHand" }]), "main hand is taken by a two-hander");
     assert.equal(equipConflict("mainHand", [{ name: "Shield", slot: "offhand" }]), null, "main hand and offhand coexist");
     assert.equal(equipConflict("none", [{ name: "Rope", slot: "none" }]), null, "unslotted items have no limit");
+    // The equip-limit hook only intervenes when the slot or Equipped actually changes, and only drops that part.
+    (globalThis as any).ui = { notifications: { warn: () => {} } };
+    const wearer: any = new StandIn();
+    const owned = (name: string, slot: string, equipped: boolean) => {
+        const item: any = new StandIn();
+        Object.assign(item, { name, type: "equipment", actor: wearer, id: name });
+        item.system = new itemModels.EquipmentModel({ slot, equipped }, { parent: item });
+        return item;
+    };
+    const helmA = owned("Helm A", "head", true);
+    const helmB = owned("Helm B", "head", false);
+    wearer.items = [helmA, helmB];
+    let changes: any = { system: { slot: "head", equipped: true, quantity: 2 } };
+    await helmB.system._preUpdate(changes, {}, {});
+    assert.equal(changes.system.equipped, false, "equipping into a full slot is dropped");
+    assert.equal(changes.system.quantity, 2, "...but the rest of the edit goes through");
+    changes = { system: { slot: "head", equipped: true, quantity: 3 } };
+    await helmA.system._preUpdate(changes, {}, {});
+    assert.equal(changes.system.equipped, true, "editing an already-equipped item isn't refused for its own slot");
+    helmB.system = new itemModels.EquipmentModel({ slot: "head", equipped: true }, { parent: helmB });
+    changes = { system: { slot: "head", equipped: true, quantity: 4 } };
+    await helmA.system._preUpdate(changes, {}, {});
+    assert.equal(changes.system.quantity, 4, "an over-full slot left from before doesn't block unrelated edits");
+    delete (globalThis as any).ui;
+
     const oldMisc = new itemModels.EquipmentModel({ slot: "misc", equipped: true });
     assert.equal(oldMisc.slot, "none", "items saved in the dropped misc slot load as unslotted");
 

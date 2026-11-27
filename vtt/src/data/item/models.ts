@@ -246,19 +246,31 @@ export class EquipmentModel extends foundry.abstract.TypeDataModel<
         }
     }
 
-    /** Refuse equipping (or moving an equipped item) into a slot that's already full. */
+    /**
+     * Refuse equipping (or moving an equipped item) into a slot that's already full.
+     *
+     * The item sheet submits every field on every edit, so `changes` carries `slot` and `equipped` even when they
+     * didn't change. Only check when one of them actually changes, and only drop that part of the update: the rest
+     * of the edit (quantity, weapon stats) still goes through. Re-render the sheet afterwards, because if nothing else
+     * changed there's no update to re-render it, and its checkbox would keep claiming the item is equipped.
+     */
     protected override async _preUpdate(changed: never, options: never, user: never): Promise<boolean | void> {
         const allowed = await super._preUpdate(changed, options, user);
         if (allowed === false) return false;
         const changes = (changed as { system?: { slot?: string; equipped?: boolean } }).system;
-        if (!changes || (changes.slot === undefined && changes.equipped === undefined)) return;
+        if (!changes) return;
+        const slot = changes.slot ?? this.slot;
         const equipped = changes.equipped ?? this.equipped;
-        if (!equipped) return;
-        const conflict = equipConflict(changes.slot ?? this.slot, this.#otherEquipped());
-        if (conflict) {
-            ui.notifications?.warn(conflict);
-            return false;
-        }
+        const moving = slot !== this.slot;
+        const equipping = equipped && !this.equipped;
+        if (!equipped || (!moving && !equipping)) return;
+        const conflict = equipConflict(slot, this.#otherEquipped());
+        if (!conflict) return;
+        ui.notifications?.warn(conflict);
+        if (equipping) changes.equipped = false;
+        else delete changes.slot;
+        const sheet = this.parent?.sheet;
+        if (sheet?.rendered) setTimeout(() => void sheet.render(), 0);
     }
 }
 
