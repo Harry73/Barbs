@@ -13,6 +13,8 @@ export interface RollModifierData {
     weapon: string;
     /** Formula for damage, number for percentages, text for notes. */
     value: string;
+    /** Only on a crit ("On crit: 2d10 fire damage"). Damage and multipliers apply to each hit that crits. */
+    onCrit?: boolean;
 }
 
 /**
@@ -62,6 +64,7 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
                     damageType: new fields.StringField({ required: true, blank: true, initial: "all" }),
                     weapon: new fields.StringField({ required: true, blank: true, initial: "" }),
                     value: new fields.StringField({ required: true, blank: true, initial: "" }),
+                    onCrit: new fields.BooleanField({ initial: false }),
                 }),
             ),
         };

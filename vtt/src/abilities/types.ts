@@ -16,6 +16,8 @@ export interface ModifierSpec {
     damageType?: string;
     weapon?: string;
     value: string | number;
+    /** Only on a crit. */
+    onCrit?: boolean;
 }
 
 /** A core ActiveEffect change, e.g. { key: "system.stats.ac.bonus", value: 40 }. */

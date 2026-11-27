@@ -24,12 +24,14 @@
   <h4>Roll modifiers</h4>
   <p class="hint">
     Applied when this effect's actor makes a matching roll. Stat changes (e.g. <code>system.stats.ac.bonus</code>)
-    go on the Changes tab instead.
+    go on the Changes tab instead. On-hit statuses take a status id and an optional chance: <code>stunned 25</code> is
+    "25% chance to Stun"; damage-over-time ones take an amount, like <code>burned:10 30</code>. Tick "On crit" for
+    "On crit: ..." affixes.
   </p>
   <table class="barbs-modifiers">
     <thead>
       <tr>
-        <th>Type</th><th>Roll</th><th>Damage type</th><th>Weapon</th><th>Value</th>
+        <th>Type</th><th>Roll</th><th>Damage type</th><th>Weapon</th><th>Value</th><th data-tooltip="Only when the hit crits">On crit</th>
         <th><a data-action="addModifier" data-tooltip="Add modifier"><i class="fa-solid fa-plus"></i></a></th>
       </tr>
     </thead>
@@ -41,6 +43,7 @@
         <td><select name="system.modifiers.{{m.index}}.damageType">{{selectOptions @root.damageTypeChoices selected=m.damageType}}</select></td>
         <td><select name="system.modifiers.{{m.index}}.weapon">{{selectOptions @root.weaponChoices selected=m.weapon}}</select></td>
         <td><input type="text" name="system.modifiers.{{m.index}}.value" value="{{m.value}}" placeholder="2d8, 25, text" /></td>
+        <td><input type="checkbox" name="system.modifiers.{{m.index}}.onCrit" {{checked m.onCrit}} /></td>
         <td><a data-action="deleteModifier" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a></td>
       </tr>
       {{/each}}

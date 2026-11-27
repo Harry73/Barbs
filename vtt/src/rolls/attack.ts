@@ -5,7 +5,7 @@
  * damage, fold in roll modifiers from every active effect on the actor (buffs, conditions, equipped gear), then
  * roll. The result is plain data the chat card can render and the "Apply" buttons can act on.
  */
-import { bleed } from "../abilities/helpers.ts";
+import { bleed, burn, poison } from "../abilities/helpers.ts";
 import { SYSTEM_ID } from "../config.ts";
 import { ELEMENTS, RANGED_WEAPONS, STATUSES, type ModifierRollType, type RollType, type StatKey } from "../config.ts";
 import { snapshotEffect, type RemovedEffect } from "../chat/undo.ts";
@@ -153,6 +153,10 @@ export class AttackBuilder {
     /** Percent of physical damage turned into Bleed on hit (Serrated Arrow), by source. */
     #bleedConvert: { percent: number; source: string }[] = [];
     #singleUse = new Set<ActiveEffect.Implementation>();
+    /** On-hit statuses with a chance ("25% chance to Stun"), rolled when the attack is. */
+    #chanceStatuses: { onHit: OnHitStatus; chance: number }[] = [];
+    /** "On crit:" modifiers, applied to hits that crit. */
+    #onCrit: { modifier: RollModifierData; source: string }[] = [];
     #accuracy = 0;
     #lethality = 0;
     #lifesteal = 0;
@@ -407,102 +411,141 @@ export class AttackBuilder {
             for (const modifier of system.modifiers ?? []) {
                 if (!this.#modifierApplies(modifier)) continue;
                 used = true;
-                const number = Number(modifier.value) || 0;
-                switch (modifier.type) {
-                    case "damage":
-                        this.addDamage(modifier.value, (modifier.damageType || "physical") as DamageKey);
-                        break;
-                    case "multiplier":
-                        this.addMultiplier((modifier.damageType || "all") as MultiplierKey, effect.name, number);
-                        break;
-                    case "critChance":
-                        this.#critChance += number;
-                        break;
-                    case "critDamage":
-                        this.#critDamage += number;
-                        break;
-                    case "penetration": {
-                        // "Magic penetration" covers every element; "all" covers armor too.
-                        const key = modifier.damageType || "physical";
-                        const types: DamageKey[] =
-                            key === "allMagic" ? [...ELEMENTS] : key === "all" ? ["physical", ...ELEMENTS] : [key as DamageKey];
-                        for (const type of types) this.#penetration[type] = (this.#penetration[type] ?? 0) + number;
-                        break;
-                    }
-                    case "note":
-                        this.addNote(`${effect.name}: ${modifier.value}`);
-                        break;
-                    case "canCrit":
-                        this.#canCrit = true;
-                        break;
-                    case "comboChance":
-                        this.#comboBonus += number;
-                        break;
-                    case "convert":
-                        if (modifier.damageType && modifier.damageType !== "all") this.#convert = modifier.damageType as DamageKey;
-                        break;
-                    case "status": {
-                        const status = STATUSES.find((s) => s.id === modifier.value);
-                        if (status) this.#statuses.push({ id: status.id, name: status.name, source: effect.name });
-                        break;
-                    }
-                    case "accuracy":
-                        this.#accuracy += number;
-                        break;
-                    case "lethality":
-                        this.#lethality += number;
-                        break;
-                    case "lifesteal":
-                        this.#lifesteal += number;
-                        break;
-                    case "unblockable":
-                        this.#unblockable += number;
-                        break;
-                    case "bleedConvert":
-                        if (number > 0) this.#bleedConvert.push({ percent: number, source: effect.name });
-                        break;
-                    case "shred":
-                    case "crShred": {
-                        if (number <= 0) break;
-                        const ac = modifier.type === "shred";
-                        const label = ac ? `${number} AC` : `${number}% CR`;
-                        this.#statuses.push({
-                            id: "",
-                            name: `Shred ${label}`,
-                            source: effect.name,
-                            // The rulebook's "Decreased Stats" condition: stacks, and the target resists it with CR.
-                            effect: {
-                                name: `Shredded (-${label})`,
-                                category: "condition",
-                                statuses: ["decreased-stats"],
-                                changes: [{ key: `system.stats.${ac ? "ac" : "conditionResist"}.bonus`, value: -number }],
-                                maxStacks: Infinity,
-                            },
-                        });
-                        break;
-                    }
-                    case "vulnerability": {
-                        const type = modifier.damageType || "all";
-                        if (number > 0) {
-                            this.#statuses.push({
-                                id: "",
-                                name: `${number}% ${type} vulnerability`,
-                                source: effect.name,
-                                effect: {
-                                    name: `${type.capitalize()} Vulnerability (${number}%)`,
-                                    category: "condition",
-                                    changes: [{ key: `system.vulnerability.${type === "allMagic" ? "magic" : type}`, value: number }],
-                                    maxStacks: Infinity,
-                                },
-                            });
-                        }
-                        break;
-                    }
-                }
+                // "On crit:" modifiers wait until a hit actually crits.
+                if (modifier.onCrit) this.#onCrit.push({ modifier, source: effect.name });
+                else this.#applyModifier(modifier, effect.name);
             }
             if (used && system.singleUse) this.#singleUse.add(effect as ActiveEffect.Implementation);
         }
         return this;
+    }
+
+    /** Fold one roll modifier into this roll. `source` names it in multipliers and notes. */
+    #applyModifier(modifier: RollModifierData, source: string): void {
+        const number = Number(modifier.value) || 0;
+        switch (modifier.type) {
+            case "damage":
+                this.addDamage(modifier.value, (modifier.damageType || "physical") as DamageKey);
+                break;
+            case "multiplier":
+                this.addMultiplier((modifier.damageType || "all") as MultiplierKey, source, number);
+                break;
+            case "critChance":
+                this.#critChance += number;
+                break;
+            case "critDamage":
+                this.#critDamage += number;
+                break;
+            case "penetration": {
+                // "Magic penetration" covers every element; "all" covers armor too.
+                const key = modifier.damageType || "physical";
+                const types: DamageKey[] =
+                    key === "allMagic" ? [...ELEMENTS] : key === "all" ? ["physical", ...ELEMENTS] : [key as DamageKey];
+                for (const type of types) this.#penetration[type] = (this.#penetration[type] ?? 0) + number;
+                break;
+            }
+            case "note":
+                this.addNote(`${source}: ${modifier.value}`);
+                break;
+            case "canCrit":
+                this.#canCrit = true;
+                break;
+            case "comboChance":
+                this.#comboBonus += number;
+                break;
+            case "convert":
+                if (modifier.damageType && modifier.damageType !== "all") this.#convert = modifier.damageType as DamageKey;
+                break;
+            case "status": {
+                // "stunned", "stunned 25" (25% chance), or a DoT with its amount: "burned:10 30".
+                const [idPart = "", chancePart] = String(modifier.value).trim().split(/\s+/);
+                const [id, amount] = idPart.split(":");
+                const status = STATUSES.find((s) => s.id === id);
+                if (!status) break;
+                const chance = chancePart === undefined ? 100 : Number.parseFloat(chancePart);
+                const effect =
+                    amount && id === "bleeding" ? bleed(amount) : amount && id === "burned" ? burn(amount) : amount && id === "poisoned" ? poison(amount) : undefined;
+                const onHit: OnHitStatus = { id: status.id, name: effect?.name ?? status.name, source, ...(effect ? { effect } : {}) };
+                if (chance >= 100) this.#statuses.push(onHit);
+                else if (chance > 0) this.#chanceStatuses.push({ onHit, chance });
+                break;
+            }
+            case "evShred":
+                if (number > 0) {
+                    this.#statuses.push({
+                        id: "",
+                        name: `Reduce Evasion ${number}%`,
+                        source,
+                        effect: {
+                            name: `Evasion reduced (-${number}%)`,
+                            category: "condition",
+                            statuses: ["decreased-stats"],
+                            changes: [{ key: "system.stats.evasion.bonus", value: -number }],
+                            duration: "1 minute",
+                            maxStacks: Infinity,
+                        },
+                    });
+                }
+                break;
+            case "buffStrip":
+                if (number > 0) this.addNote(`${source}: strip ${number} buff(s) from the target.`);
+                break;
+            case "forcedMovement":
+                if (number > 0) this.addNote(`${source}: push the target ${number} ft.`);
+                break;
+            case "accuracy":
+                this.#accuracy += number;
+                break;
+            case "lethality":
+                this.#lethality += number;
+                break;
+            case "lifesteal":
+                this.#lifesteal += number;
+                break;
+            case "unblockable":
+                this.#unblockable += number;
+                break;
+            case "bleedConvert":
+                if (number > 0) this.#bleedConvert.push({ percent: number, source: source });
+                break;
+            case "shred":
+            case "crShred": {
+                if (number <= 0) break;
+                const ac = modifier.type === "shred";
+                const label = ac ? `${number} AC` : `${number}% CR`;
+                this.#statuses.push({
+                    id: "",
+                    name: `Shred ${label}`,
+                    source: source,
+                    // The rulebook's "Decreased Stats" condition: stacks, and the target resists it with CR.
+                    effect: {
+                        name: `Shredded (-${label})`,
+                        category: "condition",
+                        statuses: ["decreased-stats"],
+                        changes: [{ key: `system.stats.${ac ? "ac" : "conditionResist"}.bonus`, value: -number }],
+                        maxStacks: Infinity,
+                    },
+                });
+                break;
+            }
+            case "vulnerability": {
+                const type = modifier.damageType || "all";
+                if (number > 0) {
+                    this.#statuses.push({
+                        id: "",
+                        name: `${number}% ${type} vulnerability`,
+                        source: source,
+                        effect: {
+                            name: `${type.capitalize()} Vulnerability (${number}%)`,
+                            category: "condition",
+                            changes: [{ key: `system.vulnerability.${type === "allMagic" ? "magic" : type}`, value: number }],
+                            maxStacks: Infinity,
+                        },
+                    });
+                }
+                break;
+            }
+        }
     }
 
     async #rollCrit(): Promise<CritResult | null> {
@@ -556,17 +599,41 @@ export class AttackBuilder {
             this.addNote(`Damage converted to ${this.#convert}.`);
         }
 
+        let critApplied = false;
         for (let i = 0; i < Math.max(1, hits); i++) {
             const crit = await this.#rollCrit();
             if (crit) rolls.push(crit.roll);
+            // "On crit:" modifiers. Damage and multipliers apply to each hit that crits; everything else (statuses,
+            // shreds, lethality, notes) applies once for the attack, the first time a hit crits.
+            let damage = this.#damage;
+            let multipliers = this.#multipliers;
+            if (crit?.isCrit && this.#onCrit.length) {
+                damage = new Map([...this.#damage].map(([k, v]) => [k, [...v]]));
+                multipliers = new Map([...this.#multipliers].map(([k, v]) => [k, new Map(v)]));
+                for (const { modifier, source } of this.#onCrit) {
+                    if (modifier.type === "damage") {
+                        const type = (this.#convert ?? (modifier.damageType || "physical")) as DamageKey;
+                        damage.set(type, [...(damage.get(type) ?? []), `(${modifier.value})`]);
+                    } else if (modifier.type === "multiplier") {
+                        const key = (modifier.damageType || "all") as MultiplierKey;
+                        const bySource = multipliers.get(key) ?? new Map<string, number>();
+                        bySource.set(source, (bySource.get(source) ?? 0) + (Number(modifier.value) || 0));
+                        multipliers.set(key, bySource);
+                    } else if (!critApplied) {
+                        this.#applyModifier(modifier, `${source} (on crit)`);
+                    }
+                }
+                if (!critApplied) this.addNote(`On crit: ${[...new Set(this.#onCrit.map((c) => c.source))].join(", ")}.`);
+                critApplied = true;
+            }
             const parts: DamagePart[] = [];
             const hitTotals: AttackHit["totals"] = {};
-            for (const [type, terms] of this.#damage) {
+            for (const [type, terms] of damage) {
                 const formula = terms.join(" + ");
                 const roll = (await new Roll(formula, rollData).evaluate({ maximize: this.#maximize })) as unknown as Roll;
                 rolls.push(roll);
                 const base = roll.total ?? 0;
-                const multiplier = multiplierFor(type, this.#multipliers);
+                const multiplier = multiplierFor(type, multipliers);
                 const total = finalDamage(base, multiplier, crit?.factor ?? 1);
                 parts.push({ type, formula: roll.formula, roll, base, multiplier, total });
                 hitTotals[type] = (hitTotals[type] ?? 0) + total;
@@ -575,7 +642,7 @@ export class AttackBuilder {
             const distanceBonus = [...distanceTerms].map(([type, terms]) => ({
                 type: (this.#convert ?? type) as DamageKey,
                 formula: terms.join(" + "),
-                factor: multiplierFor((this.#convert ?? type) as DamageKey, this.#multipliers) * (crit?.factor ?? 1),
+                factor: multiplierFor((this.#convert ?? type) as DamageKey, multipliers) * (crit?.factor ?? 1),
             }));
             results.push({ parts, crit, totals: hitTotals, distanceBonus });
         }
@@ -620,6 +687,15 @@ export class AttackBuilder {
             const delta =
                 change.set !== undefined ? await setResource(this.actor, change.key, change.set) : await adjustResource(this.actor, change.key, change.delta ?? 0);
             if (delta) passiveDeltas.push(delta);
+        }
+
+        // Chance-based on-hit statuses roll now; only the ones that land get an Apply button.
+        for (const { onHit, chance } of this.#chanceStatuses) {
+            const roll = (await new Roll("1d100").evaluate()) as unknown as Roll;
+            rolls.push(roll);
+            const landed = (roll.total ?? 101) <= chance;
+            this.addNote(`${chance}% chance to inflict ${onHit.name} (${onHit.source}): rolled ${roll.total}, ${landed ? "inflicted" : "no"}.`);
+            if (landed) this.#statuses.push(onHit);
         }
 
         // Accuracy, lethality, lifesteal, and unblockable only matter for attacks that deal damage.
