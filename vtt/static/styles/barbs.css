@@ -251,6 +251,14 @@
   text-align: right;
 }
 
+/* Inventory: one heading row per equipment slot. */
+.barbs .inventory .inventory-section th {
+  padding-top: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--barbs-border);
+  color: var(--barbs-accent);
+}
+
 /* The effect config's change key dropdown (replaces core's text box). */
 .barbs .tab.changes .key select {
   width: 100%;

@@ -248,6 +248,14 @@ export const EQUIPMENT_SLOTS = {
 } as const;
 export type EquipmentSlot = keyof typeof EQUIPMENT_SLOTS;
 
+/** Order of the inventory's sections, top to bottom: gear by slot, then everything just carried. */
+export const INVENTORY_ORDER: EquipmentSlot[] = [
+    "mainHand", "offhand", "twoHand", "head", "body", "hands", "feet", "neck", "ring", "belt", "misc", "none",
+];
+
+/** Section headings, where they differ from the slot's own label. */
+export const INVENTORY_HEADINGS: Partial<Record<EquipmentSlot, string>> = { ring: "Rings", none: "Not slotted" };
+
 /* -------------------------------------------- */
 /*  Buffs and conditions                        */
 /* -------------------------------------------- */

@@ -2,6 +2,8 @@ import {
     ATTRIBUTE_KEYS,
     ATTRIBUTES,
     EQUIPMENT_SLOTS,
+    INVENTORY_HEADINGS,
+    INVENTORY_ORDER,
     RESOURCE_KEYS,
     SKILL_MAX_POINTS,
     STAT_KEYS,
@@ -169,11 +171,19 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             return {
                 item,
                 system: e,
-                slotLabel: EQUIPMENT_SLOTS[e.slot as EquipmentSlot] ?? e.slot,
                 weaponSummary: e.isWeapon ? `${e.weapon.damage} ${e.weapon.damageType}` : "",
             };
         });
         const heldWeapons = equipment.filter((e) => e.system.isHeldWeapon);
+
+        // One section per slot, in a fixed order; equipped items first, then by name. Empty slots are left out.
+        const inventory = INVENTORY_ORDER.map((slot) => ({
+            slot,
+            label: INVENTORY_HEADINGS[slot] ?? EQUIPMENT_SLOTS[slot],
+            items: equipment
+                .filter((e) => (e.system.slot in EQUIPMENT_SLOTS ? e.system.slot : "none") === slot)
+                .sort((a, b) => Number(b.system.equipped) - Number(a.system.equipped) || a.item.name.localeCompare(b.item.name)),
+        })).filter((section) => section.items.length);
 
         // allApplicableEffects() skips suppressed ones (unequipped gear), so walk item effects too.
         const allEffects = [...actor.effects, ...actor.items.contents.flatMap((i) => [...i.effects])];
@@ -213,6 +223,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             skillMaxPoints: SKILL_MAX_POINTS,
             abilityGroups: sortedAbilityGroups,
             equipment,
+            inventory,
             passives,
             monk: passives.some((p) => p.monk)
                 ? { die: monkDie(actor as unknown as Actor.Implementation), combo: baseComboChance(actor as unknown as Actor.Implementation) }
