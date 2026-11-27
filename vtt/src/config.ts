@@ -183,6 +183,10 @@ export const MODIFIER_TYPES = {
     shred: "On-hit AC shred",
     crShred: "On-hit CR reduction (%)",
     vulnerability: "On-hit vulnerability (%, stacking)",
+    accuracy: "Accuracy (%)",
+    lethality: "Lethality (%)",
+    lifesteal: "Lifesteal (%)",
+    unblockable: "Unblockable chance (%)",
     note: "Note",
 } as const;
 export type ModifierType = keyof typeof MODIFIER_TYPES;

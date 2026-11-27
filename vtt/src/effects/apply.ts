@@ -294,7 +294,12 @@ export async function applyDamageToActor(
     penetration: Partial<Record<DamageKey, number>>,
     sourceName?: string,
     scale = 1,
-    { trueDamage = false, attack = false }: { trueDamage?: boolean; attack?: boolean } = {},
+    {
+        trueDamage = false,
+        attack = false,
+        unblockable = false,
+        lifesteal,
+    }: { trueDamage?: boolean; attack?: boolean; unblockable?: boolean; lifesteal?: { percent: number; attackerUuid: string } } = {},
 ): Promise<void> {
     const creature = target.system as unknown as CreatureModel;
     const d = creature.derived;
@@ -303,7 +308,7 @@ export async function applyDamageToActor(
     const baseScale = scale;
     let blockNote = "";
     const blockUndo: RemovedEffect[] = [];
-    if (attack && !trueDamage) {
+    if (attack && !trueDamage && !unblockable) {
         const blocks = (target.appliedEffects as ActiveEffect.Implementation[])
             .filter((e) => ((e.system as unknown as { block?: number }).block ?? 0) > 0)
             .sort((a, b) => (b.system as unknown as { block: number }).block - (a.system as unknown as { block: number }).block);
@@ -342,6 +347,7 @@ export async function applyDamageToActor(
     });
 
     const { notes, undo } = await updateHealth(target, total);
+    if (unblockable && attack) notes.push("Unblockable: blocks didn't apply.");
     (undo.removedEffects ??= []).push(...blockUndo);
     if (total > 0) {
         const bonus = d.combat?.concentrationBonus ?? 0;
@@ -357,6 +363,13 @@ export async function applyDamageToActor(
             `<ul>${rows.join("")}</ul>${notes.map((n) => `<p>${n}</p>`).join("")}`,
         undo,
     );
+
+    // Lifesteal heals the attacker for a share of what actually landed (after defenses), as its own undoable heal.
+    if (lifesteal && total > 0) {
+        const attacker = (await fromUuid(lifesteal.attackerUuid)) as Actor.Implementation | null;
+        const amount = Math.floor((total * lifesteal.percent) / 100);
+        if (attacker && amount > 0) await applyHealingToActor(attacker, amount, `Lifesteal (${lifesteal.percent}% of ${total} on ${target.name})`);
+    }
 }
 
 export async function applyHealingToActor(target: Actor.Implementation, amount: number, sourceName?: string): Promise<void> {

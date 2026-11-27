@@ -33,8 +33,8 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
         notes: ["The target can end the buff as a reaction to dash 20 ft in any direction."],
     },
     "Aeromancer/Wind Slash": {
-        attack: spell("6d8", "air"),
-        notes: ["Also hits up to 2 enemies adjacent to the target (target them too). Can't miss, can't be blocked, bypasses barriers."],
+        attack: spell("6d8", "air", { unblockable: 100 }),
+        notes: ["Also hits up to 2 enemies adjacent to the target (target them too). Can't miss, bypasses barriers."],
     },
     "Aeromancer/Aeroblast": {
         choices: [{ ...yesNo("windsOfWar", "Expend 4 Winds of War stacks to knock prone"), resource: "winds", amount: 4 }],
@@ -184,8 +184,8 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
         ],
     },
     "Aquamancer/Water Whip": {
-        attack: spell("9d6", "water", { canCrit: true }),
-        notes: ["Can't be blocked or miss. If it doesn't fail, you may pull the target 10 ft toward you."],
+        attack: spell("9d6", "water", { canCrit: true, unblockable: 100 }),
+        notes: ["Can't miss. If it doesn't fail, you may pull the target 10 ft toward you."],
     },
     "Aquamancer/Bubble Barrier": {
         target: (ctx) => [
@@ -456,8 +456,8 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
         heal: (ctx) => ({ formula: ctx.choices.touch ? "6d10" : "4d10" }),
     },
     "Luxomancer/Warrior of Light": {
-        target: (ctx) => [{ category: "buff", modifiers: [onHit(ctx.dice("4d10"), "light")] }],
-        notes: ["Also +20% accuracy, and light healing spells on the target are 50% more effective (not automated)."],
+        target: (ctx) => [{ category: "buff", modifiers: [onHit(ctx.dice("4d10"), "light"), { type: "accuracy", rollType: "all", value: ctx.scale(20) }] }],
+        notes: ["Light healing spells on the target are also 50% more effective (not automated)."],
     },
     "Luxomancer/Beam of Light": {
         choices: [{ ...yesNo("banked", "Spend 10 banked Guiding Light mana to ignore MR"), resource: "healingMana", amount: 10 }],

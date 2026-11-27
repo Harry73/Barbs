@@ -10,6 +10,7 @@ import { resolve, restoreContext, type ContextData } from "../abilities/context.
 import { buildEffectData, type EffectSource } from "../abilities/effects.ts";
 import { status as statusSpec } from "../abilities/helpers.ts";
 import type { EffectSpec } from "../abilities/types.ts";
+import type { CreatureModel } from "../data/actor/creature.ts";
 import { evaluateDistanceBonus, type AttackResult, type DistanceBonus, type OnHitStatus } from "../rolls/attack.ts";
 import type { DamageKey } from "../rules/damage-math.ts";
 import { requestOnActor, requestUndo } from "../socket.ts";
@@ -23,6 +24,12 @@ export interface CardFlags {
         penetration: Partial<Record<DamageKey, number>>;
         /** Skip all defenses (drains, health loss). */
         trueDamage?: boolean;
+        /** Blocks don't apply (Unblockable Chance succeeded, or "cannot be blocked"). */
+        unblockable?: boolean;
+        /** Heal the attacker for this percent of the damage dealt to each target. */
+        lifesteal?: number;
+        /** Reduces targets' Evasion for the Evade button, percent. */
+        accuracy?: number;
         /** Per-hit damage that depends on each target's distance (Distance Shooter), parallel to `hits`. */
         bonus?: DistanceBonus[][];
         /** Distance tiers: each target takes the first tier whose distance from the caster covers it. */
@@ -142,6 +149,7 @@ export async function postCard(
                 (flags.damage.tiers?.length ?? 0) > 0),
         trueDamage: !!flags.damage?.trueDamage,
         alterCourse: !!flags.alterCourse,
+        accuracy: flags.damage?.accuracy ?? 0,
         shielding: flags.shielding,
         drain: flags.drain,
         scaledTargets: scales.some((s) => s !== 1),
@@ -281,6 +289,8 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
                         sourceName: redirects ? `${sourceName} (redirect ${redirects}${flags.alterCourse ? `, +${50 * redirects}%` : ""})` : sourceName,
                         scale: (half ? 0.5 : perTarget) * alter,
                         trueDamage: flags.damage.trueDamage,
+                        unblockable: flags.damage.unblockable,
+                        lifesteal: flags.damage.lifesteal ? { percent: flags.damage.lifesteal, attackerUuid: flags.actorUuid } : undefined,
                     });
                 }
             }
@@ -340,6 +350,21 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
             for (const { actor } of targets) {
                 await requestOnActor(actor, "resource", { resource: flags.drain.resource, delta: -flags.drain.amount, sourceName });
                 if (caster) await requestOnActor(caster, "resource", { resource: flags.drain.resource, delta: flags.drain.amount, sourceName });
+            }
+            break;
+        }
+        case "evade": {
+            // Each target dodges with their Evasion minus the attack's Accuracy.
+            const accuracy = flags.damage?.accuracy ?? 0;
+            for (const { actor } of targets) {
+                const evasion = (actor.system as unknown as CreatureModel).derived.stats.evasion.value;
+                const chance = Math.max(0, evasion - accuracy);
+                const roll = await new Roll("1d100").evaluate();
+                const dodged = (roll.total ?? 101) <= chance;
+                await roll.toMessage({
+                    speaker: ChatMessage.getSpeaker({ actor: actor as Actor.Stored }),
+                    flavor: `Evasion vs ${sourceName}: ${chance}%${accuracy ? ` (${evasion}% − ${accuracy}% accuracy)` : ""} — ${dodged ? "<strong>dodged</strong>" : "hit"}`,
+                });
             }
             break;
         }

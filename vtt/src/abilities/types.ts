@@ -129,8 +129,16 @@ export interface AttackSpec {
     combo?: number;
     /** Damage types that swap with each redirect off a mirror (Helix Beam: ice ↔ light). */
     redirectSwap?: [DamageType, DamageType];
-    /** Heal the caster for this percent of the damage rolled ("healing for the amount of damage rolled" = 100). */
+    /** Heal the caster for this percent of the damage rolled, right away ("healing for the amount of damage rolled"). */
+    healRolled?: number;
+    /** Heal the attacker for this percent of the damage dealt, after defenses, as it's applied ("20% lifesteal"). */
     lifesteal?: number;
+    /** "+20% Accuracy": the targets' Evasion is that much lower when they dodge. */
+    accuracy?: number;
+    /** "30% Lethality": chance each hit instantly kills. */
+    lethality?: number;
+    /** "Can't be blocked": 100, or a percent chance. */
+    unblockable?: number;
 }
 
 export interface AreaSpec {

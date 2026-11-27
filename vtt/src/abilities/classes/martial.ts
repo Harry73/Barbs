@@ -68,8 +68,8 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
     },
     "Arcane Archer/Surefire Shot": {
         choices: [yesNo("sacrificed", "Sacrificed a buff this turn (+50% damage, unblockable)")],
-        attack: (ctx) => strike("7d8", { increase: ctx.choices.sacrificed ? 50 : 0 }),
-        notes: (ctx) => [`+${20 * ctx.buffs}% accuracy and +${40 * ctx.buffs} ft range from your ${ctx.buffs} buff(s).`],
+        attack: (ctx) => strike("7d8", { increase: ctx.choices.sacrificed ? 50 : 0, unblockable: ctx.choices.sacrificed ? 100 : 0, accuracy: 20 * ctx.buffs }),
+        notes: (ctx) => [`+${40 * ctx.buffs} ft range from your ${ctx.buffs} buff(s).`],
     },
     "Arcane Archer/Broadhead Arrow": {
         self: (ctx) => [
@@ -302,6 +302,7 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
                 { formula: "5d10", type: "light" },
             ],
             increase: ctx.choices.demonic ? 100 : 0,
+            lethality: ctx.choices.demonic ? 30 : 0,
             ignoreMR: !!ctx.choices.stacks,
         }),
         notes: [
@@ -438,15 +439,15 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
         notes: ["Concentration. Your current health should change by the same ratio (not automated)."],
     },
     "Juggernaut/Wild Swing": {
-        attack: strike("5d10"),
-        notes: (ctx) => {
+        // 30% lifesteal, or 60% below 30% health.
+        attack: (ctx) => {
             const { value, max } = (ctx.actor.system as { derived: { resources: { health: { value: number; max: number } } } }).derived.resources.health;
-            return [`Lifesteal ${value / max < 0.3 ? 60 : 30}% of the damage dealt (heal yourself after applying).`];
+            return strike("5d10", { lifesteal: max && value / max < 0.3 ? 60 : 30 });
         },
     },
     "Juggernaut/Hostility": {
         choices: [yesNo("concentrate", "Concentrate on it (25% lifesteal instead of 15%)")],
-        self: (ctx) => [{ category: "buff", modifiers: [note(`${ctx.choices.concentrate ? 25 : 15}% lifesteal on hit`, { rollType: "physical" })] }],
+        self: (ctx) => [{ category: "buff", modifiers: [{ type: "lifesteal", rollType: "physical", value: ctx.scale(ctx.choices.concentrate ? 25 : 15) }] }],
     },
     "Juggernaut/Blood Boil": {
         area: around(30),
@@ -480,7 +481,7 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
         notes: (ctx) => [`Cleanse ${ctx.choices.health ? 2 : 1} condition(s) of your choice first.`],
     },
     "Juggernaut/Draining Blow": {
-        attack: strike("7d10", { lifesteal: 100 }),
+        attack: strike("7d10", { healRolled: 100 }),
         notes: ["You may concentrate to repeat it at half cost while attacking the same target."],
     },
     "Juggernaut/Tachycardia": {
@@ -514,7 +515,7 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
 
     "Night Lord/Larceny": {
         // TODO: double-check with the rulebook author that drained health ignores AC/MR.
-        attack: strike("6d6", { scaling: "none", trueDamage: true, lifesteal: 100 }),
+        attack: strike("6d6", { scaling: "none", trueDamage: true, healRolled: 100 }),
         target: [{ name: "Larceny mark", category: "condition", resistible: false, changes: [{ key: "system.skillBonus", value: -30 }], description: "<p>-30 to skill checks until their next long rest.</p>" }],
         summarize: (result) => {
             const sixes = result.parts.flatMap((p) => p.roll.dice.flatMap((d) => d.results)).filter((r) => r.active && r.result === 6).length;
@@ -539,7 +540,12 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
 
     "Reaper/Soul Rend": {
         choices: [pick("mode", "Choose", { pierce: "Ignore all AC, can't be blocked", lifesteal: "20% lifesteal" })],
-        attack: (ctx) => strike("5d10", { ignoreAC: ctx.choices.mode === "pierce", lifesteal: ctx.choices.mode === "lifesteal" ? 20 : 0 }),
+        attack: (ctx) =>
+            strike("5d10", {
+                ignoreAC: ctx.choices.mode === "pierce",
+                unblockable: ctx.choices.mode === "pierce" ? 100 : 0,
+                lifesteal: ctx.choices.mode === "lifesteal" ? 20 : 0,
+            }),
     },
     "Reaper/The End Is Coming": {
         target: [
@@ -572,8 +578,7 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
     },
     "Reaper/Deathstroke": {
         choices: [{ ...count("souls", "Souls sacrificed"), resource: "souls" }],
-        attack: (ctx) => strike("6d10", { increase: 100 * Number(ctx.choices.souls) }),
-        notes: (ctx) => [`${20 * Number(ctx.choices.souls)}% Lethality.`],
+        attack: (ctx) => strike("6d10", { increase: 100 * Number(ctx.choices.souls), lethality: 20 * Number(ctx.choices.souls) }),
     },
     "Reaper/Frailty of Man": {
         target: [
@@ -731,8 +736,7 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
     },
     "Sniper/Kill Shot": {
         choices: [SPOTTING],
-        attack: strike("7d8"),
-        notes: (ctx) => [`${10 * Number(ctx.choices.spotting)}% Lethality.`],
+        attack: (ctx) => strike("7d8", { lethality: 10 * Number(ctx.choices.spotting) }),
     },
     "Sniper/Analytical Shooter": {
         self: (ctx) => [
@@ -1194,7 +1198,8 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
                 modifiers: [
                     damageIncrease(100, { rollType: "physical", damageType: "physical" }),
                     { type: "penetration", rollType: "physical", damageType: "physical", value: 100 },
-                    note("+100% Accuracy; this attack can't be blocked."),
+                    { type: "accuracy", rollType: "all", value: 100 },
+                    { type: "unblockable", rollType: "all", value: 100 },
                 ],
             },
         ],

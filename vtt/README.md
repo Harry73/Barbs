@@ -114,7 +114,10 @@ stat is higher, and weapon-type checks passing if either weapon matches (the Rol
 section gets a **Dual wield** button that attacks with each weapon, one card per weapon. Holding a shield in each hand
 counts as dual wielding shields for the Sentinel's extra options, which only appear in dialogs when it's true.
 
-There's no to-hit roll in Barbs; dodging is the defender's call (Stats tab: roll Evasion).
+There's no to-hit roll in Barbs; dodging is the defender's call. Attack cards have an **Evade** button that rolls each
+target's Evasion, minus the attack's Accuracy. Cards also apply the attacker's other attack stats: Unblockable Chance is
+rolled with the attack (a success means blocks don't apply), Lethality is rolled per hit and called out on the card,
+and Lifesteal heals the attacker for a share of the damage that actually lands, after defenses.
 
 ## Passives
 
@@ -156,7 +159,7 @@ Every ActiveEffect has Barbs data (Barbs tab in the effect config):
 - **Pulse**: damage the bearer deals to creatures within a radius at the start of each of their turns (Fiery Temper).
   The combat tracker posts it as a card already targeting everyone in range.
 - **Roll modifiers**, applied when the effect's actor makes a matching roll: extra damage, damage multiplier %,
-  crit chance, crit damage %, penetration, on-hit statuses, on-hit AC shred, CR reduction, or stacking vulnerability, converting a
+  crit chance, crit damage %, penetration, accuracy, lethality, lifesteal, unblockable chance, on-hit statuses, on-hit AC shred, CR reduction, or stacking vulnerability, converting a
   percent of physical damage into Bleed (Serrated Arrow), or a note. Each can be limited to a roll type (physical,
   magic, psychic, healing) and a weapon category ("bow attacks deal +2d8 air"), or to any ranged / any melee weapon.
 - Damage formulas can use `@distance`: the distance in feet to each target, measured when damage is applied

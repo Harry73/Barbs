@@ -104,6 +104,10 @@ function prepareAttack(
     if (spec.critDamage) builder.addCritDamage(spec.critDamage);
     if (spec.maximize) builder.maximize();
     builder.ignoreDefenses({ ac: spec.ignoreAC, mr: spec.ignoreMR });
+    if (spec.accuracy) builder.addAccuracy(spec.accuracy);
+    if (spec.lethality) builder.addLethality(spec.lethality);
+    if (spec.lifesteal) builder.addLifesteal(spec.lifesteal);
+    if (spec.unblockable) builder.addUnblockable(spec.unblockable);
     if (skipSingleUse) builder.skipSingleUse();
     return builder.applyEffects();
 }
@@ -295,8 +299,8 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
     // Healing the caster, lifesteal, shielding, and resource recovery happen right away (each with its own undo).
     const selfNotes: string[] = [];
     if (heal?.self && result) await applyHealingToActor(actor, result.totals.healing ?? 0, opts.title);
-    if (attack?.lifesteal && ctx.result) {
-        await applyHealingToActor(actor, Math.round((ctx.result.total * attack.lifesteal) / 100), `${opts.title} (lifesteal)`);
+    if (attack?.healRolled && ctx.result) {
+        await applyHealingToActor(actor, Math.round((ctx.result.total * attack.healRolled) / 100), `${opts.title} (healing for the damage rolled)`);
     }
     if (automation?.healFrom && result?.totals[automation.healFrom]) {
         await applyHealingToActor(actor, result.totals[automation.healFrom] ?? 0, opts.title);
@@ -423,6 +427,9 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
                           bonus: tiers.length ? [] : result.hits.map((h) => h.distanceBonus),
                           penetration: result.penetration,
                           trueDamage: !!attack?.trueDamage,
+                          unblockable: result.unblockable,
+                          lifesteal: result.lifesteal,
+                          accuracy: result.accuracy,
                           tiers: tiers.map((t) => ({
                               within: t.within,
                               hits: t.result.hits.map((h) => h.totals),
@@ -480,7 +487,14 @@ export async function postPulse(
         {
             actorUuid: actor.uuid ?? "",
             sourceName: `${actor.name}'s ${effect.name}`,
-            damage: { hits: result.hits.map((h) => h.totals), bonus: result.hits.map((h) => h.distanceBonus), penetration: result.penetration },
+            damage: {
+                hits: result.hits.map((h) => h.totals),
+                bonus: result.hits.map((h) => h.distanceBonus),
+                penetration: result.penetration,
+                unblockable: result.unblockable,
+                lifesteal: result.lifesteal,
+                accuracy: result.accuracy,
+            },
             casterTokenUuid: token.document.uuid ?? undefined,
             statuses: result.statuses,
         },
@@ -568,7 +582,14 @@ export async function weaponAttack(actor: Actor.Implementation, item: Item.Imple
         {
             actorUuid: actor.uuid ?? "",
             sourceName: `${actor.name}'s ${item.name}`,
-            damage: { hits: result.hits.map((h) => h.totals), bonus: result.hits.map((h) => h.distanceBonus), penetration: result.penetration },
+            damage: {
+                hits: result.hits.map((h) => h.totals),
+                bonus: result.hits.map((h) => h.distanceBonus),
+                penetration: result.penetration,
+                unblockable: result.unblockable,
+                lifesteal: result.lifesteal,
+                accuracy: result.accuracy,
+            },
             casterTokenUuid: casterTokenUuid(actor),
             statuses: result.statuses,
         },

@@ -109,6 +109,14 @@ export interface AttackResult {
     /** Passive resources the roll spent or gained (Spotting expended on a bow shot). */
     passiveDeltas: PassiveDelta[];
     rolls: Roll[];
+    /** Reduces the targets' Evasion when they dodge, percent. */
+    accuracy: number;
+    /** Heal the attacker for this percent of the damage dealt. */
+    lifesteal: number;
+    /** The attack can't be blocked (rolled from Unblockable Chance, or certain). */
+    unblockable: boolean;
+    /** Lethality: a hit that succeeds instantly kills the target. Null when the attack has none. */
+    lethality: { chance: number; lethal: boolean[] } | null;
 }
 
 interface AttackOptions {
@@ -145,6 +153,10 @@ export class AttackBuilder {
     /** Percent of physical damage turned into Bleed on hit (Serrated Arrow), by source. */
     #bleedConvert: { percent: number; source: string }[] = [];
     #singleUse = new Set<ActiveEffect.Implementation>();
+    #accuracy = 0;
+    #lethality = 0;
+    #lifesteal = 0;
+    #unblockable = 0;
 
     constructor(actor: Actor.Implementation, { rollType, weapon = null, offWeapon = null }: AttackOptions) {
         this.actor = actor;
@@ -264,6 +276,30 @@ export class AttackBuilder {
         return this;
     }
 
+    /** "+20% Accuracy" on one attack. */
+    addAccuracy(percent: number): this {
+        this.#accuracy += percent;
+        return this;
+    }
+
+    /** "Your attacks cannot be blocked": 100 for certain, less for a chance. */
+    addUnblockable(percent: number): this {
+        this.#unblockable += percent;
+        return this;
+    }
+
+    /** "30% Lethality" on one attack. */
+    addLethality(percent: number): this {
+        this.#lethality += percent;
+        return this;
+    }
+
+    /** "Lifesteal for 30% of the damage dealt". */
+    addLifesteal(percent: number): this {
+        this.#lifesteal += percent;
+        return this;
+    }
+
     /** Roll maximum on every damage die. */
     maximize(): this {
         this.#maximize = true;
@@ -349,11 +385,16 @@ export class AttackBuilder {
             for (const type of types) this.#penetration[type] = (this.#penetration[type] ?? 0) + percent;
         }
         this.#critDamage += creature.combat?.critDamage ?? 0;
+        this.#accuracy += creature.combat?.accuracy ?? 0;
+        this.#lethality += creature.combat?.lethality ?? 0;
+        this.#lifesteal += creature.combat?.lifesteal ?? 0;
+        this.#unblockable += creature.combat?.unblockable ?? 0;
 
         const casterUuid = foundry.utils.getProperty(this.actor, `flags.${SYSTEM_ID}.summon.casterUuid`) as string | undefined;
         const caster = casterUuid ? (fromUuidSync(casterUuid) as Actor.Implementation | null) : null;
-        const minion = (caster?.system as unknown as CreatureModel | undefined)?.derived.combat?.minionDamage ?? 0;
-        if (minion) this.addMultiplier("all", `${caster!.name}'s Minion Damage`, minion);
+        const casterStats = (caster?.system as unknown as CreatureModel | undefined)?.derived.combat;
+        if (casterStats?.minionDamage) this.addMultiplier("all", `${caster!.name}'s Minion Damage`, casterStats.minionDamage);
+        this.#lethality += casterStats?.minionLethality ?? 0;
     }
 
     applyEffects(): this {
@@ -405,6 +446,18 @@ export class AttackBuilder {
                         if (status) this.#statuses.push({ id: status.id, name: status.name, source: effect.name });
                         break;
                     }
+                    case "accuracy":
+                        this.#accuracy += number;
+                        break;
+                    case "lethality":
+                        this.#lethality += number;
+                        break;
+                    case "lifesteal":
+                        this.#lifesteal += number;
+                        break;
+                    case "unblockable":
+                        this.#unblockable += number;
+                        break;
                     case "bleedConvert":
                         if (number > 0) this.#bleedConvert.push({ percent: number, source: effect.name });
                         break;
@@ -569,6 +622,39 @@ export class AttackBuilder {
             if (delta) passiveDeltas.push(delta);
         }
 
+        // Accuracy, lethality, lifesteal, and unblockable only matter for attacks that deal damage.
+        const damaging = this.rollType !== "healing" && Object.values(totals).some((v) => (v ?? 0) > 0);
+        let unblockable = false;
+        let lethality: AttackResult["lethality"] = null;
+        if (damaging) {
+            if (this.#accuracy) this.addNote(`Accuracy ${this.#accuracy > 0 ? "+" : ""}${this.#accuracy}%: targets dodge with that much less Evasion (use Evade).`);
+            if (this.#unblockable >= 100) {
+                unblockable = true;
+                this.addNote("Unblockable: blocks don't apply to this attack.");
+            } else if (this.#unblockable > 0) {
+                const roll = (await new Roll("1d100").evaluate()) as unknown as Roll;
+                rolls.push(roll);
+                unblockable = (roll.total ?? 101) <= this.#unblockable;
+                this.addNote(`Unblockable chance ${this.#unblockable}%: rolled ${roll.total}, ${unblockable ? "can't be blocked" : "can be blocked"}.`);
+            }
+            if (this.#lethality > 0) {
+                const lethal: boolean[] = [];
+                for (let i = 0; i < results.length; i++) {
+                    const roll = (await new Roll("1d100").evaluate()) as unknown as Roll;
+                    rolls.push(roll);
+                    lethal.push((roll.total ?? 101) <= this.#lethality);
+                }
+                lethality = { chance: this.#lethality, lethal };
+                const hitsLethal = lethal.filter(Boolean).length;
+                this.addNote(
+                    hitsLethal
+                        ? `Lethality ${this.#lethality}%: <strong>LETHAL</strong>${results.length > 1 ? ` (${hitsLethal} of ${results.length} hits)` : ""}. The target dies instantly unless immune (players are).`
+                        : `Lethality ${this.#lethality}%: not lethal.`,
+                );
+            }
+            if (this.#lifesteal) this.addNote(`Lifesteal ${this.#lifesteal}%: applying damage heals the attacker for that much of it.`);
+        }
+
         if (Object.keys(totals).some((t) => t === "psychic")) {
             this.addNote("Psychic damage: make a Psionics: Offensive check.");
         }
@@ -587,11 +673,14 @@ export class AttackBuilder {
             consumedEffects,
             passiveDeltas,
             rolls,
+            accuracy: damaging ? this.#accuracy : 0,
+            lifesteal: damaging ? this.#lifesteal : 0,
+            unblockable,
+            lethality,
         };
     }
 }
 
-/** The weapon an actor attacks with by default: an equipped main-hand or two-handed weapon. */
 /** Which hand(s) an ability is used with: the main hand (default), the offhand, or both (dual wielding). */
 export type Hand = "main" | "off" | "dual";
 
@@ -619,6 +708,7 @@ export function weaponsFor(actor: Actor.Implementation, hand: Hand = "main"): { 
     return { weapon: mainWeapon(actor), offWeapon: null };
 }
 
+/** The weapon an actor attacks with by default: an equipped main-hand or two-handed weapon. */
 export function mainWeapon(actor: Actor.Implementation): Item.Implementation | null {
     const held = actor.items.filter((i) => i.type === "equipment" && (i.system as unknown as EquipmentModel).isHeldWeapon);
     return (

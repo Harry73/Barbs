@@ -25,6 +25,8 @@ type Requests = {
         sourceName?: string;
         scale?: number;
         trueDamage?: boolean;
+        unblockable?: boolean;
+        lifesteal?: { percent: number; attackerUuid: string };
     };
     shielding: { amount: number; sourceName?: string };
     cleanse: { statuses: string[] };
@@ -70,7 +72,12 @@ async function perform<T extends RequestType>(actor: Actor.Implementation, type:
     switch (type) {
         case "damage": {
             const p = payload as Requests["damage"];
-            return applyDamageToActor(actor, p.hits, p.penetration, p.sourceName, p.scale, { trueDamage: p.trueDamage, attack: true });
+            return applyDamageToActor(actor, p.hits, p.penetration, p.sourceName, p.scale, {
+                trueDamage: p.trueDamage,
+                attack: true,
+                unblockable: p.unblockable,
+                lifesteal: p.lifesteal,
+            });
         }
         case "healing": {
             const p = payload as Requests["healing"];
