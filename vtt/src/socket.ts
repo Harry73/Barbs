@@ -56,7 +56,7 @@ interface UndoSocketMessage {
 }
 
 interface GMSocketMessage {
-    type: "summon" | "dismiss";
+    type: "summon" | "dismiss" | "deleteEffect";
     payload: unknown;
 }
 
@@ -74,6 +74,7 @@ async function performGM(message: GMSocketMessage): Promise<void> {
     const { createSummon, dismissSummon } = await import("./summons.ts");
     if (message.type === "summon") await createSummon(message.payload as never);
     if (message.type === "dismiss") await dismissSummon(message.payload as string);
+    if (message.type === "deleteEffect") await ((await fromUuid(message.payload as string)) as ActiveEffect.Implementation | null)?.delete();
 }
 
 async function perform<T extends RequestType>(actor: Actor.Implementation, type: T, payload: Requests[T]): Promise<void> {
@@ -156,7 +157,7 @@ export function registerSocket(): void {
     game.socket?.on(CHANNEL, async (message: SocketMessage | UndoSocketMessage | GMSocketMessage) => {
         // Exactly one client (the active GM) handles each relayed request.
         if (!game.user?.isActiveGM) return;
-        if (message.type === "summon" || message.type === "dismiss") return performGM(message as GMSocketMessage);
+        if (message.type === "summon" || message.type === "dismiss" || message.type === "deleteEffect") return performGM(message as GMSocketMessage);
         if (message.type === "undo") {
             const chat = game.messages?.get(message.messageId) as ChatMessage.Implementation | undefined;
             if (chat) await performUndo(chat);

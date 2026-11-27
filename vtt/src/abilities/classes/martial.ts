@@ -1140,9 +1140,18 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
         ],
     },
     "Soldier/Long Live The King": {
-        target: [{ name: "Long Live The King", category: "", duration: "start of your next turn", description: "<p>Attacks that would hit this ally can be redirected to their protector, who blocks 50% of them.</p>" }],
+        target: [
+            {
+                name: "Long Live The King",
+                category: "",
+                duration: "start of your next turn",
+                // Attacks on the ally go to the Soldier who protected them, half blocked.
+                triggers: [{ event: "wouldTakeDamage", conditions: "attacked", action: "redirect", value: 50 }],
+                description: "<p>Attacks that would hit this ally are redirected to their protector, who blocks 50% of them.</p>",
+            },
+        ],
         notes: [
-            "Until the start of your next turn, redirect attacks on the targeted adjacent ally to yourself: apply them to yourself with the ½ button.",
+            "Until the start of your next turn, attacks on the targeted ally are redirected to you automatically, half blocked (your own defenses then apply).",
             "If they're not adjacent, you may dash to them as a free reaction (5 stamina per 5 ft, max 50 ft).",
         ],
     },
@@ -1242,11 +1251,14 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
                     { type: "accuracy", rollType: "all", value: 100 },
                     { type: "unblockable", rollType: "all", value: 100 },
                 ],
+                // The first time damage would drop you to 0, you're left at 1 instead.
+                triggers: [{ event: "wouldTakeDamage", conditions: "incoming:lethal", action: "survive", value: 1, oncePer: "once" }],
+                description: "<p>The first damage that would drop you to 0 leaves you at 1 health instead. At the end of your next turn, your health drops to 0 and you're Downed with 70 Downed Health.</p>",
             },
         ],
         notes: [
-            "Your health becomes 1 instead of 0: undo the damage card that dropped you and set health to 1 (or heal back to 1).",
-            "At the end of your next turn your health drops to 0 and you're Downed with 70 Downed Health.",
+            "Cast it before applying the damage that would down you (it's a free reaction): that damage then leaves you at 1 health.",
+            "At the end of your next turn your health drops to 0 and you're Downed with 70 Downed Health (by hand).",
         ],
     },
     "Assassin/Pursue": {

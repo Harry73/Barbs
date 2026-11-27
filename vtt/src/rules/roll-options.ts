@@ -116,6 +116,7 @@ export function defenderOptions(
     effectOrigin?: string,
 ): Set<string> {
     const out = [...actorOptions(defender, "self"), ...actorOptions(attacker, "attacker"), ...attack.map((o) => `attack:${o}`)];
+    if (attacker) out.push("attacked");
     const distance = distanceBetween(attacker, defender);
     if (distance !== null) out.push(`attacker:distance:${distance}`);
     if (attacker && sameActor(effectOrigin, attacker.uuid)) out.push("origin:attacker");

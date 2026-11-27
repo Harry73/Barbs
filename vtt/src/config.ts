@@ -208,6 +208,7 @@ export const TRIGGER_EVENTS = {
     attack: "You attack",
     attacked: "You're attacked",
     hitBy: "You're hit (each landed hit)",
+    wouldTakeDamage: "You would take damage",
     damaged: "You take damage",
     kill: "You down an enemy",
     turnStart: "Start of your turn",
@@ -224,6 +225,11 @@ export const TRIGGER_ACTIONS = {
     inflict: "Inflict an effect on the other creature",
     damage: "Damage the other creature",
     note: "Post a reminder",
+    // Only for "You would take damage": they change the damage before it lands.
+    reduceDamage: "Reduce that damage by %",
+    survive: "Survive it at this much health",
+    redirect: "Redirect % of it to whoever applied this effect",
+    reflect: "Reflect % of it back at the attacker",
 } as const;
 export type TriggerAction = keyof typeof TRIGGER_ACTIONS;
 

@@ -589,6 +589,14 @@ export const SUMMONS: Record<string, AbilityAutomation> = {
             name: "SDF Totem",
             img: "icons/magic/defensive/shield-barrier-glowing-blue.webp",
             stats: { health: 100 },
+            effects: [
+                {
+                    name: "Retaliation",
+                    category: "",
+                    triggers: [{ event: "wouldTakeDamage", conditions: "attacked", action: "reflect", value: 200 }],
+                    description: "<p>Deals twice the damage it takes, of the same types, back at the attacker.</p>",
+                },
+            ],
             description: "When it takes damage, it deals twice as much damage of the same type back at the attacker. While within 50 ft, you may use your reaction to redirect an attack on you or an ally to it.",
         },
     },

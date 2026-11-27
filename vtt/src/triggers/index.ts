@@ -55,7 +55,8 @@ const OTHER_ROLE: Partial<Record<TriggerEvent, "target" | "attacker">> = {
 /** Once-per-turn/round bookkeeping, by effect UUID and trigger index. Kept on this client; see the note above. */
 const lastFired = new Map<string, string>();
 
-function turnKey(per: "turn" | "round"): string {
+function turnKey(per: "turn" | "round" | "once"): string {
+    if (per === "once") return "once";
     const combat = game.combat;
     if (!combat?.started) return "no-combat";
     return per === "round" ? `${combat.id}:${combat.round}` : `${combat.id}:${combat.round}:${combat.turn}`;
@@ -77,13 +78,121 @@ export async function fireTriggers(bearer: Actor.Implementation | null | undefin
                 if (lastFired.get(key) === now) continue;
                 lastFired.set(key, now);
             }
-            if (trigger.chance > 0 && trigger.chance < 100) {
-                const roll = (await new Roll("1d100").evaluate()).total ?? 101;
-                if (roll > trigger.chance) continue;
-            }
+            if (!(await passesChance(trigger))) continue;
             await runAction(bearer, effect, trigger, role, ctx);
+            if (trigger.consume) await consumeEffect(effect);
         }
     }
+}
+
+async function passesChance(trigger: TriggerData): Promise<boolean> {
+    if (!(trigger.chance > 0 && trigger.chance < 100)) return true;
+    const roll = (await new Roll("1d100").evaluate()).total ?? 101;
+    return roll <= trigger.chance;
+}
+
+/** Remove a one-shot effect after its trigger fires (on whichever client may). */
+async function consumeEffect(effect: ActiveEffect.Implementation): Promise<void> {
+    if (effect.isOwner) await effect.delete();
+    else {
+        const { requestGM } = await import("../socket.ts");
+        await requestGM("deleteEffect", effect.uuid);
+    }
+}
+
+/** How "would take damage" triggers changed an incoming hit. */
+export interface IncomingDamageResult {
+    /** The damage the bearer actually takes now. */
+    total: number;
+    /** Per-type damage taken after the changes (for redirects and reflections, which keep the types). */
+    taken: Partial<Record<DamageKey, number>>;
+    notes: string[];
+    /** Damage to send elsewhere, before or after defenses. */
+    redirects: { actor: Actor.Implementation; hits: Partial<Record<DamageKey, number>>; sourceName: string }[];
+    reflects: { actor: Actor.Implementation; hits: Partial<Record<DamageKey, number>>; sourceName: string }[];
+    /** Effects used up by firing, removed with the damage (so its undo restores them). */
+    consumed: ActiveEffect.Implementation[];
+}
+
+/**
+ * "You would take damage" triggers: run after defenses and before health changes, and allowed to change the damage.
+ * `incoming` is the damage before defenses (for redirects: the protector gets the attack, and their own defenses
+ * apply), `taken` after. Runs where the damage is applied.
+ */
+export async function resolveIncomingDamage(
+    target: Actor.Implementation,
+    incoming: Partial<Record<DamageKey, number>>,
+    taken: Partial<Record<DamageKey, number>>,
+    ctx: TriggerContext,
+): Promise<IncomingDamageResult> {
+    const sum = (r: Partial<Record<DamageKey, number>>) => Object.values(r).reduce((a, b) => a + (b ?? 0), 0);
+    const scaleBy = (r: Partial<Record<DamageKey, number>>, factor: number) =>
+        Object.fromEntries(Object.entries(r).map(([k, v]) => [k, Math.round((v ?? 0) * factor)])) as Partial<Record<DamageKey, number>>;
+    const result: IncomingDamageResult = { total: sum(taken), taken: { ...taken }, notes: [], redirects: [], reflects: [], consumed: [] };
+    if ((ctx.depth ?? 0) >= MAX_TRIGGER_DEPTH || result.total <= 0) return result;
+
+    const health = (target.system as unknown as { derived?: { resources?: { health?: { value: number } } } }).derived?.resources?.health?.value ?? 0;
+    const shielding = (target.system as unknown as { shielding?: { value: number } }).shielding?.value ?? 0;
+    const lethal = () => result.total >= health + shielding;
+    const role = "attacker";
+    for (const effect of [...target.allApplicableEffects()] as ActiveEffect.Implementation[]) {
+        if (!effect.active) continue;
+        const triggers = (effect.system as unknown as BarbsEffectModel).triggers ?? [];
+        for (const [index, trigger] of triggers.entries()) {
+            if (trigger.event !== "wouldTakeDamage") continue;
+            const domain = domainFor(target, effect, role, ctx);
+            if (lethal()) domain.add("incoming:lethal");
+            if (!testPredicate(parsePredicate(trigger.conditions), domain)) continue;
+            if (trigger.oncePer) {
+                const key = `${effect.uuid}#${index}`;
+                const now = turnKey(trigger.oncePer);
+                if (lastFired.get(key) === now) continue;
+                lastFired.set(key, now);
+            }
+            if (!(await passesChance(trigger))) continue;
+            const data = { ...formulaData(target, role, ctx), incoming: { damage: result.total } };
+            const value = evaluateNumber(trigger.value, data);
+            const label = `${effect.name}`;
+            switch (trigger.action) {
+                case "reduceDamage": {
+                    const factor = Math.max(0, 1 - value / 100);
+                    result.taken = scaleBy(result.taken, factor);
+                    result.total = sum(result.taken);
+                    result.notes.push(`${label}: damage reduced by ${value}%.`);
+                    break;
+                }
+                case "survive": {
+                    if (!lethal()) break;
+                    const keep = Math.max(1, Math.round(value) || 1);
+                    const allowed = Math.max(0, health + shielding - keep);
+                    result.taken = scaleBy(result.taken, result.total ? allowed / result.total : 0);
+                    result.total = allowed;
+                    result.notes.push(`${label}: ${target.name} survives at ${keep} health.`);
+                    break;
+                }
+                case "redirect": {
+                    const originUuid = foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.casterUuid`) as string | undefined;
+                    const origin = originUuid ? ((await fromUuid(originUuid)) as Actor.Implementation | null) : null;
+                    if (!origin || origin.uuid === target.uuid) break;
+                    result.redirects.push({ actor: origin, hits: scaleBy(incoming, value / 100), sourceName: `${ctx.sourceName ?? "Damage"} (redirected by ${label})` });
+                    result.taken = {};
+                    result.total = 0;
+                    result.notes.push(`${label}: redirected to ${origin.name}.`);
+                    break;
+                }
+                case "reflect": {
+                    if (!ctx.other) break;
+                    result.reflects.push({ actor: ctx.other, hits: scaleBy(result.taken, value / 100), sourceName: `${target.name}'s ${label}` });
+                    result.notes.push(`${label}: ${value}% reflected at ${ctx.other.name}.`);
+                    break;
+                }
+                default:
+                    await runAction(target, effect, trigger, role, ctx);
+            }
+            if (trigger.consume) result.consumed.push(effect);
+        }
+    }
+    return result;
 }
 
 /** The facts a trigger's conditions are tested against, by side. */

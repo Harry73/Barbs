@@ -164,7 +164,9 @@ export interface TriggerSpec {
     event: TriggerEvent;
     conditions?: string;
     chance?: number;
-    oncePer?: "" | "turn" | "round";
+    oncePer?: "" | "turn" | "round" | "once";
+    /** Delete the effect after it fires. */
+    consume?: boolean;
     action: TriggerAction;
     value?: string | number;
     /** Resource for restore, damage type for damage. */

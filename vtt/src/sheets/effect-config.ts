@@ -65,7 +65,7 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
                 triggers: (system.triggers ?? []).map((t, index) => ({ ...t, index, inline: !!t.effectData })),
                 eventChoices: TRIGGER_EVENTS,
                 actionChoices: TRIGGER_ACTIONS,
-                onceChoices: { "": "Every time", turn: "Once per turn", round: "Once per round" },
+                onceChoices: { "": "Every time", turn: "Once per turn", round: "Once per round", once: "Only once" },
                 templateChoices: Object.fromEntries([["", "—"], ...templates.map((n) => [n, n])]),
                 categoryChoices: EFFECT_CATEGORIES,
                 typeChoices: MODIFIER_TYPES,
@@ -232,7 +232,7 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
 
     static async #onAddTrigger(this: BarbsEffectConfig) {
         const triggers = this.#currentTriggers();
-        triggers.push({ event: "hit", conditions: "", chance: 0, oncePer: "", action: "restore", value: "", type: "stamina", effect: "", effectData: null });
+        triggers.push({ event: "hit", conditions: "", chance: 0, oncePer: "", consume: false, action: "restore", value: "", type: "stamina", effect: "", effectData: null });
         await this.submit({ updateData: { system: { triggers } } } as never);
     }
 

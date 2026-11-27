@@ -56,6 +56,7 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
                 conditions: t.conditions ?? "",
                 chance: t.chance ?? 0,
                 oncePer: t.oncePer ?? "",
+                consume: !!t.consume,
                 action: t.action,
                 value: String(t.value ?? ""),
                 type: t.type ?? "",

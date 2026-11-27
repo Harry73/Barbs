@@ -383,6 +383,9 @@ export async function applyDamageToActor(
     };
     let total = 0;
     const rows: string[] = [];
+    // Per-type totals before and after defenses, for "would take damage" triggers that redirect or reflect it.
+    const incomingByType: Partial<Record<DamageKey, number>> = {};
+    const takenByType: Partial<Record<DamageKey, number>> = {};
     hits.forEach((hit, index) => {
         const scaled = Object.fromEntries(
             Object.entries(hit).map(([type, amount]) => [type, Math.round((amount ?? 0) * scale)]),
@@ -395,9 +398,32 @@ export async function applyDamageToActor(
               }
             : reduceDamage(scaled, penetration, defenses);
         total += reduced.total;
+        for (const p of reduced.parts) {
+            incomingByType[p.type] = (incomingByType[p.type] ?? 0) + p.incoming;
+            takenByType[p.type] = (takenByType[p.type] ?? 0) + p.taken;
+        }
         const parts = reduced.parts.map((p) => `${p.type} ${p.incoming} → <strong>${p.taken}</strong>`).join(", ");
         rows.push(`<li>${hits.length > 1 ? `Hit ${index + 1}: ` : ""}${parts || "no damage"}</li>`);
     });
+
+    // "Would take damage" triggers get a say before health changes: Critical Condition survives at 1, Long Live The
+    // King redirects the hit to the protector, Self Defense Turret reflects it.
+    const { fireTriggers, resolveIncomingDamage } = await import("../triggers/index.ts");
+    const dealerUuid = attackContext?.attackerUuid ?? attackerUuid;
+    const dealer = dealerUuid ? ((await fromUuid(dealerUuid)) as Actor.Implementation | null) : null;
+    const resolved =
+        total > 0
+            ? await resolveIncomingDamage(target, incomingByType, takenByType, { other: dealer, attack: attackContext, depth: triggerDepth, sourceName })
+            : null;
+    if (resolved) {
+        if (resolved.total !== total) notes0.push(`Damage changed from ${total} to ${resolved.total}.`);
+        notes0.push(...resolved.notes);
+        total = resolved.total;
+        for (const effect of resolved.consumed) {
+            blockUndo.push(snapshotEffect(effect));
+            await effect.delete();
+        }
+    }
 
     const wasDowned = target.statuses.has(STATUS_DOWNED);
     const { notes: healthNotes, undo } = await updateHealth(target, total);
@@ -418,11 +444,19 @@ export async function applyDamageToActor(
         undo,
     );
 
+    // Redirected and reflected damage goes out as trigger damage (not a new attack).
+    if (resolved) {
+        const { requestOnActor } = await import("../socket.ts");
+        for (const r of resolved.redirects) {
+            await requestOnActor(r.actor, "damage", { hits: [r.hits], penetration, sourceName: r.sourceName, triggerDepth: triggerDepth + 1, attackerUuid: dealerUuid });
+        }
+        for (const r of resolved.reflects) {
+            await requestOnActor(r.actor, "damage", { hits: [r.hits], penetration: {}, sourceName: r.sourceName, triggerDepth: triggerDepth + 1, attackerUuid: target.uuid ?? undefined });
+        }
+    }
+
     // Triggers: the target reacts to taking damage, and the attacker to downing them.
     if (total > 0) {
-        const { fireTriggers } = await import("../triggers/index.ts");
-        const dealerUuid = attackContext?.attackerUuid ?? attackerUuid;
-        const dealer = dealerUuid ? ((await fromUuid(dealerUuid)) as Actor.Implementation | null) : null;
         await fireTriggers(target, "damaged", { other: dealer, attack: attackContext, depth: triggerDepth, sourceName });
         if (!wasDowned && target.statuses.has(STATUS_DOWNED) && dealer) {
             await fireTriggers(dealer, "kill", { other: target, depth: triggerDepth, sourceName });

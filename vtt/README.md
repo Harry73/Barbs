@@ -218,6 +218,12 @@ templates never apply by themselves), or inline in ability automation (`EffectSp
 an attack (no Evasion, blocks, or on-hit reactions), and chains stop two levels deep. Each action posts its own
 message with undo. Lightning Coil Cuirass, Accursed Armor, and Heart of Ice retaliate through triggers.
 
+"You would take damage" triggers run after defenses and before health changes, and can change the damage: reduce it
+by a percent, survive at N health (Critical Condition), redirect a percent of the incoming attack to whoever applied
+the effect (Long Live The King), or reflect a percent back at the attacker (Self Defense Turret). Their conditions can
+use `incoming:lethal` and `attacked`, and values `@incoming.damage`. Any trigger can be limited to firing only once,
+or set to use up its effect when it fires.
+
 Stat buffs use the core Changes tab instead, in the "initial" phase. The Stats tab shows every one of these, laid out
 like the Roll20 sheet's: core stats, then misc combat stats, multipliers, penetration, damage reduction, and condition
 resistances. Use these for always-on gear affixes; use roll modifiers for conditional ones ("bow attacks", "on hit"). Its key field is a searchable picker over every key below

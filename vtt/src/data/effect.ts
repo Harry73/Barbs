@@ -39,8 +39,10 @@ export interface TriggerData {
     conditions: string;
     /** Percent chance it fires once the conditions hold. 0 or 100 = always. */
     chance: number;
-    /** "turn" / "round": fires at most once per turn or round. Blank = every time. */
-    oncePer: "" | "turn" | "round";
+    /** "turn" / "round": fires at most once per turn or round; "once": only ever once. Blank = every time. */
+    oncePer: "" | "turn" | "round" | "once";
+    /** Delete the effect after the trigger fires (one-shot reactions). */
+    consume: boolean;
     action: TriggerAction;
     /** Amount (restore, damage) or text (note). Formulas see @self, @other, and @target/@attacker. */
     value: string;
@@ -102,7 +104,8 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
                     event: new fields.StringField({ required: true, choices: Object.keys(TRIGGER_EVENTS), initial: "hit" }),
                     conditions: new fields.StringField({ required: true, blank: true, initial: "" }),
                     chance: new fields.NumberField({ required: true, integer: true, min: 0, max: 100, initial: 0 }),
-                    oncePer: new fields.StringField({ required: true, blank: true, choices: ["", "turn", "round"], initial: "" }),
+                    oncePer: new fields.StringField({ required: true, blank: true, choices: ["", "turn", "round", "once"], initial: "" }),
+                    consume: new fields.BooleanField({ initial: false }),
                     action: new fields.StringField({ required: true, choices: Object.keys(TRIGGER_ACTIONS), initial: "restore" }),
                     value: new fields.StringField({ required: true, blank: true, initial: "" }),
                     type: new fields.StringField({ required: true, blank: true, initial: "" }),
