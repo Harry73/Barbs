@@ -122,6 +122,10 @@ rolled per hit when the attack is made and called out on the card, and Lifesteal
 damage that actually lands, after defenses. Conditions work the same way: applying one rolls the target's Condition
 Resist (lowered by the attack's "reduce CR", raised by CR against that condition) and skips it if they resist.
 
+Attack cards that also inflict conditions have a combined **Apply** button: for each target, it applies the damage
+(rolling Evasion), then, only if at least one hit landed, the card's conditions and on-hit statuses (each rolling
+Condition Resist). A target who dodges gets nothing. The separate buttons are still there for one-off cases.
+
 ## Passives
 
 Adding a character's first ability in a class also adds that class's passive (from the Classes compendium). Passives

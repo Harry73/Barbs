@@ -10,6 +10,7 @@ import { resolve, restoreContext, type ContextData } from "../abilities/context.
 import { buildEffectData, type EffectSource } from "../abilities/effects.ts";
 import { status as statusSpec } from "../abilities/helpers.ts";
 import type { EffectSpec } from "../abilities/types.ts";
+import type { UseContext } from "../abilities/context.ts";
 import type { CreatureModel } from "../data/actor/creature.ts";
 import { evaluateDistanceBonus, type AttackResult, type DistanceBonus, type OnHitStatus } from "../rolls/attack.ts";
 import type { DamageKey } from "../rules/damage-math.ts";
@@ -233,6 +234,139 @@ function resolveTargets(flags: CardFlags): Target[] {
     return targets;
 }
 
+/**
+ * Roll a target's Evasion against the card's attack, once per hit. Only targeted attacks can be dodged (not areas,
+ * drains, or "can't miss"); shift-click skips the roll for a GM ruling. A target dodging every hit gets a message
+ * saying so. Rolled on the clicking user's client, so Apply can skip the conditions of an attack that missed.
+ *
+ * TODO: confirm the ruling that multi-hit attacks roll Evasion once per hit, not once for the whole attack.
+ */
+async function rollEvasion(flags: CardFlags, target: Target, hitCount: number, skip: boolean): Promise<{ dodged: boolean[]; note?: string }> {
+    const damage = flags.damage;
+    const none = { dodged: Array(hitCount).fill(false) as boolean[] };
+    if (!damage?.evadable || skip || damage.trueDamage) return none;
+    if (damage.cannotMissAgainst && target.actor.statuses.has(damage.cannotMissAgainst)) return none;
+    const evasion = (target.actor.system as unknown as CreatureModel).derived.stats.evasion.value;
+    const penalty = (damage.accuracy ?? 0) + (damage.evasionReduction ?? 0);
+    const chance = Math.max(0, evasion - penalty);
+    const rolls: number[] = [];
+    for (let i = 0; i < hitCount; i++) rolls.push((await new Roll("1d100").evaluate()).total ?? 101);
+    const dodged = rolls.map((r) => r <= chance);
+    const against = `${chance}% Evasion${penalty ? ` (${evasion}% − ${penalty}% from the attack)` : ""}`;
+    if (dodged.every(Boolean)) {
+        await ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor: target.actor as Actor.Stored }),
+            content: `<div class="barbs-chat-card"><p><strong>${target.actor.name} dodges</strong> ${flags.sourceName}: rolled ${rolls.join(", ")} against ${against}.</p></div>`,
+        } as never);
+        return { dodged };
+    }
+    const note = dodged.some(Boolean)
+        ? `${against}: ${rolls.map((r, i) => `hit ${i + 1} ${dodged[i] ? "dodged" : "landed"} (${r})`).join(", ")}.`
+        : `${against}: rolled ${rolls.join(", ")}, didn't dodge.`;
+    return { dodged, note };
+}
+
+/** Apply the card's damage to one target. Returns false if the target dodged every hit. */
+async function damageTarget(
+    flags: CardFlags,
+    target: Target,
+    { half = false, redirected = false, skipEvasion = false }: { half?: boolean; redirected?: boolean; skipEvasion?: boolean },
+): Promise<boolean> {
+    const damage = flags.damage!;
+    const perTarget = (target.tokenUuid && flags.targetScales?.[target.tokenUuid]) || 1;
+    let hits = damage.hits;
+    let bonus = damage.bonus;
+    if (damage.tiers?.length) {
+        const tier = tierFor(flags, target);
+        if (tier < 0) {
+            ui.notifications?.info(`${target.actor.name} is outside every distance tier; no damage.`);
+            return false;
+        }
+        hits = damage.tiers[tier].hits;
+        bonus = damage.tiers[tier].bonus;
+    }
+    // Distance-based damage is measured for this target and added to each hit before defenses.
+    if (bonus?.some((b) => b.length)) {
+        const distance = distanceFromCaster(flags, target);
+        if (distance === null) ui.notifications?.warn(`Can't measure the distance to ${target.actor.name}; no distance bonus.`);
+        hits = hits.map((hit, i) => {
+            const out = { ...hit };
+            for (const b of bonus![i] ?? []) out[b.type] = (out[b.type] ?? 0) + (distance === null ? 0 : evaluateDistanceBonus(b, distance));
+            return out;
+        });
+    }
+    const evasion = await rollEvasion(flags, target, hits.length, skipEvasion);
+    if (evasion.dodged.every(Boolean)) return false;
+    hits = hits.map((hit, i) => (evasion.dodged[i] ? {} : hit));
+    // A reflected beam hits once per segment the target was on; "Apply as redirected" is one bounce.
+    const redirectList = redirected ? [1] : (target.tokenUuid && flags.segments?.[target.tokenUuid]) || [0];
+    for (const redirects of redirectList) {
+        const alter = flags.alterCourse ? 1 + 0.5 * redirects : 1;
+        await requestOnActor(target.actor, "damage", {
+            hits: applySwap(hits, flags, redirects),
+            penetration: damage.penetration,
+            sourceName: redirects ? `${flags.sourceName} (redirect ${redirects}${flags.alterCourse ? `, +${50 * redirects}%` : ""})` : flags.sourceName,
+            scale: (half ? 0.5 : perTarget) * alter,
+            trueDamage: damage.trueDamage,
+            unblockableChance: damage.unblockableChance,
+            acReduction: damage.acReduction,
+            lifesteal: damage.lifesteal ? { percent: damage.lifesteal, attackerUuid: flags.actorUuid } : undefined,
+            notes: evasion.note ? [evasion.note] : undefined,
+        });
+    }
+    return true;
+}
+
+/** The card's per-target effects (its "Apply <condition>" buttons), resolved against the cast's context. */
+async function targetEffectSpecs(flags: CardFlags): Promise<{ specs: EffectSpec[]; ctx: UseContext } | null> {
+    const source = flags.effectSource;
+    const ctx = flags.context ? await restoreContext(flags.context) : null;
+    const automation = flags.automationKey
+        ? ABILITY_AUTOMATION[flags.automationKey]
+        : source && getAutomation(source.className, source.abilityName);
+    if (!source || !ctx || !automation) return null;
+    return { specs: resolve(automation.target, ctx) ?? [], ctx };
+}
+
+/** Apply one of the card's effects to a target, rolling Condition Resist for conditions unless skipped. */
+async function applyTargetEffect(flags: CardFlags, target: Target, spec: EffectSpec, ctx: UseContext, skipResist: boolean): Promise<void> {
+    const source = flags.effectSource!;
+    const { actor } = target;
+    // Distance-limited effects only land on targets in range of them (Glacial Crash: Frozen within 5 ft).
+    if (spec.within !== undefined || spec.beyond !== undefined) {
+        const distance = distanceFromCaster(flags, target);
+        if (distance === null) {
+            ui.notifications?.warn(`Can't measure the distance to ${actor.name}; skipping ${spec.name ?? "the effect"}.`);
+            return;
+        }
+        if (spec.within !== undefined && distance > spec.within + 0.01) return;
+        if (spec.beyond !== undefined && distance <= spec.beyond + 0.01) return;
+    }
+    const redirects = Math.min(...((target.tokenUuid && flags.segments?.[target.tokenUuid]) || [0]));
+    const resolved = spec.resolve ? spec.resolve(actor, spec, ctx, { redirects }) : spec;
+    if (!resolved) return;
+    const data = buildEffectData(resolved, source);
+    // Shift-click skips the Condition Resist roll, for when the GM rules it can't be resisted.
+    const resistible = !skipResist && (resolved.resistible ?? resolved.category === "condition");
+    await requestOnActor(actor, "effect", { data, options: { resistible, sourceName: flags.sourceName, resistPenalty: flags.crReduction } });
+}
+
+/** Apply an on-hit status from the attacker's buffs or gear (Accursed Blade's Curse, Serrated Arrow's Bleed). */
+async function applyOnHitStatus(flags: CardFlags, target: Target, onHit: OnHitStatus, skipResist: boolean): Promise<void> {
+    const spec = (onHit.effect as EffectSpec | undefined) ?? statusSpec(onHit.id);
+    const data = buildEffectData(spec, {
+        className: "",
+        abilityName: onHit.source,
+        img: spec.img ?? "",
+        duration: "Endless",
+        casterUuid: flags.actorUuid,
+    });
+    await requestOnActor(target.actor, "effect", {
+        data,
+        options: { resistible: !skipResist, sourceName: `${flags.sourceName} (${onHit.source})`, resistPenalty: flags.crReduction },
+    });
+}
+
 async function onCardButton(message: ChatMessage.Implementation, button: HTMLElement, event: MouseEvent) {
     if (button.dataset.cardAction === "undo") return requestUndo(message);
     const flags = message.getFlag(SYSTEM_ID as never, "card" as never) as unknown as CardFlags | undefined;
@@ -265,51 +399,18 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
                 return;
             }
             for (const target of targets) {
-                const perTarget = (target.tokenUuid && flags.targetScales?.[target.tokenUuid]) || 1;
-                let hits = flags.damage.hits;
-                let bonus = flags.damage.bonus;
-                if (flags.damage.tiers?.length) {
-                    const tier = tierFor(flags, target);
-                    if (tier < 0) {
-                        ui.notifications?.info(`${target.actor.name} is outside every distance tier; no damage.`);
-                        continue;
-                    }
-                    hits = flags.damage.tiers[tier].hits;
-                    bonus = flags.damage.tiers[tier].bonus;
-                }
-                // Distance-based damage is measured for this target and added to each hit before defenses.
-                if (bonus?.some((b) => b.length)) {
-                    const distance = distanceFromCaster(flags, target);
-                    if (distance === null) ui.notifications?.warn(`Can't measure the distance to ${target.actor.name}; no distance bonus.`);
-                    hits = hits.map((hit, i) => {
-                        const out = { ...hit };
-                        for (const b of bonus![i] ?? []) out[b.type] = (out[b.type] ?? 0) + (distance === null ? 0 : evaluateDistanceBonus(b, distance));
-                        return out;
-                    });
-                }
-                // A reflected beam hits once per segment the target was on; "Apply as redirected" is one bounce.
-                const redirectList =
-                    action === "redirected" ? [1] : (target.tokenUuid && flags.segments?.[target.tokenUuid]) || [0];
-                for (const redirects of redirectList) {
-                    const alter = flags.alterCourse ? 1 + 0.5 * redirects : 1;
-                    await requestOnActor(target.actor, "damage", {
-                        hits: applySwap(hits, flags, redirects),
-                        penetration: flags.damage.penetration,
-                        sourceName: redirects ? `${sourceName} (redirect ${redirects}${flags.alterCourse ? `, +${50 * redirects}%` : ""})` : sourceName,
-                        scale: (half ? 0.5 : perTarget) * alter,
-                        trueDamage: flags.damage.trueDamage,
-                        unblockableChance: flags.damage.unblockableChance,
-                        acReduction: flags.damage.acReduction,
-                        // Shift-click skips the Evasion roll, for when the GM rules it can't be dodged.
-                        evade:
-                            flags.damage.evadable &&
-                            !event.shiftKey &&
-                            !(flags.damage.cannotMissAgainst && target.actor.statuses.has(flags.damage.cannotMissAgainst))
-                                ? { penalty: (flags.damage.accuracy ?? 0) + (flags.damage.evasionReduction ?? 0) }
-                                : undefined,
-                        lifesteal: flags.damage.lifesteal ? { percent: flags.damage.lifesteal, attackerUuid: flags.actorUuid } : undefined,
-                    });
-                }
+                await damageTarget(flags, target, { half, redirected: action === "redirected", skipEvasion: event.shiftKey });
+            }
+            break;
+        }
+        case "applyAll": {
+            // Damage first, then (only for targets the attack actually hit) its conditions and on-hit statuses.
+            const effects = await targetEffectSpecs(flags);
+            for (const target of targets) {
+                const landed = flags.damage ? await damageTarget(flags, target, { skipEvasion: event.shiftKey }) : true;
+                if (!landed) continue;
+                if (effects) for (const spec of effects.specs) await applyTargetEffect(flags, target, spec, effects.ctx, event.shiftKey);
+                for (const onHit of flags.statuses ?? []) await applyOnHitStatus(flags, target, onHit, event.shiftKey);
             }
             break;
         }
@@ -319,33 +420,10 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
             }
             break;
         case "effect": {
-            const source = flags.effectSource;
-            const ctx = flags.context ? await restoreContext(flags.context) : null;
-            const automation = flags.automationKey
-                ? ABILITY_AUTOMATION[flags.automationKey]
-                : source && getAutomation(source.className, source.abilityName);
-            const spec = ctx && automation ? resolve(automation.target, ctx)?.[Number(button.dataset.index)] : null;
-            if (!source || !spec || !ctx) return;
-            for (const target of targets) {
-                const { actor } = target;
-                // Distance-limited effects only land on targets in range of them (Glacial Crash: Frozen within 5 ft).
-                if (spec.within !== undefined || spec.beyond !== undefined) {
-                    const distance = distanceFromCaster(flags, target);
-                    if (distance === null) {
-                        ui.notifications?.warn(`Can't measure the distance to ${actor.name}; skipping ${spec.name ?? "the effect"}.`);
-                        continue;
-                    }
-                    if (spec.within !== undefined && distance > spec.within + 0.01) continue;
-                    if (spec.beyond !== undefined && distance <= spec.beyond + 0.01) continue;
-                }
-                const redirects = Math.min(...((target.tokenUuid && flags.segments?.[target.tokenUuid]) || [0]));
-                const resolved = spec.resolve ? spec.resolve(actor, spec, ctx, { redirects }) : spec;
-                if (!resolved) continue;
-                const data = buildEffectData(resolved, source);
-                // Shift-click skips the Condition Resist roll, for when the GM rules it can't be resisted.
-                const resistible = !event.shiftKey && (resolved.resistible ?? resolved.category === "condition");
-                await requestOnActor(actor, "effect", { data, options: { resistible, sourceName, resistPenalty: flags.crReduction } });
-            }
+            const effects = await targetEffectSpecs(flags);
+            const spec = effects?.specs[Number(button.dataset.index)];
+            if (!effects || !spec) return;
+            for (const target of targets) await applyTargetEffect(flags, target, spec, effects.ctx, event.shiftKey);
             break;
         }
         case "extra": {
@@ -373,20 +451,7 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
         case "status": {
             const onHit = flags.statuses?.[Number(button.dataset.index)];
             if (!onHit) return;
-            const spec = (onHit.effect as EffectSpec | undefined) ?? statusSpec(onHit.id);
-            const data = buildEffectData(spec, {
-                className: "",
-                abilityName: onHit.source,
-                img: spec.img ?? "",
-                duration: "Endless",
-                casterUuid: flags.actorUuid,
-            });
-            for (const { actor } of targets) {
-                await requestOnActor(actor, "effect", {
-                    data,
-                    options: { resistible: !event.shiftKey, sourceName: `${sourceName} (${onHit.source})`, resistPenalty: flags.crReduction },
-                });
-            }
+            for (const target of targets) await applyOnHitStatus(flags, target, onHit, event.shiftKey);
             break;
         }
     }

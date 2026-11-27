@@ -99,7 +99,13 @@
   <div class="card-buttons">
     <div class="apply-buttons">
       {{#if hasDamage}}
-      <button type="button" data-card-action="damage"><i class="fa-solid fa-burst"></i> Apply damage</button>
+      {{#if (or targetEffects.length statuses.length)}}
+      <button type="button" class="apply-all" data-card-action="applyAll"
+        data-tooltip="Damage, then the conditions below to every target that didn't dodge (each rolls Evasion, then Condition Resist). Shift-click skips both rolls.">
+        <i class="fa-solid fa-bolt"></i> Apply
+      </button>
+      {{/if}}
+      <button type="button" data-card-action="damage" data-tooltip="Damage only. Targeted attacks roll each target's Evasion first; shift-click skips it."><i class="fa-solid fa-burst"></i> Apply damage</button>
       <button type="button" class="half" data-card-action="halfDamage" data-tooltip="Apply half damage">½</button>
       {{#if alterCourse}}<button type="button" class="half" data-card-action="redirected" data-tooltip="Apply as redirected once (Alter Course +50%)"><i class="fa-solid fa-share"></i></button>{{/if}}
       <button type="button" class="half" data-card-action="redirectToAttacker" data-tooltip="Redirect back at the attacker (Glass Armor, Reflective Barrier)"><i class="fa-solid fa-reply"></i></button>

@@ -302,7 +302,7 @@ export async function applyDamageToActor(
         unblockableChance = 0,
         acReduction = 0,
         lifesteal,
-        evade,
+        notes: extraNotes = [],
     }: {
         trueDamage?: boolean;
         attack?: boolean;
@@ -310,43 +310,13 @@ export async function applyDamageToActor(
         unblockableChance?: number;
         acReduction?: number;
         lifesteal?: { percent: number; attackerUuid: string };
-        /** Roll the target's Evasion first, lowered by `penalty` (the attack's Accuracy and "reduce evasion"). */
-        evade?: { penalty: number };
+        /** Lines to add to the damage message (the card's Evasion roll for a partly dodged attack). */
+        notes?: string[];
     } = {},
 ): Promise<void> {
     const creature = target.system as unknown as CreatureModel;
     const d = creature.derived;
-    const notes0: string[] = [];
-
-    // Evasion: a targeted attack can be dodged. Each hit rolls separately, so some arrows of a volley can land.
-    // TODO: confirm the ruling that multi-hit attacks roll Evasion once per hit, not once for the whole attack.
-    if (evade && !trueDamage) {
-        const chance = Math.max(0, d.stats.evasion.value - evade.penalty);
-        const results: { roll: number; dodged: boolean }[] = [];
-        for (let i = 0; i < hits.length; i++) {
-            const roll = (await new Roll("1d100").evaluate()).total ?? 101;
-            results.push({ roll, dodged: roll <= chance });
-        }
-        const penaltyNote = evade.penalty ? `, ${d.stats.evasion.value}% − ${evade.penalty}% from the attack` : "";
-        if (results.every((r) => r.dodged)) {
-            await ChatMessage.create({
-                speaker: ChatMessage.getSpeaker({ actor: target as Actor.Stored }),
-                content:
-                    `<div class="barbs-chat-card"><p><strong>${target.name} dodges</strong>${sourceName ? ` ${sourceName}` : ""}: ` +
-                    `rolled ${results.map((r) => r.roll).join(", ")} against ${chance}% Evasion${penaltyNote}.</p></div>`,
-            } as never);
-            return;
-        }
-        if (results.some((r) => r.dodged)) {
-            hits = hits.map((hit, i) => (results[i].dodged ? {} : hit));
-            notes0.push(
-                `Evasion ${chance}%${penaltyNote}: ` +
-                    results.map((r, i) => `hit ${i + 1} ${r.dodged ? "dodged" : "landed"} (${r.roll})`).join(", ") + ".",
-            );
-        } else {
-            notes0.push(`Evasion ${chance}%${penaltyNote}: rolled ${results.map((r) => r.roll).join(", ")}, didn't dodge.`);
-        }
-    }
+    const notes0: string[] = [...extraNotes];
 
     // An attack (not a drain or DoT) uses up the strongest block on the target, unless it turns out unblockable.
     const baseScale = scale;

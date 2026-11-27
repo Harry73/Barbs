@@ -699,3 +699,9 @@
 .barbs .passive-description {
   font-size: 12px;
 }
+
+/* The card's combined Apply (damage, then conditions to targets that were hit). */
+.barbs-chat-card .apply-buttons button.apply-all {
+  font-weight: bold;
+  border-color: var(--barbs-accent);
+}
