@@ -19,14 +19,15 @@ import type { UndoRecord } from "../chat/undo.ts";
 import { activePassives, adjustResource } from "../passives/index.ts";
 import type { PassiveDelta, RollInfo } from "../passives/types.ts";
 import { affected, placeArea, type AreaResult } from "./area.ts";
+import { concentrationMarkerData, concentrationMarkers } from "../concentration.ts";
 import { expectedWeaponCategories, holdsExpectedWeapon } from "../rules/hands.ts";
 import { rollOptions } from "../rules/roll-options.ts";
-import { WEAPON_CATEGORIES } from "../config.ts";
+import { SYSTEM_ID, WEAPON_CATEGORIES } from "../config.ts";
 import { getAutomation } from "./catalog.ts";
 import { askChoices, bindChoices, defaultChoices } from "./choices.ts";
 import { contextData, makeContext, resolve, type UseContext } from "./context.ts";
 import { buildEffectData, type EffectSource } from "./effects.ts";
-import type { AbilityAutomation, AttackSpec, Cost, CostResource, EffectSpec } from "./types.ts";
+import type { AbilityAutomation, AttackSpec, ChoiceSpec, Cost, CostResource, EffectSpec } from "./types.ts";
 
 const CREATURE_RESOURCES = ["health", "stamina", "mana"];
 
@@ -220,7 +221,14 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
 
     // 1. Choices (the ability's, then any its caster's passives add), and up-front random rolls
     const passiveChoices = passives.flatMap((p) => p.automation.abilityChoices?.({ actor, tags, abilityName: opts.title, className }, p.handle) ?? []);
-    const allChoices = [...(automation?.choices ?? []), ...passiveChoices];
+    // Concentration abilities ask whether you're concentrating (ticked by default), unless they already ask.
+    // Recasting an ability you're already concentrating on continues that concentration instead of starting another.
+    const ongoing = concentrationMarkers(actor).find((m) => foundry.utils.getProperty(m, `flags.${SYSTEM_ID}.concentration.ability`) === opts.title);
+    const concentrationChoice: ChoiceSpec[] =
+        tags.includes("concentration") && !ongoing && !(automation?.choices ?? []).some((c) => c.key === "concentrate")
+            ? [{ key: "concentrate", label: "Concentrate on it", type: "checkbox", default: true, hint: "Its effects end when your concentration does." }]
+            : [];
+    const allChoices = [...(automation?.choices ?? []), ...passiveChoices, ...concentrationChoice];
     const choiceSpecs = bindChoices(actor, allChoices);
     const asked = await askChoices(opts.title, choiceSpecs);
     if (asked === null) return;
@@ -279,6 +287,16 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
         createdEffects: [],
         removedEffects: [],
     };
+
+    // Concentrating: a marker on the caster, and everything this cast creates is linked to it (see concentration.ts).
+    if (ongoing) {
+        source.concentrationKey = foundry.utils.getProperty(ongoing, `flags.${SYSTEM_ID}.concentration.key`) as string;
+    } else if (tags.includes("concentration") && choices.concentrate) {
+        const key = foundry.utils.randomID();
+        source.concentrationKey = key;
+        const marker = await applyEffectToActor(actor, concentrationMarkerData(actor, opts.title, opts.img, key), { announce: false });
+        if (marker) undo.createdEffects!.push(marker.effect.uuid ?? "");
+    }
 
     // 4. Self effects go on immediately; the caster always owns themselves.
     const selfEffects: string[] = [];
@@ -368,6 +386,7 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
             duration: opts.duration ?? "1 minute",
             summonId,
             damageBonus: pacts ? 100 * pacts : 0,
+            concentrationKey: source.concentrationKey,
         });
         undo.summonIds = [summonId];
         selfNotes.push(`Summoned ${summon.name}${(summon.count ?? 1) > 1 ? ` ×${summon.count}` : ""}. Undo dismisses ${(summon.count ?? 1) > 1 ? "them" : "it"}.`);

@@ -22,6 +22,8 @@ export interface SummonRequest {
     summonId: string;
     /** Extra percent damage for the summon (Dragoncaller's Draconic Pacts). */
     damageBonus?: number;
+    /** The caster's concentration that maintains it: dismissed when it ends. */
+    concentrationKey?: string;
 }
 
 async function summonsFolder(): Promise<string | null> {
@@ -102,7 +104,7 @@ export async function createSummon(request: SummonRequest): Promise<void> {
         },
         flags: {
             [SYSTEM_ID]: {
-                summon: { summonId: request.summonId, casterUuid: request.casterUuid },
+                summon: { summonId: request.summonId, casterUuid: request.casterUuid, concentrationKey: request.concentrationKey ?? null },
                 ...(spec.mirror ? { mirror: { kind: spec.mirror, ownerUuid: request.casterUuid } } : {}),
             },
         },

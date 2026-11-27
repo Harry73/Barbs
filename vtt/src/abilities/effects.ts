@@ -14,6 +14,8 @@ export interface EffectSource {
     casterUuid?: string;
     /** Buff effectiveness the effect was built with, shown in its description when it isn't 100%. */
     effectiveness?: number;
+    /** The caster's concentration this cast is maintained by: its effects end when it does. */
+    concentrationKey?: string;
 }
 
 /** Flags can't hold Infinity (it serializes to null), so "stacks without limit" is stored as a large number. */
@@ -82,6 +84,7 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
                 maxStacks,
                 ...(isTurnDuration(durationText) ? { turnDuration: durationText } : {}),
                 ...(source.casterUuid ? { casterUuid: source.casterUuid } : {}),
+                ...(source.concentrationKey ? { concentrationKey: source.concentrationKey } : {}),
                 ...(spec.cleanse?.length ? { cleanse: spec.cleanse } : {}),
                 // A spec that only cleanses creates no effect.
                 ...(spec.cleanse?.length &&

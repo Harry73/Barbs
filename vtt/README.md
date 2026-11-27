@@ -228,6 +228,14 @@ A trigger can also require a skill check: its Check field, like `Armor Mastery: 
 check for the bearer (untrained skills roll with no rank) and only goes on if it meets the DC. Effects can be set to
 **end with combat**, removed when the combat they were gained in ends.
 
+**Concentration** (`src/concentration.ts`): abilities tagged "concentration" ask "Concentrate on it" (ticked by
+default). Concentrating puts a "Concentrating: <ability>" effect on the caster (warning if that's over their
+Concentration Limit), and everything the cast creates is linked to it: effects on the caster, effects applied from the
+card to targets, and summons. Deleting the Concentrating effect, by hand, by undoing the cast, by failing a
+concentration check, or by being Downed, ends all of them. A concentrating creature's damage messages get a
+Concentration check button (DC twice the damage; Pain Tolerance if they have it, otherwise d100 + Focus, plus
+Concentration Bonus). Recasting an ability you're already concentrating on continues the same concentration.
+
 Stat buffs use the core Changes tab instead, in the "initial" phase. The Stats tab shows every one of these, laid out
 like the Roll20 sheet's: core stats, then misc combat stats, multipliers, penetration, damage reduction, and condition
 resistances. Use these for always-on gear affixes; use roll modifiers for conditional ones ("bow attacks", "on hit"). Its key field is a searchable picker over every key below

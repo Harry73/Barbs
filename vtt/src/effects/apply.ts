@@ -10,6 +10,7 @@ import type { BarbsEffectModel } from "../data/effect.ts";
 import { isEmptyUndo, snapshotEffect, UNDO_ROW, type RemovedEffect, type UndoRecord } from "../chat/undo.ts";
 import { applyHealthChange, reduceDamage, type DamageKey } from "../rules/damage-math.ts";
 import { incomingTotal, type AttackContext } from "./incoming.ts";
+import { concentrationMarkers } from "../concentration.ts";
 
 /* -------------------------------------------- */
 /*  Durations                                   */
@@ -246,7 +247,10 @@ async function updateHealth(target: Actor.Implementation, amount: number): Promi
             await target.toggleStatusEffect(STATUS_DOWNED, { active: true });
             undo.statusesAdded.push(STATUS_DOWNED);
         }
-        const buffs = target.effects.filter((e) => (e.system as unknown as BarbsEffectModel).category === "buff");
+        // Downed creatures lose their buffs and drop concentration (deleting the markers ends what they maintained).
+        const buffs = target.effects.filter(
+            (e) => (e.system as unknown as BarbsEffectModel).category === "buff" || !!foundry.utils.getProperty(e, `flags.${SYSTEM_ID}.concentration.key`),
+        );
         if (buffs.length) {
             undo.removedEffects = buffs.map((e) => snapshotEffect(e as ActiveEffect.Implementation));
             await target.deleteEmbeddedDocuments("ActiveEffect", buffs.map((e) => e.id!));
@@ -434,9 +438,14 @@ export async function applyDamageToActor(
     const { notes: healthNotes, undo } = await updateHealth(target, total);
     const notes = [...notes0, ...healthNotes];
     (undo.removedEffects ??= []).push(...blockUndo);
-    if (total > 0) {
-        const bonus = d.combat?.concentrationBonus ?? 0;
-        notes.push(`Concentration check DC ${total * 2}, if concentrating${bonus ? ` (${target.name} has ${bonus > 0 ? "+" : ""}${bonus})` : ""}.`);
+    // Concentrating creatures roll to keep it: DC twice the damage taken.
+    const markers = concentrationMarkers(target);
+    if (total > 0 && markers.length && !target.statuses.has(STATUS_DOWNED)) {
+        const names = markers.map((m) => foundry.utils.getProperty(m, `flags.${SYSTEM_ID}.concentration.ability`)).join(", ");
+        notes.push(
+            `Concentrating on ${names}: <button type="button" class="barbs-concentration-check" data-actor-uuid="${target.uuid}" data-dc="${total * 2}">` +
+                `<i class="fa-solid fa-brain"></i> Concentration check (DC ${total * 2})</button>`,
+        );
     }
     const scaleNote =
         (baseScale !== 1 ? ` (${baseScale === 0.5 ? "half" : `×${baseScale}`} damage)` : "") +

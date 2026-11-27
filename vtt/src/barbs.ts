@@ -5,6 +5,7 @@
  * here runs client-side: actors know their own stats, items, and effects and build rolls from them directly.
  */
 import { BarbsActiveEffect } from "./documents/active-effect.ts";
+import { registerConcentrationHooks } from "./concentration.ts";
 import { ABILITY_AUTOMATION } from "./abilities/catalog.ts";
 import { EffectsPanel } from "./apps/effects-panel.ts";
 import { registerChatListeners } from "./chat/card.ts";
@@ -85,6 +86,7 @@ Hooks.once("init", () => {
 
     registerChatListeners();
     registerCombatTriggers();
+    registerConcentrationHooks();
     registerPassiveGranting();
     registerPassiveResets();
     registerConditionHooks();
