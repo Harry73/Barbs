@@ -193,6 +193,18 @@ try {
     trace = refl.traceBeam({ x: 0, y: 0 }, { x: 1, y: 0 }, 1000, 10, [faceLeft], { widthPerRedirect: 20 });
     assert.equal(trace.segments[1].width, 30, "Beam of Brilliance widens per redirect");
 
+    // Equip limits: one per slot, two rings, and two-handed fills both hands.
+    const { equipConflict } = await vite.ssrLoadModule("/src/rules/equipment.ts");
+    const helm = { name: "Helm", slot: "head" };
+    assert.equal(equipConflict("head", []), null, "an empty slot fits");
+    assert.match(equipConflict("head", [helm]) ?? "", /Helm/, "a second head item is refused, naming the first");
+    assert.equal(equipConflict("ring", [{ name: "Ring A", slot: "ring" }]), null, "two rings fit");
+    assert.ok(equipConflict("ring", [{ name: "A", slot: "ring" }, { name: "B", slot: "ring" }]), "a third ring doesn't");
+    assert.ok(equipConflict("twoHand", [{ name: "Dagger", slot: "offhand" }]), "two-handed needs the offhand free");
+    assert.ok(equipConflict("mainHand", [{ name: "Greatsword", slot: "twoHand" }]), "main hand is taken by a two-hander");
+    assert.equal(equipConflict("mainHand", [{ name: "Shield", slot: "offhand" }]), null, "main hand and offhand coexist");
+    assert.equal(equipConflict("none", [{ name: "Rope", slot: "none" }]), null, "unslotted items have no limit");
+
     const { parseDuration } = await vite.ssrLoadModule("/src/effects/apply.ts");
     assert.deepEqual(parseDuration("1 minute"), { value: 5, units: "rounds", expiry: "turnEnd" });
     assert.deepEqual(parseDuration("20 seconds"), { value: 1, units: "rounds", expiry: "turnEnd" });

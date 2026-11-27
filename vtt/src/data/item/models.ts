@@ -10,6 +10,7 @@ import {
     skillRank,
     type AttributeKey,
 } from "../../config.ts";
+import { equipConflict, type EquippedItem } from "../../rules/equipment.ts";
 import type { CreatureModel } from "../actor/creature.ts";
 
 const fields = foundry.data.fields;
@@ -212,6 +213,43 @@ export class EquipmentModel extends foundry.abstract.TypeDataModel<
     /** Held weapons are the ones in a hand slot and equipped. */
     get isHeldWeapon(): boolean {
         return this.isWeapon && this.equipped && ["mainHand", "offhand", "twoHand"].includes(this.slot);
+    }
+
+    /** Everything else the owner has equipped, for slot limits. */
+    #otherEquipped(): EquippedItem[] {
+        const item = this.parent;
+        const actor = item?.actor;
+        if (!actor) return [];
+        return actor.items
+            .filter((i) => i.id !== item.id && i.type === "equipment" && (i.system as unknown as EquipmentModel).equipped)
+            .map((i) => ({ name: i.name, slot: (i.system as unknown as EquipmentModel).slot }));
+    }
+
+    /** An item arriving already equipped (dropped from another character) into a full slot arrives unequipped. */
+    protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | void> {
+        const allowed = await super._preCreate(data, options, user);
+        if (allowed === false) return false;
+        if (!this.equipped) return;
+        const conflict = equipConflict(this.slot, this.#otherEquipped());
+        if (conflict) {
+            ui.notifications?.warn(`${this.parent.name} was added unequipped. ${conflict}`);
+            this.parent.updateSource({ system: { equipped: false } } as never);
+        }
+    }
+
+    /** Refuse equipping (or moving an equipped item) into a slot that's already full. */
+    protected override async _preUpdate(changed: never, options: never, user: never): Promise<boolean | void> {
+        const allowed = await super._preUpdate(changed, options, user);
+        if (allowed === false) return false;
+        const changes = (changed as { system?: { slot?: string; equipped?: boolean } }).system;
+        if (!changes || (changes.slot === undefined && changes.equipped === undefined)) return;
+        const equipped = changes.equipped ?? this.equipped;
+        if (!equipped) return;
+        const conflict = equipConflict(changes.slot ?? this.slot, this.#otherEquipped());
+        if (conflict) {
+            ui.notifications?.warn(conflict);
+            return false;
+        }
     }
 }
 
