@@ -176,6 +176,7 @@ export const MODIFIER_TYPES = {
     critDamage: "Crit damage (%)",
     penetration: "Penetration (%)",
     canCrit: "Can crit (spells)",
+    cannotMiss: "Can't miss (no Evasion roll)",
     comboChance: "Combo chance (%)",
     convert: "Convert damage to type",
     status: "On-hit status (id [chance%])",

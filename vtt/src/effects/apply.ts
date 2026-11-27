@@ -299,30 +299,73 @@ export async function applyDamageToActor(
     {
         trueDamage = false,
         attack = false,
-        unblockable = false,
+        unblockableChance = 0,
         acReduction = 0,
         lifesteal,
+        evade,
     }: {
         trueDamage?: boolean;
         attack?: boolean;
-        unblockable?: boolean;
+        /** Chance the attack ignores blocks, percent (100 = can't be blocked). Rolled here, per target. */
+        unblockableChance?: number;
         acReduction?: number;
         lifesteal?: { percent: number; attackerUuid: string };
+        /** Roll the target's Evasion first, lowered by `penalty` (the attack's Accuracy and "reduce evasion"). */
+        evade?: { penalty: number };
     } = {},
 ): Promise<void> {
     const creature = target.system as unknown as CreatureModel;
     const d = creature.derived;
+    const notes0: string[] = [];
 
-    // An attack (not a drain or DoT) uses up the strongest block on the target.
+    // Evasion: a targeted attack can be dodged. Each hit rolls separately, so some arrows of a volley can land.
+    // TODO: confirm the ruling that multi-hit attacks roll Evasion once per hit, not once for the whole attack.
+    if (evade && !trueDamage) {
+        const chance = Math.max(0, d.stats.evasion.value - evade.penalty);
+        const results: { roll: number; dodged: boolean }[] = [];
+        for (let i = 0; i < hits.length; i++) {
+            const roll = (await new Roll("1d100").evaluate()).total ?? 101;
+            results.push({ roll, dodged: roll <= chance });
+        }
+        const penaltyNote = evade.penalty ? `, ${d.stats.evasion.value}% − ${evade.penalty}% from the attack` : "";
+        if (results.every((r) => r.dodged)) {
+            await ChatMessage.create({
+                speaker: ChatMessage.getSpeaker({ actor: target as Actor.Stored }),
+                content:
+                    `<div class="barbs-chat-card"><p><strong>${target.name} dodges</strong>${sourceName ? ` ${sourceName}` : ""}: ` +
+                    `rolled ${results.map((r) => r.roll).join(", ")} against ${chance}% Evasion${penaltyNote}.</p></div>`,
+            } as never);
+            return;
+        }
+        if (results.some((r) => r.dodged)) {
+            hits = hits.map((hit, i) => (results[i].dodged ? {} : hit));
+            notes0.push(
+                `Evasion ${chance}%${penaltyNote}: ` +
+                    results.map((r, i) => `hit ${i + 1} ${r.dodged ? "dodged" : "landed"} (${r.roll})`).join(", ") + ".",
+            );
+        } else {
+            notes0.push(`Evasion ${chance}%${penaltyNote}: rolled ${results.map((r) => r.roll).join(", ")}, didn't dodge.`);
+        }
+    }
+
+    // An attack (not a drain or DoT) uses up the strongest block on the target, unless it turns out unblockable.
     const baseScale = scale;
     let blockNote = "";
     const blockUndo: RemovedEffect[] = [];
-    if (attack && !trueDamage && !unblockable) {
+    let unblockable = unblockableChance >= 100;
+    if (attack && !trueDamage) {
         const blocks = (target.appliedEffects as ActiveEffect.Implementation[])
             .filter((e) => ((e.system as unknown as { block?: number }).block ?? 0) > 0)
             .sort((a, b) => (b.system as unknown as { block: number }).block - (a.system as unknown as { block: number }).block);
         const block = blocks[0];
-        if (block) {
+        if (block && !unblockable && unblockableChance > 0) {
+            const roll = (await new Roll("1d100").evaluate()).total ?? 101;
+            unblockable = roll <= unblockableChance;
+            notes0.push(`Unblockable chance ${unblockableChance}%: rolled ${roll}, ${unblockable ? "the block doesn't apply" : "blocked"}.`);
+        } else if (block && unblockable) {
+            notes0.push(`Unblockable: ${block.name} doesn't apply.`);
+        }
+        if (block && !unblockable) {
             const percent = (block.system as unknown as { block: number }).block;
             scale *= 1 - percent / 100;
             blockNote = percent >= 100 ? ` (fully blocked by ${block.name})` : ` (blocked ${percent}% by ${block.name})`;
@@ -356,8 +399,8 @@ export async function applyDamageToActor(
         rows.push(`<li>${hits.length > 1 ? `Hit ${index + 1}: ` : ""}${parts || "no damage"}</li>`);
     });
 
-    const { notes, undo } = await updateHealth(target, total);
-    if (unblockable && attack) notes.push("Unblockable: blocks didn't apply.");
+    const { notes: healthNotes, undo } = await updateHealth(target, total);
+    const notes = [...notes0, ...healthNotes];
     (undo.removedEffects ??= []).push(...blockUndo);
     if (total > 0) {
         const bonus = d.combat?.concentrationBonus ?? 0;

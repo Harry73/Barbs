@@ -175,8 +175,8 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
         notes: ["With an axe or sword, each die is rolled twice keeping the higher. Otherwise you may reroll dice and must take the second result."],
     },
     "Champion/Precision Strike": {
-        attack: strike("5d8", { ignoreAC: true, ignoreMR: true }),
-        notes: ["Can't miss or be blocked. With a fine weapon or unarmed, dash up to 20 ft before or after."],
+        attack: strike("5d8", { ignoreAC: true, ignoreMR: true, cannotMiss: true, unblockable: 100 }),
+        notes: ["With a fine weapon or unarmed, dash up to 20 ft before or after."],
     },
     "Champion/Disarming Blow": {
         attack: strike("5d6"),
@@ -725,7 +725,9 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
                 singleUse: true,
                 modifiers: [
                     { type: "penetration", rollType: "physical", damageType: "all", value: 100 },
-                    note("can't miss, bypasses barriers and walls, can't be blocked, redirected, or reacted to", { rollType: "physical" }),
+                    { type: "cannotMiss", rollType: "physical", value: "" },
+                    { type: "unblockable", rollType: "physical", value: 100 },
+                    note("bypasses barriers and walls, can't be redirected or reacted to", { rollType: "physical" }),
                 ],
             },
         ],

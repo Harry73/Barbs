@@ -143,6 +143,10 @@ export interface AttackSpec {
     lethality?: number;
     /** "Can't be blocked": 100, or a percent chance. */
     unblockable?: number;
+    /** "Can't miss": targets don't roll Evasion against it. */
+    cannotMiss?: boolean;
+    /** Can't miss targets with this status (Shadow Missiles against Cursed targets). */
+    cannotMissAgainst?: string;
 }
 
 export interface AreaSpec {

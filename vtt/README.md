@@ -114,10 +114,13 @@ stat is higher, and weapon-type checks passing if either weapon matches (the Rol
 section gets a **Dual wield** button that attacks with each weapon, one card per weapon. Holding a shield in each hand
 counts as dual wielding shields for the Sentinel's extra options, which only appear in dialogs when it's true.
 
-There's no to-hit roll in Barbs; dodging is the defender's call. Attack cards have an **Evade** button that rolls each
-target's Evasion, minus the attack's Accuracy. Cards also apply the attacker's other attack stats: Unblockable Chance is
-rolled with the attack (a success means blocks don't apply), Lethality is rolled per hit and called out on the card,
-and Lifesteal heals the attacker for a share of the damage that actually lands, after defenses.
+There's no to-hit roll in Barbs; the defender dodges instead. Clicking **Apply damage** on a targeted attack rolls each
+target's Evasion, once per hit, lowered by the attack's Accuracy and any "reduce evasion" affix; dodged hits deal
+nothing. Areas, drains, and attacks that can't miss skip the roll, and shift-clicking Apply skips it for a GM ruling.
+Then, if the target has a block, the attack's Unblockable Chance is rolled to see whether it applies. Lethality is
+rolled per hit when the attack is made and called out on the card, and Lifesteal heals the attacker for a share of the
+damage that actually lands, after defenses. Conditions work the same way: applying one rolls the target's Condition
+Resist (lowered by the attack's "reduce CR", raised by CR against that condition) and skips it if they resist.
 
 ## Passives
 

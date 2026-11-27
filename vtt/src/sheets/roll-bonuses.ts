@@ -47,7 +47,7 @@ function statKeys(m: RollModifierData): string[] {
 function describe(m: RollModifierData, conditions: string[]): string {
     const label = MODIFIER_TYPES[m.type as keyof typeof MODIFIER_TYPES] ?? m.type;
     const type = m.damageType && m.damageType !== "all" && !["note", "status", "critChance", "critDamage"].includes(m.type) ? ` ${m.damageType}` : "";
-    const value = m.type === "canCrit" ? "" : `: ${m.value}${type}`;
+    const value = m.type === "canCrit" || m.type === "cannotMiss" ? "" : `: ${m.value}${type}`;
     return `${label}${value}${conditions.length ? ` (${conditions.join(", ")})` : ""}`;
 }
 

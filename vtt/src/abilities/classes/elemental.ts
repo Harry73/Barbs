@@ -33,8 +33,8 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
         notes: ["The target can end the buff as a reaction to dash 20 ft in any direction."],
     },
     "Aeromancer/Wind Slash": {
-        attack: spell("6d8", "air", { unblockable: 100 }),
-        notes: ["Also hits up to 2 enemies adjacent to the target (target them too). Can't miss, bypasses barriers."],
+        attack: spell("6d8", "air", { unblockable: 100, cannotMiss: true }),
+        notes: ["Also hits up to 2 enemies adjacent to the target (target them too). Bypasses barriers."],
     },
     "Aeromancer/Aeroblast": {
         choices: [{ ...yesNo("windsOfWar", "Expend 4 Winds of War stacks to knock prone"), resource: "winds", amount: 4 }],
@@ -184,8 +184,8 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
         ],
     },
     "Aquamancer/Water Whip": {
-        attack: spell("9d6", "water", { canCrit: true, unblockable: 100 }),
-        notes: ["Can't miss. If it doesn't fail, you may pull the target 10 ft toward you."],
+        attack: spell("9d6", "water", { canCrit: true, unblockable: 100, cannotMiss: true }),
+        notes: ["If it doesn't fail, you may pull the target 10 ft toward you."],
     },
     "Aquamancer/Bubble Barrier": {
         target: (ctx) => [
@@ -296,9 +296,9 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
         self: (ctx) => [{ category: "buff", modifiers: [onHit(ctx.dice("2d10"), "dark", { weapon: "longblade" })] }],
     },
     "Dark Duelist/Shadow Missiles": {
-        attack: spell("3d10", "dark"),
+        attack: spell("3d10", "dark", { cannotMissAgainst: "cursed" }),
         target: [status("cursed")],
-        notes: ["Up to 3 targets. Against targets that are already Cursed it can't miss and ignores MR (not automated per target)."],
+        notes: ["Up to 3 targets. Already-Cursed targets can't dodge it (handled on Apply) and it ignores their MR (not automated per target)."],
     },
     "Dark Duelist/Void Slash": {
         attack: (ctx) => strike("4d12", { ignoreAC: stacksOf(ctx.targets[0], "cursed") > 0 }),

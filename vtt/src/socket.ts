@@ -25,9 +25,10 @@ type Requests = {
         sourceName?: string;
         scale?: number;
         trueDamage?: boolean;
-        unblockable?: boolean;
+        unblockableChance?: number;
         acReduction?: number;
         lifesteal?: { percent: number; attackerUuid: string };
+        evade?: { penalty: number };
     };
     shielding: { amount: number; sourceName?: string };
     cleanse: { statuses: string[] };
@@ -76,9 +77,10 @@ async function perform<T extends RequestType>(actor: Actor.Implementation, type:
             return applyDamageToActor(actor, p.hits, p.penetration, p.sourceName, p.scale, {
                 trueDamage: p.trueDamage,
                 attack: true,
-                unblockable: p.unblockable,
+                unblockableChance: p.unblockableChance,
                 acReduction: p.acReduction,
                 lifesteal: p.lifesteal,
+                evade: p.evade,
             });
         }
         case "healing": {

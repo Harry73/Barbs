@@ -24,8 +24,12 @@ export interface CardFlags {
         penetration: Partial<Record<DamageKey, number>>;
         /** Skip all defenses (drains, health loss). */
         trueDamage?: boolean;
-        /** Blocks don't apply (Unblockable Chance succeeded, or "cannot be blocked"). */
-        unblockable?: boolean;
+        /** Chance blocks don't apply, percent (100 = "cannot be blocked"). Rolled per target on Apply. */
+        unblockableChance?: number;
+        /** A targeted attack that can miss: targets roll Evasion on Apply. False for areas, drains, "can't miss". */
+        evadable?: boolean;
+        /** Targets with this status can't dodge it (Shadow Missiles vs Cursed). */
+        cannotMissAgainst?: string;
         /** Heal the attacker for this percent of the damage dealt to each target. */
         lifesteal?: number;
         /** Reduces targets' Evasion for the Evade button, percent. */
@@ -155,7 +159,6 @@ export async function postCard(
                 (flags.damage.tiers?.length ?? 0) > 0),
         trueDamage: !!flags.damage?.trueDamage,
         alterCourse: !!flags.alterCourse,
-        accuracy: (flags.damage?.accuracy ?? 0) + (flags.damage?.evasionReduction ?? 0),
         shielding: flags.shielding,
         drain: flags.drain,
         scaledTargets: scales.some((s) => s !== 1),
@@ -295,8 +298,15 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
                         sourceName: redirects ? `${sourceName} (redirect ${redirects}${flags.alterCourse ? `, +${50 * redirects}%` : ""})` : sourceName,
                         scale: (half ? 0.5 : perTarget) * alter,
                         trueDamage: flags.damage.trueDamage,
-                        unblockable: flags.damage.unblockable,
+                        unblockableChance: flags.damage.unblockableChance,
                         acReduction: flags.damage.acReduction,
+                        // Shift-click skips the Evasion roll, for when the GM rules it can't be dodged.
+                        evade:
+                            flags.damage.evadable &&
+                            !event.shiftKey &&
+                            !(flags.damage.cannotMissAgainst && target.actor.statuses.has(flags.damage.cannotMissAgainst))
+                                ? { penalty: (flags.damage.accuracy ?? 0) + (flags.damage.evasionReduction ?? 0) }
+                                : undefined,
                         lifesteal: flags.damage.lifesteal ? { percent: flags.damage.lifesteal, attackerUuid: flags.actorUuid } : undefined,
                     });
                 }
@@ -357,22 +367,6 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
             for (const { actor } of targets) {
                 await requestOnActor(actor, "resource", { resource: flags.drain.resource, delta: -flags.drain.amount, sourceName });
                 if (caster) await requestOnActor(caster, "resource", { resource: flags.drain.resource, delta: flags.drain.amount, sourceName });
-            }
-            break;
-        }
-        case "evade": {
-            // Each target dodges with their Evasion minus the attack's Accuracy.
-            // Accuracy and an equipment's "reduce evasion" both come off the target's Evasion for this attack.
-            const accuracy = (flags.damage?.accuracy ?? 0) + (flags.damage?.evasionReduction ?? 0);
-            for (const { actor } of targets) {
-                const evasion = (actor.system as unknown as CreatureModel).derived.stats.evasion.value;
-                const chance = Math.max(0, evasion - accuracy);
-                const roll = await new Roll("1d100").evaluate();
-                const dodged = (roll.total ?? 101) <= chance;
-                await roll.toMessage({
-                    speaker: ChatMessage.getSpeaker({ actor: actor as Actor.Stored }),
-                    flavor: `Evasion vs ${sourceName}: ${chance}%${accuracy ? ` (${evasion}% − ${accuracy}% from the attack)` : ""} — ${dodged ? "<strong>dodged</strong>" : "hit"}`,
-                });
             }
             break;
         }

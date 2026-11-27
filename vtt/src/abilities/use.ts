@@ -104,6 +104,7 @@ function prepareAttack(
     if (spec.critDamage) builder.addCritDamage(spec.critDamage);
     if (spec.maximize) builder.maximize();
     builder.ignoreDefenses({ ac: spec.ignoreAC, mr: spec.ignoreMR });
+    if (spec.cannotMiss) builder.cannotMiss();
     if (spec.accuracy) builder.addAccuracy(spec.accuracy);
     if (spec.lethality) builder.addLethality(spec.lethality);
     if (spec.lifesteal) builder.addLifesteal(spec.lifesteal);
@@ -427,7 +428,10 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
                           bonus: tiers.length ? [] : result.hits.map((h) => h.distanceBonus),
                           penetration: result.penetration,
                           trueDamage: !!attack?.trueDamage,
-                          unblockable: result.unblockable,
+                          // Only attacks aimed at someone can be dodged: not areas, drains, or "can't miss".
+                          evadable: !area && !result.cannotMiss && !attack?.trueDamage,
+                          cannotMissAgainst: attack?.cannotMissAgainst,
+                          unblockableChance: result.unblockableChance,
                           lifesteal: result.lifesteal,
                           accuracy: result.accuracy,
                           evasionReduction: result.evasionReduction,
@@ -494,7 +498,9 @@ export async function postPulse(
                 hits: result.hits.map((h) => h.totals),
                 bonus: result.hits.map((h) => h.distanceBonus),
                 penetration: result.penetration,
-                unblockable: result.unblockable,
+                unblockableChance: result.unblockableChance,
+                // An aura hits everyone around the bearer: not a targeted attack, so no Evasion.
+                evadable: false,
                 lifesteal: result.lifesteal,
                 accuracy: result.accuracy,
                 evasionReduction: result.evasionReduction,
@@ -592,7 +598,8 @@ export async function weaponAttack(actor: Actor.Implementation, item: Item.Imple
                 hits: result.hits.map((h) => h.totals),
                 bonus: result.hits.map((h) => h.distanceBonus),
                 penetration: result.penetration,
-                unblockable: result.unblockable,
+                unblockableChance: result.unblockableChance,
+                evadable: !result.cannotMiss,
                 lifesteal: result.lifesteal,
                 accuracy: result.accuracy,
                 evasionReduction: result.evasionReduction,

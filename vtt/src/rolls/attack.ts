@@ -113,8 +113,10 @@ export interface AttackResult {
     accuracy: number;
     /** Heal the attacker for this percent of the damage dealt. */
     lifesteal: number;
-    /** The attack can't be blocked (rolled from Unblockable Chance, or certain). */
-    unblockable: boolean;
+    /** Chance the attack ignores blocks, percent (100 = can't be blocked). Rolled per target when damage is applied. */
+    unblockableChance: number;
+    /** "Can't miss": targets don't roll Evasion. */
+    cannotMiss: boolean;
     /** Lethality: a hit that succeeds instantly kills the target. Null when the attack has none. */
     lethality: { chance: number; lethal: boolean[] } | null;
     /** For this attack only: the target's AC is this much lower against its damage. */
@@ -167,6 +169,7 @@ export class AttackBuilder {
     #acReduction = 0;
     #crReduction = 0;
     #evasionReduction = 0;
+    #cannotMiss = false;
     #accuracy = 0;
     #lethality = 0;
     #lifesteal = 0;
@@ -287,6 +290,12 @@ export class AttackBuilder {
             damageTypes: this.damageTypes,
         };
         for (const { handle, automation } of activePassives(this.actor)) automation.rollHook?.(this, full, handle);
+        return this;
+    }
+
+    /** "This attack can't miss": no Evasion roll. */
+    cannotMiss(): this {
+        this.#cannotMiss = true;
         return this;
     }
 
@@ -462,6 +471,9 @@ export class AttackBuilder {
                 break;
             case "canCrit":
                 this.#canCrit = true;
+                break;
+            case "cannotMiss":
+                this.#cannotMiss = true;
                 break;
             case "comboChance":
                 this.#comboBonus += number;
@@ -708,19 +720,12 @@ export class AttackBuilder {
 
         // Accuracy, lethality, lifesteal, and unblockable only matter for attacks that deal damage.
         const damaging = this.rollType !== "healing" && Object.values(totals).some((v) => (v ?? 0) > 0);
-        let unblockable = false;
         let lethality: AttackResult["lethality"] = null;
         if (damaging) {
-            if (this.#accuracy) this.addNote(`Accuracy ${this.#accuracy > 0 ? "+" : ""}${this.#accuracy}%: targets dodge with that much less Evasion (use Evade).`);
-            if (this.#unblockable >= 100) {
-                unblockable = true;
-                this.addNote("Unblockable: blocks don't apply to this attack.");
-            } else if (this.#unblockable > 0) {
-                const roll = (await new Roll("1d100").evaluate()) as unknown as Roll;
-                rolls.push(roll);
-                unblockable = (roll.total ?? 101) <= this.#unblockable;
-                this.addNote(`Unblockable chance ${this.#unblockable}%: rolled ${roll.total}, ${unblockable ? "can't be blocked" : "can be blocked"}.`);
-            }
+            if (this.#cannotMiss) this.addNote("Can't miss: targets don't roll Evasion.");
+            if (this.#accuracy) this.addNote(`Accuracy ${this.#accuracy > 0 ? "+" : ""}${this.#accuracy}%: targets dodge with that much less Evasion.`);
+            if (this.#unblockable >= 100) this.addNote("Unblockable: blocks don't apply to this attack.");
+            else if (this.#unblockable > 0) this.addNote(`Unblockable chance ${this.#unblockable}%: rolled against each target's block when damage is applied.`);
             if (this.#lethality > 0) {
                 const lethal: boolean[] = [];
                 for (let i = 0; i < results.length; i++) {
@@ -738,7 +743,7 @@ export class AttackBuilder {
             }
             if (this.#lifesteal) this.addNote(`Lifesteal ${this.#lifesteal}%: applying damage heals the attacker for that much of it.`);
             if (this.#acReduction) this.addNote(`This attack: the target has ${this.#acReduction} less AC against it.`);
-            if (this.#evasionReduction) this.addNote(`This attack: the target has ${this.#evasionReduction}% less Evasion against it (use Evade).`);
+            if (this.#evasionReduction) this.addNote(`This attack: the target has ${this.#evasionReduction}% less Evasion against it.`);
         }
         if (this.#crReduction) this.addNote(`This attack: the target has ${this.#crReduction}% less CR against its conditions.`);
 
@@ -762,7 +767,8 @@ export class AttackBuilder {
             rolls,
             accuracy: damaging ? this.#accuracy : 0,
             lifesteal: damaging ? this.#lifesteal : 0,
-            unblockable,
+            unblockableChance: damaging ? Math.min(100, this.#unblockable) : 0,
+            cannotMiss: this.#cannotMiss,
             lethality,
             acReduction: damaging ? this.#acReduction : 0,
             crReduction: this.#crReduction,
