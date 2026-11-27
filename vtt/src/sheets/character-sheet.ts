@@ -3,7 +3,6 @@ import {
     ELEMENTS,
     MULTIPLIER_STAT_KEYS,
     PENETRATION_STAT_KEYS,
-    SKILL_NAMES,
     skillKey,
     STATUSES,
     ATTRIBUTE_KEYS,
@@ -158,14 +157,27 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
         const statSections = this.#statSections(rollBonuses);
 
+        // Base is rank + attribute; Value adds effects' bonuses to every skill and to this one (what a check rolls).
         const skills = ofType("skill").map((item) => {
             const s = item.system as unknown as SkillModel;
+            const all = system.skillBonus ?? 0;
+            const own = system.skillBonuses?.[skillKey(item.name)] ?? 0;
+            const attr = ATTRIBUTES[s.attribute as AttributeKey];
+            const sign = (n: number) => `${n > 0 ? "+" : ""}${n}`;
             return {
                 item,
                 rank: s.rank,
                 points: s.points,
-                attribute: ATTRIBUTES[s.attribute as AttributeKey]?.abbreviation ?? "?",
-                modifier: s.modifier,
+                attribute: attr?.abbreviation ?? "?",
+                base: s.modifier,
+                value: s.modifier + all + own,
+                changed: !!(all || own),
+                breakdown: [
+                    `${sign(s.rankBonus)} rank`,
+                    `${sign(s.attributeBonus)} ${attr?.abbreviation ?? "attribute"}`,
+                    ...(all ? [`${sign(all)} to all skills`] : []),
+                    ...(own ? [`${sign(own)} to ${item.name}`] : []),
+                ].join(", "),
             };
         });
 

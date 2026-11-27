@@ -269,8 +269,9 @@
   font-weight: bold;
 }
 
-/* A core stat whose value differs from its attribute formula (effects or gear changed it). */
-.barbs .stat-section td.value.changed {
+/* A stat or skill whose value differs from its base (effects or gear changed it). */
+.barbs .stat-section td.value.changed,
+.barbs .skills td.value.changed {
   color: var(--barbs-accent);
 }
 
