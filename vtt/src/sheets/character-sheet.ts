@@ -129,19 +129,32 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
         const overrides = (actor.creature as unknown as { overrides: Record<string, number | null> }).overrides ?? {};
         // Roll modifiers from gear and buffs that apply to every roll count towards the stats they boost.
         const rollBonuses = summarizeRollBonuses(actor as unknown as Actor.Implementation);
-        const stats = STAT_KEYS.map((key) => {
+        // The core stats, grouped like the Attributes tab (each stat under its attribute's category). Value is
+        // everything included: the formula, effects' Changes, and always-on roll modifiers; hover it for the parts.
+        const statGroups: Record<string, unknown[]> = {};
+        for (const key of STAT_KEYS) {
+            const config = STATS[key];
+            const data = system.stats[key];
             const mods = bonusTotal(rollBonuses, key);
-            return {
+            const unit = config.unit ?? "";
+            const attr = ATTRIBUTES[config.attribute];
+            const breakdown = [
+                `${data.base}${unit} from ${attr.abbreviation}${overrides[key] != null ? " (fixed)" : ""}`,
+                ...(data.bonus ? [`${data.bonus > 0 ? "+" : ""}${data.bonus} from effects`] : []),
+                ...(data.multiplier ? [`increased by ${data.multiplier}%`] : []),
+                ...(mods ? [`${mods > 0 ? "+" : ""}${mods} from ${bonusSources(rollBonuses, key)}`] : []),
+            ].join(", ");
+            (statGroups[attr.category] ??= []).push({
                 key,
-                ...STATS[key],
-                ...system.stats[key],
+                ...config,
+                ...data,
                 rollable: rollableStats.has(key),
                 override: overrides[key] ?? "",
-                mods,
-                modSources: bonusSources(rollBonuses, key),
-                total: system.stats[key].value + mods,
-            };
-        });
+                total: data.value + mods,
+                breakdown,
+                changed: data.value + mods !== data.base,
+            });
+        }
 
         const statSections = this.#statSections(rollBonuses);
 
@@ -267,7 +280,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             classes: ofType("class"),
             resources: RESOURCE_KEYS.map((key) => ({ key, label: key.capitalize(), ...system.resources[key] })),
             attributeGroups,
-            stats,
+            statGroups,
             statSections,
             skills,
             skillMaxPoints: SKILL_MAX_POINTS,
@@ -396,12 +409,11 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
         const conditions = STATUSES.filter((st) => st.category === "condition");
         const cr = d.stats.conditionResist.value;
         const mr = d.stats.magicResist.value;
-        const skills = SKILL_NAMES.map((name) => ({ name, bonus: d.skillBonuses?.[skillKey(name)] ?? 0 })).filter((x) => x.bonus);
         return [
             {
                 label: "Miscellaneous",
                 rows: [
-                    ...Object.entries(COMBAT_STATS).map(([key, c]) => {
+                    ...Object.entries(COMBAT_STATS).filter(([key]) => key !== "accuracy").map(([key, c]) => {
                         const v = d.combat?.[key as keyof typeof COMBAT_STATS] ?? 0;
                         const format = (x: number) => (c.unit === "%" ? pct(x) : `${x > 0 ? "+" : ""}${x}${c.unit}`);
                         return withMods(c.label, v, `combat.${key}`, format, c.hint);
@@ -417,10 +429,17 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
                 rows: MULTIPLIER_STAT_KEYS.map((k) => withMods(damageBucketLabel(k), d.damageMultiplier?.[k] ?? 0, `multiplier.${k}`)),
             },
             {
-                label: "Penetration",
-                rows: PENETRATION_STAT_KEYS.map((k) =>
-                    withMods(k === "physical" ? "Armor (AC)" : k === "allMagic" ? "General magic" : damageBucketLabel(k), d.penetration?.[k] ?? 0, `penetration.${k}`),
-                ),
+                label: "Accuracy & Penetration",
+                rows: [
+                    withMods(COMBAT_STATS.accuracy.label, d.combat?.accuracy ?? 0, "combat.accuracy", pct, COMBAT_STATS.accuracy.hint),
+                    ...PENETRATION_STAT_KEYS.map((k) =>
+                        withMods(
+                            k === "physical" ? "Armor (AC) penetration" : k === "allMagic" ? "General magic penetration" : `${damageBucketLabel(k)} penetration`,
+                            d.penetration?.[k] ?? 0,
+                            `penetration.${k}`,
+                        ),
+                    ),
+                ],
             },
             {
                 label: "Damage Reduction",
@@ -448,9 +467,6 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
                     }),
                 ],
             },
-            ...(skills.length
-                ? [{ label: "Skill Bonuses", rows: skills.map((x) => row(x.name, x.bonus, `${x.bonus > 0 ? "+" : ""}${x.bonus}`)) }]
-                : []),
             // Everything that only applies sometimes (a weapon's own mods, "bow attacks", on crit, next roll) or isn't
             // a stat at all (on-hit damage, statuses), spelled out.
             ...(rb.other.length ? [{ label: "Conditional & On-hit Bonuses", rows: [], lines: rb.other, wide: true }] : []),

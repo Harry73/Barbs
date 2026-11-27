@@ -269,6 +269,11 @@
   font-weight: bold;
 }
 
+/* A core stat whose value differs from its attribute formula (effects or gear changed it). */
+.barbs .stat-section td.value.changed {
+  color: var(--barbs-accent);
+}
+
 .barbs .stat-section tr.zero td {
   color: var(--barbs-muted);
   font-weight: normal;
