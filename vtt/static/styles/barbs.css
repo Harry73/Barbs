@@ -260,6 +260,11 @@
   margin-top: 0.5rem;
 }
 
+/* The four core stat groups sit two to a row; the rest of the tab fills as many columns as fit. */
+.barbs .stat-sections.core-stats {
+  grid-template-columns: repeat(2, 1fr);
+}
+
 .barbs .stat-section.wide {
   grid-column: 1 / -1;
 }
