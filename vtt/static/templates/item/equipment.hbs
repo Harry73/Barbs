@@ -26,15 +26,15 @@
     Mods and enchantments (on-hit damage, crit bonuses, ...) go in Effects below. On a weapon, their roll modifiers
     apply to attacks made with this weapon, and to your spells while it's held. Stat changes apply while equipped.
   </p>
+  <h3>Effects</h3>
+  {{#if (and effects.length (not system.equipped))}}
+  <p class="notice"><i class="fa-solid fa-triangle-exclamation"></i> Not equipped, so these effects are inactive.</p>
+  {{/if}}
+  {{> "systems/barbs/templates/item/effects-list.hbs"}}
   <h3>Description</h3>
   {{#if editable}}
   <prose-mirror name="system.description" value="{{system.description}}" toggled>{{{enrichedDescription}}}</prose-mirror>
   {{else}}
   <div class="description">{{{enrichedDescription}}}</div>
   {{/if}}
-  <h3>Effects</h3>
-  {{#if (and effects.length (not system.equipped))}}
-  <p class="notice"><i class="fa-solid fa-triangle-exclamation"></i> Not equipped, so these effects are inactive.</p>
-  {{/if}}
-  {{> "systems/barbs/templates/item/effects-list.hbs"}}
 </section>

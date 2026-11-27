@@ -253,6 +253,17 @@
 
 /* ---------- Item sheets ---------- */
 
+/* The header stays put and the details scroll, so nothing ends up below the bottom of the window. */
+.barbs.item .window-content {
+  overflow: hidden;
+}
+
+.barbs.item .item-details {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
 .barbs .item-details dl {
   margin: 0;
 }
