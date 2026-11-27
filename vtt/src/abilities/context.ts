@@ -62,8 +62,12 @@ export interface ContextData {
     hand?: Hand;
 }
 
-export function buffEffectiveness(actor: Actor.Implementation): number {
-    return 1 + ((actor.system as unknown as CreatureModel).derived.buffEffectiveness ?? 0) / 100;
+export function buffEffectiveness(actor: Actor.Implementation, item?: Item.Implementation | null): number {
+    const d = (actor.system as unknown as CreatureModel).derived;
+    // Enchantments (abilities tagged "enchantment") also get Enchant Effectiveness.
+    const tags = ((item?.system as unknown as { tags?: string[] } | undefined)?.tags ?? []).map((t) => t.toLowerCase());
+    const enchant = tags.includes("enchantment") ? (d.combat?.enchantEffectiveness ?? 0) : 0;
+    return 1 + ((d.buffEffectiveness ?? 0) + enchant) / 100;
 }
 
 export function countBuffs(actor: Actor.Implementation | null): number {
@@ -77,7 +81,7 @@ export function makeContext(
     actor: Actor.Implementation,
     item: Item.Implementation | null,
     choices: Choices,
-    effectiveness = actor ? buffEffectiveness(actor) : 1,
+    effectiveness = actor ? buffEffectiveness(actor, item) : 1,
     extra: Partial<Pick<UseContext, "targets" | "rolls" | "result" | "hand">> = {},
 ): UseContext {
     const round1 = (n: number) => Math.round(n * 10) / 10;

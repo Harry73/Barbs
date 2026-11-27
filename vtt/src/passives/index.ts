@@ -81,7 +81,8 @@ export function monkDie(actor: Actor.Implementation | null): number {
 }
 
 export function baseComboChance(actor: Actor.Implementation | null): number {
-    return MONK_COMBO[Math.min(monkMastery(actor), MONK_COMBO.length - 1)];
+    const gear = (actor?.system as { combat?: { comboChance?: number } } | undefined)?.combat?.comboChance ?? 0;
+    return MONK_COMBO[Math.min(monkMastery(actor), MONK_COMBO.length - 1)] + gear;
 }
 
 /* -------------------------------------------- */

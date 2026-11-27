@@ -164,7 +164,9 @@ Every ActiveEffect has Barbs data (Barbs tab in the effect config):
 
 Multipliers are grouped by effect: modifiers from the same effect add, different effects multiply.
 
-Stat buffs use the core Changes tab instead, in the "initial" phase. Its key field is a dropdown of every key below
+Stat buffs use the core Changes tab instead, in the "initial" phase. The Stats tab shows every one of these, laid out
+like the Roll20 sheet's: core stats, then misc combat stats, multipliers, penetration, damage reduction, and condition
+resistances. Use these for always-on gear affixes; use roll modifiers for conditional ones ("bow attacks", "on hit"). Its key field is a dropdown of every key below
 (`src/effects/change-keys.ts`), so you don't need to remember the paths:
 
 | Key | Meaning |
@@ -176,6 +178,11 @@ Stat buffs use the core Changes tab instead, in the "initial" phase. Its key fie
 | `system.damageReduction` | general damage reduction % |
 | `system.vulnerability.<type\|magic\|all>` | percent increased damage taken (-100 = immune) |
 | `system.conditionImmunity.<status>` | non-zero: can't be given that condition (Dragonblood) |
+| `system.combat.<stat>` | accuracy, lethality, minion lethality, lifesteal, unblockable chance, crit damage, combo chance, minion damage, enchant effectiveness, concentration bonus, reach, range |
+| `system.damageMultiplier.<type\|all\|allMagic\|healing>` | always-on increased damage % |
+| `system.penetration.<type\|allMagic>` | always-on penetration % (`physical` is armor penetration) |
+| `system.conditionResistBonus.<status>` | extra CR % against one condition |
+| `system.skillBonuses.<skill>` | bonus to one skill's checks |
 | `system.downedBonus` | extra Downed Health |
 | `system.initiativeBonus` | added to initiative |
 

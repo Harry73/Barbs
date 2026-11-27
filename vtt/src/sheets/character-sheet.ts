@@ -1,4 +1,11 @@
 import {
+    COMBAT_STATS,
+    ELEMENTS,
+    MULTIPLIER_STAT_KEYS,
+    PENETRATION_STAT_KEYS,
+    SKILL_NAMES,
+    skillKey,
+    STATUSES,
     ATTRIBUTE_KEYS,
     ATTRIBUTES,
     EQUIPMENT_SLOTS,
@@ -14,6 +21,7 @@ import {
     type EquipmentSlot,
 } from "../config.ts";
 import { getAutomation } from "../abilities/catalog.ts";
+import { damageBucketLabel } from "../effects/change-keys.ts";
 import { defaultChoices } from "../abilities/choices.ts";
 import { makeContext, resolve } from "../abilities/context.ts";
 import type { AbilityAutomation } from "../abilities/types.ts";
@@ -125,6 +133,8 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             rollable: rollableStats.has(key),
             override: overrides[key] ?? "",
         }));
+
+        const statSections = this.#statSections();
 
         const skills = ofType("skill").map((item) => {
             const s = item.system as unknown as SkillModel;
@@ -244,6 +254,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             resources: RESOURCE_KEYS.map((key) => ({ key, label: key.capitalize(), ...system.resources[key] })),
             attributeGroups,
             stats,
+            statSections,
             skills,
             skillMaxPoints: SKILL_MAX_POINTS,
             abilityGroups: sortedAbilityGroups,
@@ -343,6 +354,74 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
     static async #onRollSkill(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {
         const item = this.#itemFromElement(target);
         if (item) await this.barbsActor.rollSkill(item);
+    }
+
+    /**
+     * Everything else gear and buffs can change, grouped like the Roll20 sheet's Stats tab: misc combat stats, damage
+     * multipliers, penetration, damage reduction, and condition resistances. Read-only: effects set them.
+     */
+    #statSections() {
+        const d = this.barbsActor.creature.derived;
+        const pct = (v: number) => `${v > 0 ? "+" : ""}${v}%`;
+        const row = (label: string, value: number, text = pct(value), hint?: string) => ({ label, value, text, hint, zero: !value });
+        const conditions = STATUSES.filter((st) => st.category === "condition");
+        const cr = d.stats.conditionResist.value;
+        const mr = d.stats.magicResist.value;
+        const skills = SKILL_NAMES.map((name) => ({ name, bonus: d.skillBonuses?.[skillKey(name)] ?? 0 })).filter((x) => x.bonus);
+        return [
+            {
+                label: "Miscellaneous",
+                rows: [
+                    ...Object.entries(COMBAT_STATS).map(([key, c]) => {
+                        const v = d.combat?.[key as keyof typeof COMBAT_STATS] ?? 0;
+                        return row(c.label, v, c.unit === "%" ? pct(v) : `${v > 0 ? "+" : ""}${v}${c.unit}`, c.hint);
+                    }),
+                    row("Initiative Bonus", d.initiativeBonus, `${d.initiativeBonus > 0 ? "+" : ""}${d.initiativeBonus}`),
+                    row("Buff Effectiveness", d.buffEffectiveness),
+                    row("All Skill Checks", d.skillBonus, `${d.skillBonus > 0 ? "+" : ""}${d.skillBonus}`),
+                    row("Downed Health", d.downedBonus, `${d.downedBonus > 0 ? "+" : ""}${d.downedBonus}`),
+                ],
+            },
+            {
+                label: "Damage Multipliers",
+                rows: MULTIPLIER_STAT_KEYS.map((k) => row(damageBucketLabel(k), d.damageMultiplier?.[k] ?? 0)),
+            },
+            {
+                label: "Penetration",
+                rows: PENETRATION_STAT_KEYS.map((k) =>
+                    row(k === "physical" ? "Armor (AC)" : k === "allMagic" ? "General magic" : damageBucketLabel(k), d.penetration?.[k] ?? 0),
+                ),
+            },
+            {
+                label: "Damage Reduction",
+                rows: [
+                    row("General (GDR)", d.damageReduction),
+                    { label: "AC", value: d.stats.ac.value, text: String(d.stats.ac.value), zero: false },
+                    { label: "Magic Resist", value: mr, text: `${mr}%`, zero: false },
+                    ...ELEMENTS.map((e) => {
+                        const bonus = d.elementResist[e] ?? 0;
+                        return { label: `${damageBucketLabel(e)} MR`, value: bonus, text: `${mr + bonus}%`, zero: !bonus };
+                    }),
+                    ...Object.entries(d.vulnerability).map(([k, v]) =>
+                        row(`${damageBucketLabel(k === "magic" ? "allMagic" : k)} vulnerability`, v, v <= -100 ? "Immune" : pct(v)),
+                    ),
+                ],
+            },
+            {
+                label: "Condition Resistances",
+                rows: [
+                    { label: "Condition Resist", value: cr, text: `${cr}%`, zero: false },
+                    ...conditions.map((st) => {
+                        const immune = !!d.conditionImmunity?.[st.id];
+                        const bonus = d.conditionResistBonus?.[st.id] ?? 0;
+                        return { label: st.name, value: bonus, text: immune ? "Immune" : `${cr + bonus}%`, zero: !bonus && !immune };
+                    }),
+                ],
+            },
+            ...(skills.length
+                ? [{ label: "Skill Bonuses", rows: skills.map((x) => row(x.name, x.bonus, `${x.bonus > 0 ? "+" : ""}${x.bonus}`)) }]
+                : []),
+        ];
     }
 
     static async #onUseAbility(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {

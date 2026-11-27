@@ -16,5 +16,24 @@
       {{/each}}
     </tbody>
   </table>
-  <p class="hint">Effects modify stats with changes to <code>system.stats.&lt;stat&gt;.bonus</code> or <code>.multiplier</code> (percent, summed).</p>
+  <p class="hint">
+    Everything here comes from attributes plus effects (buffs, conditions, and equipped gear). To change a number, add a
+    change to an effect; the key dropdown lists all of these.
+  </p>
+
+  <div class="stat-sections">
+    {{#each statSections as |section|}}
+    <table class="barbs-table stat-section">
+      <thead><tr><th colspan="2">{{section.label}}</th></tr></thead>
+      <tbody>
+        {{#each section.rows as |r|}}
+        <tr class="{{#if r.zero}}zero{{/if}}"{{#if r.hint}} data-tooltip="{{r.hint}}"{{/if}}>
+          <td>{{r.label}}</td>
+          <td class="value">{{r.text}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{/each}}
+  </div>
 </section>

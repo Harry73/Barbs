@@ -251,6 +251,25 @@
   text-align: right;
 }
 
+/* Stats tab: the Roll20-style block of everything gear can change, in columns. */
+.barbs .stat-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+  align-items: start;
+  margin-top: 0.5rem;
+}
+
+.barbs .stat-section td.value {
+  text-align: right;
+  font-weight: bold;
+}
+
+.barbs .stat-section tr.zero td {
+  color: var(--barbs-muted);
+  font-weight: normal;
+}
+
 /* Main / Off / Dual buttons under physical abilities, when holding a weapon in each hand. */
 .barbs .abilities .hand-buttons {
   display: flex;

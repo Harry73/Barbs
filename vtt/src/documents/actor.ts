@@ -1,3 +1,4 @@
+import { skillKey } from "../config.ts";
 import {
     ATTRIBUTES,
     RESOURCE_KEYS,
@@ -60,11 +61,14 @@ export class BarbsActor extends Actor {
     async rollSkill(item: Item.Implementation): Promise<void> {
         const skill = item.system as unknown as SkillModel;
         const attr = ATTRIBUTES[skill.attribute as AttributeKey];
-        const bonus = this.creature.derived.skillBonus ? " + @skillBonus[effects]" : "";
-        const roll = new Roll(`1d100 + @rank[rank ${skill.rank}] + @${skill.attribute}[${attr.abbreviation}]${bonus}`, {
-            ...this.getRollData(),
-            rank: skill.rankBonus,
-        });
+        const d = this.creature.derived;
+        const bonus = d.skillBonus ? " + @skillBonus[effects]" : "";
+        // Gear can add to one skill ("+10 Stealth: Sneak"), on top of bonuses to every skill.
+        const specific = d.skillBonuses?.[skillKey(item.name)] ?? 0;
+        const roll = new Roll(
+            `1d100 + @rank[rank ${skill.rank}] + @${skill.attribute}[${attr.abbreviation}]${bonus}${specific ? " + @specific[gear]" : ""}`,
+            { ...this.getRollData(), rank: skill.rankBonus, specific },
+        );
         await roll.toMessage({
             speaker: this.speaker,
             flavor: `${item.name} check (rank ${skill.rank})`,

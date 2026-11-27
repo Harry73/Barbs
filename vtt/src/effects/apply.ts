@@ -115,7 +115,9 @@ export async function applyEffectToActor(
     }
 
     if (resistible) {
-        const resist = creature.derived.stats.conditionResist.value;
+        // Gear can add CR against specific conditions (the Roll20 sheet's per-condition resistances).
+        const specific = Math.max(0, ...((data.statuses as string[] | undefined) ?? []).map((id) => creature.derived.conditionResistBonus?.[id] ?? 0));
+        const resist = creature.derived.stats.conditionResist.value + specific;
         const roll = await new Roll("1d100").evaluate();
         const resisted = (roll.total ?? 101) <= resist;
         await roll.toMessage({
@@ -341,7 +343,10 @@ export async function applyDamageToActor(
 
     const { notes, undo } = await updateHealth(target, total);
     (undo.removedEffects ??= []).push(...blockUndo);
-    if (total > 0) notes.push(`Concentration check DC ${total * 2}, if concentrating.`);
+    if (total > 0) {
+        const bonus = d.combat?.concentrationBonus ?? 0;
+        notes.push(`Concentration check DC ${total * 2}, if concentrating${bonus ? ` (${target.name} has ${bonus > 0 ? "+" : ""}${bonus})` : ""}.`);
+    }
     const scaleNote =
         (baseScale !== 1 ? ` (${baseScale === 0.5 ? "half" : `×${baseScale}`} damage)` : "") +
         (trueDamage ? " (ignoring defenses)" : "") +

@@ -2,7 +2,18 @@
  * Every ActiveEffect change key a creature understands, grouped and labeled for the effect config's key dropdown.
  * These are the zeroed buckets set up in `CreatureModel.prepareBaseData()`, which effects add into.
  */
-import { ATTRIBUTES, ELEMENTS, STATS, STATUSES, type StatKey } from "../config.ts";
+import {
+    ATTRIBUTES,
+    COMBAT_STATS,
+    ELEMENTS,
+    MULTIPLIER_STAT_KEYS,
+    PENETRATION_STAT_KEYS,
+    SKILL_NAMES,
+    skillKey,
+    STATS,
+    STATUSES,
+    type StatKey,
+} from "../config.ts";
 import { VULNERABILITY_KEYS } from "../data/actor/creature.ts";
 
 export interface ChangeKeyGroup {
@@ -11,6 +22,11 @@ export interface ChangeKeyGroup {
 }
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** "allMagic" → "All magic", "physical" → "Physical": labels for multiplier/penetration buckets. */
+export function damageBucketLabel(key: string): string {
+    return key === "all" ? "All" : key === "allMagic" ? "All magic" : capitalize(key);
+}
 
 export function changeKeyGroups(): ChangeKeyGroup[] {
     const stats = Object.entries(STATS) as [StatKey, { label: string; unit?: string }][];
@@ -28,6 +44,21 @@ export function changeKeyGroups(): ChangeKeyGroup[] {
             keys: stats.map(([key, s]) => ({ key: `system.stats.${key}.multiplier`, label: `${s.label} increased by X%` })),
         },
         {
+            label: "Combat stats",
+            keys: Object.entries(COMBAT_STATS).map(([key, c]) => ({ key: `system.combat.${key}`, label: `${c.label}${c.unit === "%" ? " %" : c.unit}` })),
+        },
+        {
+            label: "Damage multipliers (increased damage %)",
+            keys: MULTIPLIER_STAT_KEYS.map((k) => ({ key: `system.damageMultiplier.${k}`, label: `${damageBucketLabel(k)} damage %` })),
+        },
+        {
+            label: "Penetration %",
+            keys: PENETRATION_STAT_KEYS.map((k) => ({
+                key: `system.penetration.${k}`,
+                label: k === "physical" ? "Armor (AC) penetration %" : `${damageBucketLabel(k)} magic penetration %`.replace("Psychic magic", "Psychic"),
+            })),
+        },
+        {
             label: "Element resist (extra MR %)",
             keys: ELEMENTS.map((e) => ({ key: `system.elementResist.${e}`, label: `${capitalize(e)} resist` })),
         },
@@ -42,8 +73,16 @@ export function changeKeyGroups(): ChangeKeyGroup[] {
             ],
         },
         {
+            label: "Condition resist against one condition %",
+            keys: STATUSES.filter((s) => s.category === "condition").map((s) => ({ key: `system.conditionResistBonus.${s.id}`, label: `${s.name} CR` })),
+        },
+        {
             label: "Condition immunity (1 = immune)",
             keys: STATUSES.filter((s) => s.category === "condition").map((s) => ({ key: `system.conditionImmunity.${s.id}`, label: `Immune to ${s.name}` })),
+        },
+        {
+            label: "Skill bonuses",
+            keys: SKILL_NAMES.map((name) => ({ key: `system.skillBonuses.${skillKey(name)}`, label: `+ ${name}` })),
         },
         {
             label: "Other",

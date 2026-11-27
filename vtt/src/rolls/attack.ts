@@ -6,6 +6,7 @@
  * roll. The result is plain data the chat card can render and the "Apply" buttons can act on.
  */
 import { bleed } from "../abilities/helpers.ts";
+import { SYSTEM_ID } from "../config.ts";
 import { ELEMENTS, RANGED_WEAPONS, STATUSES, type ModifierRollType, type RollType, type StatKey } from "../config.ts";
 import { snapshotEffect, type RemovedEffect } from "../chat/undo.ts";
 import { activePassives, adjustResource, baseComboChance, monkDie, setResource } from "../passives/index.ts";
@@ -332,7 +333,31 @@ export class AttackBuilder {
     }
 
     /** Fold in roll modifiers from every active effect on the actor (including transferred item effects). */
+    /**
+     * Always-on stats from gear and buffs: the Stats tab's damage multipliers, penetration, and crit damage. They're
+     * summed into one "Stats" source, the way the Roll20 API grouped every item's bonuses under the character.
+     * A summon's rolls also get its summoner's Minion Damage.
+     */
+    #applyStatBuckets(): void {
+        const creature = this.#creature.derived;
+        for (const [key, percent] of Object.entries(creature.damageMultiplier ?? {})) {
+            if (percent) this.addMultiplier(key as MultiplierKey, "Stats", percent);
+        }
+        for (const [key, percent] of Object.entries(creature.penetration ?? {})) {
+            if (!percent) continue;
+            const types: DamageKey[] = key === "allMagic" ? [...ELEMENTS] : [key as DamageKey];
+            for (const type of types) this.#penetration[type] = (this.#penetration[type] ?? 0) + percent;
+        }
+        this.#critDamage += creature.combat?.critDamage ?? 0;
+
+        const casterUuid = foundry.utils.getProperty(this.actor, `flags.${SYSTEM_ID}.summon.casterUuid`) as string | undefined;
+        const caster = casterUuid ? (fromUuidSync(casterUuid) as Actor.Implementation | null) : null;
+        const minion = (caster?.system as unknown as CreatureModel | undefined)?.derived.combat?.minionDamage ?? 0;
+        if (minion) this.addMultiplier("all", `${caster!.name}'s Minion Damage`, minion);
+    }
+
     applyEffects(): this {
+        this.#applyStatBuckets();
         for (const effect of this.actor.allApplicableEffects()) {
             if (!effect.active || !this.#effectApplies(effect as ActiveEffect.Implementation)) continue;
             const system = effect.system as unknown as BarbsEffectModel;

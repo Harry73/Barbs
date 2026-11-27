@@ -8,6 +8,12 @@ import {
     STAT_KEYS,
     STATS,
     STATUSES,
+    COMBAT_STAT_KEYS,
+    MULTIPLIER_STAT_KEYS,
+    PENETRATION_STAT_KEYS,
+    SKILL_NAMES,
+    skillKey,
+    type CombatStatKey,
     type AttributeKey,
     type ResourceKey,
     type StatKey,
@@ -156,6 +162,16 @@ export interface CreatureDerived {
     conditionImmunity: Record<string, number>;
     /** Extra Downed Health. Effects target `system.downedBonus` (Dragonblood: Downed Health is 200). */
     downedBonus: number;
+    /** Accuracy, lethality, lifesteal, and the rest of the Roll20 sheet's misc stats. `system.combat.<key>`. */
+    combat: Record<CombatStatKey, number>;
+    /** Always-on damage multipliers by type, percent. `system.damageMultiplier.<type|all|allMagic|healing>`. */
+    damageMultiplier: Record<(typeof MULTIPLIER_STAT_KEYS)[number], number>;
+    /** Always-on penetration by type, percent ("physical" is armor penetration). `system.penetration.<type|allMagic>`. */
+    penetration: Record<(typeof PENETRATION_STAT_KEYS)[number], number>;
+    /** Extra Condition Resist against one condition, percent. `system.conditionResistBonus.<status>`. */
+    conditionResistBonus: Record<string, number>;
+    /** Bonus to one skill's checks. `system.skillBonuses.<skill key>` (see `skillKey()`). */
+    skillBonuses: Record<string, number>;
     /** Total points spent: attribute points above -10, skill points, and ability AP. */
     level: number;
     /** AP invested per class name, derived from owned ability tiers. */
@@ -196,6 +212,12 @@ export class CreatureModel extends foundry.abstract.TypeDataModel<CreatureSchema
         d.skillBonus = 0;
         d.conditionImmunity = Object.fromEntries(STATUSES.filter((st) => st.category === "condition").map((st) => [st.id, 0]));
         d.downedBonus = 0;
+        const zeroes = <K extends string>(keys: readonly K[]) => Object.fromEntries(keys.map((k) => [k, 0])) as Record<K, number>;
+        d.combat = zeroes(COMBAT_STAT_KEYS);
+        d.damageMultiplier = zeroes(MULTIPLIER_STAT_KEYS);
+        d.penetration = zeroes(PENETRATION_STAT_KEYS);
+        d.conditionResistBonus = zeroes(STATUSES.filter((st) => st.category === "condition").map((st) => st.id));
+        d.skillBonuses = zeroes(SKILL_NAMES.map(skillKey));
     }
 
     override prepareDerivedData(): void {
@@ -247,6 +269,7 @@ export class CreatureModel extends foundry.abstract.TypeDataModel<CreatureSchema
             initiativeBonus: d.initiativeBonus,
             buffEffectiveness: d.buffEffectiveness,
             skillBonus: d.skillBonus,
+            combat: d.combat,
         };
         for (const key of ATTRIBUTE_KEYS) data[key] = d.attributes[key].total;
         return data;

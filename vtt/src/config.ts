@@ -7,6 +7,7 @@
 import attributesJson from "../../rulebook/attributes.json";
 import buffsJson from "../../rulebook/buffs.json";
 import conditionsJson from "../../rulebook/conditions.json";
+import skillsJson from "../../rulebook/skills.json";
 
 export const SYSTEM_ID = "barbs";
 
@@ -292,6 +293,38 @@ const STATUS_OVERRIDES: Record<string, { id?: string; img: string }> = {
     Taunted: { img: "icons/svg/target.svg" },
     Weakened: { img: "icons/svg/degen.svg" },
 };
+
+/**
+ * Character-level combat stats that gear and buffs modify but that aren't attribute-derived: the Roll20 sheet's
+ * "Miscellaneous" block. Effects target `system.combat.<key>`; each starts at 0 and is summed.
+ */
+export const COMBAT_STATS = {
+    accuracy: { label: "Accuracy", unit: "%", hint: "Reduces the target's Evasion when they dodge your attacks." },
+    lethality: { label: "Lethality", unit: "%", hint: "Chance a hit instantly kills the target (not usable on players)." },
+    minionLethality: { label: "Minion Lethality", unit: "%", hint: "Lethality for your summons' attacks." },
+    lifesteal: { label: "Lifesteal", unit: "%", hint: "Heal for this much of the damage your attacks deal." },
+    unblockable: { label: "Unblockable Chance", unit: "%", hint: "Chance your attacks can't be blocked." },
+    critDamage: { label: "Crit Damage Modifier", unit: "%", hint: "Extra damage on a physical crit, on top of the weapon's." },
+    comboChance: { label: "Combo Chance", unit: "%", hint: "Added to your combo rolls." },
+    minionDamage: { label: "Minion Damage", unit: "%", hint: "Increased damage for your summons' attacks." },
+    enchantEffectiveness: { label: "Enchant Effectiveness", unit: "%", hint: "Like Buff Effectiveness, for enchantment abilities." },
+    concentrationBonus: { label: "Concentration Bonus", unit: "", hint: "Added to concentration checks." },
+    reach: { label: "Reach", unit: " ft", hint: "Extra melee reach." },
+    range: { label: "Range", unit: " ft", hint: "Extra attack range." },
+} as const;
+export type CombatStatKey = keyof typeof COMBAT_STATS;
+export const COMBAT_STAT_KEYS = Object.keys(COMBAT_STATS) as CombatStatKey[];
+
+/** Always-on damage multipliers by type (the Roll20 sheet's "Damage Multipliers"). `system.damageMultiplier.<key>`. */
+export const MULTIPLIER_STAT_KEYS = ["all", "allMagic", "physical", "psychic", "healing", ...ELEMENTS] as const;
+/** Always-on penetration by type (the Roll20 sheet's "Penetration Stats"). `system.penetration.<key>`. */
+export const PENETRATION_STAT_KEYS = ["physical", "psychic", "allMagic", ...ELEMENTS] as const;
+
+/** Rulebook skill names, and the key a per-skill bonus is stored under (`system.skillBonuses.<key>`). */
+export const SKILL_NAMES: string[] = (skillsJson as { name: string }[]).map((s) => s.name);
+export function skillKey(name: string): string {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
 
 export interface StatusConfig {
     id: string;
