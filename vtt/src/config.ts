@@ -180,6 +180,7 @@ export const MODIFIER_TYPES = {
     status: "On-hit status (id)",
     bleedConvert: "Convert % physical to Bleed",
     shred: "On-hit AC shred",
+    crShred: "On-hit CR reduction (%)",
     vulnerability: "On-hit vulnerability (%, stacking)",
     note: "Note",
 } as const;

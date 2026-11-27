@@ -363,20 +363,25 @@ export class AttackBuilder {
                         if (number > 0) this.#bleedConvert.push({ percent: number, source: effect.name });
                         break;
                     case "shred":
-                        if (number > 0) {
-                            this.#statuses.push({
-                                id: "",
-                                name: `Shred ${number} AC`,
-                                source: effect.name,
-                                effect: {
-                                    name: `Shredded (-${number} AC)`,
-                                    category: "condition",
-                                    changes: [{ key: "system.stats.ac.bonus", value: -number }],
-                                    maxStacks: Infinity,
-                                },
-                            });
-                        }
+                    case "crShred": {
+                        if (number <= 0) break;
+                        const ac = modifier.type === "shred";
+                        const label = ac ? `${number} AC` : `${number}% CR`;
+                        this.#statuses.push({
+                            id: "",
+                            name: `Shred ${label}`,
+                            source: effect.name,
+                            // The rulebook's "Decreased Stats" condition: stacks, and the target resists it with CR.
+                            effect: {
+                                name: `Shredded (-${label})`,
+                                category: "condition",
+                                statuses: ["decreased-stats"],
+                                changes: [{ key: `system.stats.${ac ? "ac" : "conditionResist"}.bonus`, value: -number }],
+                                maxStacks: Infinity,
+                            },
+                        });
                         break;
+                    }
                     case "vulnerability": {
                         const type = modifier.damageType || "all";
                         if (number > 0) {

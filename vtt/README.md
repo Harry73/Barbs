@@ -149,7 +149,7 @@ Every ActiveEffect has Barbs data (Barbs tab in the effect config):
 - **Pulse**: damage the bearer deals to creatures within a radius at the start of each of their turns (Fiery Temper).
   The combat tracker posts it as a card already targeting everyone in range.
 - **Roll modifiers**, applied when the effect's actor makes a matching roll: extra damage, damage multiplier %,
-  crit chance, crit damage %, penetration, on-hit statuses, on-hit AC shred or stacking vulnerability, converting a
+  crit chance, crit damage %, penetration, on-hit statuses, on-hit AC shred, CR reduction, or stacking vulnerability, converting a
   percent of physical damage into Bleed (Serrated Arrow), or a note. Each can be limited to a roll type (physical,
   magic, psychic, healing) and a weapon category ("bow attacks deal +2d8 air"), or to any ranged / any melee weapon.
 - Damage formulas can use `@distance`: the distance in feet to each target, measured when damage is applied
