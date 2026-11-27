@@ -244,13 +244,12 @@ export const EQUIPMENT_SLOTS = {
     neck: "Neck",
     ring: "Ring",
     belt: "Belt",
-    misc: "Miscellaneous",
 } as const;
 export type EquipmentSlot = keyof typeof EQUIPMENT_SLOTS;
 
 /** Order of the inventory's sections, top to bottom: gear by slot, then everything just carried. */
 export const INVENTORY_ORDER: EquipmentSlot[] = [
-    "mainHand", "offhand", "twoHand", "head", "body", "hands", "feet", "neck", "ring", "belt", "misc", "none",
+    "mainHand", "offhand", "twoHand", "head", "body", "hands", "feet", "neck", "ring", "belt", "none",
 ];
 
 /** Section headings, where they differ from the slot's own label. */

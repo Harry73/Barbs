@@ -204,6 +204,8 @@ try {
     assert.ok(equipConflict("mainHand", [{ name: "Greatsword", slot: "twoHand" }]), "main hand is taken by a two-hander");
     assert.equal(equipConflict("mainHand", [{ name: "Shield", slot: "offhand" }]), null, "main hand and offhand coexist");
     assert.equal(equipConflict("none", [{ name: "Rope", slot: "none" }]), null, "unslotted items have no limit");
+    const oldMisc = new itemModels.EquipmentModel({ slot: "misc", equipped: true });
+    assert.equal(oldMisc.slot, "none", "items saved in the dropped misc slot load as unslotted");
 
     const { parseDuration } = await vite.ssrLoadModule("/src/effects/apply.ts");
     assert.deepEqual(parseDuration("1 minute"), { value: 5, units: "rounds", expiry: "turnEnd" });

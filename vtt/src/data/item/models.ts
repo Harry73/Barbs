@@ -206,6 +206,15 @@ export class EquipmentModel extends foundry.abstract.TypeDataModel<
         return defineEquipmentSchema();
     }
 
+    /**
+     * The "misc" slot was dropped; anything saved there is just carried now. Without this, those items would fail
+     * the slot field's validation and refuse to load.
+     */
+    static override migrateData(source: Record<string, unknown>) {
+        if (source.slot === "misc") source.slot = "none";
+        return super.migrateData(source);
+    }
+
     get isWeapon(): boolean {
         return !!this.weapon.category && !!this.weapon.damage;
     }
