@@ -32,6 +32,8 @@ export interface UndoRecord {
     removedEffects?: RemovedEffect[];
     /** Summonings the change created, to dismiss. */
     summonIds?: string[];
+    /** Item quantities the change used up (a potion drunk, an arrow fired), to give back. */
+    quantityDeltas?: { itemUuid: string; delta: number }[];
 }
 
 export function isEmptyUndo(undo: UndoRecord): boolean {
@@ -44,7 +46,8 @@ export function isEmptyUndo(undo: UndoRecord): boolean {
         !undo.statusesRemoved?.length &&
         !undo.createdEffects?.length &&
         !undo.removedEffects?.length &&
-        !undo.summonIds?.length
+        !undo.summonIds?.length &&
+        !undo.quantityDeltas?.some((q) => q.delta)
     );
 }
 
@@ -117,6 +120,12 @@ export async function performUndo(message: ChatMessage.Implementation): Promise<
     if (undo.summonIds?.length) {
         const { requestGM } = await import("../socket.ts");
         for (const id of undo.summonIds) await requestGM("dismiss", id);
+    }
+
+    for (const { itemUuid, delta } of undo.quantityDeltas ?? []) {
+        const item = (await fromUuid(itemUuid)) as Item.Implementation | null;
+        const quantity = (item?.system as { quantity?: number } | undefined)?.quantity;
+        if (item && typeof quantity === "number") await item.update({ "system.quantity": Math.max(0, quantity - delta) } as never);
     }
 
     await markUndone(message);

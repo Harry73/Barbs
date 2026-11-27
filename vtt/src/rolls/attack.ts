@@ -139,6 +139,8 @@ export interface AttackResult {
     consumedEffects: RemovedEffect[];
     /** Passive resources the roll spent or gained (Spotting expended on a bow shot). */
     passiveDeltas: PassiveDelta[];
+    /** Ammunition the attack used up, for undo. */
+    quantityDeltas: { itemUuid: string; delta: number }[];
     rolls: Roll[];
     /** Reduces the targets' Evasion when they dodge, percent. */
     accuracy: number;
@@ -469,10 +471,27 @@ export class AttackBuilder {
      * apply to spells and other non-physical rolls (a staff's magic damage bonus). Effects on anything else
      * (the actor, armor, rings) apply to every roll. Unequipped gear is already suppressed by the effect model.
      */
+    /** A ranged physical attack, which fires the loaded ammunition. */
+    get #firesAmmo(): boolean {
+        return this.rollType === "physical" && this.weapons.some((w) => RANGED_WEAPONS.includes((w.system as unknown as EquipmentModel).weapon.category));
+    }
+
+    /** The ammunition a ranged attack fires: the first equipped ammo item with any left. */
+    get loadedAmmo(): Item.Implementation | null {
+        return (
+            (this.actor.items.find((i) => {
+                const e = i.type === "equipment" ? (i.system as unknown as EquipmentModel) : null;
+                return !!e?.ammo && e.equipped && e.quantity > 0;
+            }) as Item.Implementation | undefined) ?? null
+        );
+    }
+
     #effectApplies(effect: ActiveEffect.Implementation): boolean {
         const item = effect.parent;
         if (!(item instanceof Item) || item.type !== "equipment") return true;
         const equipment = item.system as unknown as EquipmentModel;
+        // Ammunition's effects ride on the shots it's fired with, and only the loaded ammo's.
+        if (equipment.ammo) return this.#firesAmmo && this.loadedAmmo?.id === item.id;
         if (!equipment.isWeapon) return true;
         if (this.rollType === "physical") return this.weapons.some((w) => w.id === item.id);
         return equipment.isHeldWeapon;
@@ -853,6 +872,17 @@ export class AttackBuilder {
         const consumedEffects = consumed.map((e) => snapshotEffect(e));
         for (const effect of consumed) await effect.delete();
 
+        // A ranged attack uses a piece of the loaded ammunition per hit.
+        const quantityDeltas: { itemUuid: string; delta: number }[] = [];
+        const ammo = this.#firesAmmo ? this.loadedAmmo : null;
+        if (ammo) {
+            const left = (ammo.system as unknown as EquipmentModel).quantity;
+            const used = Math.min(left, Math.max(1, hits));
+            await ammo.update({ "system.quantity": left - used } as never);
+            quantityDeltas.push({ itemUuid: ammo.uuid ?? "", delta: -used });
+            this.addNote(`Fired ${used} ${ammo.name} (${left - used} left).`);
+        }
+
         const passiveDeltas: PassiveDelta[] = [];
         for (const change of this.#resourceChanges) {
             const delta =
@@ -915,6 +945,7 @@ export class AttackBuilder {
             consumed: consumed.map((e) => e.name),
             consumedEffects,
             passiveDeltas,
+            quantityDeltas,
             rolls,
             accuracy: damaging ? this.#accuracy : 0,
             lifesteal: damaging ? this.#lifesteal : 0,

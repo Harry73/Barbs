@@ -182,6 +182,7 @@ async function rollAttack(
         consumed: [...new Set(tiers.flatMap((t) => t.result.consumed))],
         consumedEffects: tiers.flatMap((t) => t.result.consumedEffects),
         passiveDeltas: tiers.flatMap((t) => t.result.passiveDeltas),
+        quantityDeltas: tiers.flatMap((t) => t.result.quantityDeltas),
         notes: [...new Set(tiers.flatMap((t) => t.result.notes))],
     };
     return { result: merged, tiers };
@@ -211,6 +212,12 @@ export interface RunOptions {
     automationKey?: string;
     /** Which hand(s) a physical ability is used with. Default: main hand. */
     hand?: Hand;
+    /** Effect data to put on the user right away (a potion drunk), besides the automation's own self effects. */
+    selfEffectData?: Record<string, unknown>[];
+    /** Effect data the card offers to apply to targets (a bomb's conditions). */
+    targetEffectData?: Record<string, unknown>[];
+    /** Item quantities this use changes (a potion used up), applied now and given back by undo. */
+    quantityDeltas?: { itemUuid: string; delta: number }[];
 }
 
 export async function runAutomation(opts: RunOptions): Promise<void> {
@@ -298,8 +305,25 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
         if (marker) undo.createdEffects!.push(marker.effect.uuid ?? "");
     }
 
+    // Items used up by this use (a potion), back on undo.
+    for (const q of opts.quantityDeltas ?? []) {
+        const usedItem = (await fromUuid(q.itemUuid)) as Item.Implementation | null;
+        const quantity = (usedItem?.system as { quantity?: number } | undefined)?.quantity ?? 0;
+        if (!usedItem) continue;
+        await usedItem.update({ "system.quantity": Math.max(0, quantity + q.delta) } as never);
+        (undo.quantityDeltas ??= []).push(q);
+    }
+
     // 4. Self effects go on immediately; the caster always owns themselves.
     const selfEffects: string[] = [];
+    for (const data of opts.selfEffectData ?? []) {
+        const applied = await applyEffectToActor(actor, data, { announce: false });
+        if (applied) {
+            undo.createdEffects!.push(applied.effect.uuid ?? "");
+            undo.removedEffects!.push(...applied.replaced);
+            selfEffects.push(String(data.name));
+        }
+    }
     for (const spec of resolve(automation?.self, ctx) ?? []) {
         const resolved = spec.resolve ? spec.resolve(actor, spec, ctx) : spec;
         if (!resolved) continue;
@@ -339,6 +363,7 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
     if (result) {
         undo.removedEffects!.push(...result.consumedEffects);
         undo.passiveDeltas!.push(...result.passiveDeltas);
+        (undo.quantityDeltas ??= []).push(...result.quantityDeltas);
         ctx.result = {
             total: Object.values(result.totals).reduce((a, b) => a + (b ?? 0), 0),
             dice: result.parts.flatMap((p) =>
@@ -472,11 +497,14 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
         const deltas = await p.automation.afterUse?.({ ...afterInfo, inflictsCC: rollInfo.inflictsCC ?? false }, p.handle);
         if (deltas) undo.passiveDeltas!.push(...deltas);
     }
-    const extraEffects: Record<string, unknown>[] = passives.flatMap((p) =>
-        (p.automation.extraTargets?.({ ...afterInfo, inflictsCC: rollInfo.inflictsCC ?? false }, p.handle) ?? []).map((spec: EffectSpec) =>
-            buildEffectData(spec, { ...source, abilityName: spec.name ?? p.handle.item.name }),
+    const extraEffects: Record<string, unknown>[] = [
+        ...(opts.targetEffectData ?? []),
+        ...passives.flatMap((p) =>
+            (p.automation.extraTargets?.({ ...afterInfo, inflictsCC: rollInfo.inflictsCC ?? false }, p.handle) ?? []).map((spec: EffectSpec) =>
+                buildEffectData(spec, { ...source, abilityName: spec.name ?? p.handle.item.name }),
+            ),
         ),
-    );
+    ];
 
     // Per-target damage scaling for area attacks, e.g. half damage past the first target of a line.
     const targetScales: Record<string, number> = {};
@@ -637,7 +665,7 @@ export async function postPulse(
             casterTokenUuid: token.document.uuid ?? undefined,
             statuses: result.statuses,
         },
-        { actorUuid: actor.uuid ?? "", removedEffects: result.consumedEffects, passiveDeltas: result.passiveDeltas },
+        { actorUuid: actor.uuid ?? "", removedEffects: result.consumedEffects, passiveDeltas: result.passiveDeltas, quantityDeltas: result.quantityDeltas },
         { targets: targets.map((t) => t.document.uuid ?? "").filter(Boolean) },
     );
 }
@@ -692,6 +720,51 @@ export async function useAbility(actor: Actor.Implementation, item: Item.Impleme
         tags: ability.tags,
         automationKey: ability.automationKey || undefined,
         hand,
+    });
+}
+
+/**
+ * Use an item (drink a potion, throw a bomb): heal, restore a resource, apply its template effects to yourself or the
+ * targets, and use one up. Runs through the same pipeline as an ability, so it gets a card, Apply buttons, and undo.
+ */
+export async function useItem(actor: Actor.Implementation, item: Item.Implementation): Promise<void> {
+    const e = item.system as unknown as EquipmentModel;
+    const use = e.use;
+    if (!use?.enabled) return void ui.notifications?.warn(`${item.name} isn't usable. Tick Usable on its sheet first.`);
+    if (use.consume && e.quantity <= 0) return void ui.notifications?.warn(`No ${item.name} left.`);
+    const onSelf = use.target === "self";
+    // Template effects on the item are what using it applies (the same mechanism as triggers' granted effects).
+    const effects = ([...item.effects] as ActiveEffect.Implementation[])
+        .filter((fx) => (fx.system as unknown as { template?: boolean }).template)
+        .map((fx) => {
+            const data = fx.toObject() as Record<string, unknown>;
+            delete data._id;
+            delete data.start;
+            data.transfer = false;
+            data.origin = item.uuid;
+            foundry.utils.setProperty(data, "system.template", false);
+            foundry.utils.setProperty(data, `flags.${SYSTEM_ID}.sourceKey`, fx.uuid);
+            foundry.utils.setProperty(data, `flags.${SYSTEM_ID}.casterUuid`, actor.uuid);
+            return data;
+        });
+    const automation: AbilityAutomation = {
+        ...(use.heal ? { heal: { formula: use.heal, self: onSelf } } : {}),
+        ...(use.restoreResource && use.restore ? { restore: [{ resource: use.restoreResource as CostResource, formula: use.restore }] } : {}),
+        notes: use.note ? [use.note] : [],
+    };
+    const description = await foundry.applications.ux.TextEditor.implementation.enrichHTML(e.description, { relativeTo: item });
+    await runAutomation({
+        actor,
+        automation,
+        title: item.name,
+        img: item.img ?? "",
+        subtitle: "Item",
+        description,
+        defaultCost: null,
+        duration: "Instant",
+        selfEffectData: onSelf ? effects : [],
+        targetEffectData: onSelf ? [] : effects,
+        quantityDeltas: use.consume ? [{ itemUuid: item.uuid ?? "", delta: -1 }] : [],
     });
 }
 
@@ -758,6 +831,6 @@ export async function weaponAttack(actor: Actor.Implementation, item: Item.Imple
             statuses: result.statuses,
         },
         // A weapon attack costs nothing, but it may have consumed a single-use buff (Focus) or Spotting.
-        { actorUuid: actor.uuid ?? "", removedEffects: result.consumedEffects, passiveDeltas: result.passiveDeltas },
+        { actorUuid: actor.uuid ?? "", removedEffects: result.consumedEffects, passiveDeltas: result.passiveDeltas, quantityDeltas: result.quantityDeltas },
     );
 }

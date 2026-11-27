@@ -112,6 +112,8 @@ export class BarbsItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
             attributeChoices: Object.fromEntries(Object.values(ATTRIBUTES).map((a) => [a.key, a.label])),
             costResourceChoices: Object.fromEntries(COST_RESOURCES.map((r) => [r, r ? r.capitalize() : "—"])),
             slotChoices: EQUIPMENT_SLOTS,
+            useTargetChoices: { self: "Yourself", target: "Targeted creatures" },
+            restoreChoices: { "": "—", stamina: "Stamina", mana: "Mana" },
             weaponCategoryChoices: WEAPON_CATEGORIES,
             weaponScalingChoices: WEAPON_SCALING,
             damageTypeChoices: Object.fromEntries(DAMAGE_TYPES.map((d) => [d, d.capitalize()])),

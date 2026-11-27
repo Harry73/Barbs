@@ -7,6 +7,27 @@
     <label>Quantity <input type="number" name="system.quantity" value="{{system.quantity}}" min="0" /></label>
     <label>Weight <input type="number" name="system.weight" value="{{system.weight}}" min="0" step="any" /></label>
   </div>
+  <h3>Use</h3>
+  <div class="barbs-grid">
+    <label class="checkbox" data-tooltip="Gives the item a Use button in the inventory">Usable <input type="checkbox" name="system.use.enabled" {{checked system.use.enabled}} /></label>
+    {{#if system.use.enabled}}
+    <label>Used on
+      <select name="system.use.target">{{selectOptions useTargetChoices selected=system.use.target}}</select>
+    </label>
+    <label>Heal <input type="text" name="system.use.heal" value="{{system.use.heal}}" placeholder="4d10" /></label>
+    <label>Restore
+      <select name="system.use.restoreResource">{{selectOptions restoreChoices selected=system.use.restoreResource}}</select>
+    </label>
+    <label>Restore amount <input type="text" name="system.use.restore" value="{{system.use.restore}}" placeholder="30" /></label>
+    <label class="checkbox">Use one up <input type="checkbox" name="system.use.consume" {{checked system.use.consume}} /></label>
+    <label class="wide">Note <input type="text" name="system.use.note" value="{{system.use.note}}" placeholder="Shown on the card" /></label>
+    {{/if}}
+    <label class="checkbox" data-tooltip="While equipped, its effects apply to ranged physical attacks, and each shot uses one">Ammunition <input type="checkbox" name="system.ammo" {{checked system.ammo}} /></label>
+  </div>
+  {{#if system.use.enabled}}
+  <p class="hint">Using it also applies the item's <em>Template</em> effects (below) to whoever it's used on.</p>
+  {{/if}}
+
   <h3>Weapon</h3>
   <div class="barbs-grid">
     <label>Category

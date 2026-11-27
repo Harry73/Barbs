@@ -552,8 +552,10 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
         case "extra": {
             const data = flags.extraEffects?.[Number(button.dataset.index)];
             if (!data) return;
+            // Conditions (a bomb's) roll Condition Resist; shift-click skips it.
+            const resistible = !event.shiftKey && foundry.utils.getProperty(data, "system.category") === "condition";
             for (const { actor } of targets) {
-                await requestOnActor(actor, "effect", { data, options: { resistible: false, sourceName } });
+                await requestOnActor(actor, "effect", { data, options: { resistible, sourceName, attackContext: attackContext(flags) } });
             }
             break;
         }

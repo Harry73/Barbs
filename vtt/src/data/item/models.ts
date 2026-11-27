@@ -181,6 +181,23 @@ function defineEquipmentSchema() {
         weight: new fields.NumberField({ required: true, nullable: false, min: 0, initial: 0 }),
         description: new fields.HTMLField(),
         /**
+         * A usable item (potion, bomb, scroll): a Use button that can heal, restore a resource, apply the item's
+         * template effects, and use one up. See useItem() in abilities/use.ts.
+         */
+        use: new fields.SchemaField({
+            enabled: new fields.BooleanField({ initial: false }),
+            /** Who it's used on: yourself, or the targeted creatures (a thrown bomb, a potion fed to an ally). */
+            target: new fields.StringField({ required: true, choices: ["self", "target"], initial: "self" }),
+            heal: new fields.StringField({ required: true, blank: true, initial: "" }),
+            restoreResource: new fields.StringField({ required: true, blank: true, choices: ["", "stamina", "mana"], initial: "" }),
+            restore: new fields.StringField({ required: true, blank: true, initial: "" }),
+            /** Use up one (quantity - 1). */
+            consume: new fields.BooleanField({ initial: true }),
+            note: new fields.StringField({ required: true, blank: true, initial: "" }),
+        }),
+        /** Ammunition: while equipped, its effects apply to ranged physical attacks, and each one uses one up. */
+        ammo: new fields.BooleanField({ initial: false }),
+        /**
          * Weapon implicit stats from the crafting blueprints, e.g. a dagger is d4 physical, 10% crit chance, 100%
          * crit modifier, no scaling.
          * Mods and enchantments (on-hit damage etc.) are ActiveEffects on the item with roll modifiers.

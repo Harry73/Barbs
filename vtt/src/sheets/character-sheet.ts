@@ -54,6 +54,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             useAbility: BarbsCharacterSheet.#onUseAbility as ActionHandler,
             weaponAttack: BarbsCharacterSheet.#onWeaponAttack as ActionHandler,
             dualWieldAttack: BarbsCharacterSheet.#onDualWieldAttack as ActionHandler,
+            useItem: BarbsCharacterSheet.#onUseItem as ActionHandler,
             rollPercentStat: BarbsCharacterSheet.#onRollPercentStat as ActionHandler,
             rollInitiative: BarbsCharacterSheet.#onRollInitiative as ActionHandler,
             deathSave: BarbsCharacterSheet.#onDeathSave as ActionHandler,
@@ -488,6 +489,11 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
     static async #onUseAbility(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {
         const item = this.#itemFromElement(target);
         if (item) await this.barbsActor.useAbility(item, (target.dataset.hand as Hand | undefined) ?? "main");
+    }
+
+    static async #onUseItem(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {
+        const item = this.#itemFromElement(target);
+        if (item) await this.barbsActor.useItem(item);
     }
 
     static async #onDualWieldAttack(this: BarbsCharacterSheet) {

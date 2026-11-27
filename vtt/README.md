@@ -244,6 +244,12 @@ effect on the caster (the ability's duration, a zone's own duration, or the cast
 that effect, or undoing the cast, removes the region. Whirlpool, Tidal Wave, Fog, Smokescreen, and Nothing Sacred
 use zones. (The "zone" behavior type is declared in `system.json`, so adding it needed a Foundry restart.)
 
+**Usable items**: tick Usable on an equipment item to give it a Use button in the inventory. Using it heals and/or
+restores stamina or mana, applies the item's Template effects to the user or the targeted creatures (conditions roll
+CR), posts its note, and uses one up, through the same pipeline as an ability (a card, Apply buttons, undo). Items
+ticked **Ammunition** apply their effects only to ranged physical attacks while equipped, and each hit of a ranged
+attack uses one of the first equipped ammo with any left (given back on undo).
+
 Stat buffs use the core Changes tab instead, in the "initial" phase. The Stats tab shows every one of these, laid out
 like the Roll20 sheet's: core stats, then misc combat stats, multipliers, penetration, damage reduction, and condition
 resistances. Use these for always-on gear affixes; use roll modifiers for conditional ones ("bow attacks", "on hit"). Its key field is a searchable picker over every key below
