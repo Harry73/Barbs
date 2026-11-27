@@ -13,6 +13,20 @@ import type { CreatureModel } from "../data/actor/creature.ts";
 import type { EquipmentModel } from "../data/item/models.ts";
 import { slug } from "./predicate.ts";
 
+/**
+ * Do two actor UUIDs mean the same creature? A character with an unlinked token exists twice: the world actor
+ * ("Actor.abc", whose sheet is opened from the sidebar) and the token's copy ("Scene.x.Token.y.Actor.abc"). A mark
+ * applied by one should count for the other. Two different unlinked tokens of the same actor (three goblins) stay
+ * distinct, since neither is the world actor.
+ */
+export function sameActor(a: string | null | undefined, b: string | null | undefined): boolean {
+    if (!a || !b) return false;
+    if (a === b) return true;
+    const id = (uuid: string) => /(?:^|\.)Actor\.([^.]+)$/.exec(uuid)?.[1];
+    const isWorld = (uuid: string) => /^Actor\.[^.]+$/.test(uuid);
+    return (isWorld(a) || isWorld(b)) && !!id(a) && id(a) === id(b);
+}
+
 /** Creature types from the comma-separated details field: "Undead, construct" → ["undead", "construct"]. */
 export function creatureTypes(actor: Actor.Implementation | null | undefined): string[] {
     const text = (actor?.system as unknown as CreatureModel | undefined)?.details?.creatureTypes ?? "";
@@ -37,7 +51,7 @@ export function actorOptions(actor: Actor.Implementation | null | undefined, pre
         const name = slug(effect.name ?? "");
         if (name) out.push(`${prefix}:effect:${name}`);
         if ((effect.system as unknown as { category?: string }).category === "buff") buffs++;
-        if (observerUuid && foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.casterUuid`) === observerUuid) {
+        if (observerUuid && sameActor(foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.casterUuid`) as string, observerUuid)) {
             if (name) out.push(`${prefix}:mark:${name}`);
             for (const status of effect.statuses) out.push(`${prefix}:mark:${status}`);
         }
@@ -104,7 +118,7 @@ export function defenderOptions(
     const out = [...actorOptions(defender, "self"), ...actorOptions(attacker, "attacker"), ...attack.map((o) => `attack:${o}`)];
     const distance = distanceBetween(attacker, defender);
     if (distance !== null) out.push(`attacker:distance:${distance}`);
-    if (attacker && effectOrigin && effectOrigin === attacker.uuid) out.push("origin:attacker");
+    if (attacker && sameActor(effectOrigin, attacker.uuid)) out.push("origin:attacker");
     return new Set(out);
 }
 
@@ -147,7 +161,7 @@ export function actorData(actor: Actor.Implementation | null | undefined, observ
         if (name) bump(data.stacks, name);
         const statuses = effect.statuses ?? [];
         for (const status of statuses) bump(data.statuses, status);
-        if (observerUuid && foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.casterUuid`) === observerUuid) {
+        if (observerUuid && sameActor(foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.casterUuid`) as string, observerUuid)) {
             if (name) bump(data.marks, name);
             for (const status of statuses) bump(data.marks, status);
         }

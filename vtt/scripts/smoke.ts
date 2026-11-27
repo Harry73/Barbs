@@ -182,6 +182,13 @@ try {
     assert.equal(pred.mentions(pred.parsePredicate("roll:physical, target:type:demon"), "target:"), true);
     assert.equal(pred.formatPredicate(pred.parsePredicate("a | b,!c, x<3")), "a | b, !c, x < 3", "round-trips");
 
+    // "Who applied this" treats a character's world actor and its unlinked token copy as the same creature.
+    const ro = await vite.ssrLoadModule("/src/rules/roll-options.ts");
+    assert.equal(ro.sameActor("Actor.abc", "Actor.abc"), true);
+    assert.equal(ro.sameActor("Actor.abc", "Scene.s1.Token.t1.Actor.abc"), true, "world actor vs its token copy");
+    assert.equal(ro.sameActor("Scene.s1.Token.t1.Actor.abc", "Scene.s1.Token.t2.Actor.abc"), false, "two unlinked tokens stay distinct");
+    assert.equal(ro.sameActor("Actor.abc", "Actor.xyz"), false);
+
     // Formula values: plain numbers skip the dice code; per-target formulas are recognized.
     const formula = await vite.ssrLoadModule("/src/rules/formula.ts");
     assert.equal(formula.evaluateNumber("25"), 25);
