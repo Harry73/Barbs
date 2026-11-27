@@ -49,6 +49,11 @@ npm run todo       # lists abilities and passives with no automation entry yet
 
 Notes:
 
+- Needs Node 22.18 or newer: the scripts are TypeScript run directly by `node`.
+- Works on macOS, Windows, and Linux. `link`, `smoke`, and `todo` default to Foundry's standard install and data
+  locations for the platform (`scripts/foundry-paths.ts`); set `FOUNDRY_APP` (the app's `resources/app` folder) or
+  `FOUNDRY_DATA` (the folder containing `systems/`) if yours are elsewhere. On Windows, `link` makes a directory
+  junction, which doesn't need admin rights.
 - Foundry locks compendium databases while a world using them is open. Close the world (back to setup) before
   `npm run packs` / `npm run build`; the pack builder refuses to run if it finds a pack locked.
   `npm run build:code` and `watch` don't touch packs.

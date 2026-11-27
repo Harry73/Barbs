@@ -4,17 +4,17 @@
  * Only dist/ is linked (not the whole project) so Foundry never sees node_modules, sources, or build scratch files.
  *
  * Usage: node scripts/link-foundry.ts [path-to-Foundry-Data]
- *   Defaults to $FOUNDRY_DATA, then the macOS default location.
+ *   Defaults to $FOUNDRY_DATA, then the platform's default location (see foundry-paths.ts).
+ *
+ * On Windows this makes a directory junction rather than a symlink: junctions don't need admin rights or Developer
+ * Mode, and Foundry can't tell the difference.
  */
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
+import { defaultDataDir } from "./foundry-paths.ts";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
-const dataDir =
-    process.argv[2] ??
-    process.env.FOUNDRY_DATA ??
-    path.join(os.homedir(), "Library", "Application Support", "FoundryVTT", "Data");
+const dataDir = process.argv[2] ?? defaultDataDir();
 
 const systemsDir = path.join(dataDir, "systems");
 if (!fs.existsSync(systemsDir)) {
@@ -39,5 +39,5 @@ if (existing?.isSymbolicLink()) {
     process.exit(1);
 }
 
-fs.symlinkSync(target, link, "dir");
+fs.symlinkSync(target, link, process.platform === "win32" ? "junction" : "dir");
 console.log(`Linked ${link} -> ${target}`);

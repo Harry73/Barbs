@@ -6,8 +6,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { createServer } from "vite";
+import { defaultAppDir } from "./foundry-paths.ts";
 
-const FOUNDRY_APP = process.env.FOUNDRY_APP ?? "/Applications/Foundry Virtual Tabletop.app/Contents/Resources/app";
+const FOUNDRY_APP = defaultAppDir();
 const foundry = await import(pathToFileURL(path.join(FOUNDRY_APP, "common", "server.mjs")).href);
 Object.assign(globalThis, { foundry, CONFIG: { Actor: { dataModels: {} }, Item: { dataModels: {} }, Token: { movement: { actions: {} } } } });
 

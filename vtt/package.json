@@ -4,6 +4,9 @@
   "description": "Barbs game system for Foundry VTT",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
   "scripts": {
     "build": "vite build && npm run packs",
     "build:code": "vite build",
@@ -12,7 +15,7 @@
     "typecheck": "tsc --noEmit",
     "smoke": "node scripts/smoke.ts",
     "todo": "node scripts/todo.ts",
-    "clean": "rm -rf dist",
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
     "link": "node scripts/link-foundry.ts"
   },
   "devDependencies": {
