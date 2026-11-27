@@ -337,6 +337,9 @@ export async function applyDamageToActor(
     let blockNote = "";
     const blockUndo: RemovedEffect[] = [];
     let unblockable = unblockableChance >= 100;
+    let blocked = false;
+    /** Who cast the block that was used: the Sentinel, when their Parallel Shields protected an ally. */
+    let blockerUuid: string | undefined;
     if (attack && !trueDamage) {
         const blocks = (target.appliedEffects as ActiveEffect.Implementation[])
             .filter((e) => ((e.system as unknown as { block?: number }).block ?? 0) > 0)
@@ -354,7 +357,9 @@ export async function applyDamageToActor(
             scale *= 1 - percent / 100;
             blockNote = percent >= 100 ? ` (fully blocked by ${block.name})` : ` (blocked ${percent}% by ${block.name})`;
             blockUndo.push(snapshotEffect(block));
+            blockerUuid = (foundry.utils.getProperty(block, `flags.${SYSTEM_ID}.casterUuid`) as string | undefined) ?? target.uuid ?? undefined;
             await block.delete();
+            blocked = true;
         }
     }
     // The defender's "incoming" modifiers for this attack: AC against ranged attacks, more damage from the caster who
@@ -455,7 +460,11 @@ export async function applyDamageToActor(
         }
     }
 
-    // Triggers: the target reacts to taking damage, and the attacker to downing them.
+    // Triggers: blocking ("when you block"), taking damage, and the attacker downing them.
+    if (blocked) {
+        const blocker = blockerUuid ? ((await fromUuid(blockerUuid)) as Actor.Implementation | null) : target;
+        await fireTriggers(blocker ?? target, "block", { other: dealer, attack: attackContext, depth: triggerDepth, sourceName });
+    }
     if (total > 0) {
         await fireTriggers(target, "damaged", { other: dealer, attack: attackContext, depth: triggerDepth, sourceName });
         if (!wasDowned && target.statuses.has(STATUS_DOWNED) && dealer) {

@@ -7,6 +7,7 @@
  *   attack    you make an attack (once, when rolled)     other = none            the attack's facts + self:*
  *   attacked  an attack is applied to you               other = the attacker    defender view: attack:*, attacker:*
  *   hitBy     an attack lands on you (each landed hit)   other = the attacker    defender view
+ *   block     one of your blocks is used on an attack     other = the attacker    defender view
  *   damaged   you take damage (after defenses)           other = the attacker    defender view, if it was an attack
  *   kill      you down a creature                        other = the downed one  self:* + target:*
  *   turnStart/turnEnd, combatStart/combatEnd            other = none            self:*
@@ -49,6 +50,7 @@ const OTHER_ROLE: Partial<Record<TriggerEvent, "target" | "attacker">> = {
     kill: "target",
     attacked: "attacker",
     hitBy: "attacker",
+    block: "attacker",
     damaged: "attacker",
 };
 

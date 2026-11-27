@@ -208,6 +208,7 @@ export const TRIGGER_EVENTS = {
     attack: "You attack",
     attacked: "You're attacked",
     hitBy: "You're hit (each landed hit)",
+    block: "You block an attack",
     wouldTakeDamage: "You would take damage",
     damaged: "You take damage",
     kill: "You down an enemy",
