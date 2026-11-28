@@ -664,13 +664,22 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
             const scales = Object.fromEntries(
                 shot.hits.filter((h) => h.redirects && alterCourse).map((h) => [h.token.document.uuid ?? "", 1 + 0.5 * h.redirects]),
             );
+            // What a redirected target takes before defenses, since the card's rows show the shot's own roll.
+            const boosted = shot.hits
+                .filter((h) => h.redirects && alterCourse)
+                .map((h) => {
+                    const factor = 1 + 0.5 * h.redirects;
+                    const parts = Object.entries(shotResult.totals).map(([type, n]) => `${Math.round((n ?? 0) * factor)} ${type}`);
+                    return `${h.token.name} (redirect ${h.redirects}): +${50 * h.redirects}% (Alter Course), ${parts.join(", ")}.`;
+                });
+            const unboosted = !alterCourse && shot.hits.some((h) => h.redirects) ? [redirectWithoutAlterCourse(actor)] : [];
             await postCard(
                 actor,
                 {
                     ...(i === 0 ? cardContent : { title: opts.title, img: opts.img, targetEffects: cardContent.targetEffects, extraEffects: cardContent.extraEffects }),
                     subtitle: `Shot ${i + 1} of ${shots.length}`,
                     result: shotResult,
-                    notes: [...(i === 0 ? (cardContent.notes ?? []) : []), `Path: ${path.join(" → ") || "hit no one"}.`],
+                    notes: [...(i === 0 ? (cardContent.notes ?? []) : []), `Path: ${path.join(" → ") || "hit no one"}.`, ...boosted, ...unboosted],
                 },
                 {
                     ...cardFlags,
@@ -721,7 +730,10 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
                           subtitle: `Redirect ${r}${what.length ? `: ${what.join(", ")}` : ""}`,
                           img: opts.img,
                           result: bounced,
-                          notes: [`On this redirect: ${onSegment.map((u) => (fromUuidSync(u) as TokenDocument.Implementation | null)?.name ?? "?").join(", ") || "no one"}.`],
+                          notes: [
+                              `On this redirect: ${onSegment.map((u) => (fromUuidSync(u) as TokenDocument.Implementation | null)?.name ?? "?").join(", ") || "no one"}.`,
+                              ...(alterCourse ? [] : [redirectWithoutAlterCourse(actor)]),
+                          ],
                           targetEffects: cardContent.targetEffects,
                           extraEffects: cardContent.extraEffects,
                       },
@@ -822,6 +834,14 @@ export async function rollZoneDamage(
 }
 
 /** Mirror Mage's Alter Course: attacks they redirect deal +50% damage per redirect. */
+/**
+ * Said on a redirected attack's card when the caster has no Alter Course passive, so a missing passive item shows up
+ * instead of silently costing the +50%.
+ */
+function redirectWithoutAlterCourse(actor: Actor.Implementation): string {
+    return `Redirected, but ${actor.name} has no Alter Course passive (Abilities tab), so there's no +50%.`;
+}
+
 export function hasAlterCourse(actor: Actor.Implementation | null): boolean {
     return !!actor?.items.some((i) => i.type === "passive" && i.name === "Alter Course");
 }
