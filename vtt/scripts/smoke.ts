@@ -572,6 +572,32 @@ try {
         assert.equal(ctx.dice("4d10 + 1d6"), "5d10 + 1d6");
     }
 
+    // The "Concentrate on it" choice is added when an ability is cast, so the loop above never takes the concentrating
+    // branch. Build every ability's self effects with it on, and the effects their buttons and triggers grant, and
+    // check each is valid. Every "use" row needs a label.
+    {
+        const { BarbsEffectModel } = await vite.ssrLoadModule("/src/data/effect.ts");
+        const { buildEffectData } = await vite.ssrLoadModule("/src/abilities/effects.ts");
+        let buttons = 0;
+        for (const [key, automation] of Object.entries(ABILITY_AUTOMATION) as [string, any][]) {
+            if (!automation.self) continue;
+            const [className, abilityName] = key.split("/");
+            const source = { className, abilityName, img: "", duration: "1 minute" };
+            for (const spec of resolve(automation.self, makeContext(actor, null, { concentrate: true }, 1)) ?? []) {
+                const data = buildEffectData(spec, source);
+                new BarbsEffectModel(data.system, { parent: new StandIn(), strict: true });
+                for (const t of data.system.triggers) {
+                    if (t.event === "use") {
+                        buttons++;
+                        assert.ok(t.label, `${key}: an action button with no label`);
+                    }
+                    if (t.effectData) new BarbsEffectModel((t.effectData as any).system, { parent: new StandIn(), strict: true });
+                }
+            }
+        }
+        assert.ok(buttons >= 12, `expected the converted abilities' buttons, found ${buttons}`);
+    }
+
     // Analytical Shooter: concentrating adds an aiming effect with a "Keep aiming" button and an end-on-attack trigger.
     {
         const { BarbsEffectModel } = await vite.ssrLoadModule("/src/data/effect.ts");

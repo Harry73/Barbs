@@ -22,24 +22,14 @@ import {
     weaken,
     yesNo,
     burst,
+    action,
+    blockSpec,
+    remind,
 } from "../helpers.ts";
 import { weaponsFor } from "../../rolls/attack.ts";
 import { creatureTypes } from "../../rules/roll-options.ts";
 import type { AbilityAutomation, AttackSpec, EffectSpec } from "../types.ts";
 
-/**
- * A block: the next attack applied to the bearer is reduced by `percent` (100 = fully blocked), then the block is
- * used up. Cast blocks as a reaction before the attack's damage is applied.
- */
-function blockSpec(name: string, percent: number): EffectSpec {
-    return {
-        name: percent >= 100 ? `${name} (block)` : `${name} (block ${percent}%)`,
-        category: "",
-        block: Math.min(100, percent),
-        duration: "end of turn",
-        description: `<p>Blocks ${percent >= 100 ? "all" : `${Math.min(100, percent)}%`} of the next attack applied to this creature. Used up when it applies; expires at the end of the turn.</p>`,
-    };
-}
 
 const WHO = pick("who", "Block for", { self: "Yourself", ally: "Targeted ally" });
 /** A block on yourself or on the targeted ally, by the WHO choice. */
@@ -64,8 +54,14 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
     /* ---------- Arcane Archer ---------- */
 
     "Arcane Archer/Elusive Hunter": {
-        self: (ctx) => [{ category: "buff", changes: [stat("speed", ctx.scale(15)), statPercent("evasion", ctx.scale(50))] }],
-        notes: ["Bonus speed is +30 for a turn you start adjacent to an enemy. Sacrifice as a free reaction to dash up to your speed."],
+        self: (ctx) => [
+            {
+                category: "buff",
+                changes: [stat("speed", ctx.scale(15)), statPercent("evasion", ctx.scale(50))],
+                triggers: action("Sacrifice: dash", "freeReaction", [remind("Dash up to your Move Speed in any direction.")], { sacrifice: true }),
+            },
+        ],
+        notes: ["Bonus speed is +30 for a turn you start adjacent to an enemy."],
     },
     "Arcane Archer/Surefire Shot": {
         choices: [yesNo("sacrificed", "Sacrificed a buff this turn (+50% damage, unblockable)")],
@@ -81,13 +77,40 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
                     damageIncrease(ctx.scale(100), { rollType: "physical", damageType: "physical", weapon: "crossbow" }),
                     note("single-target attacks also hit adjacent targets", { rollType: "physical" }),
                 ],
+                // "Sacrifice this buff as a free action: your next bow/crossbow attack has +200% increased physical
+                // damage and ignores 100% of the target's AC."
+                triggers: action(
+                    "Sacrifice",
+                    "free",
+                    [
+                        {
+                            action: "grant",
+                            effect: {
+                                key: "sacrificed",
+                                name: "Broadhead Arrow (sacrificed)",
+                                category: "",
+                                singleUse: true,
+                                modifiers: ["bow", "crossbow"].flatMap((weapon) => [
+                                    damageIncrease(ctx.scale(200), { rollType: "physical", damageType: "physical", weapon }),
+                                    { type: "penetration" as const, rollType: "physical" as const, damageType: "physical", weapon, value: 100 },
+                                ]),
+                            },
+                        },
+                    ],
+                    { sacrifice: true },
+                ),
             },
         ],
-        notes: ["Sacrifice as a free action: your next bow/crossbow attack has +200% physical damage and ignores all AC."],
     },
     "Arcane Archer/Persistent Hunter": {
-        self: (ctx) => [{ category: "buff", changes: [stat("conditionResist", ctx.scale(30))] }],
-        notes: ["Cleanse a condition of your choice first. +30% more CR against crowd control. Sacrifice as a free reaction to cleanse a condition."],
+        self: (ctx) => [
+            {
+                category: "buff",
+                changes: [stat("conditionResist", ctx.scale(30))],
+                triggers: action("Sacrifice: cleanse", "freeReaction", [remind("Cleanse a condition of your choice on yourself.")], { sacrifice: true }),
+            },
+        ],
+        notes: ["Cleanse a condition of your choice first. +30% more CR against crowd control."],
     },
     "Arcane Archer/Swelling Shot": {
         choices: [yesNo("sacrificed", "Sacrificed a buff this turn (+50% damage, Crippling)")],
@@ -1178,12 +1201,15 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
         self: (ctx) => [
             {
                 category: "buff",
-                description: `<p>${
-                    ctx.dualShields ? "Twice per round (dual shields)" : "Once per round (twice with dual shields)"
-                }, freely block an attack on yourself or an adjacent ally as a free reaction. Gain a Shield stack at the end of each of your turns instead of from Perfect Shield.</p>`,
-                // A free block ready at the start of each of your turns (you can hand it to an adjacent ally by hand).
-                triggers: [{ event: "turnStart", action: "grant", effect: { ...blockSpec("Grand Guardian", 100), duration: "start of your next turn" } }],
-                modifiers: [note("Free block available this round (cast Rapid Shields or add a 100% block effect).")],
+                description: "<p>Gain a Shield stack at the end of each of your turns instead of from Perfect Shield.</p>",
+                // "Freely block an attack on yourself or an adjacent ally up to once per round as a free reaction,
+                // increased to up to twice per round if you are dual wielding shields" (checked when you cast it).
+                triggers: [
+                    ...action("Block", "freeReaction", [{ action: "grantTarget", effect: blockSpec("Grand Guardian", 100) }], { oncePer: "round" }),
+                    ...(ctx.dualShields
+                        ? action("Block again (dual shields)", "freeReaction", [{ action: "grantTarget", effect: blockSpec("Grand Guardian", 100) }], { oncePer: "round" })
+                        : []),
+                ],
             },
         ],
     },
@@ -1231,54 +1257,80 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
                     { type: "incomingACPercent", value: 100, conditions: "attack:ranged" },
                 ],
                 description: "<p>+50% AC against melee attacks, +100% against ranged ones. Buffs on you have a 40% chance to ignore buff stripping.</p>",
+                // "If you would have buffs stripped off of you, you may sacrifice this buff as a free reaction instead."
+                triggers: action("Sacrifice: keep your buffs", "freeReaction", [remind("The buff strip is prevented.")], { sacrifice: true }),
             },
         ],
     },
     "Arcane Archer/Serrated Arrow": {
-        choices: [pick("mode", "Use", { buff: "Gain the buff", sacrifice: "Sacrifice it: next attack converts 50% (ignores CR)" })],
-        self: (ctx) =>
-            ctx.choices.mode === "sacrifice"
-                ? [{ name: "Serrated Arrow (sacrificed)", category: "", singleUse: true, modifiers: [{ type: "bleedConvert", rollType: "physical", weapon: "ranged", value: 50 }, note("This Bleed ignores Condition Resist: shift-click its Apply button.", { weapon: "ranged" })] }]
-                : [
-                      {
-                          category: "buff",
-                          modifiers: [
-                              { type: "bleedConvert", rollType: "physical", weapon: "bow", value: 20 },
-                              { type: "bleedConvert", rollType: "physical", weapon: "crossbow", value: 20 },
-                              { type: "shred", rollType: "physical", weapon: "bow", value: 20 },
-                              { type: "shred", rollType: "physical", weapon: "crossbow", value: 20 },
-                          ],
-                      },
-                  ],
-        notes: (ctx) => (ctx.choices.mode === "sacrifice" ? ["Remove your Serrated Arrow buff."] : []),
+        self: [
+            {
+                category: "buff",
+                modifiers: [
+                    { type: "bleedConvert", rollType: "physical", weapon: "bow", value: 20 },
+                    { type: "bleedConvert", rollType: "physical", weapon: "crossbow", value: 20 },
+                    { type: "shred", rollType: "physical", weapon: "bow", value: 20 },
+                    { type: "shred", rollType: "physical", weapon: "crossbow", value: 20 },
+                ],
+                // "Sacrifice this buff as a free action: your next bow/crossbow attack converts 50% of its physical
+                // damage to Bleed, and this Bleed ignores the target's CR."
+                triggers: action(
+                    "Sacrifice",
+                    "free",
+                    [
+                        {
+                            action: "grant",
+                            effect: {
+                                key: "sacrificed",
+                                name: "Serrated Arrow (sacrificed)",
+                                category: "",
+                                singleUse: true,
+                                modifiers: [
+                                    { type: "bleedConvert", rollType: "physical", weapon: "ranged", value: 50 },
+                                    note("This Bleed ignores Condition Resist: shift-click its Apply button.", { weapon: "ranged" }),
+                                ],
+                            },
+                        },
+                    ],
+                    { sacrifice: true },
+                ),
+            },
+        ],
     },
     "Arcane Archer/Bruiser Arrow": {
-        choices: [pick("mode", "Use", { buff: "Gain the buff", sacrifice: "Sacrifice it: next attack inflicts 50% vulnerability" })],
-        self: (ctx) =>
-            ctx.choices.mode === "sacrifice"
-                ? [
-                      {
-                          name: "Bruiser Arrow (sacrificed)",
-                          category: "",
-                          singleUse: true,
-                          modifiers: [
-                              { type: "vulnerability", rollType: "physical", weapon: "ranged", damageType: "physical", value: 50 },
-                              note("The target loses their next Major Action.", { weapon: "ranged" }),
-                          ],
-                      },
-                  ]
-                : [
-                      {
-                          category: "buff",
-                          modifiers: [
-                              { type: "vulnerability", rollType: "physical", weapon: "bow", damageType: "physical", value: 10 },
-                              { type: "vulnerability", rollType: "physical", weapon: "crossbow", damageType: "physical", value: 10 },
-                              note("25% chance the target loses their next Major Action.", { weapon: "bow" }),
-                              note("25% chance the target loses their next Major Action.", { weapon: "crossbow" }),
-                          ],
-                      },
-                  ],
-        notes: (ctx) => (ctx.choices.mode === "sacrifice" ? ["Remove your Bruiser Arrow buff."] : []),
+        self: [
+            {
+                category: "buff",
+                modifiers: [
+                    { type: "vulnerability", rollType: "physical", weapon: "bow", damageType: "physical", value: 10 },
+                    { type: "vulnerability", rollType: "physical", weapon: "crossbow", damageType: "physical", value: 10 },
+                    note("25% chance the target loses their next Major Action.", { weapon: "bow" }),
+                    note("25% chance the target loses their next Major Action.", { weapon: "crossbow" }),
+                ],
+                // "Sacrifice this buff as a free action: your next bow/crossbow attack inflicts 50% Physical
+                // Vulnerability and causes the target to lose their next Major Action."
+                triggers: action(
+                    "Sacrifice",
+                    "free",
+                    [
+                        {
+                            action: "grant",
+                            effect: {
+                                key: "sacrificed",
+                                name: "Bruiser Arrow (sacrificed)",
+                                category: "",
+                                singleUse: true,
+                                modifiers: [
+                                    { type: "vulnerability", rollType: "physical", weapon: "ranged", damageType: "physical", value: 50 },
+                                    note("The target loses their next Major Action.", { weapon: "ranged" }),
+                                ],
+                            },
+                        },
+                    ],
+                    { sacrifice: true },
+                ),
+            },
+        ],
     },
 
     /* ---------- Assorted ---------- */

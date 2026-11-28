@@ -21,6 +21,8 @@ import {
     vulnerable,
     weaken,
     yesNo,
+    action,
+    spend,
 } from "../helpers.ts";
 import type { DamageType } from "../../config.ts";
 import type { AbilityAutomation, ChangeSpec, EffectSpec } from "../types.ts";
@@ -222,10 +224,20 @@ export const SUPPORT: Record<string, AbilityAutomation> = {
         notes: (ctx) => [`Up to ${4 + 4 * Number(ctx.choices.extra)} targets. Concentration.`],
     },
     "Controller/Hold Person": {
-        choices: [yesNo("extend", "Recast while concentrating to extend (10 mana)")],
-        cost: (ctx) => ({ resource: "mana", amount: ctx.choices.extend ? 10 : 20 }),
         target: [status("stunned", { duration: "end of your next turn" })],
-        notes: ["Concentration."],
+        // "You may recast this spell while concentrating on it for 10 mana; the duration is extended for an additional
+        // round." The Stun is held by the concentration, so extending this extends it.
+        self: (ctx) =>
+            ctx.choices.concentrate
+                ? [
+                      {
+                          key: "holding",
+                          name: "Hold Person (concentrating)",
+                          category: "",
+                          triggers: action("Recast to extend", "major", [spend(10, "mana"), { action: "extend", value: 1 }]),
+                      },
+                  ]
+                : [],
     },
     "Controller/Baneful Curse": {
         choices: [RITUAL],

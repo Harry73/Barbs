@@ -258,10 +258,18 @@ character: the tab lists the buttons of whatever is active, so they come and go 
 trigger rows with the "You use it" event, a label, and an action type; rows with the same label are one button, run
 in order ("spend 20 mana", then "grant Block"). A button shows while any of its rows' conditions hold, and "spend"
 stops the rest when you can't afford it (`src/triggers/actions.ts`). Inflict and damage rows act on your one
-targeted creature. Three trigger actions came with them and work in ordinary triggers too: spend a resource, extend
-this effect by N rounds, and end the concentration this effect belongs to. Analytical Shooter uses all of it: while
-you concentrate, "Keep aiming" (a Major Action) grants a stacking +10% crit chance / +25% crit damage, capped at the
-ability's 100% / 200%, and attacking ends the concentration.
+targeted creature, and "grant to your target" gives a block or buff to whoever you've targeted, or yourself with no
+one targeted. Other trigger actions that came with them work in ordinary triggers too: spend a resource, extend this
+effect by N rounds (for an effect held by concentration, everything that concentration holds, through the GM), and
+end the concentration this effect belongs to. Free reactions are listed with reactions.
+
+Abilities with buttons (`action()` in `src/abilities/helpers.ts`): Analytical Shooter ("Keep aiming" while
+concentrating: a stacking +10% crit chance / +25% crit damage, capped at 100% / 200%, and attacking ends the
+concentration), Impenetrable Mist (spend 20 mana to block, while concentrating), Ice Block (block once), Grand
+Guardian (block once per round, twice if you were dual wielding shields when you cast it), Hold Person (spend 10 mana
+to extend the Stun a round), Buffeting Storm (spend 5 mana to push), and the Arcane Archer buffs' "sacrifice" options
+(Broadhead, Serrated, and Bruiser Arrow turn into their single-use version; Elusive, Persistent, and Unyielding Hunter
+post the dash, cleanse, or prevented strip).
 
 "You would take damage" triggers run after defenses and before health changes, and can change the damage: reduce it
 by a percent, survive at N health (Critical Condition), redirect a percent of the incoming attack to whoever applied

@@ -1,8 +1,8 @@
 /**
  * Small builders so catalog entries read like the ability text instead of like effect JSON.
  */
-import { ELEMENTS, STATUSES, type DamageType, type StatKey } from "../config.ts";
-import type { AreaSpec, AttackSpec, ChangeSpec, ChoiceSpec, EffectSpec, ModifierSpec } from "./types.ts";
+import { ELEMENTS, STATUSES, type DamageType, type EffectActionType, type StatKey } from "../config.ts";
+import type { AreaSpec, AttackSpec, ChangeSpec, ChoiceSpec, EffectSpec, ModifierSpec, TriggerSpec } from "./types.ts";
 
 /** Flat bonus to a derived stat: `stat("ac", 40)` is "+40 AC", `stat("magicResist", 10)` is "+10% MR". */
 export function stat(key: StatKey, amount: number): ChangeSpec {
@@ -175,4 +175,52 @@ export const CROWD_CONTROL = [
 /** How many copies of a status an actor has (Curse stacks, Paralysis stacks). */
 export function stacksOf(actor: Actor.Implementation | undefined, statusId: string): number {
     return actor ? actor.effects.filter((e) => e.active && e.statuses.has(statusId)).length : 0;
+}
+
+/**
+ * A block: the next attack applied to the bearer is reduced by `percent` (100 = fully blocked), then the block is
+ * used up. Cast blocks as a reaction before the attack's damage is applied.
+ */
+export function blockSpec(name: string, percent: number): EffectSpec {
+    return {
+        name: percent >= 100 ? `${name} (block)` : `${name} (block ${percent}%)`,
+        category: "",
+        block: Math.min(100, percent),
+        duration: "end of turn",
+        description: `<p>Blocks ${percent >= 100 ? "all" : `${Math.min(100, percent)}%`} of the next attack applied to this creature. Used up when it applies; expires at the end of the turn.</p>`,
+    };
+}
+
+
+/**
+ * An action button the effect gives while it lasts (see src/triggers/actions.ts): `steps` run in order when it's
+ * used, and `limits` (once per turn, conditions) go on the button. `sacrifice: true` uses the effect up afterwards.
+ *
+ *     action("Block", "freeReaction", [spend(20, "mana"), { action: "grantTarget", effect: blockSpec("Mist", 100) }])
+ */
+export function action(
+    label: string,
+    actionType: EffectActionType,
+    steps: Omit<TriggerSpec, "event" | "label" | "actionType">[],
+    { sacrifice = false, ...limits }: { sacrifice?: boolean; oncePer?: TriggerSpec["oncePer"]; conditions?: string } = {},
+): TriggerSpec[] {
+    return steps.map((step, i) => ({
+        ...step,
+        event: "use",
+        label,
+        actionType,
+        ...(i === 0 && limits.oncePer ? { oncePer: limits.oncePer } : {}),
+        ...(limits.conditions ? { conditions: limits.conditions } : {}),
+        ...(sacrifice && i === steps.length - 1 ? { consume: true } : {}),
+    }));
+}
+
+/** A step that spends a resource, stopping the rest when you can't afford it. */
+export function spend(amount: number, resource: "stamina" | "mana" | "health"): Omit<TriggerSpec, "event"> {
+    return { action: "spend", value: amount, type: resource };
+}
+
+/** A step that posts a reminder (the part the table resolves by hand: a dash, a push, a cleanse of their choice). */
+export function remind(text: string): Omit<TriggerSpec, "event"> {
+    return { action: "note", value: text };
 }

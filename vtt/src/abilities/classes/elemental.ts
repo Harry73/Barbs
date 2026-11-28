@@ -22,6 +22,10 @@ import {
     vulnerable,
     weaken,
     yesNo,
+    action,
+    blockSpec,
+    remind,
+    spend,
 } from "../helpers.ts";
 import type { AbilityAutomation } from "../types.ts";
 
@@ -62,7 +66,18 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
             { name: "Buffeting Storm (ally)", category: "buff", changes: [stat("speed", ctx.scale(20))] },
             { name: "Buffeting Storm (enemy)", category: "condition", resistible: false, changes: [stat("speed", -20)] },
         ],
-        notes: ["Concentration. While concentrating, spend 5 mana as a Minor Action to push any target 10 ft."],
+        // While concentrating, a 5 mana push as a Minor Action.
+        self: (ctx) =>
+            ctx.choices.concentrate
+                ? [
+                      {
+                          key: "storm",
+                          name: "Buffeting Storm (concentrating)",
+                          category: "",
+                          triggers: action("Push", "minor", [spend(5, "mana"), remind("Push a target of your choice 10 ft in any direction.")]),
+                      },
+                  ]
+                : [],
     },
     "Aeromancer/Vicious Hurricane": {
         self: [{ name: "Vicious Hurricane", category: "", modifiers: [{ type: "penetration", rollType: "magic", damageType: "air", value: 100 }] }],
@@ -259,9 +274,10 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
                 category: "buff",
                 duration: "start of your next turn",
                 changes: [stat("ac", ctx.scale(20)), stat("magicResist", ctx.scale(30))],
+                // "Block one attack on you or an ally within 30 ft": target the ally first, or no one for yourself.
+                triggers: action("Block", "reaction", [{ action: "grantTarget", effect: blockSpec("Ice Block", 100) }], { oncePer: "once" }),
             },
         ],
-        notes: ["While this lasts, you can use your reaction to block one attack on you or an ally within 30 ft for free."],
     },
     "Cryomancer/Aurora Beam": {
         choices: [count("mana", "Mana to spend (X)", undefined, "Damage is (X / 5)d8.")],
@@ -626,6 +642,22 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
         choices: [count("conditions", "Conditions on the attacker", undefined, "-5 mana each.")],
         cost: (ctx) => ({ resource: "mana", amount: Math.max(0, 35 - 5 * Number(ctx.choices.conditions)) }),
         notes: ["Block the attack."],
+    },
+    "Mistguard/Impenetrable Mist": {
+        self: (ctx) =>
+            ctx.choices.concentrate
+                ? [
+                      {
+                          key: "mist",
+                          name: "Impenetrable Mist (concentrating)",
+                          category: "",
+                          description: "<p>Within the Mist field (20 ft around you when cast), AOE effects that at least partially hit it are completely blocked.</p>",
+                          // "Spend 20 mana as a free reaction to block an attack on yourself or an ally."
+                          triggers: action("Block", "freeReaction", [spend(20, "mana"), { action: "grantTarget", effect: blockSpec("Impenetrable Mist", 100) }]),
+                      },
+                  ]
+                : [],
+        notes: ["Mist field: AOE effects that at least partially hit the field (all spaces within 20 ft) are completely blocked."],
     },
     "Mistguard/Cold Snap": {
         choices: [yesNo("recast", "Recast while concentrating (25 mana, free action)")],
