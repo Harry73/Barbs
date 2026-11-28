@@ -92,7 +92,7 @@ export class ZoneBehaviorType extends RegionBehaviorType {
                     hits: rolled.hits,
                     penetration: rolled.penetration,
                     sourceName: `${caster?.name}'s ${sourceName}`,
-                    triggerDepth: 1,
+                    attack: false,
                     attackerUuid: self.casterUuid,
                 });
             }

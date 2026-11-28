@@ -433,6 +433,7 @@ async function damageTarget(
             sourceName: redirects ? `${flags.sourceName} (redirect ${redirects}${flags.alterCourse ? `, +${50 * redirects}%` : ""})` : flags.sourceName,
             scale: (half ? 0.5 : perTarget) * alter,
             trueDamage: damage.trueDamage,
+            attack: true,
             unblockableChance: damage.unblockableChance,
             acReduction: damage.acReduction,
             lifesteal: damage.lifesteal ? { percent: damage.lifesteal, attackerUuid: flags.actorUuid } : undefined,
@@ -537,6 +538,7 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
                     sourceName: `${sourceName} (redirected back${bonus > 1 ? ", Alter Course +50%" : ""})`,
                     scale: bonus,
                     trueDamage: flags.damage.trueDamage,
+                    attack: true,
                 });
                 return;
             }

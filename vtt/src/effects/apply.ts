@@ -464,10 +464,10 @@ export async function applyDamageToActor(
     if (resolved) {
         const { requestOnActor } = await import("../socket.ts");
         for (const r of resolved.redirects) {
-            await requestOnActor(r.actor, "damage", { hits: [r.hits], penetration, sourceName: r.sourceName, triggerDepth: triggerDepth + 1, attackerUuid: dealerUuid });
+            await requestOnActor(r.actor, "damage", { hits: [r.hits], penetration, sourceName: r.sourceName, attack: false, triggerDepth: triggerDepth + 1, attackerUuid: dealerUuid });
         }
         for (const r of resolved.reflects) {
-            await requestOnActor(r.actor, "damage", { hits: [r.hits], penetration: {}, sourceName: r.sourceName, triggerDepth: triggerDepth + 1, attackerUuid: target.uuid ?? undefined });
+            await requestOnActor(r.actor, "damage", { hits: [r.hits], penetration: {}, sourceName: r.sourceName, attack: false, triggerDepth: triggerDepth + 1, attackerUuid: target.uuid ?? undefined });
         }
     }
 

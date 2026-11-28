@@ -324,6 +324,7 @@ async function runAction(
                 hits: [{ [type]: amount }],
                 penetration: {},
                 sourceName,
+                attack: false,
                 triggerDepth: (ctx.depth ?? 0) + 1,
                 attackerUuid: bearer.uuid ?? undefined,
             });

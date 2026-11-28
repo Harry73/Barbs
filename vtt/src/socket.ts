@@ -3,6 +3,12 @@
  *
  * Roll20 got this for free because everything ran on the server. In Foundry, a player who heals an ally or
  * damages a monster usually doesn't own that actor, so the request is relayed to the active GM's client.
+ *
+ * Trust model: this is a table of friends. The GM's client does whatever a relayed request asks, and nothing checks
+ * that the requesting user could have done it themselves (it trusts the request, including the UUIDs and the
+ * "attack" claims in it), so a player's modified client could change any actor, delete any effect, or undo any
+ * message. The checks in the UI (who sees an undo button, who owns what) are for convenience, not security. Don't
+ * run this system anywhere you wouldn't trust every player's browser.
  */
 import { SYSTEM_ID } from "./config.ts";
 import type { DamageKey } from "./rules/damage-math.ts";
@@ -31,7 +37,12 @@ type Requests = {
         lifesteal?: { percent: number; attackerUuid: string };
         notes?: string[];
         attackContext?: AttackContext;
-        /** Damage dealt by a trigger (retaliation) rather than an attack: how deep the trigger chain is. */
+        /**
+         * Whether this is an attack, which can be blocked and starts the defender's on-hit reactions. Retaliation,
+         * redirected and reflected damage, and zone damage aren't.
+         */
+        attack: boolean;
+        /** For damage dealt by a trigger: how deep the trigger chain is. */
         triggerDepth?: number;
         /** Who dealt it, when there's no attack context (trigger damage). */
         attackerUuid?: string;
@@ -87,8 +98,7 @@ async function perform<T extends RequestType>(actor: Actor.Implementation, type:
             const p = payload as Requests["damage"];
             return applyDamageToActor(actor, p.hits, p.penetration, p.sourceName, p.scale, {
                 trueDamage: p.trueDamage,
-                // Trigger damage (retaliation) isn't an attack: no blocks, no Evasion, no on-hit reactions.
-                attack: !p.triggerDepth,
+                attack: p.attack,
                 triggerDepth: p.triggerDepth,
                 attackerUuid: p.attackerUuid,
                 unblockableChance: p.unblockableChance,
