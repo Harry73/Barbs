@@ -352,8 +352,10 @@ async function damageTarget(
         bonus = damage.tiers[tier].bonus;
         conditional = damage.tiers[tier].conditional;
     }
-    // Bonuses that depend on the target ("+2d10 vs demons", "double damage to demons"), checked for this one.
+    // Bonuses that depend on the target ("+2d10 vs demons", "double damage to demons"), checked for this one, and
+    // formula data for the ones that read the target or the distance ("2d10 per curse on the target", Distance Shooter).
     const domain = targetDomain(flags, target);
+    const formulaData = targetFormulaData(flags, target);
     const meets = (conditions: string) => testPredicate(parsePredicate(conditions), domain);
     if (conditional?.some((c) => c.length)) {
         hits = hits.map((hit, i) => {
@@ -393,8 +395,6 @@ async function damageTarget(
         for (const t of types) penetration[t] = (penetration[t] ?? 0) + m.percent;
     }
     // Distance-based damage is measured for this target and added to each hit before defenses.
-    // Damage that reads the distance or the target (Distance Shooter, "2d10 per curse on the target"), for this one.
-    const formulaData = targetFormulaData(flags, target);
     if (bonus?.some((b) => b.length)) {
         const distance = distanceFromCaster(flags, target);
         const needsDistance = bonus.some((list) => list.some((b) => b.formula.includes("@distance")));

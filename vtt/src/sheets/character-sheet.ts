@@ -275,8 +275,12 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
         // Label the hand each weapon is in when there are two, so the buttons read Main hand / Offhand.
         const mainId = mainWeapon(actor as unknown as Actor.Implementation)?.id;
         const offId = offhandWeapon(actor as unknown as Actor.Implementation)?.id;
+        // Main hand first, then the offhand: the inventory's order is by name, which would put a dagger before a sword.
+        const handOrder = (e: { item: Item.Implementation; system: EquipmentModel }) =>
+            e.item.id === mainId ? 0 : e.item.id === offId ? 2 : e.system.slot === "offhand" ? 2 : 1;
         const heldWeapons = equipment
             .filter((e) => e.system.isHeldWeapon)
+            .sort((a, b) => handOrder(a) - handOrder(b))
             .map((e) => ({ ...e, hand: twoWeapons ? (e.item.id === mainId ? "Main hand" : e.item.id === offId ? "Offhand" : "") : "" }));
 
         // Classes come from the abilities the character has (with what they've invested in each), plus any class
