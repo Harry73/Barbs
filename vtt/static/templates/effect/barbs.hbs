@@ -65,9 +65,59 @@
   </details>
 
   {{#unless hideTriggers}}
+  <details class="barbs-section" data-section="actions" {{#if open.actions}}open{{/if}}>
+    <summary>
+      <span class="barbs-section-title">Actions</span> <span class="barbs-count">{{actionRows.length}}</span>
+      <i class="fa-solid fa-circle-question barbs-help-icon" data-tooltip="Things this effect lets you do while you have it, as buttons on the Actions tab (&quot;while concentrating, use a Major Action to gain +10% crit chance&quot;). Rows with the same label are one button, run in order: &quot;spend 20 mana&quot; then &quot;grant Block&quot;. Conditions decide when the button shows; a spend you can't afford stops the rest."></i>
+    </summary>
+  <table class="barbs-modifiers barbs-triggers barbs-effect-actions">
+    {{#if actionRows.length}}
+    <thead>
+      <tr>
+        <th>Label</th><th>Action</th><th data-tooltip="When the button shows, e.g. self:effect:concentrating-analytical-shooter">Conditions</th><th>Limit</th><th data-tooltip="Remove this effect after using it">Use up</th><th>Do</th>
+        <th data-tooltip="Amount or text">Value</th><th data-tooltip="Resource (spend, restore) or damage type">Type</th><th>Effect</th>
+        <th></th>
+      </tr>
+    </thead>
+    {{/if}}
+    <tbody>
+      {{#each actionRows as |t|}}
+      <tr data-trigger-index="{{t.index}}">
+        <td>
+          <input type="hidden" name="system.triggers.{{t.index}}.event" value="use" />
+          <input type="hidden" name="system.triggers.{{t.index}}.chance" value="{{t.chance}}" />
+          <input type="hidden" name="system.triggers.{{t.index}}.check" value="{{t.check}}" />
+          <input type="text" name="system.triggers.{{t.index}}.label" value="{{t.label}}" placeholder="Focus" />
+        </td>
+        <td><select name="system.triggers.{{t.index}}.actionType">{{selectOptions @root.actionTypeChoices selected=t.actionType}}</select></td>
+        <td><input type="text" name="system.triggers.{{t.index}}.conditions" value="{{t.conditions}}" placeholder="always" /></td>
+        <td><select name="system.triggers.{{t.index}}.oncePer">{{selectOptions @root.onceChoices selected=t.oncePer}}</select></td>
+        <td><input type="checkbox" name="system.triggers.{{t.index}}.consume" {{checked t.consume}} /></td>
+        <td><select name="system.triggers.{{t.index}}.action">{{selectOptions @root.actionChoices selected=t.action}}</select></td>
+        <td><input type="text" name="system.triggers.{{t.index}}.value" value="{{t.value}}" placeholder="20, 1, text" /></td>
+        <td><input type="text" name="system.triggers.{{t.index}}.type" value="{{t.type}}" placeholder="mana, stamina" /></td>
+        <td class="barbs-trigger-effect">
+          {{#if t.inline}}<span class="hint" data-tooltip="Defined by the ability">built in</span>
+          {{else}}
+          <select name="system.triggers.{{t.index}}.effect">{{selectOptions @root.templateChoices selected=t.effect}}</select>
+          <a data-action="editGranted" data-tooltip="Edit the granted effect (makes it if there isn't one yet)"><i class="fa-solid fa-pen-to-square"></i></a>
+          {{/if}}
+        </td>
+        <td><a data-action="deleteTrigger" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a></td>
+      </tr>
+      {{/each}}
+    </tbody>
+    <tfoot>
+      <tr><td colspan="10"><a class="barbs-add" data-action="addAction"><i class="fa-solid fa-plus"></i> Add action</a></td></tr>
+    </tfoot>
+  </table>
+  </details>
+  {{/unless}}
+
+  {{#unless hideTriggers}}
   <details class="barbs-section" data-section="triggers" {{#if open.triggers}}open{{/if}}>
     <summary>
-      <span class="barbs-section-title">Triggers</span> <span class="barbs-count">{{triggers.length}}</span>
+      <span class="barbs-section-title">Triggers</span> <span class="barbs-count">{{triggerRows.length}}</span>
       <i class="fa-solid fa-circle-question barbs-help-icon" data-tooltip="When something happens, do something: restore resources, deal damage, grant or inflict a template effect, post a reminder. &quot;Would take damage&quot; triggers change the damage before it lands (reduce it, survive at N health, redirect it, reflect it)."></i>
     </summary>
     {{#if templateWithTriggers}}
@@ -77,7 +127,7 @@
     </p>
     {{/if}}
   <table class="barbs-modifiers barbs-triggers">
-    {{#if triggers.length}}
+    {{#if triggerRows.length}}
     <thead>
       <tr>
         <th>When</th><th>Conditions</th><th data-tooltip="Percent chance; blank = always">%</th><th>Limit</th><th data-tooltip="Remove this effect after it fires">Use up</th><th data-tooltip="A skill check that must succeed, e.g. Armor Mastery: Shields vs @level / 2">Check</th><th>Do</th>
@@ -87,7 +137,7 @@
     </thead>
     {{/if}}
     <tbody>
-      {{#each triggers as |t|}}
+      {{#each triggerRows as |t|}}
       <tr data-trigger-index="{{t.index}}">
         <td><select name="system.triggers.{{t.index}}.event">{{selectOptions @root.eventChoices selected=t.event}}</select></td>
         <td><input type="text" name="system.triggers.{{t.index}}.conditions" value="{{t.conditions}}" placeholder="always" /></td>

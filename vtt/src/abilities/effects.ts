@@ -74,6 +74,8 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
                 effect: "",
                 // The granted/inflicted effect, built now with the same source (caster, effectiveness).
                 effectData: t.effect ? buildEffectData(t.effect, source) : null,
+                label: t.label ?? "",
+                actionType: t.actionType ?? "major",
             })),
             modifiers: [
                 ...(spec.changes ?? []).filter(isStatBonus).map((c) => ({

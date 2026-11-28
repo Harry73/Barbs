@@ -778,17 +778,62 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
         attack: (ctx) => strike("7d8", { lethality: 10 * Number(ctx.choices.spotting) }),
     },
     "Sniper/Analytical Shooter": {
-        self: (ctx) => [
-            {
+        self: (ctx) => {
+            const chance = ctx.scale(20);
+            const damage = ctx.scale(50);
+            const moreChance = ctx.scale(10);
+            const moreDamage = ctx.scale(25);
+            // The ability can't give more than 100% crit chance or 200% crit damage in total. Each Focus stack adds
+            // both, so stacks stop at the crit chance cap, and each copy's crit damage shrinks once N copies would pass
+            // the crit damage cap (all N copies see the same count, so N × min(25, room / N) = min(25N, room)).
+            const maxStacks = Math.max(1, Math.floor((100 - chance) / moreChance));
+            const damageRoom = Math.max(0, 200 - damage);
+            const aim: EffectSpec = {
+                key: "aim",
                 category: "buff",
                 singleUse: true,
                 modifiers: [
-                    { type: "critChance", rollType: "physical", value: ctx.scale(20) },
-                    { type: "critDamage", rollType: "physical", value: ctx.scale(50) },
+                    { type: "critChance", rollType: "physical", weapon: "ranged", value: chance },
+                    { type: "critDamage", rollType: "physical", weapon: "ranged", value: damage },
                 ],
-            },
-        ],
-        notes: ["While concentrating, a Major Action adds +10% crit chance and +25% crit damage (max 100% / 200%). Ends when you attack."],
+            };
+            if (!ctx.choices.concentrate) return [aim];
+            return [
+                aim,
+                {
+                    key: "concentrating",
+                    name: "Analytical Shooter (aiming)",
+                    category: "",
+                    description: `<p>While you concentrate, a Major Action adds +${moreChance}% crit chance and +${moreDamage}% crit damage to your next ranged attack (up to 100% / 200% in total). Concentration ends when you attack.</p>`,
+                    triggers: [
+                        {
+                            event: "use",
+                            label: "Keep aiming",
+                            actionType: "major",
+                            action: "grant",
+                            effect: {
+                                key: "focus",
+                                name: "Analytical Focus",
+                                category: "buff",
+                                singleUse: true,
+                                maxStacks,
+                                modifiers: [
+                                    { type: "critChance", rollType: "physical", weapon: "ranged", value: moreChance },
+                                    {
+                                        type: "critDamage",
+                                        rollType: "physical",
+                                        weapon: "ranged",
+                                        value: `min(${moreDamage}, ${damageRoom} / max(1, @self.stacks.analytical-focus))`,
+                                    },
+                                ],
+                            },
+                        },
+                        // "Concentration on this ability ends immediately upon making an attack."
+                        { event: "attack", action: "endConcentration" },
+                    ],
+                },
+            ];
+        },
     },
     "Sniper/Bola Shot": {
         choices: [{ ...yesNo("spotting", "Expend a Spotting stack (Immobilize instead of Slow)"), resource: "spotting", amount: 1 }],

@@ -22,6 +22,7 @@ import {
 } from "../config.ts";
 import { getAutomation } from "../abilities/catalog.ts";
 import { describeBonus, describeTrigger } from "../effects/bonuses.ts";
+import { effectActions, useEffectAction } from "../triggers/actions.ts";
 import { damageBucketLabel } from "../effects/change-keys.ts";
 import { bonusSources, bonusTotal, summarizeRollBonuses, type RollBonusSummary } from "./roll-bonuses.ts";
 import { defaultChoices } from "../abilities/choices.ts";
@@ -94,6 +95,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             toggleEquipped: BarbsCharacterSheet.#onToggleEquipped as ActionHandler,
             openCompendium: BarbsCharacterSheet.#onOpenCompendium as ActionHandler,
             openClass: BarbsCharacterSheet.#onOpenClass as ActionHandler,
+            useEffectAction: BarbsCharacterSheet.#onUseEffectAction as ActionHandler,
             createEffect: BarbsCharacterSheet.#onCreateEffect as ActionHandler,
             editEffect: BarbsCharacterSheet.#onEditEffect as ActionHandler,
             deleteEffect: BarbsCharacterSheet.#onDeleteEffect as ActionHandler,
@@ -513,7 +515,14 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             foundry.applications.ux.TextEditor.implementation.enrichHTML(html, { relativeTo: item, secrets: item.isOwner });
         const resources = this.barbsActor.creature.derived.resources as Record<string, { value: number }>;
         const heldCategories = heldWeapons.map((w) => w.system.weapon.category).filter(Boolean);
-        const groups = ACTION_GROUPS.map((g) => ({ ...g, abilities: [] as Record<string, unknown>[] }));
+        // Buttons from active effects (Analytical Shooter's Focus, a stance's moves) sit with abilities of the same
+        // action, first, since they're what's on offer right now.
+        const fromEffects = effectActions(this.barbsActor as unknown as Actor.Implementation);
+        const groups = ACTION_GROUPS.map((g) => ({
+            ...g,
+            effectActions: fromEffects.filter((a) => a.actionType === g.id),
+            abilities: [] as Record<string, unknown>[],
+        }));
         for (const entry of abilityGroups.flatMap((g) => g.abilities) as { item: Item.Implementation; system: AbilityModel }[]) {
             const a = entry.system;
             const cost = a.cost;
@@ -539,7 +548,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             );
         }
         return {
-            abilityGroups: groups.filter((g) => g.abilities.length),
+            abilityGroups: groups.filter((g) => g.abilities.length || g.effectActions.length),
             passives: passives.filter((p) => p.resources.length || p.states.length || p.actions.length),
             usable: equipment.filter((e) => e.system.use?.enabled),
             ammo: equipment.filter((e) => e.system.ammo && e.system.equipped),
@@ -691,6 +700,14 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
     static async #onToggleEquipped(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {
         const item = this.#itemFromElement(target);
         if (item) await item.update({ system: { equipped: !(item.system as unknown as EquipmentModel).equipped } } as never);
+    }
+
+    /** One of an active effect's action buttons. Re-render after, so "used this turn" shows. */
+    static async #onUseEffectAction(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {
+        const { effectUuid, label } = target.dataset;
+        if (!effectUuid || !label) return;
+        await useEffectAction(this.barbsActor as unknown as Actor.Implementation, effectUuid, label);
+        void this.render();
     }
 
     /** Open a class's description: the one on the character if they have it, otherwise the compendium's. */

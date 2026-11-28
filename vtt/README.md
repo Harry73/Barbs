@@ -252,6 +252,17 @@ an attack (no Evasion, blocks, or on-hit reactions), and chains stop two levels 
 (and spells while it's held); on ammunition, the shots it's fired with; anywhere else, everything. Each action posts its own
 message with undo. Lightning Coil Cuirass, Accursed Armor, and Heart of Ice retaliate through triggers.
 
+**Action buttons**: an effect's Actions section lists things it lets you do while you have it, shown as buttons on the
+Actions tab under the action they take (Major, Minor, Reaction, Free). Like PF2e's stances, nothing is added to the
+character: the tab lists the buttons of whatever is active, so they come and go with the effect. Underneath they're
+trigger rows with the "You use it" event, a label, and an action type; rows with the same label are one button, run
+in order ("spend 20 mana", then "grant Block"). A button shows while any of its rows' conditions hold, and "spend"
+stops the rest when you can't afford it (`src/triggers/actions.ts`). Inflict and damage rows act on your one
+targeted creature. Three trigger actions came with them and work in ordinary triggers too: spend a resource, extend
+this effect by N rounds, and end the concentration this effect belongs to. Analytical Shooter uses all of it: while
+you concentrate, "Keep aiming" (a Major Action) grants a stacking +10% crit chance / +25% crit damage, capped at the
+ability's 100% / 200%, and attacking ends the concentration.
+
 "You would take damage" triggers run after defenses and before health changes, and can change the damage: reduce it
 by a percent, survive at N health (Critical Condition), redirect a percent of the incoming attack to whoever applied
 the effect (Long Live The King), or reflect a percent back at the attacker (Self Defense Turret). Their conditions can

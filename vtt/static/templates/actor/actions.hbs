@@ -72,6 +72,16 @@
   {{#each actions.abilityGroups as |group|}}
   <div class="barbs-action-section" data-filterable>
     <h3>{{group.label}} <span class="barbs-count">{{group.abilities.length}}</span></h3>
+    {{#if group.effectActions.length}}
+    <div class="barbs-actions barbs-effect-action-buttons">
+      {{#each group.effectActions as |ea|}}
+      <button type="button" data-action="useEffectAction" data-effect-uuid="{{ea.effectUuid}}" data-label="{{ea.label}}"
+        data-action-name="{{ea.label}} {{ea.effectName}}" data-tooltip="{{ea.summary}}{{#if ea.unavailable}} ({{ea.unavailable}}){{/if}}" {{#if ea.unavailable}}disabled{{/if}}>
+        <img src="{{ea.img}}" alt="" /> {{ea.label}} <span class="hint">{{ea.effectName}}</span>
+      </button>
+      {{/each}}
+    </div>
+    {{/if}}
     <ol class="barbs-action-list">
       {{#each group.abilities as |entry|}}
       <li data-item-id="{{entry.item.id}}" data-action-name="{{entry.item.name}} {{entry.system.className}} {{entry.system.tags}}">

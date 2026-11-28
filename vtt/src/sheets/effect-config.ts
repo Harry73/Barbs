@@ -1,5 +1,6 @@
 import {
     DAMAGE_TYPES,
+    EFFECT_ACTION_TYPES,
     EFFECT_CATEGORIES,
     MODIFIER_ROLL_TYPES,
     MODIFIER_TYPES,
@@ -24,6 +25,23 @@ const coreTabs = (ActiveEffectConfig.TABS as unknown as { sheet: { tabs: object[
 
 /** Bonuses that deal damage of one type, so "All" isn't a choice for them. */
 const DAMAGE_NEEDS_TYPE = new Set(["damage", "dot"]);
+
+/** A new trigger row's fields, before its event and action are picked. */
+const BLANK_TRIGGER: TriggerData = {
+    event: "hit",
+    conditions: "",
+    chance: 0,
+    oncePer: "",
+    consume: false,
+    check: "",
+    action: "restore",
+    value: "",
+    type: "",
+    effect: "",
+    effectData: null,
+    label: "",
+    actionType: "major",
+};
 
 /** Trigger actions that copy a template effect onto someone. */
 const GRANT_ACTIONS = new Set(["grant", "inflict"]);
@@ -67,6 +85,7 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
             addModifier: BarbsEffectConfig.#onAddModifier as ActionHandler,
             deleteModifier: BarbsEffectConfig.#onDeleteModifier as ActionHandler,
             addTrigger: BarbsEffectConfig.#onAddTrigger as ActionHandler,
+            addAction: BarbsEffectConfig.#onAddAction as ActionHandler,
             deleteTrigger: BarbsEffectConfig.#onDeleteTrigger as ActionHandler,
             editGranted: BarbsEffectConfig.#onEditGranted as ActionHandler,
             openEffect: BarbsEffectConfig.#onOpenEffect as ActionHandler,
@@ -110,10 +129,17 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
                 grantedBy: grantedBy.map((e) => ({ id: e.id, name: e.name })),
                 maxStacks: maxStacks >= 999 ? "" : maxStacks,
                 // Sections start open (their add buttons are inside), then stay however they were last left.
-                open: { bonuses: this.#open.bonuses ?? true, triggers: this.#open.triggers ?? true },
+                open: { bonuses: this.#open.bonuses ?? true, actions: this.#open.actions ?? true, triggers: this.#open.triggers ?? true },
                 modifiers: system.modifiers.map((m, index) => ({ ...m, index })),
-                triggers: (system.triggers ?? []).map((t, index) => ({ ...t, index, inline: !!t.effectData, grants: GRANT_ACTIONS.has(t.action) })),
-                eventChoices: TRIGGER_EVENTS,
+                // One array underneath: "use" rows are action buttons, listed in their own section; the rest are triggers.
+                // Each keeps its index in the array, which the form fields are named by.
+                ...(() => {
+                    const rows = (system.triggers ?? []).map((t, index) => ({ ...t, index, inline: !!t.effectData, grants: GRANT_ACTIONS.has(t.action) }));
+                    return { triggerRows: rows.filter((t) => t.event !== "use"), actionRows: rows.filter((t) => t.event === "use") };
+                })(),
+                actionTypeChoices: EFFECT_ACTION_TYPES,
+                // "You use it" rows go in the Actions section, not here.
+                eventChoices: Object.fromEntries(Object.entries(TRIGGER_EVENTS).filter(([k]) => k !== "use")),
                 actionChoices: TRIGGER_ACTIONS,
                 onceChoices: { "": "Every time", turn: "Once per turn", round: "Once per round", once: "Only once" },
                 templateChoices: Object.fromEntries([["", "—"], ...templates.map((n) => [n, n])]),
@@ -154,14 +180,6 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
         return data as never;
     }
 
-    /**
-     * Core renders each change's key as free text, and nobody remembers `system.stats.conditionResist.bonus`. Swap it
-     * for a searchable picker over every key Barbs creatures understand: type any words from the label, group, or
-     * key ("fire pen", "stun cr") and pick from the menu. The real key rides along in a hidden input.
-     *
-     * A key that isn't in the list (typed by hand, or from an older version) shows as-is and is kept, so opening the
-     * sheet never changes an effect. Typing a full `system.` path and pressing Enter sets a custom key.
-     */
     /** Sections the user opened or closed by hand, so a re-render (e.g. adding a row) doesn't undo it. */
     #open: Record<string, boolean> = {};
 
@@ -173,7 +191,11 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
         this.#pickerListeners?.abort();
         this.#pickerListeners = new AbortController();
 
-        // Changes tab: the raw change key, picked from every key Barbs creatures understand.
+        // Changes tab: core renders each change's key as free text, and nobody remembers
+        // `system.stats.conditionResist.bonus`. Swap it for a searchable picker over every key Barbs creatures understand
+        // ("fire pen", "stun cr"); the real key rides along in a hidden input. A key that isn't in the list (typed by
+        // hand, or from an older version) shows as-is and is kept, so opening the sheet never changes an effect, and a
+        // full `system.` path plus Enter sets a custom key.
         const keyEntries = changeKeyGroups().flatMap((g) =>
             g.keys.map((k) => ({ identifier: k.key, label: `${k.label} (${g.label})`, search: `${k.label} ${g.label} ${k.key}`.toLowerCase() })),
         );
@@ -328,7 +350,15 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
         event.preventDefault();
         this.#open.triggers = true;
         const triggers = this.#currentTriggers();
-        triggers.push({ event: "hit", conditions: "", chance: 0, oncePer: "", consume: false, check: "", action: "restore", value: "", type: "stamina", effect: "", effectData: null });
+        triggers.push({ ...BLANK_TRIGGER, event: "hit", action: "restore", type: "stamina" });
+        await this.submit({ updateData: { system: { triggers } } } as never);
+    }
+
+    static async #onAddAction(this: BarbsEffectConfig, event: PointerEvent) {
+        event.preventDefault();
+        this.#open.actions = true;
+        const triggers = this.#currentTriggers();
+        triggers.push({ ...BLANK_TRIGGER, event: "use", action: "grant", label: "" });
         await this.submit({ updateData: { system: { triggers } } } as never);
     }
 

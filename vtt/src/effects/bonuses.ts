@@ -120,6 +120,9 @@ export function describeTrigger(t: TriggerData): string {
         survive: `survive at ${value} health`,
         redirect: `redirect ${value}% to whoever applied this`,
         reflect: `reflect ${value}% at the attacker`,
+        spend: `spend ${value} ${t.type || "stamina"}`,
+        extend: `extend this by ${value} round(s)`,
+        endConcentration: "end the concentration",
     };
     const extra = [
         t.chance ? `${t.chance}%` : "",

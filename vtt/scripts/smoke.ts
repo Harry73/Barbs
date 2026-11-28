@@ -572,6 +572,28 @@ try {
         assert.equal(ctx.dice("4d10 + 1d6"), "5d10 + 1d6");
     }
 
+    // Analytical Shooter: concentrating adds an aiming effect with a "Keep aiming" button and an end-on-attack trigger.
+    {
+        const { BarbsEffectModel } = await vite.ssrLoadModule("/src/data/effect.ts");
+        const { buildEffectData } = await vite.ssrLoadModule("/src/abilities/effects.ts");
+        const { describeTrigger } = await vite.ssrLoadModule("/src/effects/bonuses.ts");
+        const auto = ABILITY_AUTOMATION["Sniper/Analytical Shooter"];
+        assert.equal(resolve(auto.self, makeContext(actor, null, {}, 1)).length, 1, "not concentrating: just the buff");
+        const specs = resolve(auto.self, makeContext(actor, null, { concentrate: true }, 1));
+        assert.deepEqual(specs.map((e: any) => e.key), ["aim", "concentrating"]);
+        const source = { className: "Sniper", abilityName: "Analytical Shooter", img: "", duration: "Instant" };
+        const aiming = buildEffectData(specs[1], source);
+        new BarbsEffectModel(aiming.system, { parent: new StandIn(), strict: true });
+        const [use, attack] = aiming.system.triggers;
+        assert.deepEqual([use.event, use.label, use.actionType, use.action], ["use", "Keep aiming", "major", "grant"]);
+        assert.deepEqual([attack.event, attack.action], ["attack", "endConcentration"]);
+        assert.equal(use.effectData.flags.barbs.maxStacks, 8, "20% + 8 × 10% reaches the 100% crit chance cap");
+        assert.equal(use.effectData.flags.barbs.sourceKey, "Sniper/Analytical Shooter/focus", "Focus stacks with itself, not with the buff");
+        assert.equal(use.effectData.system.modifiers[1].value, "min(25, 150 / max(1, @self.stacks.analytical-focus))");
+        assert.equal(describeTrigger(use), "You use it: grant Analytical Focus");
+        assert.equal(describeTrigger({ ...use, action: "spend", value: "20", type: "mana" }), "You use it: spend 20 mana");
+    }
+
     // Every generated compendium entry must validate against its model (run `npm run packs` first).
     const packSrc = path.resolve(import.meta.dirname, "..", "build", "packs");
     const models: Record<string, any> = CONFIG.Item.dataModels as Record<string, any>;

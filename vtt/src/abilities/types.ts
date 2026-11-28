@@ -1,5 +1,5 @@
 import type { HandRequirement } from "../rules/hands.ts";
-import type { TriggerAction, TriggerEvent } from "../config.ts";
+import type { EffectActionType, TriggerAction, TriggerEvent } from "../config.ts";
 import type { DamageType, EffectCategory, ModifierRollType, ModifierType } from "../config.ts";
 import type { AttackResult } from "../rolls/attack.ts";
 import type { UseContext } from "./context.ts";
@@ -178,9 +178,12 @@ export interface TriggerSpec {
     check?: string;
     action: TriggerAction;
     value?: string | number;
-    /** Resource for restore, damage type for damage. */
+    /** Resource for restore/spend, damage type for damage. */
     type?: string;
     effect?: EffectSpec;
+    /** For "use" (an action button): its label, and the action it takes. */
+    label?: string;
+    actionType?: EffectActionType;
 }
 
 export interface AreaSpec {

@@ -221,8 +221,19 @@ export const TRIGGER_EVENTS = {
     turnEnd: "End of your turn",
     combatStart: "Combat starts",
     combatEnd: "Combat ends",
+    // An action the effect gives you: a button on the Actions tab while it's active (see src/triggers/actions.ts).
+    use: "You use it (an action button)",
 } as const;
 export type TriggerEvent = keyof typeof TRIGGER_EVENTS;
+
+/** The action an effect's action button takes, which decides where it's listed on the Actions tab. */
+export const EFFECT_ACTION_TYPES = {
+    major: "Major Action",
+    minor: "Minor Action",
+    reaction: "Reaction",
+    free: "Free Action",
+} as const;
+export type EffectActionType = keyof typeof EFFECT_ACTION_TYPES;
 
 /** What a trigger does. */
 export const TRIGGER_ACTIONS = {
@@ -231,6 +242,9 @@ export const TRIGGER_ACTIONS = {
     inflict: "Inflict an effect on the other creature",
     damage: "Damage the other creature",
     note: "Post a reminder",
+    spend: "Spend a resource (stops if you can't)",
+    extend: "Extend this effect by N rounds",
+    endConcentration: "End the concentration this belongs to",
     // Only for "You would take damage": they change the damage before it lands.
     reduceDamage: "Reduce that damage by %",
     survive: "Survive it at this much health",

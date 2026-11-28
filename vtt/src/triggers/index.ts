@@ -64,9 +64,9 @@ const OTHER_ROLE: Partial<Record<TriggerEvent, "target" | "attacker">> = {
 };
 
 /** Once-per-turn/round bookkeeping, by effect UUID and trigger index. Kept on this client; see the note above. */
-const lastFired = new Map<string, string>();
+export const lastFired = new Map<string, string>();
 
-function turnKey(per: "turn" | "round" | "once"): string {
+export function turnKey(per: "turn" | "round" | "once"): string {
     if (per === "once") return "once";
     const combat = game.combat;
     if (!combat?.started) return "no-combat";
@@ -101,7 +101,7 @@ export async function fireTriggers(bearer: Actor.Implementation | null | undefin
  * A trigger's skill-check gate ("Armor Mastery: Shields vs @level / 2"): the bearer rolls it, against a DC formula
  * over their own roll data, and the trigger only goes on if it succeeds.
  */
-async function passesCheck(bearer: Actor.Implementation, effect: ActiveEffect.Implementation, trigger: TriggerData): Promise<boolean> {
+export async function passesCheck(bearer: Actor.Implementation, effect: ActiveEffect.Implementation, trigger: TriggerData): Promise<boolean> {
     const text = trigger.check?.trim();
     if (!text) return true;
     const [skill, dcFormula] = text.split(/\s+vs\.?\s+/i);
@@ -110,14 +110,14 @@ async function passesCheck(bearer: Actor.Implementation, effect: ActiveEffect.Im
     return (await roller.skillCheck?.(skill.trim(), { dc, flavor: effect.name ?? "" })) ?? false;
 }
 
-async function passesChance(trigger: TriggerData): Promise<boolean> {
+export async function passesChance(trigger: TriggerData): Promise<boolean> {
     if (!(trigger.chance > 0 && trigger.chance < 100)) return true;
     const roll = (await new Roll("1d100").evaluate()).total ?? 101;
     return roll <= trigger.chance;
 }
 
 /** Remove a one-shot effect after its trigger fires (on whichever client may). */
-async function consumeEffect(effect: ActiveEffect.Implementation): Promise<void> {
+export async function consumeEffect(effect: ActiveEffect.Implementation): Promise<void> {
     if (effect.isOwner) await effect.delete();
     else {
         const { requestGM } = await import("../socket.ts");
@@ -222,7 +222,7 @@ export async function resolveIncomingDamage(
 }
 
 /** The facts a trigger's conditions are tested against, by side. */
-function domainFor(bearer: Actor.Implementation, effect: ActiveEffect.Implementation, role: string | undefined, ctx: TriggerContext): Set<string> {
+export function domainFor(bearer: Actor.Implementation, effect: ActiveEffect.Implementation, role: string | undefined, ctx: TriggerContext): Set<string> {
     if (ctx.attack && role === "attacker") {
         const origin = foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.casterUuid`) as string | undefined;
         const attackOptions = ctx.attack.options.filter((o) => !o.startsWith("self:") && o !== "in-combat");
@@ -283,42 +283,46 @@ function grantedEffectData(effect: ActiveEffect.Implementation, trigger: Trigger
     return data;
 }
 
-async function runAction(
+/**
+ * Do what a trigger row says. Returns false when the row couldn't be done and anything after it shouldn't happen
+ * either (a "spend" the bearer can't afford); action buttons stop there.
+ */
+export async function runAction(
     bearer: Actor.Implementation,
     effect: ActiveEffect.Implementation,
     trigger: TriggerData,
     role: string | undefined,
     ctx: TriggerContext,
-): Promise<void> {
+): Promise<boolean> {
     const { requestOnActor } = await import("../socket.ts");
     const sourceName = `${bearer.name}'s ${effect.name}`;
     const data = () => formulaData(bearer, role, ctx);
     switch (trigger.action) {
         case "restore": {
             const amount = Math.round(evaluateNumber(trigger.value, data()));
-            if (!amount) return;
+            if (!amount) return true;
             const resource = trigger.type || "health";
             if (resource === "health") await requestOnActor(bearer, "healing", { amount, sourceName });
             else await requestOnActor(bearer, "resource", { resource: resource as "stamina" | "mana", delta: amount, sourceName });
-            return;
+            return true;
         }
         case "grant":
         case "inflict": {
             const recipient = trigger.action === "grant" ? bearer : ctx.other;
-            if (!recipient) return;
+            if (!recipient) return true;
             const effectData = grantedEffectData(effect, trigger, bearer);
-            if (!effectData) return;
+            if (!effectData) return true;
             const isCondition = foundry.utils.getProperty(effectData, "system.category") === "condition";
             await requestOnActor(recipient, "effect", {
                 data: effectData,
                 options: { resistible: trigger.action === "inflict" && isCondition, sourceName },
             });
-            return;
+            return true;
         }
         case "damage": {
-            if (!ctx.other) return;
+            if (!ctx.other) return true;
             const amount = Math.round(evaluateNumber(trigger.value, data()));
-            if (amount <= 0) return;
+            if (amount <= 0) return true;
             const type = (trigger.type || "physical") as DamageKey;
             await requestOnActor(ctx.other, "damage", {
                 hits: [{ [type]: amount }],
@@ -328,7 +332,7 @@ async function runAction(
                 triggerDepth: (ctx.depth ?? 0) + 1,
                 attackerUuid: bearer.uuid ?? undefined,
             });
-            return;
+            return true;
         }
         case "note": {
             const text = String(trigger.value || effect.name);
@@ -336,7 +340,44 @@ async function runAction(
                 speaker: ChatMessage.getSpeaker({ actor: bearer as Actor.Stored }),
                 content: `<div class="barbs-chat-card"><p><strong>${esc(effect.name)}</strong>: ${esc(text)}</p></div>`,
             } as never);
-            return;
+            return true;
+        }
+        case "spend": {
+            const resource = (trigger.type || "stamina") as "stamina" | "mana" | "health";
+            const amount = Math.round(evaluateNumber(trigger.value, data()));
+            if (amount <= 0) return true;
+            const have = (bearer.system as unknown as { derived: { resources: Record<string, { value: number }> } }).derived.resources[resource]?.value ?? 0;
+            if (have < amount) {
+                ui.notifications?.warn(`${bearer.name} needs ${amount} ${resource} for ${effect.name} (has ${have}).`);
+                return false;
+            }
+            if (resource === "health") await requestOnActor(bearer, "damage", { hits: [{ physical: amount }], penetration: {}, sourceName, attack: false, trueDamage: true });
+            else await requestOnActor(bearer, "resource", { resource, delta: -amount, sourceName });
+            return true;
+        }
+        case "extend": {
+            // Rounds onto a round-based duration; an effect with no duration (or one measured in hours) stays as it is.
+            const rounds = Math.round(evaluateNumber(trigger.value, data()));
+            const duration = effect._source.duration as { value?: number | null; units?: string } | undefined;
+            if (!rounds || duration?.units !== "rounds" || duration.value == null) {
+                ui.notifications?.info(`${effect.name} has no round-based duration to extend.`);
+                return true;
+            }
+            if (!effect.isOwner) {
+                ui.notifications?.warn(`You can't change ${effect.name}.`);
+                return true;
+            }
+            await effect.update({ "duration.value": duration.value + rounds } as never);
+            return true;
+        }
+        case "endConcentration": {
+            // Deleting the Concentrating marker ends everything it maintained (concentration.ts), this effect included.
+            const key = foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.concentrationKey`) as string | undefined;
+            const { concentrationMarkers } = await import("../concentration.ts");
+            const marker = key ? concentrationMarkers(bearer).find((m) => foundry.utils.getProperty(m, `flags.${SYSTEM_ID}.concentration.key`) === key) : undefined;
+            if (marker) await consumeEffect(marker);
+            return true;
         }
     }
+    return true;
 }

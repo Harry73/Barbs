@@ -1,11 +1,13 @@
 import {
     DAMAGE_TYPES,
+    EFFECT_ACTION_TYPES,
     EFFECT_CATEGORIES,
     MODIFIER_ROLL_TYPES,
     MODIFIER_TYPES,
     TRIGGER_ACTIONS,
     TRIGGER_EVENTS,
     type ModifierRollType,
+    type EffectActionType,
     type ModifierType,
     type TriggerAction,
     type TriggerEvent,
@@ -57,6 +59,13 @@ export interface TriggerData {
     effect: string;
     /** For grant/inflict from ability automation: the effect's data inline, instead of a template. */
     effectData: object | null;
+    /**
+     * For "use" rows (action buttons): the button's label. Rows with the same label are one button, run in order
+     * (spend 20 mana, then block).
+     */
+    label: string;
+    /** For "use" rows: the action it takes, which is where it's listed on the Actions tab. */
+    actionType: EffectActionType;
 }
 
 /**
@@ -107,6 +116,8 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
                     type: new fields.StringField({ required: true, blank: true, initial: "" }),
                     effect: new fields.StringField({ required: true, blank: true, initial: "" }),
                     effectData: new fields.ObjectField({ required: false, nullable: true, initial: null }),
+                    label: new fields.StringField({ required: true, blank: true, initial: "" }),
+                    actionType: new fields.StringField({ required: true, choices: Object.keys(EFFECT_ACTION_TYPES), initial: "major" }),
                 }),
             ),
             modifiers: new fields.ArrayField(
