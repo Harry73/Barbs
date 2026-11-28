@@ -255,16 +255,12 @@ async function updateHealth(target: Actor.Implementation, amount: number): Promi
             undo.removedEffects = buffs.map((e) => snapshotEffect(e as ActiveEffect.Implementation));
             await target.deleteEmbeddedDocuments("ActiveEffect", buffs.map((e) => e.id!));
         }
-        notes.push(
-            `${target.name} is <strong>Downed</strong> and loses all buffs. They drop concentration, most conditions end, and they roll death saves.`,
-        );
     }
     if (change.died) {
         if (!target.statuses.has(STATUS_DEAD)) {
             await target.toggleStatusEffect(STATUS_DEAD, { active: true, overlay: true });
             undo.statusesAdded.push(STATUS_DEAD);
         }
-        notes.push(`${target.name}'s Downed Health reached 0. <strong>They die.</strong>`);
     }
     if (change.revived) {
         if (target.statuses.has(STATUS_DOWNED)) {
