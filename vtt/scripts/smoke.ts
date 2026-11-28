@@ -327,6 +327,24 @@ try {
     const oldMisc = new itemModels.EquipmentModel({ slot: "misc", equipped: true });
     assert.equal(oldMisc.slot, "none", "items saved in the dropped misc slot load as unslotted");
 
+    // Templates are grouped under the effect whose grant/inflict trigger names them (Effect column, or Value).
+    {
+        const { groupEffects, grantersOf } = await vite.ssrLoadModule("/src/effects/templates.ts");
+        const fx = (id: string, system: object) => ({ id, name: id, system });
+        const fervor = fx("Fervor", { triggers: [{ action: "grant", effect: "Battle Fervor" }, { action: "inflict", effect: "", value: "Shaken" }] });
+        const skin = fx("Steel Skin", { triggers: [{ action: "restore", effect: "Battle Fervor" }] });
+        const battle = fx("Battle Fervor", { template: true });
+        const shaken = fx("Shaken", { template: true });
+        const loose = fx("Potion", { template: true });
+        const groups = groupEffects([battle, fervor, skin, shaken, loose]);
+        assert.deepEqual(
+            groups.map((g: any) => [g.effect.name, g.granted.map((t: any) => t.name), g.loose]),
+            [["Fervor", ["Battle Fervor", "Shaken"], false], ["Steel Skin", [], false], ["Potion", [], true]],
+            "templates nest under the effect that grants them; restore triggers don't count",
+        );
+        assert.deepEqual(grantersOf(shaken, [battle, fervor, skin, shaken]).map((e: any) => e.name), ["Fervor"]);
+    }
+
     // Stat bonus rows become ordinary "add" changes when the effect is prepared.
     {
         const { BarbsEffectModel } = await vite.ssrLoadModule("/src/data/effect.ts");

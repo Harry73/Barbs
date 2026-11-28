@@ -1,13 +1,26 @@
 <div class="barbs-toolbar">
   {{#if editable}}<button type="button" data-action="createEffect"><i class="fa-solid fa-plus"></i> Add effect</button>{{/if}}
 </div>
-<ul class="barbs-list">
-  {{#each effects as |effect|}}
-  <li class="barbs-list-row" data-effect-id="{{effect.id}}">
-    <img src="{{effect.img}}" alt="" />
-    <a class="name" data-action="editEffect">{{effect.name}}</a>
+<ul class="barbs-list barbs-effect-groups">
+  {{#each effectGroups as |group|}}
+  <li class="barbs-list-row" data-effect-id="{{group.effect.id}}">
+    <img src="{{group.effect.img}}" alt="" />
+    <a class="name" data-action="editEffect">{{group.effect.name}}</a>
+    {{#if group.loose}}
+      {{#if @root.usable}}<span class="barbs-tag" data-tooltip="Using the item applies its templates">applied on Use</span>
+      {{else}}<span class="barbs-tag warning" data-tooltip="A template only applies when a trigger grants it, or when a usable item is used. Nothing here does yet: add a Grant/Inflict trigger to another effect and pick this one.">template, not granted</span>{{/if}}
+    {{/if}}
     {{#if @root.editable}}<a data-action="deleteEffect" data-tooltip="Delete"><i class="fa-solid fa-trash"></i></a>{{/if}}
   </li>
+  {{#each group.granted as |granted|}}
+  <li class="barbs-list-row barbs-granted" data-effect-id="{{granted.id}}">
+    <i class="fa-solid fa-turn-up fa-rotate-90 barbs-granted-arrow"></i>
+    <img src="{{granted.img}}" alt="" />
+    <a class="name" data-action="editEffect">{{granted.name}}</a>
+    <span class="barbs-tag" data-tooltip="A template: {{group.effect.name}}'s trigger copies it onto someone">granted</span>
+    {{#if @root.editable}}<a data-action="deleteEffect" data-tooltip="Delete"><i class="fa-solid fa-trash"></i></a>{{/if}}
+  </li>
+  {{/each}}
   {{else}}
   <li class="hint">No effects.</li>
   {{/each}}

@@ -808,3 +808,39 @@
 .barbs .barbs-add {
   margin-left: auto;
 }
+
+/* Item sheet effects: templates sit under the effect that grants them. */
+.barbs .barbs-effect-groups .barbs-granted {
+  padding-left: 1.25rem;
+}
+
+.barbs .barbs-granted-arrow {
+  opacity: 0.5;
+  font-size: 0.8em;
+}
+
+.barbs .barbs-tag {
+  font-size: 0.8em;
+  padding: 0 0.35rem;
+  border: 1px solid var(--color-border, #7a7971);
+  border-radius: 3px;
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+.barbs .barbs-tag.warning {
+  border-color: var(--color-level-warning, #ee9b3a);
+  color: var(--color-level-warning, #ee9b3a);
+}
+
+.barbs .barbs-trigger-effect {
+  white-space: nowrap;
+}
+
+.barbs .barbs-trigger-effect select {
+  width: calc(100% - 1.5rem);
+}
+
+.barbs .barbs-granted-by a {
+  text-decoration: underline;
+}

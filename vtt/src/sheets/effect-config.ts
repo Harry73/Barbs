@@ -11,6 +11,7 @@ import {
 } from "../config.ts";
 import type { RollModifierData, TriggerData } from "../data/effect.ts";
 import { changeKeyGroups } from "../effects/change-keys.ts";
+import { grantersOf, isTemplate, type EffectLike } from "../effects/templates.ts";
 
 const { ActiveEffectConfig } = foundry.applications.sheets;
 const { FormDataExtended } = foundry.applications.ux;
@@ -19,6 +20,19 @@ type ActionHandler = (this: BarbsEffectConfig, event: PointerEvent, target: HTML
 
 const { footer, ...coreParts } = ActiveEffectConfig.PARTS as Record<string, object>;
 const coreTabs = (ActiveEffectConfig.TABS as unknown as { sheet: { tabs: object[] } }).sheet;
+
+/** Trigger actions that copy a template effect onto someone. */
+const GRANT_ACTIONS = new Set(["grant", "inflict"]);
+
+/** A trigger row's Effect column (and its edit button) only means something for grant/inflict. */
+function syncTriggerRow(row: HTMLElement): void {
+    const grants = GRANT_ACTIONS.has(row.querySelector<HTMLSelectElement>("select[name$='.action']")?.value ?? "");
+    const cell = row.querySelector<HTMLElement>("td.barbs-trigger-effect");
+    if (!cell) return;
+    cell.classList.toggle("muted", !grants);
+    for (const field of cell.querySelectorAll<HTMLSelectElement>("select")) field.disabled = !grants;
+    cell.querySelector<HTMLElement>("[data-action='editGranted']")?.toggleAttribute("hidden", !grants);
+}
 
 /** Attack bonuses by group, in the order the Bonuses picker lists them. */
 const ROLL_BONUS_GROUPS: [string, string[]][] = [
@@ -79,6 +93,8 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
             deleteModifier: BarbsEffectConfig.#onDeleteModifier as ActionHandler,
             addTrigger: BarbsEffectConfig.#onAddTrigger as ActionHandler,
             deleteTrigger: BarbsEffectConfig.#onDeleteTrigger as ActionHandler,
+            editGranted: BarbsEffectConfig.#onEditGranted as ActionHandler,
+            openEffect: BarbsEffectConfig.#onOpenEffect as ActionHandler,
         },
     };
 
@@ -107,10 +123,16 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
             // Template effects next to this one, for grant/inflict triggers to pick from.
             const siblings = ((this.document.parent as { effects?: Iterable<ActiveEffect.Implementation> } | null)?.effects ?? []) as Iterable<ActiveEffect.Implementation>;
             const templates = [...siblings].filter((e) => (e.system as unknown as { template?: boolean }).template && e.id !== this.document.id).map((e) => e.name);
+            const template = isTemplate(this.document as unknown as EffectLike);
+            const grantedBy = template ? grantersOf(this.document as unknown as EffectLike, siblings as unknown as Iterable<EffectLike>) : [];
             Object.assign(partContext, {
                 barbs: system,
                 // Templates never apply themselves, so their own triggers never run; say so where it's set up.
-                templateWithTriggers: !!(system as unknown as { template?: boolean }).template && (system.triggers ?? []).length > 0,
+                templateWithTriggers: template && (system.triggers ?? []).length > 0,
+                // A template's own triggers never run, so it gets no Triggers section (unless it somehow has some, to
+                // warn about), and one a trigger grants says so instead of showing the Template checkbox.
+                hideTriggers: template && (system.triggers ?? []).length === 0,
+                grantedBy: grantedBy.map((e) => ({ id: e.id, name: e.name })),
                 maxStacks: maxStacks >= 999 ? "" : maxStacks,
                 // Sections start open when they have rows, then stay however they were last left.
                 open: {
@@ -118,7 +140,7 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
                     triggers: this.#open.triggers ?? (system.triggers ?? []).length > 0,
                 },
                 modifiers: system.modifiers.map((m, index) => ({ ...m, index })),
-                triggers: (system.triggers ?? []).map((t, index) => ({ ...t, index, inline: !!t.effectData })),
+                triggers: (system.triggers ?? []).map((t, index) => ({ ...t, index, inline: !!t.effectData, grants: GRANT_ACTIONS.has(t.action) })),
                 eventChoices: TRIGGER_EVENTS,
                 actionChoices: TRIGGER_ACTIONS,
                 onceChoices: { "": "Every time", turn: "Once per turn", round: "Once per round", once: "Only once" },
@@ -205,6 +227,11 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
                 custom: (text) => (text.startsWith("system.") ? text : null),
             });
             search.dataset.tooltip = hidden.value;
+        }
+
+        for (const row of this.element.querySelectorAll<HTMLElement>("tr[data-trigger-index]")) {
+            row.querySelector("select[name$='.action']")?.addEventListener("change", () => syncTriggerRow(row));
+            syncTriggerRow(row);
         }
 
         for (const section of this.element.querySelectorAll<HTMLDetailsElement>("details.barbs-section")) {
@@ -327,6 +354,47 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
         const triggers = this.#currentTriggers();
         triggers.push({ event: "hit", conditions: "", chance: 0, oncePer: "", consume: false, check: "", action: "restore", value: "", type: "stamina", effect: "", effectData: null });
         await this.submit({ updateData: { system: { triggers } } } as never);
+    }
+
+    /**
+     * Open the template a grant/inflict trigger copies, making it first if there isn't one: a new template effect next
+     * to this one, named after the trigger's Effect (or Value), or after this effect if both are blank.
+     */
+    static async #onEditGranted(this: BarbsEffectConfig, event: PointerEvent, target: HTMLElement) {
+        event.preventDefault();
+        const index = Number(target.closest<HTMLElement>("[data-trigger-index]")?.dataset.triggerIndex);
+        const triggers = this.#currentTriggers();
+        const trigger = triggers[index];
+        if (!trigger) return;
+        const parent = this.document.parent as unknown as {
+            effects: Iterable<ActiveEffect.Implementation>;
+            createEmbeddedDocuments(type: string, data: object[]): Promise<ActiveEffect.Implementation[]>;
+        };
+        const findTemplate = (name: string) => [...parent.effects].find((e) => e.name === name && isTemplate(e as unknown as EffectLike));
+        let name = (trigger.effect || trigger.value || "").trim();
+        let template = name ? findTemplate(name) : undefined;
+        if (!template) {
+            const inflict = trigger.action === "inflict";
+            if (!name) {
+                const base = `${this.document.name} (${inflict ? "inflicted" : "granted"})`;
+                name = base;
+                for (let n = 2; findTemplate(name); n++) name = `${base} ${n}`;
+            }
+            [template] = await parent.createEmbeddedDocuments("ActiveEffect", [
+                // Not transferred: a template never applies to whoever holds the item; the trigger copies it.
+                { name, img: this.document.img, transfer: false, system: { template: true, category: inflict ? "condition" : "buff" } },
+            ]);
+        }
+        triggers[index] = { ...trigger, effect: name, value: trigger.effect ? trigger.value : trigger.value === name ? "" : trigger.value };
+        await this.submit({ updateData: { system: { triggers } } } as never);
+        await template?.sheet?.render({ force: true } as never);
+    }
+
+    /** "Granted by X" links on a template open the granting effect. */
+    static async #onOpenEffect(this: BarbsEffectConfig, _event: PointerEvent, target: HTMLElement) {
+        const id = target.dataset.effectId;
+        const parent = this.document.parent as unknown as { effects: { get(id: string): ActiveEffect.Implementation | undefined } };
+        await (id ? parent.effects.get(id) : undefined)?.sheet?.render({ force: true } as never);
     }
 
     static async #onDeleteTrigger(this: BarbsEffectConfig, _event: PointerEvent, target: HTMLElement) {

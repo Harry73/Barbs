@@ -12,9 +12,16 @@
     <label class="barbs-check" data-tooltip="Removed when the combat ends (&quot;until the end of combat&quot;), whatever its duration says.">
       <input type="checkbox" name="system.endsWithCombat" {{checked barbs.endsWithCombat}} /> Ends with combat
     </label>
-    <label class="barbs-check" data-tooltip="Never applies by itself: a trigger on the same item or actor copies it onto someone (&quot;grant Battle Fervor on hit&quot;).">
+    {{#if grantedBy.length}}
+    <span class="barbs-granted-by" data-tooltip="A template: never applies by itself; these effects' triggers copy it onto someone.">
+      <i class="fa-solid fa-turn-up fa-rotate-90"></i> Granted by
+      {{#each grantedBy as |g|}}<a data-action="openEffect" data-effect-id="{{g.id}}">{{g.name}}</a>{{#unless @last}}, {{/unless}}{{/each}}
+    </span>
+    {{else}}
+    <label class="barbs-check" data-tooltip="Never applies by itself: a trigger on the same item or actor copies it onto someone (&quot;grant Battle Fervor on hit&quot;). Easiest made from a Grant/Inflict trigger's edit button.">
       <input type="checkbox" name="system.template" {{checked barbs.template}} /> Template
     </label>
+    {{/if}}
   </div>
 
   <details class="barbs-section" data-section="bonuses" {{#if open.bonuses}}open{{/if}}>
@@ -54,6 +61,7 @@
 
   </details>
 
+  {{#unless hideTriggers}}
   <details class="barbs-section" data-section="triggers" {{#if open.triggers}}open{{/if}}>
     <summary>
       <span class="barbs-section-title">Triggers</span> <span class="barbs-count">{{triggers.length}}</span>
@@ -86,9 +94,12 @@
         <td><select name="system.triggers.{{t.index}}.action">{{selectOptions @root.actionChoices selected=t.action}}</select></td>
         <td><input type="text" name="system.triggers.{{t.index}}.value" value="{{t.value}}" placeholder="5, 2d12, text" data-tooltip="Restore/damage: an amount (formula). Reminder: the text. Grant/inflict: leave blank and pick the Effect (or type the template's name here)." /></td>
         <td><input type="text" name="system.triggers.{{t.index}}.type" value="{{t.type}}" placeholder="stamina, lightning" /></td>
-        <td>
+        <td class="barbs-trigger-effect">
           {{#if t.inline}}<span class="hint" data-tooltip="Defined by the ability">built in</span>
-          {{else}}<select name="system.triggers.{{t.index}}.effect">{{selectOptions @root.templateChoices selected=t.effect}}</select>{{/if}}
+          {{else}}
+          <select name="system.triggers.{{t.index}}.effect">{{selectOptions @root.templateChoices selected=t.effect}}</select>
+          <a data-action="editGranted" data-tooltip="Edit the granted effect (makes it if there isn't one yet)"><i class="fa-solid fa-pen-to-square"></i></a>
+          {{/if}}
         </td>
         <td><a data-action="deleteTrigger" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a></td>
       </tr>
@@ -96,6 +107,7 @@
     </tbody>
   </table>
   </details>
+  {{/unless}}
 
   <details class="barbs-help">
     <summary>Syntax reference: values, conditions, on-hit statuses, triggers</summary>

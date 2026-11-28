@@ -223,8 +223,12 @@ get `@self` through `BarbsActiveEffect`, which also evaluates the arithmetic cor
   (rolling CR if it's a condition), damage the other creature, or post a reminder. Values are formulas with `@self`,
   `@other` (also `@target` / `@attacker` by role), and `@hit.damage` on hits.
 
-Granted and inflicted effects are **template** effects on the same item or actor (tick "Template" on the Barbs tab;
-templates never apply by themselves), or inline in ability automation (`EffectSpec.triggers`). Trigger damage isn't
+Granted and inflicted effects are **template** effects on the same item or actor (templates never apply by
+themselves), or inline in ability automation (`EffectSpec.triggers`). The easy way to make one is the edit button in a
+Grant/Inflict trigger's Effect column: it creates the template next to the effect (or opens it, if it exists) and
+links the trigger to it. A template's config says which effects grant it and has no Triggers section, item sheets
+list templates under the effect that grants them, and renaming a template updates the triggers that name it
+(`src/effects/templates.ts`). Trigger damage isn't
 an attack (no Evasion, blocks, or on-hit reactions), and chains stop two levels deep. Each action posts its own
 message with undo. Lightning Coil Cuirass, Accursed Armor, and Heart of Ice retaliate through triggers.
 

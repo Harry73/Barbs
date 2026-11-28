@@ -8,6 +8,7 @@ import {
     WEAPON_CATEGORIES,
     WEAPON_SCALING,
 } from "../config.ts";
+import { groupEffects, type EffectLike } from "../effects/templates.ts";
 import { getPassiveAutomation } from "../passives/index.ts";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -92,7 +93,9 @@ export class BarbsItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
             weaponScalingChoices: WEAPON_SCALING,
             damageTypeChoices: Object.fromEntries(DAMAGE_TYPES.map((d) => [d, d.capitalize()])),
             skillMaxPoints: SKILL_MAX_POINTS,
-            effects: [...item.effects],
+            // Templates are listed under the effect whose trigger grants them.
+            effectGroups: groupEffects(item.effects as unknown as Iterable<EffectLike>),
+            usable: !!(item.system as unknown as { use?: { enabled?: boolean } }).use?.enabled,
             automation: item.type === "passive" ? describePassive(item) : null,
         } as never;
     }
