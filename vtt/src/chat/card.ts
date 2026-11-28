@@ -87,7 +87,7 @@ export interface CardFlags {
     effectSource?: EffectSource;
     /** Enough to rebuild the use context (choices, effectiveness) when an effect button is clicked. */
     context?: ContextData;
-    /** On-hit statuses from the attacker's buffs, each offered as an Apply button. */
+    /** On-hit statuses from the attacker's buffs, applied by Apply to targets that were hit. */
     statuses?: OnHitStatus[];
     /** Per-target damage multipliers by token UUID, e.g. half damage past the first target of a line. */
     targetScales?: Record<string, number>;
@@ -335,7 +335,7 @@ function targetMeets(flags: CardFlags, target: Target, conditions: string | unde
 async function damageTarget(
     flags: CardFlags,
     target: Target,
-    { half = false, redirected = false, skipEvasion = false }: { half?: boolean; redirected?: boolean; skipEvasion?: boolean },
+    { redirected = false, skipEvasion = false }: { redirected?: boolean; skipEvasion?: boolean },
 ): Promise<boolean> {
     const damage = flags.damage!;
     const perTarget = (target.tokenUuid && flags.targetScales?.[target.tokenUuid]) || 1;
@@ -431,7 +431,7 @@ async function damageTarget(
             hits: applySwap(hits, flags, redirects),
             penetration,
             sourceName: redirects ? `${flags.sourceName} (redirect ${redirects}${flags.alterCourse ? `, +${50 * redirects}%` : ""})` : flags.sourceName,
-            scale: (half ? 0.5 : perTarget) * alter,
+            scale: perTarget * alter,
             trueDamage: damage.trueDamage,
             attack: true,
             unblockableChance: damage.unblockableChance,
@@ -462,11 +462,21 @@ async function targetEffectSpecs(flags: CardFlags): Promise<{ specs: EffectSpec[
     return { specs: resolve(automation.target, ctx) ?? [], ctx };
 }
 
+/** Is the target on the caster's side ("allies", by token disposition) or the other ("enemies")? */
+function onSide(flags: CardFlags, target: Target, side: "allies" | "enemies"): boolean {
+    const caster = fromUuidSync(flags.actorUuid) as Actor.Implementation | null;
+    const casterDisposition = (caster?.getActiveTokens?.(true)?.[0] as Token.Implementation | undefined)?.document.disposition ?? caster?.prototypeToken?.disposition;
+    const token = target.tokenUuid ? (fromUuidSync(target.tokenUuid) as TokenDocument.Implementation | null) : null;
+    const same = token?.disposition === casterDisposition || target.actor.uuid === caster?.uuid;
+    return side === "allies" ? same : !same;
+}
+
 /** Apply one of the card's effects to a target, rolling Condition Resist for conditions unless skipped. */
-async function applyTargetEffect(flags: CardFlags, target: Target, spec: EffectSpec, ctx: UseContext, skipResist: boolean): Promise<void> {
+async function applyTargetEffect(flags: CardFlags, target: Target, spec: EffectSpec, ctx: UseContext, skipResist: boolean, redirected = false): Promise<void> {
     const source = flags.effectSource!;
     const { actor } = target;
     // Distance-limited effects only land on targets in range of them (Glacial Crash: Frozen within 5 ft).
+    if (spec.affects && !onSide(flags, target, spec.affects)) return;
     if (spec.within !== undefined || spec.beyond !== undefined) {
         const distance = distanceFromCaster(flags, target);
         if (distance === null) {
@@ -476,7 +486,7 @@ async function applyTargetEffect(flags: CardFlags, target: Target, spec: EffectS
         if (spec.within !== undefined && distance > spec.within + 0.01) return;
         if (spec.beyond !== undefined && distance <= spec.beyond + 0.01) return;
     }
-    const redirects = Math.min(...((target.tokenUuid && flags.segments?.[target.tokenUuid]) || [0]));
+    const redirects = redirected ? 1 : Math.min(...((target.tokenUuid && flags.segments?.[target.tokenUuid]) || [0]));
     const resolved = spec.resolve ? spec.resolve(actor, spec, ctx, { redirects }) : spec;
     if (!resolved) return;
     const data = buildEffectData(resolved, source);
@@ -510,6 +520,26 @@ async function applyOnHitStatus(flags: CardFlags, target: Target, onHit: OnHitSt
     });
 }
 
+/**
+ * The card's Apply button: for each target, the damage (rolling Evasion), then, only if at least one hit landed, the
+ * card's effects, extra effects, and on-hit statuses (each condition rolling Condition Resist). Cards with no damage
+ * apply their effects to everyone. Shift-click skips the Evasion and Condition Resist rolls.
+ */
+async function applyAll(flags: CardFlags, targets: Target[], { redirected = false, skipRolls = false }: { redirected?: boolean; skipRolls?: boolean }): Promise<void> {
+    const effects = await targetEffectSpecs(flags);
+    for (const target of targets) {
+        const landed = flags.damage ? await damageTarget(flags, target, { redirected, skipEvasion: skipRolls }) : true;
+        if (!landed) continue;
+        if (effects) for (const spec of effects.specs) await applyTargetEffect(flags, target, spec, effects.ctx, skipRolls, redirected);
+        for (const data of flags.extraEffects ?? []) {
+            // Effects from passives (a bomb's condition), built when the card was made.
+            const resistible = !skipRolls && foundry.utils.getProperty(data, "system.category") === "condition";
+            await requestOnActor(target.actor, "effect", { data, options: { resistible, sourceName: flags.sourceName, attackContext: attackContext(flags) } });
+        }
+        for (const onHit of flags.statuses ?? []) await applyOnHitStatus(flags, target, onHit, skipRolls);
+    }
+}
+
 async function onCardButton(message: ChatMessage.Implementation, button: HTMLElement, event: MouseEvent) {
     if (button.dataset.cardAction === "undo") return requestUndo(message);
     const flags = message.getFlag(SYSTEM_ID as never, "card" as never) as unknown as CardFlags | undefined;
@@ -518,68 +548,40 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
     const { sourceName } = flags;
 
     switch (button.dataset.cardAction) {
+        case "redirectToAttacker": {
+            // Glass Armor / Reflective Barrier: the attack goes back at whoever made it.
+            if (!flags.damage) return;
+            const attacker = (await fromUuid(flags.actorUuid)) as Actor.Implementation | null;
+            if (!attacker) return;
+            const redirector = (game.user?.character as Actor.Implementation | null) ?? null;
+            const { hasAlterCourse } = await import("../abilities/use.ts");
+            const bonus = hasAlterCourse(redirector) ? 1.5 : 1;
+            await requestOnActor(attacker, "damage", {
+                hits: applySwap(flags.damage.hits, flags, 1),
+                penetration: flags.damage.penetration,
+                sourceName: `${sourceName} (redirected back${bonus > 1 ? ", Alter Course +50%" : ""})`,
+                scale: bonus,
+                trueDamage: flags.damage.trueDamage,
+                attack: true,
+            });
+            return;
+        }
+        // Cards posted before there was one Apply button have separate damage, half, and per-effect buttons; they all
+        // do what Apply does now.
         case "damage":
         case "halfDamage":
+        case "effect":
+        case "extra":
+        case "status":
         case "redirected":
-        case "redirectToAttacker": {
-            if (!flags.damage) return;
-            const half = button.dataset.cardAction === "halfDamage";
-            const action = button.dataset.cardAction;
-            if (action === "redirectToAttacker") {
-                // Glass Armor / Reflective Barrier: the attack goes back at whoever made it.
-                const attacker = (await fromUuid(flags.actorUuid)) as Actor.Implementation | null;
-                if (!attacker) return;
-                const redirector = (game.user?.character as Actor.Implementation | null) ?? null;
-                const { hasAlterCourse } = await import("../abilities/use.ts");
-                const bonus = hasAlterCourse(redirector) ? 1.5 : 1;
-                await requestOnActor(attacker, "damage", {
-                    hits: applySwap(flags.damage.hits, flags, 1),
-                    penetration: flags.damage.penetration,
-                    sourceName: `${sourceName} (redirected back${bonus > 1 ? ", Alter Course +50%" : ""})`,
-                    scale: bonus,
-                    trueDamage: flags.damage.trueDamage,
-                    attack: true,
-                });
-                return;
-            }
-            for (const target of targets) {
-                await damageTarget(flags, target, { half, redirected: action === "redirected", skipEvasion: event.shiftKey });
-            }
+        case "applyAll":
+            await applyAll(flags, targets, { redirected: button.dataset.cardAction === "redirected", skipRolls: event.shiftKey });
             break;
-        }
-        case "applyAll": {
-            // Damage first, then (only for targets the attack actually hit) its conditions and on-hit statuses.
-            const effects = await targetEffectSpecs(flags);
-            for (const target of targets) {
-                const landed = flags.damage ? await damageTarget(flags, target, { skipEvasion: event.shiftKey }) : true;
-                if (!landed) continue;
-                if (effects) for (const spec of effects.specs) await applyTargetEffect(flags, target, spec, effects.ctx, event.shiftKey);
-                for (const onHit of flags.statuses ?? []) await applyOnHitStatus(flags, target, onHit, event.shiftKey);
-            }
-            break;
-        }
         case "healing":
             for (const { actor } of targets) {
                 await requestOnActor(actor, "healing", { amount: flags.healing ?? 0, sourceName });
             }
             break;
-        case "effect": {
-            const effects = await targetEffectSpecs(flags);
-            const spec = effects?.specs[Number(button.dataset.index)];
-            if (!effects || !spec) return;
-            for (const target of targets) await applyTargetEffect(flags, target, spec, effects.ctx, event.shiftKey);
-            break;
-        }
-        case "extra": {
-            const data = flags.extraEffects?.[Number(button.dataset.index)];
-            if (!data) return;
-            // Conditions (a bomb's) roll Condition Resist; shift-click skips it.
-            const resistible = !event.shiftKey && foundry.utils.getProperty(data, "system.category") === "condition";
-            for (const { actor } of targets) {
-                await requestOnActor(actor, "effect", { data, options: { resistible, sourceName, attackContext: attackContext(flags) } });
-            }
-            break;
-        }
         case "shielding":
             for (const { actor } of targets) {
                 await requestOnActor(actor, "shielding", { amount: flags.shielding ?? 0, sourceName });
@@ -592,12 +594,6 @@ async function onCardButton(message: ChatMessage.Implementation, button: HTMLEle
                 await requestOnActor(actor, "resource", { resource: flags.drain.resource, delta: -flags.drain.amount, sourceName });
                 if (caster) await requestOnActor(caster, "resource", { resource: flags.drain.resource, delta: flags.drain.amount, sourceName });
             }
-            break;
-        }
-        case "status": {
-            const onHit = flags.statuses?.[Number(button.dataset.index)];
-            if (!onHit) return;
-            for (const target of targets) await applyOnHitStatus(flags, target, onHit, event.shiftKey);
             break;
         }
     }

@@ -63,8 +63,8 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
     },
     "Aeromancer/Buffeting Storm": {
         target: (ctx) => [
-            { name: "Buffeting Storm (ally)", category: "buff", changes: [stat("speed", ctx.scale(20))] },
-            { name: "Buffeting Storm (enemy)", category: "condition", resistible: false, changes: [stat("speed", -20)] },
+            { name: "Buffeting Storm (ally)", category: "buff", affects: "allies", changes: [stat("speed", ctx.scale(20))] },
+            { name: "Buffeting Storm (enemy)", category: "condition", affects: "enemies", resistible: false, changes: [stat("speed", -20)] },
         ],
         // While concentrating, a 5 mana push as a Minor Action.
         self: (ctx) =>
@@ -114,7 +114,7 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
     },
     "Air Duelist/Zephyr Shot": {
         attack: strike("1d8", { hits: 5 }),
-        notes: ["You may change targets between hits. Apply damage applies all 5 hits to each target, so split hits by hand."],
+        notes: ["You may change targets between hits. Apply applies all 5 hits to each target, so split hits by hand."],
     },
     "Air Duelist/Bow of Hurricanes": {
         self: [
@@ -520,7 +520,7 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
                 },
             },
         ],
-        notes: ["Each target rolls its condition chance (20%, +20% per redirect) when you click Apply Helix Beam."],
+        notes: ["Each target rolls its condition chance (20%, +20% per redirect) when you click Apply."],
     },
     "Mirror Mage/Scatter Shards": {
         choices: [pick("element", "Element", { ice: "Ice", light: "Light" })],
@@ -563,7 +563,7 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
     "Mirror Mage/Reflective Barrier": {
         notes: [
             "Create a 15 ft barrier in empty spaces within 30 ft until the end of the turn: it blocks line of sight and sends projectile attacks and line AOEs back at the attacker.",
-            "On the attacker's damage card, use the ↩ (redirect to attacker) button instead of Apply damage.",
+            "On the attacker's damage card, use the ↩ (redirect to attacker) button instead of Apply.",
         ],
     },
     "Mirror Mage/Remand": {

@@ -114,7 +114,7 @@ function concreteDamageType(type: string | undefined): DamageKey {
     return type === "healing" || (DAMAGE_TYPES as readonly string[]).includes(type ?? "") ? (type as DamageKey) : "physical";
 }
 
-/** An on-hit status granted by a buff (Accursed Blade's Curse), offered as an Apply button on the card. */
+/** An on-hit status granted by a buff (Accursed Blade's Curse), applied by the card's Apply to targets it hits. */
 export interface OnHitStatus {
     id: string;
     name: string;
@@ -909,7 +909,7 @@ export class AttackBuilder {
             if (delta) passiveDeltas.push(delta);
         }
 
-        // Chance-based on-hit statuses roll now; only the ones that land get an Apply button.
+        // Chance-based on-hit statuses roll now; only the ones that land go on the card.
         for (const { onHit, chance } of this.#chanceStatuses) {
             const roll = (await new Roll("1d100").evaluate()) as unknown as Roll;
             rolls.push(roll);

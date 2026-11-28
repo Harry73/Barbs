@@ -84,8 +84,8 @@ Where the rulebook and the old Roll20 implementation disagree, the rulebook wins
 
 1. Target tokens (T), then use an ability or weapon from the sheet.
 2. The card shows per-type damage (hover a row for the dice and multipliers), the crit roll for physical attacks,
-   any reminders, and Apply buttons.
-3. Anyone can click **Apply damage / healing / effect**. It applies to the clicker's targets, else the tokens that
+   any reminders, what it applies on hit, and an **Apply** button (plus separate ones for healing, shielding, and drains).
+3. Anyone can click **Apply**. It applies to the clicker's targets, else the tokens that
    were targeted when the card was posted, else their selected tokens. If they don't own the target, the GM's
    client does it (a GM must be online).
 4. Damage is reduced on the target: AC (flat, scaled by armor penetration), MR + per-element MR (percent, minus
@@ -122,7 +122,7 @@ stat is higher, and weapon-type checks passing if either weapon matches (the Rol
 section gets a **Dual wield** button that attacks with each weapon, one card per weapon. Holding a shield in each hand
 counts as dual wielding shields for the Sentinel's extra options, which only appear in dialogs when it's true.
 
-There's no to-hit roll in Barbs; the defender dodges instead. Clicking **Apply damage** on a targeted attack rolls each
+There's no to-hit roll in Barbs; the defender dodges instead. Clicking **Apply** on a targeted attack rolls each
 target's Evasion, once per hit, lowered by the attack's Accuracy and any "reduce evasion" affix; dodged hits deal
 nothing. Areas, drains, and attacks that can't miss skip the roll, and shift-clicking Apply skips it for a GM ruling.
 Then, if the target has a block, the attack's Unblockable Chance is rolled to see whether it applies. Lethality is
@@ -130,9 +130,13 @@ rolled per hit when the attack is made and called out on the card, and Lifesteal
 damage that actually lands, after defenses. Conditions work the same way: applying one rolls the target's Condition
 Resist (lowered by the attack's "reduce CR", raised by CR against that condition) and skips it if they resist.
 
-Attack cards that also inflict conditions have a combined **Apply** button: for each target, it applies the damage
-(rolling Evasion), then, only if at least one hit landed, the card's conditions and on-hit statuses (each rolling
-Condition Resist). A target who dodges gets nothing. The separate buttons are still there for one-off cases.
+A card has one **Apply** button: for each target, it applies the damage (rolling Evasion), then, only if at least one
+hit landed, everything the card inflicts: its conditions and buffs, passives' extra effects, and on-hit statuses (each
+condition rolling Condition Resist). A target who dodges gets nothing. A card with no damage applies its effects to
+every target. Shift-click skips the Evasion and Condition Resist rolls. Effects meant for one side (Buffeting Storm's
+ally buff and enemy slow) go only to that side, by token disposition. "Half damage to the enemy behind" attacks
+(Piercing Blow, Dual Shield Strike) scale by target order: target the main enemy first. Old cards' separate damage,
+half, and effect buttons all do what Apply does now.
 
 ## Passives
 

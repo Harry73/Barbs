@@ -92,6 +92,11 @@ export interface EffectSpec {
     within?: number;
     beyond?: number;
     /**
+     * Only creatures on this side of the caster (by token disposition) get it, for casts that give allies one thing
+     * and enemies another (Buffeting Storm). The card's one Apply button applies every effect, so it sorts them.
+     */
+    affects?: "allies" | "enemies";
+    /**
      * Adjust the effect for a specific target when it's applied (e.g. Weak is weaker on already-weakened targets).
      * `redirects` is how many times a reflected beam had bounced when it hit them. Return null to skip the target.
      */

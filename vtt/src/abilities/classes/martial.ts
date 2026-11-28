@@ -38,7 +38,7 @@ const blockFor = (name: string, percent: (ctx: { buffs: number }) => number) => 
     self: (ctx: { choices: Record<string, unknown>; buffs: number }) => (ctx.choices.who === "ally" ? [] : [blockSpec(name, percent(ctx))]),
     target: (ctx: { choices: Record<string, unknown>; buffs: number }) => (ctx.choices.who === "ally" ? [blockSpec(name, percent(ctx))] : []),
 });
-const BLOCK_NOTE = "Cast before the attack's damage is applied; Apply damage uses the block up.";
+const BLOCK_NOTE = "Cast before the attack's damage is applied; applying it uses the block up.";
 
 /** "You may reroll any damage dice, taking the higher result": each die is the best of two. */
 function bestOfTwo(dice: number, faces: number): string {
@@ -226,10 +226,15 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
             }),
     },
     "Champion/Piercing Blow": {
-        attack: strike("7d10"),
-        notes: [
-            "Pierces to an enemy within 15 ft behind the target for half damage (½), or full damage with a polearm or heavy throwing weapon.",
-        ],
+        // Target the enemy first, then the one within 15 ft behind it: the second takes half, or full damage with a
+        // polearm or heavy throwing weapon.
+        attack: (ctx) => {
+            const { weapon, offWeapon } = weaponsFor(ctx.actor, ctx.hand);
+            const categories = [weapon, offWeapon].map((w) => (w?.system as unknown as { weapon?: { category?: string } } | undefined)?.weapon?.category);
+            const full = categories.some((c) => ["polearm", "heavyThrowing"].includes(c ?? ""));
+            return strike("7d10", full ? {} : { targetScale: (index) => (index === 0 ? 1 : 0.5) });
+        },
+        notes: ["Target the enemy, then the one within 15 ft behind it (it takes half, or full with a polearm or heavy throwing weapon)."],
     },
     "Champion/Painful Blow": {
         choices: [yesNo("bow", "Made with a bow or light throwing weapon (+50% physical vulnerability)")],
@@ -774,8 +779,9 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
     },
     "Sentinel/Dual Shield Strike": {
         choices: [{ ...count("stacks", "Shield stacks spent"), resource: "shield", requires: "dualShields" as const }],
-        attack: (ctx) => strike(Number(ctx.choices.stacks) ? `6d10 + ${Number(ctx.choices.stacks)}d10` : "6d10"),
-        notes: ["Dash up to 20 ft first. Half damage to an enemy behind the target (½). As a reaction, it interrupts the attack or spell."],
+        // Target the enemy first, then the one behind it, which takes half.
+        attack: (ctx) => ({ ...strike(Number(ctx.choices.stacks) ? `6d10 + ${Number(ctx.choices.stacks)}d10` : "6d10"), targetScale: (index: number) => (index === 0 ? 1 : 0.5) }),
+        notes: ["Dash up to 20 ft first. Target the enemy, then the one behind it (it takes half). As a reaction, it interrupts the attack or spell."],
     },
     "Sentinel/Giga Drill Break": {
         choices: [count("stacks", "Shield stacks (while concentrating)"), yesNo("free", "Recast while concentrating (no stamina)")],
@@ -1295,7 +1301,7 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
                                 singleUse: true,
                                 modifiers: [
                                     { type: "bleedConvert", rollType: "physical", weapon: "ranged", value: 50 },
-                                    note("This Bleed ignores Condition Resist: shift-click its Apply button.", { weapon: "ranged" }),
+                                    note("This Bleed ignores Condition Resist: shift-click Apply.", { weapon: "ranged" }),
                                 ],
                             },
                         },

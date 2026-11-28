@@ -517,8 +517,17 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
         ),
     ];
 
-    // Per-target damage scaling for area attacks, e.g. half damage past the first target of a line.
+    // Per-target damage scaling: half damage past the first target of a line, or for a targeted attack, past the first
+    // creature you targeted (Piercing Blow's "an enemy behind the target"). Foundry keeps targets in the order they
+    // were targeted.
     const targetScales: Record<string, number> = {};
+    if (attack?.targetScale && !areaResult) {
+        const targeted = [...(game.user?.targets ?? [])];
+        targeted.forEach((token, index) => {
+            const uuid = token.document.uuid;
+            if (uuid) targetScales[uuid] = attack.targetScale!(index, { count: targeted.length, wasTargeted: true, anyTargeted: true, spotted: !!token.actor?.statuses.has("spotted") });
+        });
+    }
     if (attack?.targetScale && areaResult) {
         const anyTargeted = areaResult.tokens.some((t) => preTargets.has(t.document.uuid));
         areaResult.tokens.forEach((token, index) => {

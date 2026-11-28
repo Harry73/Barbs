@@ -38,7 +38,7 @@
     {{/each}}
   </div>
   {{/each}}
-  {{#if tierSections.length}}<p class="card-note">Apply damage gives each target the tier for its distance from you.</p>{{/if}}
+  {{#if tierSections.length}}<p class="card-note">Apply gives each target the tier for its distance from you.</p>{{/if}}
   {{#if trueDamage}}<p class="card-note">This damage ignores all defenses.</p>{{/if}}
 
   {{#each hits as |hit|}}
@@ -79,6 +79,11 @@
 
   {{#if consumed.length}}<p class="card-note">Consumed: {{#each consumed}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</p>{{/if}}
   {{#if selfEffects.length}}<p class="card-note">Applied to self: {{#each selfEffects}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</p>{{/if}}
+  {{#if (or targetEffects.length extraEffects.length statuses.length)}}
+  <p class="card-note">{{#if hasDamage}}On hit{{else}}Applies{{/if}}:
+    {{#each targetEffects as |e|}}{{e.label}}{{#unless @last}}, {{/unless}}{{/each}}{{#if (and targetEffects.length (or extraEffects.length statuses.length))}}, {{/if}}{{#each extraEffects as |e|}}{{e.label}}{{#unless @last}}, {{/unless}}{{/each}}{{#if (and extraEffects.length statuses.length)}}, {{/if}}{{#each statuses as |s|}}<span data-tooltip="From {{s.source}}">{{s.name}}</span>{{#unless @last}}, {{/unless}}{{/each}}
+  </p>
+  {{/if}}
   {{#if notes.length}}
   <ul class="card-notes">{{#each notes}}<li>{{{this}}}</li>{{/each}}</ul>
   {{/if}}
@@ -98,30 +103,19 @@
   {{#if (or hasDamage hasHealing targetEffects.length extraEffects.length statuses.length shielding drain canUndo)}}
   <div class="card-buttons">
     <div class="apply-buttons">
-      {{#if hasDamage}}
-      {{#if (or targetEffects.length statuses.length)}}
+      {{#if (or hasDamage targetEffects.length extraEffects.length statuses.length)}}
       <button type="button" class="apply-all" data-card-action="applyAll"
-        data-tooltip="Damage, then the conditions below to every target that didn't dodge (each rolls Evasion, then Condition Resist). Shift-click skips both rolls.">
+        data-tooltip="{{#if hasDamage}}Damage each target (rolling Evasion), then apply the effects below to every target that was hit (rolling Condition Resist for conditions).{{else}}Apply the effects to every target (rolling Condition Resist for conditions).{{/if}} Shift-click skips the rolls.">
         <i class="fa-solid fa-bolt"></i> Apply
       </button>
       {{/if}}
-      <button type="button" data-card-action="damage" data-tooltip="Damage only. Targeted attacks roll each target's Evasion first; shift-click skips it."><i class="fa-solid fa-burst"></i> Apply damage</button>
-      <button type="button" class="half" data-card-action="halfDamage" data-tooltip="Apply half damage">½</button>
+      {{#if hasDamage}}
       {{#if alterCourse}}<button type="button" class="half" data-card-action="redirected" data-tooltip="Apply as redirected once (Alter Course +50%)"><i class="fa-solid fa-share"></i></button>{{/if}}
       <button type="button" class="half" data-card-action="redirectToAttacker" data-tooltip="Redirect back at the attacker (Glass Armor, Reflective Barrier)"><i class="fa-solid fa-reply"></i></button>
       {{/if}}
       {{#if hasHealing}}<button type="button" data-card-action="healing"><i class="fa-solid fa-heart"></i> Apply healing</button>{{/if}}
       {{#if shielding}}<button type="button" data-card-action="shielding"><i class="fa-solid fa-shield-halved"></i> Apply {{shielding}} shielding</button>{{/if}}
       {{#if drain}}<button type="button" data-card-action="drain"><i class="fa-solid fa-droplet"></i> Drain {{drain.amount}} {{drain.resource}}</button>{{/if}}
-      {{#each targetEffects as |e|}}
-      <button type="button" data-card-action="effect" data-index="{{e.index}}"><i class="fa-solid fa-person-rays"></i> Apply {{e.label}}</button>
-      {{/each}}
-      {{#each extraEffects as |e|}}
-      <button type="button" data-card-action="extra" data-index="{{e.index}}"><i class="fa-solid fa-person-rays"></i> Apply {{e.label}}</button>
-      {{/each}}
-      {{#each statuses as |s|}}
-      <button type="button" data-card-action="status" data-index="{{s.index}}" data-tooltip="On hit, from {{s.source}}"><i class="fa-solid fa-person-rays"></i> Apply {{s.name}}</button>
-      {{/each}}
     </div>
     {{#if canUndo}}{{{undoButton}}}{{/if}}
   </div>

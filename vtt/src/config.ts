@@ -166,7 +166,7 @@ export type RollType = (typeof ROLL_TYPES)[number];
  *   canCrit      lets a non-physical roll crit ("your next spell is affected by your crit chance")
  *   comboChance  percent added to combo rolls (monk abilities)
  *   convert      all of the roll's damage becomes damageType ("bow damage is converted to air magic damage")
- *   status       an on-hit status (value is a status id like "cursed"), offered as an Apply button on the card
+ *   status       an on-hit status (value is a status id like "cursed"), applied by the card's Apply to targets it hits
  *   note         text reminder shown on the roll card
  */
 export const MODIFIER_TYPES = {

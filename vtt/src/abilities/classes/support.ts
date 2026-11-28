@@ -155,7 +155,7 @@ export const SUPPORT: Record<string, AbilityAutomation> = {
         choices: [elementChoice()],
         attack: (ctx) => spell("1d12", ctx.choices.element as DamageType, { hits: 3 }),
         notes: [
-            "Three darts. Divide them among up to 3 enemies: Apply damage applies all 3 to each target, so split them by hand. Each dart may be a different element (pick one here).",
+            "Three darts. Divide them among up to 3 enemies: Apply applies all 3 to each target, so split them by hand. Each dart may be a different element (pick one here).",
         ],
     },
     "Arcanist/Magic Ray": {
