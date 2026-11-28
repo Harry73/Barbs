@@ -80,6 +80,14 @@ export function monkDie(actor: Actor.Implementation | null): number {
     return MONK_DICE[Math.min(monkMastery(actor), MONK_DICE.length - 1)];
 }
 
+/**
+ * Monk abilities write their die as "dU" ("3dU", "1dU + 5"), the size from monk mastery. Swap in the real die before a
+ * formula is rolled: Foundry has no "u" die and throws on it.
+ */
+export function withMonkDie(formula: string, actor: Actor.Implementation | null): string {
+    return formula.includes("dU") ? formula.replace(/(\d*)dU\b/g, `$1d${monkDie(actor)}`) : formula;
+}
+
 export function baseComboChance(actor: Actor.Implementation | null): number {
     return MONK_COMBO[Math.min(monkMastery(actor), MONK_COMBO.length - 1)];
 }

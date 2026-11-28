@@ -16,7 +16,7 @@ import { applyEffectToActor, applyHealingToActor, applyShieldingToActor } from "
 import { AttackBuilder, mainWeapon, offhandWeapon, weaponsFor, type AttackResult, type Hand } from "../rolls/attack.ts";
 import { bounceResult, postCard, type CardContent, type CardFlags } from "../chat/card.ts";
 import type { UndoRecord } from "../chat/undo.ts";
-import { activePassives, adjustResource } from "../passives/index.ts";
+import { activePassives, adjustResource, withMonkDie } from "../passives/index.ts";
 import type { PassiveDelta, RollInfo } from "../passives/types.ts";
 import { affected, aimShots, placeArea, type AreaResult, type Shot } from "./area.ts";
 import { concentrationMarkerData, concentrationMarkers } from "../concentration.ts";
@@ -245,7 +245,7 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
     const rolls: Record<string, number> = {};
     const rollNotes: string[] = [];
     for (const [key, formula] of Object.entries(automation?.rolls ?? {})) {
-        const roll = await new Roll(formula).evaluate();
+        const roll = await new Roll(withMonkDie(formula, actor)).evaluate();
         rolls[key] = roll.total ?? 0;
         rollNotes.push(`Rolled ${key}: ${formula} = ${roll.total}`);
     }
@@ -416,7 +416,7 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
         await applyHealingToActor(actor, result.totals[automation.healFrom] ?? 0, opts.title);
     }
     for (const { resource, formula } of resolve(automation?.gain, ctx) ?? []) {
-        const roll = await new Roll(formula, actor.getRollData()).evaluate();
+        const roll = await new Roll(withMonkDie(formula, actor), actor.getRollData()).evaluate();
         const delta = await adjustResource(actor, resource, roll.total ?? 0);
         if (delta) undo.passiveDeltas!.push(delta);
         selfNotes.push(`Gained ${delta?.delta ?? 0} ${resource} (${roll.formula} = ${roll.total}).`);
@@ -424,7 +424,7 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
     const shielding = resolve(automation?.shielding, ctx);
     if (shielding?.self) await applyShieldingToActor(actor, shielding.amount, opts.title);
     for (const { resource, formula } of resolve(automation?.restore, ctx) ?? []) {
-        const roll = await new Roll(formula, actor.getRollData()).evaluate();
+        const roll = await new Roll(withMonkDie(formula, actor), actor.getRollData()).evaluate();
         const { value, max } = (actor.system as unknown as CreatureModel).derived.resources[resource];
         const gained = Math.min(max - value, roll.total ?? 0);
         await actor.update({ system: { resources: { [resource]: { value: value + gained } } } } as never);
@@ -514,7 +514,7 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
     const drain = resolve(automation?.drain, ctx);
     let drainAmount = 0;
     if (drain) {
-        const roll = await new Roll(drain.formula, actor.getRollData()).evaluate();
+        const roll = await new Roll(withMonkDie(drain.formula, actor), actor.getRollData()).evaluate();
         drainAmount = roll.total ?? 0;
         result?.rolls.push(roll as unknown as Roll);
     }

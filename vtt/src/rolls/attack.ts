@@ -12,7 +12,7 @@ import { actorData, actorOptions, distanceBetween, effectAppliesToAttack, rollOp
 import { evaluateNumber, usesTarget } from "../rules/formula.ts";
 import { ELEMENTS, RANGED_WEAPONS, STATUSES, type ModifierRollType, type RollType, type StatKey } from "../config.ts";
 import { snapshotEffect, type RemovedEffect } from "../chat/undo.ts";
-import { activePassives, adjustResource, baseComboChance, monkDie, setResource } from "../passives/index.ts";
+import { activePassives, adjustResource, baseComboChance, setResource, withMonkDie } from "../passives/index.ts";
 import type { PassiveDelta, RollInfo } from "../passives/types.ts";
 import { effectFormulaData, type BarbsEffectModel, type RollModifierData } from "../data/effect.ts";
 import type { CreatureModel } from "../data/actor/creature.ts";
@@ -766,9 +766,9 @@ export class AttackBuilder {
         const results: AttackHit[] = [];
         const totals: AttackResult["totals"] = {};
 
-        // Monk abilities use "dU", the die size from monk mastery.
-        const die = monkDie(this.actor);
-        for (const [type, terms] of this.#damage) this.#damage.set(type, terms.map((t) => t.replace(/(\d*)dU\b/g, `$1d${die}`)));
+        // Monk abilities use "dU", the die size from monk mastery. On-crit and target-dependent damage are rolled
+        // separately below, so they're swapped there.
+        for (const [type, terms] of this.#damage) this.#damage.set(type, terms.map((t) => withMonkDie(t, this.actor)));
 
         if (this.#upgradeDice) {
             const next: Record<string, string> = { 4: "6", 6: "8", 8: "10", 10: "12", 12: "20", 20: "20" };
@@ -809,7 +809,7 @@ export class AttackBuilder {
                 for (const { modifier, source, effect } of this.#onCrit) {
                     if (modifier.type === "damage") {
                         const type = (this.#convert ?? (modifier.damageType || "physical")) as DamageKey;
-                        damage.set(type, [...(damage.get(type) ?? []), `(${modifier.value})`]);
+                        damage.set(type, [...(damage.get(type) ?? []), `(${withMonkDie(modifier.value, this.actor)})`]);
                     } else if (modifier.type === "multiplier") {
                         multipliers = withMultiplier(multipliers, (modifier.damageType || "all") as MultiplierKey, this.#poolOf(effect), this.#number(modifier.value, effect));
                     } else if (!critApplied) {
@@ -845,7 +845,7 @@ export class AttackBuilder {
                     conditional.push({ conditions: d.conditions, type, amount: 0, formula: d.formula, factor });
                     continue;
                 }
-                const roll = (await new Roll(d.formula, rollData).evaluate({ maximize: this.#maximize })) as unknown as Roll;
+                const roll = (await new Roll(withMonkDie(d.formula, this.actor), rollData).evaluate({ maximize: this.#maximize })) as unknown as Roll;
                 rolls.push(roll);
                 conditional.push({ conditions: d.conditions, type, amount: finalDamage(roll.total ?? 0, multiplierFor(type, multipliers), crit?.factor ?? 1) });
             }
