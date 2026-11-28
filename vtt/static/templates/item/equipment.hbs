@@ -69,7 +69,7 @@
   {{else}}
   <p class="hint">No bonuses yet.</p>
   {{/each}}
-  <details class="barbs-all-effects">
+  <details class="barbs-all-effects" {{#if allEffectsOpen}}open{{/if}}>
     <summary>All effects ({{effectCount}})</summary>
     {{> "systems/barbs/templates/item/effects-list.hbs"}}
   </details>

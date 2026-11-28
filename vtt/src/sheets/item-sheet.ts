@@ -135,8 +135,19 @@ export class BarbsItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
             usable: !!(item.system as unknown as { use?: { enabled?: boolean } }).use?.enabled,
             bonusSummary: bonusSummary(item),
             effectCount: item.effects.size,
+            allEffectsOpen: this.#allEffectsOpen,
             automation: item.type === "passive" ? describePassive(item) : null,
         } as never;
+    }
+
+    /** Whether the "All effects" section is open, kept across re-renders (deleting an effect re-renders the sheet). */
+    #allEffectsOpen = false;
+
+    protected override async _onRender(context: never, options: never): Promise<void> {
+        await super._onRender(context, options);
+        this.element.querySelector<HTMLDetailsElement>("details.barbs-all-effects")?.addEventListener("toggle", (event) => {
+            this.#allEffectsOpen = (event.currentTarget as HTMLDetailsElement).open;
+        });
     }
 
     #effectFromElement(element: HTMLElement): ActiveEffect.Implementation | undefined {
