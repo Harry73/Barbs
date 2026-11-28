@@ -677,7 +677,8 @@ try {
                 return { flags: new foundry.data.fields.DocumentFlagsField() };
             }
         }
-        const stored = (card: object) => (new Flags({ flags: { barbs: { card } } }) as any)._source.flags.barbs.card;
+        // fvtt-types' DataModel constructor typing doesn't fit a schema-less stand-in like this.
+        const stored = (card: object) => new (Flags as any)({ flags: { barbs: { card } } })._source.flags.barbs.card;
         const uuid = "Scene.abc.Token.def";
         // The trap itself, so this test fails if Foundry ever stops expanding keys (and the pairs could be dropped).
         assert.equal(stored({ targetScales: { [uuid]: 1.5 } }).targetScales[uuid], undefined, "a UUID key is mangled");
