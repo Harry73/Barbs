@@ -269,7 +269,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             .filter((e) => e.system.isHeldWeapon)
             .map((e) => ({ ...e, hand: twoWeapons ? (e.item.id === mainId ? "Main hand" : e.item.id === offId ? "Offhand" : "") : "" }));
 
-        const actions = this.#actionsTab(sortedAbilityGroups, passives, equipment, heldWeapons);
+        const actions = await this.#actionsTab(sortedAbilityGroups, passives, equipment, heldWeapons);
 
         // One section per slot, in a fixed order, empty ones included so it's clear what's free. Equipped items
         // first, then by name.
@@ -474,12 +474,14 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
      * can't pay the cost or isn't holding the weapon the ability is used with. Adding and removing things stays on
      * the Abilities and Inventory tabs.
      */
-    #actionsTab(
+    async #actionsTab(
         abilityGroups: { abilities: unknown[] }[],
         passives: { resources: unknown[]; states: unknown[]; actions: unknown[] }[],
         equipment: { item: Item.Implementation; system: EquipmentModel }[],
         heldWeapons: { system: EquipmentModel }[],
     ) {
+        const enrich = (html: string, item: Item.Implementation) =>
+            foundry.applications.ux.TextEditor.implementation.enrichHTML(html, { relativeTo: item, secrets: item.isOwner });
         const resources = this.barbsActor.creature.derived.resources as Record<string, { value: number }>;
         const heldCategories = heldWeapons.map((w) => w.system.weapon.category).filter(Boolean);
         const groups = ACTION_GROUPS.map((g) => ({ ...g, abilities: [] as Record<string, unknown>[] }));
@@ -493,6 +495,8 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
                 .find((g) => g.id === actionGroup(a.action))!
                 .abilities.push({
                     ...entry,
+                    // Enriched so @UUID links and inline rolls in the rulebook text work.
+                    description: await enrich(a.description, entry.item),
                     cantAfford: cost.value != null && !!cost.resource && have < cost.value,
                     wrongWeapon: holdsExpectedWeapon(expected, heldCategories) ? "" : `Used with a ${names}, and you're not holding one`,
                     // "1 Major Action or Reaction": listed with its main action, marked as also a reaction.
