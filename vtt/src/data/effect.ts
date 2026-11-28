@@ -23,6 +23,8 @@ export interface RollModifierData {
     weapon: string;
     /** Formula for damage, number for percentages, text for notes. */
     value: string;
+    /** For "stat" bonuses: the change key it adds to (`system.stats.ac.bonus`). */
+    key?: string;
     /** Only on a crit ("On crit: 2d10 fire damage"). Damage and multipliers apply to each hit that crits. */
     onCrit?: boolean;
     /**
@@ -127,6 +129,7 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
                     value: new fields.StringField({ required: true, blank: true, initial: "" }),
                     onCrit: new fields.BooleanField({ initial: false }),
                     conditions: new fields.StringField({ required: true, blank: true, initial: "" }),
+                    key: new fields.StringField({ required: true, blank: true, initial: "" }),
                 }),
             ),
         };
@@ -141,6 +144,20 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
     declare template: boolean;
     declare endsWithCombat: boolean;
     declare triggers: TriggerData[];
+
+    /**
+     * "Stat" bonuses are always-on character stats, so they ride Foundry's own change engine: each becomes an "add"
+     * change (formulas included, see BarbsActiveEffect) when the effect is prepared. That keeps one list of bonuses on
+     * the Barbs tab, while stats still apply the way core changes do.
+     */
+    override prepareDerivedData(): void {
+        super.prepareDerivedData?.();
+        const changes = (this as unknown as { changes: object[] }).changes;
+        for (const m of this.modifiers ?? []) {
+            if (m.type !== "stat" || !m.key || m.value === "") continue;
+            changes.push({ key: m.key, type: "add", value: m.value, phase: "initial", priority: 20 });
+        }
+    }
 
     /**
      * Effects on equipment only apply while it's equipped. Otherwise defer to core (expired effects are suppressed).

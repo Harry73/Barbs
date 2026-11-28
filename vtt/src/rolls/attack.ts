@@ -498,27 +498,8 @@ export class AttackBuilder {
     }
 
     /** Fold in roll modifiers from every active effect on the actor (including transferred item effects). */
-    /**
-     * Always-on stats from gear and buffs: the Stats tab's damage multipliers, penetration, and crit damage. They're
-     * summed into one "Stats" source, the way the Roll20 API grouped every item's bonuses under the character.
-     * A summon's rolls also get its summoner's Minion Damage.
-     */
+    /** A summon's rolls get its summoner's Minion Damage and Minion Lethality. */
     #applyStatBuckets(): void {
-        const creature = this.#creature.derived;
-        for (const [key, percent] of Object.entries(creature.damageMultiplier ?? {})) {
-            if (percent) this.addMultiplier(key as MultiplierKey, "Stats", percent);
-        }
-        for (const [key, percent] of Object.entries(creature.penetration ?? {})) {
-            if (!percent) continue;
-            const types: DamageKey[] = key === "allMagic" ? [...ELEMENTS] : [key as DamageKey];
-            for (const type of types) this.#penetration[type] = (this.#penetration[type] ?? 0) + percent;
-        }
-        this.#critDamage += creature.combat?.critDamage ?? 0;
-        this.#accuracy += creature.combat?.accuracy ?? 0;
-        this.#lethality += creature.combat?.lethality ?? 0;
-        this.#lifesteal += creature.combat?.lifesteal ?? 0;
-        this.#unblockable += creature.combat?.unblockable ?? 0;
-
         const casterUuid = foundry.utils.getProperty(this.actor, `flags.${SYSTEM_ID}.summon.casterUuid`) as string | undefined;
         const caster = casterUuid ? (fromUuidSync(casterUuid) as Actor.Implementation | null) : null;
         const casterStats = (caster?.system as unknown as CreatureModel | undefined)?.derived.combat;
@@ -536,8 +517,9 @@ export class AttackBuilder {
             let used = false;
             for (const modifier of system.modifiers ?? []) {
                 if (!this.#modifierApplies(modifier)) continue;
-                // Defender-side modifiers only matter when the bearer is attacked (see effects/incoming.ts).
-                if (INCOMING_MODIFIER_TYPES.has(modifier.type)) continue;
+                // Defender-side modifiers only matter when the bearer is attacked (see effects/incoming.ts), and stat
+                // bonuses are applied as changes when the effect is prepared.
+                if (INCOMING_MODIFIER_TYPES.has(modifier.type) || modifier.type === "stat") continue;
                 const holds = this.#conditionsHold(modifier, (base ??= this.rollOptions));
                 if (!holds) continue;
                 used = true;

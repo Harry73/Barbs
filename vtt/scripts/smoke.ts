@@ -327,6 +327,22 @@ try {
     const oldMisc = new itemModels.EquipmentModel({ slot: "misc", equipped: true });
     assert.equal(oldMisc.slot, "none", "items saved in the dropped misc slot load as unslotted");
 
+    // Stat bonus rows become ordinary "add" changes when the effect is prepared.
+    {
+        const { BarbsEffectModel } = await vite.ssrLoadModule("/src/data/effect.ts");
+        const host: any = new StandIn();
+        const model: any = new BarbsEffectModel(
+            { modifiers: [{ type: "stat", key: "system.stats.ac.bonus", value: "10" }, { type: "multiplier", damageType: "fire", value: "20" }] },
+            { parent: host },
+        );
+        model.prepareDerivedData();
+        assert.deepEqual(
+            model.changes.map((c: any) => [c.key, c.type, c.value]),
+            [["system.stats.ac.bonus", "add", "10"]],
+            "stat bonus rows (and only those) become changes",
+        );
+    }
+
     const { parseDuration } = await vite.ssrLoadModule("/src/effects/apply.ts");
     assert.deepEqual(parseDuration("1 minute"), { value: 5, units: "rounds", expiry: "turnEnd" });
     assert.deepEqual(parseDuration("20 seconds"), { value: 1, units: "rounds", expiry: "turnEnd" });

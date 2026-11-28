@@ -20,6 +20,43 @@ type ActionHandler = (this: BarbsEffectConfig, event: PointerEvent, target: HTML
 const { footer, ...coreParts } = ActiveEffectConfig.PARTS as Record<string, object>;
 const coreTabs = (ActiveEffectConfig.TABS as unknown as { sheet: { tabs: object[] } }).sheet;
 
+/** Attack bonuses by group, in the order the Bonuses picker lists them. */
+const ROLL_BONUS_GROUPS: [string, string[]][] = [
+    [
+        "Attack",
+        ["damage", "multiplier", "penetration", "critChance", "critDamage", "canCrit", "cannotMiss", "comboChance", "convert", "accuracy", "lethality", "lifesteal", "unblockable"],
+    ],
+    ["On hit", ["status", "bleedConvert", "shred", "acReduction", "crShred", "evShred", "vulnerability", "buffStrip", "forcedMovement"]],
+    ["Defense (when you're attacked)", ["incomingDamage", "incomingAC", "incomingACPercent", "incomingEvasion", "incomingCR"]],
+    ["Other", ["note"]],
+];
+
+/**
+ * Everything a bonus row can be: character stats (stored as "stat" rows, applied as changes) and attack, on-hit, and
+ * defense bonuses (roll modifiers). Identifiers are "stat:<change key>" or "roll:<modifier type>".
+ */
+function bonusCatalog(): { identifier: string; label: string; search: string }[] {
+    const stats = changeKeyGroups().flatMap((g) =>
+        g.keys.map((k) => ({ identifier: `stat:${k.key}`, label: `${k.label} (${g.label})`, search: `${k.label} ${g.label} stat ${k.key}`.toLowerCase() })),
+    );
+    const rolls = ROLL_BONUS_GROUPS.flatMap(([group, types]) =>
+        types.map((t) => {
+            const label = (MODIFIER_TYPES as Record<string, string>)[t] ?? t;
+            return { identifier: `roll:${t}`, label: `${label} (${group})`, search: `${label} ${group} ${t}`.toLowerCase() };
+        }),
+    );
+    return [...rolls, ...stats];
+}
+
+/** Stat bonuses are always on, so a stat row's limit fields don't apply: grey them out. */
+function syncBonusRow(row: HTMLElement): void {
+    const isStat = row.querySelector<HTMLInputElement>('input[name$=".type"]')?.value === "stat";
+    for (const field of row.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-limit]")) {
+        field.disabled = isStat;
+        field.closest("td")?.classList.toggle("muted", isStat);
+    }
+}
+
 /**
  * Core effect config plus a "Barbs" tab for the effect's category, single-use flag, and roll modifiers. This is how
  * players build ad-hoc buffs by hand, like the Roll20 sheet's "Effect Creator" box.
@@ -124,12 +161,53 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
         await super._onRender(context, options);
         this.#pickerListeners?.abort();
         this.#pickerListeners = new AbortController();
-        const entries = changeKeyGroups().flatMap((g) =>
+
+        // Changes tab: the raw change key, picked from every key Barbs creatures understand.
+        const keyEntries = changeKeyGroups().flatMap((g) =>
             g.keys.map((k) => ({ identifier: k.key, label: `${k.label} (${g.label})`, search: `${k.label} ${g.label} ${k.key}`.toLowerCase() })),
         );
-        const labels = new Map(entries.map((e) => [e.identifier, e.label]));
+        const keyLabels = new Map(keyEntries.map((e) => [e.identifier, e.label]));
         for (const input of this.element.querySelectorAll<HTMLInputElement>('.tab.changes input[name$=".key"]')) {
-            this.#makeKeyPicker(input, entries, labels);
+            const hidden = document.createElement("input");
+            hidden.type = "hidden";
+            hidden.name = input.name;
+            hidden.value = input.value;
+            const search = document.createElement("input");
+            search.type = "text";
+            search.className = "barbs-key-search";
+            search.disabled = input.disabled;
+            search.placeholder = "Search: AC, fire resist, stun CR...";
+            input.replaceWith(hidden, search);
+            this.#attachPicker(search, keyEntries, {
+                label: () => (hidden.value ? (keyLabels.get(hidden.value) ?? hidden.value) : ""),
+                choose: (key) => {
+                    hidden.value = key;
+                    search.dataset.tooltip = key;
+                },
+                // A full path typed by hand, for keys the list doesn't have.
+                custom: (text) => (text.startsWith("system.") ? text : null),
+            });
+            search.dataset.tooltip = hidden.value;
+        }
+
+        // Barbs tab: each bonus row picks its kind (a stat, or an attack/on-hit/defense bonus) from one list.
+        const bonusEntries = bonusCatalog();
+        const bonusLabels = new Map(bonusEntries.map((e) => [e.identifier, e.label]));
+        for (const search of this.element.querySelectorAll<HTMLInputElement>("input.barbs-bonus-search")) {
+            const row = search.closest<HTMLElement>("tr")!;
+            const type = row.querySelector<HTMLInputElement>('input[name$=".type"]')!;
+            const key = row.querySelector<HTMLInputElement>('input[name$=".key"]')!;
+            const current = () => (type.value === "stat" ? `stat:${key.value}` : `roll:${type.value}`);
+            this.#attachPicker(search, bonusEntries, {
+                label: () => bonusLabels.get(current()) ?? (type.value === "stat" ? key.value : type.value),
+                choose: (id) => {
+                    const [kind, value] = [id.slice(0, id.indexOf(":")), id.slice(id.indexOf(":") + 1)];
+                    type.value = kind === "stat" ? "stat" : value;
+                    key.value = kind === "stat" ? value : "";
+                    syncBonusRow(row);
+                },
+            });
+            syncBonusRow(row);
         }
     }
 
@@ -139,25 +217,16 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
         this.#pickerListeners = null;
     }
 
-    #makeKeyPicker(
-        original: HTMLInputElement,
+    /**
+     * A searchable picker on a text box, using core's Autocomplete menu: typing filters the entries (every word must
+     * appear in the label or search text), arrows and Enter pick. Leaving without picking restores the current choice,
+     * and Enter never submits (and closes) the sheet.
+     */
+    #attachPicker(
+        search: HTMLInputElement,
         entries: { identifier: string; label: string; search: string }[],
-        labels: Map<string, string>,
+        { label, choose, custom }: { label: () => string; choose: (id: string) => void; custom?: (text: string) => string | null },
     ): void {
-        const hidden = document.createElement("input");
-        hidden.type = "hidden";
-        hidden.name = original.name;
-        hidden.value = original.value;
-
-        const search = document.createElement("input");
-        search.type = "text";
-        search.className = "barbs-key-search";
-        search.disabled = original.disabled;
-        search.placeholder = "Search: AC, fire pen, stun CR...";
-        const shown = () => (hidden.value ? (labels.get(hidden.value) ?? hidden.value) : "");
-        search.value = shown();
-        search.dataset.tooltip = hidden.value;
-
         const Autocomplete = foundry.applications.ux.Autocomplete as unknown as {
             implementation: new (options: { onSelect: (identifier: string) => void }) => {
                 activate(target: HTMLElement, entries: { identifier: string; label: string }[]): void;
@@ -166,20 +235,18 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
                 element: HTMLElement | null;
             };
         };
-        const choose = (key: string) => {
-            hidden.value = key;
-            search.value = shown();
-            search.dataset.tooltip = key;
+        search.value = label();
+        const pick = (id: string) => {
+            choose(id);
+            search.value = label();
         };
-        const menu = new Autocomplete.implementation({ onSelect: choose });
+        const menu = new Autocomplete.implementation({ onSelect: pick });
         const refresh = () => {
-            // Every word typed has to appear somewhere in the label, group, or key. Empty search lists everything.
             const words = search.value.toLowerCase().split(/\s+/).filter(Boolean);
-            const typingFresh = search.value !== shown();
+            const typingFresh = search.value !== label();
             const matches = typingFresh ? entries.filter((e) => words.every((w) => e.search.includes(w))) : entries;
             if (!matches.length) return menu.dismiss();
             menu.activate(search, matches);
-            // Highlight the best match while searching, so Enter picks it.
             if (typingFresh) menu.select(0);
         };
         search.addEventListener("focus", () => {
@@ -189,21 +256,18 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
         search.addEventListener("click", refresh);
         search.addEventListener("input", refresh);
         search.addEventListener("keydown", (event) => {
-            // Enter on a menu entry is handled by the menu before this runs. Otherwise Enter would submit (and
-            // close) the sheet, so swallow it, unless it's a full path typed by hand for a key the list doesn't have.
             if (event.key !== "Enter") return;
             event.preventDefault();
-            if (search.value.trim().startsWith("system.")) choose(search.value.trim());
-            else search.value = shown();
+            const own = custom?.(search.value.trim());
+            if (own) pick(own);
+            else search.value = label();
             menu.dismiss();
         });
-        // Leaving without picking puts the current choice back.
         search.addEventListener("blur", () => {
             setTimeout(() => {
-                if (document.activeElement !== search) search.value = shown();
+                if (document.activeElement !== search) search.value = label();
             }, 200);
         });
-        // Clicking anywhere else closes the menu.
         document.body.addEventListener(
             "click",
             (event) => {
@@ -213,8 +277,6 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
             },
             { signal: this.#pickerListeners!.signal },
         );
-
-        original.replaceWith(hidden, search);
     }
 
     #currentModifiers(): RollModifierData[] {
@@ -226,7 +288,7 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
 
     static async #onAddModifier(this: BarbsEffectConfig) {
         const modifiers = this.#currentModifiers();
-        modifiers.push({ type: "damage", rollType: "physical", damageType: "physical", weapon: "", value: "" });
+        modifiers.push({ type: "stat", rollType: "all", damageType: "all", weapon: "", value: "", key: "" });
         await this.submit({ updateData: { system: { modifiers } } } as never);
     }
 

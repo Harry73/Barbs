@@ -37,26 +37,16 @@ export function changeKeyGroups(): ChangeKeyGroup[] {
         },
         {
             label: "Stats: flat (\"+X\", \"+X%\")",
-            keys: stats.map(([key, s]) => ({ key: `system.stats.${key}.bonus`, label: `${s.label} +X${s.unit === "%" ? "%" : ""}` })),
+            // Crit chance bonuses are attack bonuses (roll modifiers), so they're not offered as a stat here.
+            keys: stats.filter(([key]) => key !== "critChance").map(([key, s]) => ({ key: `system.stats.${key}.bonus`, label: `${s.label} +X${s.unit === "%" ? "%" : ""}` })),
         },
         {
             label: "Stats: multiplied (\"increased by X%\")",
-            keys: stats.map(([key, s]) => ({ key: `system.stats.${key}.multiplier`, label: `${s.label} increased by X%` })),
+            keys: stats.filter(([key]) => key !== "critChance").map(([key, s]) => ({ key: `system.stats.${key}.multiplier`, label: `${s.label} increased by X%` })),
         },
         {
             label: "Combat stats",
             keys: Object.entries(COMBAT_STATS).map(([key, c]) => ({ key: `system.combat.${key}`, label: `${c.label}${c.unit === "%" ? " %" : c.unit}` })),
-        },
-        {
-            label: "Damage multipliers (increased damage %)",
-            keys: MULTIPLIER_STAT_KEYS.map((k) => ({ key: `system.damageMultiplier.${k}`, label: `${damageBucketLabel(k)} damage %` })),
-        },
-        {
-            label: "Penetration %",
-            keys: PENETRATION_STAT_KEYS.map((k) => ({
-                key: `system.penetration.${k}`,
-                label: k === "physical" ? "Armor (AC) penetration %" : `${damageBucketLabel(k)} magic penetration %`.replace("Psychic magic", "Psychic"),
-            })),
         },
         {
             label: "Element resist (extra MR %)",

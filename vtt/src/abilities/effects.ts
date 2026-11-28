@@ -21,6 +21,11 @@ export interface EffectSource {
 /** Flags can't hold Infinity (it serializes to null), so "stacks without limit" is stored as a large number. */
 const UNLIMITED_STACKS = 999;
 
+/** A plain "add" to a Barbs stat ("system.stats.ac.bonus"), which becomes a stat bonus row. */
+function isStatBonus(change: { key: string; type?: string }): boolean {
+    return (change.type ?? "add") === "add" && change.key.startsWith("system.");
+}
+
 /** Turn a catalog effect spec into ActiveEffect creation data. */
 export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<string, unknown> {
     const durationText = spec.duration ?? source.duration;
@@ -53,7 +58,11 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
                 affects: spec.pulse?.affects ?? "enemies",
             },
             dot: { formula: spec.dot?.formula ?? "", damageType: spec.dot?.type ?? "physical" },
-            changes: (spec.changes ?? []).map((c) => ({ key: c.key, type: c.type ?? "add", value: String(c.value), phase: "initial" })),
+            // Plain "add" changes to Barbs stats are written as Bonuses rows (stat bonuses), so they show in the same
+            // list as everything else on the Barbs tab; other change types stay core changes.
+            changes: (spec.changes ?? [])
+                .filter((c) => !isStatBonus(c))
+                .map((c) => ({ key: c.key, type: c.type ?? "add", value: String(c.value), phase: "initial" })),
             triggers: (spec.triggers ?? []).map((t) => ({
                 event: t.event,
                 conditions: t.conditions ?? "",
@@ -68,15 +77,28 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
                 // The granted/inflicted effect, built now with the same source (caster, effectiveness).
                 effectData: t.effect ? buildEffectData(t.effect, source) : null,
             })),
-            modifiers: (spec.modifiers ?? []).map((m) => ({
-                type: m.type,
-                rollType: m.rollType ?? "all",
-                damageType: m.damageType ?? "all",
-                weapon: m.weapon ?? "",
-                value: String(m.value),
-                onCrit: !!m.onCrit,
-                conditions: m.conditions ?? "",
-            })),
+            modifiers: [
+                ...(spec.changes ?? []).filter(isStatBonus).map((c) => ({
+                    type: "stat",
+                    rollType: "all",
+                    damageType: "all",
+                    weapon: "",
+                    value: String(c.value),
+                    onCrit: false,
+                    conditions: "",
+                    key: c.key,
+                })),
+                ...(spec.modifiers ?? []).map((m) => ({
+                    type: m.type,
+                    rollType: m.rollType ?? "all",
+                    damageType: m.damageType ?? "all",
+                    weapon: m.weapon ?? "",
+                    value: String(m.value),
+                    onCrit: !!m.onCrit,
+                    conditions: m.conditions ?? "",
+                    key: "",
+                })),
+            ],
         },
         flags: {
             [SYSTEM_ID]: {

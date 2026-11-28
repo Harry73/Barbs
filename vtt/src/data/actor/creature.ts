@@ -9,8 +9,6 @@ import {
     STATS,
     STATUSES,
     COMBAT_STAT_KEYS,
-    MULTIPLIER_STAT_KEYS,
-    PENETRATION_STAT_KEYS,
     SKILL_NAMES,
     skillKey,
     type CombatStatKey,
@@ -167,12 +165,8 @@ export interface CreatureDerived {
     conditionImmunity: Record<string, number>;
     /** Extra Downed Health. Effects target `system.downedBonus` (Dragonblood: Downed Health is 200). */
     downedBonus: number;
-    /** Accuracy, lethality, lifesteal, and the rest of the Roll20 sheet's misc stats. `system.combat.<key>`. */
+    /** Minion bonuses, enchant effectiveness, concentration bonus, reach, range. `system.combat.<key>`. */
     combat: Record<CombatStatKey, number>;
-    /** Always-on damage multipliers by type, percent. `system.damageMultiplier.<type|all|allMagic|healing>`. */
-    damageMultiplier: Record<(typeof MULTIPLIER_STAT_KEYS)[number], number>;
-    /** Always-on penetration by type, percent ("physical" is armor penetration). `system.penetration.<type|allMagic>`. */
-    penetration: Record<(typeof PENETRATION_STAT_KEYS)[number], number>;
     /** Extra Condition Resist against one condition, percent. `system.conditionResistBonus.<status>`. */
     conditionResistBonus: Record<string, number>;
     /** Bonus to one skill's checks. `system.skillBonuses.<skill key>` (see `skillKey()`). */
@@ -219,8 +213,6 @@ export class CreatureModel extends foundry.abstract.TypeDataModel<CreatureSchema
         d.downedBonus = 0;
         const zeroes = <K extends string>(keys: readonly K[]) => Object.fromEntries(keys.map((k) => [k, 0])) as Record<K, number>;
         d.combat = zeroes(COMBAT_STAT_KEYS);
-        d.damageMultiplier = zeroes(MULTIPLIER_STAT_KEYS);
-        d.penetration = zeroes(PENETRATION_STAT_KEYS);
         d.conditionResistBonus = zeroes(STATUSES.filter((st) => st.category === "condition").map((st) => st.id));
         d.skillBonuses = zeroes(SKILL_NAMES.map(skillKey));
     }

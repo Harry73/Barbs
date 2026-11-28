@@ -73,7 +73,7 @@ export function summarizeRollBonuses(actor: Actor.Implementation): RollBonusSumm
         // A weapon's own mods only apply to attacks made with it (and to spells while it's held).
         const weapon = fromItem && parent!.type === "equipment" && (parent!.system as unknown as EquipmentModel).isWeapon ? parent : null;
         const source = fromItem ? `${effect.name} (${parent!.name})` : effect.name;
-        for (const m of system.modifiers) {
+        for (const m of system.modifiers.filter((x) => x.type !== "stat")) {
             // Incoming modifiers are about attacks on you, so the roll type and weapon filters don't apply to them.
             const incoming = INCOMING_MODIFIER_TYPES.has(m.type);
             const conditions = [

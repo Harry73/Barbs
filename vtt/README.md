@@ -165,12 +165,18 @@ Every ActiveEffect has Barbs data (Barbs tab in the effect config):
   applied. Every hit of a multi-hit attack counts as that one attack; drains and DoT ticks aren't blocked.
 - **Pulse**: damage the bearer deals to creatures within a radius at the start of each of their turns (Fiery Temper).
   The combat tracker posts it as a card already targeting everyone in range.
-- **Roll modifiers**, applied when the effect's actor makes a matching roll: extra damage, damage multiplier %,
-  crit chance, crit damage %, penetration, accuracy, lethality, lifesteal, unblockable chance, on-hit statuses (optionally with a chance: `stunned 25`, or a DoT amount: `burned:10 30`), a lasting on-hit AC shred (for as long as the effect granting it lasts, like Serrated Arrow's 1 minute), "this attack only" reductions to the target's AC, CR, or Evasion (equipment's reduce AC/CR/evasion: nothing is left on the target), stacking vulnerability, buff strip and forced movement reminders, converting a
-  percent of physical damage into Bleed (Serrated Arrow), or a note. Each can be limited to a roll type (physical,
-  magic, psychic, healing) and a weapon category ("bow attacks deal +2d8 air"), or to any ranged / any melee weapon,
-  and marked "On crit". On-crit damage and multipliers apply to each hit that crits; the rest apply once if any hit
-  crits.
+- **Bonuses**: one list of everything the effect gives, each row picked from a searchable list.
+  - **Stat bonuses** (attributes, AC, Evasion, MR, CR, resists, vulnerability, immunities, skill bonuses, initiative,
+    buff/enchant effectiveness, minion bonuses, concentration, Downed Health) are always on while the effect is
+    active. They're stored as "stat" rows and become ordinary core changes when the effect is prepared.
+  - **Attack bonuses** (extra damage, multipliers, penetration, crit chance/damage, accuracy, lethality, lifesteal,
+    unblockable, combo chance, damage conversion, can't miss), **on-hit** bonuses (statuses with an optional chance:
+    `stunned 25`, or a DoT amount: `burned:10 30`; a lasting AC shred; "this attack only" AC/CR/Evasion reductions;
+    stacking vulnerability; Bleed conversion; buff strip and forced movement reminders), and **defense** bonuses
+    (incoming damage, AC, Evasion, CR) are roll modifiers. Where they apply comes from where the effect lives: on a
+    weapon, attacks with that weapon (and spells while it's held); anywhere else, every attack. Roll type, weapon
+    category (or any ranged / melee), "On crit", and Conditions narrow them. On-crit damage and multipliers apply to
+    each hit that crits; the rest apply once if any hit crits.
 - Damage formulas can use `@distance`: the distance in feet to each target, measured when damage is applied
   (Distance Shooter).
 
@@ -250,11 +256,10 @@ CR), posts its note, and uses one up, through the same pipeline as an ability (a
 ticked **Ammunition** apply their effects only to ranged physical attacks while equipped, and each hit of a ranged
 attack uses one of the first equipped ammo with any left (given back on undo).
 
-Stat buffs use the core Changes tab instead, in the "initial" phase. The Stats tab shows every one of these, laid out
-like the Roll20 sheet's: core stats, then misc combat stats, multipliers, penetration, damage reduction, and condition
-resistances. Use these for always-on gear affixes; use roll modifiers for conditional ones ("bow attacks", "on hit"). Its key field is a searchable picker over every key below
-(`src/effects/change-keys.ts`): type any words from the label or group ("fire pen", "stun cr") and pick from the menu,
-so you don't need to remember the paths. A full `system.` path plus Enter sets a key that isn't listed:
+Stat bonuses end up as core changes in the "initial" phase; the core Changes tab is still there for raw edits, with
+the same searchable key picker (`src/effects/change-keys.ts`). The Stats tab shows all of it, laid out like the Roll20
+sheet's: core stats, then misc stats, multipliers, penetration, damage reduction, and condition resistances (attack
+bonuses that apply to every attack count toward their rows). The stat keys: A full `system.` path plus Enter sets a key that isn't listed:
 
 | Key | Meaning |
 |---|---|
@@ -265,9 +270,7 @@ so you don't need to remember the paths. A full `system.` path plus Enter sets a
 | `system.damageReduction` | general damage reduction % |
 | `system.vulnerability.<type\|magic\|all>` | percent increased damage taken (-100 = immune) |
 | `system.conditionImmunity.<status>` | non-zero: can't be given that condition (Dragonblood) |
-| `system.combat.<stat>` | accuracy, lethality, minion lethality, lifesteal, unblockable chance, crit damage, combo chance, minion damage, enchant effectiveness, concentration bonus, reach, range |
-| `system.damageMultiplier.<type\|all\|allMagic\|healing>` | always-on increased damage % |
-| `system.penetration.<type\|allMagic>` | always-on penetration % (`physical` is armor penetration) |
+| `system.combat.<stat>` | minion damage, minion lethality, enchant effectiveness, concentration bonus, reach, range |
 | `system.conditionResistBonus.<status>` | extra CR % against one condition |
 | `system.skillBonuses.<skill>` | bonus to one skill's checks |
 | `system.downedBonus` | extra Downed Health |

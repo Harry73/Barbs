@@ -722,3 +722,18 @@
 .barbs .passive .passive-header .passive-delete {
   margin-left: auto;
 }
+
+/* Bonus rows whose limits don't apply (stat bonuses are always on). */
+.barbs .barbs-bonuses td.muted {
+  opacity: 0.35;
+}
+
+.barbs .barbs-bonuses .barbs-bonus-search {
+  width: 100%;
+  min-width: 16rem;
+}
+
+.barbs details.barbs-help > summary {
+  cursor: pointer;
+  color: var(--barbs-muted);
+}

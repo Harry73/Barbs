@@ -43,49 +43,61 @@
     <p class="hint">How many copies can be on one creature. 1 = a new one replaces the old; blank = no limit.</p>
   </div>
 
-  <h4>Roll modifiers</h4>
+  <h4>Bonuses</h4>
   <p class="hint">
-    Applied when this effect's actor makes a matching roll. Stat changes (e.g. <code>system.stats.ac.bonus</code>)
-    go on the Changes tab instead. On-hit statuses take a status id and an optional chance: <code>stunned 25</code> is
-    "25% chance to Stun"; damage-over-time ones take an amount, like <code>burned:10 30</code>. Tick "On crit" for
-    "On crit: ..." affixes.
+    Everything this effect gives. Pick a bonus from the list (type to search): character stats (AC, STR, resists,
+    skills...) are always on while the effect is active; attack bonuses apply to your attacks. Where an attack bonus
+    applies comes from where the effect lives: on a weapon, only attacks made with that weapon (and spells while it's
+    held); anywhere else, every attack. The Roll, Weapon, On crit, and Conditions columns narrow it further.
   </p>
-  <p class="hint">
-    <strong>Conditions</strong> limit a modifier: commas mean "and", <code>|</code> "or", <code>!</code> "not", and
-    numbers compare (<code>target:health:percent &lt; 30</code>). Facts available: <code>roll:physical</code>,
-    <code>weapon:bow</code>, <code>weapon:ranged</code>, <code>ranged</code>/<code>melee</code>, <code>hand:dual</code>,
-    <code>ability:tag:spell</code>, <code>ability:class:sniper</code>, <code>area</code>, <code>in-combat</code>;
-    <code>self:</code> or <code>target:</code> + <code>type:demon</code>, <code>status:prone</code>,
-    <code>effect:rage</code>, <code>health:percent</code>, <code>buffs</code>, <code>level</code>;
-    <code>target:mark:&lt;name&gt;</code> (an effect you put on them), <code>target:distance</code>.
-    "Incoming" modifiers instead see <code>attack:…</code> (the attack's facts), <code>attacker:…</code>,
-    <code>attacker:distance</code>, and <code>origin:attacker</code> (this effect came from the attacker).
-  </p>
-  <p class="hint">
-    <strong>Values</strong> can be formulas: <code>20 * @self.buffs</code>, <code>50 * @target.marks.pursued</code>,
-    <code>2d10 * @target.statuses.cursed</code>, <code>@target.health.missingPercent</code>. <code>@self</code>,
-    <code>@target</code>, and (for incoming modifiers) <code>@attacker</code> have <code>buffs</code>,
-    <code>conditions</code>, <code>level</code>, <code>health.percent</code>, and counts like <code>statuses.cursed</code>,
-    <code>stacks.&lt;effect&gt;</code>, <code>marks.&lt;effect&gt;</code>. Anything reading <code>@target</code> is
-    worked out per target on Apply. Changes can use <code>@self</code> too.
-  </p>
-  <table class="barbs-modifiers">
+  <details class="barbs-help">
+    <summary>Values, conditions, and on-hit syntax</summary>
+    <p class="hint">
+      <strong>Values</strong> can be formulas: <code>20 * @self.buffs</code>, <code>50 * @target.marks.pursued</code>,
+      <code>2d10 * @target.statuses.cursed</code>, <code>@target.health.missingPercent</code>. <code>@self</code>,
+      <code>@target</code>, and (for defense bonuses) <code>@attacker</code> have <code>buffs</code>,
+      <code>conditions</code>, <code>level</code>, <code>health.percent</code>, and counts like
+      <code>statuses.cursed</code>, <code>stacks.&lt;effect&gt;</code>, <code>marks.&lt;effect&gt;</code>. Anything
+      reading <code>@target</code> is worked out per target on Apply.
+    </p>
+    <p class="hint">
+      <strong>Conditions</strong>: commas mean "and", <code>|</code> "or", <code>!</code> "not", and numbers compare
+      (<code>target:health:percent &lt; 30</code>). Facts: <code>roll:physical</code>, <code>weapon:bow</code>,
+      <code>weapon:ranged</code>, <code>ranged</code>/<code>melee</code>, <code>hand:dual</code>,
+      <code>ability:tag:spell</code>, <code>ability:class:sniper</code>, <code>area</code>, <code>in-combat</code>;
+      <code>self:</code> or <code>target:</code> + <code>type:demon</code>, <code>status:prone</code>,
+      <code>effect:rage</code>, <code>health:percent</code>, <code>buffs</code>, <code>level</code>;
+      <code>target:mark:&lt;name&gt;</code> (an effect you put on them), <code>target:distance</code>. Defense bonuses
+      see <code>attack:…</code>, <code>attacker:…</code>, <code>attacker:distance</code>, and <code>origin:attacker</code>.
+    </p>
+    <p class="hint">
+      <strong>On-hit statuses</strong> take a status id and an optional chance: <code>stunned 25</code> is "25% chance
+      to Stun"; damage-over-time ones take an amount, like <code>burned:10 30</code>.
+    </p>
+  </details>
+  <table class="barbs-modifiers barbs-bonuses">
     <thead>
       <tr>
-        <th>Type</th><th>Roll</th><th>Damage type</th><th>Weapon</th><th>Value</th><th data-tooltip="Only when the hit crits">On crit</th><th data-tooltip="Optional conditions, e.g. target:type:demon, weapon:bow | weapon:crossbow, !self:status:hidden, target:health:percent < 30">Conditions</th>
-        <th><a data-action="addModifier" data-tooltip="Add modifier"><i class="fa-solid fa-plus"></i></a></th>
+        <th>Bonus</th><th>Value</th><th>Damage type</th>
+        <th data-tooltip="Only these roll types">Roll</th><th data-tooltip="Only attacks with this kind of weapon">Weapon</th>
+        <th data-tooltip="Only when the hit crits">On crit</th><th data-tooltip="Optional conditions, e.g. target:type:demon">Conditions</th>
+        <th><a data-action="addModifier" data-tooltip="Add bonus"><i class="fa-solid fa-plus"></i></a></th>
       </tr>
     </thead>
     <tbody>
       {{#each modifiers as |m|}}
       <tr data-index="{{m.index}}">
-        <td><select name="system.modifiers.{{m.index}}.type">{{selectOptions @root.typeChoices selected=m.type}}</select></td>
-        <td><select name="system.modifiers.{{m.index}}.rollType">{{selectOptions @root.rollTypeChoices selected=m.rollType}}</select></td>
-        <td><select name="system.modifiers.{{m.index}}.damageType">{{selectOptions @root.damageTypeChoices selected=m.damageType}}</select></td>
-        <td><select name="system.modifiers.{{m.index}}.weapon">{{selectOptions @root.weaponChoices selected=m.weapon}}</select></td>
-        <td><input type="text" name="system.modifiers.{{m.index}}.value" value="{{m.value}}" placeholder="2d8, 25, 20 * @self.buffs" /></td>
-        <td><input type="checkbox" name="system.modifiers.{{m.index}}.onCrit" {{checked m.onCrit}} /></td>
-        <td><input type="text" name="system.modifiers.{{m.index}}.conditions" value="{{m.conditions}}" placeholder="always" /></td>
+        <td>
+          <input type="hidden" name="system.modifiers.{{m.index}}.type" value="{{m.type}}" />
+          <input type="hidden" name="system.modifiers.{{m.index}}.key" value="{{m.key}}" />
+          <input type="text" class="barbs-bonus-search" placeholder="Search: AC, fire damage, lifesteal..." />
+        </td>
+        <td><input type="text" name="system.modifiers.{{m.index}}.value" value="{{m.value}}" placeholder="10, 2d8, 20 * @self.buffs" /></td>
+        <td><select name="system.modifiers.{{m.index}}.damageType" data-limit>{{selectOptions @root.damageTypeChoices selected=m.damageType}}</select></td>
+        <td><select name="system.modifiers.{{m.index}}.rollType" data-limit>{{selectOptions @root.rollTypeChoices selected=m.rollType}}</select></td>
+        <td><select name="system.modifiers.{{m.index}}.weapon" data-limit>{{selectOptions @root.weaponChoices selected=m.weapon}}</select></td>
+        <td><input type="checkbox" name="system.modifiers.{{m.index}}.onCrit" {{checked m.onCrit}} data-limit /></td>
+        <td><input type="text" name="system.modifiers.{{m.index}}.conditions" value="{{m.conditions}}" placeholder="always" data-limit /></td>
         <td><a data-action="deleteModifier" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a></td>
       </tr>
       {{/each}}

@@ -170,6 +170,8 @@ export type RollType = (typeof ROLL_TYPES)[number];
  *   note         text reminder shown on the roll card
  */
 export const MODIFIER_TYPES = {
+    // A character stat (AC, STR, a resist...): becomes a core change while the effect is active. `key` names it.
+    stat: "Stat bonus",
     damage: "Extra damage",
     multiplier: "Damage multiplier (%)",
     critChance: "Crit chance (%)",
@@ -350,25 +352,31 @@ const STATUS_OVERRIDES: Record<string, { id?: string; img: string }> = {
  * "Miscellaneous" block. Effects target `system.combat.<key>`; each starts at 0 and is summed.
  */
 export const COMBAT_STATS = {
-    accuracy: { label: "Accuracy", unit: "%", hint: "Reduces the target's Evasion when they dodge your attacks." },
-    lethality: { label: "Lethality", unit: "%", hint: "Chance a hit instantly kills the target (not usable on players)." },
-    minionLethality: { label: "Minion Lethality", unit: "%", hint: "Lethality for your summons' attacks." },
-    lifesteal: { label: "Lifesteal", unit: "%", hint: "Heal for this much of the damage your attacks deal." },
-    unblockable: { label: "Unblockable Chance", unit: "%", hint: "Chance your attacks can't be blocked." },
-    critDamage: { label: "Crit Damage Modifier", unit: "%", hint: "Extra damage on a physical crit, on top of the weapon's." },
-    comboChance: { label: "Combo Chance", unit: "%", hint: "Added to your combo rolls." },
     minionDamage: { label: "Minion Damage", unit: "%", hint: "Increased damage for your summons' attacks." },
+    minionLethality: { label: "Minion Lethality", unit: "%", hint: "Lethality for your summons' attacks." },
     enchantEffectiveness: { label: "Enchant Effectiveness", unit: "%", hint: "Like Buff Effectiveness, for enchantment abilities." },
     concentrationBonus: { label: "Concentration Bonus", unit: "", hint: "Added to concentration checks." },
     reach: { label: "Reach", unit: " ft", hint: "Extra melee reach." },
     range: { label: "Range", unit: " ft", hint: "Extra attack range." },
 } as const;
+/**
+ * Attack bonuses the Stats tab sums from roll modifiers (they're attack bonuses, not character stats, so they only
+ * exist as modifiers): label, unit, and tooltip.
+ */
+export const ATTACK_STATS = {
+    accuracy: { label: "Accuracy", unit: "%", hint: "Reduces the target's Evasion when they dodge your attacks." },
+    lethality: { label: "Lethality", unit: "%", hint: "Chance a hit instantly kills the target (not usable on players)." },
+    lifesteal: { label: "Lifesteal", unit: "%", hint: "Heal for this much of the damage your attacks deal." },
+    unblockable: { label: "Unblockable Chance", unit: "%", hint: "Chance your attacks can't be blocked." },
+    critDamage: { label: "Crit Damage Modifier", unit: "%", hint: "Extra damage on a physical crit, on top of the weapon's." },
+    comboChance: { label: "Combo Chance", unit: "%", hint: "Added to your combo rolls." },
+} as const;
 export type CombatStatKey = keyof typeof COMBAT_STATS;
 export const COMBAT_STAT_KEYS = Object.keys(COMBAT_STATS) as CombatStatKey[];
 
-/** Always-on damage multipliers by type (the Roll20 sheet's "Damage Multipliers"). `system.damageMultiplier.<key>`. */
+/** Damage multiplier types the Stats tab lists (summed from roll modifiers). */
 export const MULTIPLIER_STAT_KEYS = ["all", "allMagic", "physical", "psychic", "healing", ...ELEMENTS] as const;
-/** Always-on penetration by type (the Roll20 sheet's "Penetration Stats"). `system.penetration.<key>`. */
+/** Penetration types the Stats tab lists (summed from roll modifiers). */
 export const PENETRATION_STAT_KEYS = ["physical", "psychic", "allMagic", ...ELEMENTS] as const;
 
 /** Rulebook skill names, and the key a per-skill bonus is stored under (`system.skillBonuses.<key>`). */

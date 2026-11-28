@@ -1,4 +1,5 @@
 import {
+    ATTACK_STATS,
     COMBAT_STATS,
     ELEMENTS,
     MULTIPLIER_STAT_KEYS,
@@ -261,7 +262,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             const system = effect.system as unknown as BarbsEffectModel;
             const summary = [
                 ...(system.changes ?? []).map((c) => `${c.key.replace(/^system\./, "")} ${c.type} ${c.value}`),
-                ...(system.modifiers ?? []).map(
+                ...(system.modifiers ?? []).filter((m) => m.type !== "stat").map(
                     (m) => `${m.type} ${m.value}${m.damageType && m.type !== "note" ? ` ${m.damageType}` : ""}` +
                         `${m.rollType !== "all" ? ` (${m.rollType}` + (m.weapon ? ` ${m.weapon}` : "") + ")" : m.weapon ? ` (${m.weapon})` : ""}`,
                 ),
@@ -426,10 +427,14 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             {
                 label: "Miscellaneous",
                 rows: [
-                    ...Object.entries(COMBAT_STATS).filter(([key]) => key !== "accuracy").map(([key, c]) => {
+                    // Attack bonuses (from roll modifiers) first, then the character's own misc stats.
+                    ...Object.entries(ATTACK_STATS)
+                        .filter(([key]) => key !== "accuracy")
+                        .map(([key, c]) => withMods(c.label, 0, `combat.${key}`, pct, c.hint)),
+                    ...Object.entries(COMBAT_STATS).map(([key, c]) => {
                         const v = d.combat?.[key as keyof typeof COMBAT_STATS] ?? 0;
                         const format = (x: number) => (c.unit === "%" ? pct(x) : `${x > 0 ? "+" : ""}${x}${c.unit}`);
-                        return withMods(c.label, v, `combat.${key}`, format, c.hint);
+                        return row(c.label, v, format(v), c.hint);
                     }),
                     row("Initiative Bonus", d.initiativeBonus, `${d.initiativeBonus > 0 ? "+" : ""}${d.initiativeBonus}`),
                     row("Buff Effectiveness", d.buffEffectiveness),
@@ -439,16 +444,16 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             },
             {
                 label: "Damage Multipliers",
-                rows: MULTIPLIER_STAT_KEYS.map((k) => withMods(damageBucketLabel(k), d.damageMultiplier?.[k] ?? 0, `multiplier.${k}`)),
+                rows: MULTIPLIER_STAT_KEYS.map((k) => withMods(damageBucketLabel(k), 0, `multiplier.${k}`)),
             },
             {
                 label: "Accuracy & Penetration",
                 rows: [
-                    withMods(COMBAT_STATS.accuracy.label, d.combat?.accuracy ?? 0, "combat.accuracy", pct, COMBAT_STATS.accuracy.hint),
+                    withMods(ATTACK_STATS.accuracy.label, 0, "combat.accuracy", pct, ATTACK_STATS.accuracy.hint),
                     ...PENETRATION_STAT_KEYS.map((k) =>
                         withMods(
                             k === "physical" ? "Armor (AC) penetration" : k === "allMagic" ? "General magic penetration" : `${damageBucketLabel(k)} penetration`,
-                            d.penetration?.[k] ?? 0,
+                            0,
                             `penetration.${k}`,
                         ),
                     ),
