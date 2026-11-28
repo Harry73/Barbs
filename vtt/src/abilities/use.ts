@@ -14,7 +14,7 @@ import type { CreatureModel } from "../data/actor/creature.ts";
 import type { AbilityModel, EquipmentModel } from "../data/item/models.ts";
 import { applyEffectToActor, applyHealingToActor, applyShieldingToActor } from "../effects/apply.ts";
 import { AttackBuilder, mainWeapon, offhandWeapon, weaponsFor, type AttackResult, type Hand } from "../rolls/attack.ts";
-import { postCard, type CardContent } from "../chat/card.ts";
+import { bounceResult, postCard, type CardContent, type CardFlags } from "../chat/card.ts";
 import type { UndoRecord } from "../chat/undo.ts";
 import { activePassives, adjustResource } from "../passives/index.ts";
 import type { PassiveDelta, RollInfo } from "../passives/types.ts";
@@ -557,83 +557,130 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
     }
 
     // 7. Card
-    await postCard(
-        actor,
-        {
-            title: opts.title,
-            subtitle: opts.subtitle,
-            img: opts.img,
-            meta,
-            description: opts.description,
-            result,
-            notes,
-            selfEffects,
-            targetEffects: targetSpecs.map((spec, index) => ({
-                index,
-                label:
-                    (spec.name ?? opts.title) +
-                    (spec.within !== undefined ? ` (within ${spec.within} ft)` : "") +
-                    (spec.beyond !== undefined ? ` (beyond ${spec.beyond} ft)` : ""),
-            })),
-            extraEffects: extraEffects.map((data, index) => ({ index, label: String(data.name) })),
-            tiers,
-        },
-        {
-            actorUuid: actor.uuid ?? "",
-            sourceName: `${actor.name}'s ${opts.title}`,
-            damage:
-                result && result.rollType !== "healing"
-                    ? {
-                          hits: tiers.length ? [] : result.hits.map((h) => h.totals),
-                          bonus: tiers.length ? [] : result.hits.map((h) => h.distanceBonus),
-                          conditional: tiers.length ? [] : result.hits.map((h) => h.conditional),
-                          conditionalModifiers: result.conditional,
-                multipliers: result.multipliers,
-                          rollOptions: result.rollOptions,
-                          penetration: result.penetration,
-                          trueDamage: !!attack?.trueDamage,
-                          // Only attacks aimed at someone can be dodged: not areas, drains, or "can't miss".
-                          evadable: !area && !result.cannotMiss && !attack?.trueDamage,
-                          cannotMissAgainst: attack?.cannotMissAgainst,
-                          unblockableChance: result.unblockableChance,
-                          lifesteal: result.lifesteal,
-                          accuracy: result.accuracy,
-                          evasionReduction: result.evasionReduction,
-                          acReduction: result.acReduction,
-                          tiers: tiers.map((t) => ({
-                              within: t.within,
-                              hits: t.result.hits.map((h) => h.totals),
-                              bonus: t.result.hits.map((h) => h.distanceBonus),
-                              conditional: t.result.hits.map((h) => h.conditional),
-                          })),
-                      }
-                    : undefined,
-            casterTokenUuid: casterTokenUuid(actor),
-            crReduction: result?.crReduction,
-            attackOptions: rollOptions({
-                rollType: result?.rollType ?? (tags.includes("spell") ? "magic" : "physical"),
-                weapons: [],
-                tags,
-                abilityName: opts.title,
-                className,
-                area: !!area,
-            }),
-            // Self-heals were already applied; don't offer to apply them again.
-            healing: result?.rollType === "healing" && !heal?.self ? (result.totals.healing ?? 0) : undefined,
-            shielding: shielding && !shielding.self ? shielding.amount : undefined,
-            drain: drain ? { resource: drain.resource, amount: drainAmount } : undefined,
-            effectSource: targetSpecs.length ? source : undefined,
-            automationKey: opts.automationKey ?? (className ? `${className}/${opts.title}` : undefined),
-            context: contextData(ctx),
-            statuses: result?.statuses ?? [],
-            extraEffects,
-            targetScales,
-            segments: areaResult?.segments,
-            redirectSwap: attack?.redirectSwap,
-            alterCourse: hasAlterCourse(actor),
-        },
-        undo,
-    );
+    const cardContent: CardContent = {
+        title: opts.title,
+        subtitle: opts.subtitle,
+        img: opts.img,
+        meta,
+        description: opts.description,
+        result,
+        notes,
+        selfEffects,
+        targetEffects: targetSpecs.map((spec, index) => ({
+            index,
+            label:
+                (spec.name ?? opts.title) +
+                (spec.within !== undefined ? ` (within ${spec.within} ft)` : "") +
+                (spec.beyond !== undefined ? ` (beyond ${spec.beyond} ft)` : ""),
+        })),
+        extraEffects: extraEffects.map((data, index) => ({ index, label: String(data.name) })),
+        tiers,
+    };
+    const cardFlags: Omit<CardFlags, "targets"> = {
+        actorUuid: actor.uuid ?? "",
+        sourceName: `${actor.name}'s ${opts.title}`,
+        damage:
+            result && result.rollType !== "healing"
+                ? {
+                      hits: tiers.length ? [] : result.hits.map((h) => h.totals),
+                      bonus: tiers.length ? [] : result.hits.map((h) => h.distanceBonus),
+                      conditional: tiers.length ? [] : result.hits.map((h) => h.conditional),
+                      conditionalModifiers: result.conditional,
+                      multipliers: result.multipliers,
+                      rollOptions: result.rollOptions,
+                      penetration: result.penetration,
+                      trueDamage: !!attack?.trueDamage,
+                      // Only attacks aimed at someone can be dodged: not areas, drains, or "can't miss".
+                      evadable: !area && !result.cannotMiss && !attack?.trueDamage,
+                      cannotMissAgainst: attack?.cannotMissAgainst,
+                      unblockableChance: result.unblockableChance,
+                      lifesteal: result.lifesteal,
+                      accuracy: result.accuracy,
+                      evasionReduction: result.evasionReduction,
+                      acReduction: result.acReduction,
+                      tiers: tiers.map((t) => ({
+                          within: t.within,
+                          hits: t.result.hits.map((h) => h.totals),
+                          bonus: t.result.hits.map((h) => h.distanceBonus),
+                          conditional: t.result.hits.map((h) => h.conditional),
+                      })),
+                  }
+                : undefined,
+        casterTokenUuid: casterTokenUuid(actor),
+        crReduction: result?.crReduction,
+        attackOptions: rollOptions({
+            rollType: result?.rollType ?? (tags.includes("spell") ? "magic" : "physical"),
+            weapons: [],
+            tags,
+            abilityName: opts.title,
+            className,
+            area: !!area,
+        }),
+        // Self-heals were already applied; don't offer to apply them again.
+        healing: result?.rollType === "healing" && !heal?.self ? (result.totals.healing ?? 0) : undefined,
+        shielding: shielding && !shielding.self ? shielding.amount : undefined,
+        drain: drain ? { resource: drain.resource, amount: drainAmount } : undefined,
+        effectSource: targetSpecs.length ? source : undefined,
+        automationKey: opts.automationKey ?? (className ? `${className}/${opts.title}` : undefined),
+        context: contextData(ctx),
+        statuses: result?.statuses ?? [],
+        extraEffects,
+        targetScales,
+        segments: areaResult?.segments,
+        redirectSwap: attack?.redirectSwap,
+        alterCourse: hasAlterCourse(actor),
+    };
+
+    // A reflected beam posts a card per redirect (each bounce through a creature is a hit of its own, recalculated for
+    // that bounce: Helix Beam's element swap, Alter Course's +50%, the condition's chance). The first card is the
+    // cast, with its cost and undo; the others are its redirects.
+    const bounces = [...new Set(Object.values(areaResult?.segments ?? {}).flat())].sort((x, y) => x - y);
+    if (result && cardFlags.damage && bounces.some((r) => r > 0)) {
+        const alterCourse = hasAlterCourse(actor);
+        for (const [i, r] of bounces.entries()) {
+            const bounced = bounceResult(result, r, attack?.redirectSwap, alterCourse);
+            const onSegment = Object.entries(areaResult!.segments!).filter(([, rs]) => rs.includes(r)).map(([uuid]) => uuid);
+            const swapped = attack?.redirectSwap && r % 2 === 1;
+            const what = [
+                alterCourse ? `+${50 * r}% (Alter Course)` : "",
+                swapped ? `${attack!.redirectSwap![1].capitalize()} and ${attack!.redirectSwap![0].capitalize()} swap` : "",
+            ].filter(Boolean);
+            await postCard(
+                actor,
+                i === 0
+                    ? { ...cardContent, result: bounced, subtitle: r ? `Redirect ${r}` : "Direct" }
+                    : {
+                          title: opts.title,
+                          subtitle: `Redirect ${r}${what.length ? `: ${what.join(", ")}` : ""}`,
+                          img: opts.img,
+                          result: bounced,
+                          notes: [`On this redirect: ${onSegment.map((u) => (fromUuidSync(u) as TokenDocument.Implementation | null)?.name ?? "?").join(", ") || "no one"}.`],
+                          targetEffects: cardContent.targetEffects,
+                          extraEffects: cardContent.extraEffects,
+                      },
+                {
+                    ...cardFlags,
+                    sourceName: r ? `${cardFlags.sourceName} (redirect ${r})` : cardFlags.sourceName,
+                    damage: {
+                        ...cardFlags.damage,
+                        hits: bounced.hits.map((h) => h.totals),
+                        bonus: bounced.hits.map((h) => h.distanceBonus),
+                        conditional: bounced.hits.map((h) => h.conditional),
+                    },
+                    segments: undefined,
+                    redirects: r,
+                    fixedTargets: true,
+                    // Already applied to this card's numbers.
+                    redirectSwap: undefined,
+                    alterCourse: false,
+                },
+                i === 0 ? undo : undefined,
+                { targets: onSegment },
+            );
+        }
+        return;
+    }
+    await postCard(actor, cardContent, cardFlags, undo);
 }
 
 /**

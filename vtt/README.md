@@ -163,8 +163,11 @@ summoning card is undone.
 Mirror Mage mirrors are summons too, flagged as mirrors. A mirror's reflecting surface is its token's width; at
 rotation 0 it faces right, and it turns with the token. Line spells from a caster with mirrors out are traced off them
 (`src/rules/reflection.ts`): the front reflects with range reset, a Convex mirror's back splits the beam at ±45°, a
-Plane mirror's back blocks, and a twice-redirected beam dispels the next mirror it hits. Each target remembers which
-bounce hit it, so Alter Course (+50% per redirect) and Helix Beam (element flips per redirect) apply per target.
+Plane mirror's back blocks, and a twice-redirected beam dispels the next mirror it hits. A beam that's redirected posts
+a card per redirect ("Direct", "Redirect 1", ...), each a hit of its own on the creatures along that stretch, with its
+numbers recalculated for that bounce: Alter Course's +50% per redirect, Helix Beam's element flip, and its condition
+chance. A creature the beam crosses on the way out and on the way back is on two cards and is hit twice. Each card's
+Apply uses its own targets, not whoever is targeted now; only the first carries the cast's cost and undo.
 
 ## Effects and roll modifiers
 

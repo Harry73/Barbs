@@ -91,8 +91,15 @@ export interface CardFlags {
     statuses?: OnHitStatus[];
     /** Per-target damage multipliers by token UUID, e.g. half damage past the first target of a line. */
     targetScales?: Record<string, number>;
-    /** Reflected beams: which segments (by redirect count) hit each token, by token UUID. */
+    /**
+     * Reflected beams on cards posted before each redirect got its own card: which segments (by redirect count) hit
+     * each token. New casts post one card per redirect instead (see bounceResult) and set `redirects`.
+     */
     segments?: Record<string, number[]>;
+    /** This card is one redirect of a reflected beam: how many times it had bounced (conditions scale with it). */
+    redirects?: number;
+    /** Apply uses the card's own targets (the tokens on this redirect's segment), not whoever is targeted now. */
+    fixedTargets?: boolean;
     /** Damage types that swap with each redirect (Helix Beam). */
     redirectSwap?: [DamageKey, DamageKey];
     /** The caster has Alter Course: +50% damage per redirect. */
@@ -226,6 +233,31 @@ function distanceFromCaster(flags: CardFlags, target: Target): number | null {
     return grid.measurePath([caster.center, token.center]).distance;
 }
 
+/**
+ * One redirect of a reflected beam as its own attack result: on odd redirects Helix Beam's two elements swap, and
+ * with Alter Course each redirect adds 50% (a multiplier on everything the beam deals, shown in the damage rows).
+ */
+export function bounceResult(result: AttackResult, redirects: number, swap: [DamageKey, DamageKey] | undefined, alterCourse: boolean): AttackResult {
+    const factor = alterCourse ? 1 + 0.5 * redirects : 1;
+    const swapped = (type: DamageKey): DamageKey => (swap && redirects % 2 === 1 ? (type === swap[0] ? swap[1] : type === swap[1] ? swap[0] : type) : type);
+    const scale = (n: number) => Math.round(n * factor);
+    const hits = result.hits.map((hit) => {
+        const parts = hit.parts.map((p) => ({ ...p, type: swapped(p.type), multiplier: p.multiplier * factor, total: scale(p.total) }));
+        const totals: Partial<Record<DamageKey, number>> = {};
+        for (const p of parts) totals[p.type] = (totals[p.type] ?? 0) + p.total;
+        return {
+            ...hit,
+            parts,
+            totals,
+            distanceBonus: hit.distanceBonus.map((b) => ({ ...b, type: swapped(b.type), factor: b.factor * factor })),
+            conditional: hit.conditional.map((c) => ({ ...c, type: swapped(c.type), amount: scale(c.amount), ...(c.factor !== undefined ? { factor: c.factor * factor } : {}) })),
+        };
+    });
+    const totals: Partial<Record<DamageKey, number>> = {};
+    for (const hit of hits) for (const [type, amount] of Object.entries(hit.totals) as [DamageKey, number][]) totals[type] = (totals[type] ?? 0) + amount;
+    return { ...result, hits, parts: hits.flatMap((h) => h.parts), totals };
+}
+
 /** Helix Beam's element swap: on odd redirects, swap the two damage types. */
 function applySwap(hits: Partial<Record<DamageKey, number>>[], flags: CardFlags, redirects: number) {
     const swap = flags.redirectSwap;
@@ -250,7 +282,7 @@ function tierFor(flags: CardFlags, target: Target): number {
 
 /** The clicking user's targets, else the tokens targeted when the card was posted, else their selected tokens. */
 function resolveTargets(flags: CardFlags): Target[] {
-    let tokens: TokenDocument.Implementation[] = [...(game.user?.targets ?? [])].map((t) => t.document);
+    let tokens: TokenDocument.Implementation[] = flags.fixedTargets ? [] : [...(game.user?.targets ?? [])].map((t) => t.document);
     if (!tokens.length) {
         tokens = flags.targets
             .map((uuid) => fromUuidSync(uuid) as TokenDocument.Implementation | null)
@@ -486,7 +518,7 @@ async function applyTargetEffect(flags: CardFlags, target: Target, spec: EffectS
         if (spec.within !== undefined && distance > spec.within + 0.01) return;
         if (spec.beyond !== undefined && distance <= spec.beyond + 0.01) return;
     }
-    const redirects = redirected ? 1 : Math.min(...((target.tokenUuid && flags.segments?.[target.tokenUuid]) || [0]));
+    const redirects = redirected ? 1 : (flags.redirects ?? Math.min(...((target.tokenUuid && flags.segments?.[target.tokenUuid]) || [0])));
     const resolved = spec.resolve ? spec.resolve(actor, spec, ctx, { redirects }) : spec;
     if (!resolved) return;
     const data = buildEffectData(resolved, source);

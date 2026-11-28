@@ -632,6 +632,26 @@ try {
         assert.equal(describeTrigger({ ...use, action: "spend", value: "20", type: "mana" }), "You use it: spend 20 mana");
     }
 
+    // A reflected beam's redirect, as its own card: Helix Beam's elements swap on odd redirects, and Alter Course adds
+    // 50% per redirect to everything, distance bonuses and conditional damage included.
+    {
+        const { bounceResult } = await vite.ssrLoadModule("/src/chat/card.ts");
+        const part = { type: "ice", formula: "9d8", roll: null, base: 40, multiplier: 1, total: 40 };
+        const result: any = {
+            hits: [{ parts: [part], totals: { ice: 40 }, crit: null, distanceBonus: [{ type: "ice", formula: "@distance", factor: 1 }], conditional: [{ conditions: "target:type:demon", type: "ice", amount: 10 }] }],
+            parts: [part],
+            totals: { ice: 40 },
+        };
+        const once = bounceResult(result, 1, ["ice", "light"], true);
+        assert.deepEqual(once.totals, { light: 60 }, "redirect 1: light instead of ice, +50%");
+        assert.equal(once.hits[0].parts[0].multiplier, 1.5);
+        assert.deepEqual([once.hits[0].distanceBonus[0].type, once.hits[0].distanceBonus[0].factor], ["light", 1.5]);
+        assert.deepEqual([once.hits[0].conditional[0].type, once.hits[0].conditional[0].amount], ["light", 15]);
+        assert.deepEqual(bounceResult(result, 2, ["ice", "light"], true).totals, { ice: 80 }, "redirect 2: ice again, +100%");
+        assert.deepEqual(bounceResult(result, 1, undefined, false).totals, { ice: 40 }, "no swap, no Alter Course: unchanged");
+        assert.deepEqual(result.totals, { ice: 40 }, "the original result isn't changed");
+    }
+
     // Variables read before their declaration in the same function: TypeScript misses it when the read is in a callback.
     {
         const { findUseBeforeDefine } = await import("./use-before-define.ts");
