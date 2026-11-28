@@ -11,7 +11,7 @@
  * can't be done (a spend you can't afford) stops the rest. "Once per turn" and the like work as they do for triggers.
  */
 import { EFFECT_ACTION_TYPES, type EffectActionType } from "../config.ts";
-import type { BarbsEffectModel, TriggerData } from "../data/effect.ts";
+import { stacksOf, type BarbsEffectModel, type TriggerData } from "../data/effect.ts";
 import { esc } from "../chat/html.ts";
 import { parsePredicate, testPredicate } from "../rules/predicate.ts";
 import { describeTrigger } from "../effects/bonuses.ts";
@@ -27,6 +27,8 @@ export interface EffectAction {
     summary: string;
     /** Set when it can't be used right now ("Used this turn"). */
     unavailable: string;
+    /** The effect's stack count, for effects that count up (shown as "×3"). 0 when it isn't a counter. */
+    stacks: number;
 }
 
 /** The creature on the other end of a button's inflict/damage rows: the one target, if exactly one is targeted. */
@@ -54,6 +56,9 @@ export function effectActions(actor: Actor.Implementation): EffectAction[] {
             const mine = rows.filter(({ row }) => (row.label || effect.name) === label);
             if (!mine.some(({ row }) => usable(actor, effect, row, ctx))) continue;
             const spent = mine.find(({ row, index }) => row.oncePer && lastFired.get(`${effect.uuid}#${index}`) === turnKey(row.oncePer));
+            // "Add a stack" with a cap that's been reached.
+            const stacks = stacksOf(effect);
+            const full = mine.find(({ row }) => row.action === "addStack" && row.type && Number.isFinite(Number(row.type)) && stacks >= Number(row.type));
             out.push({
                 effectUuid: effect.uuid ?? "",
                 effectName: effect.name,
@@ -61,7 +66,12 @@ export function effectActions(actor: Actor.Implementation): EffectAction[] {
                 label,
                 actionType: mine[0].row.actionType ?? "major",
                 summary: mine.map(({ row }) => describeTrigger(row).replace(/^[^:]*: /, "")).join("; then "),
-                unavailable: spent ? `Used ${spent.row.oncePer === "once" ? "already" : `this ${spent.row.oncePer}`}` : "",
+                unavailable: spent
+                    ? `Used ${spent.row.oncePer === "once" ? "already" : `this ${spent.row.oncePer}`}`
+                    : full
+                      ? `At the most stacks (${stacks})`
+                      : "",
+                stacks,
             });
         }
     }

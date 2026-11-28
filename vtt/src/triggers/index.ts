@@ -378,6 +378,20 @@ export async function runAction(
             else if (!(await extendEffect(effect, rounds))) ui.notifications?.info(`${effect.name} has no round-based duration to extend.`);
             return true;
         }
+        case "addStack": {
+            // A counter on this effect (Analytical Shooter's "Keep aiming"), which its own bonuses read as @effect.stacks.
+            const { stacksOf } = await import("../data/effect.ts");
+            const current = stacksOf(effect);
+            const max = trigger.type ? Math.round(evaluateNumber(trigger.type, data())) : Infinity;
+            const next = Math.min(max, current + (Math.round(evaluateNumber(trigger.value || "1", data())) || 1));
+            if (next === current) {
+                ui.notifications?.info(`${effect.name} is already at ${current} stack(s), the most it can have.`);
+                return false;
+            }
+            if (effect.isOwner) await effect.update({ [`flags.${SYSTEM_ID}.stacks`]: next } as never);
+            else ui.notifications?.warn(`You can't change ${effect.name}.`);
+            return true;
+        }
         case "endConcentration": {
             // Deleting the Concentrating marker ends everything it maintained (concentration.ts), this effect included.
             const key = foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.concentrationKey`) as string | undefined;

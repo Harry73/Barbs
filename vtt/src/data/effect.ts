@@ -3,6 +3,7 @@ import {
     EFFECT_ACTION_TYPES,
     EFFECT_CATEGORIES,
     MODIFIER_ROLL_TYPES,
+    SYSTEM_ID,
     MODIFIER_TYPES,
     TRIGGER_ACTIONS,
     TRIGGER_EVENTS,
@@ -15,6 +16,19 @@ import {
 import type { EquipmentModel } from "./item/models.ts";
 
 const fields = foundry.data.fields;
+
+/**
+ * An effect's stack count (Analytical Shooter's "Keep aiming"), for effects that count up instead of being copied.
+ * 0 when it isn't a counter. Stored in `flags.barbs.stacks`; the "Add a stack" trigger action raises it.
+ */
+export function stacksOf(effect: { flags?: unknown } | null | undefined): number {
+    return Number(foundry.utils.getProperty(effect ?? {}, `flags.${SYSTEM_ID}.stacks`)) || 0;
+}
+
+/** Formula data an effect's own values can read: `@effect.stacks`. */
+export function effectFormulaData(effect: { flags?: unknown } | null | undefined): { effect: { stacks: number } } {
+    return { effect: { stacks: stacksOf(effect) } };
+}
 
 /** Plain shape of one roll modifier, as stored on an effect. */
 export interface RollModifierData {

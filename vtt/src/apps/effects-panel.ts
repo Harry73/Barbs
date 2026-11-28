@@ -3,7 +3,7 @@
  * PF2e's effects panel. Hover for details, left-click to open an effect, right-click to remove it.
  */
 import { SYSTEM_ID } from "../config.ts";
-import type { BarbsEffectModel } from "../data/effect.ts";
+import { stacksOf, type BarbsEffectModel } from "../data/effect.ts";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -67,6 +67,7 @@ export class EffectsPanel extends HandlebarsApplicationMixin(ApplicationV2) {
                 remaining && Number.isFinite((effect.duration as { remaining?: number }).remaining ?? Infinity)
                     ? `<p>Remaining: ${escape(remaining)}</p>`
                     : "",
+                stacksOf(effect) ? `<p>${stacksOf(effect)} stack(s).</p>` : "",
                 system.singleUse ? "<p>Single use: consumed by your next matching roll.</p>" : "",
                 effect.description ?? "",
                 effect.isOwner && !source ? "<p class=\"hint\">Left-click to edit, right-click to remove.</p>" : "",
@@ -74,7 +75,7 @@ export class EffectsPanel extends HandlebarsApplicationMixin(ApplicationV2) {
             effects.push({
                 uuid: effect.uuid,
                 img: effect.img,
-                badge: system.singleUse ? "1×" : durationBadge(effect as ActiveEffect.Implementation),
+                badge: stacksOf(effect) ? `×${stacksOf(effect)}` : system.singleUse ? "1×" : durationBadge(effect as ActiveEffect.Implementation),
                 category: system.category || "other",
                 tooltip,
             });

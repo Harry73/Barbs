@@ -77,7 +77,7 @@
       {{#each group.effectActions as |ea|}}
       <button type="button" data-action="useEffectAction" data-effect-uuid="{{ea.effectUuid}}" data-label="{{ea.label}}"
         data-action-name="{{ea.label}} {{ea.effectName}}" data-tooltip="{{ea.summary}}{{#if ea.unavailable}} ({{ea.unavailable}}){{/if}}" {{#if ea.unavailable}}disabled{{/if}}>
-        <img src="{{ea.img}}" alt="" /> {{ea.label}} <span class="hint">{{ea.effectName}}</span>
+        <img src="{{ea.img}}" alt="" /> {{ea.label}} <span class="hint">{{ea.effectName}}{{#if ea.stacks}} ×{{ea.stacks}}{{/if}}</span>
       </button>
       {{/each}}
     </div>

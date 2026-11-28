@@ -612,25 +612,23 @@ try {
         assert.ok(buttons >= 12, `expected the converted abilities' buttons, found ${buttons}`);
     }
 
-    // Analytical Shooter: concentrating adds an aiming effect with a "Keep aiming" button and an end-on-attack trigger.
+    // Analytical Shooter: one buff, with "Keep aiming" adding stacks when you concentrate, and an end-on-attack trigger.
     {
         const { BarbsEffectModel } = await vite.ssrLoadModule("/src/data/effect.ts");
         const { buildEffectData } = await vite.ssrLoadModule("/src/abilities/effects.ts");
         const { describeTrigger } = await vite.ssrLoadModule("/src/effects/bonuses.ts");
         const auto = ABILITY_AUTOMATION["Sniper/Analytical Shooter"];
-        assert.equal(resolve(auto.self, makeContext(actor, null, {}, 1)).length, 1, "not concentrating: just the buff");
-        const specs = resolve(auto.self, makeContext(actor, null, { concentrate: true }, 1));
-        assert.deepEqual(specs.map((e: any) => e.key), ["aim", "concentrating"]);
-        const source = { className: "Sniper", abilityName: "Analytical Shooter", img: "", duration: "Instant" };
-        const aiming = buildEffectData(specs[1], source);
-        new BarbsEffectModel(aiming.system, { parent: new StandIn(), strict: true });
-        const [use, attack] = aiming.system.triggers;
-        assert.deepEqual([use.event, use.label, use.actionType, use.action], ["use", "Keep aiming", "major", "grant"]);
+        const plain = resolve(auto.self, makeContext(actor, null, {}, 1));
+        assert.equal(plain.length, 1);
+        assert.equal(plain[0].triggers, undefined, "not concentrating: no Keep aiming");
+        const [spec] = resolve(auto.self, makeContext(actor, null, { concentrate: true }, 1));
+        const data = buildEffectData(spec, { className: "Sniper", abilityName: "Analytical Shooter", img: "", duration: "Instant" });
+        new BarbsEffectModel(data.system, { parent: new StandIn(), strict: true });
+        const [use, attack] = data.system.triggers;
+        assert.deepEqual([use.event, use.label, use.actionType, use.action, use.type], ["use", "Keep aiming", "major", "addStack", "8"], "20% + 8 × 10% reaches the 100% cap");
         assert.deepEqual([attack.event, attack.action], ["attack", "endConcentration"]);
-        assert.equal(use.effectData.flags.barbs.maxStacks, 8, "20% + 8 × 10% reaches the 100% crit chance cap");
-        assert.equal(use.effectData.flags.barbs.sourceKey, "Sniper/Analytical Shooter/focus", "Focus stacks with itself, not with the buff");
-        assert.equal(use.effectData.system.modifiers[1].value, "min(25, 150 / max(1, @self.stacks.analytical-focus))");
-        assert.equal(describeTrigger(use), "You use it: grant Analytical Focus");
+        assert.equal(data.system.modifiers[1].value, "min(200, 50 + 25 * @effect.stacks)");
+        assert.equal(describeTrigger(use), "You use it: add 1 stack(s) (up to 8)");
         assert.equal(describeTrigger({ ...use, action: "spend", value: "20", type: "mana" }), "You use it: spend 20 mana");
     }
 

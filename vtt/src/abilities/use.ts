@@ -297,13 +297,22 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
     };
 
     // Concentrating: a marker on the caster, and everything this cast creates is linked to it (see concentration.ts).
+    // When the cast puts exactly one effect on the caster, that effect is the marker: concentrating on Analytical
+    // Shooter is concentrating on its buff, so one effect shows instead of two, and ending either ends both.
+    const selfSpecs = (resolve(automation?.self, ctx) ?? []).map((spec) => (spec.resolve ? spec.resolve(actor, spec, ctx) : spec)).filter((s): s is EffectSpec => !!s);
+    let markerFlags: Record<string, unknown> | null = null;
     if (ongoing) {
         source.concentrationKey = foundry.utils.getProperty(ongoing, `flags.${SYSTEM_ID}.concentration.key`) as string;
     } else if (tags.includes("concentration") && choices.concentrate) {
         const key = foundry.utils.randomID();
         source.concentrationKey = key;
-        const marker = await applyEffectToActor(actor, concentrationMarkerData(actor, opts.title, opts.img, key), { announce: false });
-        if (marker) undo.createdEffects!.push(marker.effect.uuid ?? "");
+        const markerData = concentrationMarkerData(actor, opts.title, opts.img, key);
+        if (selfSpecs.length === 1 && !opts.selfEffectData?.length) {
+            markerFlags = markerData.flags as Record<string, unknown>;
+        } else {
+            const marker = await applyEffectToActor(actor, markerData, { announce: false });
+            if (marker) undo.createdEffects!.push(marker.effect.uuid ?? "");
+        }
     }
 
     // Items used up by this use (a potion), back on undo.
@@ -325,10 +334,10 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
             selfEffects.push(String(data.name));
         }
     }
-    for (const spec of resolve(automation?.self, ctx) ?? []) {
-        const resolved = spec.resolve ? spec.resolve(actor, spec, ctx) : spec;
-        if (!resolved) continue;
-        const applied = await applyEffectToActor(actor, buildEffectData(resolved, source), { announce: false });
+    for (const resolved of selfSpecs) {
+        const data = buildEffectData(resolved, source);
+        if (markerFlags) foundry.utils.mergeObject(data, { flags: markerFlags });
+        const applied = await applyEffectToActor(actor, data, { announce: false });
         if (applied) {
             undo.createdEffects!.push(applied.effect.uuid ?? "");
             undo.removedEffects!.push(...applied.replaced);

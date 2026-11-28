@@ -263,8 +263,12 @@ one targeted. Other trigger actions that came with them work in ordinary trigger
 effect by N rounds (for an effect held by concentration, everything that concentration holds, through the GM), and
 end the concentration this effect belongs to. Free reactions are listed with reactions.
 
-Abilities with buttons (`action()` in `src/abilities/helpers.ts`): Analytical Shooter ("Keep aiming" while
-concentrating: a stacking +10% crit chance / +25% crit damage, capped at 100% / 200%, and attacking ends the
+**Stacks on one effect**: an effect can count stacks instead of being copied (`flags.barbs.stacks`). The "Add a
+stack" action raises it (Value: how many; Type: the most it can have), the effect's own formulas read it as
+`@effect.stacks`, `@self.stacks.<name>` counts it, and the effects panel shows it as ×N.
+
+Abilities with buttons (`action()` in `src/abilities/helpers.ts`): Analytical Shooter (one buff; "Keep aiming" while
+concentrating adds a stack worth +10% crit chance / +25% crit damage, capped at 100% / 200%, and attacking ends the
 concentration), Impenetrable Mist (spend 20 mana to block, while concentrating), Ice Block (block once), Grand
 Guardian (block once per round, twice if you were dual wielding shields when you cast it), Hold Person (spend 10 mana
 to extend the Stun a round), Buffeting Storm (spend 5 mana to push), and the Arcane Archer buffs' "sacrifice" options
@@ -286,7 +290,8 @@ check for the bearer (untrained skills roll with no rank) and only goes on if it
 
 **Concentration** (`src/concentration.ts`): abilities tagged "concentration" ask "Concentrate on it" (ticked by
 default). Concentrating puts a "Concentrating: <ability>" effect on the caster (warning if that's over their
-Concentration Limit), and everything the cast creates is linked to it: effects on the caster, effects applied from the
+Concentration Limit); when the cast puts exactly one effect on the caster, that effect is the Concentrating effect
+instead, so ending it ends the concentration. Everything the cast creates is linked to it: effects on the caster, effects applied from the
 card to targets, and summons. Deleting the Concentrating effect, by hand, by undoing the cast, by failing a
 concentration check, or by being Downed, ends all of them. When a concentrating creature takes damage, its
 concentration check is rolled automatically (DC twice the damage; Pain Tolerance if they have it, otherwise d100 +

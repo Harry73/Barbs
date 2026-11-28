@@ -14,7 +14,7 @@ import { ELEMENTS, RANGED_WEAPONS, STATUSES, type ModifierRollType, type RollTyp
 import { snapshotEffect, type RemovedEffect } from "../chat/undo.ts";
 import { activePassives, adjustResource, baseComboChance, monkDie, setResource } from "../passives/index.ts";
 import type { PassiveDelta, RollInfo } from "../passives/types.ts";
-import type { BarbsEffectModel, RollModifierData } from "../data/effect.ts";
+import { effectFormulaData, type BarbsEffectModel, type RollModifierData } from "../data/effect.ts";
 import type { CreatureModel } from "../data/actor/creature.ts";
 import type { EquipmentModel } from "../data/item/models.ts";
 import {
@@ -541,7 +541,7 @@ export class AttackBuilder {
                 if (!holds) continue;
                 used = true;
                 if (holds === "defer") {
-                    this.#defer(modifier, effect.name, this.#poolOf(effect as ActiveEffect.Implementation));
+                    this.#defer(modifier, effect.name, this.#poolOf(effect as ActiveEffect.Implementation), effect as ActiveEffect.Implementation);
                     continue;
                 }
                 // "On crit:" modifiers wait until a hit actually crits.
@@ -563,7 +563,7 @@ export class AttackBuilder {
     }
 
     /** Hold a target-dependent damage, multiplier, or penetration modifier until damage is applied. */
-    #defer(modifier: RollModifierData, source: string, pool: string): void {
+    #defer(modifier: RollModifierData, source: string, pool: string, effect?: ActiveEffect.Implementation): void {
         const conditions = modifier.conditions ?? "";
         if (modifier.type === "damage") {
             this.#deferredDamage.push({ conditions, type: concreteDamageType(modifier.damageType), formula: modifier.value });
@@ -571,7 +571,7 @@ export class AttackBuilder {
             const kind = modifier.type as "multiplier" | "penetration";
             const key = modifier.damageType || (kind === "penetration" ? "physical" : "all");
             const perTarget = usesTarget(modifier.value);
-            const percent = perTarget ? 0 : this.#number(modifier.value);
+            const percent = perTarget ? 0 : this.#number(modifier.value, effect);
             if (perTarget || percent) this.#conditional.push({ conditions, kind, key, percent, source, pool, ...(perTarget ? { formula: modifier.value } : {}) });
         }
         this.addNote(`${source}: ${modifier.type} ${modifier.value}${conditions ? ` when ${conditions}` : ""} (worked out per target).`);
@@ -591,9 +591,12 @@ export class AttackBuilder {
         return this.#formulaData;
     }
 
-    /** A modifier's numeric value: a plain number, or a formula ("20 * @self.buffs"). */
-    #number(value: string | number): number {
-        return evaluateNumber(value, this.formulaData);
+    /**
+     * A modifier's numeric value: a plain number, or a formula ("20 * @self.buffs"). Formulas on an effect can also
+     * read that effect's own stack count, `@effect.stacks`.
+     */
+    #number(value: string | number, effect?: ActiveEffect.Implementation): number {
+        return evaluateNumber(value, effect ? { ...this.formulaData, ...effectFormulaData(effect) } : this.formulaData);
     }
 
     /**
@@ -601,7 +604,7 @@ export class AttackBuilder {
      * the multiplier pool it belongs to and for lasting debuffs that last as long as it does.
      */
     #applyModifier(modifier: RollModifierData, source: string, sourceEffect?: ActiveEffect.Implementation): void {
-        const number = this.#number(modifier.value);
+        const number = this.#number(modifier.value, sourceEffect);
         switch (modifier.type) {
             case "damage":
                 this.addDamage(modifier.value, concreteDamageType(modifier.damageType));
@@ -808,7 +811,7 @@ export class AttackBuilder {
                         const type = (this.#convert ?? (modifier.damageType || "physical")) as DamageKey;
                         damage.set(type, [...(damage.get(type) ?? []), `(${modifier.value})`]);
                     } else if (modifier.type === "multiplier") {
-                        multipliers = withMultiplier(multipliers, (modifier.damageType || "all") as MultiplierKey, this.#poolOf(effect), this.#number(modifier.value));
+                        multipliers = withMultiplier(multipliers, (modifier.damageType || "all") as MultiplierKey, this.#poolOf(effect), this.#number(modifier.value, effect));
                     } else if (!critApplied) {
                         this.#applyModifier(modifier, `${source} (on crit)`, effect);
                     }

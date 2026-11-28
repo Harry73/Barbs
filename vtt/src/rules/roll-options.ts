@@ -188,7 +188,8 @@ export function actorData(actor: Actor.Implementation | null | undefined, observ
         if (category === "buff") data.buffs++;
         if (category === "condition") data.conditions++;
         const name = slug(effect.name ?? "");
-        if (name) bump(data.stacks, name);
+        // A copy is one stack; an effect that counts its own (Analytical Shooter) is that many.
+        if (name) data.stacks[name] = (data.stacks[name] ?? 0) + Math.max(1, Number(foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.stacks`)) || 0);
         const statuses = effect.statuses ?? [];
         for (const status of statuses) bump(data.statuses, status);
         if (observerUuid && sameActor(foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.casterUuid`) as string, observerUuid)) {

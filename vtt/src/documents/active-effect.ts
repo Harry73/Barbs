@@ -10,6 +10,7 @@
  *     the job: evaluate plain arithmetic after substitution.
  */
 import { grantedName, isTemplate, type EffectLike } from "../effects/templates.ts";
+import { effectFormulaData } from "../data/effect.ts";
 import { actorData } from "../rules/roll-options.ts";
 
 const ARITHMETIC = /^[\d\s+\-*/().]+$/;
@@ -18,7 +19,7 @@ export class BarbsActiveEffect extends ActiveEffect {
     override getReplacementData(baseData: Record<string, unknown>): Record<string, unknown> {
         const owner = (this as unknown as { target?: unknown }).target ?? (this.parent as { actor?: unknown } | null)?.actor ?? this.parent;
         const actor = (owner as { documentName?: string } | null)?.documentName === "Actor" ? (owner as Actor.Implementation) : null;
-        return { ...baseData, self: actorData(actor) };
+        return { ...baseData, self: actorData(actor), ...effectFormulaData(this) };
     }
 
     static override _replaceDataRefs(raw: string, data: object): string {

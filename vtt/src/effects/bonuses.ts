@@ -123,6 +123,7 @@ export function describeTrigger(t: TriggerData): string {
         reflect: `reflect ${value}% at the attacker`,
         spend: `spend ${value} ${t.type || "stamina"}`,
         extend: `extend this by ${value} round(s)`,
+        addStack: `add ${value || 1} stack(s)${t.type ? ` (up to ${t.type})` : ""}`,
         endConcentration: "end the concentration",
     };
     const extra = [

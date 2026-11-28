@@ -7,7 +7,7 @@
  */
 import { INCOMING_MODIFIER_TYPES, NON_ROLL_BONUS_TYPES } from "../config.ts";
 import { describeBonus, describeTrigger } from "../effects/bonuses.ts";
-import type { BarbsEffectModel, RollModifierData } from "../data/effect.ts";
+import { effectFormulaData, type BarbsEffectModel, type RollModifierData } from "../data/effect.ts";
 import type { EquipmentModel } from "../data/item/models.ts";
 import { evaluateNumber, usesTarget } from "../rules/formula.ts";
 import { actorData } from "../rules/roll-options.ts";
@@ -88,7 +88,7 @@ export function summarizeRollBonuses(actor: Actor.Implementation): RollBonusSumm
                 !INCOMING_MODIFIER_TYPES.has(m.type) &&
                 (m.rollType === "all" || critOnly);
             const keys = statKeys(m);
-            const value = evaluateNumber(m.value, data);
+            const value = evaluateNumber(m.value, { ...data, ...effectFormulaData(effect) });
             if (unconditional && keys.length && value) {
                 for (const key of keys) {
                     const list = always.get(key) ?? [];

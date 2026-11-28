@@ -247,6 +247,7 @@ export const TRIGGER_ACTIONS = {
     note: "Post a reminder",
     spend: "Spend a resource (stops if you can't)",
     extend: "Extend this effect (and what its concentration holds) by N rounds",
+    addStack: "Add N stacks to this effect (Type: the most it can have)",
     endConcentration: "End the concentration this belongs to",
     // Only for "You would take damage": they change the damage before it lands.
     reduceDamage: "Reduce that damage by %",
