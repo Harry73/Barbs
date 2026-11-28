@@ -480,9 +480,6 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
                     }),
                 ],
             },
-            // Everything that only applies sometimes (a weapon's own mods, "bow attacks", on crit, next roll) or isn't
-            // a stat at all (on-hit damage, statuses), spelled out.
-            ...(rb.other.length ? [{ label: "Conditional & On-hit Bonuses", rows: [], lines: rb.other, wide: true }] : []),
         ];
     }
 

@@ -24,15 +24,14 @@
   <p class="hint">
     Everything here comes from attributes plus active effects: buffs, conditions, and equipped gear, both their Changes
     and their always-on roll modifiers (hover a number for where it comes from). Bonuses that only apply sometimes, like a
-    weapon's own mods, are listed at the bottom.
+    weapon's own mods, aren't counted here.
   </p>
 
   <div class="stat-sections">
     {{#each statSections as |section|}}
-    <table class="barbs-table stat-section{{#if section.wide}} wide{{/if}}">
+    <table class="barbs-table stat-section">
       <thead><tr><th colspan="2">{{section.label}}</th></tr></thead>
       <tbody>
-        {{#each section.lines as |line|}}<tr><td colspan="2">{{line}}</td></tr>{{/each}}
         {{#each section.rows as |r|}}
         <tr class="{{#if r.zero}}zero{{/if}}"{{#if r.hint}} data-tooltip="{{r.hint}}"{{/if}}>
           <td>{{r.label}}</td>

@@ -265,10 +265,6 @@
   grid-template-columns: repeat(2, 1fr);
 }
 
-.barbs .stat-section.wide {
-  grid-column: 1 / -1;
-}
-
 .barbs .stat-section td.value {
   text-align: right;
   font-weight: bold;
