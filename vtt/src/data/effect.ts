@@ -78,12 +78,6 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
             /** Consumed by the next roll it modifies, like Assassin's Focus. */
             singleUse: new fields.BooleanField(),
             /**
-             * Blocks the next attack applied to the bearer, reducing all of its hits by this percent (100 = fully
-             * blocked), then is used up. 0 = not a block. Drains and DoT ticks aren't attacks and aren't blocked.
-             * Derived from "block" bonus rows; stored values from before those existed are moved into one on load.
-             */
-            block: new fields.NumberField({ required: true, integer: true, min: 0, max: 100, initial: 0 }),
-            /**
              * Damage the bearer deals to creatures around them at the start of each of their turns (Fiery Temper).
              * Posted as a card targeting everyone in range; blank formula = none.
              */
@@ -92,14 +86,6 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
                 damageType: new fields.StringField({ required: true, blank: true, initial: "physical" }),
                 radius: new fields.NumberField({ required: true, integer: true, min: 0, initial: 0 }),
                 affects: new fields.StringField({ required: true, choices: ["enemies", "allies", "all"], initial: "enemies" }),
-            }),
-            /**
-             * Damage the bearer takes at the start of each of their turns (Bleed, Burn, Poison, lingering spells).
-             * Leave the formula blank for none.
-             */
-            dot: new fields.SchemaField({
-                formula: new fields.StringField({ required: true, blank: true, initial: "" }),
-                damageType: new fields.StringField({ required: true, blank: true, initial: "physical" }),
             }),
             /**
              * A template effect never applies by itself: triggers on the same item or actor copy it onto someone
@@ -140,44 +126,32 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
 
     declare category: string;
     declare singleUse: boolean;
-    declare block: number;
     declare pulse: { formula: string; damageType: string; radius: number; affects: "enemies" | "allies" | "all" };
-    declare dot: { formula: string; damageType: string };
     declare modifiers: RollModifierData[];
     declare template: boolean;
     declare endsWithCombat: boolean;
     declare triggers: TriggerData[];
 
-    /** Blocks and damage over time used to be their own fields; they're bonus rows now. */
-    static override migrateData(source: Record<string, unknown>): Record<string, unknown> {
-        const data = source as { block?: number; dot?: { formula?: string; damageType?: string }; modifiers?: object[] };
-        const row = (type: string, value: string, damageType = "all") => ({
-            type, rollType: "all", damageType, weapon: "", value, onCrit: false, conditions: "", key: "",
-        });
-        if (data.block) {
-            data.modifiers = [...(data.modifiers ?? []), row("block", String(data.block))];
-            data.block = 0;
-        }
-        if (data.dot?.formula) {
-            data.modifiers = [...(data.modifiers ?? []), row("dot", data.dot.formula, data.dot.damageType || "physical")];
-            data.dot = { formula: "", damageType: "physical" };
-        }
-        return super.migrateData(source) as Record<string, unknown>;
-    }
-
     /**
      * "Stat" bonuses are always-on character stats, so they ride Foundry's own change engine: each becomes an "add"
      * change (formulas included, see BarbsActiveEffect) when the effect is prepared. That keeps one list of bonuses on
-     * the Barbs tab, while stats still apply the way core changes do. A "block" row sets the effect's block.
+     * the Barbs tab, while stats still apply the way core changes do.
      */
     override prepareDerivedData(): void {
         super.prepareDerivedData?.();
         const changes = (this as unknown as { changes: object[] }).changes;
         for (const m of this.modifiers ?? []) {
             if (m.type === "stat" && m.key && m.value !== "") changes.push({ key: m.key, type: "add", value: m.value, phase: "initial", priority: 20 });
-            // A block row is the effect's block (the strongest, if there are several).
-            if (m.type === "block") this.block = Math.max(this.block ?? 0, Math.min(100, Number(m.value) || 0));
         }
+    }
+
+    /**
+     * Percent of the next attack on the bearer that this effect blocks (100 = all of it), from its "block" bonus rows
+     * (the strongest, if there are several). 0 = not a block. The effect is used up when it blocks. Drains and DoT
+     * ticks aren't attacks and aren't blocked.
+     */
+    get block(): number {
+        return Math.max(0, ...(this.modifiers ?? []).filter((m) => m.type === "block").map((m) => Math.min(100, Number(m.value) || 0)));
     }
 
     /** Damage the bearer takes at the start of each turn, from "dot" bonus rows. */

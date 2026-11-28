@@ -49,8 +49,6 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
         system: {
             category: spec.category,
             singleUse: spec.singleUse ?? false,
-            // Blocks and damage over time are rows in the Bonuses list (below); these fields are for older effects.
-            block: 0,
             endsWithCombat: !!spec.endsWithCombat,
             pulse: {
                 formula: spec.pulse?.formula ?? "",
@@ -58,7 +56,6 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
                 radius: spec.pulse?.radius ?? 0,
                 affects: spec.pulse?.affects ?? "enemies",
             },
-            dot: { formula: "", damageType: "physical" },
             // Plain "add" changes to Barbs stats are written as Bonuses rows (stat bonuses), so they show in the same
             // list as everything else on the Barbs tab; other change types stay core changes.
             changes: (spec.changes ?? [])
