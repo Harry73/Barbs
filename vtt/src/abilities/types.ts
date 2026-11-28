@@ -46,6 +46,11 @@ export type TurnDuration =
 export interface EffectSpec {
     /** Defaults to the ability's name. */
     name?: string;
+    /**
+     * Tells this effect apart from the ability's others. Effects from the same ability replace each other (or stack,
+     * with maxStacks), so an ability that puts two different effects on someone gives each a key.
+     */
+    key?: string;
     /** Defaults to the ability's icon. */
     img?: string;
     category: EffectCategory;

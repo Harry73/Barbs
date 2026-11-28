@@ -102,7 +102,7 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
         },
         flags: {
             [SYSTEM_ID]: {
-                sourceKey: abilityKey(source.className, source.abilityName),
+                sourceKey: abilityKey(source.className, source.abilityName) + (spec.key ? `/${spec.key}` : ""),
                 maxStacks,
                 ...(isTurnDuration(durationText) ? { turnDuration: durationText } : {}),
                 ...(source.casterUuid ? { casterUuid: source.casterUuid } : {}),

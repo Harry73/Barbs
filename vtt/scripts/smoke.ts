@@ -468,6 +468,7 @@ try {
 
     let specs = 0;
     let variantsChecked = 0;
+    const multiSelf: string[] = [];
     for (const [key, automation] of Object.entries(ABILITY_AUTOMATION) as [string, any][]) {
         // Summon actions are keyed under their summoning ability; everything else must match a rulebook ability.
         const summonOf = key.startsWith("Summon/") ? key.split("/").slice(1, 3).join("/") : null;
@@ -521,6 +522,16 @@ try {
                 const zoneEffects = (areaSpec?.zone ? [areaSpec.zone].flat() : []).flatMap((z: any) => (z.effect ? [z.effect] : []));
                 const topLevel = [...(resolve(automation.self, ctx) ?? []), ...(resolve(automation.target, ctx) ?? []), ...zoneEffects];
                 const triggerEffects = topLevel.flatMap((e: any) => (e.triggers ?? []).flatMap((t: any) => (t.effect ? [t.effect] : [])));
+                // Self effects from one cast are applied one by one, and matching keys replace each other, so two of
+                // them need different keys (EffectSpec.key) or the second deletes the first.
+                {
+                    // A spec that only cleanses creates nothing, so it can't replace anything.
+                    const selfSpecs = ((resolve(automation.self, ctx) ?? []) as any[]).filter(
+                        (e) => !(e.cleanse?.length && !e.statuses?.length && !e.changes?.length && !e.modifiers?.length && !e.dot),
+                    );
+                    const keys = selfSpecs.map((e) => e.key ?? "");
+                    if (selfSpecs.length > 1 && new Set(keys).size < keys.length) multiSelf.push(where);
+                }
                 const effectSpecs = [...topLevel, ...triggerEffects];
                 for (const spec of effectSpecs) {
                     // Chance-based resolvers can skip a target (null); check every redirect count until one applies.
@@ -581,6 +592,7 @@ try {
     }
     if (!validated) console.warn("smoke: no pack sources found; run `npm run packs` to validate them too");
 
+    assert.deepEqual([...new Set(multiSelf)], [], "abilities whose self effects would replace each other");
     const entries = Object.keys(ABILITY_AUTOMATION).filter((k) => !k.startsWith("Summon/")).length;
     console.log(
         `smoke: ok (${entries} automated abilities, ${Object.keys(PASSIVE_AUTOMATION).length} passives, ${variantsChecked} choice variants, ${specs} effect specs, ${validated} compendium entries)`,

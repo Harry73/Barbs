@@ -1160,7 +1160,7 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
     },
     "Warrior/Take Cover": {
         choices: [pick("mode", "Choose one", { shield: "Body shield (+30 AC, attack hits both)", tackle: "Tackle (+30% evasion, both prone)", drag: "Drag to safety (dash 20 ft more)" })],
-        self: (ctx) => (ctx.choices.mode === "tackle" ? [{ name: "Take Cover", category: "buff", duration: "end of turn", changes: [stat("evasion", 30)] }, status("prone")] : []),
+        self: (ctx) => (ctx.choices.mode === "tackle" ? [{ name: "Take Cover", category: "buff", duration: "end of turn", changes: [stat("evasion", 30)] }, status("prone", { key: "prone" })] : []),
         target: (ctx) =>
             ctx.choices.mode === "shield"
                 ? [{ name: "Take Cover", category: "buff", duration: "end of turn", changes: [stat("ac", 30)] }]
