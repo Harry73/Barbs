@@ -441,7 +441,10 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
         const regionData = foundry.utils.deepClone(areaResult.regionData);
         delete regionData._id;
         const actions = Object.keys((CONFIG.Token as unknown as { movement: { actions: Record<string, unknown> } }).movement.actions);
-        const behaviors: Record<string, unknown>[] = zones.flatMap((zone) => [
+        // Every effect from one ability shares its key, and effects with a key in common replace each other. A zone's
+        // effects (Smokescreen hides allies, caster included) and its "Zone:" effect each get their own key, or hiding
+        // the caster would replace the effect the zone's lifetime hangs on, ending the zone.
+        const behaviors: Record<string, unknown>[] = zones.flatMap((zone, index) => [
             ...(zone.events.length
                 ? [
                       {
@@ -455,7 +458,7 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
                               casterDisposition: casterToken?.document.disposition ?? 0,
                               damageFormula: zone.damage?.formula ?? "",
                               damageType: zone.damage?.type ?? "physical",
-                              effectData: zone.effect ? buildEffectData(zone.effect, source) : null,
+                              effectData: zone.effect ? buildEffectData({ key: `zone-${index}`, ...zone.effect }, source) : null,
                               whileInside: !!zone.whileInside,
                               note: zone.note ?? "",
                               abilityName: opts.title,
@@ -479,6 +482,7 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
         const duration = zones.find((z) => z.duration)?.duration;
         const lifetime = buildEffectData(
             {
+                key: "zone",
                 name: `Zone: ${opts.title}`,
                 category: "",
                 ...(duration ? { duration } : {}),
