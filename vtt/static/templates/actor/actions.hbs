@@ -77,13 +77,17 @@
       <li data-item-id="{{entry.item.id}}" data-action-name="{{entry.item.name}} {{entry.system.className}} {{entry.system.tags}}">
         <details class="barbs-action">
           <summary>
+            <i class="fa-solid fa-chevron-right barbs-chevron" data-tooltip="Show what it does"></i>
             <a class="barbs-use" data-action="useAbility" data-tooltip="Use {{entry.item.name}}"><img src="{{entry.item.img}}" alt="" /></a>
             <span class="barbs-action-name">
-              <a data-action="useAbility">{{entry.item.name}}</a>
-              {{#if entry.automated}}<i class="fa-solid fa-bolt automated" data-tooltip="Automated: rolls and effects are handled"></i>{{/if}}
-              {{#if entry.alsoReaction}}<span class="barbs-tag" data-tooltip="{{entry.system.action}}">or reaction</span>{{/if}}
-              {{#if entry.wrongWeapon}}<i class="fa-solid fa-triangle-exclamation barbs-warn" data-tooltip="{{entry.wrongWeapon}}"></i>{{/if}}
-              <span class="hint">{{entry.system.className}} {{entry.system.tier}}</span>
+              <span class="barbs-action-title">
+                <a data-action="useAbility" data-tooltip="Use {{entry.item.name}}">{{entry.item.name}}</a>
+                {{#if entry.automated}}<i class="fa-solid fa-bolt automated" data-tooltip="Automated: rolls and effects are handled"></i>{{/if}}
+                {{#if entry.alsoReaction}}<span class="barbs-tag" data-tooltip="{{entry.system.action}}">or reaction</span>{{/if}}
+                {{#if entry.wrongWeapon}}<i class="fa-solid fa-triangle-exclamation barbs-warn" data-tooltip="{{entry.wrongWeapon}}"></i>{{/if}}
+                <span class="hint">{{entry.system.className}} {{entry.system.tier}}</span>
+              </span>
+              {{#if entry.blurb}}<span class="barbs-blurb">{{entry.blurb}}</span>{{/if}}
             </span>
             <span class="hand-buttons">{{#if entry.hands}}
               <a data-action="useAbility" data-hand="main" data-tooltip="Use with your main hand weapon">Main</a>

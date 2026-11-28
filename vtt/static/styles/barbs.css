@@ -914,7 +914,7 @@
 
 .barbs details.barbs-action > summary {
   display: grid;
-  grid-template-columns: 32px 1fr auto 7rem 6rem 6rem;
+  grid-template-columns: 0.9rem 32px 1fr auto 7rem 6rem 6rem;
   align-items: center;
   gap: 0.5rem;
   padding: 0.15rem 0;
@@ -941,13 +941,37 @@
 
 .barbs .barbs-action-name {
   display: flex;
-  align-items: center;
-  gap: 0.35rem;
+  flex-direction: column;
   min-width: 0;
 }
 
-.barbs .barbs-action-name > a {
+.barbs .barbs-action-title {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.barbs .barbs-action-title > a {
   font-weight: bold;
+}
+
+/* A one-line summary of what the ability does, so you can see it without opening it or using it. */
+.barbs .barbs-blurb {
+  font-size: var(--font-size-12, 12px);
+  color: var(--barbs-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.barbs .barbs-chevron {
+  font-size: 0.7em;
+  opacity: 0.6;
+  transition: transform 0.1s;
+}
+
+.barbs details.barbs-action[open] .barbs-chevron {
+  transform: rotate(90deg);
 }
 
 .barbs .barbs-action-cost,

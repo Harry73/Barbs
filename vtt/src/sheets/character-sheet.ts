@@ -45,6 +45,13 @@ type ActionHandler = (this: BarbsCharacterSheet, event: PointerEvent, target: HT
  * Character sheet. Tabs roughly follow the old Roll20 sheet: main (characteristics + resources), attributes, stats,
  * skills, abilities, inventory, and effects. Rolls happen here, on the client, instead of being forwarded to an API.
  */
+/** A description's first sentence as plain text, for a one-line summary under an ability's name. */
+function blurbOf(html: string): string {
+    const text = (new DOMParser().parseFromString(html ?? "", "text/html").body.textContent ?? "").replace(/\s+/g, " ").trim();
+    const first = text.split(/(?<=[.!?])\s/)[0] ?? "";
+    return first.length > 150 ? `${first.slice(0, 147).trimEnd()}...` : first;
+}
+
 /** The Actions tab's ability sections, by the action an ability takes. */
 const ACTION_GROUPS = [
     { id: "major", label: "Major Actions" },
@@ -86,6 +93,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             deleteItem: BarbsCharacterSheet.#onDeleteItem as ActionHandler,
             toggleEquipped: BarbsCharacterSheet.#onToggleEquipped as ActionHandler,
             openCompendium: BarbsCharacterSheet.#onOpenCompendium as ActionHandler,
+            openClass: BarbsCharacterSheet.#onOpenClass as ActionHandler,
             createEffect: BarbsCharacterSheet.#onCreateEffect as ActionHandler,
             editEffect: BarbsCharacterSheet.#onEditEffect as ActionHandler,
             deleteEffect: BarbsCharacterSheet.#onDeleteEffect as ActionHandler,
@@ -93,7 +101,6 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             passiveResource: BarbsCharacterSheet.#onPassiveResource as ActionHandler,
             passiveAction: BarbsCharacterSheet.#onPassiveAction as ActionHandler,
         },
-            openClass: BarbsCharacterSheet.#onOpenClass as ActionHandler,
     };
 
     static override PARTS = {
@@ -270,13 +277,6 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             .filter((e) => e.system.isHeldWeapon)
             .map((e) => ({ ...e, hand: twoWeapons ? (e.item.id === mainId ? "Main hand" : e.item.id === offId ? "Offhand" : "") : "" }));
 
-        const actions = await this.#actionsTab(sortedAbilityGroups, passives, equipment, heldWeapons);
-
-        // One section per slot, in a fixed order, empty ones included so it's clear what's free. Equipped items
-        // first, then by name.
-        const inventory = INVENTORY_ORDER.map((slot) => ({
-            slot,
-            label: INVENTORY_HEADINGS[slot] ?? EQUIPMENT_SLOTS[slot],
         // Classes come from the abilities the character has (with what they've invested in each), plus any class
         // dragged in by hand. Rows open the class's description: the owned item, or the compendium's.
         const classPack = game.packs?.get(`${SYSTEM_ID}.classes`);
@@ -298,6 +298,13 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
                 };
             });
 
+        const actions = await this.#actionsTab(sortedAbilityGroups, passives, equipment, heldWeapons);
+
+        // One section per slot, in a fixed order, empty ones included so it's clear what's free. Equipped items
+        // first, then by name.
+        const inventory = INVENTORY_ORDER.map((slot) => ({
+            slot,
+            label: INVENTORY_HEADINGS[slot] ?? EQUIPMENT_SLOTS[slot],
             items: equipment
                 .filter((e) => (e.system.slot in EQUIPMENT_SLOTS ? e.system.slot : "none") === slot)
                 .sort((a, b) => Number(b.system.equipped) - Number(a.system.equipped) || a.item.name.localeCompare(b.item.name)),
@@ -519,6 +526,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
                     ...entry,
                     // Enriched so @UUID links and inline rolls in the rulebook text work.
                     description: await enrich(a.description, entry.item),
+                    blurb: blurbOf(a.description),
                     cantAfford: cost.value != null && !!cost.resource && have < cost.value,
                     wrongWeapon: holdsExpectedWeapon(expected, heldCategories) ? "" : `Used with a ${names}, and you're not holding one`,
                     // "1 Major Action or Reaction": listed with its main action, marked as also a reaction.
@@ -685,14 +693,6 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
         if (item) await item.update({ system: { equipped: !(item.system as unknown as EquipmentModel).equipped } } as never);
     }
 
-    static #onOpenCompendium(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {
-        void game.packs?.get(`${SYSTEM_ID}.${target.dataset.pack}`)?.render(true);
-    }
-
-    static async #onCreateEffect(this: BarbsCharacterSheet) {
-        await this.barbsActor.createEmbeddedDocuments("ActiveEffect", [
-            { name: "New Effect", img: "icons/svg/aura.svg" } as never,
-        ]);
     /** Open a class's description: the one on the character if they have it, otherwise the compendium's. */
     static async #onOpenClass(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {
         const name = target.dataset.class ?? "";
@@ -704,6 +704,14 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
         else ui.notifications?.warn(`Couldn't find the ${name} class.`);
     }
 
+    static #onOpenCompendium(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {
+        void game.packs?.get(`${SYSTEM_ID}.${target.dataset.pack}`)?.render(true);
+    }
+
+    static async #onCreateEffect(this: BarbsCharacterSheet) {
+        await this.barbsActor.createEmbeddedDocuments("ActiveEffect", [
+            { name: "New Effect", img: "icons/svg/aura.svg" } as never,
+        ]);
     }
 
     static #onEditEffect(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {
