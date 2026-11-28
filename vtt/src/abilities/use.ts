@@ -18,7 +18,7 @@ import { bounceResult, postCard, type CardContent, type CardFlags } from "../cha
 import type { UndoRecord } from "../chat/undo.ts";
 import { activePassives, adjustResource } from "../passives/index.ts";
 import type { PassiveDelta, RollInfo } from "../passives/types.ts";
-import { affected, placeArea, type AreaResult } from "./area.ts";
+import { affected, aimShots, placeArea, type AreaResult, type Shot } from "./area.ts";
 import { concentrationMarkerData, concentrationMarkers } from "../concentration.ts";
 import { expectedWeaponCategories, holdsExpectedWeapon } from "../rules/hands.ts";
 import { rollOptions } from "../rules/roll-options.ts";
@@ -259,6 +259,15 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
         areaResult = await placeArea(actor, area, { reflect: tags.includes("spell") });
         if (!areaResult) return;
     }
+    // A volley of aimed shots: cancelling the first shot cancels the cast.
+    const shotsSpec = resolve(automation?.shots, ctx);
+    let shots: Shot[] | null = null;
+    if (shotsSpec) {
+        shots = await aimShots(actor, shotsSpec);
+        if (!shots) return;
+        const hit = shots.flatMap((s) => s.hits.map((h) => h.token.id)).filter((id): id is string => !!id);
+        canvas?.tokens?.setTargets([...new Set(hit)]);
+    }
     ctx.targets = [...(game.user?.targets ?? [])].map((t) => t.actor).filter((a): a is Actor.Implementation => !!a);
 
     // 3. Cost
@@ -359,11 +368,25 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
     let tiers: TierResult[] = [];
     const attack = resolve(automation?.attack, ctx);
     const heal = resolve(automation?.heal, ctx);
+    // Each shot of a volley is its own attack roll (the first is `result`, the rest are rolled here).
+    const shotResults: AttackResult[] = [];
     if (attack) {
         ({ result, tiers } = await rollAttack(actor, attack, ctx, rollInfo, tags.includes("combo"), !!area));
         if (result.rollType !== "healing") {
             const { fireTriggers } = await import("../triggers/index.ts");
             await fireTriggers(actor, "attack", { options: new Set(result.rollOptions), sourceName: opts.title });
+        }
+        if (shots) {
+            shotResults.push(result);
+            for (let i = 1; i < shots.length; i++) {
+                const extra = (await rollAttack(actor, attack, ctx, rollInfo, tags.includes("combo"), false)).result;
+                shotResults.push(extra);
+                undo.removedEffects!.push(...extra.consumedEffects);
+                undo.passiveDeltas!.push(...extra.passiveDeltas);
+                (undo.quantityDeltas ??= []).push(...extra.quantityDeltas);
+                const { fireTriggers } = await import("../triggers/index.ts");
+                await fireTriggers(actor, "attack", { options: new Set(extra.rollOptions), sourceName: opts.title });
+            }
         }
     } else if (heal) {
         const builder = new AttackBuilder(actor, { rollType: "healing" });
@@ -630,6 +653,50 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
         redirectSwap: attack?.redirectSwap,
         alterCourse: hasAlterCourse(actor),
     };
+
+    // A volley posts a card per shot, each targeting its path in order (the enemy it hit, then its bounce's), with
+    // Alter Course's +50% per redirect on whoever was hit after one. Apply stops where the shot misses.
+    if (shots && shotResults.length && cardFlags.damage) {
+        const alterCourse = hasAlterCourse(actor);
+        for (const [i, shot] of shots.entries()) {
+            const shotResult = shotResults[i];
+            const path = shot.hits.map((h) => `${h.token.name}${h.redirects ? ` (redirect ${h.redirects}${alterCourse ? `, +${50 * h.redirects}%` : ""})` : ""}`);
+            const scales = Object.fromEntries(
+                shot.hits.filter((h) => h.redirects && alterCourse).map((h) => [h.token.document.uuid ?? "", 1 + 0.5 * h.redirects]),
+            );
+            await postCard(
+                actor,
+                {
+                    ...(i === 0 ? cardContent : { title: opts.title, img: opts.img, targetEffects: cardContent.targetEffects, extraEffects: cardContent.extraEffects }),
+                    subtitle: `Shot ${i + 1} of ${shots.length}`,
+                    result: shotResult,
+                    notes: [...(i === 0 ? (cardContent.notes ?? []) : []), `Path: ${path.join(" → ") || "hit no one"}.`],
+                },
+                {
+                    ...cardFlags,
+                    sourceName: `${cardFlags.sourceName} (shot ${i + 1})`,
+                    damage: {
+                        ...cardFlags.damage,
+                        hits: shotResult.hits.map((h) => h.totals),
+                        bonus: shotResult.hits.map((h) => h.distanceBonus),
+                        conditional: shotResult.hits.map((h) => h.conditional),
+                        conditionalModifiers: shotResult.conditional,
+                        multipliers: shotResult.multipliers,
+                        rollOptions: shotResult.rollOptions,
+                        penetration: shotResult.penetration,
+                    },
+                    statuses: shotResult.statuses,
+                    targetScales: scales,
+                    fixedTargets: true,
+                    chain: true,
+                    alterCourse: false,
+                },
+                i === 0 ? undo : undefined,
+                { targets: shot.hits.map((h) => h.token.document.uuid ?? "").filter(Boolean) },
+            );
+        }
+        return;
+    }
 
     // A reflected beam posts a card per redirect (each bounce through a creature is a hit of its own, recalculated for
     // that bounce: Helix Beam's element swap, Alter Course's +50%, the condition's chance). The first card is the

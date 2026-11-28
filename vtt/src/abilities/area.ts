@@ -220,3 +220,133 @@ export async function placeArea(
         regionData: (region as unknown as { toObject(): Record<string, unknown> }).toObject(),
     };
 }
+
+/* -------------------------------------------- */
+/*  Shots (Scatter Shards)                      */
+/* -------------------------------------------- */
+
+/** One creature a shot hit, and how many times it had been redirected (off mirrors or creatures) on the way. */
+export interface ShotHit {
+    token: Token.Implementation;
+    redirects: number;
+}
+
+export interface Shot {
+    hits: ShotHit[];
+}
+
+/**
+ * Aim a line from a point (the caster, or the creature a shot bounces off) and return its direction, or null if
+ * cancelled. While aiming, the line's bounces off the caster's mirrors are previewed.
+ */
+async function aimLine(from: Point, length: number, width: number, mirrors: Mirror[], prompt: string): Promise<Point | null> {
+    ui.notifications?.info(`${prompt} Right-click or Escape skips it.`);
+    const preview = new PIXI.Graphics();
+    canvas!.controls!.addChild(preview);
+    let rotation = 0;
+    const region = (await canvas!.regions!.placeRegion(
+        {
+            name: "Aim",
+            shapes: [{ type: "line", x: from.x, y: from.y, length, width, rotation: 0, gridBased: true }],
+            color: game.user?.color,
+            levels: canvas!.level ? [canvas!.level.id] : [],
+            highlightMode: "coverage",
+            displayMeasurements: true,
+        } as never,
+        {
+            create: false,
+            allowRotation: false,
+            onMove: ({ shape: s, position }: { shape: { updateSource(d: object): void }; position: Point }) => {
+                rotation = Math.atan2(position.y - from.y, position.x - from.x);
+                s.updateSource({ x: from.x, y: from.y, rotation: Math.toDegrees(rotation) });
+                preview.clear();
+                if (mirrors.length) paintSegments(preview, traceBeam(from, { x: Math.cos(rotation), y: Math.sin(rotation) }, length, width, mirrors).segments);
+                return false;
+            },
+        } as never,
+    )) as unknown as { shapes: { rotation?: number }[] } | null;
+    preview.destroy();
+    if (!region) return null;
+    const radians = ((region.shapes[0].rotation ?? Math.toDegrees(rotation)) * Math.PI) / 180;
+    return { x: Math.cos(radians), y: Math.sin(radians) };
+}
+
+/**
+ * The first creature along a traced line, with where it was hit and how much range was left on that stretch. Stretches
+ * are walked in the order the tracer produced them, so a mirror bounce comes after the stretch leading to it.
+ */
+export function firstAlong(segments: Segment[], candidates: Token.Implementation[], tolerance: number): { token: Token.Implementation; segment: Segment; remaining: number } | null {
+    for (const segment of segments) {
+        const dx = segment.to.x - segment.from.x;
+        const dy = segment.to.y - segment.from.y;
+        const length = Math.hypot(dx, dy) || 1;
+        let best: { token: Token.Implementation; t: number } | null = null;
+        for (const token of candidates) {
+            if (!onSegment(token.center, segment, tolerance)) continue;
+            const t = ((token.center.x - segment.from.x) * dx + (token.center.y - segment.from.y) * dy) / length;
+            if (t > tolerance / 2 && (!best || t < best.t)) best = { token, t };
+        }
+        if (best) return { token: best.token, segment, remaining: Math.max(0, length - best.t) };
+    }
+    return null;
+}
+
+/**
+ * Aim a volley of shots (Scatter Shards). Each shot is aimed from the caster and hits the first creature in its path,
+ * reflecting off the caster's mirrors on the way. If that's an enemy and the shot can bounce, the caster aims the bounce
+ * from it, with whatever range is left, and it hits the first creature along that. Returns null if the first shot is
+ * cancelled (the cast doesn't happen); later shots can be skipped.
+ */
+export async function aimShots(
+    actor: Actor.Implementation,
+    { count, range, bounces = 0 }: { count: number; range: number; bounces?: number },
+): Promise<Shot[] | null> {
+    if (!canvas?.ready || !canvas.scene) {
+        ui.notifications?.warn("Open a scene to aim this ability.");
+        return null;
+    }
+    const caster = casterToken(actor);
+    if (!caster) {
+        ui.notifications?.warn(`${actor.name} needs a token on this scene to aim this ability.`);
+        return null;
+    }
+    const px = canvas.dimensions!.distancePixels;
+    const width = 5 * px;
+    const tolerance = canvas.grid!.size / 4;
+    const mirrors = mirrorsOf(actor);
+    const mirrorIds = new Set(mirrors.map((m) => m.mirror.id));
+    const creatures = (canvas.tokens!.placeables as Token.Implementation[]).filter((t) => t.visible && !!t.actor && !mirrorIds.has(t.id ?? ""));
+    const shots: Shot[] = [];
+    const drawn: Segment[] = [];
+
+    for (let i = 0; i < count; i++) {
+        const dir = await aimLine(caster.center, range * px, width, mirrors.map((m) => m.mirror), `Aim shot ${i + 1} of ${count}.`);
+        if (!dir) {
+            if (i === 0) return null;
+            break;
+        }
+        const out = traceBeam(caster.center, dir, range * px, width, mirrors.map((m) => m.mirror));
+        drawn.push(...out.segments);
+        const first = firstAlong(out.segments, creatures.filter((t) => t !== caster), tolerance);
+        if (!first) {
+            ui.notifications?.info(`Shot ${i + 1} hit no one.`);
+            shots.push({ hits: [] });
+            continue;
+        }
+        const hits: ShotHit[] = [{ token: first.token, redirects: first.segment.redirects }];
+        // Only bouncing off an enemy redirects the shot ("reflect upon hitting an enemy").
+        if (bounces > 0 && affected(first.token, caster, "enemies") && first.remaining > tolerance) {
+            const bounceDir = await aimLine(first.token.center, first.remaining, width, mirrors.map((m) => m.mirror), `Aim shot ${i + 1}'s bounce off ${first.token.name}.`);
+            if (bounceDir) {
+                const back = traceBeam(first.token.center, bounceDir, first.remaining, width, mirrors.map((m) => m.mirror));
+                drawn.push(...back.segments);
+                const second = firstAlong(back.segments, creatures.filter((t) => t !== first.token), tolerance);
+                if (second) hits.push({ token: second.token, redirects: first.segment.redirects + 1 + second.segment.redirects });
+                else ui.notifications?.info(`Shot ${i + 1}'s bounce hit no one.`);
+            }
+        }
+        shots.push({ hits });
+    }
+    drawSegments(drawn);
+    return shots;
+}

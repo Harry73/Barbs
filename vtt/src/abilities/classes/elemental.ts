@@ -523,11 +523,11 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
         notes: ["Each target rolls its condition chance (20%, +20% per redirect) when you click Apply."],
     },
     "Mirror Mage/Scatter Shards": {
+        // Three shards, each aimed separately: it hits the first creature in its path, and if that's an enemy, you aim
+        // its one bounce off them (with the range it has left). Each shard rolls its own 5d8.
         choices: [pick("element", "Element", { ice: "Ice", light: "Light" })],
+        shots: { count: 3, range: 60, bounces: 1 },
         attack: (ctx) => spell("5d8", ctx.choices.element === "light" ? "light" : "ice"),
-        notes: [
-            "Three shards: use the ability three times or apply this card to each shard's target. Each shard reflects once off the enemy it hits, in a direction you choose: apply it to that second target with the ↪ (redirected) button for Alter Course's bonus.",
-        ],
     },
     "Mirror Mage/Mirror's Curse": {
         target: [

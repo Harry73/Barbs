@@ -169,6 +169,13 @@ numbers recalculated for that bounce: Alter Course's +50% per redirect, Helix Be
 chance. A creature the beam crosses on the way out and on the way back is on two cards and is hit twice. Each card's
 Apply uses its own targets, not whoever is targeted now; only the first carries the cast's cost and undo.
 
+Scatter Shards fires three separately aimed shards (`shots` in the automation, `aimShots` in `src/abilities/area.ts`).
+Each is aimed from the caster, reflects off mirrors like a beam, and hits the first creature in its path. If that's an
+enemy, you aim its one bounce off them, with the range left on that stretch (so a Plane Mirror's range reset carries
+over), and it hits the first creature along the bounce. Each shard rolls its own damage and posts its own card with its
+path ("Goblin → Orc (redirect 1, +50%)"); Apply goes along the path in order and stops at the first creature it doesn't
+hit, so a dodged shard never bounces. Right-click skips a bounce or the remaining shards.
+
 ## Effects and roll modifiers
 
 Gear's affixes live on the item's main effect: **Edit bonuses** on an equipment sheet opens it (creating it, named

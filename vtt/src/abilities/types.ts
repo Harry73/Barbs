@@ -319,6 +319,12 @@ export interface AbilityAutomation {
     cost?: Dyn<Cost | Cost[] | null>;
     /** Place an area on the map and target what's inside it before rolling. */
     area?: Dyn<AreaSpec | null>;
+    /**
+     * A volley of separately aimed shots (Scatter Shards): each is aimed from the caster, hits the first creature in its
+     * path, and can bounce `bounces` times off an enemy it hits, in a direction the caster aims, with the range left.
+     * Each shot rolls the attack and posts its own card.
+     */
+    shots?: Dyn<{ count: number; range: number; bounces?: number } | null>;
     /** A damage roll. */
     attack?: Dyn<AttackSpec | null>;
     /** A healing roll. `self` heals the caster immediately instead of offering an Apply button. */

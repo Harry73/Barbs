@@ -652,6 +652,23 @@ try {
         assert.deepEqual(result.totals, { ice: 40 }, "the original result isn't changed");
     }
 
+    // Scatter Shards: a shot hits the first creature on its path, and the bounce gets the range left on that stretch.
+    {
+        const { firstAlong } = await vite.ssrLoadModule("/src/abilities/area.ts");
+        const at = (name: string, x: number, y: number) => ({ name, center: { x, y } });
+        const near = at("near", 30, 0), far = at("far", 50, 0), off = at("off to the side", 60, 40), behind = at("behind", -20, 0);
+        const straight = [{ from: { x: 0, y: 0 }, to: { x: 100, y: 0 }, redirects: 0, width: 10 }];
+        const first = firstAlong(straight, [far, off, near, behind], 2);
+        assert.equal(first.token.name, "near", "the first creature along the line, not the first in the list");
+        assert.equal(first.remaining, 70, "and the range left after it");
+        assert.equal(firstAlong(straight, [off, behind], 2), null, "nothing on the line, or behind where it starts");
+        // Off a mirror at (100, 0) and back up: a creature on the second stretch is hit after one redirect.
+        const bounced = [...straight, { from: { x: 100, y: 0 }, to: { x: 100, y: 100 }, redirects: 1, width: 10 }];
+        const up = at("up", 100, 40);
+        const hit = firstAlong(bounced, [up, off], 2);
+        assert.deepEqual([hit.token.name, hit.segment.redirects, hit.remaining], ["up", 1, 60]);
+    }
+
     // Variables read before their declaration in the same function: TypeScript misses it when the read is in a callback.
     {
         const { findUseBeforeDefine } = await import("./use-before-define.ts");

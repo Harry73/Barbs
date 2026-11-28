@@ -100,6 +100,11 @@ export interface CardFlags {
     redirects?: number;
     /** Apply uses the card's own targets (the tokens on this redirect's segment), not whoever is targeted now. */
     fixedTargets?: boolean;
+    /**
+     * The targets are one shot's path, in order (Scatter Shards: the enemy it hit, then whoever its bounce hit). Apply
+     * stops at the first one the shot doesn't hit: a dodged shard never bounces.
+     */
+    chain?: boolean;
     /** Damage types that swap with each redirect (Helix Beam). */
     redirectSwap?: [DamageKey, DamageKey];
     /** The caster has Alter Course: +50% damage per redirect. */
@@ -288,7 +293,8 @@ function resolveTargets(flags: CardFlags): Target[] {
             .map((uuid) => fromUuidSync(uuid) as TokenDocument.Implementation | null)
             .filter((t): t is TokenDocument.Implementation => !!t);
     }
-    if (!tokens.length) tokens = (canvas?.tokens?.controlled ?? []).map((t) => t.document);
+    // A card pinned to its own targets (a redirect's stretch, a shot's path) applies to exactly those, even none.
+    if (!tokens.length && !flags.fixedTargets) tokens = (canvas?.tokens?.controlled ?? []).map((t) => t.document);
     const targets = tokens
         .filter((t) => !!t.actor)
         .map((t) => ({ actor: t.actor as Actor.Implementation, tokenUuid: t.uuid ?? null }));
@@ -561,6 +567,7 @@ async function applyAll(flags: CardFlags, targets: Target[], { redirected = fals
     const effects = await targetEffectSpecs(flags);
     for (const target of targets) {
         const landed = flags.damage ? await damageTarget(flags, target, { redirected, skipEvasion: skipRolls }) : true;
+        if (!landed && flags.chain) break;
         if (!landed) continue;
         if (effects) for (const spec of effects.specs) await applyTargetEffect(flags, target, spec, effects.ctx, skipRolls, redirected);
         for (const data of flags.extraEffects ?? []) {
