@@ -438,14 +438,12 @@ export async function applyDamageToActor(
     const { notes: healthNotes, undo } = await updateHealth(target, total);
     const notes = [...notes0, ...healthNotes];
     (undo.removedEffects ??= []).push(...blockUndo);
-    // Concentrating creatures roll to keep it: DC twice the damage taken.
+    // Concentrating creatures roll to keep it right away: DC twice the damage taken (see concentration.ts).
     const markers = concentrationMarkers(target);
-    if (total > 0 && markers.length && !target.statuses.has(STATUS_DOWNED)) {
+    const needsCheck = total > 0 && markers.length > 0 && !target.statuses.has(STATUS_DOWNED);
+    if (needsCheck) {
         const names = markers.map((m) => foundry.utils.getProperty(m, `flags.${SYSTEM_ID}.concentration.ability`)).join(", ");
-        notes.push(
-            `Concentrating on ${names}: <button type="button" class="barbs-concentration-check" data-actor-uuid="${target.uuid}" data-dc="${total * 2}">` +
-                `<i class="fa-solid fa-brain"></i> Concentration check (DC ${total * 2})</button>`,
-        );
+        notes.push(`Concentrating on ${names}: concentration check vs DC ${total * 2} (rolled below).`);
     }
     const scaleNote =
         (baseScale !== 1 ? ` (${baseScale === 0.5 ? "half" : `×${baseScale}`} damage)` : "") +
@@ -457,6 +455,11 @@ export async function applyDamageToActor(
             `<ul>${rows.join("")}</ul>${notes.map((n) => `<p>${n}</p>`).join("")}`,
         undo,
     );
+
+    if (needsCheck) {
+        const { concentrationCheck } = await import("../concentration.ts");
+        await concentrationCheck(target, total * 2);
+    }
 
     // Redirected and reflected damage goes out as trigger damage (not a new attack).
     if (resolved) {

@@ -232,9 +232,9 @@ check for the bearer (untrained skills roll with no rank) and only goes on if it
 default). Concentrating puts a "Concentrating: <ability>" effect on the caster (warning if that's over their
 Concentration Limit), and everything the cast creates is linked to it: effects on the caster, effects applied from the
 card to targets, and summons. Deleting the Concentrating effect, by hand, by undoing the cast, by failing a
-concentration check, or by being Downed, ends all of them. A concentrating creature's damage messages get a
-Concentration check button (DC twice the damage; Pain Tolerance if they have it, otherwise d100 + Focus, plus
-Concentration Bonus). Recasting an ability you're already concentrating on continues the same concentration.
+concentration check, or by being Downed, ends all of them. When a concentrating creature takes damage, its
+concentration check is rolled automatically (DC twice the damage; Pain Tolerance if they have it, otherwise d100 +
+Focus, plus Concentration Bonus), and a failure drops all of it. Recasting an ability you're already concentrating on continues the same concentration.
 
 **Zones** (`src/zones.ts`): an ability whose area has a `zone` leaves it on the map as a Region with a "Barbs zone"
 behavior, which reacts when tokens enter, leave, or start/end their turn inside: damage (rolled like one of the

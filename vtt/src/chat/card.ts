@@ -593,17 +593,6 @@ export function registerChatListeners(): void {
     Hooks.on("renderChatMessageHTML", (message: ChatMessage.Implementation, html: HTMLElement) => {
         hideUndoIfNotAllowed(message, html);
         if (!canRedirect()) html.querySelector('[data-card-action="redirectToAttacker"]')?.remove();
-        // Concentration checks on damage messages, for whoever owns the concentrating creature.
-        for (const button of html.querySelectorAll<HTMLButtonElement>("button.barbs-concentration-check")) {
-            button.addEventListener("click", async (event) => {
-                event.preventDefault();
-                const actor = (await fromUuid(button.dataset.actorUuid ?? "")) as Actor.Implementation | null;
-                if (!actor?.isOwner) return void ui.notifications?.warn("Only the concentrating creature's owner can roll this.");
-                button.disabled = true;
-                const { concentrationCheck } = await import("../concentration.ts");
-                await concentrationCheck(actor, Number(button.dataset.dc) || 0);
-            });
-        }
         for (const button of html.querySelectorAll<HTMLElement>("[data-card-action]")) {
             button.addEventListener("click", (event) => {
                 event.preventDefault();
