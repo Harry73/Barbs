@@ -8,7 +8,9 @@ import {
     WEAPON_CATEGORIES,
     WEAPON_SCALING,
 } from "../config.ts";
-import { groupEffects, type EffectLike } from "../effects/templates.ts";
+import { describeBonus, describeTrigger } from "../effects/bonuses.ts";
+import { groupEffects, isTemplate, type EffectLike } from "../effects/templates.ts";
+import type { BarbsEffectModel } from "../data/effect.ts";
 import { getPassiveAutomation } from "../passives/index.ts";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -39,6 +41,40 @@ function describePassive(item: Item.Implementation): string[] | null {
  * One sheet class for every item type. The header is shared; the details part swaps its template per type.
  * List fields that come from the rulebook (race traits, class branches, skill rank notes) are shown read-only for now.
  */
+/**
+ * An item's main effect: where its affixes live, opened by "Edit bonuses". The one made by that button (flagged), or
+ * else the first effect that isn't a template, for items set up before the button existed.
+ */
+function mainEffect(item: Item.Implementation): ActiveEffect.Implementation | undefined {
+    const effects = [...item.effects] as ActiveEffect.Implementation[];
+    return (
+        effects.find((e) => foundry.utils.getProperty(e, `flags.${SYSTEM_ID}.mainEffect`)) ??
+        effects.find((e) => !isTemplate(e as unknown as EffectLike))
+    );
+}
+
+/**
+ * What an item's effects do, as lines for its sheet: each regular effect's bonuses and triggers (main effect first),
+ * with what a granted template does under the trigger that grants it.
+ */
+function bonusSummary(item: Item.Implementation): { id: string; name: string; lines: { text: string; sub: string[] }[] }[] {
+    const effects = [...item.effects] as ActiveEffect.Implementation[];
+    const main = mainEffect(item);
+    const regular = effects.filter((e) => !isTemplate(e as unknown as EffectLike)).sort((a, b) => Number(b === main) - Number(a === main));
+    const bonusLines = (e: ActiveEffect.Implementation) => ((e.system as unknown as BarbsEffectModel).modifiers ?? []).map(describeBonus);
+    return regular.map((effect) => {
+        const system = effect.system as unknown as BarbsEffectModel;
+        const triggers = (system.triggers ?? []).map((t) => {
+            const name = t.effectData ? null : (t.effect || t.value || "").trim();
+            const template = name ? effects.find((e) => e.name === name && isTemplate(e as unknown as EffectLike)) : undefined;
+            const stacks = Number(foundry.utils.getProperty(template ?? {}, `flags.${SYSTEM_ID}.maxStacks`) ?? 1);
+            const sub = template ? [...bonusLines(template), ...(stacks > 1 && stacks < 999 ? [`stacks up to ${stacks} times`] : [])] : [];
+            return { text: describeTrigger(t), sub };
+        });
+        return { id: effect.id!, name: effect.name, lines: [...bonusLines(effect).map((text) => ({ text, sub: [] })), ...triggers] };
+    });
+}
+
 export class BarbsItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     static override DEFAULT_OPTIONS = {
         classes: [SYSTEM_ID, "item"],
@@ -47,6 +83,7 @@ export class BarbsItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
         form: { submitOnChange: true },
         actions: {
             createEffect: BarbsItemSheet.#onCreateEffect as ActionHandler,
+            editBonuses: BarbsItemSheet.#onEditBonuses as ActionHandler,
             editEffect: BarbsItemSheet.#onEditEffect as ActionHandler,
             deleteEffect: BarbsItemSheet.#onDeleteEffect as ActionHandler,
         },
@@ -96,6 +133,8 @@ export class BarbsItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
             // Templates are listed under the effect whose trigger grants them.
             effectGroups: groupEffects(item.effects as unknown as Iterable<EffectLike>),
             usable: !!(item.system as unknown as { use?: { enabled?: boolean } }).use?.enabled,
+            bonusSummary: bonusSummary(item),
+            effectCount: item.effects.size,
             automation: item.type === "passive" ? describePassive(item) : null,
         } as never;
     }
@@ -110,6 +149,19 @@ export class BarbsItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
         await this.document.createEmbeddedDocuments("ActiveEffect", [
             { name: `${this.document.name} effect`, img: this.document.img, transfer: true } as never,
         ]);
+    }
+
+    /** Open the item's main effect (its affixes), making it the first time. */
+    static async #onEditBonuses(this: BarbsItemSheet) {
+        let effect = mainEffect(this.document);
+        if (!effect) {
+            // Applies to whoever has the item equipped, like any gear effect. Named after the item, since it *is* the
+            // item's bonuses as far as the effects panel and Stats tooltips are concerned.
+            [effect] = (await this.document.createEmbeddedDocuments("ActiveEffect", [
+                { name: this.document.name, img: this.document.img, transfer: true, flags: { [SYSTEM_ID]: { mainEffect: true } } } as never,
+            ])) as unknown as ActiveEffect.Implementation[];
+        }
+        await effect?.sheet?.render({ force: true } as never);
     }
 
     static #onEditEffect(this: BarbsItemSheet, _event: PointerEvent, target: HTMLElement) {

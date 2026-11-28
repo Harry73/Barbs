@@ -44,14 +44,35 @@
     <label>Crit modifier (%) <input type="number" name="system.weapon.critModifier" value="{{system.weapon.critModifier}}" min="0" /></label>
   </div>
   <p class="hint">
-    Mods and enchantments (on-hit damage, crit bonuses, ...) go in Effects below. On a weapon, their roll modifiers
-    apply to attacks made with this weapon, and to your spells while it's held. Stat changes apply while equipped.
+    Mods and enchantments (on-hit damage, crit bonuses, ...) go in Bonuses below. On a weapon, attack bonuses and
+    on-hit triggers apply to attacks made with this weapon, and to your spells while it's held. Stat bonuses apply
+    while equipped.
   </p>
-  <h3>Effects</h3>
-  {{#if (and effects.length (not system.equipped))}}
-  <p class="notice"><i class="fa-solid fa-triangle-exclamation"></i> Not equipped, so these effects are inactive.</p>
+  <h3 class="barbs-heading-action">
+    Bonuses
+    {{#if editable}}<button type="button" data-action="editBonuses"><i class="fa-solid fa-pen-to-square"></i> Edit bonuses</button>{{/if}}
+  </h3>
+  {{#if (and bonusSummary.length (not system.equipped))}}
+  <p class="notice"><i class="fa-solid fa-triangle-exclamation"></i> Not equipped, so these are inactive.</p>
   {{/if}}
-  {{> "systems/barbs/templates/item/effects-list.hbs"}}
+  {{#each bonusSummary as |fx|}}
+  <div class="barbs-bonus-summary" data-effect-id="{{fx.id}}">
+    {{#if (gt @root.bonusSummary.length 1)}}<a class="barbs-bonus-source" data-action="editEffect">{{fx.name}}</a>{{/if}}
+    <ul>
+      {{#each fx.lines as |line|}}
+      <li>{{line.text}}{{#if line.sub.length}}<ul>{{#each line.sub as |sub|}}<li>{{sub}}</li>{{/each}}</ul>{{/if}}</li>
+      {{else}}
+      <li class="hint">Nothing yet.</li>
+      {{/each}}
+    </ul>
+  </div>
+  {{else}}
+  <p class="hint">No bonuses yet.</p>
+  {{/each}}
+  <details class="barbs-all-effects">
+    <summary>All effects ({{effectCount}})</summary>
+    {{> "systems/barbs/templates/item/effects-list.hbs"}}
+  </details>
   <h3>Description</h3>
   {{#if editable}}
   <prose-mirror name="system.description" value="{{system.description}}" toggled>{{{enrichedDescription}}}</prose-mirror>

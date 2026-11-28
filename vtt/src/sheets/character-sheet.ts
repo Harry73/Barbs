@@ -21,6 +21,7 @@ import {
     type EquipmentSlot,
 } from "../config.ts";
 import { getAutomation } from "../abilities/catalog.ts";
+import { describeBonus, describeTrigger } from "../effects/bonuses.ts";
 import { damageBucketLabel } from "../effects/change-keys.ts";
 import { bonusSources, bonusTotal, summarizeRollBonuses, type RollBonusSummary } from "./roll-bonuses.ts";
 import { defaultChoices } from "../abilities/choices.ts";
@@ -260,12 +261,13 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
         const allEffects = [...actor.effects, ...actor.items.contents.flatMap((i) => [...i.effects])];
         const effects = allEffects.map((effect) => {
             const system = effect.system as unknown as BarbsEffectModel;
+            // Raw changes from the source: stat bonus rows also become changes when prepared, and they're listed as
+            // bonuses already.
+            const rawChanges = ((effect._source as unknown as { system?: { changes?: { key: string; type: string; value: string }[] } }).system?.changes ?? []);
             const summary = [
-                ...(system.changes ?? []).map((c) => `${c.key.replace(/^system\./, "")} ${c.type} ${c.value}`),
-                ...(system.modifiers ?? []).filter((m) => m.type !== "stat").map(
-                    (m) => `${m.type} ${m.value}${m.damageType && m.type !== "note" ? ` ${m.damageType}` : ""}` +
-                        `${m.rollType !== "all" ? ` (${m.rollType}` + (m.weapon ? ` ${m.weapon}` : "") + ")" : m.weapon ? ` (${m.weapon})` : ""}`,
-                ),
+                ...(system.modifiers ?? []).map(describeBonus),
+                ...(system.triggers ?? []).map(describeTrigger),
+                ...rawChanges.map((c) => `${c.key.replace(/^system\./, "")} ${c.type} ${c.value}`),
                 ...(system.singleUse ? ["single use"] : []),
             ].join("; ");
             return {

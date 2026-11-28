@@ -10,6 +10,7 @@ import {
     WEAPON_FILTERS,
 } from "../config.ts";
 import type { RollModifierData, TriggerData } from "../data/effect.ts";
+import { bonusCatalog } from "../effects/bonuses.ts";
 import { changeKeyGroups } from "../effects/change-keys.ts";
 import { grantersOf, isTemplate, type EffectLike } from "../effects/templates.ts";
 
@@ -32,35 +33,6 @@ function syncTriggerRow(row: HTMLElement): void {
     cell.classList.toggle("muted", !grants);
     for (const field of cell.querySelectorAll<HTMLSelectElement>("select")) field.disabled = !grants;
     cell.querySelector<HTMLElement>("[data-action='editGranted']")?.toggleAttribute("hidden", !grants);
-}
-
-/** Attack bonuses by group, in the order the Bonuses picker lists them. */
-const ROLL_BONUS_GROUPS: [string, string[]][] = [
-    [
-        "Attack",
-        ["damage", "multiplier", "penetration", "critChance", "critDamage", "canCrit", "cannotMiss", "comboChance", "convert", "accuracy", "lethality", "lifesteal", "unblockable"],
-    ],
-    ["On hit", ["status", "bleedConvert", "shred", "acReduction", "crShred", "evShred", "vulnerability", "buffStrip", "forcedMovement"]],
-    ["Defense (when you're attacked)", ["incomingDamage", "incomingAC", "incomingACPercent", "incomingEvasion", "incomingCR"]],
-    ["Effect", ["block", "dot"]],
-    ["Other", ["note"]],
-];
-
-/**
- * Everything a bonus row can be: character stats (stored as "stat" rows, applied as changes) and attack, on-hit, and
- * defense bonuses (roll modifiers). Identifiers are "stat:<change key>" or "roll:<modifier type>".
- */
-function bonusCatalog(): { identifier: string; label: string; search: string }[] {
-    const stats = changeKeyGroups().flatMap((g) =>
-        g.keys.map((k) => ({ identifier: `stat:${k.key}`, label: `${k.label} (${g.label})`, search: `${k.label} ${g.label} stat ${k.key}`.toLowerCase() })),
-    );
-    const rolls = ROLL_BONUS_GROUPS.flatMap(([group, types]) =>
-        types.map((t) => {
-            const label = (MODIFIER_TYPES as Record<string, string>)[t] ?? t;
-            return { identifier: `roll:${t}`, label: `${label} (${group})`, search: `${label} ${group} ${t}`.toLowerCase() };
-        }),
-    );
-    return [...rolls, ...stats];
 }
 
 /**

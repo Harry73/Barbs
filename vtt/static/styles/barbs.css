@@ -844,3 +844,37 @@
 .barbs .barbs-granted-by a {
   text-decoration: underline;
 }
+
+/* Item sheet: what the item's effects do, at a glance, with the full effect list tucked away below. */
+.barbs .barbs-heading-action {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.barbs .barbs-heading-action button {
+  margin-left: auto;
+  flex: 0 0 auto;
+  width: auto;
+  font-size: var(--font-size-12, 0.8rem);
+}
+
+.barbs .barbs-bonus-summary ul {
+  margin: 0.15rem 0 0.35rem;
+  padding-left: 1.25rem;
+}
+
+.barbs .barbs-bonus-summary ul ul {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.barbs .barbs-bonus-source {
+  font-weight: bold;
+}
+
+.barbs details.barbs-all-effects > summary {
+  cursor: pointer;
+  opacity: 0.8;
+  margin: 0.25rem 0;
+}

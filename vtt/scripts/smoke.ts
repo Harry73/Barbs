@@ -327,6 +327,33 @@ try {
     const oldMisc = new itemModels.EquipmentModel({ slot: "misc", equipped: true });
     assert.equal(oldMisc.slot, "none", "items saved in the dropped misc slot load as unslotted");
 
+    // Bonus and trigger one-liners, from real Roll20 items (Bolster, the Sneakers, the Amulet, the Ring).
+    {
+        const { describeBonus, describeTrigger } = await vite.ssrLoadModule("/src/effects/bonuses.ts");
+        const row = (type: string, value: string, extra: object = {}) => ({ type, value, rollType: "all", damageType: "all", weapon: "", onCrit: false, conditions: "", key: "", ...extra });
+        const lines = [
+            row("stat", "5", { key: "system.stats.ac.bonus" }),
+            row("stat", "-5", { key: "system.stats.evasion.bonus" }),
+            row("stat", "-10", { key: "system.stats.ac.multiplier" }),
+            row("stat", "30", { key: "system.skillBonuses.athletics-pain-tolerance" }),
+            row("stat", "20", { key: "system.combat.concentrationBonus" }),
+            row("multiplier", "20", { damageType: "physical", rollType: "physical" }),
+            row("multiplier", "100", { conditions: "target:type:demon" }),
+            row("penetration", "15", { damageType: "allMagic" }),
+            row("status", "burned:20 20"),
+            row("block", "100"),
+        ].map(describeBonus);
+        assert.equal(lines[0], "AC +5");
+        assert.equal(lines[1], "Evasion -5%");
+        assert.equal(lines[2], "AC reduced by 10%");
+        assert.equal(lines[5], "Damage multiplier 20% physical, physical rolls");
+        assert.equal(lines[6], "Damage multiplier 100%, if target:type:demon");
+        assert.equal(lines[3], "+30 Athletics: Pain Tolerance");
+        assert.equal(lines[8], "On hit: 20% chance to inflict Burned (20)");
+        const trigger = describeTrigger({ event: "hit", action: "restore", value: "5", type: "stamina", conditions: "", chance: 0, oncePer: "", consume: false, check: "", effect: "" });
+        assert.equal(trigger, "You hit: restore 5 stamina");
+    }
+
     // Templates are grouped under the effect whose grant/inflict trigger names them (Effect column, or Value).
     {
         const { groupEffects, grantersOf } = await vite.ssrLoadModule("/src/effects/templates.ts");

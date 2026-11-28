@@ -156,6 +156,11 @@ bounce hit it, so Alter Course (+50% per redirect) and Helix Beam (element flips
 
 ## Effects and roll modifiers
 
+Gear's affixes live on the item's main effect: **Edit bonuses** on an equipment sheet opens it (creating it, named
+after the item, the first time). The item sheet lists what its effects do in plain English ("AC +5", "Damage
+multiplier 20% physical, physical rolls", "You hit: restore 5 stamina", with a granted template's bonuses under its
+trigger), with the full effect list collapsed below for extra effects and templates (`src/effects/bonuses.ts`).
+
 Every ActiveEffect has Barbs data, set up on the Barbs tab (the first tab of the effect config, with settings in one
 row, explanations on hover, and collapsible Bonuses and Triggers sections):
 
