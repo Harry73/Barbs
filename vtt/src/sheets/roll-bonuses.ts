@@ -70,14 +70,18 @@ export function summarizeRollBonuses(actor: Actor.Implementation): RollBonusSumm
         if (!system.modifiers?.length) continue;
         const parent = effect.parent as Item.Implementation | null;
         const fromItem = parent?.documentName === "Item";
-        // A weapon's own mods only apply to attacks made with it (and to spells while it's held).
-        const weapon = fromItem && parent!.type === "equipment" && (parent!.system as unknown as EquipmentModel).isWeapon ? parent : null;
+        // Same scoping as attacks (effectAppliesToAttack): a weapon's own mods only apply to attacks made with it (and
+        // to spells while it's held), and ammunition's to the shots it's fired with. Ammo comes first, as it does there.
+        const equipment = fromItem && parent!.type === "equipment" ? (parent!.system as unknown as EquipmentModel) : null;
+        const ammo = equipment?.ammo ? parent : null;
+        const weapon = equipment?.isWeapon && !equipment.ammo ? parent : null;
         const source = fromItem ? `${effect.name} (${parent!.name})` : effect.name;
         for (const m of system.modifiers.filter((x) => !NON_ROLL_BONUS_TYPES.has(x.type))) {
             // Incoming modifiers are about attacks on you, so the roll type and weapon filters don't apply to them.
             const incoming = INCOMING_MODIFIER_TYPES.has(m.type);
             const conditions = [
                 ...(weapon && !incoming ? [`attacks with ${weapon.name}`] : []),
+                ...(ammo && !incoming ? [`shots fired with ${ammo.name}`] : []),
                 ...(m.rollType !== "all" && !incoming ? [`${m.rollType} rolls`] : []),
                 ...(m.weapon ? [`${(WEAPON_CATEGORIES as Record<string, string>)[m.weapon] ?? (WEAPON_FILTERS as Record<string, string>)[m.weapon] ?? m.weapon} weapons`] : []),
                 ...(m.onCrit ? ["on crit"] : []),
@@ -88,6 +92,7 @@ export function summarizeRollBonuses(actor: Actor.Implementation): RollBonusSumm
             const critOnly = ["critChance", "critDamage"].includes(m.type) && m.rollType === "physical";
             const unconditional =
                 !weapon &&
+                !ammo &&
                 !m.weapon &&
                 !m.onCrit &&
                 !m.conditions &&

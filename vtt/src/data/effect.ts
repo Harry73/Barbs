@@ -1,4 +1,5 @@
 import {
+    DAMAGE_TYPES,
     EFFECT_CATEGORIES,
     MODIFIER_ROLL_TYPES,
     MODIFIER_TYPES,
@@ -181,7 +182,9 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
 
     /** Damage the bearer takes at the start of each turn, from "dot" bonus rows. */
     get dots(): { formula: string; damageType: string }[] {
-        return (this.modifiers ?? []).filter((m) => m.type === "dot" && m.value).map((m) => ({ formula: m.value, damageType: m.damageType || "physical" }));
+        // A row left on "All" (the default for new rows) isn't a damage type: treat it as physical.
+        const real = (type: string) => ((DAMAGE_TYPES as readonly string[]).includes(type) ? type : "physical");
+        return (this.modifiers ?? []).filter((m) => m.type === "dot" && m.value).map((m) => ({ formula: m.value, damageType: real(m.damageType) }));
     }
 
     /**

@@ -393,6 +393,8 @@ try {
         blocking.prepareDerivedData();
         assert.equal(blocking.block, 100, "the strongest block row is the effect's block");
         assert.deepEqual(blocking.dots, [{ formula: "1d10", damageType: "physical" }], "dot rows tick each turn");
+        const untyped: any = new BarbsEffectModel({ modifiers: [{ type: "dot", value: "1d4", damageType: "all" }] }, { parent: host });
+        assert.deepEqual(untyped.dots, [{ formula: "1d4", damageType: "physical" }], "a DoT left on All deals physical");
         const legacy = BarbsEffectModel.migrateData({ block: 50, dot: { formula: "2d4", damageType: "fire" }, modifiers: [] });
         assert.deepEqual(
             legacy.modifiers.map((m: any) => [m.type, m.value, m.damageType]),

@@ -22,6 +22,9 @@ type ActionHandler = (this: BarbsEffectConfig, event: PointerEvent, target: HTML
 const { footer, ...coreParts } = ActiveEffectConfig.PARTS as Record<string, object>;
 const coreTabs = (ActiveEffectConfig.TABS as unknown as { sheet: { tabs: object[] } }).sheet;
 
+/** Bonuses that deal damage of one type, so "All" isn't a choice for them. */
+const DAMAGE_NEEDS_TYPE = new Set(["damage", "dot"]);
+
 /** Trigger actions that copy a template effect onto someone. */
 const GRANT_ACTIONS = new Set(["grant", "inflict"]);
 
@@ -224,6 +227,10 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
                     const [kind, value] = [id.slice(0, id.indexOf(":")), id.slice(id.indexOf(":") + 1)];
                     type.value = kind === "stat" ? "stat" : value;
                     key.value = kind === "stat" ? value : "";
+                    // New rows start on "All" damage types, which multipliers and penetration take but damage and
+                    // damage over time don't: they need a real type.
+                    const damageType = row.querySelector<HTMLSelectElement>('select[name$=".damageType"]');
+                    if (damageType && DAMAGE_NEEDS_TYPE.has(type.value) && ["all", "allMagic"].includes(damageType.value)) damageType.value = "physical";
                     syncBonusRow(row);
                 },
             });

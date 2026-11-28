@@ -6,7 +6,7 @@
  * roll. The result is plain data the chat card can render and the "Apply" buttons can act on.
  */
 import { bleed, burn, poison } from "../abilities/helpers.ts";
-import { INCOMING_MODIFIER_TYPES, NON_ROLL_BONUS_TYPES, SYSTEM_ID } from "../config.ts";
+import { DAMAGE_TYPES, INCOMING_MODIFIER_TYPES, NON_ROLL_BONUS_TYPES, SYSTEM_ID } from "../config.ts";
 import { mentions, parsePredicate, testPredicate } from "../rules/predicate.ts";
 import { actorData, actorOptions, distanceBetween, effectAppliesToAttack, rollOptions } from "../rules/roll-options.ts";
 import { evaluateNumber, usesTarget } from "../rules/formula.ts";
@@ -96,6 +96,14 @@ export interface ConditionalModifier {
 export function evaluateDistanceBonus(bonus: DistanceBonus, distance: number, data: Record<string, unknown> = {}): number {
     const roll = new Roll(bonus.formula, { ...data, distance }).evaluateSync({ strict: false } as never);
     return Math.max(0, Math.round((roll.total ?? 0) * bonus.factor));
+}
+
+/**
+ * The damage type an "extra damage" bonus deals. "All" and "All magic" are the defaults on new bonus rows and only mean
+ * something for multipliers and penetration, so a damage row left on them (or blank) deals physical.
+ */
+function concreteDamageType(type: string | undefined): DamageKey {
+    return type === "healing" || (DAMAGE_TYPES as readonly string[]).includes(type ?? "") ? (type as DamageKey) : "physical";
 }
 
 /** An on-hit status granted by a buff (Accursed Blade's Curse), offered as an Apply button on the card. */
@@ -535,7 +543,7 @@ export class AttackBuilder {
     #defer(modifier: RollModifierData, source: string): void {
         const conditions = modifier.conditions ?? "";
         if (modifier.type === "damage") {
-            this.#deferredDamage.push({ conditions, type: (modifier.damageType || "physical") as DamageKey, formula: modifier.value });
+            this.#deferredDamage.push({ conditions, type: concreteDamageType(modifier.damageType), formula: modifier.value });
         } else {
             const kind = modifier.type as "multiplier" | "penetration";
             const key = modifier.damageType || (kind === "penetration" ? "physical" : "all");
@@ -573,7 +581,7 @@ export class AttackBuilder {
         const number = this.#number(modifier.value);
         switch (modifier.type) {
             case "damage":
-                this.addDamage(modifier.value, (modifier.damageType || "physical") as DamageKey);
+                this.addDamage(modifier.value, concreteDamageType(modifier.damageType));
                 break;
             case "multiplier":
                 this.addMultiplier((modifier.damageType || "all") as MultiplierKey, source, number);
@@ -840,6 +848,10 @@ export class AttackBuilder {
         const consumedEffects = consumed.map((e) => snapshotEffect(e));
         for (const effect of consumed) await effect.delete();
 
+        // The attack's facts, taken before ammo is spent: using the last arrow empties the stack, and with it the
+        // `ammo:` fact that ammunition's own triggers need.
+        const attackFacts = this.rollOptions;
+
         // A ranged attack uses a piece of the loaded ammunition per hit.
         const quantityDeltas: { itemUuid: string; delta: number }[] = [];
         const ammo = this.#firesAmmo ? this.loadedAmmo : null;
@@ -924,7 +936,7 @@ export class AttackBuilder {
             crReduction: this.#crReduction,
             evasionReduction: damaging ? this.#evasionReduction : 0,
             conditional: this.#conditional,
-            rollOptions: this.rollOptions,
+            rollOptions: attackFacts,
         };
     }
 }
