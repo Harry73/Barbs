@@ -559,7 +559,7 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
     "Mirror Mage/Plane Mirror": {
         summon: {
             name: "Plane Mirror",
-            img: "icons/magic/light/beam-deflect-path-yellow.webp",
+            img: "systems/barbs/assets/mirrors/plane.svg",
             stats: { health: 1 },
             mirror: "plane",
             effects: [{ name: "Mirror", category: "", changes: [vulnerable("all", -100)], description: "<p>Immune to damage and conditions; can't be moved or teleported, but can be dispelled.</p>" }],
@@ -570,7 +570,7 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
     "Mirror Mage/Convex Mirror": {
         summon: {
             name: "Convex Mirror",
-            img: "icons/magic/light/beam-deflect-path-yellow.webp",
+            img: "systems/barbs/assets/mirrors/convex.svg",
             stats: { health: 1 },
             mirror: "convex",
             effects: [{ name: "Mirror", category: "", changes: [vulnerable("all", -100)], description: "<p>Immune to damage and conditions; can't be moved or teleported, but can be dispelled.</p>" }],
@@ -581,7 +581,7 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
     "Mirror Mage/Concave Mirror": {
         summon: {
             name: "Concave Mirror",
-            img: "icons/magic/light/beam-deflect-path-yellow.webp",
+            img: "systems/barbs/assets/mirrors/concave.svg",
             stats: { health: 1 },
             mirror: "concave",
             effects: [{ name: "Mirror", category: "", changes: [vulnerable("all", -100)], description: "<p>Immune to damage and conditions; can't be moved or teleported, but can be dispelled.</p>" }],

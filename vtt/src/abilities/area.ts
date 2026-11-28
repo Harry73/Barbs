@@ -40,13 +40,20 @@ function mirrorsOf(actor: Actor.Implementation): { mirror: Mirror; summonId: str
     return out;
 }
 
-/** Briefly draw a beam's path (with bounces) for the caster. */
+/** Draw a beam's path (with bounces) into a graphics object: the first leg white, bounced legs pale blue. */
+function paintSegments(graphics: PIXI.Graphics, segments: Segment[]): void {
+    graphics.clear();
+    for (const s of segments) {
+        graphics.lineStyle(Math.max(4, s.width / 3), s.redirects ? 0xa8d8ff : 0xffffff, s.redirects ? 0.8 : 0.6);
+        graphics.moveTo(s.from.x, s.from.y).lineTo(s.to.x, s.to.y);
+        if (s.redirects) graphics.beginFill(0xa8d8ff, 0.9).drawCircle(s.from.x, s.from.y, Math.max(6, s.width / 4)).endFill();
+    }
+}
+
+/** Briefly draw a beam's path (with bounces) for the caster, after it's been cast. */
 function drawSegments(segments: Segment[]): void {
     const graphics = new PIXI.Graphics();
-    for (const s of segments) {
-        graphics.lineStyle(Math.max(4, s.width / 3), s.redirects ? 0xe0f0ff : 0xffffff, 0.6);
-        graphics.moveTo(s.from.x, s.from.y).lineTo(s.to.x, s.to.y);
-    }
+    paintSegments(graphics, segments);
     canvas!.controls!.addChild(graphics);
     setTimeout(() => graphics.destroy(), 6000);
 }
@@ -130,6 +137,18 @@ export async function placeArea(
             ? "Aim with the mouse and click to confirm. Right-click or Escape cancels."
             : "Click to place the area. Right-click or Escape cancels.",
     );
+    // With mirrors out, show where an aimed line would bounce while it's being aimed.
+    const previewMirrors = reflect && spec.shape === "line" && origin === "caster" ? mirrorsOf(actor) : [];
+    const preview = previewMirrors.length ? new PIXI.Graphics() : null;
+    if (preview) canvas!.controls!.addChild(preview);
+    const tracePreview = (rotation: number) => {
+        if (!preview) return;
+        const radians = (rotation * Math.PI) / 180;
+        const trace = traceBeam(caster!.center, { x: Math.cos(radians), y: Math.sin(radians) }, size * px, (spec.width ?? 5) * px, previewMirrors.map((m) => m.mirror), {
+            widthPerRedirect: (spec.widthPerRedirect ?? 0) * px,
+        });
+        paintSegments(preview, trace.segments);
+    };
     const region = (await canvas.regions!.placeRegion(
         {
             name: "Ability area",
@@ -149,11 +168,13 @@ export async function placeArea(
                           const c = caster!.center;
                           const rotation = Math.toDegrees(Math.atan2(position.y - c.y, position.x - c.x));
                           s.updateSource({ x: c.x, y: c.y, rotation });
+                          tracePreview(rotation);
                           return false;
                       }
                     : undefined,
         } as never,
     )) as unknown as { polygonTree: { testPoint(p: Point): boolean }; shapes: { x: number; y: number; rotation?: number }[] } | null;
+    preview?.destroy();
     if (!region) return null;
 
     // Line spells bounce off the caster's mirrors (Mirror Mage). Trace the beam and find targets segment by segment.

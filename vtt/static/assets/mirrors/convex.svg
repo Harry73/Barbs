@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Mirror token art. At rotation 0 the mirror faces down (+y), the way the reflection code reads it; the token's
+       rotation turns it. Back: hatched. Surface: the silver line. Front: the arrow. -->
+  <defs>
+    <pattern id="hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="10" stroke="#5a5a66" stroke-width="4"/>
+    </pattern>
+    <marker id="head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ffd23f"/>
+    </marker>
+  </defs>
+  <path d="M22,92 Q100,138 178,92 L178,52 L22,52 z" fill="url(#hatch)" stroke="none" opacity="0.9"/>
+  <path d="M22,92 Q100,138 178,92" fill="none" stroke="#1b2a3a" stroke-width="16" stroke-linecap="round"/>
+  <path d="M22,92 Q100,138 178,92" fill="none" stroke="#cfe8ff" stroke-width="9" stroke-linecap="round"/>
+  <line x1="100" y1="128" x2="100" y2="178" stroke="#1b2a3a" stroke-width="12" stroke-linecap="round"/>
+  <line x1="100" y1="128" x2="100" y2="172" stroke="#ffd23f" stroke-width="7" stroke-linecap="round" marker-end="url(#head)"/>
+  <text x="100" y="40" text-anchor="middle" font-family="sans-serif" font-size="26" font-weight="bold" fill="#ffffff" stroke="#1b2a3a" stroke-width="5" paint-order="stroke">CONVEX</text>
+</svg>
