@@ -23,17 +23,20 @@
   </div>
 
   <h3>Classes</h3>
-  {{#if classes.length}}
+  {{#if classRows.length}}
   <ul class="barbs-list">
-    {{#each classes as |item|}}
-    <li class="barbs-list-row" data-item-id="{{item.id}}">
-      <img src="{{item.img}}" alt="" />
-      <a class="name" data-action="editItem">{{item.name}}</a>
-      {{#if ../editable}}<a data-action="deleteItem" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a>{{/if}}
+    {{#each classRows as |c|}}
+    <li class="barbs-list-row" data-item-id="{{c.itemId}}">
+      <img src="{{c.img}}" alt="" />
+      <a class="name" data-action="openClass" data-class="{{c.name}}">{{c.name}}</a>
+      <span class="hint">
+        {{#if c.abilities}}{{c.abilities}} abilit{{#if (eq c.abilities 1)}}y{{else}}ies{{/if}}, {{c.investment}} AP invested, tier {{c.unlockedTier}} unlocked{{else}}no abilities yet{{/if}}{{#if c.passive}} · {{c.passive}}{{/if}}
+      </span>
+      {{#if c.itemId}}{{#if @root.editable}}<a data-action="deleteItem" data-tooltip="Remove this class"><i class="fa-solid fa-trash"></i></a>{{/if}}{{/if}}
     </li>
     {{/each}}
   </ul>
   {{else}}
-  <p class="hint">Drag classes here from the <a data-action="openCompendium" data-pack="classes">Classes compendium</a>.</p>
+  <p class="hint">Classes appear here as you add abilities. You can also drag one in from the <a data-action="openCompendium" data-pack="classes">Classes compendium</a>.</p>
   {{/if}}
 </section>

@@ -93,6 +93,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             passiveResource: BarbsCharacterSheet.#onPassiveResource as ActionHandler,
             passiveAction: BarbsCharacterSheet.#onPassiveAction as ActionHandler,
         },
+            openClass: BarbsCharacterSheet.#onOpenClass as ActionHandler,
     };
 
     static override PARTS = {
@@ -276,6 +277,27 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
         const inventory = INVENTORY_ORDER.map((slot) => ({
             slot,
             label: INVENTORY_HEADINGS[slot] ?? EQUIPMENT_SLOTS[slot],
+        // Classes come from the abilities the character has (with what they've invested in each), plus any class
+        // dragged in by hand. Rows open the class's description: the owned item, or the compendium's.
+        const classPack = game.packs?.get(`${SYSTEM_ID}.classes`);
+        await classPack?.getIndex();
+        const ownedClasses = ofType("class");
+        const classRows = [...new Set([...sortedAbilityGroups.map((g) => g.name).filter((n) => n !== "Other"), ...ownedClasses.map((c) => c.name)])]
+            .sort((a, b) => a.localeCompare(b))
+            .map((name) => {
+                const group = sortedAbilityGroups.find((g) => g.name === name);
+                const owned = ownedClasses.find((c) => c.name === name);
+                return {
+                    name,
+                    img: owned?.img ?? (classPack?.index.getName(name) as { img?: string } | undefined)?.img ?? "icons/svg/book.svg",
+                    itemId: owned?.id ?? "",
+                    abilities: group?.abilities.length ?? 0,
+                    investment: group?.investment ?? 0,
+                    unlockedTier: group?.unlockedTier ?? 0,
+                    passive: passives.find((p) => p.className === name)?.item.name ?? "",
+                };
+            });
+
             items: equipment
                 .filter((e) => (e.system.slot in EQUIPMENT_SLOTS ? e.system.slot : "none") === slot)
                 .sort((a, b) => Number(b.system.equipped) - Number(a.system.equipped) || a.item.name.localeCompare(b.item.name)),
@@ -317,7 +339,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             isNpc: actor.type === "npc",
             editable: this.isEditable,
             race: ofType("race")[0] ?? null,
-            classes: ofType("class"),
+            classRows,
             resources: RESOURCE_KEYS.map((key) => ({ key, label: key.capitalize(), ...system.resources[key] })),
             attributeGroups,
             statGroups,
@@ -671,6 +693,17 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
         await this.barbsActor.createEmbeddedDocuments("ActiveEffect", [
             { name: "New Effect", img: "icons/svg/aura.svg" } as never,
         ]);
+    /** Open a class's description: the one on the character if they have it, otherwise the compendium's. */
+    static async #onOpenClass(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {
+        const name = target.dataset.class ?? "";
+        const owned = this.barbsActor.items.find((i) => i.type === "class" && i.name === name);
+        const pack = game.packs?.get(`${SYSTEM_ID}.classes`);
+        const entry = pack?.index.getName(name);
+        const item = owned ?? (entry ? await pack?.getDocument(entry._id) : null);
+        if (item) await (item.sheet as { render(force: boolean): Promise<unknown> }).render(true);
+        else ui.notifications?.warn(`Couldn't find the ${name} class.`);
+    }
+
     }
 
     static #onEditEffect(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {
