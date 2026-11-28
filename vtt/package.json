@@ -16,7 +16,8 @@
     "smoke": "node scripts/smoke.ts",
     "todo": "node scripts/todo.ts",
     "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
-    "link": "node scripts/link-foundry.ts"
+    "link": "node scripts/link-foundry.ts",
+    "live": "node scripts/live.ts"
   },
   "devDependencies": {
     "@foundryvtt/foundryvtt-cli": "^3.0.5",

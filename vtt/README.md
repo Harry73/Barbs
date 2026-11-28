@@ -42,6 +42,7 @@ npm install
 npm run build      # code + compendium packs into dist/
 npm run link       # once: symlink dist/ to Foundry's systems/barbs
 npm run watch      # rebuild code/templates on change (then F5 in Foundry)
+npm run live       # live tests in a real Foundry client (see below)
 npm run typecheck
 npm run smoke      # model math + validates every compendium entry
 npm run todo       # lists abilities and passives with no automation entry yet
@@ -402,3 +403,14 @@ that combatant), `maxStacks`, `cleanse`, start-of-turn damage (`dot`, which bypa
 
 Defender-side buckets added for these: `system.vulnerability.<type|magic|all>` (percent increased damage taken,
 applied after AC/MR and before GDR) and `system.buffEffectiveness`.
+
+## Live tests
+
+`npm run live [filter]` runs `scripts/live/tests.js` inside a real Foundry client: it starts a headless Chrome with a
+throwaway profile (`scripts/live/cdp.ts`, Chrome DevTools Protocol over Node's built-in WebSocket), joins the running
+world as its GM (`FOUNDRY_USER`, `FOUNDRY_PASSWORD`, `FOUNDRY_URL` to override), and runs the tests there. It covers
+what the smoke test can't: chat cards, their Apply buttons, sockets, the canvas. Each test gets a scratch scene with a
+caster and two enemies with no defenses (so damage is exact), learns abilities from the compendium, casts them with the
+dialog answered for it (`withChoices`), clicks card buttons, and checks health and effects. Aiming is driven by stubbing
+`canvas.regions.placeRegion` to point at chosen tokens. Scenes and actors the tests make are deleted afterwards; their
+chat messages are kept, to look at. Since `dist` is linked into Foundry, the page always runs the current build.
