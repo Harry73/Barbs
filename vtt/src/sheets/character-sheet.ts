@@ -289,7 +289,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             // bonuses already.
             const rawChanges = ((effect._source as unknown as { system?: { changes?: { key: string; type: string; value: string }[] } }).system?.changes ?? []);
             const summary = [
-                ...(system.modifiers ?? []).map(describeBonus),
+                ...(system.modifiers ?? []).map((m) => describeBonus(m)),
                 ...(system.triggers ?? []).map(describeTrigger),
                 ...rawChanges.map((c) => `${c.key.replace(/^system\./, "")} ${c.type} ${c.value}`),
                 ...(system.singleUse ? ["single use"] : []),

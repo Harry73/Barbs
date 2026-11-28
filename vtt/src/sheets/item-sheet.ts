@@ -61,7 +61,7 @@ function bonusSummary(item: Item.Implementation): { id: string; name: string; li
     const effects = [...item.effects] as ActiveEffect.Implementation[];
     const main = mainEffect(item);
     const regular = effects.filter((e) => !isTemplate(e as unknown as EffectLike)).sort((a, b) => Number(b === main) - Number(a === main));
-    const bonusLines = (e: ActiveEffect.Implementation) => ((e.system as unknown as BarbsEffectModel).modifiers ?? []).map(describeBonus);
+    const bonusLines = (e: ActiveEffect.Implementation) => ((e.system as unknown as BarbsEffectModel).modifiers ?? []).map((m) => describeBonus(m));
     return regular.map((effect) => {
         const system = effect.system as unknown as BarbsEffectModel;
         const triggers = (system.triggers ?? []).map((t) => {

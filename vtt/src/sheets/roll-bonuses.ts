@@ -5,7 +5,8 @@
  * Stats tab built only from changes would leave out most of what equipment does. Modifiers that apply to every roll
  * are folded into the matching stat row (with their sources); the rest are described as conditional bonuses.
  */
-import { INCOMING_MODIFIER_TYPES, NON_ROLL_BONUS_TYPES, MODIFIER_TYPES, TRIGGER_ACTIONS, TRIGGER_EVENTS, WEAPON_CATEGORIES, WEAPON_FILTERS } from "../config.ts";
+import { INCOMING_MODIFIER_TYPES, NON_ROLL_BONUS_TYPES } from "../config.ts";
+import { describeBonus, describeTrigger } from "../effects/bonuses.ts";
 import type { BarbsEffectModel, RollModifierData } from "../data/effect.ts";
 import type { EquipmentModel } from "../data/item/models.ts";
 import { evaluateNumber, usesTarget } from "../rules/formula.ts";
@@ -46,13 +47,6 @@ function statKeys(m: RollModifierData): string[] {
     }
 }
 
-function describe(m: RollModifierData, conditions: string[]): string {
-    const label = MODIFIER_TYPES[m.type as keyof typeof MODIFIER_TYPES] ?? m.type;
-    const type = m.damageType && m.damageType !== "all" && !["note", "status", "critChance", "critDamage"].includes(m.type) ? ` ${m.damageType}` : "";
-    const value = m.type === "canCrit" || m.type === "cannotMiss" ? "" : `: ${m.value}${type}`;
-    return `${label}${value}${conditions.length ? ` (${conditions.join(", ")})` : ""}`;
-}
-
 export function summarizeRollBonuses(actor: Actor.Implementation): RollBonusSummary {
     const always = new Map<string, Contribution[]>();
     const other: string[] = [];
@@ -61,12 +55,8 @@ export function summarizeRollBonuses(actor: Actor.Implementation): RollBonusSumm
     for (const effect of actor.allApplicableEffects()) {
         if (!effect.active) continue;
         const system = effect.system as unknown as BarbsEffectModel;
-        // Triggers are listed as what they do ("You're attacked (attacker:distance <= 5): damage the other creature 2d12").
-        for (const t of (system as unknown as { triggers?: { event: string; conditions: string; action: string; value: string; type: string; effect: string; effectData: { name?: string } | null }[] }).triggers ?? []) {
-            const what = t.action === "grant" || t.action === "inflict" ? (t.effectData?.name ?? t.effect) : [t.value, t.type].filter(Boolean).join(" ");
-            const when = `${TRIGGER_EVENTS[t.event as keyof typeof TRIGGER_EVENTS] ?? t.event}${t.conditions ? ` (${t.conditions})` : ""}`;
-            other.push(`${effect.name}: ${when}: ${(TRIGGER_ACTIONS[t.action as keyof typeof TRIGGER_ACTIONS] ?? t.action).toLowerCase()}${what ? ` ${what}` : ""}`);
-        }
+        // Triggers are listed as what they do ("You're attacked: damage the other creature 2d12").
+        for (const t of system.triggers ?? []) other.push(`${effect.name}: ${describeTrigger(t)}`);
         if (!system.modifiers?.length) continue;
         const parent = effect.parent as Item.Implementation | null;
         const fromItem = parent?.documentName === "Item";
@@ -79,14 +69,11 @@ export function summarizeRollBonuses(actor: Actor.Implementation): RollBonusSumm
         for (const m of system.modifiers.filter((x) => !NON_ROLL_BONUS_TYPES.has(x.type))) {
             // Incoming modifiers are about attacks on you, so the roll type and weapon filters don't apply to them.
             const incoming = INCOMING_MODIFIER_TYPES.has(m.type);
-            const conditions = [
+            // The row's own limits (roll type, weapon, on crit, conditions) are in its description; this is the rest.
+            const scope = [
                 ...(weapon && !incoming ? [`attacks with ${weapon.name}`] : []),
                 ...(ammo && !incoming ? [`shots fired with ${ammo.name}`] : []),
-                ...(m.rollType !== "all" && !incoming ? [`${m.rollType} rolls`] : []),
-                ...(m.weapon ? [`${(WEAPON_CATEGORIES as Record<string, string>)[m.weapon] ?? (WEAPON_FILTERS as Record<string, string>)[m.weapon] ?? m.weapon} weapons`] : []),
-                ...(m.onCrit ? ["on crit"] : []),
                 ...(system.singleUse ? ["next roll only"] : []),
-                ...(m.conditions ? [`when ${m.conditions}`] : []),
             ];
             // Only physical rolls crit, so a physical-only crit bonus is as good as always-on.
             const critOnly = ["critChance", "critDamage"].includes(m.type) && m.rollType === "physical";
@@ -109,7 +96,7 @@ export function summarizeRollBonuses(actor: Actor.Implementation): RollBonusSumm
                     always.set(key, list);
                 }
             } else {
-                other.push(`${source}: ${describe(m, conditions)}`);
+                other.push(`${source}: ${describeBonus(m, scope)}`);
             }
         }
     }

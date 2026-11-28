@@ -69,8 +69,16 @@ function statusLine(value: string, m: RollModifierData): string {
 /** Bonus types whose damage type column means something. */
 const USES_DAMAGE_TYPE = new Set(["damage", "multiplier", "penetration", "convert", "incomingDamage", "dot"]);
 
-/** One bonus row as a line, with its limits: "Damage multiplier 20% physical, physical rolls, if target:type:demon". */
-export function describeBonus(m: RollModifierData): string {
+/**
+ * One bonus row as a line, with its limits: "Damage multiplier 20% physical, physical rolls, if target:type:demon".
+ * `scope` is where the effect applies from outside the row ("attacks with Longbow", "next roll only").
+ */
+export function describeBonus(m: RollModifierData, scope: string[] = []): string {
+    const line = describeRow(m);
+    return scope.length ? `${line}, ${scope.join(", ")}` : line;
+}
+
+function describeRow(m: RollModifierData): string {
     const value = String(m.value ?? "").trim();
     if (m.type === "stat") return statLine(m.key ?? "", value);
     if (m.type === "block") return `Blocks ${value}% of the next attack`;
