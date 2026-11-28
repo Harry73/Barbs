@@ -271,9 +271,11 @@ async function updateHealth(target: Actor.Implementation, amount: number): Promi
             await target.toggleStatusEffect(STATUS_DOWNED, { active: false });
             undo.statusesRemoved.push(STATUS_DOWNED);
         }
-        // The rulebook doesn't say when Downed Health refills; refilling on waking up is our reading.
-        undo.downedDelta = DOWNED_HEALTH_MAX - before.downed;
-        await target.update({ system: { downed: { value: DOWNED_HEALTH_MAX } } } as never);
+        // The rulebook doesn't say when Downed Health refills; refilling on waking up is our reading. Refill to the
+        // creature's own maximum, which effects can raise (Dragonblood makes it 200).
+        const maxDowned = creature.derived.downed.max;
+        undo.downedDelta = maxDowned - before.downed;
+        await target.update({ system: { downed: { value: maxDowned } } } as never);
         notes.push(`${target.name} wakes up prone.`);
     }
     if (change.stabilized) {
