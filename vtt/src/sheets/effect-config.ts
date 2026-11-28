@@ -109,11 +109,8 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
                 hideTriggers: template && (system.triggers ?? []).length === 0,
                 grantedBy: grantedBy.map((e) => ({ id: e.id, name: e.name })),
                 maxStacks: maxStacks >= 999 ? "" : maxStacks,
-                // Sections start open when they have rows, then stay however they were last left.
-                open: {
-                    bonuses: this.#open.bonuses ?? system.modifiers.length > 0,
-                    triggers: this.#open.triggers ?? (system.triggers ?? []).length > 0,
-                },
+                // Sections start open (their add buttons are inside), then stay however they were last left.
+                open: { bonuses: this.#open.bonuses ?? true, triggers: this.#open.triggers ?? true },
                 modifiers: system.modifiers.map((m, index) => ({ ...m, index })),
                 triggers: (system.triggers ?? []).map((t, index) => ({ ...t, index, inline: !!t.effectData, grants: GRANT_ACTIONS.has(t.action) })),
                 eventChoices: TRIGGER_EVENTS,

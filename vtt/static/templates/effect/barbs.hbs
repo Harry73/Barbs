@@ -28,9 +28,9 @@
     <summary>
       <span class="barbs-section-title">Bonuses</span> <span class="barbs-count">{{modifiers.length}}</span>
       <i class="fa-solid fa-circle-question barbs-help-icon" data-tooltip="Pick a bonus from the list (type to search). Character stats (AC, STR, resists, skills...) are always on while the effect is active. Attack bonuses apply to attacks with this weapon if the effect is on a weapon, otherwise to every attack; the other columns narrow them further. Columns that don't apply to a bonus are greyed out."></i>
-      <a class="barbs-add" data-action="addModifier" data-tooltip="Add bonus"><i class="fa-solid fa-plus"></i></a>
     </summary>
   <table class="barbs-modifiers barbs-bonuses">
+    {{#if modifiers.length}}
     <thead>
       <tr>
         <th>Bonus</th><th>Value</th><th>Damage type</th>
@@ -39,6 +39,7 @@
         <th></th>
       </tr>
     </thead>
+    {{/if}}
     <tbody>
       {{#each modifiers as |m|}}
       <tr data-index="{{m.index}}">
@@ -57,8 +58,10 @@
       </tr>
       {{/each}}
     </tbody>
+    <tfoot>
+      <tr><td colspan="8"><a class="barbs-add" data-action="addModifier"><i class="fa-solid fa-plus"></i> Add bonus</a></td></tr>
+    </tfoot>
   </table>
-
   </details>
 
   {{#unless hideTriggers}}
@@ -66,7 +69,6 @@
     <summary>
       <span class="barbs-section-title">Triggers</span> <span class="barbs-count">{{triggers.length}}</span>
       <i class="fa-solid fa-circle-question barbs-help-icon" data-tooltip="When something happens, do something: restore resources, deal damage, grant or inflict a template effect, post a reminder. &quot;Would take damage&quot; triggers change the damage before it lands (reduce it, survive at N health, redirect it, reflect it)."></i>
-      <a class="barbs-add" data-action="addTrigger" data-tooltip="Add trigger"><i class="fa-solid fa-plus"></i></a>
     </summary>
     {{#if templateWithTriggers}}
     <p class="notice warning">
@@ -75,6 +77,7 @@
     </p>
     {{/if}}
   <table class="barbs-modifiers barbs-triggers">
+    {{#if triggers.length}}
     <thead>
       <tr>
         <th>When</th><th>Conditions</th><th data-tooltip="Percent chance; blank = always">%</th><th>Limit</th><th data-tooltip="Remove this effect after it fires">Use up</th><th data-tooltip="A skill check that must succeed, e.g. Armor Mastery: Shields vs @level / 2">Check</th><th>Do</th>
@@ -82,6 +85,7 @@
         <th></th>
       </tr>
     </thead>
+    {{/if}}
     <tbody>
       {{#each triggers as |t|}}
       <tr data-trigger-index="{{t.index}}">
@@ -105,6 +109,9 @@
       </tr>
       {{/each}}
     </tbody>
+    <tfoot>
+      <tr><td colspan="11"><a class="barbs-add" data-action="addTrigger"><i class="fa-solid fa-plus"></i> Add trigger</a></td></tr>
+    </tfoot>
   </table>
   </details>
   {{/unless}}

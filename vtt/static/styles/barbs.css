@@ -804,8 +804,8 @@
   cursor: help;
 }
 
-.barbs .barbs-add {
-  margin-left: auto;
+.barbs .barbs-modifiers tfoot td {
+  padding-top: 0.35rem;
 }
 
 /* Item sheet effects: templates sit under the effect that grants them. */
