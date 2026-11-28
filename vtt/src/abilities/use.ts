@@ -648,8 +648,8 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
         context: contextData(ctx),
         statuses: result?.statuses ?? [],
         extraEffects,
-        targetScales,
-        segments: areaResult?.segments,
+        targetScales: Object.entries(targetScales),
+        segments: areaResult?.segments ? Object.entries(areaResult.segments) : undefined,
         redirectSwap: attack?.redirectSwap,
         alterCourse: hasAlterCourse(actor),
     };
@@ -661,9 +661,9 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
         for (const [i, shot] of shots.entries()) {
             const shotResult = shotResults[i];
             const path = shot.hits.map((h) => `${h.token.name}${h.redirects ? ` (redirect ${h.redirects}${alterCourse ? `, +${50 * h.redirects}%` : ""})` : ""}`);
-            const scales = Object.fromEntries(
-                shot.hits.filter((h) => h.redirects && alterCourse).map((h) => [h.token.document.uuid ?? "", 1 + 0.5 * h.redirects]),
-            );
+            const scales = shot.hits
+                .filter((h) => h.redirects && alterCourse)
+                .map((h) => [h.token.document.uuid ?? "", 1 + 0.5 * h.redirects] as [string, number]);
             // What a redirected target takes before defenses, since the card's rows show the shot's own roll.
             const boosted = shot.hits
                 .filter((h) => h.redirects && alterCourse)

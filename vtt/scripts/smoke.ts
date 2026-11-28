@@ -669,6 +669,25 @@ try {
         assert.deepEqual([hit.token.name, hit.segment.redirects, hit.remaining], ["up", 1, 60]);
     }
 
+    // Chat card flags go through Foundry's flags field, which expands dotted keys into nested objects. Anything keyed by
+    // a UUID has to be stored as pairs, or a lookup by "Scene.a.Token.b" finds nothing on Apply.
+    {
+        class Flags extends foundry.abstract.DataModel {
+            static defineSchema() {
+                return { flags: new foundry.data.fields.DocumentFlagsField() };
+            }
+        }
+        const stored = (card: object) => (new Flags({ flags: { barbs: { card } } }) as any)._source.flags.barbs.card;
+        const uuid = "Scene.abc.Token.def";
+        // The trap itself, so this test fails if Foundry ever stops expanding keys (and the pairs could be dropped).
+        assert.equal(stored({ targetScales: { [uuid]: 1.5 } }).targetScales[uuid], undefined, "a UUID key is mangled");
+        assert.deepEqual(stored({ targetScales: [[uuid, 1.5]] }).targetScales, [[uuid, 1.5]], "target scales survive as pairs");
+        assert.deepEqual(stored({ segments: [[uuid, [0, 2]]] }).segments, [[uuid, [0, 2]]], "beam segments survive as pairs");
+        const pools = math.poolsToRecord(new Map([["all", new Map([["self", 20], ["Actor.ally", 30]])]]));
+        const back = math.poolsFromRecord(stored({ damage: { multipliers: pools } }).damage.multipliers);
+        assert.equal(back.get("all")?.get("Actor.ally"), 30, "an ally's multiplier pool survives");
+    }
+
     // Variables read before their declaration in the same function: TypeScript misses it when the read is in a callback.
     {
         const { findUseBeforeDefine } = await import("./use-before-define.ts");

@@ -29,15 +29,19 @@ export const SELF_POOL = "self";
 /** Percent-sums per pool (the character a multiplier comes from), e.g. { self: 25, "Actor.abc": -20 } for one key. */
 export type SourceMultipliers = Map<string, number>;
 
-/** The same thing as plain data, for chat card flags: multiplier key -> pool -> percent. */
-export type MultiplierPools = Record<string, Record<string, number>>;
+/**
+ * The same thing as plain data, for chat card flags: multiplier key -> [pool, percent] pairs. Pools are actor UUIDs
+ * ("Actor.abc"), and Foundry expands dotted keys in flags into nested objects, so they can't be object keys.
+ */
+export type MultiplierPools = Record<string, [string, number][]>;
 
 export function poolsToRecord(multipliers: Map<MultiplierKey, SourceMultipliers>): MultiplierPools {
-    return Object.fromEntries([...multipliers].map(([key, pools]) => [key, Object.fromEntries(pools)]));
+    return Object.fromEntries([...multipliers].map(([key, pools]) => [key, [...pools]]));
 }
 
 export function poolsFromRecord(record: MultiplierPools | undefined): Map<MultiplierKey, SourceMultipliers> {
-    return new Map(Object.entries(record ?? {}).map(([key, pools]) => [key as MultiplierKey, new Map(Object.entries(pools))]));
+    // Cards from before the pairs stored the pools as objects, which Foundry mangled; they read as having none.
+    return new Map(Object.entries(record ?? {}).map(([key, pools]) => [key as MultiplierKey, new Map(Array.isArray(pools) ? pools : [])]));
 }
 
 /** A copy of `multipliers` with `percent` more in one pool of one key. */

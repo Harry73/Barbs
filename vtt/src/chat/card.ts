@@ -90,12 +90,16 @@ export interface CardFlags {
     /** On-hit statuses from the attacker's buffs, applied by Apply to targets that were hit. */
     statuses?: OnHitStatus[];
     /** Per-target damage multipliers by token UUID, e.g. half damage past the first target of a line. */
-    targetScales?: Record<string, number>;
+    /**
+     * Per-target damage multipliers, as [token UUID, scale] pairs. Flags can't have UUIDs as keys: Foundry expands
+     * dotted keys into nested objects, so `{"Scene.a.Token.b": 0.5}` would come back as `{Scene: {a: ...}}`.
+     */
+    targetScales?: [string, number][];
     /**
      * Reflected beams on cards posted before each redirect got its own card: which segments (by redirect count) hit
      * each token. New casts post one card per redirect instead (see bounceResult) and set `redirects`.
      */
-    segments?: Record<string, number[]>;
+    segments?: [string, number[]][];
     /** This card is one redirect of a reflected beam: how many times it had bounced (conditions scale with it). */
     redirects?: number;
     /** Apply uses the card's own targets (the tokens on this redirect's segment), not whoever is targeted now. */
@@ -166,7 +170,7 @@ export async function postCard(
     { targets: explicitTargets }: { targets?: string[] } = {},
 ) {
     const result = content.result ?? null;
-    const scales = Object.values(flags.targetScales ?? {});
+    const scales = scalePairs(flags).map(([, scale]) => scale);
 
     // Preview distance-based bonus damage for the current targets; the real amount is measured again on Apply.
     const bonuses = result?.hits.flatMap((h) => h.distanceBonus) ?? [];
@@ -227,6 +231,22 @@ export async function postCard(
 interface Target {
     actor: Actor.Implementation;
     tokenUuid: string | null;
+}
+
+/** The card's per-target scales as pairs (cards from before the pairs stored an object, which Foundry mangled). */
+function scalePairs(flags: Pick<CardFlags, "targetScales">): [string, number][] {
+    return Array.isArray(flags.targetScales) ? flags.targetScales : [];
+}
+
+/** How much this target's damage is scaled (half past the first in a line, +50% for a redirected shard). */
+function scaleFor(flags: Pick<CardFlags, "targetScales">, tokenUuid: string | null): number {
+    return (tokenUuid && scalePairs(flags).find(([uuid]) => uuid === tokenUuid)?.[1]) || 1;
+}
+
+/** On an old reflected-beam card, which redirects hit this target. */
+function segmentsFor(flags: CardFlags, tokenUuid: string | null): number[] | undefined {
+    if (!tokenUuid || !Array.isArray(flags.segments)) return undefined;
+    return flags.segments.find(([uuid]) => uuid === tokenUuid)?.[1];
 }
 
 /** Grid distance in feet between the caster's token and a target's, or null if either isn't on the canvas. */
@@ -376,7 +396,7 @@ async function damageTarget(
     { redirected = false, skipEvasion = false }: { redirected?: boolean; skipEvasion?: boolean },
 ): Promise<boolean> {
     const damage = flags.damage!;
-    const perTarget = (target.tokenUuid && flags.targetScales?.[target.tokenUuid]) || 1;
+    const perTarget = scaleFor(flags, target.tokenUuid);
     let hits = damage.hits;
     let bonus = damage.bonus;
     let conditional = damage.conditional;
@@ -462,7 +482,7 @@ async function damageTarget(
         notes.push(`${esc(m.source)}: ${m.percent}% Lethality, rolled ${rolls.join(", ")}${lethal ? ": <strong>LETHAL</strong> (dies unless immune; players are)" : ""}.`);
     }
     // A reflected beam hits once per segment the target was on; "Apply as redirected" is one bounce.
-    const redirectList = redirected ? [1] : (target.tokenUuid && flags.segments?.[target.tokenUuid]) || [0];
+    const redirectList = redirected ? [1] : segmentsFor(flags, target.tokenUuid) ?? [0];
     for (const redirects of redirectList) {
         const alter = flags.alterCourse ? 1 + 0.5 * redirects : 1;
         await requestOnActor(target.actor, "damage", {
@@ -524,7 +544,7 @@ async function applyTargetEffect(flags: CardFlags, target: Target, spec: EffectS
         if (spec.within !== undefined && distance > spec.within + 0.01) return;
         if (spec.beyond !== undefined && distance <= spec.beyond + 0.01) return;
     }
-    const redirects = redirected ? 1 : (flags.redirects ?? Math.min(...((target.tokenUuid && flags.segments?.[target.tokenUuid]) || [0])));
+    const redirects = redirected ? 1 : (flags.redirects ?? Math.min(...(segmentsFor(flags, target.tokenUuid) ?? [0])));
     const resolved = spec.resolve ? spec.resolve(actor, spec, ctx, { redirects }) : spec;
     if (!resolved) return;
     const data = buildEffectData(resolved, source);
