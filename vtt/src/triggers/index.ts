@@ -26,6 +26,7 @@ import { evaluateNumber } from "../rules/formula.ts";
 import { parsePredicate, testPredicate } from "../rules/predicate.ts";
 import { actorData, actorOptions, defenderOptions, distanceBetween, effectAppliesToAttack } from "../rules/roll-options.ts";
 import type { DamageKey } from "../rules/damage-math.ts";
+import { esc } from "../chat/html.ts";
 
 export const MAX_TRIGGER_DEPTH = 2;
 
@@ -177,13 +178,13 @@ export async function resolveIncomingDamage(
             if (!(await passesCheck(target, effect, trigger))) continue;
             const data = { ...formulaData(target, role, ctx), incoming: { damage: result.total } };
             const value = evaluateNumber(trigger.value, data);
-            const label = `${effect.name}`;
+            const label = effect.name;
             switch (trigger.action) {
                 case "reduceDamage": {
                     const factor = Math.max(0, 1 - value / 100);
                     result.taken = scaleBy(result.taken, factor);
                     result.total = sum(result.taken);
-                    result.notes.push(`${label}: damage reduced by ${value}%.`);
+                    result.notes.push(`${esc(label)}: damage reduced by ${value}%.`);
                     break;
                 }
                 case "survive": {
@@ -192,7 +193,7 @@ export async function resolveIncomingDamage(
                     const allowed = Math.max(0, health + shielding - keep);
                     result.taken = scaleBy(result.taken, result.total ? allowed / result.total : 0);
                     result.total = allowed;
-                    result.notes.push(`${label}: ${target.name} survives at ${keep} health.`);
+                    result.notes.push(`${esc(label)}: ${esc(target.name)} survives at ${keep} health.`);
                     break;
                 }
                 case "redirect": {
@@ -202,13 +203,13 @@ export async function resolveIncomingDamage(
                     result.redirects.push({ actor: origin, hits: scaleBy(incoming, value / 100), sourceName: `${ctx.sourceName ?? "Damage"} (redirected by ${label})` });
                     result.taken = {};
                     result.total = 0;
-                    result.notes.push(`${label}: redirected to ${origin.name}.`);
+                    result.notes.push(`${esc(label)}: redirected to ${esc(origin.name)}.`);
                     break;
                 }
                 case "reflect": {
                     if (!ctx.other) break;
                     result.reflects.push({ actor: ctx.other, hits: scaleBy(result.taken, value / 100), sourceName: `${target.name}'s ${label}` });
-                    result.notes.push(`${label}: ${value}% reflected at ${ctx.other.name}.`);
+                    result.notes.push(`${esc(label)}: ${value}% reflected at ${esc(ctx.other.name)}.`);
                     break;
                 }
                 default:
@@ -332,7 +333,7 @@ async function runAction(
             const text = String(trigger.value || effect.name);
             await ChatMessage.create({
                 speaker: ChatMessage.getSpeaker({ actor: bearer as Actor.Stored }),
-                content: `<div class="barbs-chat-card"><p><strong>${effect.name}</strong>: ${text}</p></div>`,
+                content: `<div class="barbs-chat-card"><p><strong>${esc(effect.name)}</strong>: ${esc(text)}</p></div>`,
             } as never);
             return;
         }

@@ -11,6 +11,7 @@
  * concentration if it's a concentration ability, or until that effect is deleted or the cast is undone.
  */
 import { SYSTEM_ID } from "./config.ts";
+import { esc } from "./chat/html.ts";
 
 const fields = foundry.data.fields;
 // fvtt-types doesn't describe region behavior types well; this is core's RegionBehaviorType base class.
@@ -105,7 +106,7 @@ export class ZoneBehaviorType extends RegionBehaviorType {
         if (self.note) {
             await ChatMessage.create({
                 speaker: ChatMessage.getSpeaker({ actor: actor as Actor.Stored }),
-                content: `<div class="barbs-chat-card"><p><strong>${sourceName}</strong>: ${self.note}</p></div>`,
+                content: `<div class="barbs-chat-card"><p><strong>${esc(sourceName)}</strong>: ${esc(self.note)}</p></div>`,
             } as never);
         }
     }

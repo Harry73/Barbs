@@ -11,6 +11,7 @@ import { isEmptyUndo, snapshotEffect, UNDO_ROW, type RemovedEffect, type UndoRec
 import { applyHealthChange, reduceDamage, type DamageKey } from "../rules/damage-math.ts";
 import { incomingTotal, type AttackContext } from "./incoming.ts";
 import { concentrationMarkers } from "../concentration.ts";
+import { esc } from "../chat/html.ts";
 
 /* -------------------------------------------- */
 /*  Durations                                   */
@@ -130,7 +131,7 @@ export async function applyEffectToActor(
         const resisted = (roll.total ?? 101) <= resist;
         await roll.toMessage({
             speaker,
-            flavor: `Condition Resist vs ${name} (${resist}%${resistPenalty ? `, ${resistPenalty}% lowered by the attack` : ""}): ${resisted ? "<strong>resisted</strong>" : "failed"}`,
+            flavor: `Condition Resist vs ${esc(name)} (${resist}%${resistPenalty ? `, ${resistPenalty}% lowered by the attack` : ""}): ${resisted ? "<strong>resisted</strong>" : "failed"}`,
         });
         if (resisted) return null;
     }
@@ -145,7 +146,7 @@ export async function applyEffectToActor(
             const undo: UndoRecord = { actorUuid: target.uuid ?? "", removedEffects: cleansedSnapshots };
             await ChatMessage.create({
                 speaker,
-                content: `<div class="barbs-chat-card"><p>${target.name} is cleansed of ${cleansed.map((e) => e.name).join(", ")}.</p>${UNDO_ROW}</div>`,
+                content: `<div class="barbs-chat-card"><p>${esc(target.name)} is cleansed of ${cleansed.map((e) => esc(e.name)).join(", ")}.</p>${UNDO_ROW}</div>`,
                 flags: { [SYSTEM_ID]: { undo } },
             } as never);
         } else if (announce) {
@@ -196,8 +197,8 @@ export async function applyEffectToActor(
     await ChatMessage.create({
         speaker,
         content:
-            `<div class="barbs-chat-card"><p>${target.name} ${isBuff ? "gains" : "is affected by"} ` +
-            `<strong>${name}</strong>${sourceName ? ` from ${sourceName}` : ""}.</p>${UNDO_ROW}</div>`,
+            `<div class="barbs-chat-card"><p>${esc(target.name)} ${isBuff ? "gains" : "is affected by"} ` +
+            `<strong>${esc(name)}</strong>${sourceName ? ` from ${esc(sourceName)}` : ""}.</p>${UNDO_ROW}</div>`,
         flags: { [SYSTEM_ID]: { undo } },
     } as never);
     return result;
@@ -272,12 +273,12 @@ async function updateHealth(target: Actor.Implementation, amount: number): Promi
         const maxDowned = creature.derived.downed.max;
         undo.downedDelta = maxDowned - before.downed;
         await target.update({ system: { downed: { value: maxDowned } } } as never);
-        notes.push(`${target.name} wakes up prone.`);
+        notes.push(`${esc(target.name)} wakes up prone.`);
     }
     if (change.stabilized) {
         const turns = (await new Roll("1d4").evaluate()).total;
         notes.push(
-            `${target.name} is <strong>stabilized</strong>: no more death saves, and they wake up after missing ` +
+            `${esc(target.name)} is <strong>stabilized</strong>: no more death saves, and they wake up after missing ` +
                 `${turns} turn(s). Damage to Downed Health can still kill them.`,
         );
     }
@@ -352,12 +353,12 @@ export async function applyDamageToActor(
             unblockable = roll <= unblockableChance;
             notes0.push(`Unblockable chance ${unblockableChance}%: rolled ${roll}, ${unblockable ? "the block doesn't apply" : "blocked"}.`);
         } else if (block && unblockable) {
-            notes0.push(`Unblockable: ${block.name} doesn't apply.`);
+            notes0.push(`Unblockable: ${esc(block.name)} doesn't apply.`);
         }
         if (block && !unblockable) {
             const percent = (block.system as unknown as { block: number }).block;
             scale *= 1 - percent / 100;
-            blockNote = percent >= 100 ? ` (fully blocked by ${block.name})` : ` (blocked ${percent}% by ${block.name})`;
+            blockNote = percent >= 100 ? ` (fully blocked by ${esc(block.name)})` : ` (blocked ${percent}% by ${esc(block.name)})`;
             blockUndo.push(snapshotEffect(block));
             blockerUuid = (foundry.utils.getProperty(block, `flags.${SYSTEM_ID}.casterUuid`) as string | undefined) ?? target.uuid ?? undefined;
             await block.delete();
@@ -379,7 +380,7 @@ export async function applyDamageToActor(
         vulnerability[key] += extra.total;
         incomingSources.push(...extra.sources);
     }
-    if (incomingSources.length) notes0.push(`${target.name}'s defenses against this attack: ${incomingSources.join(", ")}.`);
+    if (incomingSources.length) notes0.push(`${esc(target.name)}'s defenses against this attack: ${incomingSources.map(esc).join(", ")}.`);
     const defenses = {
         // An attack's "reduce AC" affix only lowers AC against that attack.
         ac: Math.max(0, Math.round((d.stats.ac.value - acReduction + incomingAC.total) * (1 + incomingACPercent.total / 100))),
@@ -440,7 +441,7 @@ export async function applyDamageToActor(
     const markers = concentrationMarkers(target);
     const needsCheck = total > 0 && markers.length > 0 && !target.statuses.has(STATUS_DOWNED);
     if (needsCheck) {
-        const names = markers.map((m) => foundry.utils.getProperty(m, `flags.${SYSTEM_ID}.concentration.ability`)).join(", ");
+        const names = markers.map((m) => esc(foundry.utils.getProperty(m, `flags.${SYSTEM_ID}.concentration.ability`) as string)).join(", ");
         notes.push(`Concentrating on ${names}: concentration check vs DC ${total * 2} (rolled below).`);
     }
     const scaleNote =
@@ -449,7 +450,7 @@ export async function applyDamageToActor(
         blockNote;
     await postHealthMessage(
         target,
-        `<p>${target.name} takes <strong>${total}</strong> damage${sourceName ? ` from ${sourceName}` : ""}${scaleNote}.</p>` +
+        `<p>${esc(target.name)} takes <strong>${total}</strong> damage${sourceName ? ` from ${esc(sourceName)}` : ""}${scaleNote}.</p>` +
             `<ul>${rows.join("")}</ul>${notes.map((n) => `<p>${n}</p>`).join("")}`,
         undo,
     );
@@ -497,7 +498,7 @@ export async function applyHealingToActor(target: Actor.Implementation, amount: 
     const after = (target.system as unknown as CreatureModel).derived.resources.health.value;
     await postHealthMessage(
         target,
-        `<p>${target.name} is healed for <strong>${after - before}</strong>${sourceName ? ` by ${sourceName}` : ""} ` +
+        `<p>${esc(target.name)} is healed for <strong>${after - before}</strong>${sourceName ? ` by ${esc(sourceName)}` : ""} ` +
             `(${before} → ${after}).</p>${notes.map((n) => `<p>${n}</p>`).join("")}`,
         undo,
     );
@@ -515,7 +516,7 @@ export async function applyShieldingToActor(target: Actor.Implementation, amount
     const undo: UndoRecord = { actorUuid: target.uuid ?? "", shieldingDelta: next - current };
     await postHealthMessage(
         target,
-        `<p>${target.name} gains <strong>${next}</strong> shielding${sourceName ? ` from ${sourceName}` : ""} (was ${current}).</p>`,
+        `<p>${esc(target.name)} gains <strong>${next}</strong> shielding${sourceName ? ` from ${esc(sourceName)}` : ""} (was ${current}).</p>`,
         undo,
     );
 }
@@ -537,8 +538,8 @@ export async function applyResourceChangeToActor(
     const undo: UndoRecord = { actorUuid: target.uuid ?? "", resourceDeltas: { [resource]: changed } };
     await postHealthMessage(
         target,
-        `<p>${target.name} ${changed < 0 ? "loses" : "gains"} <strong>${Math.abs(changed)}</strong> ${resource}${
-            sourceName ? ` (${sourceName})` : ""
+        `<p>${esc(target.name)} ${changed < 0 ? "loses" : "gains"} <strong>${Math.abs(changed)}</strong> ${resource}${
+            sourceName ? ` (${esc(sourceName)})` : ""
         } (${value} → ${next}).</p>`,
         undo,
     );

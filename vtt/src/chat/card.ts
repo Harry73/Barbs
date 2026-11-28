@@ -35,6 +35,7 @@ import { evaluateNumber } from "../rules/formula.ts";
 import { incomingTotal, type AttackContext } from "../effects/incoming.ts";
 import { requestOnActor, requestUndo } from "../socket.ts";
 import { hideUndoIfNotAllowed, UNDO_BUTTON, type UndoRecord } from "./undo.ts";
+import { esc } from "./html.ts";
 
 export interface CardFlags {
     actorUuid: string;
@@ -289,7 +290,7 @@ async function rollEvasion(flags: CardFlags, target: Target, hitCount: number, s
     if (dodged.every(Boolean)) {
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: target.actor as Actor.Stored }),
-            content: `<div class="barbs-chat-card"><p><strong>${target.actor.name} dodges</strong> ${flags.sourceName}: rolled ${rolls.join(", ")} against ${against}.</p></div>`,
+            content: `<div class="barbs-chat-card"><p><strong>${esc(target.actor.name)} dodges</strong> ${esc(flags.sourceName)}: rolled ${rolls.join(", ")} against ${against}.</p></div>`,
         } as never);
         return { dodged };
     }
@@ -420,7 +421,7 @@ async function damageTarget(
         const rolls: number[] = [];
         for (let i = 0; i < hits.length; i++) if (!evasion.dodged[i]) rolls.push((await new Roll("1d100").evaluate()).total ?? 101);
         const lethal = rolls.some((r) => r <= m.percent);
-        notes.push(`${m.source}: ${m.percent}% Lethality, rolled ${rolls.join(", ")}${lethal ? ": <strong>LETHAL</strong> (dies unless immune; players are)" : ""}.`);
+        notes.push(`${esc(m.source)}: ${m.percent}% Lethality, rolled ${rolls.join(", ")}${lethal ? ": <strong>LETHAL</strong> (dies unless immune; players are)" : ""}.`);
     }
     // A reflected beam hits once per segment the target was on; "Apply as redirected" is one bounce.
     const redirectList = redirected ? [1] : (target.tokenUuid && flags.segments?.[target.tokenUuid]) || [0];

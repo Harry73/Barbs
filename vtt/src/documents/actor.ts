@@ -9,6 +9,7 @@ import { dualWieldAttack, useAbility, useItem, weaponAttack } from "../abilities
 import type { Hand } from "../rolls/attack.ts";
 import type { CreatureModel } from "../data/actor/creature.ts";
 import type { SkillModel } from "../data/item/models.ts";
+import { esc } from "../chat/html.ts";
 
 export class BarbsActor extends Actor {
     /** The prepared creature data. Every Barbs actor type extends CreatureModel. */
@@ -85,9 +86,9 @@ export class BarbsActor extends Actor {
         await roll.toMessage({
             speaker: this.speaker,
             flavor:
-                `${item?.name ?? name} check${skill ? ` (rank ${skill.rank})` : " (untrained)"}` +
+                `${esc(item?.name ?? name)} check${skill ? ` (rank ${skill.rank})` : " (untrained)"}` +
                 (dc !== undefined ? ` vs DC ${dc}: ${passed ? "<strong>success</strong>" : "failure"}` : "") +
-                (flavor ? ` (${flavor})` : ""),
+                (flavor ? ` (${esc(flavor)})` : ""),
         });
         return passed;
     }

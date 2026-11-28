@@ -9,6 +9,7 @@
  */
 import { skillKey, SYSTEM_ID } from "./config.ts";
 import type { CreatureModel } from "./data/actor/creature.ts";
+import { esc } from "./chat/html.ts";
 
 export interface ConcentrationMarker {
     key: string;
@@ -37,7 +38,7 @@ export function concentrationMarkerData(actor: Actor.Implementation, ability: st
     return {
         name: `Concentrating: ${ability}`,
         img,
-        description: `<p>Concentrating on ${ability}. Delete this effect to end it and everything it maintains.</p>`,
+        description: `<p>Concentrating on ${esc(ability)}. Delete this effect to end it and everything it maintains.</p>`,
         showIcon: CONST.ACTIVE_EFFECT_SHOW_ICON.ALWAYS,
         system: { category: "" },
         flags: { [SYSTEM_ID]: { concentration: { key, ability } satisfies ConcentrationMarker } },
@@ -86,7 +87,7 @@ export async function concentrationCheck(actor: Actor.Implementation, dc: number
     const dropped = kept ? [] : await dropConcentration(actor);
     await roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: actor as Actor.Stored }),
-        flavor: `Concentration check vs DC ${dc}: ${kept ? "<strong>kept</strong>" : `broken${dropped.length ? ` (${dropped.join(", ")} ended)` : ""}`}`,
+        flavor: `Concentration check vs DC ${dc}: ${kept ? "<strong>kept</strong>" : `broken${dropped.length ? ` (${dropped.map(esc).join(", ")} ended)` : ""}`}`,
     });
     return kept;
 }

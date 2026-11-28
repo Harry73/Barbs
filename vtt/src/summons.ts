@@ -10,6 +10,7 @@ import { summonActionKey } from "./abilities/catalog.ts";
 import type { SummonSpec } from "./abilities/types.ts";
 import { SYSTEM_ID, STAT_KEYS } from "./config.ts";
 import type { EquipmentModel } from "./data/item/models.ts";
+import { esc } from "./chat/html.ts";
 
 export interface SummonRequest {
     casterUuid: string;
@@ -159,7 +160,7 @@ export async function createSummon(request: SummonRequest): Promise<void> {
     }
     await ChatMessage.create({
         speaker: ChatMessage.getSpeaker({ actor: caster as Actor.Stored }),
-        content: `<div class="barbs-chat-card"><p>${caster.name} summons <strong>${spec.name}</strong>${(spec.count ?? 1) > 1 ? ` ×${spec.count}` : ""}.</p></div>`,
+        content: `<div class="barbs-chat-card"><p>${esc(caster.name)} summons <strong>${esc(spec.name)}</strong>${(spec.count ?? 1) > 1 ? ` ×${spec.count}` : ""}.</p></div>`,
     });
 }
 

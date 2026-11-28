@@ -28,6 +28,7 @@ import { askChoices, bindChoices, defaultChoices } from "./choices.ts";
 import { contextData, makeContext, resolve, type UseContext } from "./context.ts";
 import { buildEffectData, type EffectSource } from "./effects.ts";
 import type { AbilityAutomation, AttackSpec, ChoiceSpec, Cost, CostResource, EffectSpec } from "./types.ts";
+import { esc } from "../chat/html.ts";
 
 const CREATURE_RESOURCES = ["health", "stamina", "mana"];
 
@@ -642,7 +643,7 @@ export async function postPulse(
             img: effect.img ?? "icons/svg/aura.svg",
             subtitle: "Start of turn",
             result,
-            notes: [`Everyone ${pulse.affects === "enemies" ? "hostile " : ""}within ${pulse.radius} ft: ${targets.map((t) => t.name).join(", ") || "no one"}.`],
+            notes: [`Everyone ${pulse.affects === "enemies" ? "hostile " : ""}within ${pulse.radius} ft: ${targets.map((t) => esc(t.name)).join(", ") || "no one"}.`],
         },
         {
             actorUuid: actor.uuid ?? "",
@@ -752,7 +753,7 @@ export async function useItem(actor: Actor.Implementation, item: Item.Implementa
     const automation: AbilityAutomation = {
         ...(use.heal ? { heal: { formula: use.heal, self: onSelf } } : {}),
         ...(use.restoreResource && use.restore ? { restore: [{ resource: use.restoreResource as CostResource, formula: use.restore }] } : {}),
-        notes: use.note ? [use.note] : [],
+        notes: use.note ? [esc(use.note)] : [],
     };
     const description = await foundry.applications.ux.TextEditor.implementation.enrichHTML(e.description, { relativeTo: item });
     await runAutomation({

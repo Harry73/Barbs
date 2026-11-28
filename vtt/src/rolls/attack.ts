@@ -29,6 +29,7 @@ import {
     type MultiplierPools,
     type SourceMultipliers,
 } from "../rules/damage-math.ts";
+import { esc } from "../chat/html.ts";
 
 /** Crit modifier when no weapon sets one: crits double damage. */
 const DEFAULT_CRIT_MODIFIER = 100;
@@ -286,8 +287,9 @@ export class AttackBuilder {
         return !caster || sameActor(caster, this.actor.uuid) ? SELF_POOL : caster;
     }
 
+    /** Add a line to the card's notes. Plain text: it's escaped, since it often holds an effect or item name. */
     addNote(text: string): this {
-        this.#notes.push(text);
+        this.#notes.push(esc(text));
         return this;
     }
 
