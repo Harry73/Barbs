@@ -77,6 +77,8 @@ export interface RollFacts {
     className?: string | null;
     /** An area attack (not aimed at one creature). */
     area?: boolean;
+    /** The ammunition a ranged attack fires, if any. */
+    ammo?: Item.Implementation | null;
 }
 
 /** Facts about the roll itself: what kind, with what weapon, from which ability. */
@@ -93,7 +95,34 @@ export function rollOptions(facts: RollFacts): string[] {
     if (facts.className) out.push(`ability:class:${slug(facts.className)}`);
     for (const tag of facts.tags ?? []) out.push(`ability:tag:${slug(tag)}`);
     if (facts.area) out.push("area");
+    // Which items made the attack, so effects on a weapon or ammo apply only to its own attacks (effectAppliesToAttack).
+    for (const w of facts.weapons) out.push(`item:${w.id}`);
+    if (facts.ammo) out.push(`ammo:${facts.ammo.id}`);
     return out;
+}
+
+/**
+ * Whether an effect's bonuses and attacker-side triggers apply to an attack, given the attack's roll options. It
+ * depends on where the effect lives:
+ *
+ *   - On a weapon: physical attacks made with that weapon, plus spells and other non-physical rolls while it's held
+ *     (a staff's magic damage bonus).
+ *   - On ammunition: the shots it's fired with.
+ *   - Anywhere else (the actor, armor, rings): every attack.
+ *
+ * With no attack at all (a kill by a DoT tick or by trigger damage), weapon and ammo effects don't apply.
+ * Unequipped gear is already suppressed by the effect model.
+ */
+export function effectAppliesToAttack(effect: ActiveEffect.Implementation, options: Iterable<string> | null | undefined): boolean {
+    const item = effect.parent;
+    if (!(item instanceof Item) || item.type !== "equipment") return true;
+    const equipment = item.system as unknown as EquipmentModel;
+    if (!equipment.ammo && !equipment.isWeapon) return true;
+    if (!options) return false;
+    const facts = options instanceof Set ? (options as Set<string>) : new Set(options);
+    if (equipment.ammo) return facts.has(`ammo:${item.id}`);
+    if (facts.has("roll:physical")) return facts.has(`item:${item.id}`);
+    return equipment.isHeldWeapon;
 }
 
 /** Grid distance between two actors' first tokens, in feet, or null when either isn't on the canvas. */

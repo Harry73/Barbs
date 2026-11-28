@@ -229,7 +229,9 @@ Grant/Inflict trigger's Effect column: it creates the template next to the effec
 links the trigger to it. A template's config says which effects grant it and has no Triggers section, item sheets
 list templates under the effect that grants them, and renaming a template updates the triggers that name it
 (`src/effects/templates.ts`). Trigger damage isn't
-an attack (no Evasion, blocks, or on-hit reactions), and chains stop two levels deep. Each action posts its own
+an attack (no Evasion, blocks, or on-hit reactions), and chains stop two levels deep. Triggers about your own attacks
+(you attack, you hit, you down someone) follow the same scope as bonuses: on a weapon, only that weapon's attacks
+(and spells while it's held); on ammunition, the shots it's fired with; anywhere else, everything. Each action posts its own
 message with undo. Lightning Coil Cuirass, Accursed Armor, and Heart of Ice retaliate through triggers.
 
 "You would take damage" triggers run after defenses and before health changes, and can change the damage: reduce it

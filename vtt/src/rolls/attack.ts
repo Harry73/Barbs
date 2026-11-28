@@ -8,7 +8,7 @@
 import { bleed, burn, poison } from "../abilities/helpers.ts";
 import { INCOMING_MODIFIER_TYPES, NON_ROLL_BONUS_TYPES, SYSTEM_ID } from "../config.ts";
 import { mentions, parsePredicate, testPredicate } from "../rules/predicate.ts";
-import { actorData, actorOptions, distanceBetween, rollOptions } from "../rules/roll-options.ts";
+import { actorData, actorOptions, distanceBetween, effectAppliesToAttack, rollOptions } from "../rules/roll-options.ts";
 import { evaluateNumber, usesTarget } from "../rules/formula.ts";
 import { ELEMENTS, RANGED_WEAPONS, STATUSES, type ModifierRollType, type RollType, type StatKey } from "../config.ts";
 import { snapshotEffect, type RemovedEffect } from "../chat/undo.ts";
@@ -351,7 +351,7 @@ export class AttackBuilder {
     /** The roll's own facts plus the roller's (`self:`). */
     get rollOptions(): string[] {
         return [
-            ...rollOptions({ rollType: this.rollType, weapons: this.weapons, ...this.#facts }),
+            ...rollOptions({ rollType: this.rollType, weapons: this.weapons, ammo: this.#firesAmmo ? this.loadedAmmo : null, ...this.#facts }),
             ...actorOptions(this.actor, "self"),
         ];
     }
@@ -465,12 +465,6 @@ export class AttackBuilder {
         return true;
     }
 
-    /**
-     * Whether an effect's roll modifiers apply to this roll, based on where the effect lives. Effects on a weapon
-     * are that weapon's mods: they only apply to physical attacks made with it, though a held weapon's mods also
-     * apply to spells and other non-physical rolls (a staff's magic damage bonus). Effects on anything else
-     * (the actor, armor, rings) apply to every roll. Unequipped gear is already suppressed by the effect model.
-     */
     /** A ranged physical attack, which fires the loaded ammunition. */
     get #firesAmmo(): boolean {
         return this.rollType === "physical" && this.weapons.some((w) => RANGED_WEAPONS.includes((w.system as unknown as EquipmentModel).weapon.category));
@@ -486,18 +480,7 @@ export class AttackBuilder {
         );
     }
 
-    #effectApplies(effect: ActiveEffect.Implementation): boolean {
-        const item = effect.parent;
-        if (!(item instanceof Item) || item.type !== "equipment") return true;
-        const equipment = item.system as unknown as EquipmentModel;
-        // Ammunition's effects ride on the shots it's fired with, and only the loaded ammo's.
-        if (equipment.ammo) return this.#firesAmmo && this.loadedAmmo?.id === item.id;
-        if (!equipment.isWeapon) return true;
-        if (this.rollType === "physical") return this.weapons.some((w) => w.id === item.id);
-        return equipment.isHeldWeapon;
-    }
 
-    /** Fold in roll modifiers from every active effect on the actor (including transferred item effects). */
     /** A summon's rolls get its summoner's Minion Damage and Minion Lethality. */
     #applyStatBuckets(): void {
         const casterUuid = foundry.utils.getProperty(this.actor, `flags.${SYSTEM_ID}.summon.casterUuid`) as string | undefined;
@@ -507,11 +490,14 @@ export class AttackBuilder {
         this.#lethality += casterStats?.minionLethality ?? 0;
     }
 
+    /** Fold in roll modifiers from every active effect on the actor (including transferred item effects). */
     applyEffects(): this {
         this.#applyStatBuckets();
         let base: string[] | undefined;
+        // Whether an effect applies depends on where it lives: a weapon's own effects only on its attacks, etc.
+        const scope = new Set(this.rollOptions);
         for (const effect of this.actor.allApplicableEffects()) {
-            if (!effect.active || !this.#effectApplies(effect as ActiveEffect.Implementation)) continue;
+            if (!effect.active || !effectAppliesToAttack(effect as ActiveEffect.Implementation, scope)) continue;
             const system = effect.system as unknown as BarbsEffectModel;
             if (system.singleUse && this.#skipSingleUse) continue;
             let used = false;

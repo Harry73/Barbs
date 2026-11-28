@@ -24,7 +24,7 @@ import type { BarbsEffectModel, TriggerData } from "../data/effect.ts";
 import type { AttackContext } from "../effects/incoming.ts";
 import { evaluateNumber } from "../rules/formula.ts";
 import { parsePredicate, testPredicate } from "../rules/predicate.ts";
-import { actorData, actorOptions, defenderOptions, distanceBetween } from "../rules/roll-options.ts";
+import { actorData, actorOptions, defenderOptions, distanceBetween, effectAppliesToAttack } from "../rules/roll-options.ts";
 import type { DamageKey } from "../rules/damage-math.ts";
 
 export const MAX_TRIGGER_DEPTH = 2;
@@ -36,6 +36,11 @@ export interface TriggerContext {
     options?: Set<string>;
     /** For defender-side events: the incoming attack, so conditions get the defender's view (attack:*, origin:attacker). */
     attack?: AttackContext;
+    /**
+     * For attacker-side events, the attack's roll options for deciding which item effects count: a weapon's
+     * triggers only fire for its own attacks (effectAppliesToAttack). Defaults to `options`.
+     */
+    scope?: Iterable<string>;
     /** Extra formula data for values (`@hit.damage`). */
     data?: Record<string, unknown>;
     /** How many triggers deep this event already is. */
@@ -43,6 +48,9 @@ export interface TriggerContext {
     /** What caused the event, for messages. */
     sourceName?: string;
 }
+
+/** Events about an attack the bearer made, where effects on a weapon only count for that weapon's attacks. */
+const ATTACKER_EVENTS = new Set<TriggerEvent>(["hit", "attack", "kill"]);
 
 /** What `other` is called in conditions and formulas for each event. */
 const OTHER_ROLE: Partial<Record<TriggerEvent, "target" | "attacker">> = {
@@ -70,6 +78,7 @@ export async function fireTriggers(bearer: Actor.Implementation | null | undefin
     const role = OTHER_ROLE[event];
     for (const effect of [...bearer.allApplicableEffects()] as ActiveEffect.Implementation[]) {
         if (!effect.active) continue;
+        if (ATTACKER_EVENTS.has(event) && !effectAppliesToAttack(effect, ctx.scope ?? ctx.options)) continue;
         const triggers = (effect.system as unknown as BarbsEffectModel).triggers ?? [];
         for (const [index, trigger] of triggers.entries()) {
             if (trigger.event !== event) continue;

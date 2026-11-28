@@ -478,7 +478,8 @@ export async function applyDamageToActor(
     if (total > 0) {
         await fireTriggers(target, "damaged", { other: dealer, attack: attackContext, depth: triggerDepth, sourceName });
         if (!wasDowned && target.statuses.has(STATUS_DOWNED) && dealer) {
-            await fireTriggers(dealer, "kill", { other: target, depth: triggerDepth, sourceName });
+            // The killing attack's facts decide whether the dealer's weapon effects count (none for DoTs and trigger damage).
+            await fireTriggers(dealer, "kill", { other: target, scope: attackContext?.options, depth: triggerDepth, sourceName });
         }
     }
 
