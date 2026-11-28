@@ -22,6 +22,7 @@ import {
     applyShieldingToActor,
     type ApplyEffectOptions,
 } from "./effects/apply.ts";
+import { deleteExisting } from "./documents/delete-existing.ts";
 
 const CHANNEL = `system.${SYSTEM_ID}` as const;
 
@@ -85,7 +86,10 @@ async function performGM(message: GMSocketMessage): Promise<void> {
     const { createSummon, dismissSummon } = await import("./summons.ts");
     if (message.type === "summon") await createSummon(message.payload as never);
     if (message.type === "dismiss") await dismissSummon(message.payload as string);
-    if (message.type === "deleteEffect") await ((await fromUuid(message.payload as string)) as ActiveEffect.Implementation | null)?.delete();
+    if (message.type === "deleteEffect") {
+        const effect = (await fromUuid(message.payload as string)) as ActiveEffect.Implementation | null;
+        if (effect) await deleteExisting(effect.parent, "ActiveEffect", [effect.id!]);
+    }
     if (message.type === "extendConcentration") {
         const { extendConcentration } = await import("./concentration.ts");
         const { key, rounds } = message.payload as { key: string; rounds: number };

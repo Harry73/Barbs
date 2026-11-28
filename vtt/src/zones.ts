@@ -12,6 +12,7 @@
  */
 import { SYSTEM_ID } from "./config.ts";
 import { esc } from "./chat/html.ts";
+import { deleteExisting } from "./documents/delete-existing.ts";
 
 const fields = foundry.data.fields;
 // fvtt-types doesn't describe region behavior types well; this is core's RegionBehaviorType base class.
@@ -76,7 +77,7 @@ export class ZoneBehaviorType extends RegionBehaviorType {
             if (!self.whileInside) return;
             for (const effect of [...actor.effects]) {
                 if (foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.zoneKey`) !== self.zoneKey) continue;
-                if (effect.isOwner) await effect.delete();
+                if (effect.isOwner) await deleteExisting(actor, "ActiveEffect", [effect.id!]);
                 else await requestGM("deleteEffect", effect.uuid);
             }
             return;
@@ -122,7 +123,7 @@ export class ZoneBehaviorType extends RegionBehaviorType {
 export async function removeZones(key: string): Promise<void> {
     for (const scene of game.scenes ?? []) {
         const regions = scene.regions.filter((r) => foundry.utils.getProperty(r, `flags.${SYSTEM_ID}.zoneKey`) === key);
-        if (regions.length) await scene.deleteEmbeddedDocuments("Region", regions.map((r) => r.id!) as never);
+        if (regions.length) await deleteExisting(scene, "Region", regions.map((r) => r.id!));
     }
     const actors = new Set<Actor.Implementation>([...(game.actors ?? [])] as Actor.Implementation[]);
     for (const scene of game.scenes ?? []) {
@@ -132,7 +133,7 @@ export async function removeZones(key: string): Promise<void> {
         const inside = actor.effects.filter(
             (e) => foundry.utils.getProperty(e, `flags.${SYSTEM_ID}.zoneKey`) === key && !!foundry.utils.getProperty(e, `flags.${SYSTEM_ID}.zoneWhileInside`),
         );
-        if (inside.length) await actor.deleteEmbeddedDocuments("ActiveEffect", inside.map((e) => e.id!) as never);
+        if (inside.length) await deleteExisting(actor, "ActiveEffect", inside.map((e) => e.id!));
     }
 }
 

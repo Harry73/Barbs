@@ -8,6 +8,7 @@
  */
 import { SYSTEM_ID } from "../config.ts";
 import type { CreatureModel } from "../data/actor/creature.ts";
+import { deleteExisting } from "../documents/delete-existing.ts";
 
 export interface RemovedEffect {
     /** The actor or item the effect lived on. */
@@ -119,9 +120,11 @@ async function reverseChanges(message: ChatMessage.Implementation): Promise<void
     for (const status of undo.statusesAdded ?? []) await actor.toggleStatusEffect(status, { active: false });
     for (const status of undo.statusesRemoved ?? []) await actor.toggleStatusEffect(status, { active: true });
 
-    for (const uuid of undo.createdEffects ?? []) {
-        const effect = fromUuidSync(uuid) as ActiveEffect.Implementation | null;
-        if (effect) await effect.delete();
+    // Concentrating markers last: deleting one ends its concentration, which deletes the cast's other effects too.
+    const created = (undo.createdEffects ?? []).map((uuid) => fromUuidSync(uuid) as ActiveEffect.Implementation | null).filter((e): e is ActiveEffect.Implementation => !!e);
+    const isMarker = (e: ActiveEffect.Implementation) => !!foundry.utils.getProperty(e, `flags.${SYSTEM_ID}.concentration.key`);
+    for (const effect of [...created.filter((e) => !isMarker(e)), ...created.filter(isMarker)]) {
+        await deleteExisting(effect.parent, "ActiveEffect", [effect.id!]);
     }
     for (const { parentUuid, data } of undo.removedEffects ?? []) {
         const parent = (await fromUuid(parentUuid)) as Actor.Implementation | Item.Implementation | null;

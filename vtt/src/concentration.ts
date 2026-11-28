@@ -10,6 +10,7 @@
 import { skillKey, SYSTEM_ID } from "./config.ts";
 import type { CreatureModel } from "./data/actor/creature.ts";
 import { esc } from "./chat/html.ts";
+import { deleteExisting } from "./documents/delete-existing.ts";
 
 export interface ConcentrationMarker {
     key: string;
@@ -49,7 +50,7 @@ export function concentrationMarkerData(actor: Actor.Implementation, ability: st
 export async function endConcentration(key: string): Promise<void> {
     for (const actor of heldActors()) {
         const linked = [...actor.effects].filter((e) => foundry.utils.getProperty(e, `flags.${SYSTEM_ID}.concentrationKey`) === key);
-        if (linked.length) await actor.deleteEmbeddedDocuments("ActiveEffect", linked.map((e) => e.id!) as never);
+        if (linked.length) await deleteExisting(actor, "ActiveEffect", linked.map((e) => e.id!));
     }
     const { dismissSummon } = await import("./summons.ts");
     const summonIds = new Set(
@@ -82,7 +83,7 @@ function heldActors(): Set<Actor.Implementation> {
 /** Drop all of a creature's concentration (a failed check, being Downed). */
 export async function dropConcentration(actor: Actor.Implementation): Promise<string[]> {
     const markers = concentrationMarkers(actor);
-    if (markers.length) await actor.deleteEmbeddedDocuments("ActiveEffect", markers.map((e) => e.id!) as never);
+    if (markers.length) await deleteExisting(actor, "ActiveEffect", markers.map((e) => e.id!));
     return markers.map((m) => String(foundry.utils.getProperty(m, `flags.${SYSTEM_ID}.concentration.ability`)));
 }
 

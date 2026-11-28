@@ -11,6 +11,7 @@ import type { SummonSpec } from "./abilities/types.ts";
 import { SYSTEM_ID, STAT_KEYS } from "./config.ts";
 import type { EquipmentModel } from "./data/item/models.ts";
 import { esc } from "./chat/html.ts";
+import { deleteActorIfPresent, deleteExisting } from "./documents/delete-existing.ts";
 
 export interface SummonRequest {
     casterUuid: string;
@@ -171,11 +172,12 @@ export async function dismissSummon(summonId: string): Promise<void> {
 }
 
 async function removeSummonActor(actor: Actor.Implementation): Promise<void> {
+    // Undo and the end of concentration can both dismiss the same summon; whichever comes second finds less to do.
     for (const scene of game.scenes ?? []) {
         const ids = scene.tokens.filter((t) => t.actorId === actor.id).map((t) => t.id!);
-        if (ids.length) await scene.deleteEmbeddedDocuments("Token", ids);
+        if (ids.length) await deleteExisting(scene, "Token", ids);
     }
-    await actor.delete();
+    await deleteActorIfPresent(actor);
 }
 
 /** When a summon's duration effect expires, remove that token (or the whole summon if it's the base actor's). */
