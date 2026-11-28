@@ -66,7 +66,7 @@ function actionGroup(action: string): string {
 export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     static override DEFAULT_OPTIONS = {
         classes: [SYSTEM_ID, "actor", "character"],
-        position: { width: 780, height: 820 },
+        position: { width: 860, height: 820 },
         window: { resizable: true },
         form: { submitOnChange: true },
         actions: {

@@ -76,14 +76,17 @@
 
 .barbs .resources {
   display: flex;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
 }
 
+/* One line each ("Stamina [ 100 ] / 100"), wrapping between resources instead of inside one. */
 .barbs .resource {
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  flex: 1;
+  flex: 1 0 auto;
+  white-space: nowrap;
 }
 
 .barbs .resource input {
