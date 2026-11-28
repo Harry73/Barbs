@@ -17,6 +17,7 @@ import {
     STATS,
     SYSTEM_ID,
     TIER_INVESTMENT_REQUIRED,
+    WEAPON_CATEGORIES,
     type AttributeKey,
     type EquipmentSlot,
 } from "../config.ts";
@@ -27,6 +28,7 @@ import { bonusSources, bonusTotal, summarizeRollBonuses, type RollBonusSummary }
 import { defaultChoices } from "../abilities/choices.ts";
 import { makeContext, resolve } from "../abilities/context.ts";
 import type { AbilityAutomation } from "../abilities/types.ts";
+import { expectedWeaponCategories, holdsExpectedWeapon } from "../rules/hands.ts";
 import { holdsTwoWeapons, mainWeapon, offhandWeapon, type Hand } from "../rolls/attack.ts";
 import { adjustResource, baseComboChance, getPassiveAutomation, handle as passiveHandle, monkDie, setState } from "../passives/index.ts";
 import type { BarbsActor } from "../documents/actor.ts";
@@ -44,6 +46,24 @@ type ActionHandler = (this: BarbsCharacterSheet, event: PointerEvent, target: HT
  * Character sheet. Tabs roughly follow the old Roll20 sheet: main (characteristics + resources), attributes, stats,
  * skills, abilities, inventory, and effects. Rolls happen here, on the client, instead of being forwarded to an API.
  */
+/** The Actions tab's ability sections, by the action an ability takes. */
+const ACTION_GROUPS = [
+    { id: "major", label: "Major Actions" },
+    { id: "minor", label: "Minor Actions" },
+    { id: "reaction", label: "Reactions" },
+    { id: "free", label: "Free Actions" },
+    { id: "longer", label: "Longer (minutes)" },
+];
+
+/** Which section an ability's action ("1 Major Action", "Free Reaction", "10 minutes") goes in. */
+function actionGroup(action: string): string {
+    if (/major/i.test(action)) return "major";
+    if (/minor/i.test(action)) return "minor";
+    if (/reaction/i.test(action)) return "reaction";
+    if (/free/i.test(action)) return "free";
+    return action.trim() ? "longer" : "major";
+}
+
 export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     static override DEFAULT_OPTIONS = {
         classes: [SYSTEM_ID, "actor", "character"],
@@ -80,6 +100,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
         header: { template: `${TEMPLATES}/header.hbs` },
         tabs: { template: "templates/generic/tab-navigation.hbs" },
         main: { template: `${TEMPLATES}/main.hbs`, scrollable: [""] },
+        actions: { template: `${TEMPLATES}/actions.hbs`, scrollable: [""] },
         attributes: { template: `${TEMPLATES}/attributes.hbs`, scrollable: [""] },
         stats: { template: `${TEMPLATES}/stats.hbs`, scrollable: [""] },
         skills: { template: `${TEMPLATES}/skills.hbs`, scrollable: [""] },
@@ -93,6 +114,7 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
         primary: {
             tabs: [
                 { id: "main", label: "Main" },
+                { id: "actions", label: "Actions" },
                 { id: "attributes", label: "Attributes" },
                 { id: "stats", label: "Stats" },
                 { id: "skills", label: "Skills" },
@@ -101,7 +123,8 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
                 { id: "effects", label: "Effects" },
                 { id: "notes", label: "Notes" },
             ],
-            initial: "main",
+            // Where play happens: everything the character can do, and the buttons to do it.
+            initial: "actions",
         },
     };
 
@@ -247,6 +270,8 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             .filter((e) => e.system.isHeldWeapon)
             .map((e) => ({ ...e, hand: twoWeapons ? (e.item.id === mainId ? "Main hand" : e.item.id === offId ? "Offhand" : "") : "" }));
 
+        const actions = this.#actionsTab(sortedAbilityGroups, passives, equipment, heldWeapons);
+
         // One section per slot, in a fixed order, empty ones included so it's clear what's free. Equipped items
         // first, then by name.
         const inventory = INVENTORY_ORDER.map((slot) => ({
@@ -310,9 +335,11 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
             shielding: actor.creature.shielding.value,
             heldWeapons,
             twoWeapons,
+            actions,
             effects: otherEffects,
             equipmentEffects,
             equipmentEffectsOpen: this.#equipmentEffectsOpen,
+            downed: (actor as unknown as Actor.Implementation).statuses.has("downed"),
             activeEquipmentEffects: equipmentEffects.filter((e) => !e.inactive).length,
             enrichedBiography: await foundry.applications.ux.TextEditor.implementation.enrichHTML(
                 actor.creature.details.biography,
@@ -331,8 +358,38 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
     /** Whether the Effects tab's Equipment section is open; remembered across re-renders, closed by default. */
     #equipmentEffectsOpen = false;
 
+    /** The Actions tab's filter text, kept across re-renders (using an ability re-renders the sheet). */
+    #actionFilter = "";
+
+    /** Show only the Actions tab entries whose name (or class, tags) contains every word typed. */
+    #applyActionFilter(): void {
+        const words = this.#actionFilter.toLowerCase().split(/\s+/).filter(Boolean);
+        const tab = this.element.querySelector<HTMLElement>(".barbs-actions-tab");
+        if (!tab) return;
+        for (const el of tab.querySelectorAll<HTMLElement>("[data-action-name]")) {
+            const text = el.dataset.actionName!.toLowerCase();
+            el.hidden = !words.every((w) => text.includes(w));
+        }
+        // Hide sections with nothing left in them.
+        for (const section of tab.querySelectorAll<HTMLElement>("[data-filterable]")) {
+            const entries = [...section.querySelectorAll<HTMLElement>("[data-action-name]")];
+            section.hidden = words.length > 0 && entries.length > 0 && entries.every((el) => el.hidden);
+        }
+    }
+
     protected override async _onRender(context: never, options: never): Promise<void> {
         await super._onRender(context, options);
+        const filter = this.element.querySelector<HTMLInputElement>("input.barbs-action-filter");
+        if (filter) {
+            filter.value = this.#actionFilter;
+            filter.addEventListener("input", () => {
+                this.#actionFilter = filter.value;
+                this.#applyActionFilter();
+            });
+            // Not a field: don't let it submit the sheet.
+            filter.addEventListener("change", (event) => event.stopPropagation());
+            this.#applyActionFilter();
+        }
         this.element.querySelector<HTMLDetailsElement>("details.equipment-effects")?.addEventListener("toggle", (event) => {
             this.#equipmentEffectsOpen = (event.currentTarget as HTMLDetailsElement).open;
         });
@@ -412,6 +469,50 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
      * Everything else gear and buffs can change, grouped like the Roll20 sheet's Stats tab: misc combat stats, damage
      * multipliers, penetration, damage reduction, and condition resistances. Read-only: effects set them.
      */
+    /**
+     * The Actions tab: everything the character can do right now, with the buttons to do it. Abilities are grouped
+     * by the action they take (as the rulebook writes it), sorted by class and tier, and flagged when the character
+     * can't pay the cost or isn't holding the weapon the ability is used with. Adding and removing things stays on
+     * the Abilities and Inventory tabs.
+     */
+    #actionsTab(
+        abilityGroups: { abilities: unknown[] }[],
+        passives: { resources: unknown[]; states: unknown[]; actions: unknown[] }[],
+        equipment: { item: Item.Implementation; system: EquipmentModel }[],
+        heldWeapons: { system: EquipmentModel }[],
+    ) {
+        const resources = this.barbsActor.creature.derived.resources as Record<string, { value: number }>;
+        const heldCategories = heldWeapons.map((w) => w.system.weapon.category).filter(Boolean);
+        const groups = ACTION_GROUPS.map((g) => ({ ...g, abilities: [] as Record<string, unknown>[] }));
+        for (const entry of abilityGroups.flatMap((g) => g.abilities) as { item: Item.Implementation; system: AbilityModel }[]) {
+            const a = entry.system;
+            const cost = a.cost;
+            const have = cost.resource ? (resources[cost.resource]?.value ?? 0) : Infinity;
+            const expected = expectedWeaponCategories(a.tags);
+            const names = [...expected].map((c) => (WEAPON_CATEGORIES as Record<string, string>)[c] ?? c).join(" or ");
+            groups
+                .find((g) => g.id === actionGroup(a.action))!
+                .abilities.push({
+                    ...entry,
+                    cantAfford: cost.value != null && !!cost.resource && have < cost.value,
+                    wrongWeapon: holdsExpectedWeapon(expected, heldCategories) ? "" : `Used with a ${names}, and you're not holding one`,
+                    // "1 Major Action or Reaction": listed with its main action, marked as also a reaction.
+                    alsoReaction: /or reaction/i.test(a.action),
+                });
+        }
+        for (const g of groups) {
+            (g.abilities as unknown as { system: AbilityModel; item: Item.Implementation }[]).sort(
+                (x, y) => x.system.className.localeCompare(y.system.className) || x.system.tier - y.system.tier || x.item.name.localeCompare(y.item.name),
+            );
+        }
+        return {
+            abilityGroups: groups.filter((g) => g.abilities.length),
+            passives: passives.filter((p) => p.resources.length || p.states.length || p.actions.length),
+            usable: equipment.filter((e) => e.system.use?.enabled),
+            ammo: equipment.filter((e) => e.system.ammo && e.system.equipped),
+        };
+    }
+
     #statSections(rb: RollBonusSummary) {
         const d = this.barbsActor.creature.derived;
         const pct = (v: number) => `${v > 0 ? "+" : ""}${v}%`;
@@ -490,7 +591,9 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
         ];
     }
 
-    static async #onUseAbility(this: BarbsCharacterSheet, _event: PointerEvent, target: HTMLElement) {
+    static async #onUseAbility(this: BarbsCharacterSheet, event: PointerEvent, target: HTMLElement) {
+        // On the Actions tab the buttons sit in an ability's expandable row: use it, don't toggle it.
+        event.preventDefault();
         const item = this.#itemFromElement(target);
         if (item) await this.barbsActor.useAbility(item, (target.dataset.hand as Hand | undefined) ?? "main");
     }

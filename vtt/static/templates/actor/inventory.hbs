@@ -14,11 +14,11 @@
         <td><a data-action="toggleEquipped" data-tooltip="{{#if entry.system.equipped}}Equipped: click to unequip{{else}}Not equipped: click to equip{{/if}}"><i class="{{#if entry.system.equipped}}fa-solid fa-square-check{{else}}fa-regular fa-square{{/if}}"></i></a></td>
         <td>
           <a data-action="editItem">{{entry.item.name}}</a>
-          {{#if entry.system.use.enabled}}<a class="use-item" data-action="useItem" data-tooltip="Use"><i class="fa-solid fa-flask"></i> Use</a>{{/if}}
+          {{#if entry.system.use.enabled}}<span class="hint" data-tooltip="Usable from the Actions tab">usable</span>{{/if}}
           {{#if entry.system.ammo}}<span class="hint" data-tooltip="Ammunition: fired by ranged attacks while equipped">ammo</span>{{/if}}
         </td>
-        <td>{{#if entry.weaponSummary}}<a data-action="weaponAttack" class="{{#unless entry.system.isHeldWeapon}}unheld{{/unless}}"
-              data-tooltip="{{#if entry.system.isHeldWeapon}}Attack{{else}}Equip in a hand slot to attack{{/if}}"><i class="fa-solid fa-khanda"></i> {{entry.weaponSummary}}</a>{{/if}}</td>
+        <td>{{#if entry.weaponSummary}}<span class="{{#unless entry.system.isHeldWeapon}}unheld{{/unless}}"
+              data-tooltip="{{#if entry.system.isHeldWeapon}}Attack from the Actions tab{{else}}Equip in a hand slot to attack with it{{/if}}"><i class="fa-solid fa-khanda"></i> {{entry.weaponSummary}}</span>{{/if}}</td>
         <td>{{entry.system.quantity}}</td>
         <td>{{entry.system.weight}}</td>
         <td>{{#if @root.editable}}<a data-action="deleteItem" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a>{{/if}}</td>

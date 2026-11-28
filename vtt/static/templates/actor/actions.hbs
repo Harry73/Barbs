@@ -1,0 +1,122 @@
+<section class="tab barbs-actions-tab {{tab.cssClass}}" data-group="primary" data-tab="actions">
+  <div class="barbs-actions-toolbar">
+    <input type="search" class="barbs-action-filter" placeholder="Filter actions..." aria-label="Filter actions" />
+    <div class="barbs-actions">
+      <button type="button" data-action="rollInitiative"><i class="fa-solid fa-bolt"></i> Initiative</button>
+      <button type="button" data-action="shortRest"><i class="fa-solid fa-mug-hot"></i> Short Rest</button>
+      <button type="button" data-action="longRest"><i class="fa-solid fa-bed"></i> Long Rest</button>
+    </div>
+  </div>
+
+  {{#if downed}}
+  <div class="barbs-row downed notice">
+    <strong>Downed.</strong>
+    <span>Downed Health {{system.downed.value}} / {{system.downed.max}}</span>
+    <button type="button" data-action="deathSave"><i class="fa-solid fa-skull"></i> Death Save</button>
+  </div>
+  {{/if}}
+
+  <div class="barbs-action-section" data-filterable>
+    <h3>Weapons</h3>
+    {{#if heldWeapons.length}}
+    <div class="barbs-actions">
+      {{#each heldWeapons as |w|}}
+      <button type="button" data-action="weaponAttack" data-item-id="{{w.item.id}}" data-action-name="{{w.item.name}} attack weapon">
+        <img src="{{w.item.img}}" alt="" /> {{#if w.hand}}<span class="hint">{{w.hand}}:</span> {{/if}}{{w.item.name}} <span class="hint">{{w.weaponSummary}}</span>
+      </button>
+      {{/each}}
+      {{#if twoWeapons}}
+      <button type="button" data-action="dualWieldAttack" data-action-name="dual wield attack" data-tooltip="Attack with each weapon (one card per weapon)">
+        <i class="fa-solid fa-hand-fist"></i> Dual wield
+      </button>
+      {{/if}}
+    </div>
+    {{#if actions.ammo.length}}
+    <p class="hint">
+      Ammo: {{#each actions.ammo as |a|}}{{a.item.name}} ×{{a.system.quantity}}{{#unless @last}}, {{/unless}}{{/each}}
+    </p>
+    {{/if}}
+    {{else}}
+    <p class="hint">No weapon held. Equip one in a hand slot on the Inventory tab.</p>
+    {{/if}}
+  </div>
+
+  {{#if actions.passives.length}}
+  <div class="barbs-action-section" data-filterable>
+    <h3>Passives</h3>
+    {{#each actions.passives as |p|}}
+    <div class="passive-controls" data-item-id="{{p.item.id}}" data-action-name="{{p.item.name}}">
+      <strong>{{p.item.name}}</strong>
+      {{#each p.resources as |r|}}
+      <span class="passive-resource">
+        {{r.label}}
+        <a data-action="passiveResource" data-key="{{r.key}}" data-delta="-1"><i class="fa-solid fa-minus"></i></a>
+        <input type="number" data-passive-resource="{{r.key}}" value="{{r.value}}" min="0" />
+        <a data-action="passiveResource" data-key="{{r.key}}" data-delta="1"><i class="fa-solid fa-plus"></i></a>
+        {{#if r.max}}<span class="hint">/ {{r.max}}</span>{{/if}}
+      </span>
+      {{/each}}
+      {{#each p.states as |st|}}
+      <label class="passive-state">{{st.label}}
+        <select data-passive-state="{{st.key}}">{{selectOptions st.options selected=st.value}}</select>
+      </label>
+      {{/each}}
+      {{#each p.actions as |a|}}
+      <button type="button" data-action="passiveAction" data-key="{{a.key}}"><i class="{{#if a.icon}}{{a.icon}}{{else}}fa-solid fa-bolt{{/if}}"></i> {{a.label}}</button>
+      {{/each}}
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+
+  {{#each actions.abilityGroups as |group|}}
+  <div class="barbs-action-section" data-filterable>
+    <h3>{{group.label}} <span class="barbs-count">{{group.abilities.length}}</span></h3>
+    <ol class="barbs-action-list">
+      {{#each group.abilities as |entry|}}
+      <li data-item-id="{{entry.item.id}}" data-action-name="{{entry.item.name}} {{entry.system.className}} {{entry.system.tags}}">
+        <details class="barbs-action">
+          <summary>
+            <a class="barbs-use" data-action="useAbility" data-tooltip="Use {{entry.item.name}}"><img src="{{entry.item.img}}" alt="" /></a>
+            <span class="barbs-action-name">
+              <a data-action="useAbility">{{entry.item.name}}</a>
+              {{#if entry.automated}}<i class="fa-solid fa-bolt automated" data-tooltip="Automated: rolls and effects are handled"></i>{{/if}}
+              {{#if entry.alsoReaction}}<span class="barbs-tag" data-tooltip="{{entry.system.action}}">or reaction</span>{{/if}}
+              {{#if entry.wrongWeapon}}<i class="fa-solid fa-triangle-exclamation barbs-warn" data-tooltip="{{entry.wrongWeapon}}"></i>{{/if}}
+              <span class="hint">{{entry.system.className}} {{entry.system.tier}}</span>
+            </span>
+            <span class="hand-buttons">{{#if entry.hands}}
+              <a data-action="useAbility" data-hand="main" data-tooltip="Use with your main hand weapon">Main</a>
+              <a data-action="useAbility" data-hand="off" data-tooltip="Use with your offhand weapon">Off</a>
+              <a data-action="useAbility" data-hand="dual" data-tooltip="Dual wield: both weapons' effects apply, scaling from the better one">Dual</a>
+            {{/if}}</span>
+            <span class="barbs-action-cost {{#if entry.cantAfford}}short{{/if}}" {{#if entry.cantAfford}}data-tooltip="Not enough {{entry.system.cost.resource}}"{{/if}}>{{entry.system.cost.text}}</span>
+            <span class="barbs-action-meta">{{entry.system.range}}</span>
+            <span class="barbs-action-meta">{{entry.system.duration}}</span>
+          </summary>
+          <div class="barbs-action-description">
+            <p class="hint">{{entry.system.action}}{{#if entry.system.range}} · {{entry.system.range}}{{/if}}{{#if entry.system.duration}} · {{entry.system.duration}}{{/if}}</p>
+            {{{entry.system.description}}}
+          </div>
+        </details>
+      </li>
+      {{/each}}
+    </ol>
+  </div>
+  {{else}}
+  <p class="hint">No abilities yet. Add them on the Abilities tab.</p>
+  {{/each}}
+
+  {{#if actions.usable.length}}
+  <div class="barbs-action-section" data-filterable>
+    <h3>Items</h3>
+    <div class="barbs-actions">
+      {{#each actions.usable as |u|}}
+      <button type="button" data-action="useItem" data-item-id="{{u.item.id}}" data-action-name="{{u.item.name}} item use" {{#if (and u.system.use.consume (lte u.system.quantity 0))}}disabled{{/if}}>
+        <img src="{{u.item.img}}" alt="" /> {{u.item.name}}{{#if u.system.use.consume}} <span class="hint">×{{u.system.quantity}}</span>{{/if}}
+      </button>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+</section>

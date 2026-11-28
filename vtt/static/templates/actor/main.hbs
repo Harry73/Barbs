@@ -1,35 +1,10 @@
 <section class="tab {{tab.cssClass}}" data-group="primary" data-tab="main">
-  <div class="barbs-actions">
-    <button type="button" data-action="rollInitiative"><i class="fa-solid fa-bolt"></i> Initiative</button>
-    <button type="button" data-action="shortRest"><i class="fa-solid fa-mug-hot"></i> Short Rest</button>
-    <button type="button" data-action="longRest"><i class="fa-solid fa-bed"></i> Long Rest</button>
-  </div>
-
-  <h3>Weapons</h3>
-  {{#if heldWeapons.length}}
-  <div class="barbs-actions">
-    {{#each heldWeapons as |w|}}
-    <button type="button" data-action="weaponAttack" data-item-id="{{w.item.id}}">
-      <img src="{{w.item.img}}" alt="" /> {{#if w.hand}}<span class="hint">{{w.hand}}:</span> {{/if}}{{w.item.name}} <span class="hint">{{w.weaponSummary}}</span>
-    </button>
-    {{/each}}
-    {{#if twoWeapons}}
-    <button type="button" data-action="dualWieldAttack" data-tooltip="Attack with each weapon (one card per weapon)">
-      <i class="fa-solid fa-hand-fist"></i> Dual wield
-    </button>
-    {{/if}}
-  </div>
-  {{else}}
-  <p class="hint">No weapon held. Equip one in a hand slot on the Inventory tab.</p>
-  {{/if}}
-
-  <h3>Death Saves</h3>
+  <h3>Downed</h3>
   <div class="barbs-row downed">
-    <label>Downed Health
+    <label data-tooltip="Death saves are rolled from the Actions tab while Downed.">Downed Health
       <input type="number" name="system.downed.value" value="{{system.downed.value}}" min="0" max="{{system.downed.max}}" />
       / {{system.downed.max}}
     </label>
-    <button type="button" data-action="deathSave"><i class="fa-solid fa-skull"></i> Death Save</button>
   </div>
 
   <h3>Characteristics</h3>

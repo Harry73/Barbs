@@ -1,6 +1,7 @@
 <section class="tab {{tab.cssClass}}" data-group="primary" data-tab="abilities">
   <div class="barbs-toolbar">
     <button type="button" data-action="openCompendium" data-pack="abilities"><i class="fa-solid fa-book"></i> Browse abilities</button>
+    <span class="hint">Use abilities, and passives' counters and buttons, from the Actions tab.</span>
   </div>
 
   {{#if passives.length}}
@@ -12,27 +13,6 @@
       <a data-action="editItem"><strong>{{p.item.name}}</strong></a> <span class="hint">{{p.className}}</span>
       {{#if @root.editable}}<a class="passive-delete" data-action="deleteItem" data-tooltip="Remove this passive"><i class="fa-solid fa-trash"></i></a>{{/if}}
     </div>
-    {{#if (or p.resources.length p.states.length p.actions.length)}}
-    <div class="passive-controls">
-      {{#each p.resources as |r|}}
-      <span class="passive-resource">
-        {{r.label}}
-        <a data-action="passiveResource" data-key="{{r.key}}" data-delta="-1"><i class="fa-solid fa-minus"></i></a>
-        <input type="number" data-passive-resource="{{r.key}}" value="{{r.value}}" min="0" />
-        <a data-action="passiveResource" data-key="{{r.key}}" data-delta="1"><i class="fa-solid fa-plus"></i></a>
-        {{#if r.max}}<span class="hint">/ {{r.max}}</span>{{/if}}
-      </span>
-      {{/each}}
-      {{#each p.states as |st|}}
-      <label class="passive-state">{{st.label}}
-        <select data-passive-state="{{st.key}}">{{selectOptions st.options selected=st.value}}</select>
-      </label>
-      {{/each}}
-      {{#each p.actions as |a|}}
-      <button type="button" data-action="passiveAction" data-key="{{a.key}}"><i class="{{#if a.icon}}{{a.icon}}{{else}}fa-solid fa-bolt{{/if}}"></i> {{a.label}}</button>
-      {{/each}}
-    </div>
-    {{/if}}
     <details class="passive-description"><summary>Description</summary>{{{p.description}}}
       {{#if p.notes.length}}<ul>{{#each p.notes}}<li>{{this}}</li>{{/each}}</ul>{{/if}}
     </details>
@@ -49,18 +29,11 @@
       <tbody>
         {{#each group.abilities as |entry|}}
         <tr data-item-id="{{entry.item.id}}">
-          <td><a data-action="useAbility" data-tooltip="Use"><img src="{{entry.item.img}}" alt="" /></a></td>
+          <td><img src="{{entry.item.img}}" alt="" /></td>
           <td>
             <a data-action="editItem">{{entry.item.name}}</a>
             {{#if entry.automated}}<i class="fa-solid fa-bolt automated" data-tooltip="Automated: rolls and effects are handled"></i>{{/if}}
             <div class="branch">{{entry.system.branch}}</div>
-            {{#if entry.hands}}
-            <div class="hand-buttons">
-              <a data-action="useAbility" data-hand="main" data-tooltip="Use with your main hand weapon">Main</a>
-              <a data-action="useAbility" data-hand="off" data-tooltip="Use with your offhand weapon">Off</a>
-              <a data-action="useAbility" data-hand="dual" data-tooltip="Dual wield: both weapons' effects apply, scaling from the better one">Dual</a>
-            </div>
-            {{/if}}
           </td>
           <td>{{entry.system.tier}}</td>
           <td>{{entry.system.action}}</td>

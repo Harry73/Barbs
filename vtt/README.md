@@ -103,13 +103,21 @@ Where the rulebook and the old Roll20 implementation disagree, the rulebook wins
 Click a damage row on a card to expand its dice. Healing someone who is Downed wakes them only if the healing
 exceeds their missing Downed Health; otherwise they're stabilized and wake after 1d4 turns.
 
+The character sheet's **Actions** tab (where it opens) is where you play from: everything the character can do, with
+the buttons to do it. Initiative and rests; a Death Save while Downed; attacks with each held weapon (and Dual wield),
+with the ammo you have loaded; passives' counters, states, and buttons; abilities grouped into Major, Minor, Reactions,
+Free, and Longer (minutes) by the action they take, sorted by class and tier; and usable items with how many are left.
+Each ability shows its cost (red when you can't pay it), range, and duration, warns when you're not holding the weapon
+it's used with, and expands to its description. Click its icon or name to use it. The filter box narrows everything by
+name, class, or tag. The Abilities and Inventory tabs are for adding, removing, and equipping.
+
 The **effects panel** in the top right shows the selected token's effects (or your character's): green border for
 buffs, red for conditions, remaining duration as a badge. Hover for details, left-click to edit, right-click to
 remove. Effects that come from equipped items can't be removed there; unequip the item.
 
 **Hands.** Physical abilities use the main-hand weapon: its scaling, its effects, and its type for checks like "your
 next bow attack". With a weapon in each hand, physical weapon abilities get **Main / Off / Dual** buttons on the
-Abilities tab. Dual wielding rolls the ability once with both weapons' effects applied, scaling from whichever weapon's
+Actions tab. Dual wielding rolls the ability once with both weapons' effects applied, scaling from whichever weapon's
 stat is higher, and weapon-type checks passing if either weapon matches (the Roll20 API's `dual_wield`). The Weapons
 section gets a **Dual wield** button that attacks with each weapon, one card per weapon. Holding a shield in each hand
 counts as dual wielding shields for the Sentinel's extra options, which only appear in dialogs when it's true.
@@ -129,7 +137,7 @@ Condition Resist). A target who dodges gets nothing. The separate buttons are st
 ## Passives
 
 Adding a character's first ability in a class also adds that class's passive (from the Classes compendium). Passives
-show on the Abilities tab with whatever their automation tracks (`src/passives/catalog.ts`, keyed `"Class/Passive"`):
+are listed on the Abilities tab, and their controls are on the Actions tab, with whatever their automation tracks (`src/passives/catalog.ts`, keyed `"Class/Passive"`):
 
 - **Resources** (Spotting, Ki, Hunter stacks, banked Healing Mana) with +/- controls; some gain each turn or reset at the
   end of combat or on a long rest. Ability dialogs can spend them (`choice.resource`), and costs can be paid in them.

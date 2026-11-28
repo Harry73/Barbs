@@ -281,21 +281,20 @@
   font-weight: normal;
 }
 
-/* Main / Off / Dual buttons under physical abilities, when holding a weapon in each hand. */
-.barbs .abilities .hand-buttons {
+/* Main / Off / Dual buttons on physical abilities, when holding a weapon in each hand. */
+.barbs .hand-buttons {
   display: flex;
   gap: 0.25rem;
-  margin-top: 0.15rem;
 }
 
-.barbs .abilities .hand-buttons a {
+.barbs .hand-buttons a {
   padding: 0 0.4rem;
   border: 1px solid var(--barbs-border);
   border-radius: 4px;
   font-size: var(--font-size-11, 11px);
 }
 
-.barbs .abilities .hand-buttons a:hover {
+.barbs .hand-buttons a:hover {
   border-color: var(--barbs-accent);
 }
 
@@ -877,4 +876,93 @@
   cursor: pointer;
   opacity: 0.8;
   margin: 0.25rem 0;
+}
+
+/* ---------- Actions tab ---------- */
+
+.barbs .barbs-actions-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.barbs .barbs-actions-toolbar .barbs-action-filter {
+  flex: 1;
+}
+
+.barbs .barbs-action-section h3 {
+  margin-top: 0.75rem;
+}
+
+.barbs .barbs-action-section .passive-controls {
+  margin: 0.25rem 0;
+}
+
+.barbs ol.barbs-action-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.barbs ol.barbs-action-list > li {
+  border-bottom: 1px solid var(--barbs-border);
+}
+
+.barbs details.barbs-action > summary {
+  display: grid;
+  grid-template-columns: 32px 1fr auto 7rem 6rem 6rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.15rem 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.barbs details.barbs-action > summary::-webkit-details-marker {
+  display: none;
+}
+
+.barbs details.barbs-action .barbs-use img {
+  width: 32px;
+  height: 32px;
+  border: none;
+  object-fit: cover;
+  display: block;
+}
+
+.barbs details.barbs-action .barbs-use:hover img {
+  filter: brightness(1.25);
+  outline: 1px solid var(--barbs-accent);
+}
+
+.barbs .barbs-action-name {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.barbs .barbs-action-name > a {
+  font-weight: bold;
+}
+
+.barbs .barbs-action-cost,
+.barbs .barbs-action-meta {
+  font-size: var(--font-size-12, 12px);
+  color: var(--barbs-muted);
+  text-align: right;
+}
+
+.barbs .barbs-action-cost.short {
+  color: var(--color-level-error, #d33);
+  font-weight: bold;
+}
+
+.barbs .barbs-warn {
+  color: var(--color-level-warning, #ee9b3a);
+}
+
+.barbs .barbs-action-description {
+  padding: 0.25rem 0.5rem 0.5rem 2.6rem;
 }
