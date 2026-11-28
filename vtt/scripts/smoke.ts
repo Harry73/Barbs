@@ -595,6 +595,20 @@ try {
                 }
             }
         }
+        // Zones' buttons go on the caster's "Zone: <ability>" effect, built when it's cast (as in use.ts).
+        for (const [key, automation] of Object.entries(ABILITY_AUTOMATION) as [string, any][]) {
+            const area = resolve(automation.area, makeContext(actor, null, {}, 1));
+            const actions = (area?.zone ? [area.zone].flat() : []).flatMap((z: any) => z.actions ?? []);
+            if (!actions.length) continue;
+            const [className, abilityName] = key.split("/");
+            const lifetime = buildEffectData({ name: `Zone: ${abilityName}`, category: "", triggers: actions }, { className, abilityName, img: "", duration: "1 minute" });
+            new BarbsEffectModel(lifetime.system, { parent: new StandIn(), strict: true });
+            for (const t of lifetime.system.triggers) {
+                assert.equal(t.event, "use", `${key}: zone actions are buttons`);
+                assert.ok(t.label, `${key}: a zone button with no label`);
+                buttons++;
+            }
+        }
         assert.ok(buttons >= 12, `expected the converted abilities' buttons, found ${buttons}`);
     }
 

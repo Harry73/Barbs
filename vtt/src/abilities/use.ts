@@ -450,6 +450,7 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
                 name: `Zone: ${opts.title}`,
                 category: "",
                 ...(duration ? { duration } : {}),
+                triggers: zones.flatMap((z) => z.actions ?? []),
                 description: "<p>The zone stays on the map while this lasts. Delete this to remove it.</p>",
             },
             source,

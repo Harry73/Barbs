@@ -225,6 +225,11 @@ export interface ZoneSpec {
     difficultTerrain?: boolean;
     /** How long the zone lasts, if not the ability's duration ("1 hour" for Tidal Wave's shallow water). */
     duration?: string;
+    /**
+     * Action buttons the caster has while the zone lasts ("move the whirlpool", "expend the field"), on their
+     * "Zone: <ability>" effect. A sacrifice removes the zone.
+     */
+    actions?: TriggerSpec[];
 }
 
 export interface ChoiceSpec {

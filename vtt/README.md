@@ -269,7 +269,10 @@ concentration), Impenetrable Mist (spend 20 mana to block, while concentrating),
 Guardian (block once per round, twice if you were dual wielding shields when you cast it), Hold Person (spend 10 mana
 to extend the Stun a round), Buffeting Storm (spend 5 mana to push), and the Arcane Archer buffs' "sacrifice" options
 (Broadhead, Serrated, and Bruiser Arrow turn into their single-use version; Elusive, Persistent, and Unyielding Hunter
-post the dash, cleanse, or prevented strip).
+post the dash, cleanse, or prevented strip), Drag To Hell (a reaction pull while the chain lasts), and zones with
+extra actions: a zone's `actions` are buttons on the caster's "Zone: <ability>" effect, so Whirlpool can be moved with
+a Major Action and Banishing Bolt's field (now a real zone: -20% MR and CR for enemies inside) can be expended as a free
+action, which removes it.
 
 "You would take damage" triggers run after defenses and before health changes, and can change the damage: reduce it
 by a percent, survive at N health (Critical Condition), redirect a percent of the incoming attack to whoever applied

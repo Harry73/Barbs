@@ -819,9 +819,9 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
                 damage: { formula: "10d6", type: "water" },
                 effect: status("immobilized", { duration: "end of target's next turn" }),
                 note: "Pulled to the center. In the center 15 ft square instead: 15d6 water (add 5d6 by hand) and drowning (25% chance to die at the end of their turn).",
+                actions: action("Move the whirlpool", "major", [remind("Move the whirlpool up to 20 ft in any direction, at no mana cost (drag its region).")]),
             },
         },
-        notes: ["Move it up to 20 ft with a Major Action at no cost (drag the region)."],
     },
     "Aquamancer/Fountain of Purity": {
         choices: [count("extra", "Extra fountains (30 mana each)", 4)],

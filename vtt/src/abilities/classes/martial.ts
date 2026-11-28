@@ -318,7 +318,31 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
     "Demon Hunter/Banishing Bolt": {
         choices: [HUNTER("Expend 2 Hunter stacks (free action, ignores MR)")],
         cost: (ctx) => (ctx.choices.stacks ? null : { resource: "mana", amount: 40 }),
-        area: square(35),
+        // The blast leaves a field of banishment for 1 minute: enemies inside have -20% MR and CR, and the Demon Hunter
+        // can expend it to cleanse a condition on every ally who was in it.
+        area: {
+            ...square(35),
+            zone: {
+                events: ["tokenEnter", "tokenExit", "tokenTurnStart"],
+                affects: "enemies",
+                whileInside: true,
+                duration: "1 minute",
+                effect: {
+                    name: "Banishment field",
+                    category: "condition",
+                    resistible: false,
+                    duration: "Endless",
+                    changes: [stat("magicResist", -20), stat("conditionResist", -20)],
+                    description: "<p>-20% MR and CR inside the field. Attacks against demons in it have 30% Lethality.</p>",
+                },
+                actions: action(
+                    "Expend the field",
+                    "free",
+                    [remind("Every ally (yourself included) who was within the field cleanses 1 condition of their choice.")],
+                    { sacrifice: true },
+                ),
+            },
+        },
         attack: (ctx) => ({
             rollType: "magic",
             damage: [
@@ -334,7 +358,7 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
         }),
         notes: [
             "Allies caught in it gain the lightning damage rolled as on-hit damage for their next attack and heal for the light damage rolled.",
-            "Leaves a banishment field for 1 minute: enemies have -20% MR and CR; expend it to cleanse 1 condition on every ally inside.",
+            "In the banishment field, attacks against demons have 30% Lethality.",
         ],
     },
     "Demon Hunter/Essence Scatter": {
@@ -660,7 +684,17 @@ export const MARTIAL: Record<string, AbilityAutomation> = {
                 description: "<p>Pulled 30 ft in a direction of the caster's choice and takes 3d10 dark at the start of each turn.</p>",
             },
         ],
-        notes: ["While it lasts, you can use your reaction to pull the target 20 ft."],
+        // "While this condition persists, you may use your reaction to pull the afflicted target 20 ft." The button
+        // lives on the caster for the same duration; delete it if the condition ends early.
+        self: [
+            {
+                key: "chain",
+                name: "Drag To Hell (chained)",
+                category: "",
+                description: "<p>Your soul chain on the target. Delete this if their Drag To Hell ends early.</p>",
+                triggers: action("Pull", "reaction", [remind("Pull the afflicted target 20 ft in a direction of your choice.")]),
+            },
+        ],
     },
     "Reaper/Inevitable End": {
         area: around(30),
