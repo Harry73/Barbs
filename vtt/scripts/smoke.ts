@@ -632,6 +632,12 @@ try {
         assert.equal(describeTrigger({ ...use, action: "spend", value: "20", type: "mana" }), "You use it: spend 20 mana");
     }
 
+    // Variables read before their declaration in the same function: TypeScript misses it when the read is in a callback.
+    {
+        const { findUseBeforeDefine } = await import("./use-before-define.ts");
+        assert.deepEqual(findUseBeforeDefine(path.resolve(import.meta.dirname, "..")), [], "variables used before they're declared");
+    }
+
     // Every generated compendium entry must validate against its model (run `npm run packs` first).
     const packSrc = path.resolve(import.meta.dirname, "..", "build", "packs");
     const models: Record<string, any> = CONFIG.Item.dataModels as Record<string, any>;
