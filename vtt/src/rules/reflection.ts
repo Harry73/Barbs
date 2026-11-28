@@ -2,7 +2,7 @@
  * Beam reflection geometry for Mirror Mage mirrors. Pure math (canvas pixels), no Foundry APIs.
  *
  * A mirror is a line segment the width of its token, through the token's center, along the token's rotation. Its
- * front faces "down" at rotation 0 (+y on the canvas) and turns with the token.
+ * front faces right at rotation 0 (+x on the canvas) and turns with the token.
  *
  *   - A beam hitting a mirror's front reflects off it (angle in = angle out), with its range reset.
  *   - A beam hitting a Convex mirror's back splits into two beams out the front at ±45° from its facing.
@@ -55,13 +55,14 @@ const rotate = (p: Point, degrees: number): Point => {
 
 /** A mirror from a token's center, width in pixels, and rotation in degrees. */
 export function mirrorFromToken(id: string, kind: MirrorKind, center: Point, width: number, rotation: number): Mirror {
-    const along = rotate({ x: 1, y: 0 }, rotation);
+    // At rotation 0 the surface runs top to bottom and the front faces right (+x).
+    const along = rotate({ x: 0, y: 1 }, rotation);
     return {
         id,
         kind,
         a: add(center, mul(along, -width / 2)),
         b: add(center, mul(along, width / 2)),
-        front: rotate({ x: 0, y: 1 }, rotation),
+        front: rotate({ x: 1, y: 0 }, rotation),
     };
 }
 

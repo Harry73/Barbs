@@ -564,7 +564,7 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
             mirror: "plane",
             effects: [{ name: "Mirror", category: "", changes: [vulnerable("all", -100)], description: "<p>Immune to damage and conditions; can't be moved or teleported, but can be dispelled.</p>" }],
             description:
-                "Reflects your line AOEs and straight projectile spells by angle, resetting their range (+20% accuracy). Opaque from behind. Rotate the token to aim it: at rotation 0 it faces down.",
+                "Reflects your line AOEs and straight projectile spells by angle, resetting their range (+20% accuracy). Opaque from behind. Rotate the token to aim it: at rotation 0 it faces right.",
         },
     },
     "Mirror Mage/Convex Mirror": {
@@ -575,7 +575,7 @@ export const ELEMENTAL: Record<string, AbilityAutomation> = {
             mirror: "convex",
             effects: [{ name: "Mirror", category: "", changes: [vulnerable("all", -100)], description: "<p>Immune to damage and conditions; can't be moved or teleported, but can be dispelled.</p>" }],
             description:
-                "Hit from behind, it splits the beam into two out the front at 45° angles, resetting range (+20% accuracy). Its front reflects like a plane mirror. Rotate the token to aim it: at rotation 0 it faces down.",
+                "Hit from behind, it splits the beam into two out the front at 45° angles, resetting range (+20% accuracy). Its front reflects like a plane mirror. Rotate the token to aim it: at rotation 0 it faces right.",
         },
     },
     "Mirror Mage/Concave Mirror": {

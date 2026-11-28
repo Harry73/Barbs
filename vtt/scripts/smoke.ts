@@ -201,22 +201,23 @@ try {
     // Mirror reflections: a beam fired right at a mirror facing left bounces straight back; a convex mirror hit
     // from behind splits it in two; a twice-redirected beam dispels the third mirror it hits.
     const refl = await vite.ssrLoadModule("/src/rules/reflection.ts");
-    const faceLeft = refl.mirrorFromToken("m1", "plane", { x: 500, y: 0 }, 100, 90); // front normal = (-1, 0)
+    // At rotation 0 a mirror faces right; 180 faces left.
+    const faceLeft = refl.mirrorFromToken("m1", "plane", { x: 500, y: 0 }, 100, 180); // front normal = (-1, 0)
     let trace = refl.traceBeam({ x: 0, y: 0 }, { x: 1, y: 0 }, 1000, 10, [faceLeft]);
     assert.equal(trace.segments.length, 2, "beam reflects once");
     assert.equal(Math.round(trace.segments[0].to.x), 500, "first segment stops at the mirror");
     assert.equal(Math.round(trace.segments[1].to.x), -500, "reflected segment comes back with its range reset");
     assert.equal(trace.segments[1].redirects, 1);
     assert.ok(refl.onSegment({ x: 200, y: 3 }, trace.segments[1]), "token on the way back is hit by the redirect");
-    const backOfPlane = refl.mirrorFromToken("m2", "plane", { x: 500, y: 0 }, 100, -90); // facing right: hit from behind
+    const backOfPlane = refl.mirrorFromToken("m2", "plane", { x: 500, y: 0 }, 100, 0); // facing right: hit from behind
     trace = refl.traceBeam({ x: 0, y: 0 }, { x: 1, y: 0 }, 1000, 10, [backOfPlane]);
     assert.equal(trace.segments.length, 1, "the back of a plane mirror blocks");
-    const convex = refl.mirrorFromToken("m3", "convex", { x: 500, y: 0 }, 100, -90); // front faces +x, hit from behind
+    const convex = refl.mirrorFromToken("m3", "convex", { x: 500, y: 0 }, 100, 0); // front faces +x, hit from behind
     trace = refl.traceBeam({ x: 0, y: 0 }, { x: 1, y: 0 }, 1000, 10, [convex]);
     assert.equal(trace.segments.length, 3, "convex mirror splits the beam in two");
     assert.ok(trace.segments.slice(1).every((s: { to: { x: number } }) => s.to.x > 500), "both beams leave out the front");
-    const left = refl.mirrorFromToken("a", "plane", { x: 500, y: 0 }, 100, 90);
-    const right = refl.mirrorFromToken("b", "plane", { x: -500, y: 0 }, 100, -90);
+    const left = refl.mirrorFromToken("a", "plane", { x: 500, y: 0 }, 100, 180);
+    const right = refl.mirrorFromToken("b", "plane", { x: -500, y: 0 }, 100, 0);
     trace = refl.traceBeam({ x: 0, y: 0 }, { x: 1, y: 0 }, 2000, 10, [left, right]);
     assert.deepEqual(trace.segments.map((s: { redirects: number }) => s.redirects), [0, 1, 2], "two redirects then stop");
     assert.deepEqual(trace.dispelled, ["a"], "the third mirror hit by a twice-redirected beam is dispelled");

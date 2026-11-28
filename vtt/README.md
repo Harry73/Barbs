@@ -149,7 +149,7 @@ GM's client (a GM must be online), carries a "Summoned" duration effect, and is 
 summoning card is undone.
 
 Mirror Mage mirrors are summons too, flagged as mirrors. A mirror's reflecting surface is its token's width; at
-rotation 0 it faces down, and it turns with the token. Line spells from a caster with mirrors out are traced off them
+rotation 0 it faces right, and it turns with the token. Line spells from a caster with mirrors out are traced off them
 (`src/rules/reflection.ts`): the front reflects with range reset, a Convex mirror's back splits the beam at ±45°, a
 Plane mirror's back blocks, and a twice-redirected beam dispels the next mirror it hits. Each target remembers which
 bounce hit it, so Alter Course (+50% per redirect) and Helix Beam (element flips per redirect) apply per target.
