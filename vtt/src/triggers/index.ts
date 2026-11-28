@@ -83,14 +83,13 @@ export async function fireTriggers(bearer: Actor.Implementation | null | undefin
         for (const [index, trigger] of triggers.entries()) {
             if (trigger.event !== event) continue;
             if (!testPredicate(parsePredicate(trigger.conditions), domainFor(bearer, effect, role, ctx))) continue;
-            if (trigger.oncePer) {
-                const key = `${effect.uuid}#${index}`;
-                const now = turnKey(trigger.oncePer);
-                if (lastFired.get(key) === now) continue;
-                lastFired.set(key, now);
-            }
+            // "Once per turn" is spent when the trigger actually fires, not when it merely comes up: a failed chance
+            // roll or skill check leaves it available for the next hit.
+            const spent = trigger.oncePer ? `${effect.uuid}#${index}` : null;
+            if (spent && lastFired.get(spent) === turnKey(trigger.oncePer as "turn" | "round" | "once")) continue;
             if (!(await passesChance(trigger))) continue;
             if (!(await passesCheck(bearer, effect, trigger))) continue;
+            if (spent) lastFired.set(spent, turnKey(trigger.oncePer as "turn" | "round" | "once"));
             await runAction(bearer, effect, trigger, role, ctx);
             if (trigger.consume) await consumeEffect(effect);
         }

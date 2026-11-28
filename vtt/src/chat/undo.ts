@@ -71,8 +71,22 @@ export function isUndone(message: ChatMessage.Implementation): boolean {
     return !!message.getFlag(SYSTEM_ID as never, "undone" as never);
 }
 
+/** Messages being undone right now. The "undone" flag is only set at the end, so a second click would undo twice. */
+const undoing = new Set<string>();
+
 /** Reverse a message's recorded changes and mark it undone. Must run on a client that can edit the actor and message. */
 export async function performUndo(message: ChatMessage.Implementation): Promise<void> {
+    const id = message.id;
+    if (!id || undoing.has(id)) return;
+    undoing.add(id);
+    try {
+        await reverseChanges(message);
+    } finally {
+        undoing.delete(id);
+    }
+}
+
+async function reverseChanges(message: ChatMessage.Implementation): Promise<void> {
     const undo = getUndo(message);
     if (!undo || isUndone(message)) return;
     const actor = (await fromUuid(undo.actorUuid)) as Actor.Implementation | null;

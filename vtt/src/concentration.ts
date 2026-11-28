@@ -7,13 +7,16 @@
  * Rulebook: you can concentrate on up to your Concentration Limit. When you take damage you roll to keep it (a
  * relevant skill like Pain Tolerance, otherwise d100 + Focus); on a failure all concentration breaks.
  */
-import { SYSTEM_ID } from "./config.ts";
+import { skillKey, SYSTEM_ID } from "./config.ts";
 import type { CreatureModel } from "./data/actor/creature.ts";
 
 export interface ConcentrationMarker {
     key: string;
     ability: string;
 }
+
+/** The rulebook's name for the skill that keeps concentration (skills are named "Group: Skill"). */
+const PAIN_TOLERANCE = "Athletics: Pain Tolerance";
 
 /** The caster's Concentrating markers. */
 export function concentrationMarkers(actor: Actor.Implementation | null | undefined): ActiveEffect.Implementation[] {
@@ -73,8 +76,9 @@ export async function dropConcentration(actor: Actor.Implementation): Promise<st
  */
 export async function concentrationCheck(actor: Actor.Implementation, dc: number): Promise<boolean> {
     const d = (actor.system as unknown as CreatureModel).derived;
-    const pain = actor.items.find((i) => i.type === "skill" && i.name.toLowerCase() === "pain tolerance");
-    const skillBonus = pain ? (pain.system as unknown as { modifier: number }).modifier + (d.skillBonus ?? 0) : 0;
+    const pain = actor.items.find((i) => i.type === "skill" && i.name.toLowerCase() === PAIN_TOLERANCE.toLowerCase());
+    // The skill's own modifier, plus bonuses to every skill and to Pain Tolerance specifically (gear can add either).
+    const skillBonus = pain ? (pain.system as unknown as { modifier: number }).modifier + (d.skillBonus ?? 0) + (d.skillBonuses?.[skillKey(PAIN_TOLERANCE)] ?? 0) : 0;
     const formula = pain ? "1d100 + @skill[Pain Tolerance]" : "1d100 + @fcs[FCS]";
     const bonus = d.combat?.concentrationBonus ?? 0;
     const roll = await new Roll(`${formula}${bonus ? " + @bonus[concentration]" : ""}`, { ...actor.getRollData(), skill: skillBonus, bonus }).evaluate();
