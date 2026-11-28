@@ -100,6 +100,8 @@ export class ZoneBehaviorType extends RegionBehaviorType {
         if (self.effectData && !(self.whileInside && actor.effects.some((e) => foundry.utils.getProperty(e, `flags.${SYSTEM_ID}.zoneKey`) === self.zoneKey))) {
             const data = foundry.utils.deepClone(self.effectData);
             foundry.utils.setProperty(data, `flags.${SYSTEM_ID}.zoneKey`, self.zoneKey);
+            // "While inside" effects also come off when the zone goes, since nobody leaves a zone that's deleted.
+            if (self.whileInside) foundry.utils.setProperty(data, `flags.${SYSTEM_ID}.zoneWhileInside`, true);
             const isCondition = foundry.utils.getProperty(data, "system.category") === "condition";
             await requestOnActor(actor, "effect", { data, options: { resistible: isCondition, sourceName } });
         }
@@ -112,11 +114,25 @@ export class ZoneBehaviorType extends RegionBehaviorType {
     }
 }
 
-/** Delete every zone region with this key (its "Zone: <ability>" effect ended). Runs on the active GM's client. */
+/**
+ * Delete every zone region with this key (its "Zone: <ability>" effect ended), and the "while inside" effects it put
+ * on creatures still standing in it. Effects with their own duration (Whirlpool's Immobilize) run out on their own.
+ * Runs on the active GM's client.
+ */
 export async function removeZones(key: string): Promise<void> {
     for (const scene of game.scenes ?? []) {
         const regions = scene.regions.filter((r) => foundry.utils.getProperty(r, `flags.${SYSTEM_ID}.zoneKey`) === key);
         if (regions.length) await scene.deleteEmbeddedDocuments("Region", regions.map((r) => r.id!) as never);
+    }
+    const actors = new Set<Actor.Implementation>([...(game.actors ?? [])] as Actor.Implementation[]);
+    for (const scene of game.scenes ?? []) {
+        for (const token of scene.tokens) if (token.actor && !token.actorLink) actors.add(token.actor as Actor.Implementation);
+    }
+    for (const actor of actors) {
+        const inside = actor.effects.filter(
+            (e) => foundry.utils.getProperty(e, `flags.${SYSTEM_ID}.zoneKey`) === key && !!foundry.utils.getProperty(e, `flags.${SYSTEM_ID}.zoneWhileInside`),
+        );
+        if (inside.length) await actor.deleteEmbeddedDocuments("ActiveEffect", inside.map((e) => e.id!) as never);
     }
 }
 
