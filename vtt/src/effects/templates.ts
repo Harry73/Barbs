@@ -17,7 +17,8 @@ export interface EffectLike {
     system: unknown;
 }
 
-const GRANT_ACTIONS = new Set(["grant", "inflict"]);
+/** Trigger actions that copy a template effect onto someone. */
+export const GRANT_ACTIONS = new Set(["grant", "grantTarget", "inflict"]);
 
 export const isTemplate = (effect: EffectLike): boolean => !!(effect.system as { template?: boolean }).template;
 

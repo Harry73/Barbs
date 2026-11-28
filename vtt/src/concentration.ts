@@ -47,11 +47,7 @@ export function concentrationMarkerData(actor: Actor.Implementation, ability: st
 
 /** End everything linked to a concentration: effects on any creature, and summons. Runs on the active GM's client. */
 export async function endConcentration(key: string): Promise<void> {
-    const actors = new Set<Actor.Implementation>([...(game.actors ?? [])] as Actor.Implementation[]);
-    for (const scene of game.scenes ?? []) {
-        for (const token of scene.tokens) if (token.actor && !token.actorLink) actors.add(token.actor as Actor.Implementation);
-    }
-    for (const actor of actors) {
+    for (const actor of heldActors()) {
         const linked = [...actor.effects].filter((e) => foundry.utils.getProperty(e, `flags.${SYSTEM_ID}.concentrationKey`) === key);
         if (linked.length) await actor.deleteEmbeddedDocuments("ActiveEffect", linked.map((e) => e.id!) as never);
     }
@@ -62,6 +58,25 @@ export async function endConcentration(key: string): Promise<void> {
             .map((a) => foundry.utils.getProperty(a, `flags.${SYSTEM_ID}.summon.summonId`) as string),
     );
     for (const id of summonIds) if (id) await dismissSummon(id);
+}
+
+/** Extend everything a concentration holds by some rounds (Hold Person's recast). Runs on the active GM's client. */
+export async function extendConcentration(key: string, rounds: number): Promise<void> {
+    const { extendEffect } = await import("./triggers/index.ts");
+    for (const actor of heldActors()) {
+        for (const effect of actor.effects) {
+            if (foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.concentrationKey`) === key) await extendEffect(effect as ActiveEffect.Implementation, rounds);
+        }
+    }
+}
+
+/** Every actor effects can be on: world actors and unlinked tokens' copies. */
+function heldActors(): Set<Actor.Implementation> {
+    const actors = new Set<Actor.Implementation>([...(game.actors ?? [])] as Actor.Implementation[]);
+    for (const scene of game.scenes ?? []) {
+        for (const token of scene.tokens) if (token.actor && !token.actorLink) actors.add(token.actor as Actor.Implementation);
+    }
+    return actors;
 }
 
 /** Drop all of a creature's concentration (a failed check, being Downed). */

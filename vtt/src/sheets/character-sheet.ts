@@ -520,7 +520,8 @@ export class BarbsCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2
         const fromEffects = effectActions(this.barbsActor as unknown as Actor.Implementation);
         const groups = ACTION_GROUPS.map((g) => ({
             ...g,
-            effectActions: fromEffects.filter((a) => a.actionType === g.id),
+            // Free reactions are listed with reactions (they're reactions that don't use yours).
+            effectActions: fromEffects.filter((a) => a.actionType === g.id || (g.id === "reaction" && a.actionType === "freeReaction")),
             abilities: [] as Record<string, unknown>[],
         }));
         for (const entry of abilityGroups.flatMap((g) => g.abilities) as { item: Item.Implementation; system: AbilityModel }[]) {

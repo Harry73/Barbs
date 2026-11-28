@@ -231,6 +231,8 @@ export const EFFECT_ACTION_TYPES = {
     major: "Major Action",
     minor: "Minor Action",
     reaction: "Reaction",
+    // Listed with reactions, but doesn't use yours.
+    freeReaction: "Free Reaction",
     free: "Free Action",
 } as const;
 export type EffectActionType = keyof typeof EFFECT_ACTION_TYPES;
@@ -239,11 +241,12 @@ export type EffectActionType = keyof typeof EFFECT_ACTION_TYPES;
 export const TRIGGER_ACTIONS = {
     restore: "Restore resource to yourself",
     grant: "Grant yourself an effect",
+    grantTarget: "Grant an effect to your target (or yourself, with none)",
     inflict: "Inflict an effect on the other creature",
     damage: "Damage the other creature",
     note: "Post a reminder",
     spend: "Spend a resource (stops if you can't)",
-    extend: "Extend this effect by N rounds",
+    extend: "Extend this effect (and what its concentration holds) by N rounds",
     endConcentration: "End the concentration this belongs to",
     // Only for "You would take damage": they change the damage before it lands.
     reduceDamage: "Reduce that damage by %",

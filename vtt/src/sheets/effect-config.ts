@@ -13,7 +13,7 @@ import {
 import type { RollModifierData, TriggerData } from "../data/effect.ts";
 import { bonusCatalog } from "../effects/bonuses.ts";
 import { changeKeyGroups } from "../effects/change-keys.ts";
-import { grantersOf, isTemplate, type EffectLike } from "../effects/templates.ts";
+import { GRANT_ACTIONS, grantersOf, isTemplate, type EffectLike } from "../effects/templates.ts";
 
 const { ActiveEffectConfig } = foundry.applications.sheets;
 const { FormDataExtended } = foundry.applications.ux;
@@ -43,8 +43,6 @@ const BLANK_TRIGGER: TriggerData = {
     actionType: "major",
 };
 
-/** Trigger actions that copy a template effect onto someone. */
-const GRANT_ACTIONS = new Set(["grant", "inflict"]);
 
 /** A trigger row's Effect column (and its edit button) only means something for grant/inflict. */
 function syncTriggerRow(row: HTMLElement): void {

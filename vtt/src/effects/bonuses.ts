@@ -113,6 +113,7 @@ export function describeTrigger(t: TriggerData): string {
     const actions: Record<string, string> = {
         restore: `restore ${value} ${t.type || "stamina"}`,
         grant: `grant ${effect}`,
+        grantTarget: `grant ${effect} to your target (or yourself)`,
         inflict: `inflict ${effect}`,
         damage: `deal ${value} ${t.type || "physical"} damage`,
         note: value ? `remind: ${value}` : "post a reminder",

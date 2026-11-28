@@ -125,6 +125,14 @@ export async function consumeEffect(effect: ActiveEffect.Implementation): Promis
     }
 }
 
+/** Add rounds to an effect's round-based duration. False when it has none (no duration, or one in hours). */
+export async function extendEffect(effect: ActiveEffect.Implementation, rounds: number): Promise<boolean> {
+    const duration = effect._source.duration as { value?: number | null; units?: string } | undefined;
+    if (duration?.units !== "rounds" || duration.value == null) return false;
+    await effect.update({ "duration.value": duration.value + rounds } as never);
+    return true;
+}
+
 /** How "would take damage" triggers changed an incoming hit. */
 export interface IncomingDamageResult {
     /** The damage the bearer actually takes now. */
@@ -307,8 +315,11 @@ export async function runAction(
             return true;
         }
         case "grant":
+        case "grantTarget":
         case "inflict": {
-            const recipient = trigger.action === "grant" ? bearer : ctx.other;
+            // grantTarget: a block or buff for whoever you're targeting, yourself when no one is (Ice Block, Grand
+            // Guardian: "block an attack on yourself or an ally").
+            const recipient = trigger.action === "grant" ? bearer : trigger.action === "grantTarget" ? (ctx.other ?? bearer) : ctx.other;
             if (!recipient) return true;
             const effectData = grantedEffectData(effect, trigger, bearer);
             if (!effectData) return true;
@@ -356,18 +367,15 @@ export async function runAction(
             return true;
         }
         case "extend": {
-            // Rounds onto a round-based duration; an effect with no duration (or one measured in hours) stays as it is.
+            // Rounds onto round-based durations. An effect held by concentration extends everything that concentration
+            // holds (Hold Person: "the duration is extended for an additional round" means the Stun on the target),
+            // which can be on creatures the bearer doesn't own, so that goes through the GM.
             const rounds = Math.round(evaluateNumber(trigger.value, data()));
-            const duration = effect._source.duration as { value?: number | null; units?: string } | undefined;
-            if (!rounds || duration?.units !== "rounds" || duration.value == null) {
-                ui.notifications?.info(`${effect.name} has no round-based duration to extend.`);
-                return true;
-            }
-            if (!effect.isOwner) {
-                ui.notifications?.warn(`You can't change ${effect.name}.`);
-                return true;
-            }
-            await effect.update({ "duration.value": duration.value + rounds } as never);
+            if (!rounds) return true;
+            const key = foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.concentrationKey`) as string | undefined;
+            const { requestGM } = await import("../socket.ts");
+            if (key) await requestGM("extendConcentration", { key, rounds });
+            else if (!(await extendEffect(effect, rounds))) ui.notifications?.info(`${effect.name} has no round-based duration to extend.`);
             return true;
         }
         case "endConcentration": {
