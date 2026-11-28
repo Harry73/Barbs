@@ -20,15 +20,7 @@
   {{else}}
   <div class="description">{{{enrichedDescription}}}</div>
   {{/if}}
-  {{#if automation}}
-  <h3><i class="fa-solid fa-bolt"></i> Automation</h3>
-  <ul class="automation">{{#each automation}}<li>{{this}}</li>{{/each}}</ul>
-  {{/if}}
   {{#if system.tags.length}}
   <p class="tags">{{#each system.tags as |tag|}}<span class="tag">{{tag}}</span>{{/each}}</p>
-  {{/if}}
-  {{#if system.notes}}
-  <h3>Roll20 API Notes</h3>
-  <div class="notes">{{{enrichedNotes}}}</div>
   {{/if}}
 </section>

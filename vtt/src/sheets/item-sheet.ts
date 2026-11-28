@@ -1,7 +1,3 @@
-import { getAutomation } from "../abilities/catalog.ts";
-import { defaultChoices } from "../abilities/choices.ts";
-import { makeContext, resolve, type UseContext } from "../abilities/context.ts";
-import type { AbilityAutomation } from "../abilities/types.ts";
 import {
     ATTRIBUTES,
     COST_RESOURCES,
@@ -12,7 +8,6 @@ import {
     WEAPON_CATEGORIES,
     WEAPON_SCALING,
 } from "../config.ts";
-import type { AbilityModel } from "../data/item/models.ts";
 import { getPassiveAutomation } from "../passives/index.ts";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -37,26 +32,6 @@ function describePassive(item: Item.Implementation): string[] | null {
         ...(a.extraTargets ? ["Adds Apply buttons to relevant ability cards."] : []),
         ...(a.notes ?? []),
     ];
-}
-
-/** One-line descriptions of what the system automates for an ability, shown on its sheet. */
-function describeAutomation(a: AbilityAutomation, ctx: UseContext): string[] {
-    const lines: string[] = [];
-    if (a.choices?.length) lines.push(`Asks: ${a.choices.map((c) => c.label).join("; ")}`);
-    const area = resolve(a.area, ctx);
-    if (area) lines.push(`Places a ${area.size} ft ${area.shape} and targets the ${area.affects ?? "enemies"} inside`);
-    const attack = resolve(a.attack, ctx);
-    if (attack) {
-        const hits = attack.hits && attack.hits > 1 ? `, ${attack.hits} hits` : "";
-        lines.push(`Rolls ${attack.damage.map((d) => `${d.formula} ${d.type}`).join(" + ")} (${attack.rollType}${hits})`);
-    }
-    const heal = resolve(a.heal, ctx);
-    if (heal) lines.push(`Rolls ${heal.formula} healing`);
-    for (const e of resolve(a.self, ctx) ?? []) lines.push(`Applies ${e.name ?? "a buff"} to you`);
-    for (const e of resolve(a.target, ctx) ?? []) lines.push(`Offers "Apply ${e.name ?? "effect"}" for targets`);
-    for (const n of resolve(a.notes, ctx) ?? []) lines.push(`Reminder: ${n}`);
-    if (Object.values(a).some((v) => typeof v === "function")) lines.push("(Details depend on the choices made when used.)");
-    return lines;
 }
 
 /**
@@ -108,7 +83,6 @@ export class BarbsItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
             editable: this.isEditable,
             enrichedDescription: await enrich(system.description),
             enrichedFlavor: await enrich(system.flavorText),
-            enrichedNotes: await enrich(system.notes),
             attributeChoices: Object.fromEntries(Object.values(ATTRIBUTES).map((a) => [a.key, a.label])),
             costResourceChoices: Object.fromEntries(COST_RESOURCES.map((r) => [r, r ? r.capitalize() : "—"])),
             slotChoices: EQUIPMENT_SLOTS,
@@ -119,20 +93,7 @@ export class BarbsItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
             damageTypeChoices: Object.fromEntries(DAMAGE_TYPES.map((d) => [d, d.capitalize()])),
             skillMaxPoints: SKILL_MAX_POINTS,
             effects: [...item.effects],
-            automation: item.type === "passive" ? describePassive(item) : item.type === "ability"
-                    ? (() => {
-                          const a = getAutomation((system as unknown as AbilityModel).className, item.name);
-                          // Describe with default choices, as the owner (or nobody, for compendium items).
-                          const actor = item.actor as Actor.Implementation | null;
-                          if (!a) return null;
-                          try {
-                              return describeAutomation(a, makeContext(actor as never, item, defaultChoices(a.choices), actor ? undefined : 1));
-                          } catch {
-                              // Some entries read the caster (Backstab checks Hidden); compendium items have none.
-                              return ["Automated. Details depend on the caster: add it to a character to see them."];
-                          }
-                      })()
-                    : null,
+            automation: item.type === "passive" ? describePassive(item) : null,
         } as never;
     }
 
