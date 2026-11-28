@@ -191,6 +191,9 @@ export async function placeArea(
         for (const segment of trace.segments) {
             for (const token of candidates) {
                 if (mirrorTokens.has(token.id ?? "") || !onSegment(token.center, segment, canvas.grid!.size / 4)) continue;
+                // The beam starts at the caster's center, so they're on its first stretch; they're only hit when a
+                // mirror sends it back through them.
+                if (token === caster && segment.redirects === 0) continue;
                 const uuid = token.document.uuid ?? "";
                 (hits[uuid] ??= []).push(segment.redirects);
                 hitTokens.set(uuid, token);
@@ -208,9 +211,10 @@ export async function placeArea(
 
     const placed = region.shapes[0];
     const center = origin === "caster" ? caster!.center : { x: placed.x, y: placed.y };
+    // A line or cone from the caster starts at their center, so it always "contains" them; it isn't aimed at them.
     return {
         ...finish(
-            candidates.filter((t) => region.polygonTree.testPoint(t.center)),
+            candidates.filter((t) => region.polygonTree.testPoint(t.center) && !(origin === "caster" && t === caster)),
             center,
         ),
         regionData: (region as unknown as { toObject(): Record<string, unknown> }).toObject(),
