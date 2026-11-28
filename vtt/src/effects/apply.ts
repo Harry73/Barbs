@@ -4,7 +4,7 @@
  * These modify the target, which the clicking player often doesn't own, so callers go through `socket.ts` to run
  * them on a client that can (the target's owner or the GM).
  */
-import { DOWNED_HEALTH_MAX, STATUSES, SYSTEM_ID } from "../config.ts";
+import { STATUSES, SYSTEM_ID } from "../config.ts";
 import type { CreatureModel } from "../data/actor/creature.ts";
 import type { BarbsEffectModel } from "../data/effect.ts";
 import { isEmptyUndo, snapshotEffect, UNDO_ROW, type RemovedEffect, type UndoRecord } from "../chat/undo.ts";
@@ -92,18 +92,18 @@ export interface ApplyEffectOptions {
     attackContext?: AttackContext;
 }
 
-/**
- * Give an actor an effect.
- *
- * Effects don't stack with themselves: an effect from the same ability (flags.barbs.sourceKey) or with any of the
- * same statuses replaces the existing one. Going over Buff Limit only warns, matching how the table plays it.
- */
 export interface AppliedEffect {
     effect: ActiveEffect.Implementation;
     /** Existing effects it replaced, so an undo can bring them back. */
     replaced: RemovedEffect[];
 }
 
+/**
+ * Give an actor an effect.
+ *
+ * Effects don't stack with themselves: an effect from the same ability (flags.barbs.sourceKey) or with any of the
+ * same statuses replaces the existing one. Going over Buff Limit only warns, matching how the table plays it.
+ */
 export async function applyEffectToActor(
     target: Actor.Implementation,
     data: Record<string, unknown>,
@@ -485,9 +485,9 @@ export async function applyDamageToActor(
 
     // Lifesteal heals the attacker for a share of what actually landed (after defenses), as its own undoable heal.
     if (lifesteal && total > 0) {
-        const attacker = (await fromUuid(lifesteal.attackerUuid)) as Actor.Implementation | null;
+        const healed = (await fromUuid(lifesteal.attackerUuid)) as Actor.Implementation | null;
         const amount = Math.floor((total * lifesteal.percent) / 100);
-        if (attacker && amount > 0) await applyHealingToActor(attacker, amount, `Lifesteal (${lifesteal.percent}% of ${total} on ${target.name})`);
+        if (healed && amount > 0) await applyHealingToActor(healed, amount, `Lifesteal (${lifesteal.percent}% of ${total} on ${target.name})`);
     }
 }
 

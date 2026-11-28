@@ -148,11 +148,6 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
     declare endsWithCombat: boolean;
     declare triggers: TriggerData[];
 
-    /**
-     * "Stat" bonuses are always-on character stats, so they ride Foundry's own change engine: each becomes an "add"
-     * change (formulas included, see BarbsActiveEffect) when the effect is prepared. That keeps one list of bonuses on
-     * the Barbs tab, while stats still apply the way core changes do.
-     */
     /** Blocks and damage over time used to be their own fields; they're bonus rows now. */
     static override migrateData(source: Record<string, unknown>): Record<string, unknown> {
         const data = source as { block?: number; dot?: { formula?: string; damageType?: string }; modifiers?: object[] };
@@ -170,6 +165,11 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
         return super.migrateData(source) as Record<string, unknown>;
     }
 
+    /**
+     * "Stat" bonuses are always-on character stats, so they ride Foundry's own change engine: each becomes an "add"
+     * change (formulas included, see BarbsActiveEffect) when the effect is prepared. That keeps one list of bonuses on
+     * the Barbs tab, while stats still apply the way core changes do. A "block" row sets the effect's block.
+     */
     override prepareDerivedData(): void {
         super.prepareDerivedData?.();
         const changes = (this as unknown as { changes: object[] }).changes;

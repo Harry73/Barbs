@@ -37,8 +37,8 @@ export function bonusCatalog(): { identifier: string; label: string; search: str
 
 let statLabels: Map<string, string> | null = null;
 
-/** "+5", "-5", or a formula as written. */
-const signed = (value: string) => (/^[-+]/.test(value) ? value : `+${value}`);
+/** "+5", "-5", or a formula as written; blank (a row not filled in yet) shows as 0. */
+const signed = (value: string) => (!value ? "0" : /^[-+]/.test(value) ? value : `+${value}`);
 
 /** A stat bonus as a line: "AC +5", "Evasion -5%", "AC reduced by 10%", "+30 Athletics: Pain Tolerance". */
 function statLine(key: string, value: string): string {
@@ -84,7 +84,7 @@ export function describeBonus(m: RollModifierData): string {
     const base = label.replace(/\s*\((%|%, stacking|count|ft|flat)\)/, "").replace(/\s*\(id \[chance%\]\)/, "");
     const unit = percent ? "%" : label.includes("(ft)") ? " ft" : "";
     const flag = m.type === "canCrit" || m.type === "cannotMiss";
-    const parts = [flag ? base : `${base} ${value}${unit}`];
+    const parts = [flag ? base : `${base} ${value}${value ? unit : ""}`.trim()];
     if (USES_DAMAGE_TYPE.has(m.type) && m.damageType && m.damageType !== "all") parts[0] += ` ${damageBucketLabel(m.damageType).toLowerCase()}`;
     const limits: string[] = [];
     if (m.rollType && m.rollType !== "all") limits.push(`${m.rollType} rolls`);

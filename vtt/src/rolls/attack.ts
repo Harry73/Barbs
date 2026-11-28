@@ -699,6 +699,23 @@ export class AttackBuilder {
                 }
                 break;
             }
+            // Stats, blocks, and DoTs are handled when the effect is prepared, and the incoming ones when the bearer
+            // is attacked, so none of them are rolled here (applyEffects skips them before this point).
+            case "stat":
+            case "block":
+            case "dot":
+            case "incomingDamage":
+            case "incomingAC":
+            case "incomingACPercent":
+            case "incomingEvasion":
+            case "incomingCR":
+                break;
+            default: {
+                // A new modifier type has to be handled (or skipped) above; this fails to compile until it is. A type
+                // that's stored but no longer exists is ignored.
+                const unhandled: never = modifier.type;
+                void unhandled;
+            }
         }
     }
 

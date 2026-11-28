@@ -6,8 +6,6 @@ import {
     ATTRIBUTES,
     COMBAT_STATS,
     ELEMENTS,
-    MULTIPLIER_STAT_KEYS,
-    PENETRATION_STAT_KEYS,
     SKILL_NAMES,
     skillKey,
     STATS,

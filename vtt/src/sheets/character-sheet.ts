@@ -19,7 +19,6 @@ import {
     TIER_INVESTMENT_REQUIRED,
     WEAPON_CATEGORIES,
     type AttributeKey,
-    type EquipmentSlot,
 } from "../config.ts";
 import { getAutomation } from "../abilities/catalog.ts";
 import { describeBonus, describeTrigger } from "../effects/bonuses.ts";

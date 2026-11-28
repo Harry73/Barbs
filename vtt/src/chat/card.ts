@@ -424,9 +424,9 @@ async function damageTarget(
     // Each landed hit: the attacker's on-hit reactions (Battle Fervor), then the defender's "when hit" ones.
     const landed = hits.filter((hit, i) => !evasion.dodged[i] && Object.values(hit).some((v) => (v ?? 0) > 0));
     for (const hit of landed) {
-        const damage = Object.values(hit).reduce((a, b) => a + (b ?? 0), 0);
-        await fireTriggers(attacker, "hit", { other: target.actor, options: domain, data: { hit: { damage } }, sourceName: flags.sourceName });
-        await fireTriggers(target.actor, "hitBy", { other: attacker, attack: attackContext(flags), data: { hit: { damage } }, sourceName: flags.sourceName });
+        const dealt = Object.values(hit).reduce((a, b) => a + (b ?? 0), 0);
+        await fireTriggers(attacker, "hit", { other: target.actor, options: domain, data: { hit: { damage: dealt } }, sourceName: flags.sourceName });
+        await fireTriggers(target.actor, "hitBy", { other: attacker, attack: attackContext(flags), data: { hit: { damage: dealt } }, sourceName: flags.sourceName });
     }
     return true;
 }
