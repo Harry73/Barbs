@@ -49,7 +49,8 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
         system: {
             category: spec.category,
             singleUse: spec.singleUse ?? false,
-            block: Math.max(0, Math.min(100, Math.round(spec.block ?? 0))),
+            // Blocks and damage over time are rows in the Bonuses list (below); these fields are for older effects.
+            block: 0,
             endsWithCombat: !!spec.endsWithCombat,
             pulse: {
                 formula: spec.pulse?.formula ?? "",
@@ -57,7 +58,7 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
                 radius: spec.pulse?.radius ?? 0,
                 affects: spec.pulse?.affects ?? "enemies",
             },
-            dot: { formula: spec.dot?.formula ?? "", damageType: spec.dot?.type ?? "physical" },
+            dot: { formula: "", damageType: "physical" },
             // Plain "add" changes to Barbs stats are written as Bonuses rows (stat bonuses), so they show in the same
             // list as everything else on the Barbs tab; other change types stay core changes.
             changes: (spec.changes ?? [])
@@ -88,6 +89,8 @@ export function buildEffectData(spec: EffectSpec, source: EffectSource): Record<
                     conditions: "",
                     key: c.key,
                 })),
+                ...(spec.block ? [{ type: "block", rollType: "all", damageType: "all", weapon: "", value: String(Math.max(0, Math.min(100, Math.round(spec.block)))), onCrit: false, conditions: "", key: "" }] : []),
+                ...(spec.dot?.formula ? [{ type: "dot", rollType: "all", damageType: spec.dot.type ?? "physical", weapon: "", value: spec.dot.formula, onCrit: false, conditions: "", key: "" }] : []),
                 ...(spec.modifiers ?? []).map((m) => ({
                     type: m.type,
                     rollType: m.rollType ?? "all",

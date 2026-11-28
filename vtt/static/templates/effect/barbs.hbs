@@ -14,14 +14,6 @@
     <p class="hint">Removed after the first roll it modifies, like Assassin's Focus.</p>
   </div>
   <div class="form-group">
-    <label>Block %</label>
-    <div class="form-fields">
-      <input type="number" name="system.block" value="{{barbs.block}}" min="0" max="100" step="1" />
-    </div>
-    <p class="hint">Reduces the next attack applied to the bearer by this much (100 = fully blocked), then is removed. 0 = not a block.</p>
-  </div>
-
-  <div class="form-group">
     <label>Ends with combat</label>
     <div class="form-fields">
       <input type="checkbox" name="system.endsWithCombat" {{checked barbs.endsWithCombat}} />
@@ -93,11 +85,11 @@
           <input type="text" class="barbs-bonus-search" placeholder="Search: AC, fire damage, lifesteal..." />
         </td>
         <td><input type="text" name="system.modifiers.{{m.index}}.value" value="{{m.value}}" placeholder="10, 2d8, 20 * @self.buffs" /></td>
-        <td><select name="system.modifiers.{{m.index}}.damageType" data-limit>{{selectOptions @root.damageTypeChoices selected=m.damageType}}</select></td>
-        <td><select name="system.modifiers.{{m.index}}.rollType" data-limit>{{selectOptions @root.rollTypeChoices selected=m.rollType}}</select></td>
-        <td><select name="system.modifiers.{{m.index}}.weapon" data-limit>{{selectOptions @root.weaponChoices selected=m.weapon}}</select></td>
-        <td><input type="checkbox" name="system.modifiers.{{m.index}}.onCrit" {{checked m.onCrit}} data-limit /></td>
-        <td><input type="text" name="system.modifiers.{{m.index}}.conditions" value="{{m.conditions}}" placeholder="always" data-limit /></td>
+        <td><select name="system.modifiers.{{m.index}}.damageType" data-limit="damageType">{{selectOptions @root.damageTypeChoices selected=m.damageType}}</select></td>
+        <td><select name="system.modifiers.{{m.index}}.rollType" data-limit="rollType">{{selectOptions @root.rollTypeChoices selected=m.rollType}}</select></td>
+        <td><select name="system.modifiers.{{m.index}}.weapon" data-limit="weapon">{{selectOptions @root.weaponChoices selected=m.weapon}}</select></td>
+        <td><input type="checkbox" name="system.modifiers.{{m.index}}.onCrit" {{checked m.onCrit}} data-limit="onCrit" /></td>
+        <td><input type="text" name="system.modifiers.{{m.index}}.conditions" value="{{m.conditions}}" placeholder="always" data-limit="conditions" /></td>
         <td><a data-action="deleteModifier" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></a></td>
       </tr>
       {{/each}}

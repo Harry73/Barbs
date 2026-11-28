@@ -172,6 +172,9 @@ export type RollType = (typeof ROLL_TYPES)[number];
 export const MODIFIER_TYPES = {
     // A character stat (AC, STR, a resist...): becomes a core change while the effect is active. `key` names it.
     stat: "Stat bonus",
+    // Effect behaviors that live in the same list: blocking the next attack, and damage at the start of each turn.
+    block: "Block the next attack (%)",
+    dot: "Damage over time (each turn)",
     damage: "Extra damage",
     multiplier: "Damage multiplier (%)",
     critChance: "Crit chance (%)",
@@ -235,6 +238,9 @@ export const TRIGGER_ACTIONS = {
     reflect: "Reflect % of it back at the attacker",
 } as const;
 export type TriggerAction = keyof typeof TRIGGER_ACTIONS;
+
+/** Bonus rows that aren't roll modifiers: stats (applied as changes), blocks, and damage over time. */
+export const NON_ROLL_BONUS_TYPES = new Set(["stat", "block", "dot"]);
 
 /** Modifier types that only apply when the bearer is attacked, never to the bearer's own rolls. */
 export const INCOMING_MODIFIER_TYPES = new Set(["incomingDamage", "incomingAC", "incomingACPercent", "incomingEvasion", "incomingCR"]);

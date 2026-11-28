@@ -6,7 +6,7 @@
  * roll. The result is plain data the chat card can render and the "Apply" buttons can act on.
  */
 import { bleed, burn, poison } from "../abilities/helpers.ts";
-import { INCOMING_MODIFIER_TYPES, SYSTEM_ID } from "../config.ts";
+import { INCOMING_MODIFIER_TYPES, NON_ROLL_BONUS_TYPES, SYSTEM_ID } from "../config.ts";
 import { mentions, parsePredicate, testPredicate } from "../rules/predicate.ts";
 import { actorData, actorOptions, distanceBetween, rollOptions } from "../rules/roll-options.ts";
 import { evaluateNumber, usesTarget } from "../rules/formula.ts";
@@ -519,7 +519,7 @@ export class AttackBuilder {
                 if (!this.#modifierApplies(modifier)) continue;
                 // Defender-side modifiers only matter when the bearer is attacked (see effects/incoming.ts), and stat
                 // bonuses are applied as changes when the effect is prepared.
-                if (INCOMING_MODIFIER_TYPES.has(modifier.type) || modifier.type === "stat") continue;
+                if (INCOMING_MODIFIER_TYPES.has(modifier.type) || NON_ROLL_BONUS_TYPES.has(modifier.type)) continue;
                 const holds = this.#conditionsHold(modifier, (base ??= this.rollOptions));
                 if (!holds) continue;
                 used = true;

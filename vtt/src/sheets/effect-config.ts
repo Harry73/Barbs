@@ -28,6 +28,7 @@ const ROLL_BONUS_GROUPS: [string, string[]][] = [
     ],
     ["On hit", ["status", "bleedConvert", "shred", "acReduction", "crShred", "evShred", "vulnerability", "buffStrip", "forcedMovement"]],
     ["Defense (when you're attacked)", ["incomingDamage", "incomingAC", "incomingACPercent", "incomingEvasion", "incomingCR"]],
+    ["Effect", ["block", "dot"]],
     ["Other", ["note"]],
 ];
 
@@ -48,12 +49,17 @@ function bonusCatalog(): { identifier: string; label: string; search: string }[]
     return [...rolls, ...stats];
 }
 
-/** Stat bonuses are always on, so a stat row's limit fields don't apply: grey them out. */
+/**
+ * Which of a bonus row's other columns mean anything for its type: stat bonuses and blocks are always on, damage over
+ * time only has a damage type, and attack bonuses use them all. The rest are greyed out.
+ */
 function syncBonusRow(row: HTMLElement): void {
-    const isStat = row.querySelector<HTMLInputElement>('input[name$=".type"]')?.value === "stat";
+    const type = row.querySelector<HTMLInputElement>('input[name$=".type"]')?.value ?? "";
+    const applies = (field: string) => (type === "stat" || type === "block" ? false : type === "dot" ? field === "damageType" : true);
     for (const field of row.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-limit]")) {
-        field.disabled = isStat;
-        field.closest("td")?.classList.toggle("muted", isStat);
+        const off = !applies(field.dataset.limit ?? "");
+        field.disabled = off;
+        field.closest("td")?.classList.toggle("muted", off);
     }
 }
 

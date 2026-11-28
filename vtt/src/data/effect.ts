@@ -59,9 +59,10 @@ export interface TriggerData {
 }
 
 /**
- * Barbs data on every ActiveEffect. Stat changes still use core `changes` (e.g. `system.stats.ac.bonus` + 40);
- * `modifiers` covers what the Roll20 API did by mutating an attack roll in flight: extra on-hit damage, damage
- * multipliers, crit chance, and so on. These are read when the effect's actor builds a roll.
+ * Barbs data on every ActiveEffect. `modifiers` is the Bonuses list: stat bonuses (applied as core changes, e.g.
+ * `system.stats.ac.bonus` + 40), blocks, damage over time, and what the Roll20 API did by mutating an attack roll in
+ * flight: extra on-hit damage, damage multipliers, crit chance, and so on. Roll modifiers are read when the effect's
+ * actor builds a roll.
  */
 export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
     static override defineSchema() {
@@ -78,6 +79,7 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
             /**
              * Blocks the next attack applied to the bearer, reducing all of its hits by this percent (100 = fully
              * blocked), then is used up. 0 = not a block. Drains and DoT ticks aren't attacks and aren't blocked.
+             * Derived from "block" bonus rows; stored values from before those existed are moved into one on load.
              */
             block: new fields.NumberField({ required: true, integer: true, min: 0, max: 100, initial: 0 }),
             /**
@@ -150,13 +152,36 @@ export class BarbsEffectModel extends foundry.data.ActiveEffectTypeDataModel {
      * change (formulas included, see BarbsActiveEffect) when the effect is prepared. That keeps one list of bonuses on
      * the Barbs tab, while stats still apply the way core changes do.
      */
+    /** Blocks and damage over time used to be their own fields; they're bonus rows now. */
+    static override migrateData(source: Record<string, unknown>): Record<string, unknown> {
+        const data = source as { block?: number; dot?: { formula?: string; damageType?: string }; modifiers?: object[] };
+        const row = (type: string, value: string, damageType = "all") => ({
+            type, rollType: "all", damageType, weapon: "", value, onCrit: false, conditions: "", key: "",
+        });
+        if (data.block) {
+            data.modifiers = [...(data.modifiers ?? []), row("block", String(data.block))];
+            data.block = 0;
+        }
+        if (data.dot?.formula) {
+            data.modifiers = [...(data.modifiers ?? []), row("dot", data.dot.formula, data.dot.damageType || "physical")];
+            data.dot = { formula: "", damageType: "physical" };
+        }
+        return super.migrateData(source) as Record<string, unknown>;
+    }
+
     override prepareDerivedData(): void {
         super.prepareDerivedData?.();
         const changes = (this as unknown as { changes: object[] }).changes;
         for (const m of this.modifiers ?? []) {
-            if (m.type !== "stat" || !m.key || m.value === "") continue;
-            changes.push({ key: m.key, type: "add", value: m.value, phase: "initial", priority: 20 });
+            if (m.type === "stat" && m.key && m.value !== "") changes.push({ key: m.key, type: "add", value: m.value, phase: "initial", priority: 20 });
+            // A block row is the effect's block (the strongest, if there are several).
+            if (m.type === "block") this.block = Math.max(this.block ?? 0, Math.min(100, Number(m.value) || 0));
         }
+    }
+
+    /** Damage the bearer takes at the start of each turn, from "dot" bonus rows. */
+    get dots(): { formula: string; damageType: string }[] {
+        return (this.modifiers ?? []).filter((m) => m.type === "dot" && m.value).map((m) => ({ formula: m.value, damageType: m.damageType || "physical" }));
     }
 
     /**

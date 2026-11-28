@@ -160,9 +160,6 @@ Every ActiveEffect has Barbs data (Barbs tab in the effect config):
 
 - **Category**: buff (counts against Buff Limit, removed when Downed), condition (resistible), or other.
 - **Single use**: deleted after the first roll it modifies (Assassin's Focus).
-- **Block %**: the next attack applied to the bearer is reduced by this much (100 = fully blocked), then the effect is
-  removed. Block abilities (Shields Up, Intercept, Rapid Shields) create one; cast them before the attack's damage is
-  applied. Every hit of a multi-hit attack counts as that one attack; drains and DoT ticks aren't blocked.
 - **Pulse**: damage the bearer deals to creatures within a radius at the start of each of their turns (Fiery Temper).
   The combat tracker posts it as a card already targeting everyone in range.
 - **Bonuses**: one list of everything the effect gives, each row picked from a searchable list.
@@ -177,6 +174,12 @@ Every ActiveEffect has Barbs data (Barbs tab in the effect config):
     weapon, attacks with that weapon (and spells while it's held); anywhere else, every attack. Roll type, weapon
     category (or any ranged / melee), "On crit", and Conditions narrow them. On-crit damage and multipliers apply to
     each hit that crits; the rest apply once if any hit crits.
+  - **Block the next attack (%)**: the next attack applied to the bearer is reduced by this much (100 = fully
+    blocked), then the effect is removed. Block abilities (Shields Up, Intercept, Rapid Shields) create one; cast them
+    before the attack's damage is applied. Every hit of a multi-hit attack counts as that one attack; drains and DoT
+    ticks aren't blocked.
+  - **Damage over time**: a formula and damage type the bearer takes at the start of each of their turns, bypassing
+    AC and MR (Bleed, Burn, Poison).
 - Damage formulas can use `@distance`: the distance in feet to each target, measured when damage is applied
   (Distance Shooter).
 

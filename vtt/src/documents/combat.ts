@@ -33,18 +33,19 @@ export class BarbsCombat extends Combat {
             if (effect.active && pulse?.formula) await postPulse(actor, effect as ActiveEffect.Implementation, pulse);
         }
         for (const effect of actor.allApplicableEffects()) {
-            const dot = (effect.system as unknown as BarbsEffectModel).dot;
-            if (!effect.active || !dot?.formula) continue;
-            const roll = await new Roll(dot.formula).evaluate();
-            const type = (dot.damageType || "physical") as DamageKey;
-            // Each ticking effect gets its own message (and undo), naming the effect as the source. DoTs bypass AC
-            // and MR (otherwise any real armor makes a d10 Bleed do nothing); vulnerability and GDR still apply.
-            await applyDamageToActor(
-                actor,
-                [{ [type]: roll.total ?? 0 }],
-                { [type]: 100 },
-                `${effect.name} (${roll.formula} = ${roll.total})`,
-            );
+            if (!effect.active) continue;
+            for (const dot of (effect.system as unknown as BarbsEffectModel).dots ?? []) {
+                const roll = await new Roll(dot.formula).evaluate();
+                const type = (dot.damageType || "physical") as DamageKey;
+                // Each ticking effect gets its own message (and undo), naming the effect as the source. DoTs bypass AC
+                // and MR (otherwise any real armor makes a d10 Bleed do nothing); vulnerability and GDR still apply.
+                await applyDamageToActor(
+                    actor,
+                    [{ [type]: roll.total ?? 0 }],
+                    { [type]: 100 },
+                    `${effect.name} (${roll.formula} = ${roll.total})`,
+                );
+            }
         }
     }
 

@@ -341,6 +341,19 @@ try {
             [["system.stats.ac.bonus", "add", "10"]],
             "stat bonus rows (and only those) become changes",
         );
+        const blocking: any = new BarbsEffectModel(
+            { modifiers: [{ type: "block", value: "25" }, { type: "block", value: "100" }, { type: "dot", value: "1d10", damageType: "physical" }] },
+            { parent: host },
+        );
+        blocking.prepareDerivedData();
+        assert.equal(blocking.block, 100, "the strongest block row is the effect's block");
+        assert.deepEqual(blocking.dots, [{ formula: "1d10", damageType: "physical" }], "dot rows tick each turn");
+        const legacy = BarbsEffectModel.migrateData({ block: 50, dot: { formula: "2d4", damageType: "fire" }, modifiers: [] });
+        assert.deepEqual(
+            legacy.modifiers.map((m: any) => [m.type, m.value, m.damageType]),
+            [["block", "50", "all"], ["dot", "2d4", "fire"]],
+            "old block and DoT fields load as bonus rows",
+        );
     }
 
     const { parseDuration } = await vite.ssrLoadModule("/src/effects/apply.ts");

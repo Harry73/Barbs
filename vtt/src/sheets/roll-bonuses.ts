@@ -5,7 +5,7 @@
  * Stats tab built only from changes would leave out most of what equipment does. Modifiers that apply to every roll
  * are folded into the matching stat row (with their sources); the rest are described as conditional bonuses.
  */
-import { INCOMING_MODIFIER_TYPES, MODIFIER_TYPES, TRIGGER_ACTIONS, TRIGGER_EVENTS, WEAPON_CATEGORIES, WEAPON_FILTERS } from "../config.ts";
+import { INCOMING_MODIFIER_TYPES, NON_ROLL_BONUS_TYPES, MODIFIER_TYPES, TRIGGER_ACTIONS, TRIGGER_EVENTS, WEAPON_CATEGORIES, WEAPON_FILTERS } from "../config.ts";
 import type { BarbsEffectModel, RollModifierData } from "../data/effect.ts";
 import type { EquipmentModel } from "../data/item/models.ts";
 import { evaluateNumber, usesTarget } from "../rules/formula.ts";
@@ -73,7 +73,7 @@ export function summarizeRollBonuses(actor: Actor.Implementation): RollBonusSumm
         // A weapon's own mods only apply to attacks made with it (and to spells while it's held).
         const weapon = fromItem && parent!.type === "equipment" && (parent!.system as unknown as EquipmentModel).isWeapon ? parent : null;
         const source = fromItem ? `${effect.name} (${parent!.name})` : effect.name;
-        for (const m of system.modifiers.filter((x) => x.type !== "stat")) {
+        for (const m of system.modifiers.filter((x) => !NON_ROLL_BONUS_TYPES.has(x.type))) {
             // Incoming modifiers are about attacks on you, so the roll type and weapon filters don't apply to them.
             const incoming = INCOMING_MODIFIER_TYPES.has(m.type);
             const conditions = [
