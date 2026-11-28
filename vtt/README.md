@@ -156,7 +156,8 @@ bounce hit it, so Alter Course (+50% per redirect) and Helix Beam (element flips
 
 ## Effects and roll modifiers
 
-Every ActiveEffect has Barbs data (Barbs tab in the effect config):
+Every ActiveEffect has Barbs data, set up on the Barbs tab (the first tab of the effect config, with settings in one
+row, explanations on hover, and collapsible Bonuses and Triggers sections):
 
 - **Category**: buff (counts against Buff Limit, removed when Downed), condition (resistible), or other.
 - **Single use**: deleted after the first roll it modifies (Assassin's Focus).

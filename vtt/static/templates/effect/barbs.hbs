@@ -1,79 +1,35 @@
 <section class="tab barbs-effect {{#if tab.active}}active{{/if}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
-  <div class="form-group">
-    <label>Category</label>
-    <div class="form-fields">
-      <select name="system.category">{{selectOptions categoryChoices selected=barbs.category}}</select>
-    </div>
-    <p class="hint">Buffs count against Buff Limit. Conditions roll Condition Resist when applied from a card.</p>
-  </div>
-  <div class="form-group">
-    <label>Single use</label>
-    <div class="form-fields">
-      <input type="checkbox" name="system.singleUse" {{checked barbs.singleUse}} />
-    </div>
-    <p class="hint">Removed after the first roll it modifies, like Assassin's Focus.</p>
-  </div>
-  <div class="form-group">
-    <label>Ends with combat</label>
-    <div class="form-fields">
-      <input type="checkbox" name="system.endsWithCombat" {{checked barbs.endsWithCombat}} />
-    </div>
-    <p class="hint">Removed when the combat ends ("until the end of combat"), whatever its duration says.</p>
-  </div>
-  <div class="form-group">
-    <label>Template</label>
-    <div class="form-fields">
-      <input type="checkbox" name="system.template" {{checked barbs.template}} />
-    </div>
-    <p class="hint">Never applies by itself: triggers on the same item or actor copy it onto someone ("grant Battle Fervor on hit").</p>
-  </div>
-  <div class="form-group">
-    <label>Max stacks</label>
-    <div class="form-fields">
-      <input type="number" name="flags.barbs.maxStacks" value="{{maxStacks}}" min="1" step="1" placeholder="no limit" />
-    </div>
-    <p class="hint">How many copies can be on one creature. 1 = a new one replaces the old; blank = no limit.</p>
+  <div class="barbs-effect-header">
+    <label data-tooltip="Buffs count against Buff Limit and are removed when Downed. Conditions roll Condition Resist when applied from a card.">
+      Category <select name="system.category">{{selectOptions categoryChoices selected=barbs.category}}</select>
+    </label>
+    <label data-tooltip="How many copies can be on one creature. 1 = a new one replaces the old; blank = no limit.">
+      Max stacks <input type="number" class="barbs-short" name="flags.barbs.maxStacks" value="{{maxStacks}}" min="1" step="1" placeholder="∞" />
+    </label>
+    <label class="barbs-check" data-tooltip="Removed after the first roll it modifies, like Assassin's Focus.">
+      <input type="checkbox" name="system.singleUse" {{checked barbs.singleUse}} /> Single use
+    </label>
+    <label class="barbs-check" data-tooltip="Removed when the combat ends (&quot;until the end of combat&quot;), whatever its duration says.">
+      <input type="checkbox" name="system.endsWithCombat" {{checked barbs.endsWithCombat}} /> Ends with combat
+    </label>
+    <label class="barbs-check" data-tooltip="Never applies by itself: a trigger on the same item or actor copies it onto someone (&quot;grant Battle Fervor on hit&quot;).">
+      <input type="checkbox" name="system.template" {{checked barbs.template}} /> Template
+    </label>
   </div>
 
-  <h4>Bonuses</h4>
-  <p class="hint">
-    Everything this effect gives. Pick a bonus from the list (type to search): character stats (AC, STR, resists,
-    skills...) are always on while the effect is active; attack bonuses apply to your attacks. Where an attack bonus
-    applies comes from where the effect lives: on a weapon, only attacks made with that weapon (and spells while it's
-    held); anywhere else, every attack. The Roll, Weapon, On crit, and Conditions columns narrow it further.
-  </p>
-  <details class="barbs-help">
-    <summary>Values, conditions, and on-hit syntax</summary>
-    <p class="hint">
-      <strong>Values</strong> can be formulas: <code>20 * @self.buffs</code>, <code>50 * @target.marks.pursued</code>,
-      <code>2d10 * @target.statuses.cursed</code>, <code>@target.health.missingPercent</code>. <code>@self</code>,
-      <code>@target</code>, and (for defense bonuses) <code>@attacker</code> have <code>buffs</code>,
-      <code>conditions</code>, <code>level</code>, <code>health.percent</code>, and counts like
-      <code>statuses.cursed</code>, <code>stacks.&lt;effect&gt;</code>, <code>marks.&lt;effect&gt;</code>. Anything
-      reading <code>@target</code> is worked out per target on Apply.
-    </p>
-    <p class="hint">
-      <strong>Conditions</strong>: commas mean "and", <code>|</code> "or", <code>!</code> "not", and numbers compare
-      (<code>target:health:percent &lt; 30</code>). Facts: <code>roll:physical</code>, <code>weapon:bow</code>,
-      <code>weapon:ranged</code>, <code>ranged</code>/<code>melee</code>, <code>hand:dual</code>,
-      <code>ability:tag:spell</code>, <code>ability:class:sniper</code>, <code>area</code>, <code>in-combat</code>;
-      <code>self:</code> or <code>target:</code> + <code>type:demon</code>, <code>status:prone</code>,
-      <code>effect:rage</code>, <code>health:percent</code>, <code>buffs</code>, <code>level</code>;
-      <code>target:mark:&lt;name&gt;</code> (an effect you put on them), <code>target:distance</code>. Defense bonuses
-      see <code>attack:…</code>, <code>attacker:…</code>, <code>attacker:distance</code>, and <code>origin:attacker</code>.
-    </p>
-    <p class="hint">
-      <strong>On-hit statuses</strong> take a status id and an optional chance: <code>stunned 25</code> is "25% chance
-      to Stun"; damage-over-time ones take an amount, like <code>burned:10 30</code>.
-    </p>
-  </details>
+  <details class="barbs-section" data-section="bonuses" {{#if open.bonuses}}open{{/if}}>
+    <summary>
+      <span class="barbs-section-title">Bonuses</span> <span class="barbs-count">{{modifiers.length}}</span>
+      <i class="fa-solid fa-circle-question barbs-help-icon" data-tooltip="Pick a bonus from the list (type to search). Character stats (AC, STR, resists, skills...) are always on while the effect is active. Attack bonuses apply to attacks with this weapon if the effect is on a weapon, otherwise to every attack; the other columns narrow them further. Columns that don't apply to a bonus are greyed out."></i>
+      <a class="barbs-add" data-action="addModifier" data-tooltip="Add bonus"><i class="fa-solid fa-plus"></i></a>
+    </summary>
   <table class="barbs-modifiers barbs-bonuses">
     <thead>
       <tr>
         <th>Bonus</th><th>Value</th><th>Damage type</th>
         <th data-tooltip="Only these roll types">Roll</th><th data-tooltip="Only attacks with this kind of weapon">Weapon</th>
         <th data-tooltip="Only when the hit crits">On crit</th><th data-tooltip="Optional conditions, e.g. target:type:demon">Conditions</th>
-        <th><a data-action="addModifier" data-tooltip="Add bonus"><i class="fa-solid fa-plus"></i></a></th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -96,28 +52,26 @@
     </tbody>
   </table>
 
-  <h4>Triggers</h4>
-  {{#if templateWithTriggers}}
-  <p class="notice warning">
-    <i class="fa-solid fa-triangle-exclamation"></i> This effect is a <strong>Template</strong>, so it's never active and these
-    triggers won't run. Put the triggers on a separate, regular effect on the same item, and have them grant this one.
-  </p>
-  {{/if}}
-  <p class="hint">
-    When something happens, do something. Conditions work as for modifiers: "you're attacked/hit/damaged" see the
-    attack (<code>attack:…</code>, <code>attacker:…</code>, <code>attacker:distance</code>), "you hit"/"you down"
-    see the target. Values are formulas with <code>@self</code>, <code>@other</code>, <code>@target</code> or
-    <code>@attacker</code>, <code>@hit.damage</code> on hits, and <code>@incoming.damage</code> for "would take
-    damage". That event's actions change the damage before it lands (reduce, survive at N health, redirect to whoever
-    applied this effect, reflect at the attacker); its conditions can use <code>incoming:lethal</code> and
-    <code>attacked</code>. Grant/inflict copy a <em>template</em> effect from the same item or actor.
-  </p>
+  </details>
+
+  <details class="barbs-section" data-section="triggers" {{#if open.triggers}}open{{/if}}>
+    <summary>
+      <span class="barbs-section-title">Triggers</span> <span class="barbs-count">{{triggers.length}}</span>
+      <i class="fa-solid fa-circle-question barbs-help-icon" data-tooltip="When something happens, do something: restore resources, deal damage, grant or inflict a template effect, post a reminder. &quot;Would take damage&quot; triggers change the damage before it lands (reduce it, survive at N health, redirect it, reflect it)."></i>
+      <a class="barbs-add" data-action="addTrigger" data-tooltip="Add trigger"><i class="fa-solid fa-plus"></i></a>
+    </summary>
+    {{#if templateWithTriggers}}
+    <p class="notice warning">
+      <i class="fa-solid fa-triangle-exclamation"></i> This effect is a <strong>Template</strong>, so it's never active and these
+      triggers won't run. Put the triggers on a separate, regular effect on the same item, and have them grant this one.
+    </p>
+    {{/if}}
   <table class="barbs-modifiers barbs-triggers">
     <thead>
       <tr>
         <th>When</th><th>Conditions</th><th data-tooltip="Percent chance; blank = always">%</th><th>Limit</th><th data-tooltip="Remove this effect after it fires">Use up</th><th data-tooltip="A skill check that must succeed, e.g. Armor Mastery: Shields vs @level / 2">Check</th><th>Do</th>
         <th data-tooltip="Amount or text">Value</th><th data-tooltip="Resource (restore) or damage type">Type</th><th>Effect</th>
-        <th><a data-action="addTrigger" data-tooltip="Add trigger"><i class="fa-solid fa-plus"></i></a></th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -141,4 +95,39 @@
       {{/each}}
     </tbody>
   </table>
+  </details>
+
+  <details class="barbs-help">
+    <summary>Syntax reference: values, conditions, on-hit statuses, triggers</summary>
+    <p class="hint">
+      <strong>Values</strong> can be formulas: <code>20 * @self.buffs</code>, <code>50 * @target.marks.pursued</code>,
+      <code>2d10 * @target.statuses.cursed</code>, <code>@target.health.missingPercent</code>. <code>@self</code>,
+      <code>@target</code>, and (for defense bonuses) <code>@attacker</code> have <code>buffs</code>,
+      <code>conditions</code>, <code>level</code>, <code>health.percent</code>, and counts like
+      <code>statuses.cursed</code>, <code>stacks.&lt;effect&gt;</code>, <code>marks.&lt;effect&gt;</code>. Anything
+      reading <code>@target</code> is worked out per target on Apply.
+    </p>
+    <p class="hint">
+      <strong>Conditions</strong>: commas mean "and", <code>|</code> "or", <code>!</code> "not", and numbers compare
+      (<code>target:health:percent &lt; 30</code>). Facts: <code>roll:physical</code>, <code>weapon:bow</code>,
+      <code>weapon:ranged</code>, <code>ranged</code>/<code>melee</code>, <code>hand:dual</code>,
+      <code>ability:tag:spell</code>, <code>ability:class:sniper</code>, <code>area</code>, <code>in-combat</code>;
+      <code>self:</code> or <code>target:</code> + <code>type:demon</code>, <code>status:prone</code>,
+      <code>effect:rage</code>, <code>health:percent</code>, <code>buffs</code>, <code>level</code>;
+      <code>target:mark:&lt;name&gt;</code> (an effect you put on them), <code>target:distance</code>. Defense bonuses
+      see <code>attack:…</code>, <code>attacker:…</code>, <code>attacker:distance</code>, and <code>origin:attacker</code>.
+    </p>
+    <p class="hint">
+      <strong>On-hit statuses</strong> take a status id and an optional chance: <code>stunned 25</code> is "25% chance
+      to Stun"; damage-over-time ones take an amount, like <code>burned:10 30</code>.
+    </p>
+    <p class="hint">
+      <strong>Triggers</strong>: "you're attacked/hit/damaged" conditions see the attack (<code>attack:…</code>,
+      <code>attacker:…</code>, <code>attacker:distance</code>), "you hit"/"you down" see the target. Values can use
+      <code>@self</code>, <code>@other</code>, <code>@target</code> or <code>@attacker</code>,
+      <code>@hit.damage</code> on hits, and <code>@incoming.damage</code> for "would take damage", whose conditions
+      can also use <code>incoming:lethal</code> and <code>attacked</code>. Grant/inflict copy a template effect from the
+      same item or actor.
+    </p>
+  </details>
 </section>

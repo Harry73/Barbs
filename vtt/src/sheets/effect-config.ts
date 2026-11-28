@@ -64,8 +64,9 @@ function syncBonusRow(row: HTMLElement): void {
 }
 
 /**
- * Core effect config plus a "Barbs" tab for the effect's category, single-use flag, and roll modifiers. This is how
- * players build ad-hoc buffs by hand, like the Roll20 sheet's "Effect Creator" box.
+ * Core effect config plus a "Barbs" tab (first, and open by default) for the effect's settings, its Bonuses, and its
+ * Triggers. This is how players build gear affixes and ad-hoc buffs by hand, like the Roll20 sheet's "Effect
+ * Creator" box.
  */
 export class BarbsEffectConfig extends ActiveEffectConfig {
     static override DEFAULT_OPTIONS = {
@@ -90,7 +91,9 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
     static override TABS = {
         sheet: {
             ...coreTabs,
-            tabs: [...coreTabs.tabs, { id: "barbs", icon: "fa-solid fa-dice-d20", label: "Barbs" }],
+            // Barbs first and open by default: it's where nearly everything about an effect is set up.
+            tabs: [{ id: "barbs", icon: "fa-solid fa-dice-d20", label: "Barbs" }, ...coreTabs.tabs],
+            initial: "barbs",
         },
     } as never;
 
@@ -109,6 +112,11 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
                 // Templates never apply themselves, so their own triggers never run; say so where it's set up.
                 templateWithTriggers: !!(system as unknown as { template?: boolean }).template && (system.triggers ?? []).length > 0,
                 maxStacks: maxStacks >= 999 ? "" : maxStacks,
+                // Sections start open when they have rows, then stay however they were last left.
+                open: {
+                    bonuses: this.#open.bonuses ?? system.modifiers.length > 0,
+                    triggers: this.#open.triggers ?? (system.triggers ?? []).length > 0,
+                },
                 modifiers: system.modifiers.map((m, index) => ({ ...m, index })),
                 triggers: (system.triggers ?? []).map((t, index) => ({ ...t, index, inline: !!t.effectData })),
                 eventChoices: TRIGGER_EVENTS,
@@ -160,6 +168,9 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
      * A key that isn't in the list (typed by hand, or from an older version) shows as-is and is kept, so opening the
      * sheet never changes an effect. Typing a full `system.` path and pressing Enter sets a custom key.
      */
+    /** Sections the user opened or closed by hand, so a re-render (e.g. adding a row) doesn't undo it. */
+    #open: Record<string, boolean> = {};
+
     /** Listeners the key pickers put on the document; replaced each render and dropped on close. */
     #pickerListeners: AbortController | null = null;
 
@@ -194,6 +205,10 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
                 custom: (text) => (text.startsWith("system.") ? text : null),
             });
             search.dataset.tooltip = hidden.value;
+        }
+
+        for (const section of this.element.querySelectorAll<HTMLDetailsElement>("details.barbs-section")) {
+            section.addEventListener("toggle", () => (this.#open[section.dataset.section!] = section.open));
         }
 
         // Barbs tab: each bonus row picks its kind (a stat, or an attack/on-hit/defense bonus) from one list.
@@ -292,7 +307,10 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
         return data.system?.modifiers ?? [];
     }
 
-    static async #onAddModifier(this: BarbsEffectConfig) {
+    static async #onAddModifier(this: BarbsEffectConfig, event: PointerEvent) {
+        // The button sits in the section's summary: add a row and open the section, rather than toggling it.
+        event.preventDefault();
+        this.#open.bonuses = true;
         const modifiers = this.#currentModifiers();
         modifiers.push({ type: "stat", rollType: "all", damageType: "all", weapon: "", value: "", key: "" });
         await this.submit({ updateData: { system: { modifiers } } } as never);
@@ -303,7 +321,9 @@ export class BarbsEffectConfig extends ActiveEffectConfig {
         return data.system?.triggers ?? [];
     }
 
-    static async #onAddTrigger(this: BarbsEffectConfig) {
+    static async #onAddTrigger(this: BarbsEffectConfig, event: PointerEvent) {
+        event.preventDefault();
+        this.#open.triggers = true;
         const triggers = this.#currentTriggers();
         triggers.push({ event: "hit", conditions: "", chance: 0, oncePer: "", consume: false, check: "", action: "restore", value: "", type: "stamina", effect: "", effectData: null });
         await this.submit({ updateData: { system: { triggers } } } as never);

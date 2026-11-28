@@ -737,3 +737,74 @@
   cursor: pointer;
   color: var(--barbs-muted);
 }
+
+/* Effect config, Barbs tab: one row of settings, then collapsible Bonuses and Triggers sections. */
+.barbs .barbs-effect-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.barbs .barbs-effect-header label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.barbs .barbs-effect-header .barbs-short {
+  width: 3.5rem;
+}
+
+.barbs details.barbs-section {
+  margin: 0.25rem 0;
+}
+
+.barbs details.barbs-section > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--color-border, #7a7971);
+  cursor: pointer;
+}
+
+.barbs details.barbs-section > summary::before {
+  content: "\f054";
+  font-family: "Font Awesome 6 Pro";
+  font-weight: 900;
+  font-size: 0.75em;
+  transition: transform 0.1s;
+}
+
+.barbs details.barbs-section[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.barbs details.barbs-section > summary::-webkit-details-marker {
+  display: none;
+}
+
+.barbs details.barbs-section > summary {
+  list-style: none;
+}
+
+.barbs .barbs-section-title {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.barbs .barbs-count {
+  opacity: 0.6;
+}
+
+.barbs .barbs-help-icon {
+  opacity: 0.6;
+  cursor: help;
+}
+
+.barbs .barbs-add {
+  margin-left: auto;
+}
