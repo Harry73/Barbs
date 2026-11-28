@@ -3,8 +3,9 @@
  *
  * Mirrors the Roll20 API:
  *   - Damage of each type is (dice + flat) * multiplier, rounded, then doubled (by default) on a crit.
- *   - Multipliers are grouped by source. Within a source they add (+25% and +25% from one source = +50%), across
- *     sources they multiply (+50% from one source and -20% Weakened = 1.5 * 0.8).
+ *   - Multipliers are grouped by the character they come from. Within one character's pool they add (+25% from a
+ *     passive and +25% from their gear = +50%), across characters they multiply (+50% from you and -20% from an enemy's
+ *     Weaken = 1.5 * 0.8), which rewards teamwork: two allies' buffs multiply, one ally's two buffs add.
  *   - Only physical rolls can crit.
  *   - Physical damage is reduced by a flat AC (scaled down by armor penetration), magic damage by a percentage MR
  *     (minus magic penetration), psychic damage isn't reduced. Vulnerability then increases what gets through, and
@@ -22,22 +23,50 @@ export function isMagic(type: DamageKey): boolean {
     return (ELEMENTS as readonly string[]).includes(type);
 }
 
-/** Percent-sums per source, e.g. { "Warleader": 25, "Weakened": -20 } for one multiplier key. */
+/** The pool a creature's own multipliers go in: its passives, gear, and the buffs it cast on itself. */
+export const SELF_POOL = "self";
+
+/** Percent-sums per pool (the character a multiplier comes from), e.g. { self: 25, "Actor.abc": -20 } for one key. */
 export type SourceMultipliers = Map<string, number>;
+
+/** The same thing as plain data, for chat card flags: multiplier key -> pool -> percent. */
+export type MultiplierPools = Record<string, Record<string, number>>;
+
+export function poolsToRecord(multipliers: Map<MultiplierKey, SourceMultipliers>): MultiplierPools {
+    return Object.fromEntries([...multipliers].map(([key, pools]) => [key, Object.fromEntries(pools)]));
+}
+
+export function poolsFromRecord(record: MultiplierPools | undefined): Map<MultiplierKey, SourceMultipliers> {
+    return new Map(Object.entries(record ?? {}).map(([key, pools]) => [key as MultiplierKey, new Map(Object.entries(pools))]));
+}
+
+/** A copy of `multipliers` with `percent` more in one pool of one key. */
+export function withMultiplier(
+    multipliers: Map<MultiplierKey, SourceMultipliers>,
+    key: MultiplierKey,
+    pool: string,
+    percent: number,
+): Map<MultiplierKey, SourceMultipliers> {
+    const copy = new Map([...multipliers].map(([k, v]) => [k, new Map(v)] as const));
+    const pools = copy.get(key) ?? new Map<string, number>();
+    pools.set(pool, (pools.get(pool) ?? 0) + percent);
+    copy.set(key, pools);
+    return copy;
+}
 
 /** Combine the multipliers that apply to a damage type into one factor. */
 export function multiplierFor(type: DamageKey, multipliers: Map<MultiplierKey, SourceMultipliers>): number {
     const keys: MultiplierKey[] = [type, "all"];
     if (isMagic(type)) keys.push("allMagic");
 
-    const perSource = new Map<string, number>();
+    const perPool = new Map<string, number>();
     for (const key of keys) {
-        for (const [source, percent] of multipliers.get(key) ?? []) {
-            perSource.set(source, (perSource.get(source) ?? 0) + percent);
+        for (const [pool, percent] of multipliers.get(key) ?? []) {
+            perPool.set(pool, (perPool.get(pool) ?? 0) + percent);
         }
     }
     let factor = 1;
-    for (const percent of perSource.values()) factor *= 1 + percent / 100;
+    for (const percent of perPool.values()) factor *= 1 + percent / 100;
     return factor;
 }
 

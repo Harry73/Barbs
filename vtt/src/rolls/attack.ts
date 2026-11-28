@@ -8,7 +8,7 @@
 import { bleed, burn, poison } from "../abilities/helpers.ts";
 import { DAMAGE_TYPES, INCOMING_MODIFIER_TYPES, NON_ROLL_BONUS_TYPES, SYSTEM_ID } from "../config.ts";
 import { mentions, parsePredicate, testPredicate } from "../rules/predicate.ts";
-import { actorData, actorOptions, distanceBetween, effectAppliesToAttack, rollOptions } from "../rules/roll-options.ts";
+import { actorData, actorOptions, distanceBetween, effectAppliesToAttack, rollOptions, sameActor } from "../rules/roll-options.ts";
 import { evaluateNumber, usesTarget } from "../rules/formula.ts";
 import { ELEMENTS, RANGED_WEAPONS, STATUSES, type ModifierRollType, type RollType, type StatKey } from "../config.ts";
 import { snapshotEffect, type RemovedEffect } from "../chat/undo.ts";
@@ -21,8 +21,12 @@ import {
     finalDamage,
     isCritRoll,
     multiplierFor,
+    poolsToRecord,
+    SELF_POOL,
+    withMultiplier,
     type DamageKey,
     type MultiplierKey,
+    type MultiplierPools,
     type SourceMultipliers,
 } from "../rules/damage-math.ts";
 
@@ -89,7 +93,10 @@ export interface ConditionalModifier {
     percent: number;
     /** Set when the value reads the target (`@target`): evaluated per target instead of `percent`. */
     formula?: string;
+    /** What to call it in notes. */
     source: string;
+    /** The multiplier pool a multiplier goes in (see AttackBuilder.addMultiplier). */
+    pool: string;
 }
 
 /** One target's distance bonus for a hit. Deterministic for the usual formulas; dice would be rolled per target. */
@@ -168,6 +175,8 @@ export interface AttackResult {
     evasionReduction: number;
     /** Multipliers and penetration that depend on the target, applied per target. */
     conditional: ConditionalModifier[];
+    /** The multipliers already in the damage, by key and pool, so a target-dependent one can add to its pool. */
+    multipliers: MultiplierPools;
     /** The roll's facts (roll:, weapon:, ability:, self:), for conditions checked later against each target. */
     rollOptions: string[];
 }
@@ -259,11 +268,22 @@ export class AttackBuilder {
         return value ? this.addDamage(value, type) : this;
     }
 
-    addMultiplier(key: MultiplierKey, source: string, percent: number): this {
-        const bySource = this.#multipliers.get(key) ?? new Map<string, number>();
-        bySource.set(source, (bySource.get(source) ?? 0) + percent);
-        this.#multipliers.set(key, bySource);
+    /**
+     * Add to a damage multiplier. Multipliers add within a pool and multiply across pools, and a pool is a character:
+     * the default is the roller's own (passives, gear, their own buffs); another character's buff on the roller, or a
+     * debuff an enemy put on them, is that character's pool.
+     */
+    addMultiplier(key: MultiplierKey, percent: number, pool: string = SELF_POOL): this {
+        const pools = this.#multipliers.get(key) ?? new Map<string, number>();
+        pools.set(pool, (pools.get(pool) ?? 0) + percent);
+        this.#multipliers.set(key, pools);
         return this;
+    }
+
+    /** The multiplier pool an effect's bonuses go in: whoever cast it, or the roller's own when it's theirs or has no caster. */
+    #poolOf(effect?: ActiveEffect.Implementation): string {
+        const caster = effect ? (foundry.utils.getProperty(effect, `flags.${SYSTEM_ID}.casterUuid`) as string | undefined) : undefined;
+        return !caster || sameActor(caster, this.actor.uuid) ? SELF_POOL : caster;
     }
 
     addNote(text: string): this {
@@ -345,8 +365,8 @@ export class AttackBuilder {
     }
 
     /** A multiplier, penetration, or lethality that only applies to targets meeting conditions ("vs demons"). */
-    addConditional(modifier: Omit<ConditionalModifier, "source"> & { source?: string }): this {
-        this.#conditional.push({ source: "Ability", ...modifier });
+    addConditional(modifier: Omit<ConditionalModifier, "source" | "pool"> & { source?: string; pool?: string }): this {
+        this.#conditional.push({ source: "Ability", pool: SELF_POOL, ...modifier });
         return this;
     }
 
@@ -494,7 +514,8 @@ export class AttackBuilder {
         const casterUuid = foundry.utils.getProperty(this.actor, `flags.${SYSTEM_ID}.summon.casterUuid`) as string | undefined;
         const caster = casterUuid ? (fromUuidSync(casterUuid) as Actor.Implementation | null) : null;
         const casterStats = (caster?.system as unknown as CreatureModel | undefined)?.derived.combat;
-        if (casterStats?.minionDamage) this.addMultiplier("all", `${caster!.name}'s Minion Damage`, casterStats.minionDamage);
+        // The summoner's bonus is their pool, so it multiplies with the summon's own gear and buffs.
+        if (casterStats?.minionDamage) this.addMultiplier("all", casterStats.minionDamage, casterUuid);
         this.#lethality += casterStats?.minionLethality ?? 0;
     }
 
@@ -518,7 +539,7 @@ export class AttackBuilder {
                 if (!holds) continue;
                 used = true;
                 if (holds === "defer") {
-                    this.#defer(modifier, effect.name);
+                    this.#defer(modifier, effect.name, this.#poolOf(effect as ActiveEffect.Implementation));
                     continue;
                 }
                 // "On crit:" modifiers wait until a hit actually crits.
@@ -540,7 +561,7 @@ export class AttackBuilder {
     }
 
     /** Hold a target-dependent damage, multiplier, or penetration modifier until damage is applied. */
-    #defer(modifier: RollModifierData, source: string): void {
+    #defer(modifier: RollModifierData, source: string, pool: string): void {
         const conditions = modifier.conditions ?? "";
         if (modifier.type === "damage") {
             this.#deferredDamage.push({ conditions, type: concreteDamageType(modifier.damageType), formula: modifier.value });
@@ -549,7 +570,7 @@ export class AttackBuilder {
             const key = modifier.damageType || (kind === "penetration" ? "physical" : "all");
             const perTarget = usesTarget(modifier.value);
             const percent = perTarget ? 0 : this.#number(modifier.value);
-            if (perTarget || percent) this.#conditional.push({ conditions, kind, key, percent, source, ...(perTarget ? { formula: modifier.value } : {}) });
+            if (perTarget || percent) this.#conditional.push({ conditions, kind, key, percent, source, pool, ...(perTarget ? { formula: modifier.value } : {}) });
         }
         this.addNote(`${source}: ${modifier.type} ${modifier.value}${conditions ? ` when ${conditions}` : ""} (worked out per target).`);
     }
@@ -574,8 +595,8 @@ export class AttackBuilder {
     }
 
     /**
-     * Fold one roll modifier into this roll. `source` names it in multipliers and notes; `sourceEffect` is the
-     * effect it lives on, for lasting debuffs that last as long as it does.
+     * Fold one roll modifier into this roll. `source` names it in notes; `sourceEffect` is the effect it lives on, for
+     * the multiplier pool it belongs to and for lasting debuffs that last as long as it does.
      */
     #applyModifier(modifier: RollModifierData, source: string, sourceEffect?: ActiveEffect.Implementation): void {
         const number = this.#number(modifier.value);
@@ -584,7 +605,7 @@ export class AttackBuilder {
                 this.addDamage(modifier.value, concreteDamageType(modifier.damageType));
                 break;
             case "multiplier":
-                this.addMultiplier((modifier.damageType || "all") as MultiplierKey, source, number);
+                this.addMultiplier((modifier.damageType || "all") as MultiplierKey, number, this.#poolOf(sourceEffect));
                 break;
             case "critChance":
                 this.#critChance += number;
@@ -780,16 +801,12 @@ export class AttackBuilder {
             let multipliers = this.#multipliers;
             if (crit?.isCrit && this.#onCrit.length) {
                 damage = new Map([...this.#damage].map(([k, v]) => [k, [...v]]));
-                multipliers = new Map([...this.#multipliers].map(([k, v]) => [k, new Map(v)]));
                 for (const { modifier, source, effect } of this.#onCrit) {
                     if (modifier.type === "damage") {
                         const type = (this.#convert ?? (modifier.damageType || "physical")) as DamageKey;
                         damage.set(type, [...(damage.get(type) ?? []), `(${modifier.value})`]);
                     } else if (modifier.type === "multiplier") {
-                        const key = (modifier.damageType || "all") as MultiplierKey;
-                        const bySource = multipliers.get(key) ?? new Map<string, number>();
-                        bySource.set(source, (bySource.get(source) ?? 0) + this.#number(modifier.value));
-                        multipliers.set(key, bySource);
+                        multipliers = withMultiplier(multipliers, (modifier.damageType || "all") as MultiplierKey, this.#poolOf(effect), this.#number(modifier.value));
                     } else if (!critApplied) {
                         this.#applyModifier(modifier, `${source} (on crit)`, effect);
                     }
@@ -953,6 +970,7 @@ export class AttackBuilder {
             crReduction: this.#crReduction,
             evasionReduction: damaging ? this.#evasionReduction : 0,
             conditional: this.#conditional,
+            multipliers: poolsToRecord(this.#multipliers),
             rollOptions: attackFacts,
         };
     }

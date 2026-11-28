@@ -20,12 +20,19 @@ import {
     type DistanceBonus,
     type OnHitStatus,
 } from "../rolls/attack.ts";
-import { isMagic } from "../rules/damage-math.ts";
+import {
+    multiplierFor,
+    poolsFromRecord,
+    SELF_POOL,
+    withMultiplier,
+    type DamageKey,
+    type MultiplierKey,
+    type MultiplierPools,
+} from "../rules/damage-math.ts";
 import { parsePredicate, testPredicate } from "../rules/predicate.ts";
 import { actorData, actorOptions } from "../rules/roll-options.ts";
 import { evaluateNumber } from "../rules/formula.ts";
 import { incomingTotal, type AttackContext } from "../effects/incoming.ts";
-import type { DamageKey } from "../rules/damage-math.ts";
 import { requestOnActor, requestUndo } from "../socket.ts";
 import { hideUndoIfNotAllowed, UNDO_BUTTON, type UndoRecord } from "./undo.ts";
 
@@ -55,6 +62,8 @@ export interface CardFlags {
         conditional?: ConditionalDamage[][];
         /** Multipliers and penetration that only apply to targets meeting a condition. */
         conditionalModifiers?: ConditionalModifier[];
+        /** The multipliers already in the hits, by key and pool: a conditional one adds to its pool's share. */
+        multipliers?: MultiplierPools;
         /** The attack's roll facts, for checking conditions against each target. */
         rollOptions?: string[];
         /** Per-hit damage that depends on each target's distance (Distance Shooter), parallel to `hits`. */
@@ -360,12 +369,21 @@ async function damageTarget(
         .filter((m) => meets(m.conditions))
         .map((m) => (m.formula ? { ...m, percent: evaluateNumber(m.formula, formulaData) } : m))
         .filter((m) => m.percent);
-    const covers = (key: string, type: string) => key === "all" || key === type || (key === "allMagic" && isMagic(type as DamageKey));
+    // "Double damage to demons" adds to the pool it belongs to (the roller's own, say), so next to a +20% from the same
+    // character it's +120%, not +20% then +100% on top. Each hit already has its pool's current share multiplied in,
+    // so scale by how much that factor changes.
+    let pools = poolsFromRecord(damage.multipliers);
     for (const m of conditionalMods.filter((x) => x.kind === "multiplier")) {
-        // A separate source, so it multiplies with the attack's other multipliers (like any other effect's).
+        const next = withMultiplier(pools, m.key as MultiplierKey, m.pool ?? SELF_POOL, m.percent);
         hits = hits.map((hit) =>
-            Object.fromEntries(Object.entries(hit).map(([type, amount]) => [type, covers(m.key, type) ? Math.round((amount ?? 0) * (1 + m.percent / 100)) : amount])),
+            Object.fromEntries(
+                Object.entries(hit).map(([type, amount]) => {
+                    const before = multiplierFor(type as DamageKey, pools);
+                    return [type, before ? Math.round(((amount ?? 0) * multiplierFor(type as DamageKey, next)) / before) : amount];
+                }),
+            ),
         );
+        pools = next;
     }
     let penetration = damage.penetration;
     for (const m of conditionalMods.filter((x) => x.kind === "penetration")) {

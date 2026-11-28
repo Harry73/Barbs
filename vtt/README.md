@@ -197,7 +197,12 @@ row, explanations on hover, and collapsible Bonuses and Triggers sections):
 - Damage formulas can use `@distance`: the distance in feet to each target, measured when damage is applied
   (Distance Shooter).
 
-Multipliers are grouped by effect: modifiers from the same effect add, different effects multiply.
+**Damage multipliers are grouped by the character they come from**, as in Roll20: everything from one character adds,
+and different characters' multiply, which rewards teamwork. Your passives, your gear, and buffs you cast on yourself
+share your pool (+25% from a passive and +25% from a ring is +50%, and five stacks of a +10% buff is +50%). An ally's
+buff on you, or an enemy's Weaken, is that character's pool and multiplies with yours. An effect with no caster
+(made by hand) counts as yours. Target-dependent ones ("double damage to demons") join their pool when damage is
+applied. The Stats tab shows what you bring on your own and doesn't model other characters' pools.
 
 **Conditions** (`src/rules/predicate.ts`, modeled on PF2e's predicates) limit a roll modifier to situations: a text
 field where commas mean "and", `|` "or", `!` "not", and numbers compare. They're tested against "roll options",

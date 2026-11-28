@@ -97,7 +97,7 @@ export const PASSIVE_AUTOMATION: Record<string, PassiveAutomation> = {
             const stacks = p.resource("spotting");
             if (!stacks || info.rollType !== "physical" || weaponCategory(info.weapon) !== "bow") return;
             if (!info.targets.some((t) => t.statuses.has("spotted"))) return;
-            builder.addMultiplier("physical", "Spotter", 25 * stacks).addNote(`Spotter: expended ${stacks} Spotting (+${25 * stacks}%).`);
+            builder.addMultiplier("physical", 25 * stacks).addNote(`Spotter: expended ${stacks} Spotting (+${25 * stacks}%).`);
             builder.queueResource("spotting", { set: 0 });
         },
         notes: ["Gain 1 Spotting whenever you take a Major action that doesn't deal damage or move (use +). Max 8. Lost when the Spotted target dies."],
@@ -142,7 +142,7 @@ export const PASSIVE_AUTOMATION: Record<string, PassiveAutomation> = {
                 : [],
         rollHook: (builder, info) => {
             const n = Number(info.choices["passive.winds"]) || 0;
-            if (n) builder.addMultiplier("air", "Winds of War", 5 * n);
+            if (n) builder.addMultiplier("air", 5 * n);
         },
         notes: ["Gain a stack per 5 ft moved with a Move Action or dash (use +)."],
     },
@@ -225,8 +225,8 @@ export const PASSIVE_AUTOMATION: Record<string, PassiveAutomation> = {
         rollHook: (builder, info, p) => {
             if (!info.tags.includes("water")) return;
             const tide = p.state("tide");
-            if (tide === "flood" && info.rollType === "magic") builder.addMultiplier("all", "Flood Tide", 50);
-            if (tide === "ebb" && info.rollType === "healing") builder.addMultiplier("healing", "Ebb Tide", 50);
+            if (tide === "flood" && info.rollType === "magic") builder.addMultiplier("all", 50);
+            if (tide === "ebb" && info.rollType === "healing") builder.addMultiplier("healing", 50);
         },
         onTurnStart: async (p) => {
             await p.item.update({ "system.state.tide": p.state("tide") === "flood" ? "ebb" : "flood" } as never);
@@ -260,7 +260,7 @@ export const PASSIVE_AUTOMATION: Record<string, PassiveAutomation> = {
     "Warrior/Warleader": {
         rollHook: (builder, info) => {
             const buffs = countBuffs(info.actor);
-            if (buffs && info.rollType === "physical") builder.addMultiplier("physical", "Warleader", 25 * buffs);
+            if (buffs && info.rollType === "physical") builder.addMultiplier("physical", 25 * buffs);
         },
         notes: ["End a buff as a free action on your turn to give an ally's next attack +25% damage."],
     },
@@ -270,7 +270,7 @@ export const PASSIVE_AUTOMATION: Record<string, PassiveAutomation> = {
             const target = info.targets[0];
             if (!target) return;
             const { value, max } = resources(target).health;
-            if (value >= max) builder.addMultiplier("all", "Assassinate", 100).addNote("Assassinate: uninjured target, double damage.");
+            if (value >= max) builder.addMultiplier("all", 100).addNote("Assassinate: uninjured target, double damage.");
         },
     },
     "Warper/Opportunistic Predator": {
@@ -294,7 +294,7 @@ export const PASSIVE_AUTOMATION: Record<string, PassiveAutomation> = {
             const r = resources(info.actor);
             const max = r.health.max + r.stamina.max + r.mana.max;
             const missing = max ? (100 * (max - r.health.value - r.stamina.value - r.mana.value)) / max : 0;
-            if (missing > 0) builder.addMultiplier("psychic", "Stress Headache", Math.round(3 * missing));
+            if (missing > 0) builder.addMultiplier("psychic", Math.round(3 * missing));
         },
     },
     "Juggernaut/What Doesn't Kill You": {
@@ -306,7 +306,7 @@ export const PASSIVE_AUTOMATION: Record<string, PassiveAutomation> = {
             if (!info.choices["passive.payHealth"]) return;
             const { value, max } = resources(info.actor).health;
             const missing = Math.round(100 * (1 - value / Math.max(1, max)));
-            if (missing > 0) builder.addMultiplier("physical", "What Doesn't Kill You", missing);
+            if (missing > 0) builder.addMultiplier("physical", missing);
         },
     },
     "Destroyer/Aggravated Assault": {
@@ -377,7 +377,7 @@ export const PASSIVE_AUTOMATION: Record<string, PassiveAutomation> = {
         rollHook: (builder, info) => {
             if (!info.choices["passive.frostbite"] || !info.targets[0]) return;
             const stacks = info.targets[0].effects.filter((e) => e.statuses.has("frostbite")).length;
-            if (stacks) builder.addMultiplier("ice", "Frostbite", 50 * stacks).addNote(`Frostbite: consumed ${stacks} stack(s).`);
+            if (stacks) builder.addMultiplier("ice", 50 * stacks).addNote(`Frostbite: consumed ${stacks} stack(s).`);
         },
         afterUse: async (info) => {
             if (!info.choices["passive.frostbite"] || !info.targets[0]) return;
@@ -399,7 +399,7 @@ export const PASSIVE_AUTOMATION: Record<string, PassiveAutomation> = {
             const spend = ranged ? "ranged" : "melee";
             const earn = ranged ? "melee" : "ranged";
             if (p.resource(spend)) {
-                builder.addMultiplier("physical", "Calculated Aggression", 50);
+                builder.addMultiplier("physical", 50);
                 builder.queueResource(spend, { set: 0 });
             }
             if (!p.resource(earn)) {

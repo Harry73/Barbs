@@ -580,7 +580,8 @@ async function eerieMists(target: Actor.Implementation, data: Record<string, unk
                 category: "",
                 modifiers: [{ type: "multiplier", rollType: "all", damageType: "all", weapon: "", value: String(-10 * conditions) }],
             },
-            flags: { [SYSTEM_ID]: { eerieMists: true } },
+            // The Mistguard's own Weaken, so it multiplies with the target's other bonuses instead of adding to them.
+            flags: { [SYSTEM_ID]: { eerieMists: true, casterUuid: caster!.uuid } },
         } as never,
     ]);
 }

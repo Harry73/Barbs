@@ -117,7 +117,7 @@ function prepareAttack(
             ui.notifications?.warn(warning);
         }
     }
-    if (spec.increase) builder.addMultiplier("all", ctx.item?.name ?? "Ability", spec.increase);
+    if (spec.increase) builder.addMultiplier("all", spec.increase);
     if (spec.canCrit) builder.enableCrit();
     if (spec.critChance) builder.addCritChance(spec.critChance);
     if (spec.critDamage) builder.addCritDamage(spec.critDamage);
@@ -568,6 +568,7 @@ export async function runAutomation(opts: RunOptions): Promise<void> {
                           bonus: tiers.length ? [] : result.hits.map((h) => h.distanceBonus),
                           conditional: tiers.length ? [] : result.hits.map((h) => h.conditional),
                           conditionalModifiers: result.conditional,
+                multipliers: result.multipliers,
                           rollOptions: result.rollOptions,
                           penetration: result.penetration,
                           trueDamage: !!attack?.trueDamage,
@@ -651,6 +652,7 @@ export async function postPulse(
                 bonus: result.hits.map((h) => h.distanceBonus),
                 conditional: result.hits.map((h) => h.conditional),
                 conditionalModifiers: result.conditional,
+                multipliers: result.multipliers,
                 rollOptions: result.rollOptions,
                 penetration: result.penetration,
                 unblockableChance: result.unblockableChance,
@@ -817,6 +819,7 @@ export async function weaponAttack(actor: Actor.Implementation, item: Item.Imple
                 bonus: result.hits.map((h) => h.distanceBonus),
                 conditional: result.hits.map((h) => h.conditional),
                 conditionalModifiers: result.conditional,
+                multipliers: result.multipliers,
                 rollOptions: result.rollOptions,
                 penetration: result.penetration,
                 unblockableChance: result.unblockableChance,

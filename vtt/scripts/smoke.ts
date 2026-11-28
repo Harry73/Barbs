@@ -125,6 +125,19 @@ try {
     // Same source adds (25 + 25), different sources multiply: 1.5 * 0.8 * 1.1.
     assert.equal(math.multiplierFor("fire", mults).toFixed(4), (1.5 * 0.8 * 1.1).toFixed(4));
     assert.equal(math.multiplierFor("physical", mults).toFixed(4), (1.25 * 0.8).toFixed(4), "allMagic skips physical");
+    // Pools are characters: your passive and your gear add (+25 +25), an ally's pool and an enemy's Weaken multiply.
+    const pools = new Map([["all", new Map([["self", 25], ["Actor.ally", 20], ["Actor.enemy", -10]])], ["physical", new Map([["self", 25]])]]);
+    assert.equal(math.multiplierFor("physical", pools).toFixed(4), (1.5 * 1.2 * 0.9).toFixed(4));
+    // "Double damage to demons" joins the roller's pool: 1 + .5 + 1 = 2.5, not 1.5 * 2.
+    const demons = math.withMultiplier(pools, "all", "self", 100);
+    assert.equal(math.multiplierFor("physical", demons).toFixed(4), (2.5 * 1.2 * 0.9).toFixed(4));
+    assert.equal(
+        (math.multiplierFor("physical", demons) / math.multiplierFor("physical", pools)).toFixed(4),
+        (2.5 / 1.5).toFixed(4),
+        "the card scales a hit by the ratio",
+    );
+    assert.equal(math.multiplierFor("fire", math.withMultiplier(pools, "physical", "self", 100)).toFixed(4), math.multiplierFor("fire", pools).toFixed(4), "a physical multiplier leaves fire alone");
+    assert.deepEqual(math.poolsToRecord(math.poolsFromRecord(math.poolsToRecord(pools))), math.poolsToRecord(pools), "pools survive a trip through chat flags");
     assert.equal(math.finalDamage(27, 1.25, 2), 68);
     assert.equal(math.isCritRoll(91, 10), true);
     assert.equal(math.isCritRoll(90, 10), false);
